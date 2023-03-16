@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.util.env_dynamics_util</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.util.env_dynamics_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -87,7 +92,7 @@
 
 
 <div class="viewcode-block" id="EnvDynamicsUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil">[docs]</a><span class="k">class</span> <span class="nc">EnvDynamicsUtil</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class containing common utilities that are used both in simulation-mode and in emulation-mode.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -95,7 +100,7 @@
     <span class="k">def</span> <span class="nf">merge_complete_obs_state</span><span class="p">(</span><span class="n">old_obs_state</span><span class="p">:</span> <span class="n">EmulationAttackerObservationState</span><span class="p">,</span>
                                  <span class="n">new_obs_state</span><span class="p">:</span> <span class="n">EmulationAttackerObservationState</span><span class="p">,</span>
                                  <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Merges an old observation state with a new one</span>
 
 <span class="sd">        :param old_obs_state: the old observation state</span>
@@ -116,7 +121,7 @@
                                <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span>
                                <span class="n">action</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">EmulationAttackerAction</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span> \
             <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerMachineObservationState</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old network observation with new information collected</span>
 
 <span class="sd">        :param old_machines_obs: the list of old machine observations</span>
@@ -155,7 +160,7 @@
                                                    <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                                                    <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation with new information collected</span>
 
 <span class="sd">        :param o_m: old machine observation</span>
@@ -195,7 +200,7 @@
 
 <div class="viewcode-block" id="EnvDynamicsUtil.merge_os"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.merge_os">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">merge_os</span><span class="p">(</span><span class="n">o_os</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_os</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation OS with new information collected</span>
 
 <span class="sd">        :param o_os: the old OS</span>
@@ -212,7 +217,7 @@
     <span class="k">def</span> <span class="nf">merge_shell_access</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                            <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">Tuple</span><span class="p">[</span><span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation shell access with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -240,7 +245,7 @@
     <span class="k">def</span> <span class="nf">merge_reachable</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                         <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation reachable nodes with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -254,7 +259,7 @@
     <span class="k">def</span> <span class="nf">merge_backdoor_credentials</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                                    <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation backdoor credentials nodes with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -268,7 +273,7 @@
     <span class="k">def</span> <span class="nf">merge_logged_in</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                         <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation logged in with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -286,7 +291,7 @@
     <span class="k">def</span> <span class="nf">merge_tools_installed</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                               <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation &quot;tools installed flag&quot; with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -304,7 +309,7 @@
     <span class="k">def</span> <span class="nf">merge_backdoor_installed</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                                  <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation &quot;backdoor installed&quot; flag with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -322,7 +327,7 @@
     <span class="k">def</span> <span class="nf">merge_backdoor_tried</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                              <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation &quot;backdoor tried&quot; flag with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -336,7 +341,7 @@
 <div class="viewcode-block" id="EnvDynamicsUtil.merge_tools_tried"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.merge_tools_tried">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">merge_tools_tried</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                           <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation &quot;tools tried&quot; flag with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -350,7 +355,7 @@
 <div class="viewcode-block" id="EnvDynamicsUtil.merge_root"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.merge_root">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">merge_root</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation root with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -367,7 +372,7 @@
 <div class="viewcode-block" id="EnvDynamicsUtil.merge_flags"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.merge_flags">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">merge_flags</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation flags with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -384,7 +389,7 @@
 <div class="viewcode-block" id="EnvDynamicsUtil.merge_connections"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.merge_connections">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">merge_connections</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                           <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation shell-connections with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -400,7 +405,7 @@
     <span class="k">def</span> <span class="nf">merge_filesystem_scanned</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                                  <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                                  <span class="n">new_root</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation file-system-scanned-flag with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -418,7 +423,7 @@
     <span class="k">def</span> <span class="nf">merge_untried_credentials</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                                   <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                                   <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation untried-credentials-flag with new information collected</span>
 
 <span class="sd">        :param o_m: the old machine observation</span>
@@ -436,7 +441,7 @@
 <div class="viewcode-block" id="EnvDynamicsUtil.merge_exploit_tried"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.merge_exploit_tried">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">merge_exploit_tried</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                             <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation tried_brute_flags with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -482,7 +487,7 @@
 <div class="viewcode-block" id="EnvDynamicsUtil.merge_trace"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.merge_trace">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">merge_trace</span><span class="p">(</span><span class="n">o_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="n">n_m</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging an old machine observation trace with new information collected</span>
 
 <span class="sd">        :param o_os: the old machine observation</span>
@@ -496,7 +501,7 @@
 <div class="viewcode-block" id="EnvDynamicsUtil.merge_ports"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.merge_ports">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">merge_ports</span><span class="p">(</span><span class="n">o_ports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationPortObservationState</span><span class="p">],</span> <span class="n">n_ports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationPortObservationState</span><span class="p">],</span>
                     <span class="n">acc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationPortObservationState</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging two port lists</span>
 
 <span class="sd">        :param o_ports: old list of ports</span>
@@ -530,7 +535,7 @@
     <span class="k">def</span> <span class="nf">merge_vulnerabilities</span><span class="p">(</span><span class="n">o_vuln</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationVulnerabilityObservationState</span><span class="p">],</span>
                               <span class="n">n_vuln</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationVulnerabilityObservationState</span><span class="p">],</span>
                               <span class="n">acc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EmulationVulnerabilityObservationState</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for merging two vulnerability lists lists</span>
 
 <span class="sd">        :param o_vuln: old list of vulnerabilities</span>
@@ -561,7 +566,7 @@
 
 <div class="viewcode-block" id="EnvDynamicsUtil.is_all_flags_collected"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.is_all_flags_collected">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_all_flags_collected</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if all flags are collected (then episode is done)</span>
 
 <span class="sd">        :param s: current state</span>
@@ -578,7 +583,7 @@
 
 <div class="viewcode-block" id="EnvDynamicsUtil.check_if_telnet_connection_is_alive"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.check_if_telnet_connection_is_alive">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">check_if_telnet_connection_is_alive</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function to check whether a Telnet connection is alive or not</span>
 
 <span class="sd">        :param conn: the connection to check</span>
@@ -588,7 +593,7 @@
 
 <div class="viewcode-block" id="EnvDynamicsUtil.check_if_ftp_connection_is_alive"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.check_if_ftp_connection_is_alive">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">check_if_ftp_connection_is_alive</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utilitty function to check whether a FTP connection is alive or not</span>
 
 <span class="sd">        :param conn: the connection to check</span>
@@ -598,7 +603,7 @@
 
 <div class="viewcode-block" id="EnvDynamicsUtil.exploit_tried_flags"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.exploit_tried_flags">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">exploit_tried_flags</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span> <span class="n">m_obs</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for updating exploit-tried flags</span>
 
 <span class="sd">        :param a: the action</span>
@@ -653,7 +658,7 @@
 
 <div class="viewcode-block" id="EnvDynamicsUtil.ssh_backdoor_tried_flags"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.ssh_backdoor_tried_flags">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">ssh_backdoor_tried_flags</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span> <span class="n">m_obs</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for updating install-backdoor flag</span>
 
 <span class="sd">        :param a: the action</span>
@@ -666,7 +671,7 @@
 
 <div class="viewcode-block" id="EnvDynamicsUtil.install_tools_tried"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.install_tools_tried">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">install_tools_tried</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span> <span class="n">m_obs</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for updating install-tools flag</span>
 
 <span class="sd">        :param a: the action</span>
@@ -680,7 +685,7 @@
 <div class="viewcode-block" id="EnvDynamicsUtil.cache_attacker_action"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.cache_attacker_action">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">cache_attacker_action</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for caching an attacker action</span>
 
 <span class="sd">        :param a: the attacker action to cache</span>
@@ -693,7 +698,7 @@
 <div class="viewcode-block" id="EnvDynamicsUtil.cache_defender_action"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.cache_defender_action">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">cache_defender_action</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">EmulationDefenderAction</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for caching a defender action</span>
 
 <span class="sd">        :param a: the defender action to cache</span>
@@ -705,7 +710,7 @@
 
 <div class="viewcode-block" id="EnvDynamicsUtil.logged_in_ips_str"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.logged_in_ips_str">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">logged_in_ips_str</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function to getting a string-id of the attacker state (Q) of logged in machines</span>
 
 <span class="sd">        :param emulation_env_config: the environment config</span>
@@ -724,7 +729,7 @@
 
 <div class="viewcode-block" id="EnvDynamicsUtil.exploit_get_vuln_name"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.exploit_get_vuln_name">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">exploit_get_vuln_name</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utiltiy function to get the vulnerability name of a particular exploit action</span>
 
 <span class="sd">        :param a: the action</span>
@@ -761,7 +766,7 @@
 
 <div class="viewcode-block" id="EnvDynamicsUtil.exploit_get_vuln_cvss"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.exploit_get_vuln_cvss">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">exploit_get_vuln_cvss</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for getting the CVSS of an exploit action</span>
 
 <span class="sd">        :param a: the action</span>
@@ -773,7 +778,7 @@
 
 <div class="viewcode-block" id="EnvDynamicsUtil.exploit_get_service_name"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.exploit_get_service_name">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">exploit_get_service_name</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function to get the name of the exploited service of a particular exploit action</span>
 
 <span class="sd">        :param a: the action</span>
@@ -811,7 +816,7 @@
 <div class="viewcode-block" id="EnvDynamicsUtil.merge_duplicate_machines"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.env_dynamics_util.EnvDynamicsUtil.merge_duplicate_machines">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">merge_duplicate_machines</span><span class="p">(</span><span class="n">machines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerMachineObservationState</span><span class="p">],</span>
                                  <span class="n">action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerMachineObservationState</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for merging machines that are duplicates</span>
 
 <span class="sd">        :param machines: list of machines (possibly with duplicates)</span>
@@ -838,7 +843,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

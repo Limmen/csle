@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.traffic_manager.traffic_manager</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.traffic_manager.traffic_manager</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -78,6 +81,7 @@
 <span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
 <span class="kn">import</span> <span class="nn">grpc</span>
 <span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">netifaces</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">csle_collector.traffic_manager.traffic_manager_pb2_grpc</span>
 <span class="kn">import</span> <span class="nn">csle_collector.traffic_manager.traffic_manager_pb2</span>
@@ -85,36 +89,34 @@
 
 
 <div class="viewcode-block" id="TrafficManagerServicer"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">TrafficManagerServicer</span><span class="p">(</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2_grpc</span><span class="o">.</span><span class="n">TrafficManagerServicer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    gRPC server for managing a traffic generator. Allows to start/stop the script and also to query the</span>
 <span class="sd">    state of the script.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">TRAFFIC_MANAGER_LOG_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
                                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">TRAFFIC_MANAGER_LOG_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">netifaces</span><span class="o">.</span><span class="n">ifaddresses</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">INTERFACES</span><span class="o">.</span><span class="n">ETH0</span><span class="p">)[</span><span class="n">netifaces</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">INTERFACES</span><span class="o">.</span><span class="n">ADDR</span><span class="p">]</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting up TrafficManager hostname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_traffic_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to get the status of the traffic generator script</span>
 
 <span class="sd">        :return: status of the traffic generator</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_GENERATOR</span><span class="o">.</span><span class="n">CHECK_IF_TRAFFIC_GENERATOR_IS_RUNNING</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
         <span class="n">running</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_GENERATOR</span><span class="o">.</span><span class="n">TRAFFIC_GENERATOR_FILE_NAME</span> <span class="ow">in</span> <span class="n">output</span>
         <span class="k">return</span> <span class="n">running</span>
 
     <span class="k">def</span> <span class="nf">_read_traffic_script</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the traffic generator script file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -125,7 +127,7 @@
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not read the script file: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_traffic_script</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commands</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to create the traffic script based on the list of commands</span>
 
 <span class="sd">        :param commands: the list of commands</span>
@@ -145,21 +147,18 @@
 
         <span class="c1"># Remove old file if exists</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_GENERATOR</span><span class="o">.</span><span class="n">REMOVE_OLD_TRAFFIC_GENERATOR_FILE</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removed old file, stdout: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="s2">, stderr: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># Create file</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_GENERATOR</span><span class="o">.</span><span class="n">CREATE_TRAFFIC_GENERATOR_FILE</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created new file, stdout: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="s2">, stderr: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># Make executable</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_GENERATOR</span><span class="o">.</span><span class="n">MAKE_TRAFFIC_GENERATOR_FILE_EXECUTABLE</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Changed permissions, stdout: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="s2">, stderr: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># Write traffic generation script file</span>
         <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_GENERATOR</span><span class="o">.</span><span class="n">TRAFFIC_GENERATOR_FILE_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -168,7 +167,7 @@
 <div class="viewcode-block" id="TrafficManagerServicer.getTrafficStatus"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.getTrafficStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getTrafficStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">GetTrafficStatusMsg</span><span class="p">,</span>
                          <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the state of the traffic manager</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -183,7 +182,7 @@
 
 <div class="viewcode-block" id="TrafficManagerServicer.stopTraffic"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.stopTraffic">[docs]</a>    <span class="k">def</span> <span class="nf">stopTraffic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">StartTrafficMsg</span><span class="p">,</span>
                     <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the traffic generator</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -198,7 +197,7 @@
 
 <div class="viewcode-block" id="TrafficManagerServicer.startTraffic"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.traffic_manager.TrafficManagerServicer.startTraffic">[docs]</a>    <span class="k">def</span> <span class="nf">startTraffic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">StartTrafficMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the traffic generator</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -220,7 +219,7 @@
 
 <div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.traffic_manager.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50043</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
           <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;traffic_manager.log&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Starts the gRPC server for managing traffic scripts</span>
 
 <span class="sd">    :param port: the port that the server will listen to</span>

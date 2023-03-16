@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.dao.simulation_config.base_env</li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.dao.simulation_config.base_env</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -75,20 +80,20 @@
 
 
 <div class="viewcode-block" id="BaseEnv"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.base_env.BaseEnv">[docs]</a><span class="k">class</span> <span class="nc">BaseEnv</span><span class="p">(</span><span class="n">gym</span><span class="o">.</span><span class="n">Env</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract class representing a csle Environment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="BaseEnv.get_traces"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.base_env.BaseEnv.get_traces">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">SimulationTrace</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the list of simulation traces</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="BaseEnv.reset_traces"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.base_env.BaseEnv.reset_traces">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">reset_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resets the list of traces</span>
 
 <span class="sd">        :return: None</span>
@@ -97,7 +102,7 @@
 
 <div class="viewcode-block" id="BaseEnv.manual_play"><a class="viewcode-back" href="../../../../csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.base_env.BaseEnv.manual_play">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">manual_play</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        An interactive loop for manual play of the environment</span>
 
 <span class="sd">        :return: None</span>
@@ -112,7 +117,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

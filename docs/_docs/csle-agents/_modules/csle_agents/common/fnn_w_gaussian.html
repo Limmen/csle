@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-agents
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-agents
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -54,9 +57,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_agents.common.fnn_w_gaussian</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_agents.common.fnn_w_gaussian</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -71,7 +74,7 @@
 
 
 <div class="viewcode-block" id="FNNwithGaussian"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.fnn_w_gaussian.FNNwithGaussian">[docs]</a><span class="k">class</span> <span class="nc">FNNwithGaussian</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Implements a FNN with Gaussian output and parameterizable number of layers, dimensions, and hidden activations.</span>
 
 <span class="sd">    Sub-classing the torch.nn.Module to be able to use high-level API for creating the custom network</span>
@@ -79,7 +82,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_hidden_layers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
                  <span class="n">hidden_activation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ReLU&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Builds the model</span>
 
 <span class="sd">        :param input_dim: the input dimension</span>
@@ -118,7 +121,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sigma_output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
 
 <div class="viewcode-block" id="FNNwithGaussian.get_hidden_activation"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.fnn_w_gaussian.FNNwithGaussian.get_hidden_activation">[docs]</a>    <span class="k">def</span> <span class="nf">get_hidden_activation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interprets the hidden activation</span>
 
 <span class="sd">        :return: the hidden activation function</span>
@@ -141,7 +144,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Activation type: </span><span class="si">{}</span><span class="s2"> not recognized&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_activation</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="FNNwithGaussian.forward"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.fnn_w_gaussian.FNNwithGaussian.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Forward propagation</span>
 
 <span class="sd">        :param x: input tensor</span>
@@ -157,7 +160,7 @@
 
 
 <div class="viewcode-block" id="test"><a class="viewcode-back" href="../../../csle_agents.common.html#csle_agents.common.fnn_w_gaussian.test">[docs]</a><span class="k">def</span> <span class="nf">test</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A basic test-case to verify that the model can fit some randomly generated data</span>
 
 <span class="sd">    :return: None</span>

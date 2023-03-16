@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_defender.emulation package &mdash; csle-defender 0.0.1 documentation</title>
@@ -12,9 +12,8 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -26,11 +25,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> csle-defender
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            csle-defender
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -39,9 +42,29 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_defender.emulation package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_defender.emulation.defender_stopping_middleware">csle_defender.emulation.defender_stopping_middleware module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_defender.emulation.defender_update_state_middleware">csle_defender.emulation.defender_update_state_middleware module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_defender.emulation.emulated_defender">csle_defender.emulation.emulated_defender module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_defender.emulation.defender_stopping_middleware">csle_defender.emulation.defender_stopping_middleware module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware"><code class="docutils literal notranslate"><span class="pre">DefenderStoppingMiddleware</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.continue_monitor"><code class="docutils literal notranslate"><span class="pre">DefenderStoppingMiddleware.continue_monitor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.stop_monitor"><code class="docutils literal notranslate"><span class="pre">DefenderStoppingMiddleware.stop_monitor()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_defender.emulation.defender_update_state_middleware">csle_defender.emulation.defender_update_state_middleware module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_defender.emulation.defender_update_state_middleware.DefenderUpdateStateMiddleware"><code class="docutils literal notranslate"><span class="pre">DefenderUpdateStateMiddleware</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_defender.emulation.defender_update_state_middleware.DefenderUpdateStateMiddleware.update_state"><code class="docutils literal notranslate"><span class="pre">DefenderUpdateStateMiddleware.update_state()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_defender.emulation.emulated_defender">csle_defender.emulation.emulated_defender module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_defender.emulation.emulated_defender.EmulatedDefender"><code class="docutils literal notranslate"><span class="pre">EmulatedDefender</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_defender.emulation.emulated_defender.EmulatedDefender.defender_stopping_action"><code class="docutils literal notranslate"><span class="pre">EmulatedDefender.defender_stopping_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_defender.emulation.emulated_defender.EmulatedDefender.defender_transition"><code class="docutils literal notranslate"><span class="pre">EmulatedDefender.defender_transition()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_defender.emulation">Module contents</a></li>
 </ul>
 </li>
@@ -60,8 +83,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_defender.emulation package</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">csle_defender.emulation package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_defender.emulation.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -72,12 +95,12 @@
            <div itemprop="articleBody">
              
   <section id="csle-defender-emulation-package">
-<h1>csle_defender.emulation package<a class="headerlink" href="#csle-defender-emulation-package" title="Permalink to this headline"></a></h1>
+<h1>csle_defender.emulation package<a class="headerlink" href="#csle-defender-emulation-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_defender.emulation.defender_stopping_middleware">
-<span id="csle-defender-emulation-defender-stopping-middleware-module"></span><h2>csle_defender.emulation.defender_stopping_middleware module<a class="headerlink" href="#module-csle_defender.emulation.defender_stopping_middleware" title="Permalink to this headline"></a></h2>
+<span id="csle-defender-emulation-defender-stopping-middleware-module"></span><h2>csle_defender.emulation.defender_stopping_middleware module<a class="headerlink" href="#module-csle_defender.emulation.defender_stopping_middleware" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_defender.emulation.defender_stopping_middleware.</span></span><span class="sig-name descname"><span class="pre">DefenderStoppingMiddleware</span></span><a class="reference internal" href="_modules/csle_defender/emulation/defender_stopping_middleware.html#DefenderStoppingMiddleware"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware" title="Permalink to this definition"></a></dt>
@@ -85,10 +108,10 @@
 <p>Class that implements optimal stopping actions for the defender.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.continue_monitor">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">continue_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_defender/emulation/defender_stopping_middleware.html#DefenderStoppingMiddleware.continue_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.continue_monitor" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">continue_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationDefenderAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_defender/emulation/defender_stopping_middleware.html#DefenderStoppingMiddleware.continue_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.continue_monitor" title="Permalink to this definition"></a></dt>
 <dd><p>Performs a “continue” action for the defender (continues monitoring)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>defender_action</strong> – the action to take</p></li>
@@ -96,7 +119,7 @@
 <li><p><strong>emulation_env_config</strong> – the emulation environment configuration</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>s_prime, reward, done</p>
 </dd>
 </dl>
@@ -104,10 +127,10 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.stop_monitor">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_defender/emulation/defender_stopping_middleware.html#DefenderStoppingMiddleware.stop_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.stop_monitor" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationDefenderAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvConfig</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_defender/emulation/defender_stopping_middleware.html#DefenderStoppingMiddleware.stop_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.defender_stopping_middleware.DefenderStoppingMiddleware.stop_monitor" title="Permalink to this definition"></a></dt>
 <dd><p>Performs a stopping action for the defender (reports an intrusion)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>defender_action</strong> – the action to take</p></li>
@@ -115,7 +138,7 @@
 <li><p><strong>emulation_env_config</strong> – the emulation environment configuration</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>s_prime</p>
 </dd>
 </dl>
@@ -125,7 +148,7 @@
 
 </section>
 <section id="module-csle_defender.emulation.defender_update_state_middleware">
-<span id="csle-defender-emulation-defender-update-state-middleware-module"></span><h2>csle_defender.emulation.defender_update_state_middleware module<a class="headerlink" href="#module-csle_defender.emulation.defender_update_state_middleware" title="Permalink to this headline"></a></h2>
+<span id="csle-defender-emulation-defender-update-state-middleware-module"></span><h2>csle_defender.emulation.defender_update_state_middleware module<a class="headerlink" href="#module-csle_defender.emulation.defender_update_state_middleware" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_defender.emulation.defender_update_state_middleware.DefenderUpdateStateMiddleware">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_defender.emulation.defender_update_state_middleware.</span></span><span class="sig-name descname"><span class="pre">DefenderUpdateStateMiddleware</span></span><a class="reference internal" href="_modules/csle_defender/emulation/defender_update_state_middleware.html#DefenderUpdateStateMiddleware"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.defender_update_state_middleware.DefenderUpdateStateMiddleware" title="Permalink to this definition"></a></dt>
@@ -133,13 +156,13 @@
 <p>Class that implements update state actions for the defender.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_defender.emulation.defender_update_state_middleware.DefenderUpdateStateMiddleware.update_state">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_defender/emulation/defender_update_state_middleware.html#DefenderUpdateStateMiddleware.update_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.defender_update_state_middleware.DefenderUpdateStateMiddleware.update_state" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_defender/emulation/defender_update_state_middleware.html#DefenderUpdateStateMiddleware.update_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.defender_update_state_middleware.DefenderUpdateStateMiddleware.update_state" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the defender’s state by measuring the emulation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>s</strong> – the current state</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>s_prime</p>
 </dd>
 </dl>
@@ -149,7 +172,7 @@
 
 </section>
 <section id="module-csle_defender.emulation.emulated_defender">
-<span id="csle-defender-emulation-emulated-defender-module"></span><h2>csle_defender.emulation.emulated_defender module<a class="headerlink" href="#module-csle_defender.emulation.emulated_defender" title="Permalink to this headline"></a></h2>
+<span id="csle-defender-emulation-emulated-defender-module"></span><h2>csle_defender.emulation.emulated_defender module<a class="headerlink" href="#module-csle_defender.emulation.emulated_defender" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_defender.emulation.emulated_defender.EmulatedDefender">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_defender.emulation.emulated_defender.</span></span><span class="sig-name descname"><span class="pre">EmulatedDefender</span></span><a class="reference internal" href="_modules/csle_defender/emulation/emulated_defender.html#EmulatedDefender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.emulated_defender.EmulatedDefender" title="Permalink to this definition"></a></dt>
@@ -157,10 +180,10 @@
 <p>Represents an emulated defender agent</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_defender.emulation.emulated_defender.EmulatedDefender.defender_stopping_action">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">defender_stopping_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_defender/emulation/emulated_defender.html#EmulatedDefender.defender_stopping_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.emulated_defender.EmulatedDefender.defender_stopping_action" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">defender_stopping_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationDefenderAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_defender/emulation/emulated_defender.html#EmulatedDefender.defender_stopping_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.emulated_defender.EmulatedDefender.defender_stopping_action" title="Permalink to this definition"></a></dt>
 <dd><p>Implements transition of a stopping action of the defender</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>defender_action</strong> – the defender’s action</p></li>
@@ -168,7 +191,7 @@
 <li><p><strong>emulation_env_config</strong> – the emulation environment configuration</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>s’</p>
 </dd>
 </dl>
@@ -176,17 +199,17 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_defender.emulation.emulated_defender.EmulatedDefender.defender_transition">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">defender_transition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.defender.emulation_defender_action.EmulationDefenderAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">csle_common.dao.emulation_action.attacker.emulation_attacker_action.EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_defender/emulation/emulated_defender.html#EmulatedDefender.defender_transition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.emulated_defender.EmulatedDefender.defender_transition" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">defender_transition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationEnvState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defender_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationDefenderAction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attacker_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EmulationAttackerAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationEnvState</span></span></span><a class="reference internal" href="_modules/csle_defender/emulation/emulated_defender.html#EmulatedDefender.defender_transition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_defender.emulation.emulated_defender.EmulatedDefender.defender_transition" title="Permalink to this definition"></a></dt>
 <dd><p>Implements the transition operator T: (s,a) -&gt; s’</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>s</strong> – the current state</p></li>
 <li><p><strong>defender_action</strong> – the defender action</p></li>
 <li><p><strong>attacker_action</strong> – the previous action of the attacker</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>s’</p>
 </dd>
 </dl>
@@ -196,7 +219,7 @@
 
 </section>
 <section id="module-csle_defender.emulation">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_defender.emulation" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_defender.emulation" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

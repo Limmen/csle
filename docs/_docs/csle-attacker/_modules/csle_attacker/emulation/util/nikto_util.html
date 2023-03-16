@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> csle-attacker
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            csle-attacker
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -51,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_attacker.emulation.util.nikto_util</li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_attacker.emulation.util.nikto_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -80,13 +83,13 @@
 
 
 <div class="viewcode-block" id="NiktoUtil"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nikto_util.NiktoUtil">[docs]</a><span class="k">class</span> <span class="nc">NiktoUtil</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class containing utility functions for the nikto-related functionality to the emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="NiktoUtil.parse_nikto_scan"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nikto_util.NiktoUtil.parse_nikto_scan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_nikto_scan</span><span class="p">(</span><span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parses an XML file containing the result of an nikt scan</span>
 
 <span class="sd">        :param file_name: name of the file to parse</span>
@@ -105,7 +108,7 @@
 <div class="viewcode-block" id="NiktoUtil.nikto_scan_action_helper"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nikto_util.NiktoUtil.nikto_scan_action_helper">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">nikto_scan_action_helper</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for executing a NIKTO web scan action on the emulation. Implements caching.</span>
 
 <span class="sd">        :param s: the current env state</span>
@@ -139,7 +142,7 @@
 <div class="viewcode-block" id="NiktoUtil.merge_nikto_scan_result_with_state"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nikto_util.NiktoUtil.merge_nikto_scan_result_with_state">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">merge_nikto_scan_result_with_state</span><span class="p">(</span><span class="n">scan_result</span><span class="p">:</span> <span class="n">NiktoScanResult</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span>
                                            <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Merges a Nikto scan result with an existing observation state</span>
 
 <span class="sd">        :param scan_result: the scan result</span>
@@ -166,7 +169,7 @@
 
 <div class="viewcode-block" id="NiktoUtil.parse_nikto_scan_xml"><a class="viewcode-back" href="../../../../csle_attacker.emulation.util.html#csle_attacker.emulation.util.nikto_util.NiktoUtil.parse_nikto_scan_xml">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_nikto_scan_xml</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NiktoScanResult</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parses an XML Tree with Nikto Scan Result into a Nikto Scan DTO</span>
 
 <span class="sd">        :param xml_data: the xml tree of Nikto Scan Result to parse</span>
@@ -184,7 +187,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_nikto_scandetails</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NiktoScanResult</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parses a host-element in the XML tree</span>
 
 <span class="sd">        :param xml_data: the host element</span>
@@ -209,7 +212,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_parse_nikto_item</span><span class="p">(</span><span class="n">xml_data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NiktoVuln</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parses a item in the XML tree of a Nikto scan</span>
 
 <span class="sd">        :param xml_data: the item element</span>

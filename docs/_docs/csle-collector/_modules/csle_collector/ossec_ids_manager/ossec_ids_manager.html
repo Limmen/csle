@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.ossec_ids_manager.ossec_ids_manager</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.ossec_ids_manager.ossec_ids_manager</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -77,6 +80,7 @@
 <span class="kn">import</span> <span class="nn">grpc</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">netifaces</span>
 <span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
 <span class="kn">from</span> <span class="nn">confluent_kafka</span> <span class="kn">import</span> <span class="n">Producer</span>
 <span class="kn">import</span> <span class="nn">csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc</span>
@@ -86,13 +90,13 @@
 
 
 <div class="viewcode-block" id="OSSecIdsMonitorThread"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSecIdsMonitorThread">[docs]</a><span class="k">class</span> <span class="nc">OSSecIdsMonitorThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Thread that collects the OSSEC IDS statistics and pushes it to Kafka periodically</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">log_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                  <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the thread</span>
 
 <span class="sd">        :param kafka_ip: IP of the Kafka server to push to</span>
@@ -114,10 +118,10 @@
                      <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">CLIENT_ID_PROPERTY</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OSSEC IDSMonitor thread started successfully&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;OSSEC IDSMonitor thread started successfully&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="OSSecIdsMonitorThread.run"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSecIdsMonitorThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Main loop of the thread. Parses the IDS log and pushes it to Kafka periodically</span>
 
 <span class="sd">        :return: None</span>
@@ -132,18 +136,18 @@
 
 
 <div class="viewcode-block" id="OSSECIdsManagerServicer"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">OSSECIdsManagerServicer</span><span class="p">(</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2_grpc</span><span class="o">.</span><span class="n">OSSECIdsManagerServicer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    gRPC server for collecting OSSEC IDS statistics.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">OSSEC_IDS_MANAGER_LOG_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
                                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">OSSEC_IDS_MANAGER_LOG_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">netifaces</span><span class="o">.</span><span class="n">ifaddresses</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">INTERFACES</span><span class="o">.</span><span class="n">ETH0</span><span class="p">)[</span><span class="n">netifaces</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">INTERFACES</span><span class="o">.</span><span class="n">ADDR</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">PORT</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">CLIENT_ID_PROPERTY</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">}</span>
@@ -151,22 +155,23 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting the OSSEC IDSManager hostname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_is_ossec_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to check if OSSEC is running</span>
 
 <span class="sd">        :return: status and list of topics</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">CHECK_IF_OSSEC_IS_RUNNING_CMD</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">status_output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking if OSSEC IDS is running&quot;</span><span class="p">)</span>
+        <span class="n">status_output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">CHECK_IF_OSSEC_IS_RUNNING_CMD</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span>
+                                       <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Status output: </span><span class="si">{</span><span class="n">status_output</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">running</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_RUNNING_SEARCH</span> <span class="ow">in</span> <span class="n">status_output</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running status: </span><span class="si">{</span><span class="n">running</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">running</span>
 
 <div class="viewcode-block" id="OSSECIdsManagerServicer.getOSSECIdsAlerts"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer.getOSSECIdsAlerts">[docs]</a>    <span class="k">def</span> <span class="nf">getOSSECIdsAlerts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">GetOSSECIdsAlertsMsg</span><span class="p">,</span>
                           <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsLogDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the statistics of the OSSEC IDS log from a given timestamp</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -181,7 +186,7 @@
                              <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">StartOSSECIdsMonitorMsg</span><span class="p">,</span>
                              <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the OSSEC IDS monitor thread</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -198,7 +203,7 @@
                                                         <span class="n">log_file_path</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">log_file_path</span><span class="p">,</span>
                                                         <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Started the OSSEC IDSMonitor thread&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Started the OSSEC IDSMonitor thread&quot;</span><span class="p">)</span>
         <span class="n">ossec_ids_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_ossec_running</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">(</span>
             <span class="n">monitor_running</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ossec_ids_running</span><span class="o">=</span><span class="n">ossec_ids_running</span><span class="p">)</span></div>
@@ -207,7 +212,7 @@
                             <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">StartOSSECIdsMonitorMsg</span><span class="p">,</span>
                             <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the OSSEC IDS monitor thread if it is running</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -223,55 +228,51 @@
 <div class="viewcode-block" id="OSSECIdsManagerServicer.startOSSECIds"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer.startOSSECIds">[docs]</a>    <span class="k">def</span> <span class="nf">startOSSECIds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">StartOSSECIdsMsg</span><span class="p">,</span>
                       <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the OSSEC IDS</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: a DTO with the status of the IDS and its monitor thread</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting the OSSEC IDS&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting the OSSEC IDS&quot;</span><span class="p">)</span>
         <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span><span class="o">.</span><span class="n">running</span>
         <span class="n">ossec_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_ossec_running</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">ossec_running</span><span class="p">:</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">STOP_OSSEC_IDS</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">STOP_OSSEC_IDS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopped the OSSEC IDS, stdout: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="s2">, stderr: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ossec_running</span><span class="p">:</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">START_OSSEC_IDS</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Started the OSSEC IDS&quot;</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">START_OSSEC_IDS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Started the OSSEC IDS, stdout: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="s2">, stderr: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Started the OSSEC IDS&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">(</span>
             <span class="n">monitor_running</span><span class="o">=</span><span class="n">monitor_running</span><span class="p">,</span> <span class="n">ossec_ids_running</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OSSECIdsManagerServicer.stopOSSECIds"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer.stopOSSECIds">[docs]</a>    <span class="k">def</span> <span class="nf">stopOSSECIds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">StartOSSECIdsMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the OSSEC IDS</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: a DTO with the status of the IDS and its monitor thread</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopping the OSSECIDS&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping the OSSECIDS&quot;</span><span class="p">)</span>
         <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_monitor_thread</span><span class="o">.</span><span class="n">running</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">STOP_OSSEC_IDS</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopped the OSSECIDS&quot;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">STOP_OSSEC_IDS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopped the OSSECIDS, stdout: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="s2">, stderr: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">(</span>
             <span class="n">monitor_running</span><span class="o">=</span><span class="n">monitor_running</span><span class="p">,</span> <span class="n">ossec_ids_running</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OSSECIdsManagerServicer.getOSSECIdsMonitorStatus"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager.OSSECIdsManagerServicer.getOSSECIdsMonitorStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getOSSECIdsMonitorStatus</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">GetOSSECIdsMonitorStatusMsg</span><span class="p">,</span>
             <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the status of the OSSEC IDS Monitor thread</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -288,7 +289,7 @@
 
 <div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../csle_collector.ossec_ids_manager.html#csle_collector.ossec_ids_manager.ossec_ids_manager.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50047</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
           <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ossec_ids_manager.log&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Starts the gRPC server for managing clients</span>
 
 <span class="sd">    :param port: the port that the server will listen to</span>

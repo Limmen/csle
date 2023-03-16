@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-attacker
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-attacker
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -51,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_attacker.emulation.emulated_attacker</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_attacker.emulation.emulated_attacker</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -75,13 +78,13 @@
 
 
 <div class="viewcode-block" id="EmulatedAttacker"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.emulated_attacker.EmulatedAttacker">[docs]</a><span class="k">class</span> <span class="nc">EmulatedAttacker</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents an emulated attacker agent</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EmulatedAttacker.attacker_transition"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_transition">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">attacker_transition</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">attacker_action</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implements the transition operator T: (s,a) -&gt; s&#39;</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -108,7 +111,7 @@
 <div class="viewcode-block" id="EmulatedAttacker.attacker_recon_action"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_recon_action">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">attacker_recon_action</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implements the transition of a reconnaissance action</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -164,7 +167,7 @@
 
 <div class="viewcode-block" id="EmulatedAttacker.attacker_exploit_action"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_exploit_action">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">attacker_exploit_action</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implements transition of an exploit action</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -219,7 +222,7 @@
 
 <div class="viewcode-block" id="EmulatedAttacker.attacker_post_exploit_action"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_post_exploit_action">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">attacker_post_exploit_action</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implements the transition of a post-exploit action</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -239,7 +242,7 @@
 
 <div class="viewcode-block" id="EmulatedAttacker.attacker_stopping_action"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.emulated_attacker.EmulatedAttacker.attacker_stopping_action">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">attacker_stopping_action</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implements transition of a stopping action of the attacker</span>
 
 <span class="sd">        :param s: the current state</span>

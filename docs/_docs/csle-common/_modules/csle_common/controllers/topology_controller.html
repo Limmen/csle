@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.controllers.topology_controller</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.controllers.topology_controller</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,46 +73,50 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.controllers.topology_controller</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.util.emulation_util</span> <span class="kn">import</span> <span class="n">EmulationUtil</span>
-<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
 
 
 <div class="viewcode-block" id="TopologyController"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.topology_controller.TopologyController">[docs]</a><span class="k">class</span> <span class="nc">TopologyController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class managing topologies in the emulation environments</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TopologyController.create_topology"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.topology_controller.TopologyController.create_topology">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_topology</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">create_topology</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                        <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for connecting to a running emulation and creating the configuration</span>
 
 <span class="sd">        :param emulation_env_config: the emulation configuration</span>
+<span class="sd">        :param physical_server_ip: ip of the physical server</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating topology&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Creating topology&quot;</span><span class="p">)</span>
         <span class="n">topology_configs</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">topology_config</span><span class="o">.</span><span class="n">node_configs</span>
         <span class="n">topology_configs</span> <span class="o">=</span> <span class="n">topology_configs</span> <span class="o">+</span> <span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">firewall_config</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">topology_configs</span> <span class="o">=</span> <span class="n">topology_configs</span> <span class="o">+</span> <span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">firewall_config</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">topology_configs</span><span class="p">:</span>
-            <span class="n">ips</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()</span>
-            <span class="n">ip</span> <span class="o">=</span> <span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Connecting to node:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ip</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">node_fw_config</span> <span class="ow">in</span> <span class="n">topology_configs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_server_ip</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">ip</span> <span class="o">=</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connecting to node:</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">connect_admin</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">routes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">routes</span><span class="p">:</span>
                 <span class="n">target</span><span class="p">,</span> <span class="n">gw</span> <span class="o">=</span> <span class="n">route</span>
                 <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SUDO_ADD_ROUTE</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2"> gw </span><span class="si">{</span><span class="n">gw</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">),</span>
                                               <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">default_network_fw_config</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">ips_gw_default_policy_networks</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">default_network_fw_config</span> <span class="ow">in</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">ips_gw_default_policy_networks</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">default_network_fw_config</span><span class="o">.</span><span class="n">default_gw</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SUDO_ADD_ROUTE</span><span class="si">}</span><span class="s2"> &quot;</span> \
-                          <span class="sa">f</span><span class="s2">&quot;-net </span><span class="si">{</span><span class="n">default_network_fw_config</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">subnet_mask</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/24&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span> \
+                          <span class="sa">f</span><span class="s2">&quot;-net </span><span class="si">{</span><span class="n">default_network_fw_config</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">subnet_mask</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/24&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span> \
                           <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">NETMASK</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">default_network_fw_config</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">bitmask</span><span class="si">}</span><span class="s2"> &quot;</span> \
                           <span class="sa">f</span><span class="s2">&quot;gw </span><span class="si">{</span><span class="n">default_network_fw_config</span><span class="o">.</span><span class="n">default_gw</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">),</span>
@@ -118,8 +127,9 @@
                                           <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
             <span class="c1"># Setup /etc/hosts</span>
-            <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">ECHO</span><span class="si">}</span><span class="s2"> &#39;&quot;</span> <span class="o">+</span> <span class="n">ip</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> \
-                  <span class="n">node</span><span class="o">.</span><span class="n">hostname</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;&#39; | </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">ETC_HOSTS</span><span class="o">.</span><span class="n">APPEND_TO_ETC_HOSTS</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">internal_ip</span> <span class="o">=</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">ECHO</span><span class="si">}</span><span class="s2"> &#39;&quot;</span> <span class="o">+</span> <span class="n">internal_ip</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> \
+                  <span class="n">node_fw_config</span><span class="o">.</span><span class="n">hostname</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;&#39; | </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">ETC_HOSTS</span><span class="o">.</span><span class="n">APPEND_TO_ETC_HOSTS</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">ECHO</span><span class="si">}</span><span class="s2"> &quot;</span> \
                   <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">ETC_HOSTS</span><span class="o">.</span><span class="n">DEFAULT_HOST_LINE_1</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">ETC_HOSTS</span><span class="o">.</span><span class="n">APPEND_TO_ETC_HOSTS</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -140,14 +150,14 @@
                   <span class="sa">f</span><span class="s2">&quot;| </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">ETC_HOSTS</span><span class="o">.</span><span class="n">APPEND_TO_ETC_HOSTS</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">node2</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">topology_config</span><span class="o">.</span><span class="n">node_configs</span><span class="p">:</span>
-                <span class="n">ips2</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()</span>
+                <span class="n">ips2</span> <span class="o">=</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">ip</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ips2</span><span class="p">:</span>
                     <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">ECHO</span><span class="si">}</span><span class="s2"> &#39;&quot;</span> <span class="o">+</span> <span class="n">ips2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">node2</span><span class="o">.</span><span class="n">hostname</span> \
                           <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;&#39; | </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">ETC_HOSTS</span><span class="o">.</span><span class="n">APPEND_TO_ETC_HOSTS</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span>
 
             <span class="c1"># Setup iptables and arptables</span>
-            <span class="k">for</span> <span class="n">output_node</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">output_accept</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">output_node</span> <span class="ow">in</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">output_accept</span><span class="p">:</span>
                 <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">IPTABLES_APPEND_OUTPUT</span><span class="si">}</span><span class="s2"> -d </span><span class="si">{</span><span class="n">output_node</span><span class="si">}</span><span class="s2"> -j </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">FIREWALL</span><span class="o">.</span><span class="n">ACCEPT</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">),</span>
                                               <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -155,7 +165,7 @@
                 <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">),</span>
                                               <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">input_node</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">input_accept</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">input_node</span> <span class="ow">in</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">input_accept</span><span class="p">:</span>
                 <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">IPTABLES_APPEND_INPUT</span><span class="si">}</span><span class="s2"> -s </span><span class="si">{</span><span class="n">input_node</span><span class="si">}</span><span class="s2"> -j </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">FIREWALL</span><span class="o">.</span><span class="n">ACCEPT</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">),</span>
                                               <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -163,12 +173,12 @@
                 <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">),</span>
                                               <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">forward_node</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">forward_accept</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">forward_node</span> <span class="ow">in</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">forward_accept</span><span class="p">:</span>
                 <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">IPTABLES_APPEND_FORWARD</span><span class="si">}</span><span class="s2"> -d </span><span class="si">{</span><span class="n">forward_node</span><span class="si">}</span><span class="s2"> -j </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">FIREWALL</span><span class="o">.</span><span class="n">ACCEPT</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">),</span>
                                               <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">output_node</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">output_drop</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">output_node</span> <span class="ow">in</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">output_drop</span><span class="p">:</span>
                 <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">IPTABLES_APPEND_OUTPUT</span><span class="si">}</span><span class="s2"> -d </span><span class="si">{</span><span class="n">output_node</span><span class="si">}</span><span class="s2"> -j </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">FIREWALL</span><span class="o">.</span><span class="n">DROP</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">),</span>
                                               <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -176,7 +186,7 @@
                 <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">),</span>
                                               <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">input_node</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">input_drop</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">input_node</span> <span class="ow">in</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">input_drop</span><span class="p">:</span>
                 <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">IPTABLES_APPEND_INPUT</span><span class="si">}</span><span class="s2"> -s </span><span class="si">{</span><span class="n">input_node</span><span class="si">}</span><span class="s2"> -j </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">FIREWALL</span><span class="o">.</span><span class="n">DROP</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">),</span>
                                               <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -184,12 +194,12 @@
                 <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">),</span>
                                               <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">forward_node</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">forward_drop</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">forward_node</span> <span class="ow">in</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">forward_drop</span><span class="p">:</span>
                 <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">IPTABLES_APPEND_FORWARD</span><span class="si">}</span><span class="s2"> -d </span><span class="si">{</span><span class="n">forward_node</span><span class="si">}</span><span class="s2"> -j </span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">FIREWALL</span><span class="o">.</span><span class="n">DROP</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">),</span>
                                               <span class="n">wait_for_completion</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">default_network_fw_config</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">ips_gw_default_policy_networks</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">default_network_fw_config</span> <span class="ow">in</span> <span class="n">node_fw_config</span><span class="o">.</span><span class="n">ips_gw_default_policy_networks</span><span class="p">:</span>
                 <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">IPTABLES_APPEND_OUTPUT</span><span class="si">}</span><span class="s2"> -d &quot;</span> \
                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">default_network_fw_config</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">subnet_mask</span><span class="si">}</span><span class="s2"> -j &quot;</span> \
                       <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">default_network_fw_config</span><span class="o">.</span><span class="n">default_output</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -233,7 +243,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

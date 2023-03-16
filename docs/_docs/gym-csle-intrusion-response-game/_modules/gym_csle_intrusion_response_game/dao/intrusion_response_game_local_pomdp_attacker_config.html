@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config &mdash; gym-csle-intrusion-response-game 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gym-csle-intrusion-response-game
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.constants.html">gym_csle_intrusion_response_game.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.dao.html">gym_csle_intrusion_response_game.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.envs.html">gym_csle_intrusion_response_game.envs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.util.html">gym_csle_intrusion_response_game.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym-csle-intrusion-response-game</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_env_input_config</span> <span class="kn">import</span> <span class="n">SimulationEnvInputConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.random_policy</span> <span class="kn">import</span> <span class="n">RandomPolicy</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.multi_threshold_stopping_policy</span> <span class="kn">import</span> <span class="n">MultiThresholdStoppingPolicy</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.ppo_policy</span> <span class="kn">import</span> <span class="n">PPOPolicy</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.training.tabular_policy</span> <span class="kn">import</span> <span class="n">TabularPolicy</span>
+<span class="kn">from</span> <span class="nn">gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config</span> <span class="kn">import</span> <span class="n">LocalIntrusionResponseGameConfig</span>
+
+
+<div class="viewcode-block" id="IntrusionResponseGameLocalPOMDPAttackerConfig"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config.IntrusionResponseGameLocalPOMDPAttackerConfig">[docs]</a><span class="k">class</span> <span class="nc">IntrusionResponseGameLocalPOMDPAttackerConfig</span><span class="p">(</span><span class="n">SimulationEnvInputConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    DTO class representing the configuration of the local POMDP environment of the attacker for a specific node</span>
+<span class="sd">    when facing a static defender strategy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">local_intrusion_response_game_config</span><span class="p">:</span> <span class="n">LocalIntrusionResponseGameConfig</span><span class="p">,</span>
+                 <span class="n">defender_strategy</span><span class="p">:</span> <span class="n">Policy</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the DTO</span>
+
+<span class="sd">        :param env_name: the environment name</span>
+<span class="sd">        :param local_intrusion_response_game_config: The underlying game config</span>
+<span class="sd">        :param defender_strategy: the defender&#39;s strategy</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env_name</span> <span class="o">=</span> <span class="n">env_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span> <span class="o">=</span> <span class="n">local_intrusion_response_game_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defender_strategy</span> <span class="o">=</span> <span class="n">defender_strategy</span>
+
+<div class="viewcode-block" id="IntrusionResponseGameLocalPOMDPAttackerConfig.from_dict"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config.IntrusionResponseGameLocalPOMDPAttackerConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;IntrusionResponseGameLocalPOMDPAttackerConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation to an instance</span>
+
+<span class="sd">        :param d: the dict to convert</span>
+<span class="sd">        :return: the created instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">defender_strategy</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">parse_functions</span> <span class="o">=</span> <span class="p">[</span><span class="n">MultiThresholdStoppingPolicy</span><span class="o">.</span><span class="n">from_dict</span><span class="p">,</span> <span class="n">RandomPolicy</span><span class="o">.</span><span class="n">from_dict</span><span class="p">,</span> <span class="n">PPOPolicy</span><span class="o">.</span><span class="n">from_dict</span><span class="p">,</span>
+                           <span class="n">TabularPolicy</span><span class="o">.</span><span class="n">from_dict</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">parse_fun</span> <span class="ow">in</span> <span class="n">parse_functions</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">defender_strategy</span> <span class="o">=</span> <span class="n">parse_fun</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;defender_strategy&quot;</span><span class="p">])</span>
+                <span class="k">break</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">if</span> <span class="n">defender_strategy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not parse the defender strategy&quot;</span><span class="p">)</span>
+
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">IntrusionResponseGameLocalPOMDPAttackerConfig</span><span class="p">(</span>
+            <span class="n">local_intrusion_response_game_config</span><span class="o">=</span><span class="n">LocalIntrusionResponseGameConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+                <span class="n">d</span><span class="p">[</span><span class="s2">&quot;local_intrusion_response_game_config&quot;</span><span class="p">]),</span>
+            <span class="n">defender_strategy</span><span class="o">=</span><span class="n">defender_strategy</span><span class="p">,</span> <span class="n">env_name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;env_name&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameLocalPOMDPAttackerConfig.to_dict"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.dao.html#gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_attacker_config.IntrusionResponseGameLocalPOMDPAttackerConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: a dict representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;local_intrusion_response_game_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;defender_strategy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">defender_strategy</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;env_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_name</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return:  a string representation of the object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;local_intrusion_response_game_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">local_intrusion_response_game_config</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;defender_strategy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">defender_strategy</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;env_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env_name</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

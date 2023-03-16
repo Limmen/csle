@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> gym-csle-stopping-game
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gym-csle-stopping-game
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -54,9 +57,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>gym_csle_stopping_game.util.stopping_game_util</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gym_csle_stopping_game.util.stopping_game_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -77,13 +80,13 @@
 
 
 <div class="viewcode-block" id="StoppingGameUtil"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil">[docs]</a><span class="k">class</span> <span class="nc">StoppingGameUtil</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class with utility functions for the StoppingGame Environment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="StoppingGameUtil.b1"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.b1">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">b1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the initial belief</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span></div>
@@ -94,21 +97,21 @@
 
 <div class="viewcode-block" id="StoppingGameUtil.defender_actions"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.defender_actions">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">defender_actions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the action space of the defender</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="StoppingGameUtil.attacker_actions"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.attacker_actions">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">attacker_actions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the action space of the attacker</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="StoppingGameUtil.observation_space"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.observation_space">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">observation_space</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the observation space of size n</span>
 
 <span class="sd">        :param n: the maximum observation</span>
@@ -118,7 +121,7 @@
 
 <div class="viewcode-block" id="StoppingGameUtil.reward_tensor"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reward_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">reward_tensor</span><span class="p">(</span><span class="n">R_SLA</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">R_INT</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">R_COST</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">R_ST</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param R_SLA: the R_SLA constant</span>
 <span class="sd">        :param R_INT: the R_INT constant</span>
 <span class="sd">        :param R_COST: the R_COST constant</span>
@@ -149,7 +152,7 @@
 
 <div class="viewcode-block" id="StoppingGameUtil.transition_tensor"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.transition_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">transition_tensor</span><span class="p">(</span><span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param L: the maximum number of stop actions</span>
 <span class="sd">        :return: a |L|x|A1|x|A2||S|^2 tensor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -233,7 +236,7 @@
                                                      <span class="n">joint_action_space</span><span class="p">:</span> <span class="n">JointActionSpaceConfig</span><span class="p">,</span>
                                                      <span class="n">state_space</span><span class="p">:</span> <span class="n">StateSpaceConfig</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns an observation tensor based on measured emulation statistics</span>
 
 <span class="sd">        :param emulation_statistic: the measured statistics</span>
@@ -326,7 +329,7 @@
 
 <div class="viewcode-block" id="StoppingGameUtil.observation_tensor"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.observation_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">observation_tensor</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a |A1|x|A2|x|S|x|O| tensor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">intrusion_dist</span> <span class="o">=</span> <span class="p">[]</span>
@@ -370,7 +373,7 @@
 
 <div class="viewcode-block" id="StoppingGameUtil.sample_next_state"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_next_state">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">sample_next_state</span><span class="p">(</span><span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Samples the next state</span>
 
 <span class="sd">        :param T: the transition operator</span>
@@ -389,7 +392,7 @@
 
 <div class="viewcode-block" id="StoppingGameUtil.sample_initial_state"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_initial_state">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">sample_initial_state</span><span class="p">(</span><span class="n">b1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Samples the initial state</span>
 
 <span class="sd">        :param b1: the initial belief</span>
@@ -400,7 +403,7 @@
 
 <div class="viewcode-block" id="StoppingGameUtil.sample_next_observation"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_next_observation">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">sample_next_observation</span><span class="p">(</span><span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Samples the next observation</span>
 
 <span class="sd">        :param s_prime: the new state</span>
@@ -421,7 +424,7 @@
 <div class="viewcode-block" id="StoppingGameUtil.bayes_filter"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.bayes_filter">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">bayes_filter</span><span class="p">(</span><span class="n">s_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                      <span class="n">config</span><span class="p">:</span> <span class="n">StoppingGameConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A Bayesian filter to compute the belief of player 1</span>
 <span class="sd">        of being in s_prime when observing o after taking action a in belief b given that the opponent follows</span>
 <span class="sd">        strategy pi2</span>
@@ -458,7 +461,7 @@
 
 <div class="viewcode-block" id="StoppingGameUtil.p_o_given_b_a1_a2"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.p_o_given_b_a1_a2">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">p_o_given_b_a1_a2</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">StoppingGameConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes P[o|a,b]</span>
 
 <span class="sd">        :param o: the observation</span>
@@ -478,7 +481,7 @@
 <div class="viewcode-block" id="StoppingGameUtil.next_belief"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.next_belief">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">next_belief</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">StoppingGameConfig</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                     <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the next belief using a Bayesian filter</span>
 
 <span class="sd">        :param o: the latest observation</span>
@@ -503,7 +506,7 @@
 
 <div class="viewcode-block" id="StoppingGameUtil.sample_attacker_action"><a class="viewcode-back" href="../../../gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_attacker_action">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Samples the attacker action</span>
 
 <span class="sd">        :param pi2: the attacker action</span>

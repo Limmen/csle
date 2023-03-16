@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.host_manager.host_manager_pb2_grpc</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.host_manager.host_manager_pb2_grpc</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -77,12 +80,13 @@
 
 <span class="kn">import</span> <span class="nn">csle_collector.host_manager.host_manager_pb2</span> <span class="k">as</span> <span class="nn">host__manager__pb2</span>
 
+
 <div class="viewcode-block" id="HostManagerStub"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub">[docs]</a><span class="k">class</span> <span class="nc">HostManagerStub</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Interface exported by the server</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface exported by the server</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            channel: A grpc.Channel.</span>
@@ -90,49 +94,181 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stopHostMonitor</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
                 <span class="s1">&#39;/HostManager/stopHostMonitor&#39;</span><span class="p">,</span>
                 <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopHostMonitorMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
                 <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startHostMonitor</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
                 <span class="s1">&#39;/HostManager/startHostMonitor&#39;</span><span class="p">,</span>
                 <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartHostMonitorMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
                 <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">getHostMonitorStatus</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
-                <span class="s1">&#39;/HostManager/getHostMonitorStatus&#39;</span><span class="p">,</span>
-                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">GetHostMonitorStatusMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">getHostStatus</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/getHostStatus&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">GetHostStatusMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
                 <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">getHostMetrics</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
                 <span class="s1">&#39;/HostManager/getHostMetrics&#39;</span><span class="p">,</span>
                 <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">GetHostMetricsMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
                 <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopFilebeat</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/stopFilebeat&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopFilebeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startFilebeat</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/startFilebeat&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartFilebeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configFilebeat</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/configFilebeat&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">ConfigFilebeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopPacketbeat</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/stopPacketbeat&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopPacketbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startPacketbeat</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/startPacketbeat&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartPacketbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configPacketbeat</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/configPacketbeat&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">ConfigPacketbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopMetricbeat</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/stopMetricbeat&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopMetricbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startMetricbeat</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/startMetricbeat&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartMetricbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configMetricbeat</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/configMetricbeat&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">ConfigMetricbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopHeartbeat</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/stopHeartbeat&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopHeartbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startHeartbeat</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/startHeartbeat&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartHeartbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configHeartbeat</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/HostManager/configHeartbeat&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">ConfigHeartbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
                 <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="HostManagerServicer"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">HostManagerServicer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Interface exported by the server</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface exported by the server</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="HostManagerServicer.stopHostMonitor"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.stopHostMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">stopHostMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HostManagerServicer.startHostMonitor"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.startHostMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">startHostMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="HostManagerServicer.getHostMonitorStatus"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.getHostMonitorStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getHostMonitorStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="HostManagerServicer.getHostStatus"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.getHostStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getHostStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HostManagerServicer.getHostMetrics"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.getHostMetrics">[docs]</a>    <span class="k">def</span> <span class="nf">getHostMetrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerServicer.stopFilebeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.stopFilebeat">[docs]</a>    <span class="k">def</span> <span class="nf">stopFilebeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerServicer.startFilebeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.startFilebeat">[docs]</a>    <span class="k">def</span> <span class="nf">startFilebeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerServicer.configFilebeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.configFilebeat">[docs]</a>    <span class="k">def</span> <span class="nf">configFilebeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerServicer.stopPacketbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.stopPacketbeat">[docs]</a>    <span class="k">def</span> <span class="nf">stopPacketbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerServicer.startPacketbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.startPacketbeat">[docs]</a>    <span class="k">def</span> <span class="nf">startPacketbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerServicer.configPacketbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.configPacketbeat">[docs]</a>    <span class="k">def</span> <span class="nf">configPacketbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerServicer.stopMetricbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.stopMetricbeat">[docs]</a>    <span class="k">def</span> <span class="nf">stopMetricbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerServicer.startMetricbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.startMetricbeat">[docs]</a>    <span class="k">def</span> <span class="nf">startMetricbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerServicer.configMetricbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.configMetricbeat">[docs]</a>    <span class="k">def</span> <span class="nf">configMetricbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerServicer.stopHeartbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.stopHeartbeat">[docs]</a>    <span class="k">def</span> <span class="nf">stopHeartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerServicer.startHeartbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.startHeartbeat">[docs]</a>    <span class="k">def</span> <span class="nf">startHeartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerServicer.configHeartbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer.configHeartbeat">[docs]</a>    <span class="k">def</span> <span class="nf">configHeartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div></div>
@@ -143,22 +279,82 @@
             <span class="s1">&#39;stopHostMonitor&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
                     <span class="n">servicer</span><span class="o">.</span><span class="n">stopHostMonitor</span><span class="p">,</span>
                     <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopHostMonitorMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="s1">&#39;startHostMonitor&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
                     <span class="n">servicer</span><span class="o">.</span><span class="n">startHostMonitor</span><span class="p">,</span>
                     <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartHostMonitorMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
             <span class="p">),</span>
-            <span class="s1">&#39;getHostMonitorStatus&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
-                    <span class="n">servicer</span><span class="o">.</span><span class="n">getHostMonitorStatus</span><span class="p">,</span>
-                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">GetHostMonitorStatusMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
-                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="s1">&#39;getHostStatus&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">getHostStatus</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">GetHostStatusMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="s1">&#39;getHostMetrics&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
                     <span class="n">servicer</span><span class="o">.</span><span class="n">getHostMetrics</span><span class="p">,</span>
                     <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">GetHostMetricsMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
                     <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;stopFilebeat&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">stopFilebeat</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopFilebeatMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;startFilebeat&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">startFilebeat</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartFilebeatMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;configFilebeat&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">configFilebeat</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">ConfigFilebeatMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;stopPacketbeat&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">stopPacketbeat</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopPacketbeatMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;startPacketbeat&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">startPacketbeat</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartPacketbeatMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;configPacketbeat&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">configPacketbeat</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">ConfigPacketbeatMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;stopMetricbeat&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">stopMetricbeat</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopMetricbeatMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;startMetricbeat&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">startMetricbeat</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartMetricbeatMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;configMetricbeat&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">configMetricbeat</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">ConfigMetricbeatMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;stopHeartbeat&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">stopHeartbeat</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopHeartbeatMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;startHeartbeat&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">startHeartbeat</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartHeartbeatMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;configHeartbeat&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">configHeartbeat</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">ConfigHeartbeatMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
             <span class="p">),</span>
     <span class="p">}</span>
     <span class="n">generic_handler</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">method_handlers_generic_handler</span><span class="p">(</span>
@@ -168,7 +364,7 @@
 
  <span class="c1"># This class is part of an EXPERIMENTAL API.</span>
 <div class="viewcode-block" id="HostManager"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager">[docs]</a><span class="k">class</span> <span class="nc">HostManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Interface exported by the server</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface exported by the server</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="HostManager.stopHostMonitor"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.stopHostMonitor">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -184,7 +380,7 @@
             <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/stopHostMonitor&#39;</span><span class="p">,</span>
             <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopHostMonitorMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
             <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
             <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
 
@@ -201,12 +397,12 @@
             <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/startHostMonitor&#39;</span><span class="p">,</span>
             <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartHostMonitorMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
             <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
             <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="HostManager.getHostMonitorStatus"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.getHostMonitorStatus">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">getHostMonitorStatus</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+<div class="viewcode-block" id="HostManager.getHostStatus"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.getHostStatus">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">getHostStatus</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
             <span class="n">target</span><span class="p">,</span>
             <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
             <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -216,9 +412,9 @@
             <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/getHostMonitorStatus&#39;</span><span class="p">,</span>
-            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">GetHostMonitorStatusMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
-            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/getHostStatus&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">GetHostStatusMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
             <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
             <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
 
@@ -236,6 +432,210 @@
         <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/getHostMetrics&#39;</span><span class="p">,</span>
             <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">GetHostMetricsMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
             <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManager.stopFilebeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.stopFilebeat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">stopFilebeat</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/stopFilebeat&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopFilebeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManager.startFilebeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.startFilebeat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">startFilebeat</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/startFilebeat&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartFilebeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManager.configFilebeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.configFilebeat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">configFilebeat</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/configFilebeat&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">ConfigFilebeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManager.stopPacketbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.stopPacketbeat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">stopPacketbeat</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/stopPacketbeat&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopPacketbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManager.startPacketbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.startPacketbeat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">startPacketbeat</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/startPacketbeat&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartPacketbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManager.configPacketbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.configPacketbeat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">configPacketbeat</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/configPacketbeat&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">ConfigPacketbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManager.stopMetricbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.stopMetricbeat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">stopMetricbeat</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/stopMetricbeat&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopMetricbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManager.startMetricbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.startMetricbeat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">startMetricbeat</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/startMetricbeat&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartMetricbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManager.configMetricbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.configMetricbeat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">configMetricbeat</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/configMetricbeat&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">ConfigMetricbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManager.stopHeartbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.stopHeartbeat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">stopHeartbeat</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/stopHeartbeat&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StopHeartbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManager.startHeartbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.startHeartbeat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">startHeartbeat</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/startHeartbeat&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">StartHeartbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManager.configHeartbeat"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_pb2_grpc.HostManager.configHeartbeat">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">configHeartbeat</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/HostManager/configHeartbeat&#39;</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">ConfigHeartbeatMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">host__manager__pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
             <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
             <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div></div>
 </pre></div>

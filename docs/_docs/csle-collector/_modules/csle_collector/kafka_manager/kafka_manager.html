@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.kafka_manager.kafka_manager</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.kafka_manager.kafka_manager</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -79,6 +82,7 @@
 <span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
 <span class="kn">import</span> <span class="nn">grpc</span>
 <span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">netifaces</span>
 <span class="kn">import</span> <span class="nn">confluent_kafka</span>
 <span class="kn">import</span> <span class="nn">confluent_kafka.admin</span>
 <span class="kn">import</span> <span class="nn">csle_collector.kafka_manager.kafka_manager_pb2_grpc</span>
@@ -87,33 +91,30 @@
 
 
 <div class="viewcode-block" id="KafkaManagerServicer"><a class="viewcode-back" href="../../../csle_collector.kafka_manager.html#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">KafkaManagerServicer</span><span class="p">(</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2_grpc</span><span class="o">.</span><span class="n">KafkaManagerServicer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    gRPC server for managing a Kafka server. Allows to start/stop the kafka server remotely and also to query the</span>
 <span class="sd">    state of the server and create/delete topics.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">KAFKA_MANAGER_LOG_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
                                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">KAFKA_MANAGER_LOG_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">netifaces</span><span class="o">.</span><span class="n">ifaddresses</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">INTERFACES</span><span class="o">.</span><span class="n">ETH0</span><span class="p">)[</span><span class="n">netifaces</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">INTERFACES</span><span class="o">.</span><span class="n">ADDR</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="p">{</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">PORT</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                      <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">CLIENT_ID_PROPERTY</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">}</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting up KafkaManager hostname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_kafka_status_and_topics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to get the status of Kafka and existing topics</span>
 
 <span class="sd">        :return: status and list of topics</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">KAFKA_STATUS</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">status_output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">status_output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">KAFKA_STATUS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
         <span class="n">running</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;not&quot;</span> <span class="ow">in</span> <span class="n">status_output</span><span class="p">)</span>
         <span class="n">topics</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">running</span><span class="p">:</span>
@@ -129,7 +130,7 @@
 <div class="viewcode-block" id="KafkaManagerServicer.getKafkaStatus"><a class="viewcode-back" href="../../../csle_collector.kafka_manager.html#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.getKafkaStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getKafkaStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2</span><span class="o">.</span><span class="n">GetKafkaStatusMsg</span><span class="p">,</span>
                        <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2</span><span class="o">.</span><span class="n">KafkaDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the state of the kafka server</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -142,7 +143,7 @@
 
 <div class="viewcode-block" id="KafkaManagerServicer.stopKafka"><a class="viewcode-back" href="../../../csle_collector.kafka_manager.html#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.stopKafka">[docs]</a>    <span class="k">def</span> <span class="nf">stopKafka</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2</span><span class="o">.</span><span class="n">StopKafkaMsg</span><span class="p">,</span>
                   <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the kafka server</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -155,20 +156,20 @@
 
 <div class="viewcode-block" id="KafkaManagerServicer.startKafka"><a class="viewcode-back" href="../../../csle_collector.kafka_manager.html#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.startKafka">[docs]</a>    <span class="k">def</span> <span class="nf">startKafka</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2</span><span class="o">.</span><span class="n">StartKafkaMsg</span><span class="p">,</span>
                    <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2</span><span class="o">.</span><span class="n">KafkaDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the kafka server</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: a clients DTO with the state of the kafka server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting kafka&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting kafka&quot;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">KAFKA_START</span><span class="p">)</span>
         <span class="n">kafka_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2</span><span class="o">.</span><span class="n">KafkaDTO</span><span class="p">(</span><span class="n">running</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">topics</span><span class="o">=</span><span class="p">[])</span>
         <span class="k">return</span> <span class="n">kafka_dto</span></div>
 
 <div class="viewcode-block" id="KafkaManagerServicer.hours_to_ms"><a class="viewcode-back" href="../../../csle_collector.kafka_manager.html#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.hours_to_ms">[docs]</a>    <span class="k">def</span> <span class="nf">hours_to_ms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hours</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert hours to ms</span>
 
 <span class="sd">        :param hours: the hours to convert</span>
@@ -178,7 +179,7 @@
 
 <div class="viewcode-block" id="KafkaManagerServicer.createTopic"><a class="viewcode-back" href="../../../csle_collector.kafka_manager.html#csle_collector.kafka_manager.kafka_manager.KafkaManagerServicer.createTopic">[docs]</a>    <span class="k">def</span> <span class="nf">createTopic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2</span><span class="o">.</span><span class="n">CreateTopicMsg</span><span class="p">,</span>
                     <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2</span><span class="o">.</span><span class="n">KafkaDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a new Kafka topic</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -203,8 +204,8 @@
 
 <div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../csle_collector.kafka_manager.html#csle_collector.kafka_manager.kafka_manager.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50051</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
           <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;kafka_manager.log&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Starts the gRPC server for managing clients</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Starts the gRPC server for managing the kafka server</span>
 
 <span class="sd">    :param port: the port that the server will listen to</span>
 <span class="sd">    :param log_dir: the directory to write the log file</span>

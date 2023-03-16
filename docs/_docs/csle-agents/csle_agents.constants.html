@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_agents.constants package &mdash; csle-agents 0.0.1 documentation</title>
@@ -12,9 +12,8 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -27,11 +26,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> csle-agents
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            csle-agents
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -42,7 +45,308 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_agents.common.html">csle_agents.common package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_agents.constants package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_agents.constants.constants">csle_agents.constants.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_agents.constants.constants">csle_agents.constants.constants module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.L"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.N"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.PARAMS"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.PARAMS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.STOP_DISTRIBUTION_ATTACKER"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.STOP_DISTRIBUTION_ATTACKER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.STOP_DISTRIBUTION_DEFENDER"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.STOP_DISTRIBUTION_DEFENDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.TARGET"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.TARGET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.THETA1"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.THETA1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.THETAS"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.THETAS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.THRESHOLDS"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.THRESHOLDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.UCB"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.UCB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.UCB_KAPPA"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.UCB_KAPPA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.UCB_XI"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.UCB_XI</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION"><code class="docutils literal notranslate"><span class="pre">BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.COMMON"><code class="docutils literal notranslate"><span class="pre">COMMON</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.ADAM"><code class="docutils literal notranslate"><span class="pre">COMMON.ADAM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.AVERAGE_ATTACKER_RETURN"><code class="docutils literal notranslate"><span class="pre">COMMON.AVERAGE_ATTACKER_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.AVERAGE_DEFENDER_RETURN"><code class="docutils literal notranslate"><span class="pre">COMMON.AVERAGE_DEFENDER_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.AVERAGE_RANDOM_RETURN"><code class="docutils literal notranslate"><span class="pre">COMMON.AVERAGE_RANDOM_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.AVERAGE_RETURN"><code class="docutils literal notranslate"><span class="pre">COMMON.AVERAGE_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.AVERAGE_TIME_HORIZON"><code class="docutils literal notranslate"><span class="pre">COMMON.AVERAGE_TIME_HORIZON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.AVERAGE_UPPER_BOUND_RETURN"><code class="docutils literal notranslate"><span class="pre">COMMON.AVERAGE_UPPER_BOUND_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.BASELINE_PREFIX"><code class="docutils literal notranslate"><span class="pre">COMMON.BASELINE_PREFIX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.BATCH_SIZE"><code class="docutils literal notranslate"><span class="pre">COMMON.BATCH_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.CONFIDENCE_INTERVAL"><code class="docutils literal notranslate"><span class="pre">COMMON.CONFIDENCE_INTERVAL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.EVAL_BATCH_SIZE"><code class="docutils literal notranslate"><span class="pre">COMMON.EVAL_BATCH_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.EVAL_EVERY"><code class="docutils literal notranslate"><span class="pre">COMMON.EVAL_EVERY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.EVAL_PREFIX"><code class="docutils literal notranslate"><span class="pre">COMMON.EVAL_PREFIX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.EXPLOITABILITY"><code class="docutils literal notranslate"><span class="pre">COMMON.EXPLOITABILITY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.GAMMA"><code class="docutils literal notranslate"><span class="pre">COMMON.GAMMA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.L"><code class="docutils literal notranslate"><span class="pre">COMMON.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.LEARNING_RATE"><code class="docutils literal notranslate"><span class="pre">COMMON.LEARNING_RATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.LEARNING_RATE_DECAY_RATE"><code class="docutils literal notranslate"><span class="pre">COMMON.LEARNING_RATE_DECAY_RATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.LEARNING_RATE_EXP_DECAY"><code class="docutils literal notranslate"><span class="pre">COMMON.LEARNING_RATE_EXP_DECAY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.MAX_ENV_STEPS"><code class="docutils literal notranslate"><span class="pre">COMMON.MAX_ENV_STEPS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.NUM_CACHED_SIMULATION_TRACES"><code class="docutils literal notranslate"><span class="pre">COMMON.NUM_CACHED_SIMULATION_TRACES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.NUM_NODES"><code class="docutils literal notranslate"><span class="pre">COMMON.NUM_NODES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.NUM_PARALLEL_ENVS"><code class="docutils literal notranslate"><span class="pre">COMMON.NUM_PARALLEL_ENVS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.NUM_TRAINING_TIMESTEPS"><code class="docutils literal notranslate"><span class="pre">COMMON.NUM_TRAINING_TIMESTEPS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.OPTIMIZER"><code class="docutils literal notranslate"><span class="pre">COMMON.OPTIMIZER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.POLICY_LOSSES"><code class="docutils literal notranslate"><span class="pre">COMMON.POLICY_LOSSES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE"><code class="docutils literal notranslate"><span class="pre">COMMON.RUNNING_AVERAGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_ATTACKER_RETURN"><code class="docutils literal notranslate"><span class="pre">COMMON.RUNNING_AVERAGE_ATTACKER_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_DEFENDER_RETURN"><code class="docutils literal notranslate"><span class="pre">COMMON.RUNNING_AVERAGE_DEFENDER_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_EXPLOITABILITY"><code class="docutils literal notranslate"><span class="pre">COMMON.RUNNING_AVERAGE_EXPLOITABILITY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH"><code class="docutils literal notranslate"><span class="pre">COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_INTRUSION_START"><code class="docutils literal notranslate"><span class="pre">COMMON.RUNNING_AVERAGE_INTRUSION_START</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_RETURN"><code class="docutils literal notranslate"><span class="pre">COMMON.RUNNING_AVERAGE_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_START_POINT_CORRECT"><code class="docutils literal notranslate"><span class="pre">COMMON.RUNNING_AVERAGE_START_POINT_CORRECT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON"><code class="docutils literal notranslate"><span class="pre">COMMON.RUNNING_AVERAGE_TIME_HORIZON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_WEIGHTED_INTRUSION_PREDICTION_DISTANCE"><code class="docutils literal notranslate"><span class="pre">COMMON.RUNNING_AVERAGE_WEIGHTED_INTRUSION_PREDICTION_DISTANCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.RUNTIME"><code class="docutils literal notranslate"><span class="pre">COMMON.RUNTIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.SAVE_EVERY"><code class="docutils literal notranslate"><span class="pre">COMMON.SAVE_EVERY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.SGD"><code class="docutils literal notranslate"><span class="pre">COMMON.SGD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.START_POINT_CORRECT"><code class="docutils literal notranslate"><span class="pre">COMMON.START_POINT_CORRECT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.STOPPING_ENVS"><code class="docutils literal notranslate"><span class="pre">COMMON.STOPPING_ENVS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.COMMON.WEIGHTED_INTRUSION_PREDICTION_DISTANCE"><code class="docutils literal notranslate"><span class="pre">COMMON.WEIGHTED_INTRUSION_PREDICTION_DISTANCE</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.K"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.K</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.L"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.LAMB"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.LAMB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.N"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.STOP_DISTRIBUTION_ATTACKER"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.STOP_DISTRIBUTION_ATTACKER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.STOP_DISTRIBUTION_DEFENDER"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.STOP_DISTRIBUTION_DEFENDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.THETA1"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.THETA1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.THETAS"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.THETAS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.CROSS_ENTROPY.THRESHOLDS"><code class="docutils literal notranslate"><span class="pre">CROSS_ENTROPY.THRESHOLDS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.BOUNDS"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.BOUNDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.L"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.MUTATE"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.MUTATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.N"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.POPULATION_SIZE"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.POPULATION_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.RECOMBINATION"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.RECOMBINATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.STOP_DISTRIBUTION_ATTACKER"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.STOP_DISTRIBUTION_ATTACKER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.STOP_DISTRIBUTION_DEFENDER"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.STOP_DISTRIBUTION_DEFENDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.THETA1"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.THETA1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.THETAS"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.THETAS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.THRESHOLDS"><code class="docutils literal notranslate"><span class="pre">DIFFERENTIAL_EVOLUTION.THRESHOLDS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.DQN"><code class="docutils literal notranslate"><span class="pre">DQN</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DQN.BUFFER_SIZE"><code class="docutils literal notranslate"><span class="pre">DQN.BUFFER_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DQN.DQN_BATCH_SIZE"><code class="docutils literal notranslate"><span class="pre">DQN.DQN_BATCH_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DQN.EXPLORATION_FINAL_EPS"><code class="docutils literal notranslate"><span class="pre">DQN.EXPLORATION_FINAL_EPS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DQN.EXPLORATION_FRACTION"><code class="docutils literal notranslate"><span class="pre">DQN.EXPLORATION_FRACTION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DQN.EXPLORATION_INITIAL_EPS"><code class="docutils literal notranslate"><span class="pre">DQN.EXPLORATION_INITIAL_EPS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DQN.GRADIENT_STEPS"><code class="docutils literal notranslate"><span class="pre">DQN.GRADIENT_STEPS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DQN.LEARNING_STARTS"><code class="docutils literal notranslate"><span class="pre">DQN.LEARNING_STARTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DQN.MAX_GRAD_NORM"><code class="docutils literal notranslate"><span class="pre">DQN.MAX_GRAD_NORM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DQN.MLP_POLICY"><code class="docutils literal notranslate"><span class="pre">DQN.MLP_POLICY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DQN.N_EPISODES_ROLLOUT"><code class="docutils literal notranslate"><span class="pre">DQN.N_EPISODES_ROLLOUT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DQN.TARGET_UPDATE_INTERVAL"><code class="docutils literal notranslate"><span class="pre">DQN.TARGET_UPDATE_INTERVAL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DQN.TRAIN_FREQ"><code class="docutils literal notranslate"><span class="pre">DQN.TRAIN_FREQ</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC"><code class="docutils literal notranslate"><span class="pre">DYNASEC</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.CLIENTS_ARRIVAL_RATE"><code class="docutils literal notranslate"><span class="pre">DYNASEC.CLIENTS_ARRIVAL_RATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.EMULATION_MONITOR_SLEEP_TIME"><code class="docutils literal notranslate"><span class="pre">DYNASEC.EMULATION_MONITOR_SLEEP_TIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.EMULATION_TRACES_TO_SAVE_W_DATA_COLLECTION_JOB"><code class="docutils literal notranslate"><span class="pre">DYNASEC.EMULATION_TRACES_TO_SAVE_W_DATA_COLLECTION_JOB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.INTRUSION_ALERTS_MEAN"><code class="docutils literal notranslate"><span class="pre">DYNASEC.INTRUSION_ALERTS_MEAN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.INTRUSION_ALERTS_MEAN_BASELINE"><code class="docutils literal notranslate"><span class="pre">DYNASEC.INTRUSION_ALERTS_MEAN_BASELINE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.INTRUSION_START_P"><code class="docutils literal notranslate"><span class="pre">DYNASEC.INTRUSION_START_P</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.NO_INTRUSION_ALERTS_MEAN"><code class="docutils literal notranslate"><span class="pre">DYNASEC.NO_INTRUSION_ALERTS_MEAN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.NO_INTRUSION_ALERTS_MEAN_BASELINE"><code class="docutils literal notranslate"><span class="pre">DYNASEC.NO_INTRUSION_ALERTS_MEAN_BASELINE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.NUM_CLIENTS"><code class="docutils literal notranslate"><span class="pre">DYNASEC.NUM_CLIENTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.REPLAY_WINDOW_SIZE"><code class="docutils literal notranslate"><span class="pre">DYNASEC.REPLAY_WINDOW_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.SLEEP_TIME"><code class="docutils literal notranslate"><span class="pre">DYNASEC.SLEEP_TIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.STATIC_ATTACKER_TYPE"><code class="docutils literal notranslate"><span class="pre">DYNASEC.STATIC_ATTACKER_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.TRAINING_EPOCHS"><code class="docutils literal notranslate"><span class="pre">DYNASEC.TRAINING_EPOCHS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.DYNASEC.WARMUP_EPISODES"><code class="docutils literal notranslate"><span class="pre">DYNASEC.WARMUP_EPISODES</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.ENV_METRICS"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.ENV_METRICS.ATTACKER_ACTION"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.ATTACKER_ACTION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.ENV_METRICS.AVERAGE_RANDOM_RETURN"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.AVERAGE_RANDOM_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.ENV_METRICS.DEFENDER_ACTION"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.DEFENDER_ACTION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.ENV_METRICS.OBSERVATION"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.OBSERVATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.ENV_METRICS.RETURN"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.ENV_METRICS.STATE"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.STATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.ENV_METRICS.TIME_HORIZON"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.TIME_HORIZON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.ENV_METRICS.TIME_STEP"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.TIME_STEP</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.FICTITIOUS_PLAY"><code class="docutils literal notranslate"><span class="pre">FICTITIOUS_PLAY</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.FICTITIOUS_PLAY.N"><code class="docutils literal notranslate"><span class="pre">FICTITIOUS_PLAY.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.FICTITIOUS_PLAY.PAYOFF_MATRIX"><code class="docutils literal notranslate"><span class="pre">FICTITIOUS_PLAY.PAYOFF_MATRIX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.FICTITIOUS_PLAY.PLAYER_1_PRIOR"><code class="docutils literal notranslate"><span class="pre">FICTITIOUS_PLAY.PLAYER_1_PRIOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.FICTITIOUS_PLAY.PLAYER_2_PRIOR"><code class="docutils literal notranslate"><span class="pre">FICTITIOUS_PLAY.PLAYER_2_PRIOR</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.HSVI"><code class="docutils literal notranslate"><span class="pre">HSVI</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.ACTION_SPACE"><code class="docutils literal notranslate"><span class="pre">HSVI.ACTION_SPACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.EPSILON"><code class="docutils literal notranslate"><span class="pre">HSVI.EPSILON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.INITIAL_BELIEF"><code class="docutils literal notranslate"><span class="pre">HSVI.INITIAL_BELIEF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.INITIAL_BELIEF_VALUES"><code class="docutils literal notranslate"><span class="pre">HSVI.INITIAL_BELIEF_VALUES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.LB_SIZE"><code class="docutils literal notranslate"><span class="pre">HSVI.LB_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.LB_SIZES"><code class="docutils literal notranslate"><span class="pre">HSVI.LB_SIZES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.NUMBER_OF_SIMULATIONS"><code class="docutils literal notranslate"><span class="pre">HSVI.NUMBER_OF_SIMULATIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.OBSERVATION_SPACE"><code class="docutils literal notranslate"><span class="pre">HSVI.OBSERVATION_SPACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.OBSERVATION_TENSOR"><code class="docutils literal notranslate"><span class="pre">HSVI.OBSERVATION_TENSOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.PRUNE_FREQUENCY"><code class="docutils literal notranslate"><span class="pre">HSVI.PRUNE_FREQUENCY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.REWARD_TENSOR"><code class="docutils literal notranslate"><span class="pre">HSVI.REWARD_TENSOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.SIMULATE_HORIZON"><code class="docutils literal notranslate"><span class="pre">HSVI.SIMULATE_HORIZON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.SIMULATION_FREQUENCY"><code class="docutils literal notranslate"><span class="pre">HSVI.SIMULATION_FREQUENCY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.STATE_SPACE"><code class="docutils literal notranslate"><span class="pre">HSVI.STATE_SPACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.TRANSITION_TENSOR"><code class="docutils literal notranslate"><span class="pre">HSVI.TRANSITION_TENSOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.UB_SIZE"><code class="docutils literal notranslate"><span class="pre">HSVI.UB_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.UB_SIZES"><code class="docutils literal notranslate"><span class="pre">HSVI.UB_SIZES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.USE_LP"><code class="docutils literal notranslate"><span class="pre">HSVI.USE_LP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.WIDTH"><code class="docutils literal notranslate"><span class="pre">HSVI.WIDTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI.WIDTHS"><code class="docutils literal notranslate"><span class="pre">HSVI.WIDTHS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.ACTION_SPACE_PLAYER_1"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.ACTION_SPACE_PLAYER_1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.ACTION_SPACE_PLAYER_2"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.ACTION_SPACE_PLAYER_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.EPSILON"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.EPSILON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.EXCESSES"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.EXCESSES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.INITIAL_BELIEF"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.INITIAL_BELIEF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.N"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.OBSERVATION_FUNCTION"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.OBSERVATION_FUNCTION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.OBSERVATION_SPACE"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.OBSERVATION_SPACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.PRUNE_FREQUENCY"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.PRUNE_FREQUENCY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.REWARD_TENSOR"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.REWARD_TENSOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.STATE_SPACE"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.STATE_SPACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.TRANSITION_TENSOR"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.TRANSITION_TENSOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.HSVI_OS_POSG.WIDTHS"><code class="docutils literal notranslate"><span class="pre">HSVI_OS_POSG.WIDTHS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.KIEFER_WOLFOWITZ"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.KIEFER_WOLFOWITZ.DELTA"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.DELTA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.KIEFER_WOLFOWITZ.GRADIENT_BATCH_SIZE"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.GRADIENT_BATCH_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.KIEFER_WOLFOWITZ.INITIAL_ALPHA"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.INITIAL_ALPHA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.KIEFER_WOLFOWITZ.L"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.KIEFER_WOLFOWITZ.N"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.KIEFER_WOLFOWITZ.STOP_DISTRIBUTION_ATTACKER"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.STOP_DISTRIBUTION_ATTACKER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.KIEFER_WOLFOWITZ.STOP_DISTRIBUTION_DEFENDER"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.STOP_DISTRIBUTION_DEFENDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.KIEFER_WOLFOWITZ.THETA1"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.THETA1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.KIEFER_WOLFOWITZ.THETAS"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.THETAS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.KIEFER_WOLFOWITZ.THRESHOLDS"><code class="docutils literal notranslate"><span class="pre">KIEFER_WOLFOWITZ.THRESHOLDS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_NF_GAMES"><code class="docutils literal notranslate"><span class="pre">LP_FOR_NF_GAMES</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_1"><code class="docutils literal notranslate"><span class="pre">LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_2"><code class="docutils literal notranslate"><span class="pre">LP_FOR_NF_GAMES.ACTION_SPACE_PLAYER_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_NF_GAMES.N"><code class="docutils literal notranslate"><span class="pre">LP_FOR_NF_GAMES.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.LP_FOR_NF_GAMES.PAYOFF_MATRIX"><code class="docutils literal notranslate"><span class="pre">LP_FOR_NF_GAMES.PAYOFF_MATRIX</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.PI"><code class="docutils literal notranslate"><span class="pre">PI</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PI.INITIAL_POLICY"><code class="docutils literal notranslate"><span class="pre">PI.INITIAL_POLICY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PI.N"><code class="docutils literal notranslate"><span class="pre">PI.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PI.NUM_ACTIONS"><code class="docutils literal notranslate"><span class="pre">PI.NUM_ACTIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PI.NUM_STATES"><code class="docutils literal notranslate"><span class="pre">PI.NUM_STATES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PI.REWARD_TENSOR"><code class="docutils literal notranslate"><span class="pre">PI.REWARD_TENSOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PI.TRANSITION_TENSOR"><code class="docutils literal notranslate"><span class="pre">PI.TRANSITION_TENSOR</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.PPO"><code class="docutils literal notranslate"><span class="pre">PPO</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PPO.CLIP_RANGE"><code class="docutils literal notranslate"><span class="pre">PPO.CLIP_RANGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PPO.CLIP_RANGE_VF"><code class="docutils literal notranslate"><span class="pre">PPO.CLIP_RANGE_VF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PPO.ENT_COEF"><code class="docutils literal notranslate"><span class="pre">PPO.ENT_COEF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PPO.GAE_LAMBDA"><code class="docutils literal notranslate"><span class="pre">PPO.GAE_LAMBDA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PPO.MAX_GRAD_NORM"><code class="docutils literal notranslate"><span class="pre">PPO.MAX_GRAD_NORM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PPO.MLP_POLICY"><code class="docutils literal notranslate"><span class="pre">PPO.MLP_POLICY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PPO.STEPS_BETWEEN_UPDATES"><code class="docutils literal notranslate"><span class="pre">PPO.STEPS_BETWEEN_UPDATES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PPO.TARGET_KL"><code class="docutils literal notranslate"><span class="pre">PPO.TARGET_KL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.PPO.VF_COEF"><code class="docutils literal notranslate"><span class="pre">PPO.VF_COEF</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.Q_LEARNING"><code class="docutils literal notranslate"><span class="pre">Q_LEARNING</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.Q_LEARNING.A"><code class="docutils literal notranslate"><span class="pre">Q_LEARNING.A</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.Q_LEARNING.EPSILON"><code class="docutils literal notranslate"><span class="pre">Q_LEARNING.EPSILON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.Q_LEARNING.INITIAL_STATE_VALUES"><code class="docutils literal notranslate"><span class="pre">Q_LEARNING.INITIAL_STATE_VALUES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.Q_LEARNING.N"><code class="docutils literal notranslate"><span class="pre">Q_LEARNING.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.Q_LEARNING.S"><code class="docutils literal notranslate"><span class="pre">Q_LEARNING.S</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.DELTA"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.DELTA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.L"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.L</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.N"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.STOP_DISTRIBUTION_ATTACKER"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.STOP_DISTRIBUTION_ATTACKER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.STOP_DISTRIBUTION_DEFENDER"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.STOP_DISTRIBUTION_DEFENDER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.THETA1"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.THETA1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.THETAS"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.THETAS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.RANDOM_SEARCH.THRESHOLDS"><code class="docutils literal notranslate"><span class="pre">RANDOM_SEARCH.THRESHOLDS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.REINFORCE"><code class="docutils literal notranslate"><span class="pre">REINFORCE</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.REINFORCE.CLIP_GRADIENT"><code class="docutils literal notranslate"><span class="pre">REINFORCE.CLIP_GRADIENT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.REINFORCE.GRADIENT_BATCH_SIZE"><code class="docutils literal notranslate"><span class="pre">REINFORCE.GRADIENT_BATCH_SIZE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.REINFORCE.N"><code class="docutils literal notranslate"><span class="pre">REINFORCE.N</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.SARSA"><code class="docutils literal notranslate"><span class="pre">SARSA</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SARSA.A"><code class="docutils literal notranslate"><span class="pre">SARSA.A</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SARSA.EPSILON"><code class="docutils literal notranslate"><span class="pre">SARSA.EPSILON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SARSA.INITIAL_STATE_VALUES"><code class="docutils literal notranslate"><span class="pre">SARSA.INITIAL_STATE_VALUES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SARSA.N"><code class="docutils literal notranslate"><span class="pre">SARSA.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SARSA.S"><code class="docutils literal notranslate"><span class="pre">SARSA.S</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.SHAPLEY_ITERATION"><code class="docutils literal notranslate"><span class="pre">SHAPLEY_ITERATION</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SHAPLEY_ITERATION.ACTION_SPACE_PLAYER_1"><code class="docutils literal notranslate"><span class="pre">SHAPLEY_ITERATION.ACTION_SPACE_PLAYER_1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SHAPLEY_ITERATION.ACTION_SPACE_PLAYER_2"><code class="docutils literal notranslate"><span class="pre">SHAPLEY_ITERATION.ACTION_SPACE_PLAYER_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SHAPLEY_ITERATION.DELTA"><code class="docutils literal notranslate"><span class="pre">SHAPLEY_ITERATION.DELTA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SHAPLEY_ITERATION.N"><code class="docutils literal notranslate"><span class="pre">SHAPLEY_ITERATION.N</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SHAPLEY_ITERATION.REWARD_TENSOR"><code class="docutils literal notranslate"><span class="pre">SHAPLEY_ITERATION.REWARD_TENSOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SHAPLEY_ITERATION.STATE_SPACE"><code class="docutils literal notranslate"><span class="pre">SHAPLEY_ITERATION.STATE_SPACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SHAPLEY_ITERATION.TRANSITION_TENSOR"><code class="docutils literal notranslate"><span class="pre">SHAPLEY_ITERATION.TRANSITION_TENSOR</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI.ACTION_SPACE"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI.ACTION_SPACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI.INITIAL_BELIEF"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI.INITIAL_BELIEF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI.INITIAL_BELIEF_VALUES"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI.INITIAL_BELIEF_VALUES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI.NUM_ALPHA_VECTORS"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI.NUM_ALPHA_VECTORS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI.OBSERVATION_SPACE"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI.OBSERVATION_SPACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI.OBSERVATION_TENSOR"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI.OBSERVATION_TENSOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI.PLANNING_HORIZON"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI.PLANNING_HORIZON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI.REWARD_TENSOR"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI.REWARD_TENSOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI.STATE_SPACE"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI.STATE_SPACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI.TRANSITION_TENSOR"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI.TRANSITION_TENSOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.SONDIK_VI.USE_PRUNING"><code class="docutils literal notranslate"><span class="pre">SONDIK_VI.USE_PRUNING</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.T_FP"><code class="docutils literal notranslate"><span class="pre">T_FP</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.T_FP.ATTACKER_THRESHOLDS"><code class="docutils literal notranslate"><span class="pre">T_FP.ATTACKER_THRESHOLDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.T_FP.AVERAGE_BEST_RESPONSE_ATTACKER_RETURN"><code class="docutils literal notranslate"><span class="pre">T_FP.AVERAGE_BEST_RESPONSE_ATTACKER_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.T_FP.AVERAGE_BEST_RESPONSE_DEFENDER_RETURN"><code class="docutils literal notranslate"><span class="pre">T_FP.AVERAGE_BEST_RESPONSE_DEFENDER_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.T_FP.BEST_RESPONSE_EVALUATION_ITERATIONS"><code class="docutils literal notranslate"><span class="pre">T_FP.BEST_RESPONSE_EVALUATION_ITERATIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.T_FP.DEFENDER_THRESHOLDS"><code class="docutils literal notranslate"><span class="pre">T_FP.DEFENDER_THRESHOLDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS"><code class="docutils literal notranslate"><span class="pre">T_FP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.T_FP.N_2"><code class="docutils literal notranslate"><span class="pre">T_FP.N_2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.T_FP.RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN"><code class="docutils literal notranslate"><span class="pre">T_FP.RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.T_FP.RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN"><code class="docutils literal notranslate"><span class="pre">T_FP.RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.T_FP.THETA1_ATTACKER"><code class="docutils literal notranslate"><span class="pre">T_FP.THETA1_ATTACKER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.T_FP.THETA1_DEFENDER"><code class="docutils literal notranslate"><span class="pre">T_FP.THETA1_DEFENDER</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_agents.constants.constants.VI"><code class="docutils literal notranslate"><span class="pre">VI</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.VI.DELTA"><code class="docutils literal notranslate"><span class="pre">VI.DELTA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.VI.NUM_ACTIONS"><code class="docutils literal notranslate"><span class="pre">VI.NUM_ACTIONS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.VI.NUM_STATES"><code class="docutils literal notranslate"><span class="pre">VI.NUM_STATES</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.VI.REWARD_TENSOR"><code class="docutils literal notranslate"><span class="pre">VI.REWARD_TENSOR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.VI.THETA"><code class="docutils literal notranslate"><span class="pre">VI.THETA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_agents.constants.constants.VI.TRANSITION_TENSOR"><code class="docutils literal notranslate"><span class="pre">VI.TRANSITION_TENSOR</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_agents.constants">Module contents</a></li>
 </ul>
 </li>
@@ -62,8 +366,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_agents.constants package</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">csle_agents.constants package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_agents.constants.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -74,12 +378,12 @@
            <div itemprop="articleBody">
              
   <section id="csle-agents-constants-package">
-<h1>csle_agents.constants package<a class="headerlink" href="#csle-agents-constants-package" title="Permalink to this headline"></a></h1>
+<h1>csle_agents.constants package<a class="headerlink" href="#csle-agents-constants-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_agents.constants.constants">
-<span id="csle-agents-constants-constants-module"></span><h2>csle_agents.constants.constants module<a class="headerlink" href="#module-csle_agents.constants.constants" title="Permalink to this headline"></a></h2>
+<span id="csle-agents-constants-constants-module"></span><h2>csle_agents.constants.constants module<a class="headerlink" href="#module-csle_agents.constants.constants" title="Permalink to this heading"></a></h2>
 <p>Constants for csle-agents</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.BAYESIAN_OPTIMIZATION">
@@ -164,11 +468,6 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Common string constants among all agents</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.ACTIVATION_FUNCTION">
-<span class="sig-name descname"><span class="pre">ACTIVATION_FUNCTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'activation_function'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.ACTIVATION_FUNCTION" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.ADAM">
 <span class="sig-name descname"><span class="pre">ADAM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Adam'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.ADAM" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -184,8 +483,23 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.AVERAGE_RANDOM_RETURN">
+<span class="sig-name descname"><span class="pre">AVERAGE_RANDOM_RETURN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'average_random_return'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.AVERAGE_RANDOM_RETURN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.AVERAGE_RETURN">
 <span class="sig-name descname"><span class="pre">AVERAGE_RETURN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'average_return'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.AVERAGE_RETURN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.AVERAGE_TIME_HORIZON">
+<span class="sig-name descname"><span class="pre">AVERAGE_TIME_HORIZON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'average_time_horizon'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.AVERAGE_TIME_HORIZON" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.AVERAGE_UPPER_BOUND_RETURN">
+<span class="sig-name descname"><span class="pre">AVERAGE_UPPER_BOUND_RETURN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'average_upper_bound_return'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.AVERAGE_UPPER_BOUND_RETURN" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -201,11 +515,6 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.CONFIDENCE_INTERVAL">
 <span class="sig-name descname"><span class="pre">CONFIDENCE_INTERVAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'confidence_interval'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.CONFIDENCE_INTERVAL" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.DEVICE">
-<span class="sig-name descname"><span class="pre">DEVICE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'device'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.DEVICE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -264,13 +573,8 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.NUM_HIDDEN_LAYERS">
-<span class="sig-name descname"><span class="pre">NUM_HIDDEN_LAYERS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'num_hidden_layers'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.NUM_HIDDEN_LAYERS" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER">
-<span class="sig-name descname"><span class="pre">NUM_NEURONS_PER_HIDDEN_LAYER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'num_neurons_per_hidden_layer'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.NUM_NEURONS_PER_HIDDEN_LAYER" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.NUM_NODES">
+<span class="sig-name descname"><span class="pre">NUM_NODES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'num_nodes'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.NUM_NODES" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -341,6 +645,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_WEIGHTED_INTRUSION_PREDICTION_DISTANCE">
 <span class="sig-name descname"><span class="pre">RUNNING_AVERAGE_WEIGHTED_INTRUSION_PREDICTION_DISTANCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'running_average_weighted_intrusion_prediction_distance'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.RUNNING_AVERAGE_WEIGHTED_INTRUSION_PREDICTION_DISTANCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.COMMON.RUNTIME">
+<span class="sig-name descname"><span class="pre">RUNTIME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'runtime'</span></em><a class="headerlink" href="#csle_agents.constants.constants.COMMON.RUNTIME" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -624,6 +933,58 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.DYNASEC.WARMUP_EPISODES">
 <span class="sig-name descname"><span class="pre">WARMUP_EPISODES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'warmup_episodes'</span></em><a class="headerlink" href="#csle_agents.constants.constants.DYNASEC.WARMUP_EPISODES" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.ENV_METRICS">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.constants.constants.</span></span><span class="sig-name descname"><span class="pre">ENV_METRICS</span></span><a class="reference internal" href="_modules/csle_agents/constants/constants.html#ENV_METRICS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.constants.constants.ENV_METRICS" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>String constants representing environment metrics</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.ENV_METRICS.ATTACKER_ACTION">
+<span class="sig-name descname"><span class="pre">ATTACKER_ACTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'a2'</span></em><a class="headerlink" href="#csle_agents.constants.constants.ENV_METRICS.ATTACKER_ACTION" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.ENV_METRICS.AVERAGE_RANDOM_RETURN">
+<span class="sig-name descname"><span class="pre">AVERAGE_RANDOM_RETURN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'average_random_return'</span></em><a class="headerlink" href="#csle_agents.constants.constants.ENV_METRICS.AVERAGE_RANDOM_RETURN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN">
+<span class="sig-name descname"><span class="pre">AVERAGE_UPPER_BOUND_RETURN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'average_upper_bound_return'</span></em><a class="headerlink" href="#csle_agents.constants.constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.ENV_METRICS.DEFENDER_ACTION">
+<span class="sig-name descname"><span class="pre">DEFENDER_ACTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'a1'</span></em><a class="headerlink" href="#csle_agents.constants.constants.ENV_METRICS.DEFENDER_ACTION" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.ENV_METRICS.OBSERVATION">
+<span class="sig-name descname"><span class="pre">OBSERVATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'o'</span></em><a class="headerlink" href="#csle_agents.constants.constants.ENV_METRICS.OBSERVATION" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.ENV_METRICS.RETURN">
+<span class="sig-name descname"><span class="pre">RETURN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'R'</span></em><a class="headerlink" href="#csle_agents.constants.constants.ENV_METRICS.RETURN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.ENV_METRICS.STATE">
+<span class="sig-name descname"><span class="pre">STATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'s'</span></em><a class="headerlink" href="#csle_agents.constants.constants.ENV_METRICS.STATE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.ENV_METRICS.TIME_HORIZON">
+<span class="sig-name descname"><span class="pre">TIME_HORIZON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'T'</span></em><a class="headerlink" href="#csle_agents.constants.constants.ENV_METRICS.TIME_HORIZON" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_agents.constants.constants.ENV_METRICS.TIME_STEP">
+<span class="sig-name descname"><span class="pre">TIME_STEP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'t'</span></em><a class="headerlink" href="#csle_agents.constants.constants.ENV_METRICS.TIME_STEP" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1307,78 +1668,6 @@
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.constants.constants.</span></span><span class="sig-name descname"><span class="pre">T_SPSA</span></span><a class="reference internal" href="_modules/csle_agents/constants/constants.html#T_SPSA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>String constants related to T-SPSA</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.A">
-<span class="sig-name descname"><span class="pre">A</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'A'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.A" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.EPSILON">
-<span class="sig-name descname"><span class="pre">EPSILON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'epsilon'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.EPSILON" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.GRADIENT_BATCH_SIZE">
-<span class="sig-name descname"><span class="pre">GRADIENT_BATCH_SIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'gradient_batch_size'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.GRADIENT_BATCH_SIZE" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.L">
-<span class="sig-name descname"><span class="pre">L</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'L'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.L" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.LAMBDA">
-<span class="sig-name descname"><span class="pre">LAMBDA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'lambda'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.LAMBDA" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.N">
-<span class="sig-name descname"><span class="pre">N</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'N'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.N" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER">
-<span class="sig-name descname"><span class="pre">STOP_DISTRIBUTION_ATTACKER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stop_distribution_attacker'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER">
-<span class="sig-name descname"><span class="pre">STOP_DISTRIBUTION_DEFENDER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stop_distribution_defender'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.STOP_DISTRIBUTION_DEFENDER" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.THETA1">
-<span class="sig-name descname"><span class="pre">THETA1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'theta1'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.THETA1" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.THETAS">
-<span class="sig-name descname"><span class="pre">THETAS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'thetas'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.THETAS" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.THRESHOLDS">
-<span class="sig-name descname"><span class="pre">THRESHOLDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'thresholds'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.THRESHOLDS" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.a">
-<span class="sig-name descname"><span class="pre">a</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'a'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.a" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_agents.constants.constants.T_SPSA.c">
-<span class="sig-name descname"><span class="pre">c</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'c'</span></em><a class="headerlink" href="#csle_agents.constants.constants.T_SPSA.c" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="csle_agents.constants.constants.VI">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_agents.constants.constants.</span></span><span class="sig-name descname"><span class="pre">VI</span></span><a class="reference internal" href="_modules/csle_agents/constants/constants.html#VI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_agents.constants.constants.VI" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -1417,7 +1706,7 @@
 
 </section>
 <section id="module-csle_agents.constants">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.constants" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_agents.constants" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.traffic_manager.traffic_manager_util</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.traffic_manager.traffic_manager_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -76,14 +79,14 @@
 
 
 <div class="viewcode-block" id="TrafficManagerUtil"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil">[docs]</a><span class="k">class</span> <span class="nc">TrafficManagerUtil</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class with utility functions related to the Traffic Manager</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TrafficManagerUtil.traffic_dto_to_dict"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">traffic_dto_to_dict</span><span class="p">(</span><span class="n">traffic_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a TrafficDTO to a dict</span>
 
 <span class="sd">        :param traffic_dto: the dto to convert</span>
@@ -96,7 +99,7 @@
 
 <div class="viewcode-block" id="TrafficManagerUtil.traffic_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">traffic_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation of a TrafficDTO to a DTO</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -109,7 +112,7 @@
 
 <div class="viewcode-block" id="TrafficManagerUtil.traffic_dto_empty"><a class="viewcode-back" href="../../../csle_collector.traffic_manager.html#csle_collector.traffic_manager.traffic_manager_util.TrafficManagerUtil.traffic_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">traffic_dto_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: an empty TrafficDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">traffic_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">traffic_manager</span><span class="o">.</span><span class="n">traffic_manager_pb2</span><span class="o">.</span><span class="n">TrafficDTO</span><span class="p">()</span>

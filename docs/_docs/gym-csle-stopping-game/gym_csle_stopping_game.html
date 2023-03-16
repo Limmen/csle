@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gym_csle_stopping_game package &mdash; gym-csle-stopping-game 0.0.1 documentation</title>
@@ -12,9 +12,8 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -25,11 +24,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> gym-csle-stopping-game
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            gym-csle-stopping-game
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,8 +58,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>gym_csle_stopping_game package</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">gym_csle_stopping_game package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/gym_csle_stopping_game.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -67,37 +70,120 @@
            <div itemprop="articleBody">
              
   <section id="gym-csle-stopping-game-package">
-<h1>gym_csle_stopping_game package<a class="headerlink" href="#gym-csle-stopping-game-package" title="Permalink to this headline"></a></h1>
+<h1>gym_csle_stopping_game package<a class="headerlink" href="#gym-csle-stopping-game-package" title="Permalink to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_stopping_game.constants.html">gym_csle_stopping_game.constants package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.constants.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.constants.html#module-gym_csle_stopping_game.constants.constants">gym_csle_stopping_game.constants.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.constants.html#module-gym_csle_stopping_game.constants.constants">gym_csle_stopping_game.constants.constants module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.ATTACKER_ACTION"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.ATTACKER_ACTION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.DEFENDER_ACTION"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.DEFENDER_ACTION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.INTRUSION_END"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.INTRUSION_END</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.INTRUSION_LENGTH"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.INTRUSION_LENGTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.INTRUSION_START"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.INTRUSION_START</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.OBSERVATION"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.OBSERVATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.RETURN"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.RETURN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.START_POINT_CORRECT"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.START_POINT_CORRECT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.STATE"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.STATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.STOP"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.STOP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.STOPS_REMAINING"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.STOPS_REMAINING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.TIME_HORIZON"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.TIME_HORIZON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.TIME_STEP"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.TIME_STEP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE"><code class="docutils literal notranslate"><span class="pre">ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.STATIC_ATTACKER_STRATEGIES"><code class="docutils literal notranslate"><span class="pre">STATIC_ATTACKER_STRATEGIES</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.STATIC_ATTACKER_STRATEGIES.RANDOM"><code class="docutils literal notranslate"><span class="pre">STATIC_ATTACKER_STRATEGIES.RANDOM</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.STATIC_DEFENDER_STRATEGIES"><code class="docutils literal notranslate"><span class="pre">STATIC_DEFENDER_STRATEGIES</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.constants.html#gym_csle_stopping_game.constants.constants.STATIC_DEFENDER_STRATEGIES.RANDOM"><code class="docutils literal notranslate"><span class="pre">STATIC_DEFENDER_STRATEGIES.RANDOM</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.constants.html#module-gym_csle_stopping_game.constants">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_stopping_game.dao.html">gym_csle_stopping_game.dao package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.dao.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.dao.html#module-gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config">gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.dao.html#module-gym_csle_stopping_game.dao.stopping_game_config">gym_csle_stopping_game.dao.stopping_game_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.dao.html#module-gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config">gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.dao.html#module-gym_csle_stopping_game.dao.stopping_game_state">gym_csle_stopping_game.dao.stopping_game_state module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.dao.html#module-gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config">gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config.StoppingGameAttackerMdpConfig"><code class="docutils literal notranslate"><span class="pre">StoppingGameAttackerMdpConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config.StoppingGameAttackerMdpConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">StoppingGameAttackerMdpConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config.StoppingGameAttackerMdpConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">StoppingGameAttackerMdpConfig.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.dao.html#module-gym_csle_stopping_game.dao.stopping_game_config">gym_csle_stopping_game.dao.stopping_game_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_config.StoppingGameConfig"><code class="docutils literal notranslate"><span class="pre">StoppingGameConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_config.StoppingGameConfig.attacker_action_space"><code class="docutils literal notranslate"><span class="pre">StoppingGameConfig.attacker_action_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_config.StoppingGameConfig.attacker_observation_space"><code class="docutils literal notranslate"><span class="pre">StoppingGameConfig.attacker_observation_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_config.StoppingGameConfig.defender_action_space"><code class="docutils literal notranslate"><span class="pre">StoppingGameConfig.defender_action_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_config.StoppingGameConfig.defender_observation_space"><code class="docutils literal notranslate"><span class="pre">StoppingGameConfig.defender_observation_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_config.StoppingGameConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">StoppingGameConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_config.StoppingGameConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">StoppingGameConfig.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.dao.html#module-gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config">gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config.StoppingGameDefenderPomdpConfig"><code class="docutils literal notranslate"><span class="pre">StoppingGameDefenderPomdpConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config.StoppingGameDefenderPomdpConfig.from_dict"><code class="docutils literal notranslate"><span class="pre">StoppingGameDefenderPomdpConfig.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config.StoppingGameDefenderPomdpConfig.to_dict"><code class="docutils literal notranslate"><span class="pre">StoppingGameDefenderPomdpConfig.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.dao.html#module-gym_csle_stopping_game.dao.stopping_game_state">gym_csle_stopping_game.dao.stopping_game_state module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState"><code class="docutils literal notranslate"><span class="pre">StoppingGameState</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState.attacker_observation"><code class="docutils literal notranslate"><span class="pre">StoppingGameState.attacker_observation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState.defender_observation"><code class="docutils literal notranslate"><span class="pre">StoppingGameState.defender_observation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.dao.html#gym_csle_stopping_game.dao.stopping_game_state.StoppingGameState.reset"><code class="docutils literal notranslate"><span class="pre">StoppingGameState.reset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.dao.html#module-gym_csle_stopping_game.dao">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_stopping_game.envs.html">gym_csle_stopping_game.envs package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#module-gym_csle_stopping_game.envs.stopping_game_env">gym_csle_stopping_game.envs.stopping_game_env module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#module-gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env">gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#module-gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env">gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#module-gym_csle_stopping_game.envs">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym-csle-stopping-game-envs-stopping-game-env-module">gym_csle_stopping_game.envs.stopping_game_env module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym-csle-stopping-game-envs-stopping-game-mdp-attacker-env-module">gym_csle_stopping_game.envs.stopping_game_mdp_attacker_env module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#gym-csle-stopping-game-envs-stopping-game-pomdp-defender-env-module">gym_csle_stopping_game.envs.stopping_game_pomdp_defender_env module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.envs.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gym_csle_stopping_game.util.html">gym_csle_stopping_game.util package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.util.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.util.html#module-gym_csle_stopping_game.util.stopping_game_util">gym_csle_stopping_game.util.stopping_game_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.util.html#module-gym_csle_stopping_game.util.stopping_game_util">gym_csle_stopping_game.util.stopping_game_util module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.attacker_actions"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.attacker_actions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.b1"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.b1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.bayes_filter"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.bayes_filter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.defender_actions"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.defender_actions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.next_belief"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.next_belief()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.observation_space"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.observation_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.observation_tensor"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.observation_tensor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.observation_tensor_from_emulation_statistics"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.observation_tensor_from_emulation_statistics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.p_o_given_b_a1_a2"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.p_o_given_b_a1_a2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.reward_tensor"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.reward_tensor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_attacker_action"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.sample_attacker_action()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_initial_state"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.sample_initial_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_next_observation"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.sample_next_observation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.sample_next_state"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.sample_next_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.state_space"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.state_space()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="gym_csle_stopping_game.util.html#gym_csle_stopping_game.util.stopping_game_util.StoppingGameUtil.transition_tensor"><code class="docutils literal notranslate"><span class="pre">StoppingGameUtil.transition_tensor()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="gym_csle_stopping_game.util.html#module-gym_csle_stopping_game.util">Module contents</a></li>
 </ul>
 </li>
@@ -105,7 +191,7 @@
 </div>
 </section>
 <section id="module-gym_csle_stopping_game">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gym_csle_stopping_game" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gym_csle_stopping_game" title="Permalink to this heading"></a></h2>
 <p>Register OpenAI Envs</p>
 </section>
 </section>

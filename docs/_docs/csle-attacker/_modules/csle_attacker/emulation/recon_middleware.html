@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-attacker
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-attacker
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -51,9 +54,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_attacker.emulation.recon_middleware</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_attacker.emulation.recon_middleware</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -70,13 +73,13 @@
 
 
 <div class="viewcode-block" id="ReconMiddleware"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware">[docs]</a><span class="k">class</span> <span class="nc">ReconMiddleware</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class that implements functionality for executing reconnaissance actions on the emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ReconMiddleware.execute_tcp_syn_stealth_scan"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_syn_stealth_scan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_tcp_syn_stealth_scan</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a TCP SYN Stealth Scan action</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -87,7 +90,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_ping_scan"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_ping_scan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_ping_scan</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a Ping Scan action</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -98,7 +101,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_udp_port_scan"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_udp_port_scan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_udp_port_scan</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a UDP Port Scan action</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -109,7 +112,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_tcp_con_stealth_scan"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_con_stealth_scan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_tcp_con_stealth_scan</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a TCP CON Stealth scan action</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -120,7 +123,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_tcp_fin_scan"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_fin_scan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_tcp_fin_scan</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a TCP FIN scan action</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -131,7 +134,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_tcp_null_scan"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_null_scan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_tcp_null_scan</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a TCP Null scan action</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -142,7 +145,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_tcp_xmas_scan"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_tcp_xmas_scan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_tcp_xmas_scan</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a TCP Xmas scan action</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -153,7 +156,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_os_detection_scan"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_os_detection_scan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_os_detection_scan</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a OS detection scan action</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -164,7 +167,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_vulscan"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_vulscan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_vulscan</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a vulscan action</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -175,7 +178,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_nmap_vulners"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_nmap_vulners">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_nmap_vulners</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a nmap_vulners scan</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -186,7 +189,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_nikto_web_host_scan"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_nikto_web_host_scan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_nikto_web_host_scan</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a nikto web host scan</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -197,7 +200,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_masscan_scan"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_masscan_scan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_masscan_scan</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a masscan scan</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -208,7 +211,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_firewalk_scan"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_firewalk_scan">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_firewalk_scan</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a firewalk scan</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -219,7 +222,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_http_enum"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_http_enum">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_http_enum</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a http enum scan</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -230,7 +233,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_http_grep"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_http_grep">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_http_grep</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a http grep scan</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -241,7 +244,7 @@
 
 <div class="viewcode-block" id="ReconMiddleware.execute_finger"><a class="viewcode-back" href="../../../csle_attacker.emulation.html#csle_attacker.emulation.recon_middleware.ReconMiddleware.execute_finger">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">execute_finger</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a finger scan</span>
 
 <span class="sd">        :param s: the current state</span>

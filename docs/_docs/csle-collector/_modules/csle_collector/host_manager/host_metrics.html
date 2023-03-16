@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.host_manager.host_metrics</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.host_manager.host_metrics</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -77,7 +80,7 @@
 
 
 <div class="viewcode-block" id="HostMetrics"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_metrics.HostMetrics">[docs]</a><span class="k">class</span> <span class="nc">HostMetrics</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DTO class containing host metrics</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -85,7 +88,7 @@
                  <span class="n">num_open_connections</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                  <span class="n">num_login_events</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_processes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">num_users</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                  <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
 <span class="sd">        :param num_logged_in_users: the number of logged in users</span>
@@ -105,7 +108,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
 
 <div class="viewcode-block" id="HostMetrics.to_dto"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_metrics.HostMetrics.to_dto">[docs]</a>    <span class="k">def</span> <span class="nf">to_dto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the object into a gRPC DTO for serialization</span>
 
 <span class="sd">        :param ip: the ip to add to the DTO in addition to the metrics</span>
@@ -118,7 +121,7 @@
             <span class="n">num_processes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_processes</span><span class="p">,</span> <span class="n">num_users</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_users</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">ts</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HostMetrics.to_kafka_record"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_metrics.HostMetrics.to_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">to_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the DTO into a Kafka record string</span>
 
 <span class="sd">        :param ip: the IP to add to the record in addition to the metrics</span>
@@ -131,7 +134,7 @@
 
 <div class="viewcode-block" id="HostMetrics.from_kafka_record"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_metrics.HostMetrics.from_kafka_record">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;HostMetrics&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the Kafka record string to a DTO</span>
 
 <span class="sd">        :param record: the kafka record</span>
@@ -145,7 +148,7 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="HostMetrics.update_with_kafka_record"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_metrics.HostMetrics.update_with_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">update_with_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the DTO based on a kafka record</span>
 
 <span class="sd">        :param record: the kafka record</span>
@@ -164,7 +167,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">num_users</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;num_logged_in_users:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_logged_in_users</span><span class="si">}</span><span class="s2">, &quot;</span> \
@@ -175,7 +178,7 @@
 
 <div class="viewcode-block" id="HostMetrics.from_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_metrics.HostMetrics.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;HostMetrics&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation to an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -194,7 +197,7 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="HostMetrics.to_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_metrics.HostMetrics.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a dict representation of the instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -209,7 +212,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="HostMetrics.copy"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_metrics.HostMetrics.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;HostMetrics&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">HostMetrics</span><span class="p">(</span>
@@ -220,7 +223,7 @@
         <span class="k">return</span> <span class="n">c</span></div>
 
 <div class="viewcode-block" id="HostMetrics.get_deltas"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_metrics.HostMetrics.get_deltas">[docs]</a>    <span class="k">def</span> <span class="nf">get_deltas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stats_prime</span><span class="p">:</span> <span class="s2">&quot;HostMetrics&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the deltas between two stats objects</span>
 
 <span class="sd">        :param stats_prime: the stats object to compare with</span>
@@ -240,7 +243,7 @@
         <span class="k">return</span> <span class="n">deltas</span><span class="p">,</span> <span class="n">labels</span></div>
 
 <div class="viewcode-block" id="HostMetrics.get_values"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_metrics.HostMetrics.get_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the current values</span>
 
 <span class="sd">        :return: the values and the labels</span>
@@ -258,14 +261,14 @@
         <span class="k">return</span> <span class="n">deltas</span><span class="p">,</span> <span class="n">labels</span></div>
 
 <div class="viewcode-block" id="HostMetrics.num_attributes"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_metrics.HostMetrics.num_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">num_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: The number of attributes of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">8</span></div>
 
 <div class="viewcode-block" id="HostMetrics.schema"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_metrics.HostMetrics.schema">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">schema</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;HostMetrics&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: get the schema of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">HostMetrics</span><span class="p">()</span></div></div>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gym_csle_intrusion_response_game.constants.constants &mdash; gym-csle-intrusion-response-game 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gym-csle-intrusion-response-game
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.constants.html">gym_csle_intrusion_response_game.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.dao.html">gym_csle_intrusion_response_game.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.envs.html">gym_csle_intrusion_response_game.envs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.util.html">gym_csle_intrusion_response_game.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym-csle-intrusion-response-game</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gym_csle_intrusion_response_game.constants.constants</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gym_csle_intrusion_response_game.constants.constants</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Constants for gym-csle-intrusion-response-game</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="ZONES"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.constants.html#gym_csle_intrusion_response_game.constants.constants.ZONES">[docs]</a><span class="k">class</span> <span class="nc">ZONES</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to the zones of the network</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">REDIRECTION_ZONE</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">SHUTDOWN_ZONE</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="STATES"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.constants.html#gym_csle_intrusion_response_game.constants.constants.STATES">[docs]</a><span class="k">class</span> <span class="nc">STATES</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to the state space of the game</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">TERMINAL_STATE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">D_STATE_INDEX</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">A_STATE_INDEX</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="ATTACK_STATES"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.constants.html#gym_csle_intrusion_response_game.constants.constants.ATTACK_STATES">[docs]</a><span class="k">class</span> <span class="nc">ATTACK_STATES</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to the attack state semantics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">HEALTHY</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">RECON</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">COMPROMISED</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+
+<div class="viewcode-block" id="ATTACKER_ACTIONS"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.constants.html#gym_csle_intrusion_response_game.constants.constants.ATTACKER_ACTIONS">[docs]</a><span class="k">class</span> <span class="nc">ATTACKER_ACTIONS</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to the local attacker actions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">WAIT</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">RECON</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">BRUTE_FORCE</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">EXPLOIT</span> <span class="o">=</span> <span class="mi">3</span></div>
+
+
+<div class="viewcode-block" id="DEFENDER_ACTIONS"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.constants.html#gym_csle_intrusion_response_game.constants.constants.DEFENDER_ACTIONS">[docs]</a><span class="k">class</span> <span class="nc">DEFENDER_ACTIONS</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to the local defender actions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">WAIT</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="STATIC_DEFENDER_STRATEGIES"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.constants.html#gym_csle_intrusion_response_game.constants.constants.STATIC_DEFENDER_STRATEGIES">[docs]</a><span class="k">class</span> <span class="nc">STATIC_DEFENDER_STRATEGIES</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants representing static defender strategies</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RANDOM</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span></div>
+
+
+<div class="viewcode-block" id="STATIC_ATTACKER_STRATEGIES"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.constants.html#gym_csle_intrusion_response_game.constants.constants.STATIC_ATTACKER_STRATEGIES">[docs]</a><span class="k">class</span> <span class="nc">STATIC_ATTACKER_STRATEGIES</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants representing static attacker strategies</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RANDOM</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span></div>
+
+
+<div class="viewcode-block" id="ENV_METRICS"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.constants.html#gym_csle_intrusion_response_game.constants.constants.ENV_METRICS">[docs]</a><span class="k">class</span> <span class="nc">ENV_METRICS</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants representing environment metrics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RETURN</span> <span class="o">=</span> <span class="s2">&quot;R&quot;</span>
+    <span class="n">TIME_HORIZON</span> <span class="o">=</span> <span class="s2">&quot;T&quot;</span>
+    <span class="n">STATE</span> <span class="o">=</span> <span class="s2">&quot;s&quot;</span>
+    <span class="n">DEFENDER_ACTION</span> <span class="o">=</span> <span class="s2">&quot;a1&quot;</span>
+    <span class="n">ATTACKER_ACTION</span> <span class="o">=</span> <span class="s2">&quot;a2&quot;</span>
+    <span class="n">OBSERVATION</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span>
+    <span class="n">TIME_STEP</span> <span class="o">=</span> <span class="s2">&quot;t&quot;</span>
+    <span class="n">AVERAGE_UPPER_BOUND_RETURN</span> <span class="o">=</span> <span class="s2">&quot;average_upper_bound_return&quot;</span>
+    <span class="n">AVERAGE_RANDOM_RETURN</span> <span class="o">=</span> <span class="s2">&quot;average_random_return&quot;</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

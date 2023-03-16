@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.dao.emulation_config.sdn_controller_config</li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.dao.emulation_config.sdn_controller_config</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,7 +73,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.dao.emulation_config.sdn_controller_config</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_container_config</span> <span class="kn">import</span> <span class="n">NodeContainerConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_resources_config</span> <span class="kn">import</span> <span class="n">NodeResourcesConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_firewall_config</span> <span class="kn">import</span> <span class="n">NodeFirewallConfig</span>
@@ -76,7 +81,7 @@
 
 
 <div class="viewcode-block" id="SDNControllerConfig"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.sdn_controller_config.SDNControllerConfig">[docs]</a><span class="k">class</span> <span class="nc">SDNControllerConfig</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DTO containing configuration for the SDN controller</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -84,8 +89,10 @@
                  <span class="n">firewall_config</span><span class="p">:</span> <span class="n">NodeFirewallConfig</span><span class="p">,</span>
                  <span class="n">controller_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">controller_type</span><span class="p">:</span> <span class="n">SDNControllerType</span><span class="p">,</span> <span class="n">controller_module_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">controller_web_api_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                 <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">manager_log_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">manager_log_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">manager_max_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
+                 <span class="n">manager_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50042</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
 <span class="sd">        :param container: the container config of the controller</span>
@@ -96,6 +103,10 @@
 <span class="sd">        :param time_step_len_seconds: the length of a time-step in the emulation (for monitoring)</span>
 <span class="sd">        :param controller_module_name: the name of the controller Python module</span>
 <span class="sd">        :param controller_web_api_port: the port to run the controller&#39;s web API</span>
+<span class="sd">        :param manager_log_dir: the directory to save log files of the manager</span>
+<span class="sd">        :param manager_log_file: the file name for the manager logs</span>
+<span class="sd">        :param manager_max_workers: the maximum number of gRPC workers of the manager</span>
+<span class="sd">        :param manager_port: the port of the manager</span>
 <span class="sd">        :param version: the version</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="n">container</span>
@@ -107,10 +118,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span> <span class="o">=</span> <span class="n">controller_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controller_module_name</span> <span class="o">=</span> <span class="n">controller_module_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controller_web_api_port</span> <span class="o">=</span> <span class="n">controller_web_api_port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manager_log_file</span> <span class="o">=</span> <span class="n">manager_log_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manager_log_dir</span> <span class="o">=</span> <span class="n">manager_log_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manager_max_workers</span> <span class="o">=</span> <span class="n">manager_max_workers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">manager_port</span> <span class="o">=</span> <span class="n">manager_port</span>
 
 <div class="viewcode-block" id="SDNControllerConfig.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.sdn_controller_config.SDNControllerConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;SDNControllerConfig&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation to an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -124,12 +139,13 @@
             <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;time_step_len_seconds&quot;</span><span class="p">],</span>
             <span class="n">version</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span> <span class="n">controller_type</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;controller_type&quot;</span><span class="p">],</span> <span class="n">controller_port</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;controller_port&quot;</span><span class="p">],</span>
             <span class="n">controller_web_api_port</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;controller_web_api_port&quot;</span><span class="p">],</span> <span class="n">controller_module_name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;controller_module_name&quot;</span><span class="p">],</span>
-            <span class="n">firewall_config</span><span class="o">=</span><span class="n">NodeFirewallConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;firewall_config&quot;</span><span class="p">])</span>
-        <span class="p">)</span>
+            <span class="n">firewall_config</span><span class="o">=</span><span class="n">NodeFirewallConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;firewall_config&quot;</span><span class="p">]),</span> <span class="n">manager_port</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;manager_port&quot;</span><span class="p">],</span>
+            <span class="n">manager_log_dir</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;manager_log_dir&quot;</span><span class="p">],</span> <span class="n">manager_log_file</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;manager_log_file&quot;</span><span class="p">],</span>
+            <span class="n">manager_max_workers</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;manager_max_workers&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="SDNControllerConfig.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.sdn_controller_config.SDNControllerConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -142,20 +158,26 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;controller_module_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_module_name</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;controller_web_api_port&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller_web_api_port</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;firewall_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">firewall_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;manager_port&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager_port</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;manager_log_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager_log_file</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;manager_log_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager_log_dir</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;manager_max_workers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">manager_max_workers</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;container: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;resources: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">resources</span><span class="si">}</span><span class="s2">, time step len: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len_seconds</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;controller type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">controller_type</span><span class="si">}</span><span class="s2">, controller_port: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">controller_port</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;version: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">, controller_module_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">controller_module_name</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;controller_web_api_port: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">controller_web_api_port</span><span class="si">}</span><span class="s2">, firewall_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">firewall_config</span><span class="si">}</span><span class="s2">&quot;</span>
+               <span class="sa">f</span><span class="s2">&quot;controller_web_api_port: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">controller_web_api_port</span><span class="si">}</span><span class="s2">, firewall_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">firewall_config</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;manager_port: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manager_port</span><span class="si">}</span><span class="s2">, manager_log_file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manager_log_file</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;manager_log_dir: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manager_log_dir</span><span class="si">}</span><span class="s2">, manager_max_workers: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">manager_max_workers</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="SDNControllerConfig.to_json_str"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.sdn_controller_config.SDNControllerConfig.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the DTO into a json string</span>
 
 <span class="sd">        :return: the json string representation of the DTO</span>
@@ -165,7 +187,7 @@
         <span class="k">return</span> <span class="n">json_str</span></div>
 
 <div class="viewcode-block" id="SDNControllerConfig.to_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.sdn_controller_config.SDNControllerConfig.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the DTO to a json file</span>
 
 <span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
@@ -176,21 +198,37 @@
         <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="SDNControllerConfig.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.sdn_controller_config.SDNControllerConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SDNControllerConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">SDNControllerConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="SDNControllerConfig.copy"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.sdn_controller_config.SDNControllerConfig.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SDNControllerConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">SDNControllerConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="SDNControllerConfig.create_execution_config"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.sdn_controller_config.SDNControllerConfig.create_execution_config">[docs]</a>    <span class="k">def</span> <span class="nf">create_execution_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SDNControllerConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SDNControllerConfig.create_execution_config"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.sdn_controller_config.SDNControllerConfig.create_execution_config">[docs]</a>    <span class="k">def</span> <span class="nf">create_execution_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">physical_servers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;SDNControllerConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a new config for an execution</span>
 
 <span class="sd">        :param ip_first_octet: the first octet of the IP of the new execution</span>
+<span class="sd">        :param physical_servers: the physical servers of the execution</span>
 <span class="sd">        :return: the new config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">,</span>
+                                                                    <span class="n">physical_servers</span><span class="o">=</span><span class="n">physical_servers</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">resources</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">firewall_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">firewall_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">config</span></div></div>
@@ -203,7 +241,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

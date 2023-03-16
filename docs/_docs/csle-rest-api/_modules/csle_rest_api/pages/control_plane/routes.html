@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> csle-rest-api
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            csle-rest-api
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_rest_api.pages.control_plane.routes</li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_rest_api.pages.control_plane.routes</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -75,23 +78,31 @@
 <span class="kn">import</span> <span class="nn">csle_rest_api.constants.constants</span> <span class="k">as</span> <span class="nn">api_constants</span>
 
 
-<span class="c1"># Creates a blueprint &quot;sub application&quot; of the main REST app</span>
-<span class="n">control_plane_page_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTROL_PLANE_PAGE_RESOURCE</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span>
-                                  <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
-                                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTROL_PLANE_PAGE_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                                  <span class="n">static_url_path</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s1">&#39;</span>
-                                                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTROL_PLANE_PAGE_RESOURCE</span><span class="si">}</span><span class="s1">&#39;</span>
-                                                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s1">&#39;</span>
-                                                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">STATIC</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                                  <span class="n">static_folder</span><span class="o">=</span><span class="s2">&quot;../../../../../../management-system/csle-mgmt-webapp/build&quot;</span><span class="p">)</span>
+<div class="viewcode-block" id="get_control_plane_page_bp"><a class="viewcode-back" href="../../../../csle_rest_api.pages.control_plane.html#csle_rest_api.pages.control_plane.routes.get_control_plane_page_bp">[docs]</a><span class="k">def</span> <span class="nf">get_control_plane_page_bp</span><span class="p">(</span><span class="n">static_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Blueprint</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a blueprint &quot;sub application&quot; of the main REST app that represents the control plane page</span>
 
-
-<div class="viewcode-block" id="control_plane_page"><a class="viewcode-back" href="../../../../csle_rest_api.pages.control_plane.html#csle_rest_api.pages.control_plane.routes.control_plane_page">[docs]</a><span class="nd">@control_plane_page_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">control_plane_page</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    :return: static resources for the /control-plane-page url</span>
+<span class="sd">    :param static_folder: the folder with the static resources</span>
+<span class="sd">    :return: the created blueprint</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">control_plane_page_bp</span><span class="o">.</span><span class="n">send_static_file</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">STATIC_RESOURCE_INDEX</span><span class="p">)</span></div>
+    <span class="c1"># Creates a blueprint &quot;sub application&quot; of the main REST app</span>
+    <span class="n">control_plane_page_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTROL_PLANE_PAGE_RESOURCE</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span>
+                                      <span class="n">url_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s2">&quot;</span>
+                                                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTROL_PLANE_PAGE_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                                      <span class="n">static_url_path</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s1">&#39;</span>
+                                                      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">CONTROL_PLANE_PAGE_RESOURCE</span><span class="si">}</span><span class="s1">&#39;</span>
+                                                      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span><span class="si">}</span><span class="s1">&#39;</span>
+                                                      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">STATIC</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                      <span class="n">static_folder</span><span class="o">=</span><span class="n">static_folder</span><span class="p">)</span>
+
+    <span class="nd">@control_plane_page_bp</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">HTTP_REST_GET</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">control_plane_page</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: static resources for the /control-plane-page url</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">control_plane_page_bp</span><span class="o">.</span><span class="n">send_static_file</span><span class="p">(</span><span class="n">api_constants</span><span class="o">.</span><span class="n">MGMT_WEBAPP</span><span class="o">.</span><span class="n">STATIC_RESOURCE_INDEX</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">control_plane_page_bp</span></div>
 </pre></div>
 
            </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_collector.snort_ids_manager package &mdash; csle-collector 0.0.1 documentation</title>
@@ -12,9 +12,8 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -27,11 +26,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -47,13 +50,100 @@
 <li class="toctree-l1"><a class="reference internal" href="csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_collector.snort_ids_manager package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.query_snort_ids_manager">csle_collector.snort_ids_manager.query_snort_ids_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_alert">csle_collector.snort_ids_manager.snort_ids_alert module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_alert_counters">csle_collector.snort_ids_manager.snort_ids_alert_counters module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_manager">csle_collector.snort_ids_manager.snort_ids_manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.query_snort_ids_manager">csle_collector.snort_ids_manager.query_snort_ids_manager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_alerts"><code class="docutils literal notranslate"><span class="pre">get_snort_ids_alerts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_monitor_status"><code class="docutils literal notranslate"><span class="pre">get_snort_ids_monitor_status()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids"><code class="docutils literal notranslate"><span class="pre">start_snort_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids_monitor"><code class="docutils literal notranslate"><span class="pre">start_snort_ids_monitor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids"><code class="docutils literal notranslate"><span class="pre">stop_snort_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids_monitor"><code class="docutils literal notranslate"><span class="pre">stop_snort_ids_monitor()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_alert">csle_collector.snort_ids_manager.snort_ids_alert module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlert</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.fast_log_parse"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlert.fast_log_parse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.parse_from_str"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlert.parse_from_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.set_priority"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlert.set_priority()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><code class="docutils literal notranslate"><span class="pre">SnortIdsFastLogAlert</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_alert_counters">csle_collector.snort_ids_manager.snort_ids_alert_counters module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.add"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.copy"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.count"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.count()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.from_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.get_deltas"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.get_deltas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.num_attributes"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.num_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.schema"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dto"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.to_dto()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.to_kafka_record()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.update_with_kafka_record"><code class="docutils literal notranslate"><span class="pre">SnortIdsAlertCounters.update_with_kafka_record()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_manager">csle_collector.snort_ids_manager.snort_ids_manager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread"><code class="docutils literal notranslate"><span class="pre">SnortIDSMonitorThread</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread.run"><code class="docutils literal notranslate"><span class="pre">SnortIDSMonitorThread.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.getSnortIdsAlerts"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.getSnortIdsAlerts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.getSnortIdsMonitorStatus"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.getSnortIdsMonitorStatus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.startSnortIds"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.startSnortIds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.startSnortIdsMonitor"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.startSnortIdsMonitor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.stopSnortIds"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.stopSnortIds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.stopSnortIdsMonitor"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.stopSnortIdsMonitor()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager.serve"><code class="docutils literal notranslate"><span class="pre">serve()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_manager_pb2">csle_collector.snort_ids_manager.snort_ids_manager_pb2 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_manager_util">csle_collector.snort_ids_manager.snort_ids_manager_util module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManager"><code class="docutils literal notranslate"><span class="pre">SnortIdsManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManager.getSnortIdsAlerts"><code class="docutils literal notranslate"><span class="pre">SnortIdsManager.getSnortIdsAlerts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManager.getSnortIdsMonitorStatus"><code class="docutils literal notranslate"><span class="pre">SnortIdsManager.getSnortIdsMonitorStatus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManager.startSnortIds"><code class="docutils literal notranslate"><span class="pre">SnortIdsManager.startSnortIds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManager.startSnortIdsMonitor"><code class="docutils literal notranslate"><span class="pre">SnortIdsManager.startSnortIdsMonitor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManager.stopSnortIds"><code class="docutils literal notranslate"><span class="pre">SnortIdsManager.stopSnortIds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManager.stopSnortIdsMonitor"><code class="docutils literal notranslate"><span class="pre">SnortIdsManager.stopSnortIdsMonitor()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer.getSnortIdsAlerts"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.getSnortIdsAlerts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer.getSnortIdsMonitorStatus"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.getSnortIdsMonitorStatus()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer.startSnortIds"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.startSnortIds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer.startSnortIdsMonitor"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.startSnortIdsMonitor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer.stopSnortIds"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.stopSnortIds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer.stopSnortIdsMonitor"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerServicer.stopSnortIdsMonitor()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerStub</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.add_SnortIdsManagerServicer_to_server"><code class="docutils literal notranslate"><span class="pre">add_SnortIdsManagerServicer_to_server()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager.snort_ids_manager_util">csle_collector.snort_ids_manager.snort_ids_manager_util module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerUtil</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_alerts"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerUtil.check_snort_ids_alerts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_fast_log"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerUtil.check_snort_ids_fast_log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.get_latest_snort_alert_ts"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerUtil.get_latest_snort_alert_ts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.read_snort_ids_data"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerUtil.read_snort_ids_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_empty"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerUtil.snort_ids_log_dto_empty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_from_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerUtil.snort_ids_log_dto_from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_to_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerUtil.snort_ids_log_dto_to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_empty"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerUtil.snort_ids_monitor_dto_empty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_to_dict"><code class="docutils literal notranslate"><span class="pre">SnortIdsManagerUtil.snort_ids_monitor_dto_to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_collector.snort_ids_manager">Module contents</a></li>
 </ul>
 </li>
@@ -73,8 +163,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_collector.snort_ids_manager package</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">csle_collector.snort_ids_manager package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_collector.snort_ids_manager.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -85,18 +175,18 @@
            <div itemprop="articleBody">
              
   <section id="csle-collector-snort-ids-manager-package">
-<h1>csle_collector.snort_ids_manager package<a class="headerlink" href="#csle-collector-snort-ids-manager-package" title="Permalink to this headline"></a></h1>
+<h1>csle_collector.snort_ids_manager package<a class="headerlink" href="#csle-collector-snort-ids-manager-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_collector.snort_ids_manager.query_snort_ids_manager">
-<span id="csle-collector-snort-ids-manager-query-snort-ids-manager-module"></span><h2>csle_collector.snort_ids_manager.query_snort_ids_manager module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.query_snort_ids_manager" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-snort-ids-manager-query-snort-ids-manager-module"></span><h2>csle_collector.snort_ids_manager.query_snort_ids_manager module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.query_snort_ids_manager" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_alerts">
-<span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.query_snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">get_snort_ids_alerts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/query_snort_ids_manager.html#get_snort_ids_alerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_alerts" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.query_snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">get_snort_ids_alerts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><span class="pre">SnortIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/query_snort_ids_manager.html#get_snort_ids_alerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_alerts" title="Permalink to this definition"></a></dt>
 <dd><p>Queries the IDS manager for the data of the IDS log from a given time-step</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timestamp</strong> – the timtestamp to parse the log from</p></li>
@@ -104,7 +194,7 @@
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>an IdsLogDTO with data of the IDS log</p>
 </dd>
 </dl>
@@ -112,16 +202,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_monitor_status">
-<span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.query_snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">get_snort_ids_monitor_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/query_snort_ids_manager.html#get_snort_ids_monitor_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_monitor_status" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.query_snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">get_snort_ids_monitor_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><span class="pre">SnortIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/query_snort_ids_manager.html#get_snort_ids_monitor_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_monitor_status" title="Permalink to this definition"></a></dt>
 <dd><p>Queries the IDS manager for the status of the IDS monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>an IdsMonitorDTO describing the status of the IDS monitor thread</p>
 </dd>
 </dl>
@@ -129,16 +219,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids">
-<span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.query_snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">start_snort_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/query_snort_ids_manager.html#start_snort_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.query_snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">start_snort_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><span class="pre">SnortIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/query_snort_ids_manager.html#start_snort_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the IDS manager to start the Snort IDS</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>an IdsMonitorDTO describing the status of the IDS and its monitor thread</p>
 </dd>
 </dl>
@@ -146,10 +236,10 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids_monitor">
-<span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.query_snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">start_snort_ids_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/query_snort_ids_manager.html#start_snort_ids_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids_monitor" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.query_snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">start_snort_ids_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><span class="pre">SnortIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/query_snort_ids_manager.html#start_snort_ids_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids_monitor" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the IDS manager to start the IDS monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>kafka_ip</strong> – the ip of the Kafka server</p></li>
 <li><p><strong>kafka_port</strong> – the port of the Kafka server</p></li>
@@ -159,7 +249,7 @@
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>an IdsMonitorDTO describing the status of the IDS monitor thread</p>
 </dd>
 </dl>
@@ -167,16 +257,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids">
-<span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.query_snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">stop_snort_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/query_snort_ids_manager.html#stop_snort_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.query_snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">stop_snort_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><span class="pre">SnortIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/query_snort_ids_manager.html#stop_snort_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the IDS manager to stop the Snort IDS</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>an IdsMonitorDTO describing the status of the IDS and its monitor thread</p>
 </dd>
 </dl>
@@ -184,16 +274,16 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids_monitor">
-<span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.query_snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">stop_snort_ids_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/query_snort_ids_manager.html#stop_snort_ids_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids_monitor" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.query_snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">stop_snort_ids_monitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub"><span class="pre">SnortIdsManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/query_snort_ids_manager.html#stop_snort_ids_monitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids_monitor" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the IDS manager to stop the IDS monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
 <li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>an IdsMonitorDTO describing the status of the IDS monitor thread</p>
 </dd>
 </dl>
@@ -201,7 +291,7 @@
 
 </section>
 <section id="module-csle_collector.snort_ids_manager.snort_ids_alert">
-<span id="csle-collector-snort-ids-manager-snort-ids-alert-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_alert module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_alert" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-snort-ids-manager-snort-ids-alert-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_alert module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_alert" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert.</span></span><span class="sig-name descname"><span class="pre">SnortIdsAlert</span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert.html#SnortIdsAlert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert" title="Permalink to this definition"></a></dt>
@@ -209,16 +299,16 @@
 <p>Object representing an IDS Alert</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.fast_log_parse">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fast_log_parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fast_log_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert.html#SnortIdsAlert.fast_log_parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.fast_log_parse" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fast_log_parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fast_log_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><span class="pre">SnortIdsFastLogAlert</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert.html#SnortIdsAlert.fast_log_parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.fast_log_parse" title="Permalink to this definition"></a></dt>
 <dd><p>Parses the IDS Alert from a given string from the fast-log of Snort</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fast_log_str</strong> – the fast log string to parse</p></li>
 <li><p><strong>year</strong> – the year</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the priority, the class, and the time-stamp</p>
 </dd>
 </dl>
@@ -226,16 +316,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.parse_from_str">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_str_record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert.html#SnortIdsAlert.parse_from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.parse_from_str" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_str_record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert"><span class="pre">SnortIdsAlert</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert.html#SnortIdsAlert.parse_from_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.parse_from_str" title="Permalink to this definition"></a></dt>
 <dd><p>Parses the IDS alert from a string</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>csv_str_record</strong> – the string to parse</p></li>
 <li><p><strong>year</strong> – the year of the entry</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the parsed IDS Alert</p>
 </dd>
 </dl>
@@ -246,10 +336,10 @@
 <span class="sig-name descname"><span class="pre">set_priority</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert.html#SnortIdsAlert.set_priority"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert.set_priority" title="Permalink to this definition"></a></dt>
 <dd><p>Sets the priority of the alert DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>priority</strong> – the priority to set</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -266,7 +356,7 @@
 
 </section>
 <section id="module-csle_collector.snort_ids_manager.snort_ids_alert_counters">
-<span id="csle-collector-snort-ids-manager-snort-ids-alert-counters-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_alert_counters module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_alert_counters" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-snort-ids-manager-snort-ids-alert-counters-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_alert_counters module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_alert_counters" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert_counters.</span></span><span class="sig-name descname"><span class="pre">SnortIdsAlertCounters</span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="Permalink to this definition"></a></dt>
@@ -274,13 +364,13 @@
 <p>DTO containing statistics from the Snort IDS log</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.add" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.add" title="Permalink to this definition"></a></dt>
 <dd><p>Adds another alert counters object to this one</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>alert_counters</strong> – the counters to add</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -288,9 +378,9 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.copy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.copy" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a copy of the object</p>
 </dd>
 </dl>
@@ -298,13 +388,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.count">
-<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alerts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.count" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alerts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><span class="pre">SnortIdsFastLogAlert</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.count" title="Permalink to this definition"></a></dt>
 <dd><p>Counts the list of alerts</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>alerts</strong> – list of alerts from the log</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -312,13 +402,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_dict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representaion of the object into an instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the DTO</p>
 </dd>
 </dl>
@@ -326,13 +416,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_kafka_record">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.from_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_kafka_record" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.from_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a kafka record to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>record</strong> – the kafka record to convert</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the DTO</p>
 </dd>
 </dl>
@@ -340,13 +430,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.get_deltas">
-<span class="sig-name descname"><span class="pre">get_deltas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counters_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.get_deltas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.get_deltas" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_deltas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">counters_prime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.get_deltas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.get_deltas" title="Permalink to this definition"></a></dt>
 <dd><p>Get the deltas between two counters objects</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>counters_prime</strong> – the counters object to compare with</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the deltas and the labels</p>
 </dd>
 </dl>
@@ -356,7 +446,7 @@
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.num_attributes">
 <span class="sig-name descname"><span class="pre">num_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.num_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.num_attributes" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The number of attributes of the DTO</p>
 </dd>
 </dl>
@@ -364,9 +454,9 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.schema">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.schema" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.schema" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>get the schema of the DTO</p>
 </dd>
 </dl>
@@ -376,7 +466,7 @@
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dict">
 <span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dict" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a dict representation of the object</p>
 </dd>
 </dl>
@@ -384,13 +474,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dto">
-<span class="sig-name descname"><span class="pre">to_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.to_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dto" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.to_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dto" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the object into a gRPC DTO for serialization</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ip</strong> – the ip to add to the DTO in addition to the statistics</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A csle_collector.snort_ids_manager.snort_ids_manager_pb2.IdsLogDTOb</p>
 </dd>
 </dl>
@@ -401,10 +491,10 @@
 <span class="sig-name descname"><span class="pre">to_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.to_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Converts the DTO into a kafka record</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ip</strong> – the ip to add to the record in addition to the IDS statistics</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a comma-separated string representing the kafka record</p>
 </dd>
 </dl>
@@ -415,10 +505,10 @@
 <span class="sig-name descname"><span class="pre">update_with_kafka_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_alert_counters.html#SnortIdsAlertCounters.update_with_kafka_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.update_with_kafka_record" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the DTO with a kafka record</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>record</strong> – the kafka record to use for updating</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -428,18 +518,18 @@
 
 </section>
 <section id="module-csle_collector.snort_ids_manager.snort_ids_manager">
-<span id="csle-collector-snort-ids-manager-snort-ids-manager-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_manager module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_manager" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-snort-ids-manager-snort-ids-manager-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_manager module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_manager" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">SnortIDSMonitorThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hostname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIDSMonitorThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
 <p>Thread that collects the Snort IDS statistics and pushes it to Kafka periodically</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIDSMonitorThread.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIDSMonitorThread.run" title="Permalink to this definition"></a></dt>
 <dd><p>Main loop of the thread. Parses the IDS log and pushes it to Kafka periodically</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -450,20 +540,20 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">SnortIdsManagerServicer</span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer"><code class="xref py py-class docutils literal notranslate"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer" title="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnortIdsManagerServicer</span></code></a></p>
 <p>gRPC server for collecting Snort IDS statistics.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.getSnortIdsAlerts">
-<span class="sig-name descname"><span class="pre">getSnortIdsAlerts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">snort_ids_manager_pb2.GetSnortIdsAlertsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer.getSnortIdsAlerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.getSnortIdsAlerts" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">getSnortIdsAlerts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetSnortIdsAlertsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer.getSnortIdsAlerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.getSnortIdsAlerts" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the statistics of the IDS log from a given timestamp</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a DTO with IDS statistics</p>
 </dd>
 </dl>
@@ -471,16 +561,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.getSnortIdsMonitorStatus">
-<span class="sig-name descname"><span class="pre">getSnortIdsMonitorStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">snort_ids_manager_pb2.GetSnortIdsMonitorStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer.getSnortIdsMonitorStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.getSnortIdsMonitorStatus" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">getSnortIdsMonitorStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GetSnortIdsMonitorStatusMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer.getSnortIdsMonitorStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.getSnortIdsMonitorStatus" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the status of the Snort IDS Monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a DTO with the status of the IDS monitor</p>
 </dd>
 </dl>
@@ -488,16 +578,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.startSnortIds">
-<span class="sig-name descname"><span class="pre">startSnortIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">snort_ids_manager_pb2.StartSnortIdsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer.startSnortIds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.startSnortIds" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">startSnortIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartSnortIdsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer.startSnortIds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.startSnortIds" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the Snort IDS</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a DTO with the status of the IDS and its monitor thread</p>
 </dd>
 </dl>
@@ -505,16 +595,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.startSnortIdsMonitor">
-<span class="sig-name descname"><span class="pre">startSnortIdsMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">snort_ids_manager_pb2.StartSnortIdsMonitorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer.startSnortIdsMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.startSnortIdsMonitor" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">startSnortIdsMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartSnortIdsMonitorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer.startSnortIdsMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.startSnortIdsMonitor" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the Snort IDS monitor thread</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a DTO with the status of the IDS monitor thread</p>
 </dd>
 </dl>
@@ -522,16 +612,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.stopSnortIds">
-<span class="sig-name descname"><span class="pre">stopSnortIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">snort_ids_manager_pb2.StartSnortIdsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer.stopSnortIds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.stopSnortIds" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">stopSnortIds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartSnortIdsMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer.stopSnortIds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.stopSnortIds" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the Snort IDS</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a DTO with the status of the IDS and its monitor thread</p>
 </dd>
 </dl>
@@ -539,16 +629,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.stopSnortIdsMonitor">
-<span class="sig-name descname"><span class="pre">stopSnortIdsMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">snort_ids_manager_pb2.StopSnortIdsMonitorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">grpc.ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer.stopSnortIdsMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.stopSnortIdsMonitor" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">stopSnortIdsMonitor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopSnortIdsMonitorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#SnortIdsManagerServicer.stopSnortIdsMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.SnortIdsManagerServicer.stopSnortIdsMonitor" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the Snort IDS monitor thread if it is running</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>request</strong> – the gRPC request</p></li>
 <li><p><strong>context</strong> – the gRPC context</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a DTO with the status of the IDS monitor thread</p>
 </dd>
 </dl>
@@ -561,7 +651,7 @@
 <span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager.</span></span><span class="sig-name descname"><span class="pre">serve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50048</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'snort_ids_manager.log'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager.html#serve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager.serve" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the gRPC server for managing clients</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>port</strong> – the port that the server will listen to</p></li>
 <li><p><strong>log_dir</strong> – the directory to write the log file</p></li>
@@ -569,7 +659,7 @@
 <li><p><strong>max_workers</strong> – the maximum number of GRPC workers</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -577,11 +667,11 @@
 
 </section>
 <section id="module-csle_collector.snort_ids_manager.snort_ids_manager_pb2">
-<span id="csle-collector-snort-ids-manager-snort-ids-manager-pb2-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_manager_pb2 module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_manager_pb2" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-snort-ids-manager-snort-ids-manager-pb2-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_manager_pb2 module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_manager_pb2" title="Permalink to this heading"></a></h2>
 <p>Generated protocol buffer code.</p>
 </section>
 <section id="module-csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc">
-<span id="csle-collector-snort-ids-manager-snort-ids-manager-pb2-grpc-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-snort-ids-manager-snort-ids-manager-pb2-grpc-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc" title="Permalink to this heading"></a></h2>
 <p>Client and server classes corresponding to protobuf-defined services.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManager">
@@ -677,7 +767,7 @@
 
 </section>
 <section id="module-csle_collector.snort_ids_manager.snort_ids_manager_util">
-<span id="csle-collector-snort-ids-manager-snort-ids-manager-util-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_manager_util module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_manager_util" title="Permalink to this headline"></a></h2>
+<span id="csle-collector-snort-ids-manager-snort-ids-manager-util-module"></span><h2>csle_collector.snort_ids_manager.snort_ids_manager_util module<a class="headerlink" href="#module-csle_collector.snort_ids_manager.snort_ids_manager_util" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.snort_ids_manager.snort_ids_manager_util.</span></span><span class="sig-name descname"><span class="pre">SnortIdsManagerUtil</span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil" title="Permalink to this definition"></a></dt>
@@ -685,10 +775,10 @@
 <p>Class with utility functions related to the Snort IDS Manager</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_alerts">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_snort_ids_alerts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.check_snort_ids_alerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_alerts" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_snort_ids_alerts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsAlert"><span class="pre">SnortIdsAlert</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.check_snort_ids_alerts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_alerts" title="Permalink to this definition"></a></dt>
 <dd><p>Reads alerts from the Snort IDS alerts log</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a list of alerts</p>
 </dd>
 </dl>
@@ -696,13 +786,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_fast_log">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_snort_ids_fast_log</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.check_snort_ids_fast_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_fast_log" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_snort_ids_fast_log</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert" title="csle_collector.snort_ids_manager.snort_ids_alert.SnortIdsFastLogAlert"><span class="pre">SnortIdsFastLogAlert</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.check_snort_ids_fast_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_fast_log" title="Permalink to this definition"></a></dt>
 <dd><p>Reads alerts from the Snort IDS fast-log</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>env_config</strong> – the environment config</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a list of alerts</p>
 </dd>
 </dl>
@@ -713,10 +803,10 @@
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_latest_snort_alert_ts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.get_latest_snort_alert_ts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.get_latest_snort_alert_ts" title="Permalink to this definition"></a></dt>
 <dd><p>Gets the latest timestamp in the snort alerts log</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>env_config</strong> – the environment config</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the latest timestamp</p>
 </dd>
 </dl>
@@ -724,16 +814,16 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.read_snort_ids_data">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_snort_ids_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">episode_last_alert_ts:</span> <span class="pre">&lt;module</span> <span class="pre">'datetime'</span> <span class="pre">from</span> <span class="pre">'/home/kim/miniconda3/lib/python3.9/datetime.py'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.read_snort_ids_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.read_snort_ids_data" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_snort_ids_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">episode_last_alert_ts:</span> <span class="pre">&lt;module</span> <span class="pre">'datetime'</span> <span class="pre">from</span> <span class="pre">'/Users/kimham/anaconda3/envs/py39/lib/python3.9/datetime.py'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters" title="csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters"><span class="pre">SnortIdsAlertCounters</span></a></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.read_snort_ids_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.read_snort_ids_data" title="Permalink to this definition"></a></dt>
 <dd><p>Measures metrics from the Snort ids</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>env_config</strong> – environment configuration</p></li>
 <li><p><strong>episode_last_alert_ts</strong> – timestamp when the episode started</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>ids statistics</p>
 </dd>
 </dl>
@@ -741,9 +831,9 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_empty">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_log_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.snort_ids_log_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_empty" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_log_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.snort_ids_log_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_empty" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>an empty SnortIdsLogDTO</p>
 </dd>
 </dl>
@@ -751,13 +841,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_log_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.snort_ids_log_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_from_dict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_log_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsLogDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.snort_ids_log_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of a SnortIdsLogDTO to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -765,13 +855,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_to_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_log_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_log_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">snort_ids_manager_pb2.SnortIdsLogDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.snort_ids_log_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_to_dict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_log_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_log_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsLogDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.snort_ids_log_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_to_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a SnortIdsLogDTO to a dict</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>snort_ids_log_dto</strong> – the DTO to convert</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -779,9 +869,9 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_empty">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_monitor_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.snort_ids_monitor_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_empty" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_monitor_dto_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.snort_ids_monitor_dto_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_empty" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>An empty SnortIdsMonitorDTO</p>
 </dd>
 </dl>
@@ -789,13 +879,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_monitor_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_monitor_dto_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsMonitorDTO</span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a dict representation of a SnortIDSMonitorDTO to a DTO</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>the converted DTO</p>
 </dd>
 </dl>
@@ -803,13 +893,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_to_dict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_monitor_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_monitor_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">snort_ids_manager_pb2.SnortIdsMonitorDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.snort_ids_monitor_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_to_dict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_monitor_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_monitor_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsMonitorDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_collector/snort_ids_manager/snort_ids_manager_util.html#SnortIdsManagerUtil.snort_ids_monitor_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_to_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a SnortIDSMonitorDTO to a dict</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>snort_ids_monitor_dto</strong> – the dto to convert</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a dict representation of the DTO</p>
 </dd>
 </dl>
@@ -819,7 +909,7 @@
 
 </section>
 <section id="module-csle_collector.snort_ids_manager">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_collector.snort_ids_manager" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_collector.snort_ids_manager" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

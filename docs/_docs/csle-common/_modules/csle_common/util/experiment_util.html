@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.util.experiment_util</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.util.experiment_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -90,13 +95,13 @@
 
 
 <div class="viewcode-block" id="ExperimentUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil">[docs]</a><span class="k">class</span> <span class="nc">ExperimentUtil</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class with utility functions related to training</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ExperimentUtil.get_subdir"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.get_subdir">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_subdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">results_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">subdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function to construct the subdir string from a given results dir, subdir, and random seed</span>
 
 <span class="sd">        :param output_dir: the base output directory</span>
@@ -110,7 +115,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.create_artifact_dirs"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.create_artifact_dirs">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_artifact_dirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates artifact directories if they do not already exist</span>
 
 <span class="sd">        :param output_dir: the base directory</span>
@@ -148,7 +153,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.setup_experiment_logger"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.setup_experiment_logger">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">setup_experiment_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logdir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">time_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Configures the logger for writing log-data of training</span>
 
 <span class="sd">        :param name: name of the logger</span>
@@ -180,7 +185,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.write_emulation_config_file"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.write_emulation_config_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">write_emulation_config_file</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Writes a config object to a config file</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config object</span>
@@ -193,7 +198,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.write_simulation_config_file"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.write_simulation_config_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">write_simulation_config_file</span><span class="p">(</span><span class="n">simulation_env_config</span><span class="p">:</span> <span class="n">SimulationEnvConfig</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Writes a config object to a config file</span>
 
 <span class="sd">        :param simulation_env_config: the simulation env config object</span>
@@ -206,7 +211,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.read_emulation_env_config"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.read_emulation_env_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_emulation_env_config</span><span class="p">(</span><span class="n">emulation_env_config_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationEnvConfig</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads emulation env config from a json file</span>
 
 <span class="sd">        :param emulation_env_config_path: the path to the emulation env config file</span>
@@ -219,7 +224,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.read_simulation_env_config"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.read_simulation_env_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_simulation_env_config</span><span class="p">(</span><span class="n">simulation_env_config_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimulationEnvConfig</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads simulation env config from a json file</span>
 
 <span class="sd">        :param simulation_env_config_path: the path to the simulation env config file</span>
@@ -232,7 +237,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.read_env_picture"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.read_env_picture">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_env_picture</span><span class="p">(</span><span class="n">env_picture_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads the environment topology picture from a file</span>
 
 <span class="sd">        :param env_picture_path: the path to picture</span>
@@ -244,7 +249,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.read_containers_config"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.read_containers_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_containers_config</span><span class="p">(</span><span class="n">containers_config_path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContainersConfig</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads containers_config of the experiment from a json file</span>
 
 <span class="sd">        :param containers_config_path: the path to the containers_config file</span>
@@ -257,7 +262,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.parse_args"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.parse_args">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="n">default_config_path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parses the commandline arguments with argparse</span>
 
 <span class="sd">        :param default_config_path: default path to config file</span>
@@ -277,14 +282,14 @@
 
 <div class="viewcode-block" id="ExperimentUtil.get_script_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.get_script_path">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_script_path</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the script path</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
 
 <div class="viewcode-block" id="ExperimentUtil.default_output_dir"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_output_dir">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">default_output_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the default output dir</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">script_dir</span> <span class="o">=</span> <span class="n">ExperimentUtil</span><span class="o">.</span><span class="n">get_script_path</span><span class="p">()</span>
@@ -292,7 +297,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.default_emulation_config_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_emulation_config_path">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">default_emulation_config_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param out_dir: directory to write</span>
 <span class="sd">        :return: the default path to emulation config file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -306,7 +311,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.default_simulation_config_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_simulation_config_path">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">default_simulation_config_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param out_dir: directory to write</span>
 <span class="sd">        :return: the default path to simulatio config file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -320,7 +325,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.default_emulation_picture_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_emulation_picture_path">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">default_emulation_picture_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param out_dir: directory to write</span>
 <span class="sd">        :return: the default path to emulation img file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -333,7 +338,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.default_simulation_picture_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_simulation_picture_path">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">default_simulation_picture_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param out_dir: directory to write</span>
 <span class="sd">        :return: the default path to simulatio img file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -347,7 +352,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.default_containers_folders_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_containers_folders_path">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">default_containers_folders_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param out_dir: directory to write</span>
 <span class="sd">        :return: the default path to container folders</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -361,7 +366,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.default_makefile_template_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_makefile_template_path">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">default_makefile_template_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param out_dir: directory to write</span>
 <span class="sd">        :return: the default path to makefile tempalte</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -376,7 +381,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.default_makefile_path"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.default_makefile_path">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">default_makefile_path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param out_dir: directory to write</span>
 <span class="sd">        :return: the default path to makefile tempalte</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -391,7 +396,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.running_average"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.running_average">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">running_average</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39; Function used to compute the running average</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39; Function used to compute the running average</span>
 <span class="sd">            of the last N elements of a vector x</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
@@ -405,7 +410,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.running_average_list"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.running_average_list">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">running_average_list</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39; Function used to compute the running average</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39; Function used to compute the running average</span>
 <span class="sd">            of the last N elements of a vector x</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
@@ -419,7 +424,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.mean_confidence_interval"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.mean_confidence_interval">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">mean_confidence_interval</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.95</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute confidence intervals</span>
 
 <span class="sd">        :param data: the data</span>
@@ -434,7 +439,7 @@
 
 <div class="viewcode-block" id="ExperimentUtil.set_seed"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.experiment_util.ExperimentUtil.set_seed">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the random seed</span>
 
 <span class="sd">        :param seed: the seed to set</span>
@@ -452,7 +457,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

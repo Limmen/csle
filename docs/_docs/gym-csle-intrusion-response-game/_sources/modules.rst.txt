@@ -1,7 +1,7 @@
-gym_csle_stopping_game
-======================
+gym_csle_intrusion_response_game
+================================
 
 .. toctree::
    :maxdepth: 4
 
-   gym_csle_stopping_game
+   gym_csle_intrusion_response_game

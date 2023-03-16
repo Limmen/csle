@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
-        <script src="../../../../../_static/jquery.js"></script>
-        <script src="../../../../../_static/underscore.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.dao.emulation_observation.defender.emulation_defender_observation_state</li>
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.dao.emulation_observation.defender.emulation_defender_observation_state</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,7 +73,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.dao.emulation_observation.defender.emulation_defender_observation_state</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state</span> \
     <span class="kn">import</span> <span class="nn">EmulationDefenderMachineObservationState</span>
@@ -90,18 +95,18 @@
 
 
 <div class="viewcode-block" id="EmulationDefenderObservationState"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState">[docs]</a><span class="k">class</span> <span class="nc">EmulationDefenderObservationState</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents the defender&#39;s agent&#39;s current belief state of the emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kafka_config</span><span class="p">:</span> <span class="n">KafkaConfig</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kafka_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">KafkaConfig</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
                  <span class="n">client_population_metrics</span><span class="p">:</span> <span class="n">ClientPopulationMetrics</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">docker_stats</span><span class="p">:</span> <span class="n">DockerStats</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">snort_ids_alert_counters</span><span class="p">:</span> <span class="n">SnortIdsAlertCounters</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">ossec_ids_alert_counters</span><span class="p">:</span> <span class="n">OSSECIdsAlertCounters</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">aggregated_host_metrics</span><span class="p">:</span> <span class="n">HostMetrics</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">defender_actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderAction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">attacker_actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationAttackerAction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
 <span class="sd">        :param kafka_config: the kafka config</span>
@@ -151,7 +156,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">aggregated_host_metrics_thread</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="EmulationDefenderObservationState.start_monitoring_threads"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.start_monitoring_threads">[docs]</a>    <span class="k">def</span> <span class="nf">start_monitoring_threads</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the avg host metrics thread</span>
 
 <span class="sd">        :return: None</span>
@@ -202,13 +207,16 @@
 
 <div class="viewcode-block" id="EmulationDefenderObservationState.from_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderObservationState&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation of the object to an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
 <span class="sd">        :return: the created instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="n">EmulationDefenderObservationState</span><span class="p">(</span><span class="n">kafka_config</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;kafka_config&quot;</span><span class="p">])</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">EmulationDefenderObservationState</span><span class="p">(</span><span class="n">kafka_config</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;kafka_config&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">EmulationDefenderObservationState</span><span class="p">(</span><span class="n">kafka_config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">machines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">EmulationDefenderMachineObservationState</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">x</span><span class="p">),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;machines&quot;</span><span class="p">]))</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">actions_tried</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;actions_tried&quot;</span><span class="p">])))</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">client_population_metrics</span> <span class="o">=</span> <span class="n">ClientPopulationMetrics</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;client_population_metrics&quot;</span><span class="p">])</span>
@@ -218,7 +226,6 @@
         <span class="n">obj</span><span class="o">.</span><span class="n">aggregated_host_metrics</span> <span class="o">=</span> <span class="n">HostMetrics</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;aggregated_host_metrics&quot;</span><span class="p">])</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">attacker_actions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attacker_actions&quot;</span><span class="p">]))</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">defender_actions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">EmulationDefenderAction</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;defender_actions&quot;</span><span class="p">]))</span>
-        <span class="n">obj</span><span class="o">.</span><span class="n">kafka_config</span> <span class="o">=</span> <span class="n">KafkaConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;kafka_config&quot;</span><span class="p">])</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">avg_aggregated_host_metrics</span> <span class="o">=</span> <span class="n">HostMetrics</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;avg_aggregated_host_metrics&quot;</span><span class="p">])</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">avg_docker_stats</span> <span class="o">=</span> <span class="n">DockerStats</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;avg_docker_stats&quot;</span><span class="p">])</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">avg_client_population_metrics</span> <span class="o">=</span> <span class="n">ClientPopulationMetrics</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;avg_client_population_metrics&quot;</span><span class="p">])</span>
@@ -227,7 +234,7 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderObservationState.to_dict"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -237,7 +244,10 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_stats&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">docker_stats</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;snort_ids_alert_counters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ossec_ids_alert_counters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_alert_counters</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;kafka_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s2">&quot;kafka_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s2">&quot;kafka_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attacker_actions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacker_actions</span><span class="p">))</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;defender_actions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">defender_actions</span><span class="p">))</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;aggregated_host_metrics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aggregated_host_metrics</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
@@ -249,7 +259,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderObservationState.sort_machines"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.sort_machines">[docs]</a>    <span class="k">def</span> <span class="nf">sort_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sorts the machines in the observation</span>
 
 <span class="sd">        :return: None</span>
@@ -257,7 +267,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">machines</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machines</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderObservationState.cleanup"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cleans up the machines in the observation</span>
 
 <span class="sd">        :return: None</span>
@@ -286,7 +296,7 @@
             <span class="n">m</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderObservationState.reset_metric_lists"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.reset_metric_lists">[docs]</a>    <span class="k">def</span> <span class="nf">reset_metric_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resets the metric lists</span>
 
 <span class="sd">        :return: None</span>
@@ -298,7 +308,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">aggregated_host_metrics_thread</span><span class="o">.</span><span class="n">host_metrics_list</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderObservationState.average_metric_lists"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.average_metric_lists">[docs]</a>    <span class="k">def</span> <span class="nf">average_metric_lists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: computes the averages of the metric lists</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">avg_snort_ids_alert_counters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_log_consumer_thread</span><span class="o">.</span><span class="n">get_aggregated_ids_alert_counters</span><span class="p">()</span>
@@ -309,7 +319,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">client_population_consumer_thread</span><span class="o">.</span><span class="n">get_average_client_population_metrics</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderObservationState.get_action_ips"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.get_action_ips">[docs]</a>    <span class="k">def</span> <span class="nf">get_action_ips</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationDefenderAction</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the ips of the node that a defender action is targeted for</span>
 
 <span class="sd">        :param a: the action</span>
@@ -323,7 +333,7 @@
         <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">ips</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderObservationState.copy"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderObservationState&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">EmulationDefenderObservationState</span><span class="p">(</span>
@@ -345,7 +355,7 @@
         <span class="k">return</span> <span class="n">c</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;client_population_metrics: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client_population_metrics</span><span class="si">}</span><span class="s2">,&quot;</span> \
@@ -353,8 +363,8 @@
                <span class="sa">f</span><span class="s2">&quot;snort_ids_alert_counters: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_alert_counters</span><span class="si">}</span><span class="s2">,&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;ossec_ids_alert_counters: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_alert_counters</span><span class="si">}</span><span class="s2">,&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;aggregated_host_metrics: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">aggregated_host_metrics</span><span class="si">}</span><span class="s2">&quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;attacker_actions: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">attacker_actions</span><span class="p">))</span><span class="si">}</span><span class="s2">,&quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;defender_actions: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">defender_actions</span><span class="p">))</span><span class="si">}</span><span class="se">\n</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;attacker_actions: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_actions</span><span class="p">))</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;defender_actions: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">defender_actions</span><span class="p">))</span><span class="si">}</span><span class="se">\n</span><span class="s2">,&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;avg_snort_ids_alert_counters: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">avg_snort_ids_alert_counters</span><span class="si">}</span><span class="s2">,&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;avg_ossec_ids_alert_counters: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">avg_ossec_ids_alert_counters</span><span class="si">}</span><span class="s2">,&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;avg_docker_stats: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">avg_docker_stats</span><span class="si">}</span><span class="s2">,&quot;</span> \
@@ -363,7 +373,7 @@
                <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machines</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machines</span><span class="p">))])</span>
 
 <div class="viewcode-block" id="EmulationDefenderObservationState.to_json_str"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the DTO into a json string</span>
 
 <span class="sd">        :return: the json string representation of the DTO</span>
@@ -373,7 +383,7 @@
         <span class="k">return</span> <span class="n">json_str</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderObservationState.to_json_file"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the DTO to a json file</span>
 
 <span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
@@ -384,8 +394,22 @@
         <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="EmulationDefenderObservationState.from_json_file"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderObservationState&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">EmulationDefenderObservationState</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="EmulationDefenderObservationState.num_attributes"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.num_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">num_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: The number of attribute of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">num_attributes</span> <span class="o">=</span> <span class="mi">0</span>
@@ -407,7 +431,7 @@
 
 <div class="viewcode-block" id="EmulationDefenderObservationState.schema"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_observation.defender.html#csle_common.dao.emulation_observation.defender.emulation_defender_observation_state.EmulationDefenderObservationState.schema">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">schema</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderObservationState&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: get the schema of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EmulationDefenderObservationState</span><span class="p">(</span><span class="n">kafka_config</span><span class="o">=</span><span class="n">KafkaConfig</span><span class="o">.</span><span class="n">schema</span><span class="p">(),</span>
@@ -427,7 +451,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

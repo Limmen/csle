@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_rest_api.constants package &mdash; csle-rest-api 0.0.1 documentation</title>
@@ -12,9 +12,8 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -27,11 +26,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> csle-rest-api
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            csle-rest-api
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -40,7 +43,234 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_rest_api.constants package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_rest_api.constants.constants">csle_rest_api.constants.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_rest_api.constants.constants">csle_rest_api.constants.constants module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ABOUT_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ABOUT_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ACCEPT_HEADER"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ACCEPT_HEADER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ACTIVE_COUNT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ACTIVE_COUNT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ADMIN_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ADMIN_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.AGG_FLOWS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.AGG_FLOWS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.APPLICATION_JSON_DATA_TYPE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.APPLICATION_JSON_DATA_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CADVISOR_PORT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CADVISOR_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CADVISOR_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CADVISOR_URL_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CLIENT_PRODUCER_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CLIENT_PRODUCER_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CLUSTERMANAGER_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CLUSTERMANAGER_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CLUSTER_STATUS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CLUSTER_STATUS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.COLS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.COLS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONFIG_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CONFIG_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONFIG_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CONFIG_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTAINER_NAME_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CONTAINER_NAME_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CONTAINER_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTAINER_TERMINAL_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CONTAINER_TERMINAL_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_CONNECTION"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_CONNECTION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_SHELL"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_SHELL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTENT_TYPE_HEADER"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CONTENT_TYPE_HEADER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTROL_PLANE_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CONTROL_PLANE_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CPUS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CPUS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CREATE_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.CREATE_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DESC_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.DESC_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DOCKER_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.DOCKER_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DOCKER_STATS_MONITOR_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.DOCKER_STATS_MONITOR_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DOWNLOADS_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.DOWNLOADS_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DOWNLOAD_QUERY_PARAM"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.DOWNLOAD_QUERY_PARAM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DPID_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.DPID_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.DQN_POLICIES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ELASTIC_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ELK_STACK_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EMAIL_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EMAIL_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODEL_TYPE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODEL_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATIONS_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EMULATIONS_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATIONS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EMULATIONS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATION_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EMULATION_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EMULATION_QUERY_PARAM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EMULATION_TRACES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EMULATION_TRACES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EXEC_ID_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EXEC_ID_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.EXPERIMENTS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.FILEBEAT_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FILE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.FILE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.FIRST_NAME_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FLASK_PORT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.FLASK_PORT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FLASK_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.FLASK_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.FLASK_RUNNING_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FLASK_URL_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.FLASK_URL_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FLOWS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.FLOWS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GPUS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.GPUS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GP_SYSTEM_MODEL_TYPE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.GP_SYSTEM_MODEL_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.GRAFANA_PORT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GRAFANA_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.GRAFANA_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.GRAFANA_URL_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GROUPS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.GROUPS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GROUP_DESCS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.GROUP_DESCS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GROUP_FEATURES_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.GROUP_FEATURES_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HTTP_REST_DELETE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.HTTP_REST_DELETE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HTTP_REST_GET"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.HTTP_REST_GET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HTTP_REST_POST"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.HTTP_REST_POST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HTTP_REST_PUT"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.HTTP_REST_PUT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.IDS_QUERY_PARAM"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.IDS_QUERY_PARAM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ID_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ID_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.IMAGES_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.IMAGES_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.IMAGES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.IMAGES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.INFO_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.INFO_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.INPUT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.INPUT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.IP_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.IP_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.IP_QUERY_PARAM"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.IP_QUERY_PARAM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.JOBS_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.JOBS_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.JOBS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.JOBS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.KAFKA_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.KIBANA_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.LAST_NAME_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.LAST_NAME_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.LEADER_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.LEADER_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.LOGIN_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.LOGIN_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.LOGIN_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.LOGIN_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.LOGSTASH_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.LOGS_ADMIN_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.LOGS_ADMIN_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.LOGS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.LOGS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.LOGS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.LOGS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.METERS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.METERS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.METER_CONFIGS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.METER_CONFIGS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.METER_FEATURES_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.METER_FEATURES_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.METRICBEAT_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.MONITORING_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.MONITORING_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.MONITORING_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.MONITORING_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.MONITOR_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.MONITOR_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NAME_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.NAME_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NGINX_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.NGINX_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NGINX_RUNNING_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.NGINX_RUNNING_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NODE_EXPORTER_PORT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.NODE_EXPORTER_PORT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.NODE_EXPORTER_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NODE_EXPORTER_RUNNING_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.NODE_EXPORTER_RUNNING_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ORGANIZATION_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.OUTPUT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.OUTPUT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PASSWORD_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PASSWORD_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PATH_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PATH_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PGADMIN_PORT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PGADMIN_PORT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PGADMIN_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PGADMIN_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PGADMIN_URL_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.POLICIES_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.POLICIES_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.POLICIES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.POLICIES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.POLICY_EXAMINATION_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.POLICY_EXAMINATION_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PORT_DESCS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PORT_DESCS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PORT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PORT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PORT_STATS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PORT_STATS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.POSTGRESQL_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.POSTGRESQL_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.POSTGRESQL_RUNNING_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.POSTGRESQL_RUNNING_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PPO_POLICIES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_PORT_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PROMETHEUS_PORT_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PROMETHEUS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.QUEUES_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.QUEUES_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.QUEUE_CONFIGS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.QUEUE_CONFIGS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.RAM_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.RAM_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.REGISTER_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.REGISTER_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.REGISTRATION_ALLOWED_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.REGISTRATION_ALLOWED_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ROLES_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ROLES_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.ROWS_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.ROWS_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.RUNNING_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.RUNNING_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SDN_CONTROLLERS_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SDN_CONTROLLERS_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SDN_CONTROLLER_LOCAL_PORT"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SDN_CONTROLLER_LOCAL_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SERVER_CLUSTER_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SERVER_CLUSTER_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SERVER_CLUSTER_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SERVER_CLUSTER_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SIMULATIONS_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SIMULATIONS_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SIMULATIONS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SIMULATION_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SIMULATION_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SIZE_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SIZE_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.START_ALL_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.START_ALL_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.START_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.START_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.STATIC"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.STATIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.STATIC_RESOURCE_INDEX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.STATISTICS_DATASET_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.STATISTICS_DATASET_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.STATISTIC_ID_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.STOP_ALL_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.STOP_ALL_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.STOP_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.STOP_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.STOP_QUERY_PARAM"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.STOP_QUERY_PARAM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SWITCHES_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SYSTEM_ADMIN_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SYSTEM_ADMIN_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SYSTEM_MODELS_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SYSTEM_MODELS_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.SYSTEM_MODEL_TYPE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TABLES_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TABLES_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TABLE_FEATURES_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TABLE_FEATURES_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TABLE_ID_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TABLE_ID_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TABULAR_POLICIES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.THREAD_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.THREAD_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TOKEN_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TOKEN_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TOKEN_QUERY_PARAM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TRACES_DATASETS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TRACES_DATASETS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TRACES_DATASET_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TRACES_DATASET_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TRACES_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TRACES_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TRACES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TRACES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TRAINING_JOBS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TRAINING_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TRAINING_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TRAINING_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TRAINING_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.TRAJECTORIES_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.TRAJECTORIES_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.URL_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.URL_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.USERNAME_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.USERNAME_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.USERS_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.USERS_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.USER_ADMIN_PAGE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.USER_ADMIN_PAGE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.USER_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.USER_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.VERSION_PROPERTY"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.VERSION_PROPERTY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.VERSION_RESOURCE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.VERSION_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.WS_CONNECT_MSG"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.WS_CONNECT_MSG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_INPUT_MSG"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.WS_CONTAINER_TERMINAL_INPUT_MSG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_NAMESPACE"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.WS_CONTAINER_TERMINAL_NAMESPACE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_OUTPUT_MSG"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.WS_CONTAINER_TERMINAL_OUTPUT_MSG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.WS_RESIZE_MSG"><code class="docutils literal notranslate"><span class="pre">MGMT_WEBAPP.WS_RESIZE_MSG</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_rest_api.constants.constants.SESSION_TOKENS"><code class="docutils literal notranslate"><span class="pre">SESSION_TOKENS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_rest_api.constants.constants.SESSION_TOKENS.EXPIRE_TIME_HOURS"><code class="docutils literal notranslate"><span class="pre">SESSION_TOKENS.EXPIRE_TIME_HOURS</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_rest_api.constants">Module contents</a></li>
 </ul>
 </li>
@@ -63,8 +293,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_rest_api.constants package</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">csle_rest_api.constants package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_rest_api.constants.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -75,12 +305,13 @@
            <div itemprop="articleBody">
              
   <section id="csle-rest-api-constants-package">
-<h1>csle_rest_api.constants package<a class="headerlink" href="#csle-rest-api-constants-package" title="Permalink to this headline"></a></h1>
+<h1>csle_rest_api.constants package<a class="headerlink" href="#csle-rest-api-constants-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_rest_api.constants.constants">
-<span id="csle-rest-api-constants-constants-module"></span><h2>csle_rest_api.constants.constants module<a class="headerlink" href="#module-csle_rest_api.constants.constants" title="Permalink to this headline"></a></h2>
+<span id="csle-rest-api-constants-constants-module"></span><h2>csle_rest_api.constants.constants module<a class="headerlink" href="#module-csle_rest_api.constants.constants" title="Permalink to this heading"></a></h2>
+<p>Constants for csle-rest-api</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_rest_api.constants.constants.</span></span><span class="sig-name descname"><span class="pre">MGMT_WEBAPP</span></span><a class="reference internal" href="_modules/csle_rest_api/constants/constants.html#MGMT_WEBAPP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP" title="Permalink to this definition"></a></dt>
@@ -127,8 +358,23 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY">
+<span class="sig-name descname"><span class="pre">CADVISOR_PORT_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cAdvisorPort'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.CADVISOR_RESOURCE">
 <span class="sig-name descname"><span class="pre">CADVISOR_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cadvisor'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CADVISOR_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY">
+<span class="sig-name descname"><span class="pre">CADVISOR_RUNNING_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cAdvisorRunning'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY">
+<span class="sig-name descname"><span class="pre">CADVISOR_URL_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cAdvisorUrl'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -144,6 +390,16 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.CLIENT_PRODUCER_SUBRESOURCE">
 <span class="sig-name descname"><span class="pre">CLIENT_PRODUCER_SUBRESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'client-producer'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CLIENT_PRODUCER_SUBRESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.CLUSTERMANAGER_RESOURCE">
+<span class="sig-name descname"><span class="pre">CLUSTERMANAGER_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'clustermanager'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CLUSTERMANAGER_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.CLUSTER_STATUS_RESOURCE">
+<span class="sig-name descname"><span class="pre">CLUSTER_STATUS_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'clusterstatus'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CLUSTER_STATUS_RESOURCE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -177,6 +433,16 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_CONNECTION">
+<span class="sig-name descname"><span class="pre">CONTAINER_TERMINAL_SSH_CONNECTION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'container-terminal-ssh-connection'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_CONNECTION" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_SHELL">
+<span class="sig-name descname"><span class="pre">CONTAINER_TERMINAL_SSH_SHELL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'container-terminal-ssh-shell'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_SHELL" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.CONTENT_TYPE_HEADER">
 <span class="sig-name descname"><span class="pre">CONTENT_TYPE_HEADER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Content-type'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTENT_TYPE_HEADER" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -184,6 +450,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.CONTROL_PLANE_PAGE_RESOURCE">
 <span class="sig-name descname"><span class="pre">CONTROL_PLANE_PAGE_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'control-plane-page'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CONTROL_PLANE_PAGE_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.CPUS_PROPERTY">
+<span class="sig-name descname"><span class="pre">CPUS_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'cpus'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.CPUS_PROPERTY" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -199,6 +470,16 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.DESC_PROPERTY">
 <span class="sig-name descname"><span class="pre">DESC_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'desc'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DESC_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY">
+<span class="sig-name descname"><span class="pre">DOCKER_ENGINE_RUNNING_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'dockerEngineRunning'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.DOCKER_RESOURCE">
+<span class="sig-name descname"><span class="pre">DOCKER_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'docker'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.DOCKER_RESOURCE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -327,6 +608,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE">
+<span class="sig-name descname"><span class="pre">FILEBEAT_SUBRESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'filebeat'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.FILE_RESOURCE">
 <span class="sig-name descname"><span class="pre">FILE_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'file'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FILE_RESOURCE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -334,6 +620,26 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY">
 <span class="sig-name descname"><span class="pre">FIRST_NAME_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'first_name'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.FLASK_PORT_PROPERTY">
+<span class="sig-name descname"><span class="pre">FLASK_PORT_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'flaskPort'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FLASK_PORT_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.FLASK_RESOURCE">
+<span class="sig-name descname"><span class="pre">FLASK_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'flask'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FLASK_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY">
+<span class="sig-name descname"><span class="pre">FLASK_RUNNING_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'flaskRunning'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.FLASK_URL_PROPERTY">
+<span class="sig-name descname"><span class="pre">FLASK_URL_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'flaskUrl'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.FLASK_URL_PROPERTY" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -357,6 +663,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.GPUS_PROPERTY">
+<span class="sig-name descname"><span class="pre">GPUS_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'gpus'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GPUS_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE">
 <span class="sig-name descname"><span class="pre">GP_SYSTEM_MODELS_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'gp-system-models'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -367,8 +678,23 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY">
+<span class="sig-name descname"><span class="pre">GRAFANA_PORT_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'grafanaPort'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.GRAFANA_RESOURCE">
 <span class="sig-name descname"><span class="pre">GRAFANA_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'grafana'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GRAFANA_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY">
+<span class="sig-name descname"><span class="pre">GRAFANA_RUNNING_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'grafanaRunning'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY">
+<span class="sig-name descname"><span class="pre">GRAFANA_URL_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'grafanaUrl'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -387,6 +713,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE">
+<span class="sig-name descname"><span class="pre">HEARTBEAT_SUBRESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'heartbeat'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE">
 <span class="sig-name descname"><span class="pre">HOST_MANAGER_SUBRESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'host-manager'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -394,26 +725,6 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE">
 <span class="sig-name descname"><span class="pre">HOST_MONITOR_SUBRESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'host-monitor'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_TERMINAL_CHILD_PID">
-<span class="sig-name descname"><span class="pre">HOST_TERMINAL_CHILD_PID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'host-terminal-child-pid'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_TERMINAL_CHILD_PID" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_TERMINAL_CMD">
-<span class="sig-name descname"><span class="pre">HOST_TERMINAL_CMD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'host-terminal-cmd'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_TERMINAL_CMD" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_TERMINAL_FD">
-<span class="sig-name descname"><span class="pre">HOST_TERMINAL_FD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'host-terminal-fd'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_TERMINAL_FD" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_TERMINAL_PAGE_RESOURCE">
-<span class="sig-name descname"><span class="pre">HOST_TERMINAL_PAGE_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'host-terminal-page'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.HOST_TERMINAL_PAGE_RESOURCE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -502,18 +813,13 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT">
-<span class="sig-name descname"><span class="pre">KIBANA_TUNNELS_DICT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.KIBANA_TUNNELS_DICT" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.KIBANA_TUNNEL_BASE_PORT">
-<span class="sig-name descname"><span class="pre">KIBANA_TUNNEL_BASE_PORT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">17000</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.KIBANA_TUNNEL_BASE_PORT" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.LAST_NAME_PROPERTY">
 <span class="sig-name descname"><span class="pre">LAST_NAME_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'last_name'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.LAST_NAME_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.LEADER_PROPERTY">
+<span class="sig-name descname"><span class="pre">LEADER_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'leader'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.LEADER_PROPERTY" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -562,6 +868,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE">
+<span class="sig-name descname"><span class="pre">METRICBEAT_SUBRESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'metricbeat'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.MONITORING_PAGE_RESOURCE">
 <span class="sig-name descname"><span class="pre">MONITORING_PAGE_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'monitoring-page'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.MONITORING_PAGE_RESOURCE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -587,8 +898,33 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.NGINX_RESOURCE">
+<span class="sig-name descname"><span class="pre">NGINX_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nginx'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NGINX_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.NGINX_RUNNING_PROPERTY">
+<span class="sig-name descname"><span class="pre">NGINX_RUNNING_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nginxRunning'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NGINX_RUNNING_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.NODE_EXPORTER_PORT_PROPERTY">
+<span class="sig-name descname"><span class="pre">NODE_EXPORTER_PORT_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nodeExporterPort'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NODE_EXPORTER_PORT_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE">
 <span class="sig-name descname"><span class="pre">NODE_EXPORTER_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'node-exporter'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.NODE_EXPORTER_RUNNING_PROPERTY">
+<span class="sig-name descname"><span class="pre">NODE_EXPORTER_RUNNING_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nodeExporterRunning'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NODE_EXPORTER_RUNNING_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY">
+<span class="sig-name descname"><span class="pre">NODE_EXPORTER_URL_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nodeExporterUrl'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -617,6 +953,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE">
+<span class="sig-name descname"><span class="pre">PACKETBEAT_SUBRESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'packetbeat'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.PASSWORD_PROPERTY">
 <span class="sig-name descname"><span class="pre">PASSWORD_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'password'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PASSWORD_PROPERTY" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -624,6 +965,26 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.PATH_PROPERTY">
 <span class="sig-name descname"><span class="pre">PATH_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'path'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PATH_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.PGADMIN_PORT_PROPERTY">
+<span class="sig-name descname"><span class="pre">PGADMIN_PORT_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pgAdminPort'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PGADMIN_PORT_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.PGADMIN_RESOURCE">
+<span class="sig-name descname"><span class="pre">PGADMIN_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pgadmin'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PGADMIN_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY">
+<span class="sig-name descname"><span class="pre">PGADMIN_RUNNING_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pgAdminRunning'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY">
+<span class="sig-name descname"><span class="pre">PGADMIN_URL_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pgAdminUrl'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -657,13 +1018,38 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.POSTGRESQL_RESOURCE">
+<span class="sig-name descname"><span class="pre">POSTGRESQL_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'postgresql'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.POSTGRESQL_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.POSTGRESQL_RUNNING_PROPERTY">
+<span class="sig-name descname"><span class="pre">POSTGRESQL_RUNNING_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'postgresqlRunning'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.POSTGRESQL_RUNNING_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE">
 <span class="sig-name descname"><span class="pre">PPO_POLICIES_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ppo-policies'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_PORT_PROPERTY">
+<span class="sig-name descname"><span class="pre">PROMETHEUS_PORT_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'prometheusPort'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_PORT_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE">
 <span class="sig-name descname"><span class="pre">PROMETHEUS_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'prometheus'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY">
+<span class="sig-name descname"><span class="pre">PROMETHEUS_RUNNING_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'prometheusRunning'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY">
+<span class="sig-name descname"><span class="pre">PROMETHEUS_URL_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'prometheusUrl'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -677,8 +1063,23 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.RAM_PROPERTY">
+<span class="sig-name descname"><span class="pre">RAM_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'RAM'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.RAM_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.REGISTER_PAGE_RESOURCE">
 <span class="sig-name descname"><span class="pre">REGISTER_PAGE_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'register-page'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.REGISTER_PAGE_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_PROPERTY">
+<span class="sig-name descname"><span class="pre">REGISTRATION_ALLOWED_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'registration_allowed'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_SUBRESOURCE">
+<span class="sig-name descname"><span class="pre">REGISTRATION_ALLOWED_SUBRESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'registration-allowed'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_SUBRESOURCE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -697,6 +1098,21 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE">
+<span class="sig-name descname"><span class="pre">RYU_CONTROLLER_SUBRESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ryu-controller'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE">
+<span class="sig-name descname"><span class="pre">RYU_MANAGER_SUBRESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ryu-manager'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE">
+<span class="sig-name descname"><span class="pre">RYU_MONITOR_SUBRESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ryu-monitor'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.SDN_CONTROLLERS_PAGE_RESOURCE">
 <span class="sig-name descname"><span class="pre">SDN_CONTROLLERS_PAGE_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sdn-controllers-page'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SDN_CONTROLLERS_PAGE_RESOURCE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -704,6 +1120,21 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE">
 <span class="sig-name descname"><span class="pre">SDN_CONTROLLERS_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sdn-controllers'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.SDN_CONTROLLER_LOCAL_PORT">
+<span class="sig-name descname"><span class="pre">SDN_CONTROLLER_LOCAL_PORT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sdn-controller-local-port'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SDN_CONTROLLER_LOCAL_PORT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.SERVER_CLUSTER_PAGE_RESOURCE">
+<span class="sig-name descname"><span class="pre">SERVER_CLUSTER_PAGE_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'server-cluster-page'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SERVER_CLUSTER_PAGE_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.SERVER_CLUSTER_RESOURCE">
+<span class="sig-name descname"><span class="pre">SERVER_CLUSTER_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'server-cluster'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.SERVER_CLUSTER_RESOURCE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -942,23 +1373,33 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.VERSION_PROPERTY">
+<span class="sig-name descname"><span class="pre">VERSION_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'version'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.VERSION_PROPERTY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.VERSION_RESOURCE">
+<span class="sig-name descname"><span class="pre">VERSION_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'version'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.VERSION_RESOURCE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.WS_CONNECT_MSG">
 <span class="sig-name descname"><span class="pre">WS_CONNECT_MSG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'connect'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.WS_CONNECT_MSG" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.WS_HOST_TERMINAL_INPUT_MSG">
-<span class="sig-name descname"><span class="pre">WS_HOST_TERMINAL_INPUT_MSG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'host-terminal-input'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.WS_HOST_TERMINAL_INPUT_MSG" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_INPUT_MSG">
+<span class="sig-name descname"><span class="pre">WS_CONTAINER_TERMINAL_INPUT_MSG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'container-terminal-input'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_INPUT_MSG" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.WS_HOST_TERMINAL_NAMESPACE">
-<span class="sig-name descname"><span class="pre">WS_HOST_TERMINAL_NAMESPACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'host-terminal'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.WS_HOST_TERMINAL_NAMESPACE" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_NAMESPACE">
+<span class="sig-name descname"><span class="pre">WS_CONTAINER_TERMINAL_NAMESPACE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'container-terminal'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_NAMESPACE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.WS_HOST_TERMINAL_OUTPUT_MSG">
-<span class="sig-name descname"><span class="pre">WS_HOST_TERMINAL_OUTPUT_MSG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'host-terminal-output'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.WS_HOST_TERMINAL_OUTPUT_MSG" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_rest_api.constants.constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_OUTPUT_MSG">
+<span class="sig-name descname"><span class="pre">WS_CONTAINER_TERMINAL_OUTPUT_MSG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'container-terminal-output'</span></em><a class="headerlink" href="#csle_rest_api.constants.constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_OUTPUT_MSG" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -982,7 +1423,7 @@
 
 </section>
 <section id="module-csle_rest_api.constants">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_rest_api.constants" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_rest_api.constants" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

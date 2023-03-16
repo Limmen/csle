@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.elk_manager.elk_manager</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.elk_manager.elk_manager</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -78,54 +81,49 @@
 <span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
 <span class="kn">import</span> <span class="nn">grpc</span>
 <span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">netifaces</span>
 <span class="kn">import</span> <span class="nn">csle_collector.elk_manager.elk_manager_pb2_grpc</span>
 <span class="kn">import</span> <span class="nn">csle_collector.elk_manager.elk_manager_pb2</span>
 <span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 
 
 <div class="viewcode-block" id="ElkManagerServicer"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">ElkManagerServicer</span><span class="p">(</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2_grpc</span><span class="o">.</span><span class="n">ElkManagerServicer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    gRPC server for managing an ELK stack. Allows to start/stop the ELK stack remotely and also to query the</span>
 <span class="sd">    state of the ELK stack.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">ELK_MANAGER_LOG_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
                                      <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">ELK_MANAGER_LOG_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">netifaces</span><span class="o">.</span><span class="n">ifaddresses</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">INTERFACES</span><span class="o">.</span><span class="n">ETH0</span><span class="p">)[</span><span class="n">netifaces</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">INTERFACES</span><span class="o">.</span><span class="n">ADDR</span><span class="p">]</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting up ElkManager hostname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_elk_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to get the status of the ELK stack</span>
 
 <span class="sd">        :return: status of elastic, status of kibana, status of logstash</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">ELASTICSEARCH_STATUS</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">status_output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">status_output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">ELASTICSEARCH_STATUS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span>
+                                       <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
         <span class="n">elasticsearch_running</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;not&quot;</span> <span class="ow">in</span> <span class="n">status_output</span><span class="p">)</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">KIBANA_STATUS</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">status_output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">status_output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">KIBANA_STATUS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span>
+                                       <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
         <span class="n">kibana_running</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;not&quot;</span> <span class="ow">in</span> <span class="n">status_output</span><span class="p">)</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">LOGSTASH_STATUS</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">status_output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">status_output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">LOGSTASH_STATUS</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span>
+                                       <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
         <span class="n">logstash_running</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;not&quot;</span> <span class="ow">in</span> <span class="n">status_output</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">elasticsearch_running</span><span class="p">,</span> <span class="n">kibana_running</span><span class="p">,</span> <span class="n">logstash_running</span>
 
 <div class="viewcode-block" id="ElkManagerServicer.getElkStatus"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.getElkStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getElkStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">GetElkStatusMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the state of the ELK server</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -140,7 +138,7 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.stopElk"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopElk">[docs]</a>    <span class="k">def</span> <span class="nf">stopElk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StopElkMsg</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the ELK stack</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -159,14 +157,14 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.startElk"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startElk">[docs]</a>    <span class="k">def</span> <span class="nf">startElk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StartElkMsg</span><span class="p">,</span>
                  <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the ELK stack</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: an ElkDTO with the state of the ELK server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting ELK&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting ELK&quot;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">ELK_START</span><span class="p">)</span>
         <span class="n">elk_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">(</span><span class="n">elasticRunning</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kibanaRunning</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                                                     <span class="n">logstashRunning</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -174,14 +172,14 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.startElastic"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startElastic">[docs]</a>    <span class="k">def</span> <span class="nf">startElastic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StartElasticMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts elasticsearch</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: an ElkDTO with the state of the ELK server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting Elasticsearch&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting Elasticsearch&quot;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">ELASTICSEARCH_START</span><span class="p">)</span>
         <span class="n">elasticsearch_running</span><span class="p">,</span> <span class="n">kibana_running</span><span class="p">,</span> <span class="n">logstash_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_elk_status</span><span class="p">()</span>
         <span class="n">elk_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">(</span><span class="n">elasticRunning</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kibanaRunning</span><span class="o">=</span><span class="n">kibana_running</span><span class="p">,</span>
@@ -190,14 +188,14 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.startKibana"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startKibana">[docs]</a>    <span class="k">def</span> <span class="nf">startKibana</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StartKibanaMsg</span><span class="p">,</span>
                     <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts Kibana</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: an ElkDTO with the state of the ELK server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting Kibana&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting Kibana&quot;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">KIBANA_START</span><span class="p">)</span>
         <span class="n">elasticsearch_running</span><span class="p">,</span> <span class="n">kibana_running</span><span class="p">,</span> <span class="n">logstash_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_elk_status</span><span class="p">()</span>
         <span class="n">elk_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">(</span><span class="n">elasticRunning</span><span class="o">=</span><span class="n">elasticsearch_running</span><span class="p">,</span>
@@ -207,14 +205,14 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.startLogstash"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.startLogstash">[docs]</a>    <span class="k">def</span> <span class="nf">startLogstash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StartLogstashMsg</span><span class="p">,</span>
                       <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts Logstash</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: an ElkDTO with the state of the ELK server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting Logstash&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting Logstash&quot;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">LOGSTASH_START</span><span class="p">)</span>
         <span class="n">elasticsearch_running</span><span class="p">,</span> <span class="n">kibana_running</span><span class="p">,</span> <span class="n">logstash_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_elk_status</span><span class="p">()</span>
         <span class="n">elk_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">(</span><span class="n">elasticRunning</span><span class="o">=</span><span class="n">elasticsearch_running</span><span class="p">,</span>
@@ -224,14 +222,14 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.stopElastic"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopElastic">[docs]</a>    <span class="k">def</span> <span class="nf">stopElastic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StartElasticMsg</span><span class="p">,</span>
                     <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops elasticsearch</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: an ElkDTO with the state of the ELK server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stops Elasticsearch&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stops Elasticsearch&quot;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">ELASTICSEARCH_STOP</span><span class="p">)</span>
         <span class="n">elasticsearch_running</span><span class="p">,</span> <span class="n">kibana_running</span><span class="p">,</span> <span class="n">logstash_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_elk_status</span><span class="p">()</span>
         <span class="n">elk_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">(</span><span class="n">elasticRunning</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">kibanaRunning</span><span class="o">=</span><span class="n">kibana_running</span><span class="p">,</span>
@@ -240,14 +238,14 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.stopKibana"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopKibana">[docs]</a>    <span class="k">def</span> <span class="nf">stopKibana</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StopKibanaMsg</span><span class="p">,</span>
                    <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops Kibana</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: an ElkDTO with the state of the ELK server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stops Kibana&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stops Kibana&quot;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">KIBANA_STOP</span><span class="p">)</span>
         <span class="n">elasticsearch_running</span><span class="p">,</span> <span class="n">kibana_running</span><span class="p">,</span> <span class="n">logstash_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_elk_status</span><span class="p">()</span>
         <span class="n">elk_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">(</span><span class="n">elasticRunning</span><span class="o">=</span><span class="n">elasticsearch_running</span><span class="p">,</span>
@@ -257,14 +255,14 @@
 
 <div class="viewcode-block" id="ElkManagerServicer.stopLogstash"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.ElkManagerServicer.stopLogstash">[docs]</a>    <span class="k">def</span> <span class="nf">stopLogstash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">StopLogstashMsg</span><span class="p">,</span>
                      <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops Logstash</span>
 
 <span class="sd">        :param request: the gRPC request</span>
 <span class="sd">        :param context: the gRPC context</span>
 <span class="sd">        :return: an ElkDTO with the state of the ELK server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopping Logstash&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stopping Logstash&quot;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">LOGSTASH_STOP</span><span class="p">)</span>
         <span class="n">elasticsearch_running</span><span class="p">,</span> <span class="n">kibana_running</span><span class="p">,</span> <span class="n">logstash_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_elk_status</span><span class="p">()</span>
         <span class="n">elk_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">elk_manager</span><span class="o">.</span><span class="n">elk_manager_pb2</span><span class="o">.</span><span class="n">ElkDTO</span><span class="p">(</span><span class="n">elasticRunning</span><span class="o">=</span><span class="n">elasticsearch_running</span><span class="p">,</span>
@@ -275,7 +273,7 @@
 
 <div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../csle_collector.elk_manager.html#csle_collector.elk_manager.elk_manager.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50045</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
           <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;elk_manager.log&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Starts the gRPC server for managing the ELK stack</span>
 
 <span class="sd">    :param port: the port that the server will listen to</span>

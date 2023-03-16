@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-rest-api
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-rest-api
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -55,9 +58,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_rest_api.constants.constants</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_rest_api.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -67,10 +70,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_rest_api.constants.constants</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Constants for csle-rest-api</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 
 <div class="viewcode-block" id="MGMT_WEBAPP"><a class="viewcode-back" href="../../../csle_rest_api.constants.html#csle_rest_api.constants.constants.MGMT_WEBAPP">[docs]</a><span class="k">class</span> <span class="nc">MGMT_WEBAPP</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the management webapp</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ACCESS_CONTROL_ALLOW_ORIGIN_HEADER</span> <span class="o">=</span> <span class="s2">&quot;Access-Control-Allow-Origin&quot;</span>
@@ -95,6 +101,7 @@
     <span class="n">EMULATIONS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulations-page&quot;</span>
     <span class="n">IMAGES_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;images-page&quot;</span>
     <span class="n">DOWNLOADS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;downloads-page&quot;</span>
+    <span class="n">SERVER_CLUSTER_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;server-cluster-page&quot;</span>
     <span class="n">JOBS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;jobs-page&quot;</span>
     <span class="n">MONITORING_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;monitoring-page&quot;</span>
     <span class="n">POLICIES_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;policies-page&quot;</span>
@@ -102,7 +109,6 @@
     <span class="n">SDN_CONTROLLERS_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;sdn-controllers-page&quot;</span>
     <span class="n">CONTROL_PLANE_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;control-plane-page&quot;</span>
     <span class="n">USER_ADMIN_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;user-admin-page&quot;</span>
-    <span class="n">HOST_TERMINAL_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;host-terminal-page&quot;</span>
     <span class="n">CONTAINER_TERMINAL_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;container-terminal-page&quot;</span>
     <span class="n">SYSTEM_ADMIN_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;system-admin-page&quot;</span>
     <span class="n">LOGS_ADMIN_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;logs-admin-page&quot;</span>
@@ -111,7 +117,14 @@
     <span class="n">TRACES_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;traces-page&quot;</span>
     <span class="n">TRAINING_PAGE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;training-page&quot;</span>
     <span class="n">CADVISOR_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;cadvisor&quot;</span>
+    <span class="n">PGADMIN_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;pgadmin&quot;</span>
     <span class="n">GRAFANA_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;grafana&quot;</span>
+    <span class="n">CLUSTER_STATUS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;clusterstatus&quot;</span>
+    <span class="n">NGINX_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;nginx&quot;</span>
+    <span class="n">POSTGRESQL_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;postgresql&quot;</span>
+    <span class="n">DOCKER_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;docker&quot;</span>
+    <span class="n">FLASK_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;flask&quot;</span>
+    <span class="n">CLUSTERMANAGER_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;clustermanager&quot;</span>
     <span class="n">NODE_EXPORTER_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;node-exporter&quot;</span>
     <span class="n">PROMETHEUS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;prometheus&quot;</span>
     <span class="n">EMULATIONS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulations&quot;</span>
@@ -123,6 +136,9 @@
     <span class="n">KAFKA_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;kafka-manager&quot;</span>
     <span class="n">KAFKA_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;kafka&quot;</span>
     <span class="n">ELK_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;elk-manager&quot;</span>
+    <span class="n">RYU_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;ryu-manager&quot;</span>
+    <span class="n">RYU_CONTROLLER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;ryu-controller&quot;</span>
+    <span class="n">RYU_MONITOR_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;ryu-monitor&quot;</span>
     <span class="n">ELK_STACK_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;elk-stack&quot;</span>
     <span class="n">ELASTIC_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;elastic&quot;</span>
     <span class="n">KIBANA_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;kibana&quot;</span>
@@ -137,11 +153,17 @@
     <span class="n">HOST_MONITOR_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;host-monitor&quot;</span>
     <span class="n">TRAFFIC_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;traffic-manager&quot;</span>
     <span class="n">TRAFFIC_GENERATOR_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;traffic-generator&quot;</span>
+    <span class="n">FILEBEAT_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;filebeat&quot;</span>
+    <span class="n">PACKETBEAT_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;packetbeat&quot;</span>
+    <span class="n">METRICBEAT_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;metricbeat&quot;</span>
+    <span class="n">HEARTBEAT_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;heartbeat&quot;</span>
     <span class="n">DOCKER_STATS_MANAGER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;docker-stats-manager&quot;</span>
     <span class="n">DOCKER_STATS_MONITOR_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;docker-stats-monitor&quot;</span>
     <span class="n">CREATE_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;create&quot;</span>
+    <span class="n">REGISTRATION_ALLOWED_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;registration-allowed&quot;</span>
     <span class="n">CONTAINER_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;container&quot;</span>
     <span class="n">SWITCHES_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;switches&quot;</span>
+    <span class="n">SDN_CONTROLLER_LOCAL_PORT</span> <span class="o">=</span> <span class="s2">&quot;sdn-controller-local-port&quot;</span>
     <span class="n">MONITOR_SUBRESOURCE</span> <span class="o">=</span> <span class="s2">&quot;monitor&quot;</span>
     <span class="n">EMULATION_EXECUTIONS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulation-executions&quot;</span>
     <span class="n">EMULATION_TRACES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;emulation-traces&quot;</span>
@@ -171,20 +193,49 @@
     <span class="n">USERS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
     <span class="n">LOGS_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;logs&quot;</span>
     <span class="n">CONFIG_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span>
+    <span class="n">SERVER_CLUSTER_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;server-cluster&quot;</span>
+    <span class="n">VERSION_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;version&quot;</span>
     <span class="n">DQN_POLICIES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;dqn-policies&quot;</span>
     <span class="n">FNN_W_SOFTMAX_POLICIES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;fnn-w-softmax-policies&quot;</span>
     <span class="n">TRACES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;traces&quot;</span>
     <span class="n">TRAINING_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;training&quot;</span>
     <span class="n">RUNNING_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;running&quot;</span>
+    <span class="n">CADVISOR_RUNNING_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;cAdvisorRunning&quot;</span>
+    <span class="n">GRAFANA_RUNNING_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;grafanaRunning&quot;</span>
+    <span class="n">POSTGRESQL_RUNNING_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;postgresqlRunning&quot;</span>
+    <span class="n">NODE_EXPORTER_RUNNING_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;nodeExporterRunning&quot;</span>
+    <span class="n">DOCKER_ENGINE_RUNNING_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;dockerEngineRunning&quot;</span>
+    <span class="n">NGINX_RUNNING_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;nginxRunning&quot;</span>
+    <span class="n">FLASK_RUNNING_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;flaskRunning&quot;</span>
+    <span class="n">PROMETHEUS_RUNNING_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;prometheusRunning&quot;</span>
+    <span class="n">PGADMIN_RUNNING_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;pgAdminRunning&quot;</span>
+    <span class="n">CADVISOR_URL_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;cAdvisorUrl&quot;</span>
+    <span class="n">GRAFANA_URL_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;grafanaUrl&quot;</span>
+    <span class="n">NODE_EXPORTER_URL_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;nodeExporterUrl&quot;</span>
+    <span class="n">FLASK_URL_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;flaskUrl&quot;</span>
+    <span class="n">PROMETHEUS_URL_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;prometheusUrl&quot;</span>
+    <span class="n">PGADMIN_URL_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;pgAdminUrl&quot;</span>
+    <span class="n">CADVISOR_PORT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;cAdvisorPort&quot;</span>
+    <span class="n">GRAFANA_PORT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;grafanaPort&quot;</span>
+    <span class="n">NODE_EXPORTER_PORT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;nodeExporterPort&quot;</span>
+    <span class="n">FLASK_PORT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;flaskPort&quot;</span>
+    <span class="n">PROMETHEUS_PORT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;prometheusPort&quot;</span>
+    <span class="n">PGADMIN_PORT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;pgAdminPort&quot;</span>
+    <span class="n">REGISTRATION_ALLOWED_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;registration_allowed&quot;</span>
+    <span class="n">VERSION_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;version&quot;</span>
     <span class="n">OUTPUT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;output&quot;</span>
     <span class="n">INPUT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;input&quot;</span>
     <span class="n">ROWS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;rows&quot;</span>
     <span class="n">COLS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;cols&quot;</span>
     <span class="n">WS_CONNECT_MSG</span> <span class="o">=</span> <span class="s2">&quot;connect&quot;</span>
-    <span class="n">WS_HOST_TERMINAL_OUTPUT_MSG</span> <span class="o">=</span> <span class="s2">&quot;host-terminal-output&quot;</span>
-    <span class="n">WS_HOST_TERMINAL_INPUT_MSG</span> <span class="o">=</span> <span class="s2">&quot;host-terminal-input&quot;</span>
     <span class="n">WS_RESIZE_MSG</span> <span class="o">=</span> <span class="s2">&quot;resize&quot;</span>
+    <span class="n">WS_CONTAINER_TERMINAL_OUTPUT_MSG</span> <span class="o">=</span> <span class="s2">&quot;container-terminal-output&quot;</span>
+    <span class="n">WS_CONTAINER_TERMINAL_INPUT_MSG</span> <span class="o">=</span> <span class="s2">&quot;container-terminal-input&quot;</span>
     <span class="n">IP_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;ip&quot;</span>
+    <span class="n">CPUS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;cpus&quot;</span>
+    <span class="n">GPUS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;gpus&quot;</span>
+    <span class="n">LEADER_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;leader&quot;</span>
+    <span class="n">RAM_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;RAM&quot;</span>
     <span class="n">EXEC_ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;exec_id&quot;</span>
     <span class="n">EMULATION_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;emulation&quot;</span>
     <span class="n">STATISTIC_ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;statistic_id&quot;</span>
@@ -243,16 +294,13 @@
     <span class="n">GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE</span> <span class="o">=</span> <span class="s2">&quot;gaussian_mixture&quot;</span>
     <span class="n">EMPIRICAL_SYSTEM_MODEL_TYPE</span> <span class="o">=</span> <span class="s2">&quot;empirical&quot;</span>
     <span class="n">GP_SYSTEM_MODEL_TYPE</span> <span class="o">=</span> <span class="s2">&quot;gp&quot;</span>
-    <span class="n">KIBANA_TUNNELS_DICT</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">KIBANA_TUNNEL_BASE_PORT</span> <span class="o">=</span> <span class="mi">17000</span>
-    <span class="n">WS_HOST_TERMINAL_NAMESPACE</span> <span class="o">=</span> <span class="s2">&quot;host-terminal&quot;</span>
-    <span class="n">HOST_TERMINAL_FD</span> <span class="o">=</span> <span class="s2">&quot;host-terminal-fd&quot;</span>
-    <span class="n">HOST_TERMINAL_CHILD_PID</span> <span class="o">=</span> <span class="s2">&quot;host-terminal-child-pid&quot;</span>
-    <span class="n">HOST_TERMINAL_CMD</span> <span class="o">=</span> <span class="s2">&quot;host-terminal-cmd&quot;</span></div>
+    <span class="n">WS_CONTAINER_TERMINAL_NAMESPACE</span> <span class="o">=</span> <span class="s2">&quot;container-terminal&quot;</span>
+    <span class="n">CONTAINER_TERMINAL_SSH_SHELL</span> <span class="o">=</span> <span class="s2">&quot;container-terminal-ssh-shell&quot;</span>
+    <span class="n">CONTAINER_TERMINAL_SSH_CONNECTION</span> <span class="o">=</span> <span class="s2">&quot;container-terminal-ssh-connection&quot;</span></div>
 
 
 <div class="viewcode-block" id="SESSION_TOKENS"><a class="viewcode-back" href="../../../csle_rest_api.constants.html#csle_rest_api.constants.constants.SESSION_TOKENS">[docs]</a><span class="k">class</span> <span class="nc">SESSION_TOKENS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to session tokens</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">EXPIRE_TIME_HOURS</span> <span class="o">=</span> <span class="mi">48</span></div>

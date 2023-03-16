@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.docker_stats_manager.docker_stats_manager</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.docker_stats_manager.docker_stats_manager</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -91,13 +94,13 @@
 
 
 <div class="viewcode-block" id="DockerStatsThread"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread">[docs]</a><span class="k">class</span> <span class="nc">DockerStatsThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Thread that collects performance statistics of Docker containers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container_names_and_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ContainerIp</span><span class="p">],</span> <span class="n">emulation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">execution_first_ip_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stats_queue_maxsize</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the thread</span>
 
 <span class="sd">        :param container_names_and_ips: list of container names and ips to monitor</span>
@@ -127,7 +130,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span> <span class="o">=</span> <span class="n">kafka_ip</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span> <span class="o">=</span> <span class="n">kafka_port</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="s2">&quot;8.8.8.8&quot;</span><span class="p">,</span> <span class="mi">80</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conf</span> <span class="o">=</span> <span class="p">{</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                      <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">CLIENT_ID_PROPERTY</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
@@ -138,7 +143,7 @@
                      <span class="sa">f</span><span class="s2">&quot;container and ips:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">container_names_and_ips</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DockerStatsThread.run"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Main loop of the thread</span>
 
 <span class="sd">        :return: None</span>
@@ -171,7 +176,7 @@
                                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation</span><span class="si">}</span><span class="s2">, exception: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DockerStatsThread.get_ip"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.get_ip">[docs]</a>    <span class="k">def</span> <span class="nf">get_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the ip of a given container name</span>
 
 <span class="sd">        :param container_name: the name of the container</span>
@@ -183,7 +188,7 @@
         <span class="k">return</span> <span class="s2">&quot;-&quot;</span></div>
 
 <div class="viewcode-block" id="DockerStatsThread.compute_averages"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsThread.compute_averages">[docs]</a>    <span class="k">def</span> <span class="nf">compute_averages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">DockerStats</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DockerStats</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute averages and aggregates of the list of metrics</span>
 <span class="sd">        :return: the average and aggregate metrics</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -206,14 +211,14 @@
 
 <div class="viewcode-block" id="DockerStatsManagerServicer"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">DockerStatsManagerServicer</span><span class="p">(</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">docker_stats_manager_pb2_grpc</span><span class="o">.</span>
                                  <span class="n">DockerStatsManagerServicer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    gRPC server for managing a the docker statsm monitor server.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    gRPC server for managing a the docker stats monitor server.</span>
 <span class="sd">    Allows to start/stop the docker stats monitor remotely and also to query the</span>
 <span class="sd">    state of the server.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">file_name</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">DOCKER_STATS_MANAGER_LOG_FILE</span>
@@ -221,13 +226,17 @@
         <span class="n">logfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">logfile</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">docker_stats_monitor_threads</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting up DockerStatsManager&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="s2">&quot;8.8.8.8&quot;</span><span class="p">,</span> <span class="mi">80</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting up DockerStatsManager, hostname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2">, ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DockerStatsManagerServicer.getDockerStatsMonitorStatus"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.getDockerStatsMonitorStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getDockerStatsMonitorStatus</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">docker_stats_manager_pb2</span><span class="o">.</span><span class="n">GetDockerStatsMonitorStatusMsg</span><span class="p">,</span>
             <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">docker_stats_manager_pb2</span><span class="o">.</span><span class="n">DockerStatsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the state of the docker stats monitors</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -255,7 +264,7 @@
 <div class="viewcode-block" id="DockerStatsManagerServicer.stopDockerStatsMonitor"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.DockerStatsManagerServicer.stopDockerStatsMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">stopDockerStatsMonitor</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">docker_stats_manager_pb2</span><span class="o">.</span><span class="n">StopDockerStatsMonitorMsg</span><span class="p">,</span>
             <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the docker stats monitor server</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -280,7 +289,7 @@
             <span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">docker_stats_manager_pb2</span><span class="o">.</span><span class="n">StartDockerStatsMonitorMsg</span><span class="p">,</span>
             <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">docker_stats_manager</span><span class="o">.</span><span class="n">docker_stats_manager_pb2</span><span class="o">.</span><span class="n">DockerStatsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts a new docker stats monitor</span>
 
 <span class="sd">        :param request: the gRPC request</span>
@@ -317,8 +326,8 @@
 
 <div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../csle_collector.docker_stats_manager.html#csle_collector.docker_stats_manager.docker_stats_manager.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50046</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/&quot;</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
           <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;docker_stats_manager.log&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Starts the gRPC server for managing clients</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Starts the gRPC server for managing docker stats collection</span>
 
 <span class="sd">    :param port: the port that the server will listen to</span>
 <span class="sd">    :param log_dir: the directory to write the log file</span>

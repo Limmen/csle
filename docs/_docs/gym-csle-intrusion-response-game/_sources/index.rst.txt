@@ -1,4 +1,4 @@
-gym\_csle_stopping_game package
+gym\_csle_intrusion_response_game package
 ===============================
 
 Subpackages
@@ -6,15 +6,15 @@ Subpackages
 
 .. toctree::
 
-   gym_csle_stopping_game.constants
-   gym_csle_stopping_game.dao
-   gym_csle_stopping_game.envs
-   gym_csle_stopping_game.util
+   gym_csle_intrusion_response_game.constants
+   gym_csle_intrusion_response_game.dao
+   gym_csle_intrusion_response_game.envs
+   gym_csle_intrusion_response_game.util
 
 Module contents
 ---------------
 
-.. automodule:: gym_csle_stopping_game
+.. automodule:: gym_csle_intrusion_response_game
    :members:
    :undoc-members:
    :show-inheritance:

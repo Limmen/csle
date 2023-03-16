@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.dao.emulation_config.emulation_env_state</li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.dao.emulation_config.emulation_env_state</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -84,13 +89,13 @@
 
 
 <div class="viewcode-block" id="EmulationEnvState"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState">[docs]</a><span class="k">class</span> <span class="nc">EmulationEnvState</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents the combined state of the emulation environment,</span>
 <span class="sd">    including both the attacker&#39;s and the defender&#39;s states.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the state</span>
 
 <span class="sd">        :param emulation_env_config: the environment configuration</span>
@@ -121,7 +126,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
 <div class="viewcode-block" id="EmulationEnvState.initialize_defender_machines"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState.initialize_defender_machines">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_defender_machines</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the defender observation state based on the emulation configuration</span>
 
 <span class="sd">        :return: None</span>
@@ -134,7 +139,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">start_monitoring_threads</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EmulationEnvState.reset"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resets the env state. Caches connections</span>
 
 <span class="sd">        :return: None</span>
@@ -168,7 +173,7 @@
                 <span class="n">kafka_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationEnvState.cleanup"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cleanup</span>
 
 <span class="sd">        :return: None</span>
@@ -190,7 +195,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">defender_obs_state</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EmulationEnvState.get_attacker_machine"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState.get_attacker_machine">[docs]</a>    <span class="k">def</span> <span class="nf">get_attacker_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for extracting the attacker machine from the attacker&#39;s observation</span>
 
 <span class="sd">        :param ip: the ip of the attacker machine</span>
@@ -202,7 +207,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="EmulationEnvState.get_defender_machine"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState.get_defender_machine">[docs]</a>    <span class="k">def</span> <span class="nf">get_defender_machine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">EmulationDefenderMachineObservationState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for extracting the defender machine from the defender&#39;s observation given an IP</span>
 
 <span class="sd">        :param ip: the ip of the machine</span>
@@ -214,7 +219,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="EmulationEnvState.copy"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_state.EmulationEnvState.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationEnvState&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the env state</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">copy</span> <span class="o">=</span> <span class="n">EmulationEnvState</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="p">)</span>
@@ -223,7 +228,7 @@
         <span class="k">return</span> <span class="n">copy</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Attacker observation state: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">attacker_obs_state</span><span class="si">}</span><span class="s2">&quot;</span> \
@@ -237,7 +242,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

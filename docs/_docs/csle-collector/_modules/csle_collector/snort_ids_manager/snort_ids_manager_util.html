@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.snort_ids_manager.snort_ids_manager_util</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.snort_ids_manager.snort_ids_manager_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -81,43 +84,39 @@
 
 
 <div class="viewcode-block" id="SnortIdsManagerUtil"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil">[docs]</a><span class="k">class</span> <span class="nc">SnortIdsManagerUtil</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class with utility functions related to the Snort IDS Manager</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SnortIdsManagerUtil.check_snort_ids_alerts"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_alerts">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">check_snort_ids_alerts</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsAlert</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads alerts from the Snort IDS alerts log</span>
 
 <span class="sd">        :return: a list of alerts</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">TAIL_ALERTS_COMMAND</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">SNORT_ALERTS_FILE</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">alerts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
             <span class="n">a_str</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
             <span class="n">alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SnortIdsAlert</span><span class="o">.</span><span class="n">parse_from_str</span><span class="p">(</span><span class="n">a_str</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">alerts</span></div>
 
 <div class="viewcode-block" id="SnortIdsManagerUtil.check_snort_ids_fast_log"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.check_snort_ids_fast_log">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">check_snort_ids_fast_log</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsFastLogAlert</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads alerts from the Snort IDS fast-log</span>
 
 <span class="sd">        :param env_config: the environment config</span>
 <span class="sd">        :return: a list of alerts</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">TAIL_FAST_LOG_COMMAND</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">SNORT_FAST_LOG_FILE</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">fast_logs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">line</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
                 <span class="n">a_str</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
                 <span class="n">fast_logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SnortIdsAlert</span><span class="o">.</span><span class="n">fast_log_parse</span><span class="p">(</span><span class="n">a_str</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">))</span>
@@ -125,30 +124,26 @@
 
 <div class="viewcode-block" id="SnortIdsManagerUtil.get_latest_snort_alert_ts"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.get_latest_snort_alert_ts">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_latest_snort_alert_ts</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the latest timestamp in the snort alerts log</span>
 
 <span class="sd">        :param env_config: the environment config</span>
 <span class="sd">        :return: the latest timestamp</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">TAIL_ALERTS_LATEST_COMMAND</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">SNORT_ALERTS_FILE</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
         <span class="n">alerts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">line</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
                 <span class="n">a_str</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
                 <span class="n">alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SnortIdsAlert</span><span class="o">.</span><span class="n">parse_from_str</span><span class="p">(</span><span class="n">a_str</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">alerts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># retry once</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">alerts</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">line</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
                     <span class="n">a_str</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
                     <span class="n">alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SnortIdsAlert</span><span class="o">.</span><span class="n">parse_from_str</span><span class="p">(</span><span class="n">a_str</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">))</span>
@@ -161,7 +156,7 @@
 
 <div class="viewcode-block" id="SnortIdsManagerUtil.read_snort_ids_data"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.read_snort_ids_data">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_snort_ids_data</span><span class="p">(</span><span class="n">episode_last_alert_ts</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SnortIdsAlertCounters</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures metrics from the Snort ids</span>
 
 <span class="sd">        :param env_config: environment configuration</span>
@@ -186,7 +181,7 @@
     <span class="k">def</span> <span class="nf">snort_ids_monitor_dto_to_dict</span><span class="p">(</span>
             <span class="n">snort_ids_monitor_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a SnortIDSMonitorDTO to a dict</span>
 
 <span class="sd">        :param snort_ids_monitor_dto: the dto to convert</span>
@@ -200,7 +195,7 @@
 <div class="viewcode-block" id="SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">snort_ids_monitor_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation of a SnortIDSMonitorDTO to a DTO</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -215,7 +210,7 @@
     <span class="k">def</span> <span class="nf">snort_ids_log_dto_to_dict</span><span class="p">(</span>
             <span class="n">snort_ids_log_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsLogDTO</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a SnortIdsLogDTO to a dict</span>
 
 <span class="sd">        :param snort_ids_log_dto: the DTO to convert</span>
@@ -270,7 +265,7 @@
 <div class="viewcode-block" id="SnortIdsManagerUtil.snort_ids_log_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">snort_ids_log_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsLogDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation of a SnortIdsLogDTO to a DTO</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -325,7 +320,7 @@
 <div class="viewcode-block" id="SnortIdsManagerUtil.snort_ids_log_dto_empty"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_log_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">snort_ids_log_dto_empty</span><span class="p">()</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsLogDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: an empty SnortIdsLogDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">snort_ids_log_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsLogDTO</span><span class="p">()</span>
@@ -376,7 +371,7 @@
 
 <div class="viewcode-block" id="SnortIdsManagerUtil.snort_ids_monitor_dto_empty"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_util.SnortIdsManagerUtil.snort_ids_monitor_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">snort_ids_monitor_dto_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: An empty SnortIdsMonitorDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">snort_ids_monitor_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsMonitorDTO</span><span class="p">()</span>

@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.dao.training.multi_threshold_stopping_policy</li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.dao.training.multi_threshold_stopping_policy</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -72,7 +77,7 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">csle_agents.constants.constants</span> <span class="k">as</span> <span class="nn">agent_constants</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.training.policy</span> <span class="kn">import</span> <span class="n">Policy</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.training.agent_type</span> <span class="kn">import</span> <span class="n">AgentType</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.state</span> <span class="kn">import</span> <span class="n">State</span>
@@ -83,14 +88,14 @@
 
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy">[docs]</a><span class="k">class</span> <span class="nc">MultiThresholdStoppingPolicy</span><span class="p">(</span><span class="n">Policy</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A multi-threshold stopping policy</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">simulation_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">L</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">states</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">State</span><span class="p">],</span> <span class="n">player_type</span><span class="p">:</span> <span class="n">PlayerType</span><span class="p">,</span>
                  <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Action</span><span class="p">],</span> <span class="n">experiment_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ExperimentConfig</span><span class="p">],</span> <span class="n">avg_R</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                  <span class="n">agent_type</span><span class="p">:</span> <span class="n">AgentType</span><span class="p">,</span> <span class="n">opponent_strategy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;MultiThresholdStoppingPolicy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the policy</span>
 
 <span class="sd">        :param theta: the threshold vector</span>
@@ -116,7 +121,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">opponent_strategy</span> <span class="o">=</span> <span class="n">opponent_strategy</span>
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.action"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.action">[docs]</a>    <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Multi-threshold stopping policy</span>
 
 <span class="sd">        :param o: the current observation</span>
@@ -130,7 +135,7 @@
             <span class="k">return</span> <span class="n">a</span></div>
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.probability"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.probability">[docs]</a>    <span class="k">def</span> <span class="nf">probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Probability of a given action</span>
 
 <span class="sd">        :param o: the current observation</span>
@@ -145,7 +150,7 @@
             <span class="k">return</span> <span class="n">prob</span></div>
 
     <span class="k">def</span> <span class="nf">_attacker_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">defender_stopping_prob</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Multi-threshold stopping policy of the attacker</span>
 
 <span class="sd">        :param o: the input observation</span>
@@ -174,7 +179,7 @@
         <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">attacker_action_prob</span>
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.stage_policy"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.stage_policy">[docs]</a>    <span class="k">def</span> <span class="nf">stage_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]],</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets the stage policy, i.e a |S|x|A| policy</span>
 
 <span class="sd">        :param o: the latest observation</span>
@@ -212,7 +217,7 @@
             <span class="k">return</span> <span class="n">stage_policy</span></div>
 
     <span class="k">def</span> <span class="nf">_defender_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Multi-threshold stopping policy of the defender</span>
 
 <span class="sd">        :param o: the input observation</span>
@@ -227,7 +232,7 @@
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.sigmoid"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.sigmoid">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The sigmoid function</span>
 
 <span class="sd">        :param x: the input</span>
@@ -237,7 +242,7 @@
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.inverse_sigmoid"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.inverse_sigmoid">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">inverse_sigmoid</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The inverse sigmoid function</span>
 
 <span class="sd">        :param y: sigmoid(x)</span>
@@ -248,7 +253,7 @@
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.smooth_threshold_action_selection"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.smooth_threshold_action_selection">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">smooth_threshold_action_selection</span><span class="p">(</span><span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">threshold_action</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                                           <span class="n">alternative_action</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span><span class="o">=-</span><span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Selects the next action according to a smooth threshold function on the belief</span>
 
 <span class="sd">        :param threshold: the threshold</span>
@@ -265,7 +270,7 @@
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.stopping_probability"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.stopping_probability">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stopping_probability</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">k</span><span class="o">=-</span><span class="mi">20</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the probability of stopping given a belief and a threshold</span>
 
 <span class="sd">        :param b1: the belief</span>
@@ -285,7 +290,7 @@
             <span class="k">return</span> <span class="mi">0</span></div>
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a dict representation of the policy</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -307,7 +312,7 @@
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MultiThresholdStoppingPolicy&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converst a dict representation of the object to an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -323,13 +328,13 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.thresholds"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.thresholds">[docs]</a>    <span class="k">def</span> <span class="nf">thresholds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the thresholds</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">MultiThresholdStoppingPolicy</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">3</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.stop_distributions"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.stop_distributions">[docs]</a>    <span class="k">def</span> <span class="nf">stop_distributions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the stop distributions and their names</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">distributions</span> <span class="o">=</span> <span class="p">{}</span>
@@ -343,7 +348,7 @@
                         <span class="n">stop_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">prob</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">stop_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">prob</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-                <span class="n">distributions</span><span class="p">[</span><span class="n">agent_constants</span><span class="o">.</span><span class="n">T_SPSA</span><span class="o">.</span><span class="n">STOP_DISTRIBUTION_DEFENDER</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;_l=</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stop_dist</span>
+                <span class="n">distributions</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">T_SPSA</span><span class="o">.</span><span class="n">STOP_DISTRIBUTION_DEFENDER</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;_l=</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stop_dist</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">defender_stop_space</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">:</span>
@@ -356,13 +361,13 @@
                                 <span class="n">stop_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">prob</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
                             <span class="k">else</span><span class="p">:</span>
                                 <span class="n">stop_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">prob</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-                            <span class="n">distributions</span><span class="p">[</span><span class="n">agent_constants</span><span class="o">.</span><span class="n">T_SPSA</span><span class="o">.</span><span class="n">STOP_DISTRIBUTION_ATTACKER</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;_l=</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">_s=</span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> \
+                            <span class="n">distributions</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">T_SPSA</span><span class="o">.</span><span class="n">STOP_DISTRIBUTION_ATTACKER</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;_l=</span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">_s=</span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> \
                                 <span class="n">stop_dist</span>
 
         <span class="k">return</span> <span class="n">distributions</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;theta: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="si">}</span><span class="s2">, id: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, simulation_name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation_name</span><span class="si">}</span><span class="s2">, &quot;</span> \
@@ -371,7 +376,7 @@
                <span class="sa">f</span><span class="s2">&quot;experiment_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_config</span><span class="si">}</span><span class="s2">, avg_R: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">avg_R</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.to_json_str"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the DTO into a json string</span>
 
 <span class="sd">        :return: the json string representation of the DTO</span>
@@ -381,7 +386,7 @@
         <span class="k">return</span> <span class="n">json_str</span></div>
 
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.to_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the DTO to a json file</span>
 
 <span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
@@ -392,8 +397,22 @@
         <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="MultiThresholdStoppingPolicy.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MultiThresholdStoppingPolicy&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">MultiThresholdStoppingPolicy</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="MultiThresholdStoppingPolicy.copy"><a class="viewcode-back" href="../../../../csle_common.dao.training.html#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;MultiThresholdStoppingPolicy&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div></div>
@@ -406,7 +425,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

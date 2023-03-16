@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -79,11 +82,11 @@
 
 
 <div class="viewcode-block" id="SnortIdsManagerStub"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub">[docs]</a><span class="k">class</span> <span class="nc">SnortIdsManagerStub</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Interface exported by the server</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface exported by the server</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Constructor.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            channel: A grpc.Channel.</span>
@@ -121,41 +124,41 @@
 
 
 <div class="viewcode-block" id="SnortIdsManagerServicer"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">SnortIdsManagerServicer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Interface exported by the server</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface exported by the server</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SnortIdsManagerServicer.getSnortIdsAlerts"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer.getSnortIdsAlerts">[docs]</a>    <span class="k">def</span> <span class="nf">getSnortIdsAlerts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SnortIdsManagerServicer.stopSnortIdsMonitor"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer.stopSnortIdsMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">stopSnortIdsMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SnortIdsManagerServicer.startSnortIdsMonitor"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer.startSnortIdsMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">startSnortIdsMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SnortIdsManagerServicer.getSnortIdsMonitorStatus"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer.getSnortIdsMonitorStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getSnortIdsMonitorStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SnortIdsManagerServicer.stopSnortIds"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer.stopSnortIds">[docs]</a>    <span class="k">def</span> <span class="nf">stopSnortIds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SnortIdsManagerServicer.startSnortIds"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer.startSnortIds">[docs]</a>    <span class="k">def</span> <span class="nf">startSnortIds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div></div>
@@ -201,7 +204,7 @@
 
  <span class="c1"># This class is part of an EXPERIMENTAL API.</span>
 <div class="viewcode-block" id="SnortIdsManager"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManager">[docs]</a><span class="k">class</span> <span class="nc">SnortIdsManager</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Interface exported by the server</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface exported by the server</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SnortIdsManager.getSnortIdsAlerts"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManager.getSnortIdsAlerts">[docs]</a>    <span class="nd">@staticmethod</span>

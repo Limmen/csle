@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.host_manager.host_manager_util</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.host_manager.host_manager_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -71,9 +74,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_collector.host_manager.host_manager_util</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">csle_collector.host_manager.failed_login_attempt</span> <span class="kn">import</span> <span class="n">FailedLoginAttempt</span>
 <span class="kn">from</span> <span class="nn">csle_collector.host_manager.successful_login</span> <span class="kn">import</span> <span class="n">SuccessfulLogin</span>
@@ -85,17 +90,15 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_latest_ts_auth"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_latest_ts_auth">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_latest_ts_auth</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the timestamp of the latest failed login attempt</span>
 
 <span class="sd">        :return: the number of recently failed login attempts</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_FAILED_LOGIN_ATTEMPTS</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-            <span class="n">login_attempts_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">login_attempts_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
             <span class="n">login_attempts</span> <span class="o">=</span> <span class="n">login_attempts_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">login_attempts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">14</span><span class="p">,</span> <span class="n">login_attempts</span><span class="p">))</span>
             <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
@@ -107,17 +110,15 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_failed_login_attempts"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_failed_login_attempts">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_failed_login_attempts</span><span class="p">(</span><span class="n">failed_auth_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the number of recent failed login attempts</span>
 
 <span class="sd">        :param emulation_config: configuration to connect to the node in the emulation</span>
 <span class="sd">        :return: the number of recently failed login attempts</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_FAILED_LOGIN_ATTEMPTS</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">login_attempts_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">login_attempts_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
         <span class="n">login_attempts</span> <span class="o">=</span> <span class="n">login_attempts_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">login_attempts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">14</span><span class="p">,</span> <span class="n">login_attempts</span><span class="p">))</span>
         <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
@@ -128,17 +129,15 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_latest_ts_login"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_latest_ts_login">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_latest_ts_login</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the timestamp of the latest successful login attempt</span>
 
 <span class="sd">        :return: the number of recently failed login attempts</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_SUCCESSFUL_LOGIN_ATTEMPTS</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-            <span class="n">logins</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">logins</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
             <span class="n">logins</span> <span class="o">=</span> <span class="n">logins</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">logins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s2">&quot;wtmp begins&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">x</span><span class="p">,</span> <span class="n">logins</span><span class="p">))</span>
             <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
@@ -148,17 +147,15 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_successful_login_events"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_successful_login_events">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_successful_login_events</span><span class="p">(</span><span class="n">login_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the number of recent successful login attempts</span>
 
 <span class="sd">        :param login_last_ts: the timestamp to use when filtering logins</span>
 <span class="sd">        :return: the number of recently failed login attempts</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_SUCCESSFUL_LOGIN_ATTEMPTS</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">logins</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">logins</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
         <span class="n">logins</span> <span class="o">=</span> <span class="n">logins</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">logins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="s2">&quot;wtmp begins&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">x</span><span class="p">,</span> <span class="n">logins</span><span class="p">))</span>
         <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
@@ -169,16 +166,14 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_open_connections"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_open_connections">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_open_connections</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the number of open connections to the server</span>
 
 <span class="sd">        :return: the number of open connections</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_OPEN_CONNECTIONS_CMD</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">connections_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">connections_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="n">connections_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;Active UNIX domain sockets&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">parts2</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;State&quot;</span><span class="p">)</span>
@@ -189,38 +184,34 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_users"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_users">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_users</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the number of user accounts on the server</span>
 
 <span class="sd">        :return: the number of user accounts</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_USER_ACCOUNTS</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">users_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">users_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">users_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HostManagerUtil.read_logged_in_users"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_logged_in_users">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_logged_in_users</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the number of logged-in users on the server</span>
 
 <span class="sd">        :return: the number of logged in users</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_LOGGED_IN_USERS_CMD</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="n">users_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">users_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
         <span class="n">users_str</span> <span class="o">=</span> <span class="n">users_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="n">users</span> <span class="o">=</span> <span class="n">users_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HostManagerUtil.read_processes"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_processes">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_processes</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Measures the number of processes on the server</span>
 
 <span class="sd">        :param emulation_config: configuration to connect to the node in the emulation</span>
@@ -228,10 +219,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HOST_METRICS</span><span class="o">.</span><span class="n">LIST_NUMBER_OF_PROCESSES</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-            <span class="n">processes_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">processes_str</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span>
             <span class="n">num_processes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">processes_str</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="n">num_processes</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -239,7 +228,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.read_host_metrics"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.read_host_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_host_metrics</span><span class="p">(</span><span class="n">failed_auth_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">login_last_ts</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HostMetrics</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads the latest metrics from the host</span>
 
 <span class="sd">        :param failed_auth_last_ts: the last time-step of read failed authentication attempts</span>
@@ -268,34 +257,44 @@
         <span class="k">return</span> <span class="n">host_metrics</span></div>
 
 <div class="viewcode-block" id="HostManagerUtil.host_monitor_dto_to_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">host_monitor_dto_to_dict</span><span class="p">(</span><span class="n">host_monitor_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="p">)</span> \
+    <span class="k">def</span> <span class="nf">host_monitor_dto_to_dict</span><span class="p">(</span><span class="n">host_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts a HostMonitorDTO to a dict</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a HostStatusDTO to a dict</span>
 
-<span class="sd">        :param host_monitor_dto: the dto to convert</span>
+<span class="sd">        :param host_dto: the dto to convert</span>
 <span class="sd">        :return: a dict representation of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">host_dto</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">host_dto</span> <span class="o">=</span> <span class="n">host_dto</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;running&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_monitor_dto</span><span class="o">.</span><span class="n">running</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;monitor_running&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_dto</span><span class="o">.</span><span class="n">monitor_running</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;filebeat_running&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_dto</span><span class="o">.</span><span class="n">filebeat_running</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packetbeat_running&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_dto</span><span class="o">.</span><span class="n">packetbeat_running</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;metricbeat_running&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_dto</span><span class="o">.</span><span class="n">metricbeat_running</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;heartbeat_running&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host_dto</span><span class="o">.</span><span class="n">heartbeat_running</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="HostManagerUtil.host_monitor_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">host_monitor_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts a dict representation of a HostMonitorDTO to a DTO</span>
+    <span class="k">def</span> <span class="nf">host_monitor_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict representation of a HostStatusDTO to a DTO</span>
 
 <span class="sd">        :param d: the dict to convert</span>
 <span class="sd">        :return: the converted DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">host_monitor_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="p">()</span>
-        <span class="n">host_monitor_dto</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;running&quot;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">host_monitor_dto</span></div>
+        <span class="n">host_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">()</span>
+        <span class="n">host_dto</span><span class="o">.</span><span class="n">monitor_running</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;monitor_running&quot;</span><span class="p">]</span>
+        <span class="n">host_dto</span><span class="o">.</span><span class="n">filebeat_running</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;filebeat_running&quot;</span><span class="p">]</span>
+        <span class="n">host_dto</span><span class="o">.</span><span class="n">packetbeat_running</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;packetbeat_running&quot;</span><span class="p">]</span>
+        <span class="n">host_dto</span><span class="o">.</span><span class="n">metricbeat_running</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;metricbeat_running&quot;</span><span class="p">]</span>
+        <span class="n">host_dto</span><span class="o">.</span><span class="n">heartbeat_running</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;heartbeat_running&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">host_dto</span></div>
 
 <div class="viewcode-block" id="HostManagerUtil.host_metrics_dto_to_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">host_metrics_dto_to_dict</span><span class="p">(</span><span class="n">host_metrics_dto</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a HostMetricsDTO to a dict</span>
 
 <span class="sd">        :param host_metrics_dto: the dto to convert</span>
@@ -314,7 +313,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.host_metrics_dto_from_dict"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">host_metrics_dto_from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation of a HostMetricsDTO to a DTO</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -333,7 +332,7 @@
 
 <div class="viewcode-block" id="HostManagerUtil.host_metrics_dto_empty"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_metrics_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">host_metrics_dto_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: an empty HostMetricsDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">host_metrics_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDTO</span><span class="p">()</span>
@@ -348,13 +347,508 @@
         <span class="k">return</span> <span class="n">host_metrics_dto</span></div>
 
 <div class="viewcode-block" id="HostManagerUtil.host_monitor_dto_empty"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.host_monitor_dto_empty">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">host_monitor_dto_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        :return: an empty HostMonitorDTO</span>
+    <span class="k">def</span> <span class="nf">host_monitor_dto_empty</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: an empty HostStatusDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">host_monitor_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostMonitorDTO</span><span class="p">()</span>
-        <span class="n">host_monitor_dto</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="n">host_monitor_dto</span></div></div>
+        <span class="n">host_monitor_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">()</span>
+        <span class="n">host_monitor_dto</span><span class="o">.</span><span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">host_monitor_dto</span><span class="o">.</span><span class="n">filebeat_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">host_monitor_dto</span><span class="o">.</span><span class="n">packetbeat_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">host_monitor_dto</span><span class="o">.</span><span class="n">metricbeat_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">host_monitor_dto</span><span class="o">.</span><span class="n">heartbeat_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">host_monitor_dto</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.filebeat_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">filebeat_config</span><span class="p">(</span><span class="n">log_files_paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                        <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">kafka_topics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                        <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">reload_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kafka</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the filebeat.yml config</span>
+
+<span class="sd">        :param log_files_paths: the list of log files that filebeat should monitor</span>
+<span class="sd">        :param kibana_ip: the IP of Kibana where the data should be visualized</span>
+<span class="sd">        :param kibana_port: the port of Kibana where the data should be visualized</span>
+<span class="sd">        :param elastic_ip: the IP of elastic where the data should be shipped</span>
+<span class="sd">        :param elastic_port: the port of elastic where the data should be shipped</span>
+<span class="sd">        :param num_elastic_shards: the number of elastic shards</span>
+<span class="sd">        :param reload_enabled: whether automatic reload of modules should be enabled</span>
+<span class="sd">        :param kafka: whether kafka should be added as input</span>
+<span class="sd">        :param kafka_topics: list of kafka topics to ingest</span>
+<span class="sd">        :param kafka_port: the kafka server port</span>
+<span class="sd">        :param kafka_ip: the kafka server ip</span>
+<span class="sd">        :return: the filebeat configuration dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filebeat_config</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">filebeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">INPUTS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">FILESTREAM_PROPERTY</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ID_PROPERTY</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PATHS_PROPERTY</span><span class="p">:</span> <span class="n">log_files_paths</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">kafka</span><span class="p">:</span>
+            <span class="n">filebeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">INPUTS_PROPERTY</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">KAFKA_PROPERTY</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">GROUP_ID_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">FILEBEAT_GROUP_ID</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TOPICS_PROPERTY</span><span class="p">:</span> <span class="n">kafka_topics</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOSTS_PROPERTY</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kafka_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">kafka_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="n">filebeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">MODULES_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PATH_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">MODULES_CONFIG_DIR</span><span class="si">}</span><span class="s2">*.yml&quot;</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">RELOAD_ENABLED_PROPERTY</span><span class="p">:</span> <span class="n">reload_enabled</span>
+        <span class="p">}</span>
+        <span class="n">filebeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">SETUP_TEMPLATE_SETTINGS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">INDEX_NUM_SHARDS_PROPERTY</span><span class="p">:</span> <span class="n">num_elastic_shards</span>
+        <span class="p">}</span>
+        <span class="n">filebeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">SETUP_KIBANA_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOST_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kibana_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">kibana_port</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">}</span>
+        <span class="n">filebeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ELASTIC_OUTPUT_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOSTS_PROPERTY</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">elastic_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">elastic_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+        <span class="n">filebeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PROCESSORS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ADD_HOST_METADATA_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">WHEN_NOT_CONTAIN_TAGS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">FORWARDED_PROPERTY</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">filebeat_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.write_yaml_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.write_yaml_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">write_yaml_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]],</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes a given filebeat config to disk</span>
+
+<span class="sd">        :param config: the filebeat config to write</span>
+<span class="sd">        :param path: the path to write the file to</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing configuration file to path: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.filebeat_snort_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_snort_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">filebeat_snort_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the snort filebeat module config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">snort_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">MODULE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">SNORT_MODULE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">LOG_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">VAR_INPUT_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">FILE_PROPERTY</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">VAR_PATHS_PROPERTY</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">SNORT_FAST_LOG_FILE</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">snort_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.filebeat_elasticsearch_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_elasticsearch_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">filebeat_elasticsearch_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the elasticsearch filebeat module config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">elastic_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">MODULE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">ELASTICSEARCH_MODULE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">SERVER_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">VAR_PATHS_PROPERTY</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">ELASTICSEARCH_LOG_DIR</span><span class="si">}</span><span class="s2">*.log&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">ELASTICSEARCH_LOG_DIR</span><span class="si">}</span><span class="s2">*_server.json&quot;</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">elastic_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.filebeat_logstash_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_logstash_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">filebeat_logstash_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the logstash filebeat module config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logstash_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">MODULE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">LOGSTASH_MODULE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">LOG_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">VAR_PATHS_PROPERTY</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">LOGSTASH_LOG_DIR</span><span class="si">}</span><span class="s2">logstash.log*&quot;</span>
+                    <span class="p">]</span>
+                <span class="p">},</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">SLOWLOG_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">VAR_PATHS_PROPERTY</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">LOGSTASH_LOG_DIR</span><span class="si">}</span><span class="s2">logstash-slowlog.log*&quot;</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">logstash_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.filebeat_kibana_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_kibana_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">filebeat_kibana_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the kibana filebeat module config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kibana_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">MODULE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">KIBANA_MODULE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">LOG_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">VAR_PATHS_PROPERTY</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">ELK</span><span class="o">.</span><span class="n">KIBANA_LOG_DIR</span><span class="si">}</span><span class="s2">*.log&quot;</span>
+                    <span class="p">]</span>
+                <span class="p">},</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">AUDIT_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">kibana_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.filebeat_system_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_system_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">filebeat_system_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the system filebeat module config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">system_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">MODULE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">SYSTEM_MODULE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">SYSLOG_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">VAR_PATHS_PROPERTY</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">SYSTEM</span><span class="o">.</span><span class="n">SYSLOG</span><span class="si">}</span><span class="s2">*&quot;</span>
+                    <span class="p">]</span>
+                <span class="p">},</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">AUTH_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">VAR_PATHS_PROPERTY</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">SYSTEM</span><span class="o">.</span><span class="n">AUTH_LOG</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">system_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.filebeat_kafka_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.filebeat_kafka_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">filebeat_kafka_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the kafka filebeat module config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">system_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">MODULE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">KAFKA_MODULE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">LOG_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">VAR_PATHS_PROPERTY</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">DIR</span><span class="si">}</span><span class="s2">controller.log*&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">DIR</span><span class="si">}</span><span class="s2">server.log*&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">DIR</span><span class="si">}</span><span class="s2">state-change.log*&quot;</span><span class="p">,</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">DIR</span><span class="si">}</span><span class="s2">kafka-*.log*&quot;</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">system_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.packetbeat_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.packetbeat_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">packetbeat_config</span><span class="p">(</span><span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                          <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the packetbeat.yml config</span>
+
+<span class="sd">        :param kibana_ip: the IP of Kibana where the data should be visualized</span>
+<span class="sd">        :param kibana_port: the port of Kibana where the data should be visualized</span>
+<span class="sd">        :param elastic_ip: the IP of elastic where the data should be shipped</span>
+<span class="sd">        :param elastic_port: the port of elastic where the data should be shipped</span>
+<span class="sd">        :param num_elastic_shards: the number of elastic shards</span>
+<span class="sd">        :return: the filebeat configuration dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">packetbeat_config</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">packetbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">INTERFACES_TYPE_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">AF_PACKET_PROPERTY</span>
+        <span class="n">packetbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">INTERFACES_DEVICE_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">ANY_DEVICE_PROPERTY</span>
+        <span class="n">packetbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">FLOWS</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">TIMEOUT_PROPERTY</span><span class="p">:</span> <span class="s2">&quot;30s&quot;</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PERIOD_PROPERTY</span><span class="p">:</span> <span class="s2">&quot;10s&quot;</span>
+        <span class="p">}</span>
+        <span class="n">packetbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PROTOCOLS</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">ICMP_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">AMQP_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">AMQP_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">CASSANDRA_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">CASSANDRA_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">DHCPV4_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">DHCPV4_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">DNS_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">DNS_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">HTTP_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">HTTP_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">MEMCACHE_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">MEMCACHE_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">MYSQL_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">MYSQL_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PGSQL_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PGSQL_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">REDIS_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">REDIS_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">THRIFT_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">THRIFT_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">MONGODB_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">MONGODB_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">NFS_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">NFS_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">TLS_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">TLS_PORTS</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">SIP_PROTOCOL</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">PORTS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">PACKETBEAT</span><span class="o">.</span><span class="n">SIP_PORTS</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="n">packetbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">SETUP_TEMPLATE_SETTINGS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">INDEX_NUM_SHARDS_PROPERTY</span><span class="p">:</span> <span class="n">num_elastic_shards</span>
+        <span class="p">}</span>
+        <span class="n">packetbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">SETUP_KIBANA_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOST_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kibana_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">kibana_port</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">}</span>
+        <span class="n">packetbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ELASTIC_OUTPUT_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOSTS_PROPERTY</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">elastic_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">elastic_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+        <span class="n">packetbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PROCESSORS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ADD_HOST_METADATA_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">WHEN_NOT_CONTAIN_TAGS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">FORWARDED_PROPERTY</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">packetbeat_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.metricbeat_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">metricbeat_config</span><span class="p">(</span><span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">reload_enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the metricbeat.yml config</span>
+
+<span class="sd">        :param kibana_ip: the IP of Kibana where the data should be visualized</span>
+<span class="sd">        :param kibana_port: the port of Kibana where the data should be visualized</span>
+<span class="sd">        :param elastic_ip: the IP of elastic where the data should be shipped</span>
+<span class="sd">        :param elastic_port: the port of elastic where the data should be shipped</span>
+<span class="sd">        :param num_elastic_shards: the number of elastic shards</span>
+<span class="sd">        :param reload_enabled: whether automatic reload of modules should be enabled</span>
+<span class="sd">        :return: the metricbeat configuration dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">metricbeat_config</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">metricbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">MODULES_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PATH_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">MODULES_CONFIG_DIR</span><span class="si">}</span><span class="s2">*.yml&quot;</span><span class="p">,</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">RELOAD_ENABLED_PROPERTY</span><span class="p">:</span> <span class="n">reload_enabled</span>
+        <span class="p">}</span>
+        <span class="n">metricbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">SETUP_TEMPLATE_SETTINGS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">INDEX_NUM_SHARDS_PROPERTY</span><span class="p">:</span> <span class="n">num_elastic_shards</span>
+        <span class="p">}</span>
+        <span class="n">metricbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">SETUP_KIBANA_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOST_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kibana_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">kibana_port</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">}</span>
+        <span class="n">metricbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ELASTIC_OUTPUT_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOSTS_PROPERTY</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">elastic_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">elastic_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+        <span class="n">metricbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PROCESSORS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ADD_HOST_METADATA_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">WHEN_NOT_CONTAIN_TAGS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">FORWARDED_PROPERTY</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">metricbeat_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.metricbeat_elasticsearch_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_elasticsearch_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">metricbeat_elasticsearch_module_config</span><span class="p">(</span><span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the elasticsearch metricbeat module config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">elastic_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">MODULE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">FILEBEAT</span><span class="o">.</span><span class="n">ELASTICSEARCH_MODULE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PERIOD_PROPERTY</span><span class="p">:</span> <span class="s2">&quot;10s&quot;</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOSTS_PROPERTY</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">elastic_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">elastic_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">elastic_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.metricbeat_kibana_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_kibana_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">metricbeat_kibana_module_config</span><span class="p">(</span><span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates the kibana metricbeat module configuration</span>
+
+<span class="sd">        :param kibana_ip: the kibana host IP</span>
+<span class="sd">        :param kibana_port: the kibana host port</span>
+<span class="sd">        :return: the kibana metricbeat module config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kibana_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">MODULE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">KIBANA_MODULE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PERIOD_PROPERTY</span><span class="p">:</span> <span class="s2">&quot;10s&quot;</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOSTS_PROPERTY</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kibana_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">kibana_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">kibana_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.metricbeat_logstash_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_logstash_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">metricbeat_logstash_module_config</span><span class="p">(</span><span class="n">logstash_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logstash_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates the logstash metricbeat module configuration</span>
+
+<span class="sd">        :param logstash_ip: the kibana host IP</span>
+<span class="sd">        :param logstash_port: the kibana host port</span>
+<span class="sd">        :return: the kibana metricbeat module config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logstash_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">MODULE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">LOGSTASH_MODULE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PERIOD_PROPERTY</span><span class="p">:</span> <span class="s2">&quot;10s&quot;</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOSTS_PROPERTY</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">logstash_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">logstash_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">logstash_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.metricbeat_kafka_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_kafka_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">metricbeat_kafka_module_config</span><span class="p">(</span><span class="n">kafka_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kafka_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates the kafka metricbeat module configuration</span>
+
+<span class="sd">        :param kafka_ip: the kibana host IP</span>
+<span class="sd">        :param kafka_port: the kibana host port</span>
+<span class="sd">        :return: the kafka metricbeat module config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kafka_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">MODULE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">KAFKA_MODULE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PERIOD_PROPERTY</span><span class="p">:</span> <span class="s2">&quot;10s&quot;</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOSTS_PROPERTY</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kafka_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">kafka_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">kafka_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.metricbeat_system_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_system_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">metricbeat_system_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates the system metricbeat module configuration</span>
+
+<span class="sd">        :return: the system metricbeat module config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">system_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">MODULE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">SYSTEM_MODULE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PERIOD_PROPERTY</span><span class="p">:</span> <span class="s2">&quot;10s&quot;</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">METRICSETS_PROPERTY</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">CPU_METRIC</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">LOAD_METRIC</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">MEMORY_METRIC</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">NETWORK_METRIC</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">PROCESS_METRIC</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">PROCESS_SUMMARY_METRIC</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">SOCKET_SUMMARY_METRIC</span>
+                <span class="p">],</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">PROCESSES_PROPERTY</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;.*&quot;</span><span class="p">],</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">CPU_METRICS_PROPERTY</span><span class="p">:</span> <span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">PERCENTAGES_PROPERTY</span><span class="p">,</span>
+                                                            <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">NORMALIZED_PERCENTAGES_PROPERTY</span><span class="p">],</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">CORE_METRICS_PROPERTY</span><span class="p">:</span> <span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">PERCENTAGES_PROPERTY</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">system_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.metricbeat_linux_module_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.metricbeat_linux_module_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">metricbeat_linux_module_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates the linux metricbeat module configuration</span>
+
+<span class="sd">        :return: the linux metricbeat module config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">linux_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">MODULE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">LINUX_MODULE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PERIOD_PROPERTY</span><span class="p">:</span> <span class="s2">&quot;10s&quot;</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">METRICSETS_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">PAGEINFO_METRIC</span><span class="p">,</span>
+                    <span class="n">constants</span><span class="o">.</span><span class="n">METRICBEAT</span><span class="o">.</span><span class="n">SUMMARY_METRIC</span>
+                <span class="p">},</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ENABLED_PROPERTY</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="n">linux_config</span></div>
+
+<div class="viewcode-block" id="HostManagerUtil.heartbeat_config"><a class="viewcode-back" href="../../../csle_collector.host_manager.html#csle_collector.host_manager.host_manager_util.HostManagerUtil.heartbeat_config">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">heartbeat_config</span><span class="p">(</span><span class="n">kibana_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kibana_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">elastic_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">elastic_port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                         <span class="n">num_elastic_shards</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">hosts_to_monitor</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the heartbeat.yml config</span>
+
+<span class="sd">        :param kibana_ip: the IP of Kibana where the data should be visualized</span>
+<span class="sd">        :param kibana_port: the port of Kibana where the data should be visualized</span>
+<span class="sd">        :param elastic_ip: the IP of elastic where the data should be shipped</span>
+<span class="sd">        :param elastic_port: the port of elastic where the data should be shipped</span>
+<span class="sd">        :param num_elastic_shards: the number of elastic shards</span>
+<span class="sd">        :param hosts_to_monitor: a list of host IP addresses to monitor</span>
+<span class="sd">        :return: the heartbeat configuration dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">heartbeat_config</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">heartbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">HEARTBEAT</span><span class="o">.</span><span class="n">HEARTBEAT_MONITORS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">TYPE_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">HEARTBEAT</span><span class="o">.</span><span class="n">ICMP_MONITOR_TYPE</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">HEARTBEAT</span><span class="o">.</span><span class="n">SCHEDULE_PROPERTY</span><span class="p">:</span> <span class="s1">&#39;*/5 * * * * * *&#39;</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOSTS_PROPERTY</span><span class="p">:</span> <span class="n">hosts_to_monitor</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ID_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">HEARTBEAT</span><span class="o">.</span><span class="n">CSLE_MONITOR_SERVICE_ID</span><span class="p">,</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">NAME_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">HEARTBEAT</span><span class="o">.</span><span class="n">CSLE_MONITOR_SERVICE_NAME</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+        <span class="n">heartbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">SETUP_TEMPLATE_SETTINGS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">INDEX_NUM_SHARDS_PROPERTY</span><span class="p">:</span> <span class="n">num_elastic_shards</span>
+        <span class="p">}</span>
+        <span class="n">heartbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">SETUP_KIBANA_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOST_PROPERTY</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">kibana_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">kibana_port</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">}</span>
+        <span class="n">heartbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ELASTIC_OUTPUT_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">HOSTS_PROPERTY</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">elastic_ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">elastic_port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+        <span class="n">heartbeat_config</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">PROCESSORS_PROPERTY</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">ADD_HOST_METADATA_PROPERTY</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">WHEN_NOT_CONTAIN_TAGS_PROPERTY</span><span class="p">:</span> <span class="n">constants</span><span class="o">.</span><span class="n">BEATS</span><span class="o">.</span><span class="n">FORWARDED_PROPERTY</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">heartbeat_config</span></div></div>
 </pre></div>
 
            </div>

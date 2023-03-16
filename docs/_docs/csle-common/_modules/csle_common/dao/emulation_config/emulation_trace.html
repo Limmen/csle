@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.dao.emulation_config.emulation_trace</li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.dao.emulation_config.emulation_trace</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -72,6 +77,7 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">collector_constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
@@ -84,13 +90,13 @@
 
 
 <div class="viewcode-block" id="EmulationTrace"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace">[docs]</a><span class="k">class</span> <span class="nc">EmulationTrace</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DTO class representing a trace in the emulation system</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_attacker_observation_state</span><span class="p">:</span> <span class="n">EmulationAttackerObservationState</span><span class="p">,</span>
                  <span class="n">initial_defender_observation_state</span><span class="p">:</span> <span class="n">EmulationDefenderObservationState</span><span class="p">,</span> <span class="n">emulation_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
 <span class="sd">        :param initial_attacker_observation_state: the initial state of the attacker</span>
@@ -107,7 +113,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;initial_attacker_observation_state:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_attacker_observation_state</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -121,7 +127,7 @@
 
 <div class="viewcode-block" id="EmulationTrace.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationTrace&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation into an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -144,7 +150,7 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="EmulationTrace.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -160,7 +166,7 @@
 
 <div class="viewcode-block" id="EmulationTrace.save_traces_to_disk"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.save_traces_to_disk">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">save_traces_to_disk</span><span class="p">(</span><span class="n">traces_save_dir</span><span class="p">,</span> <span class="n">traces</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;EmulationTrace&quot;</span><span class="p">],</span> <span class="n">traces_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for saving a list of traces to a json file</span>
 
 <span class="sd">        :param traces_save_dir: the directory where to save the traces</span>
@@ -177,29 +183,29 @@
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s2">&quot;traces&quot;</span><span class="p">:</span> <span class="n">traces</span><span class="p">},</span> <span class="n">fp</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">NpEncoder</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationTrace.load_traces_from_disk"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.load_traces_from_disk">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">load_traces_from_disk</span><span class="p">(</span><span class="n">traces_save_dir</span><span class="p">,</span> <span class="n">traces_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;EmulationTrace&quot;</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">load_traces_from_disk</span><span class="p">(</span><span class="n">traces_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;EmulationTrace&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for loading and parsing a list of traces from a json file</span>
 
-<span class="sd">        :param traces_save_dir: the directory where to load the traces from</span>
 <span class="sd">        :param traces_file: (optional) a custom name of the traces file</span>
 <span class="sd">        :return: a list of the loaded traces</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">traces_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">traces_file</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">SYSTEM_IDENTIFICATION</span><span class="o">.</span><span class="n">TRACES_FILE</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">traces_save_dir</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SLASH_DELIM</span> <span class="o">+</span> <span class="n">traces_file</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">traces_file</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">traces_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
                 <span class="n">d</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
-                <span class="n">traces</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;traces&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">METADATA_STORE</span><span class="o">.</span><span class="n">TRACES_PROPERTY</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+                    <span class="n">traces</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">METADATA_STORE</span><span class="o">.</span><span class="n">TRACES_PROPERTY</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">traces</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulations&quot;</span><span class="p">]</span>
                 <span class="n">traces</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">EmulationTrace</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">traces</span><span class="p">))</span>
                 <span class="k">return</span> <span class="n">traces</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: Could not read traces file, path does not exist:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Warning: Could not &quot;</span>
+                                                <span class="sa">f</span><span class="s2">&quot;read traces file, path does not exist:</span><span class="si">{</span><span class="n">traces_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">[]</span></div>
 
 <div class="viewcode-block" id="EmulationTrace.to_json_str"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the DTO into a json string</span>
 
 <span class="sd">        :return: the json string representation of the DTO</span>
@@ -209,7 +215,7 @@
         <span class="k">return</span> <span class="n">json_str</span></div>
 
 <div class="viewcode-block" id="EmulationTrace.to_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the DTO to a json file</span>
 
 <span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
@@ -222,7 +228,7 @@
 
 <div class="viewcode-block" id="EmulationTrace.from_json_str"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.from_json_str">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json_str</span><span class="p">(</span><span class="n">json_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationTrace&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts json string into a DTO</span>
 
 <span class="sd">        :param json_str: the json string representation</span>
@@ -234,7 +240,7 @@
 
 <div class="viewcode-block" id="EmulationTrace.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationTrace&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads a json file and converts it into a dto</span>
 
 <span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
@@ -247,7 +253,7 @@
             <span class="k">return</span> <span class="n">dto</span></div>
 
 <div class="viewcode-block" id="EmulationTrace.num_attributes_per_time_step"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.num_attributes_per_time_step">[docs]</a>    <span class="k">def</span> <span class="nf">num_attributes_per_time_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: approximately the number of attributes recorded per time-step of the trace</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">num_attributes</span> <span class="o">=</span> <span class="mi">2</span>
@@ -263,7 +269,7 @@
 
 <div class="viewcode-block" id="EmulationTrace.schema"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.schema">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">schema</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the schema of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dto</span> <span class="o">=</span> <span class="n">EmulationTrace</span><span class="p">(</span><span class="n">initial_attacker_observation_state</span><span class="o">=</span><span class="n">EmulationAttackerObservationState</span><span class="o">.</span><span class="n">schema</span><span class="p">(),</span>
@@ -277,7 +283,7 @@
 
 <div class="viewcode-block" id="EmulationTrace.to_csv_record"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.EmulationTrace.to_csv_record">[docs]</a>    <span class="k">def</span> <span class="nf">to_csv_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_time_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_nodes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_ports</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_vulns</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                       <span class="n">null_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the trace into a csv row</span>
 
 <span class="sd">        :param max_time_steps: the maximum number of time-steps to include in the row</span>
@@ -842,7 +848,7 @@
 
 
 <div class="viewcode-block" id="NpEncoder"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.NpEncoder">[docs]</a><span class="k">class</span> <span class="nc">NpEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Encoder for Numpy arrays to JSON</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="NpEncoder.default"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_trace.NpEncoder.default">[docs]</a>    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
@@ -862,7 +868,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

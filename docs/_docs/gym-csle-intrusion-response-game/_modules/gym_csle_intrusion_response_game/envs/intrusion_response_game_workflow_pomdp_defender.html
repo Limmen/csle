@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender &mdash; gym-csle-intrusion-response-game 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gym-csle-intrusion-response-game
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.constants.html">gym_csle_intrusion_response_game.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.dao.html">gym_csle_intrusion_response_game.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.envs.html">gym_csle_intrusion_response_game.envs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.util.html">gym_csle_intrusion_response_game.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym-csle-intrusion-response-game</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.base_env</span> <span class="kn">import</span> <span class="n">BaseEnv</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.simulation_config.simulation_trace</span> <span class="kn">import</span> <span class="n">SimulationTrace</span>
+<span class="kn">from</span> <span class="nn">gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defender_config</span> <span class="kn">import</span> \
+    <span class="n">WorkflowIntrusionResponsePOMDPDefenderConfig</span>
+<span class="kn">from</span> <span class="nn">gym_csle_intrusion_response_game.util.intrusion_response_game_util</span> <span class="kn">import</span> <span class="n">IntrusionResponseGameUtil</span>
+<span class="kn">from</span> <span class="nn">gym_csle_intrusion_response_game.envs.intrusion_response_game_local_pomdp_defender</span> <span class="kn">import</span> \
+    <span class="n">IntrusionResponseGameLocalPOMDPDefenderEnv</span>
+<span class="kn">from</span> <span class="nn">gym_csle_intrusion_response_game.dao.intrusion_response_game_local_pomdp_defender_config</span> <span class="kn">import</span> \
+    <span class="n">IntrusionResponseGameLocalPOMDPDefenderConfig</span>
+<span class="kn">from</span> <span class="nn">gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config</span> <span class="kn">import</span> <span class="n">LocalIntrusionResponseGameConfig</span>
+<span class="kn">import</span> <span class="nn">gym_csle_intrusion_response_game.constants.constants</span> <span class="k">as</span> <span class="nn">env_constants</span>
+
+
+<div class="viewcode-block" id="IntrusionResponseGameWorkflowPOMDPDefenderEnv"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.envs.html#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv">[docs]</a><span class="k">class</span> <span class="nc">IntrusionResponseGameWorkflowPOMDPDefenderEnv</span><span class="p">(</span><span class="n">BaseEnv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    OpenAI Gym Env for the POMDP of the defender when facing a static attacker in the workflow game.</span>
+
+<span class="sd">    (A PO-POSG, i.e a partially observed stochastic game with public observations) where the attacker strategy</span>
+<span class="sd">    is fixed)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">WorkflowIntrusionResponsePOMDPDefenderConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the environment</span>
+
+<span class="sd">        :param config: the environment configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_envs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="n">reachable</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">S</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_state_space</span><span class="p">(</span><span class="n">number_of_zones</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">zones</span><span class="p">))</span>
+            <span class="n">states_to_idx</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+                <span class="n">states_to_idx</span><span class="p">[(</span><span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">])]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">S_A</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_attacker_state_space</span><span class="p">()</span>
+            <span class="n">S_D</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_defender_state_space</span><span class="p">(</span>
+                <span class="n">number_of_zones</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">zones</span><span class="p">))</span>
+            <span class="n">A1</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_defender_actions</span><span class="p">(</span><span class="n">number_of_zones</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">zones</span><span class="p">))</span>
+            <span class="n">A2</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_attacker_actions</span><span class="p">()</span>
+            <span class="n">O</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_observation_space</span><span class="p">(</span><span class="n">X_max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">X_max</span><span class="p">)</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_transition_tensor</span><span class="p">(</span>
+                <span class="n">S</span><span class="o">=</span><span class="n">S</span><span class="p">,</span> <span class="n">A1</span><span class="o">=</span><span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="o">=</span><span class="n">A2</span><span class="p">,</span> <span class="n">Z_D</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">Z_D_P</span><span class="p">,</span> <span class="n">A_P</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">A_P</span><span class="p">)])</span>
+            <span class="n">Z</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_observation_tensor_betabinom</span><span class="p">(</span><span class="n">S</span><span class="o">=</span><span class="n">S</span><span class="p">,</span> <span class="n">A1</span><span class="o">=</span><span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="o">=</span><span class="n">A2</span><span class="p">,</span> <span class="n">O</span><span class="o">=</span><span class="n">O</span><span class="p">)</span>
+            <span class="n">Z_U</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_reward_tensor</span><span class="p">(</span>
+                    <span class="n">eta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span>  <span class="n">C_D</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">C_D</span><span class="p">,</span> <span class="n">A1</span><span class="o">=</span><span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="o">=</span><span class="n">A2</span><span class="p">,</span>
+                    <span class="n">reachable</span><span class="o">=</span><span class="n">reachable</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="n">S</span><span class="p">,</span> <span class="n">Z_U</span><span class="o">=</span><span class="n">Z_U</span><span class="p">,</span>
+                    <span class="n">initial_zone</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">initial_zones</span><span class="p">[</span><span class="n">node</span><span class="p">])])</span>
+            <span class="n">d_b1</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_initial_defender_belief</span><span class="p">(</span><span class="n">S_A</span><span class="o">=</span><span class="n">S_A</span><span class="p">)</span>
+            <span class="n">a_b1</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_initial_attacker_belief</span><span class="p">(</span>
+                <span class="n">S_D</span><span class="o">=</span><span class="n">S_D</span><span class="p">,</span> <span class="n">initial_zone</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">initial_zones</span><span class="p">[</span><span class="n">node</span><span class="p">])</span>
+            <span class="n">initial_state</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">initial_zones</span><span class="p">[</span><span class="n">node</span><span class="p">],</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">initial_state_idx</span> <span class="o">=</span> <span class="n">states_to_idx</span><span class="p">[(</span><span class="n">initial_state</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">],</span>
+                                               <span class="n">initial_state</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">])]</span>
+            <span class="n">local_game_config</span> <span class="o">=</span> <span class="n">LocalIntrusionResponseGameConfig</span><span class="p">(</span>
+                <span class="n">env_name</span><span class="o">=</span><span class="s2">&quot;csle-intrusion-response-game-local-pomdp-defender-001&quot;</span><span class="p">,</span>
+                <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">O</span><span class="o">=</span><span class="n">O</span><span class="p">,</span> <span class="n">Z</span><span class="o">=</span><span class="n">Z</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">,</span> <span class="n">S</span><span class="o">=</span><span class="n">S</span><span class="p">,</span> <span class="n">S_A</span><span class="o">=</span><span class="n">S_A</span><span class="p">,</span> <span class="n">S_D</span><span class="o">=</span><span class="n">S_D</span><span class="p">,</span> <span class="n">s_1_idx</span><span class="o">=</span><span class="n">initial_state_idx</span><span class="p">,</span>
+                <span class="n">zones</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">zones</span><span class="p">,</span> <span class="n">A1</span><span class="o">=</span><span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="o">=</span><span class="n">A2</span><span class="p">,</span> <span class="n">d_b1</span><span class="o">=</span><span class="n">d_b1</span><span class="p">,</span> <span class="n">a_b1</span><span class="o">=</span><span class="n">a_b1</span><span class="p">,</span>
+                <span class="n">gamma</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">gamma</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">beta</span><span class="p">,</span>
+                <span class="n">C_D</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">C_D</span><span class="p">,</span> <span class="n">A_P</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">A_P</span><span class="p">,</span> <span class="n">Z_D_P</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">Z_D_P</span><span class="p">,</span>
+                <span class="n">Z_U</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">Z_U</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">eta</span><span class="p">)</span>
+            <span class="n">local_pomdp_config</span> <span class="o">=</span> <span class="n">IntrusionResponseGameLocalPOMDPDefenderConfig</span><span class="p">(</span>
+                <span class="n">env_name</span><span class="o">=</span><span class="s2">&quot;csle-intrusion-response-game-local-pomdp-defender-v1&quot;</span><span class="p">,</span>
+                <span class="n">local_intrusion_response_game_config</span><span class="o">=</span><span class="n">local_game_config</span><span class="p">,</span>
+                <span class="n">attacker_strategy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">attacker_strategies</span><span class="p">[</span><span class="n">node</span><span class="p">])</span>
+            <span class="n">env</span> <span class="o">=</span> <span class="n">IntrusionResponseGameLocalPOMDPDefenderEnv</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">local_pomdp_config</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">local_envs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+
+        <span class="c1"># Setup spaces</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observation_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">defender_observation_space</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">defender_action_space</span><span class="p">()</span>
+
+        <span class="c1"># Setup Config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;render.modes&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;human&#39;</span><span class="p">,</span> <span class="s1">&#39;rgb_array&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;video.frames_per_second&#39;</span><span class="p">:</span> <span class="mi">50</span>  <span class="c1"># Video rendering speed</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Setup traces</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">traces</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="n">SimulationTrace</span><span class="p">(</span><span class="n">simulation_env</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">env_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">latest_attacker_obs</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Reset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+        <span class="c1"># Get upper bound and random return estimate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound_return</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">random_return</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">env</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_envs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound_return</span> <span class="o">+=</span> <span class="n">env</span><span class="o">.</span><span class="n">upper_bound_return</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">random_return</span> <span class="o">+=</span> <span class="n">env</span><span class="o">.</span><span class="n">random_return</span>
+
+        <span class="c1"># State metrics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Reset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="IntrusionResponseGameWorkflowPOMDPDefenderEnv.step"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.envs.html#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes a step in the environment by executing the given action</span>
+
+<span class="sd">        :param a1: defender action</span>
+<span class="sd">        :return: (obs, reward, done, info)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="p">{}</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">defender_obs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">attacker_obs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">d_b</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Step the envs</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">local_env</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">local_envs</span><span class="p">):</span>
+            <span class="n">local_a1</span> <span class="o">=</span> <span class="n">a1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">local_o</span><span class="p">,</span> <span class="n">local_r</span><span class="p">,</span> <span class="n">local_done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">local_env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a1</span><span class="o">=</span><span class="n">local_a1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">local_done</span><span class="p">:</span>
+                <span class="n">done</span><span class="o">=</span><span class="kc">True</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">r</span> <span class="o">+</span> <span class="n">local_r</span>
+            <span class="n">defender_obs</span> <span class="o">=</span> <span class="n">defender_obs</span> <span class="o">+</span> <span class="n">local_o</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="n">local_env</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">state_vector</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">a2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">local_env</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">attacker_actions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">attacker_obs</span> <span class="o">=</span> <span class="n">attacker_obs</span> <span class="o">+</span> <span class="n">local_env</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">attacker_observations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">d_b</span> <span class="o">=</span> <span class="n">d_b</span> <span class="o">+</span> <span class="n">local_env</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">beliefs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">defender_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">defender_obs</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a2</span><span class="p">)</span>
+        <span class="n">d_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">d_b</span><span class="p">)</span>
+
+        <span class="c1"># Update time-step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Populate info dict</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">STATE</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">DEFENDER_ACTION</span><span class="p">]</span> <span class="o">=</span> <span class="n">a1</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">ATTACKER_ACTION</span><span class="p">]</span> <span class="o">=</span> <span class="n">a2</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">OBSERVATION</span><span class="p">]</span> <span class="o">=</span> <span class="n">defender_obs</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">TIME_STEP</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span>
+
+        <span class="c1"># Log trace</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">attacker_rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="n">r</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">attacker_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">infos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">beliefs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d_b</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">infrastructure_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">defender_obs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">attacker_observations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attacker_obs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_observations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">defender_obs</span><span class="p">)</span>
+
+        <span class="c1"># Populate info</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">defender_obs</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span></div>
+
+    <span class="k">def</span> <span class="nf">_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds the cumulative reward and episode length to the info dict</span>
+<span class="sd">        :param info: the info dict to update</span>
+<span class="sd">        :return: the updated info dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_rewards</span><span class="p">)):</span>
+            <span class="n">R</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_rewards</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">game_config</span><span class="o">.</span><span class="n">gamma</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">TIME_HORIZON</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_actions</span><span class="p">)</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">AVERAGE_UPPER_BOUND_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound_return</span>
+        <span class="n">info</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ENV_METRICS</span><span class="o">.</span><span class="n">AVERAGE_RANDOM_RETURN</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_return</span>
+        <span class="k">return</span> <span class="n">info</span>
+
+<div class="viewcode-block" id="IntrusionResponseGameWorkflowPOMDPDefenderEnv.reset"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.envs.html#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">soft</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the environment state, this should be called whenever step() returns &lt;done&gt;</span>
+
+<span class="sd">        :return: initial observation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">defender_obs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">attacker_obs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">local_env</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_envs</span><span class="p">:</span>
+            <span class="n">local_o</span> <span class="o">=</span> <span class="n">local_env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">defender_obs</span> <span class="o">=</span> <span class="n">defender_obs</span> <span class="o">+</span> <span class="n">local_o</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">attacker_obs</span> <span class="o">=</span> <span class="n">attacker_obs</span> <span class="o">+</span> <span class="n">local_env</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">attacker_observations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">defender_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">defender_obs</span><span class="p">)</span>
+        <span class="n">attacker_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">attacker_obs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_rewards</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">traces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span> <span class="o">=</span> <span class="n">SimulationTrace</span><span class="p">(</span><span class="n">simulation_env</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">env_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">attacker_observations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attacker_obs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">defender_observations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">defender_obs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">defender_obs</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameWorkflowPOMDPDefenderEnv.render"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.envs.html#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;human&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Renders the environment.  Supported rendering modes: (1) human; and (2) rgb_array</span>
+
+<span class="sd">        :param mode: the rendering mode</span>
+<span class="sd">        :return: True (if human mode) otherwise an rgb array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Rendering is not implemented for this environment&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameWorkflowPOMDPDefenderEnv.is_defense_action_legal"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.envs.html#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.is_defense_action_legal">[docs]</a>    <span class="k">def</span> <span class="nf">is_defense_action_legal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defense_action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether a defender action in the environment is legal or not</span>
+
+<span class="sd">        :param defense_action_id: the id of the action</span>
+<span class="sd">        :return: True or False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameWorkflowPOMDPDefenderEnv.is_attack_action_legal"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.envs.html#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.is_attack_action_legal">[docs]</a>    <span class="k">def</span> <span class="nf">is_attack_action_legal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attack_action_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether an attacker action in the environment is legal or not</span>
+
+<span class="sd">        :param attack_action_id: the id of the attacker action</span>
+<span class="sd">        :return: True or False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameWorkflowPOMDPDefenderEnv.get_traces"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.envs.html#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.get_traces">[docs]</a>    <span class="k">def</span> <span class="nf">get_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">SimulationTrace</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the list of simulation traces</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">traces</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameWorkflowPOMDPDefenderEnv.reset_traces"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.envs.html#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.reset_traces">[docs]</a>    <span class="k">def</span> <span class="nf">reset_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the list of traces</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">traces</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+    <span class="k">def</span> <span class="nf">__checkpoint_traces</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checkpoints agent traces</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">SimulationTrace</span><span class="o">.</span><span class="n">save_traces</span><span class="p">(</span><span class="n">traces_save_dir</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">LOGGING</span><span class="o">.</span><span class="n">DEFAULT_LOG_DIR</span><span class="p">,</span>
+                                    <span class="n">traces</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">traces</span><span class="p">,</span> <span class="n">traces_file</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;taus</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IntrusionResponseGameWorkflowPOMDPDefenderEnv.close"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.envs.html#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Closes the viewer (cleanup)</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameWorkflowPOMDPDefenderEnv.manual_play"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.envs.html#gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_defender.IntrusionResponseGameWorkflowPOMDPDefenderEnv.manual_play">[docs]</a>    <span class="k">def</span> <span class="nf">manual_play</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An interactive loop to test the environment manually</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;o:</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="nb">list</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">tolist</span><span class="p">())))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">raw_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;&gt; &quot;</span><span class="p">)</span>
+            <span class="n">raw_input</span> <span class="o">=</span> <span class="n">raw_input</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;help&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Enter an action id to execute the action, &quot;</span>
+                      <span class="s2">&quot;press R to reset,&quot;</span>
+                      <span class="s2">&quot;press S to print the state, press A to print the actions, &quot;</span>
+                      <span class="s2">&quot;press D to check if done&quot;</span>
+                      <span class="s2">&quot;press H to print the history of actions&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Action space: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">action_space</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;D&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">done</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;H&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">raw_input</span> <span class="o">==</span> <span class="s2">&quot;R&quot;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Resetting the state&quot;</span><span class="p">)</span>
+                <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;o:</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="nb">list</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">tolist</span><span class="p">())))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">a1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">raw_input</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">))))</span>
+                <span class="n">o</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;o:</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="nb">list</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">tolist</span><span class="p">())))</span><span class="si">}</span><span class="s2">, r:</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">, done: </span><span class="si">{</span><span class="n">done</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

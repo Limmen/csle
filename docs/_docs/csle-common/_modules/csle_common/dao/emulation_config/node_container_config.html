@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.dao.emulation_config.node_container_config</li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.dao.emulation_config.node_container_config</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -75,14 +80,15 @@
 
 
 <div class="viewcode-block" id="NodeContainerConfig"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig">[docs]</a><span class="k">class</span> <span class="nc">NodeContainerConfig</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A DTO object representing an individual container in an emulation environment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ips_and_networks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ContainerNetwork</span><span class="p">]],</span>
                  <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">restart_policy</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">os</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">execution_ip_first_octet</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">suffix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">os</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">execution_ip_first_octet</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">docker_gw_bridge_ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 
 <span class="sd">        :param name: the name of the node container</span>
@@ -93,6 +99,8 @@
 <span class="sd">        :param suffix: the suffix of the container id</span>
 <span class="sd">        :param os: the operating system of the container</span>
 <span class="sd">        :param execution_ip_first_octet: the first octet in the IP address (depends on the execution)</span>
+<span class="sd">        :param docker_gw_bridge_ip: IP to reach the container from the host network</span>
+<span class="sd">        :param physical_host_ip: IP of the physical host where the container is running</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ips_and_networks</span> <span class="o">=</span> <span class="n">ips_and_networks</span>
@@ -103,34 +111,34 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">os</span> <span class="o">=</span> <span class="n">os</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">execution_ip_first_octet</span> <span class="o">=</span> <span class="n">execution_ip_first_octet</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">full_name_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span> <span class="o">=</span> <span class="n">docker_gw_bridge_ip</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">=</span> <span class="n">physical_host_ip</span>
 
 <div class="viewcode-block" id="NodeContainerConfig.get_ips"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.get_ips">[docs]</a>    <span class="k">def</span> <span class="nf">get_ips</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a list of ips that this container has</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ips_and_networks</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="NodeContainerConfig.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;NodeContainerConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation to an instance</span>
 <span class="sd">        :param d:  the dict to convert</span>
 <span class="sd">        :return: the created instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">execution_ip_first_octet</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="k">if</span> <span class="s2">&quot;execution_ip_first_octet&quot;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
-            <span class="n">execution_ip_first_octet</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;execution_ip_first_octet&quot;</span><span class="p">]</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="n">NodeContainerConfig</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
             <span class="n">ips_and_networks</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ContainerNetwork</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ips_and_networks&quot;</span><span class="p">])),</span>
             <span class="n">version</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span> <span class="n">level</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">],</span>
             <span class="n">restart_policy</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;restart_policy&quot;</span><span class="p">],</span> <span class="n">suffix</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;suffix&quot;</span><span class="p">],</span> <span class="n">os</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;os&quot;</span><span class="p">],</span>
-            <span class="n">execution_ip_first_octet</span><span class="o">=</span><span class="n">execution_ip_first_octet</span>
+            <span class="n">execution_ip_first_octet</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;execution_ip_first_octet&quot;</span><span class="p">],</span>
+            <span class="n">docker_gw_bridge_ip</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_gw_bridge_ip&quot;</span><span class="p">],</span> <span class="n">physical_host_ip</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;physical_host_ip&quot;</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="NodeContainerConfig.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -143,19 +151,22 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;full_name_str&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;execution_ip_first_octet&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_ip_first_octet</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_gw_bridge_ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;physical_host_ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;name</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, ips and networks: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ips_and_networks</span><span class="si">}</span><span class="s2">, version: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;level:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="si">}</span><span class="s2">, restart_policy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">restart_policy</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;suffix:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">, os:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">os</span><span class="si">}</span><span class="s2">, full_name:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">full_name_str</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;execution_ip_first_octet: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">execution_ip_first_octet</span><span class="si">}</span><span class="s2">&quot;</span>
+               <span class="sa">f</span><span class="s2">&quot;execution_ip_first_octet: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">execution_ip_first_octet</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;docker_gw_bridge_ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">, physical_host_ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="NodeContainerConfig.reachable"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.reachable">[docs]</a>    <span class="k">def</span> <span class="nf">reachable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reachable_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if container is reachable given a list of reachable ips</span>
 
 <span class="sd">        :param reachable_ips: the list of reachable ips</span>
@@ -167,14 +178,21 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="NodeContainerConfig.get_full_name"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.get_full_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_full_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the full name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">NAME</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">LEVEL</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="si">}</span><span class="s2">-&quot;</span> \
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">LEVEL</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="si">}</span><span class="s2">-&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">execution_ip_first_octet</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+<div class="viewcode-block" id="NodeContainerConfig.get_readable_name"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.get_readable_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_readable_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the readable name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;csle-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">CSLE</span><span class="o">.</span><span class="n">LEVEL</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="si">}</span><span class="s2">_&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">execution_ip_first_octet</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 <div class="viewcode-block" id="NodeContainerConfig.to_json_str"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the DTO into a json string</span>
 
 <span class="sd">        :return: the json string representation of the DTO</span>
@@ -184,7 +202,7 @@
         <span class="k">return</span> <span class="n">json_str</span></div>
 
 <div class="viewcode-block" id="NodeContainerConfig.to_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the DTO to a json file</span>
 
 <span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
@@ -195,21 +213,37 @@
         <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="NodeContainerConfig.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;NodeContainerConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">NodeContainerConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="NodeContainerConfig.copy"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;NodeContainerConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">NodeContainerConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="NodeContainerConfig.create_execution_config"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.create_execution_config">[docs]</a>    <span class="k">def</span> <span class="nf">create_execution_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;NodeContainerConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="NodeContainerConfig.create_execution_config"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.create_execution_config">[docs]</a>    <span class="k">def</span> <span class="nf">create_execution_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">physical_servers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;NodeContainerConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a new config for an execution</span>
 
 <span class="sd">        :param ip_first_octet: the first octet of the IP of the new execution</span>
+<span class="sd">        :param physical_servers: the list of physical servers of the execution</span>
 <span class="sd">        :return: the new config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">config</span><span class="o">.</span><span class="n">execution_ip_first_octet</span> <span class="o">=</span> <span class="n">ip_first_octet</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">=</span> <span class="n">physical_servers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># TODO Update this</span>
         <span class="n">config</span><span class="o">.</span><span class="n">ips_and_networks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
             <span class="n">GeneralUtil</span><span class="o">.</span><span class="n">replace_first_octet_of_ip</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">),</span>
             <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)),</span> <span class="n">config</span><span class="o">.</span><span class="n">ips_and_networks</span><span class="p">))</span>
@@ -217,7 +251,7 @@
 
 <div class="viewcode-block" id="NodeContainerConfig.schema"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.node_container_config.NodeContainerConfig.schema">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">schema</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;NodeContainerConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: get the schema of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">NodeContainerConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ips_and_networks</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ContainerNetwork</span><span class="o">.</span><span class="n">schema</span><span class="p">())],</span> <span class="n">version</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -231,7 +265,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

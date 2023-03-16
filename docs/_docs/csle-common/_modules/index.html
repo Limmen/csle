@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,8 +61,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Overview: module code</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Overview: module code</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -78,9 +83,7 @@
 <li><a href="csle_common/consumer_threads/host_metrics_consumer_thread.html">csle_common.consumer_threads.host_metrics_consumer_thread</a></li>
 <li><a href="csle_common/consumer_threads/ossec_ids_log_consumer_thread.html">csle_common.consumer_threads.ossec_ids_log_consumer_thread</a></li>
 <li><a href="csle_common/consumer_threads/snort_ids_log_consumer_thread.html">csle_common.consumer_threads.snort_ids_log_consumer_thread</a></li>
-<li><a href="csle_common/controllers/container_controller.html">csle_common.controllers.container_controller</a></li>
 <li><a href="csle_common/controllers/elk_controller.html">csle_common.controllers.elk_controller</a></li>
-<li><a href="csle_common/controllers/emulation_env_controller.html">csle_common.controllers.emulation_env_controller</a></li>
 <li><a href="csle_common/controllers/flags_controller.html">csle_common.controllers.flags_controller</a></li>
 <li><a href="csle_common/controllers/host_controller.html">csle_common.controllers.host_controller</a></li>
 <li><a href="csle_common/controllers/installation_controller.html">csle_common.controllers.installation_controller</a></li>
@@ -90,7 +93,6 @@
 <li><a href="csle_common/controllers/ovs_controller.html">csle_common.controllers.ovs_controller</a></li>
 <li><a href="csle_common/controllers/resource_constraints_controller.html">csle_common.controllers.resource_constraints_controller</a></li>
 <li><a href="csle_common/controllers/sdn_controller_manager.html">csle_common.controllers.sdn_controller_manager</a></li>
-<li><a href="csle_common/controllers/simulation_env_controller.html">csle_common.controllers.simulation_env_controller</a></li>
 <li><a href="csle_common/controllers/snort_ids_controller.html">csle_common.controllers.snort_ids_controller</a></li>
 <li><a href="csle_common/controllers/topology_controller.html">csle_common.controllers.topology_controller</a></li>
 <li><a href="csle_common/controllers/traffic_controller.html">csle_common.controllers.traffic_controller</a></li>
@@ -136,6 +138,7 @@
 <li><a href="csle_common/dao/emulation_action_result/nmap_trace.html">csle_common.dao.emulation_action_result.nmap_trace</a></li>
 <li><a href="csle_common/dao/emulation_action_result/nmap_vuln.html">csle_common.dao.emulation_action_result.nmap_vuln</a></li>
 <li><a href="csle_common/dao/emulation_action_result/nmap_vulscan.html">csle_common.dao.emulation_action_result.nmap_vulscan</a></li>
+<li><a href="csle_common/dao/emulation_config/beats_config.html">csle_common.dao.emulation_config.beats_config</a></li>
 <li><a href="csle_common/dao/emulation_config/client_managers_info.html">csle_common.dao.emulation_config.client_managers_info</a></li>
 <li><a href="csle_common/dao/emulation_config/client_population_config.html">csle_common.dao.emulation_config.client_population_config</a></li>
 <li><a href="csle_common/dao/emulation_config/client_population_process_type.html">csle_common.dao.emulation_config.client_population_process_type</a></li>
@@ -158,7 +161,6 @@
 <li><a href="csle_common/dao/emulation_config/emulation_execution_info.html">csle_common.dao.emulation_config.emulation_execution_info</a></li>
 <li><a href="csle_common/dao/emulation_config/emulation_metrics_time_series.html">csle_common.dao.emulation_config.emulation_metrics_time_series</a></li>
 <li><a href="csle_common/dao/emulation_config/emulation_simulation_trace.html">csle_common.dao.emulation_config.emulation_simulation_trace</a></li>
-<li><a href="csle_common/dao/emulation_config/emulation_statistics_windowed.html">csle_common.dao.emulation_config.emulation_statistics_windowed</a></li>
 <li><a href="csle_common/dao/emulation_config/emulation_trace.html">csle_common.dao.emulation_config.emulation_trace</a></li>
 <li><a href="csle_common/dao/emulation_config/flag.html">csle_common.dao.emulation_config.flag</a></li>
 <li><a href="csle_common/dao/emulation_config/flags_config.html">csle_common.dao.emulation_config.flags_config</a></li>
@@ -168,6 +170,7 @@
 <li><a href="csle_common/dao/emulation_config/kafka_managers_info.html">csle_common.dao.emulation_config.kafka_managers_info</a></li>
 <li><a href="csle_common/dao/emulation_config/kafka_topic.html">csle_common.dao.emulation_config.kafka_topic</a></li>
 <li><a href="csle_common/dao/emulation_config/network_service.html">csle_common.dao.emulation_config.network_service</a></li>
+<li><a href="csle_common/dao/emulation_config/node_beats_config.html">csle_common.dao.emulation_config.node_beats_config</a></li>
 <li><a href="csle_common/dao/emulation_config/node_container_config.html">csle_common.dao.emulation_config.node_container_config</a></li>
 <li><a href="csle_common/dao/emulation_config/node_firewall_config.html">csle_common.dao.emulation_config.node_firewall_config</a></li>
 <li><a href="csle_common/dao/emulation_config/node_flags_config.html">csle_common.dao.emulation_config.node_flags_config</a></li>
@@ -184,6 +187,7 @@
 <li><a href="csle_common/dao/emulation_config/packet_delay_distribution_type.html">csle_common.dao.emulation_config.packet_delay_distribution_type</a></li>
 <li><a href="csle_common/dao/emulation_config/packet_loss_type.html">csle_common.dao.emulation_config.packet_loss_type</a></li>
 <li><a href="csle_common/dao/emulation_config/resources_config.html">csle_common.dao.emulation_config.resources_config</a></li>
+<li><a href="csle_common/dao/emulation_config/ryu_managers_info.html">csle_common.dao.emulation_config.ryu_managers_info</a></li>
 <li><a href="csle_common/dao/emulation_config/sdn_controller_config.html">csle_common.dao.emulation_config.sdn_controller_config</a></li>
 <li><a href="csle_common/dao/emulation_config/sdn_controller_type.html">csle_common.dao.emulation_config.sdn_controller_type</a></li>
 <li><a href="csle_common/dao/emulation_config/services_config.html">csle_common.dao.emulation_config.services_config</a></li>
@@ -263,19 +267,17 @@
 <li><a href="csle_common/dao/training/vector_policy.html">csle_common.dao.training.vector_policy</a></li>
 <li><a href="csle_common/logging/custom_formatter.html">csle_common.logging.custom_formatter</a></li>
 <li><a href="csle_common/logging/log.html">csle_common.logging.log</a></li>
-<li><a href="csle_common/metastore/metastore_facade.html">csle_common.metastore.metastore_facade</a></li>
+<li><a href="csle_common/models/fnn_w_softmax.html">csle_common.models.fnn_w_softmax</a></li>
 <li><a href="csle_common/tunneling/forward_ssh_controller.html">csle_common.tunneling.forward_ssh_controller</a></li>
 <li><a href="csle_common/tunneling/forward_ssh_server.html">csle_common.tunneling.forward_ssh_server</a></li>
 <li><a href="csle_common/tunneling/forward_tunnel_thread.html">csle_common.tunneling.forward_tunnel_thread</a></li>
 <li><a href="csle_common/util/connection_util.html">csle_common.util.connection_util</a></li>
-<li><a href="csle_common/util/docker_util.html">csle_common.util.docker_util</a></li>
 <li><a href="csle_common/util/emulation_util.html">csle_common.util.emulation_util</a></li>
 <li><a href="csle_common/util/env_dynamics_util.html">csle_common.util.env_dynamics_util</a></li>
 <li><a href="csle_common/util/experiment_util.html">csle_common.util.experiment_util</a></li>
-<li><a href="csle_common/util/export_util.html">csle_common.util.export_util</a></li>
 <li><a href="csle_common/util/general_util.html">csle_common.util.general_util</a></li>
 <li><a href="csle_common/util/grpc_util.html">csle_common.util.grpc_util</a></li>
-<li><a href="csle_common/util/management_util.html">csle_common.util.management_util</a></li>
+<li><a href="csle_common/util/plotting_util.html">csle_common.util.plotting_util</a></li>
 <li><a href="csle_common/util/read_emulation_statistics_util.html">csle_common.util.read_emulation_statistics_util</a></li>
 <li><a href="csle_common/util/ssh_util.html">csle_common.util.ssh_util</a></li>
 </ul>
@@ -287,7 +289,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

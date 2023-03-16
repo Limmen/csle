@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
-        <script src="../../../../../_static/jquery.js"></script>
-        <script src="../../../../../_static/underscore.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions</li>
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -77,13 +82,13 @@
 
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions">[docs]</a><span class="k">class</span> <span class="nc">EmulationAttackerNMAPActions</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class containing Attacker NMAP actions in the emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">TCP_SYN_STEALTH_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a TCP SYN scan</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -106,7 +111,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.PING_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.PING_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">PING_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a Ping scan</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -130,7 +135,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.UDP_PORT_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.UDP_PORT_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">UDP_PORT_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a UDP port scan</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -153,7 +158,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.TCP_CON_NON_STEALTH_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">TCP_CON_NON_STEALTH_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a TCP CON (non-stealthy) scan</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -177,7 +182,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.TCP_FIN_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.TCP_FIN_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">TCP_FIN_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a TCP FIN scan</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -200,7 +205,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.TCP_NULL_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.TCP_NULL_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">TCP_NULL_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a TCP Null scan</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -221,7 +226,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.TCP_XMAS_TREE_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.TCP_XMAS_TREE_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">TCP_XMAS_TREE_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a TCP XMAS TREE scan</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -244,7 +249,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.OS_DETECTION_SCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.OS_DETECTION_SCAN">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">OS_DETECTION_SCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a OS detection scan</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -266,7 +271,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.VULSCAN"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.VULSCAN">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">VULSCAN</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a vulnerability scan using the VULSCAN script</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -288,7 +293,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.NMAP_VULNERS"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.NMAP_VULNERS">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">NMAP_VULNERS</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a vulnerability scan using the Vulners script</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -310,7 +315,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">TELNET_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a dictionary attack trying combinations with same user+pw against telnet</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -337,7 +342,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">SSH_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a dictionary attack trying combinations with same user+pw against ssh</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -363,7 +368,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">FTP_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a dictionary attack trying combinations with same user+pw against ftp</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -389,7 +394,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.CASSANDRA_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">CASSANDRA_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a dictionary attack trying combinations with same user+pw against cassandra</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -415,7 +420,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.IRC_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.IRC_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">IRC_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a dictionary attack trying combinations with same user+pw against irc</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -441,7 +446,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.MONGO_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.MONGO_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">MONGO_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a dictionary attack trying combinations with same user+pw against mongo</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -467,7 +472,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.MYSQL_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">MYSQL_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a dictionary attack trying combinations with same user+pw against mysql</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -493,7 +498,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.SMTP_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.SMTP_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">SMTP_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a dictionary attack trying combinations with same user+pw against smtp</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -519,7 +524,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.POSTGRES_SAME_USER_PASS_DICTIONARY">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">POSTGRES_SAME_USER_PASS_DICTIONARY</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a dictionary attack trying combinations with same user+pw against postgres</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -545,7 +550,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.FIREWALK"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.FIREWALK">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">FIREWALK</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a firewalk scan to try to identify and bypass firewalls</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -570,7 +575,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.HTTP_ENUM"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.HTTP_ENUM">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">HTTP_ENUM</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a HTTP enumeration scan</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -594,7 +599,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.HTTP_GREP"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.HTTP_GREP">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">HTTP_GREP</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a HTTP grep scan</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -620,7 +625,7 @@
 
 <div class="viewcode-block" id="EmulationAttackerNMAPActions.FINGER"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.attacker.html#csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions.EmulationAttackerNMAPActions.FINGER">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">FINGER</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationAttackerAction</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs a fingerprint scan</span>
 
 <span class="sd">        :param index: index of the machine to apply the action to</span>
@@ -651,7 +656,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

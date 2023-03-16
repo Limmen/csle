@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.controllers.ossec_ids_controller</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.controllers.ossec_ids_controller</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,7 +73,8 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.controllers.ossec_ids_controller</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 <span class="kn">import</span> <span class="nn">grpc</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
@@ -84,39 +90,50 @@
 
 
 <div class="viewcode-block" id="OSSECIDSController"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController">[docs]</a><span class="k">class</span> <span class="nc">OSSECIDSController</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class controlling OSSEC IDS running on nodes in the emulations, as well as OSSECIDS managers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="OSSECIDSController.stop_ossec_idses"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.stop_ossec_idses">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">stop_ossec_idses</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">stop_ossec_idses</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for stopping the OSSEC IDSes</span>
 
 <span class="sd">        :param emulation_config: the emulation env configuration</span>
+<span class="sd">        :param physical_host_ip: the physical host ip</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_host_ip</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="k">for</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">OSSEC_IDS_IMAGES</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                    <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">stop_ossec_ids</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span></div>
+                    <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">stop_ossec_ids</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
+                                                      <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OSSECIDSController.start_ossec_idses"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_idses">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">start_ossec_idses</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">start_ossec_idses</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for starting the OSSEC IDSes</span>
 
 <span class="sd">        :param emulation_config: the emulation env configuration</span>
+<span class="sd">        :param physical_server_ip: the ip of the physical server</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_server_ip</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="k">for</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">OSSEC_IDS_IMAGES</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                    <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">start_ossec_ids</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span></div>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting the OSSEC IDS on ip: </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">start_ossec_ids</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
+                                                       <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OSSECIDSController.start_ossec_ids"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_ids">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_ossec_ids</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for starting a OSSEC IDS with a specific IP</span>
 
 <span class="sd">        :param emulation_config: the emulation env configuration</span>
@@ -138,7 +155,7 @@
 
 <div class="viewcode-block" id="OSSECIDSController.stop_ossec_ids"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.stop_ossec_ids">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_ossec_ids</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for stopping an OSSEC IDS with a specific IP</span>
 
 <span class="sd">        :param emulation_config: the emulation env configuration</span>
@@ -159,22 +176,25 @@
                 <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">query_ossec_ids_manager</span><span class="o">.</span><span class="n">stop_ossec_ids</span><span class="p">(</span><span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OSSECIDSController.start_ossec_idses_managers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_idses_managers">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">start_ossec_idses_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">start_ossec_idses_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for starting OSSEC IDS managers</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
+<span class="sd">        :param physical_server_ip: the ip of the physical server</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_server_ip</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="k">for</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">OSSEC_IDS_IMAGES</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
                     <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">start_ossec_ids_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
-                                                               <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span></div>
+                                                               <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OSSECIDSController.start_ossec_ids_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_ids_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_ossec_ids_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for starting the OSSEC IDS manager on a specific container</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -211,22 +231,25 @@
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OSSECIDSController.stop_ossec_idses_managers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.stop_ossec_idses_managers">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">stop_ossec_idses_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">stop_ossec_idses_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for stopping ossec ids managers</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
+<span class="sd">        :param physical_server_ip: the IP of the physical host</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_server_ip</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="k">for</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">OSSEC_IDS_IMAGES</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
                     <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">stop_ossec_ids_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
-                                                              <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span></div>
+                                                              <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OSSECIDSController.stop_ossec_ids_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.stop_ossec_ids_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_ossec_ids_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for stopping an ossec ids manager with a speicific IP</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -246,25 +269,32 @@
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OSSECIDSController.start_ossec_idses_monitor_threads"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_idses_monitor_threads">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">start_ossec_idses_monitor_threads</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">start_ossec_idses_monitor_threads</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                          <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the OSSECIDSManager on every container that runs</span>
 <span class="sd">        an IDS to start the IDS manager and the monitor thread</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
+<span class="sd">        :param physical_server_ip: the ip of the physical server</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">start_ossec_idses_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
+        <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">start_ossec_idses_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
+                                                      <span class="n">physical_server_ip</span><span class="o">=</span><span class="n">physical_server_ip</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_server_ip</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="k">for</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">OSSEC_IDS_IMAGES</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting OSSEC IDS monitor thread on IP: </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">start_ossec_ids_monitor_thread</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
-                                                                      <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span></div>
+                                                                      <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OSSECIDSController.start_ossec_ids_monitor_thread"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.start_ossec_ids_monitor_thread">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_ossec_ids_monitor_thread</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the OSSECIDSManager on a specific IP to start</span>
 <span class="sd">        to start the IDS manager and the monitor thread</span>
 
@@ -290,7 +320,7 @@
 
 <div class="viewcode-block" id="OSSECIDSController.stop_ossec_ids_monitor_thread"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.stop_ossec_ids_monitor_thread">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_ossec_ids_monitor_thread</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the OSSECIDSManager for a specific IP to stop the monitor threads</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -308,72 +338,53 @@
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">query_ossec_ids_manager</span><span class="o">.</span><span class="n">stop_ossec_ids_monitor</span><span class="p">(</span><span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OSSECIDSController.stop_ossec_idses_monitor_threads"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.stop_ossec_idses_monitor_threads">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">stop_ossec_idses_monitor_threads</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">stop_ossec_idses_monitor_threads</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the OSSECIDSManager on every container that runs</span>
 <span class="sd">        an IDS to stop the monitor threads</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
+<span class="sd">        :param physical_server_ip: the ip of the physical server</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_server_ip</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="k">for</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">OSSEC_IDS_IMAGES</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
                     <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">stop_ossec_ids_monitor_thread</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
-                                                                     <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span></div>
+                                                                     <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OSSECIDSController.get_ossec_idses_monitor_threads_statuses"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.get_ossec_idses_monitor_threads_statuses">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_ossec_idses_monitor_threads_statuses</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> \
-            <span class="n">List</span><span class="p">[</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">get_ossec_idses_monitor_threads_statuses</span><span class="p">(</span>
+            <span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the OSSECIDSManager on every container to get the status of the</span>
 <span class="sd">        IDS monitor thread</span>
 
 <span class="sd">        :param emulation_env_config: the emulation config</span>
+<span class="sd">        :param physical_server_ip: the IP of the physical server</span>
 <span class="sd">        :return: List of monitor thread statuses</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">statuses</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">start_ossec_idses_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
+        <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">start_ossec_idses_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
+                                                      <span class="n">physical_server_ip</span><span class="o">=</span><span class="n">physical_server_ip</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_server_ip</span><span class="p">:</span>
+                <span class="k">continue</span>
             <span class="k">for</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">OSSEC_IDS_IMAGES</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
                     <span class="n">status</span> <span class="o">=</span> <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">get_ossec_ids_monitor_thread_status_by_ip_and_port</span><span class="p">(</span>
-                        <span class="n">port</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">ossec_ids_manager_config</span><span class="o">.</span><span class="n">ossec_ids_manager_port</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">port</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">ossec_ids_manager_config</span><span class="o">.</span><span class="n">ossec_ids_manager_port</span><span class="p">,</span>
+                        <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
                     <span class="n">statuses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">statuses</span></div>
 
-<div class="viewcode-block" id="OSSECIDSController.get_ossec_idses_log_data"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.get_ossec_idses_log_data">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_ossec_idses_log_data</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> \
-            <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsLogDTO</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A method that sends a request to the OSSEC IDSManager on every container to get contents of the IDS log from</span>
-<span class="sd">        a given timestamp</span>
-
-<span class="sd">        :param emulation_env_config: the emulation env config</span>
-<span class="sd">        :param timestamp: the timestamp to read the IDS log from</span>
-<span class="sd">        :return: List of monitor thread statuses</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ids_log_data_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">OSSECIDSController</span><span class="o">.</span><span class="n">start_ossec_idses_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">OSSEC_IDS_IMAGES</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                    <span class="c1"># Open a gRPC session</span>
-                    <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">:&#39;</span>
-                            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">ossec_ids_manager_config</span><span class="o">.</span><span class="n">ossec_ids_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
-                        <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2_grpc</span><span class="o">.</span><span class="n">OSSECIdsManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
-                        <span class="n">ids_log_data</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">query_ossec_ids_manager</span><span class="o">.</span><span class="n">get_ossec_ids_alerts</span><span class="p">(</span>
-                            <span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp</span><span class="p">,</span>
-                            <span class="n">log_file_path</span><span class="o">=</span><span class="n">csle_collector_constants</span><span class="o">.</span><span class="n">OSSEC</span><span class="o">.</span><span class="n">OSSEC_ALERTS_FILE</span><span class="p">)</span>
-                        <span class="n">ids_log_data_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ids_log_data</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ids_log_data_list</span></div>
-
 <div class="viewcode-block" id="OSSECIDSController.get_ossec_idses_managers_ips"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.get_ossec_idses_managers_ips">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_ossec_idses_managers_ips</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the IPS of the OSSEC IDS managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -383,12 +394,12 @@
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">OSSEC_IDS_IMAGES</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                    <span class="n">ips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">ips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ips</span></div>
 
 <div class="viewcode-block" id="OSSECIDSController.get_ossec_idses_managers_ports"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.get_ossec_idses_managers_ports">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_ossec_idses_managers_ports</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the ports of the OSSEC IDS managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -404,7 +415,7 @@
 <div class="viewcode-block" id="OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.get_ossec_ids_monitor_thread_status_by_ip_and_port">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_ossec_ids_monitor_thread_status_by_ip_and_port</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ossec_ids_manager</span><span class="o">.</span><span class="n">ossec_ids_manager_pb2</span><span class="o">.</span><span class="n">OSSECIdsMonitorDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the OSSECIDSManager with a specific port and ip</span>
 <span class="sd">        to get the status of the IDS monitor thread</span>
 
@@ -419,13 +430,16 @@
             <span class="k">return</span> <span class="n">status</span></div>
 
 <div class="viewcode-block" id="OSSECIDSController.get_ossec_managers_info"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.ossec_ids_controller.OSSECIDSController.get_ossec_managers_info">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_ossec_managers_info</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">active_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> \
+    <span class="k">def</span> <span class="nf">get_ossec_managers_info</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">active_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                                <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">OSSECIDSManagersInfo</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts the information of the OSSEC IDS managers for a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation</span>
 <span class="sd">        :param active_ips: list of active IPs</span>
+<span class="sd">        :param physical_host_ip: the physical host ip</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: a DTO with the status of the OSSEC IDS managers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ossec_ids_managers_ips</span> <span class="o">=</span> \
@@ -435,7 +449,8 @@
         <span class="n">ossec_ids_managers_statuses</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">ossec_ids_managers_running</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">ossec_ids_managers_ips</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">ip</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">active_ips</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ip</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">active_ips</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">physical_ip_match</span><span class="p">(</span>
+                    <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="o">=</span><span class="n">physical_host_ip</span><span class="p">):</span>
                 <span class="k">continue</span>
             <span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">status</span> <span class="o">=</span> <span class="kc">None</span>
@@ -444,8 +459,7 @@
                     <span class="n">port</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">ossec_ids_manager_config</span><span class="o">.</span><span class="n">ossec_ids_manager_port</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
                 <span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Could not fetch OSSEC IDS manager status on IP:</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">, error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not fetch OSSEC IDS manager status on IP:</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">, error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">ossec_ids_managers_statuses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -469,7 +483,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

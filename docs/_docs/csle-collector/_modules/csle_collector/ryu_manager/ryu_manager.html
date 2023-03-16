@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>csle_collector.ryu_manager.ryu_manager &mdash; csle-collector 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.client_manager.html">csle_collector.client_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.constants.html">csle_collector.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.docker_stats_manager.html">csle_collector.docker_stats_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.elk_manager.html">csle_collector.elk_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.host_manager.html">csle_collector.host_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.kafka_manager.html">csle_collector.kafka_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.ossec_ids_manager.html">csle_collector.ossec_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.snort_ids_manager.html">csle_collector.snort_ids_manager package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_collector.traffic_manager.html">csle_collector.traffic_manager package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">csle-collector</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.ryu_manager.ryu_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for csle_collector.ryu_manager.ryu_manager</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">concurrent</span> <span class="kn">import</span> <span class="n">futures</span>
+<span class="kn">import</span> <span class="nn">grpc</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">netifaces</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">csle_collector.ryu_manager.ryu_manager_pb2_grpc</span>
+<span class="kn">import</span> <span class="nn">csle_collector.ryu_manager.ryu_manager_pb2</span>
+<span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
+
+
+<div class="viewcode-block" id="RyuManagerServicer"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer">[docs]</a><span class="k">class</span> <span class="nc">RyuManagerServicer</span><span class="p">(</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2_grpc</span><span class="o">.</span><span class="n">RyuManagerServicer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    gRPC server for managing a Ryu controller. Allows to start/stop the ryu controller remotely and also to query the</span>
+<span class="sd">    state of the controller</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the server</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">RYU_MANAGER_LOG_DIR</span><span class="si">}</span><span class="s2">&quot;</span>
+                                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">RYU_MANAGER_LOG_FILE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">netifaces</span><span class="o">.</span><span class="n">ifaddresses</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">INTERFACES</span><span class="o">.</span><span class="n">ETH0</span><span class="p">)[</span><span class="n">netifaces</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">constants</span><span class="o">.</span><span class="n">INTERFACES</span><span class="o">.</span><span class="n">ADDR</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ryu_port</span> <span class="o">=</span> <span class="mi">6633</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span> <span class="o">=</span> <span class="mi">8080</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span> <span class="o">=</span> <span class="mi">9092</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_step_len</span> <span class="o">=</span> <span class="mi">30</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Setting up RyuManager hostname: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="si">}</span><span class="s2"> ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_ryu_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility method to get the status of Ryu</span>
+
+<span class="sd">        :return: status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">CHECK_IF_RYU_CONTROLLER_IS_RUNNING</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Checking if Ryu controller is running by executing command: </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+        <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">stdout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">stderr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stdout: </span><span class="si">{</span><span class="n">stdout</span><span class="si">}</span><span class="s2">, Stderr: </span><span class="si">{</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">running</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">SEARCH_CONTROLLER</span> <span class="ow">in</span> <span class="n">stdout</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running: </span><span class="si">{</span><span class="n">running</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">running</span>
+
+    <span class="k">def</span> <span class="nf">_get_monitor_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility method to get the status of the monitor</span>
+
+<span class="sd">        :return: status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Checking monitor status by sending a request to: &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">HTTP</span><span class="o">.</span><span class="n">HTTP_PROTOCOL_PREFIX</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span><span class="si">}</span><span class="s2">&quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">STATUS_PRODUCER_HTTP_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">HTTP</span><span class="o">.</span><span class="n">HTTP_PROTOCOL_PREFIX</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">STATUS_PRODUCER_HTTP_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">PRODUCER_RUNNING</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">monitor_running</span>
+
+<div class="viewcode-block" id="RyuManagerServicer.getRyuStatus"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer.getRyuStatus">[docs]</a>    <span class="k">def</span> <span class="nf">getRyuStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">GetRyuStatusMsg</span><span class="p">,</span>
+                     <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">RyuDTO</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the state of the Ryu controller</span>
+
+<span class="sd">        :param request: the gRPC request</span>
+<span class="sd">        :param context: the gRPC context</span>
+<span class="sd">        :return: a clients DTO with the state of the Ryu server</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ryu_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ryu_status</span><span class="p">()</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">ryu_running</span><span class="p">:</span>
+            <span class="n">monitor_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_monitor_status</span><span class="p">()</span>
+        <span class="n">ryu_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">RyuDTO</span><span class="p">(</span><span class="n">ryu_running</span><span class="o">=</span><span class="n">ryu_running</span><span class="p">,</span>
+                                                                    <span class="n">monitor_running</span><span class="o">=</span><span class="n">monitor_running</span><span class="p">,</span>
+                                                                    <span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_port</span><span class="p">,</span>
+                                                                    <span class="n">web_port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span><span class="p">,</span>
+                                                                    <span class="n">controller</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span>
+                                                                    <span class="n">kafka_ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span><span class="p">,</span>
+                                                                    <span class="n">kafka_port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span><span class="p">,</span>
+                                                                    <span class="n">time_step_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ryu_dto</span></div>
+
+<div class="viewcode-block" id="RyuManagerServicer.stopRyu"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer.stopRyu">[docs]</a>    <span class="k">def</span> <span class="nf">stopRyu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">StopRyuMsg</span><span class="p">,</span>
+                <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stops the Ryu controller</span>
+
+<span class="sd">        :param request: the gRPC request</span>
+<span class="sd">        :param context: the gRPC context</span>
+<span class="sd">        :return: a clients DTO with the state of the ryu server</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">STOP_RYU_CONTROLLER</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopping ryu with command: </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">),</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stdout: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="si">}</span><span class="s2">, stderr: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">RyuDTO</span><span class="p">(</span><span class="n">ryu_running</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">monitor_running</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                                 <span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_port</span><span class="p">,</span>
+                                                                 <span class="n">web_port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span><span class="p">,</span>
+                                                                 <span class="n">controller</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span>
+                                                                 <span class="n">kafka_ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span><span class="p">,</span>
+                                                                 <span class="n">kafka_port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span><span class="p">,</span>
+                                                                 <span class="n">time_step_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RyuManagerServicer.startRyu"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer.startRyu">[docs]</a>    <span class="k">def</span> <span class="nf">startRyu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">StartRyuMsg</span><span class="p">,</span>
+                 <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">RyuDTO</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts the ryu server</span>
+
+<span class="sd">        :param request: the gRPC request</span>
+<span class="sd">        :param context: the gRPC context</span>
+<span class="sd">        :return: a clients DTO with the state of the kafka server</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting Ryu, ryu port: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">port</span><span class="si">}</span><span class="s2">, ryu_web_port: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">web_port</span><span class="si">}</span><span class="s2">, &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;controller: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">controller</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ryu_port</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">web_port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">controller</span>
+
+        <span class="c1"># Check if controller is already running</span>
+        <span class="n">ryu_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ryu_status</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ryu_running</span><span class="p">:</span>
+            <span class="c1"># Stop old background job if running</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">STOP_RYU_CONTROLLER</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">START_RYU_CONTROLLER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_port</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting RYU controller with command: </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+        <span class="n">ryu_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">RyuDTO</span><span class="p">(</span><span class="n">ryu_running</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">monitor_running</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                                    <span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_port</span><span class="p">,</span>
+                                                                    <span class="n">web_port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span><span class="p">,</span>
+                                                                    <span class="n">controller</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span>
+                                                                    <span class="n">kafka_ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span><span class="p">,</span>
+                                                                    <span class="n">kafka_port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span><span class="p">,</span>
+                                                                    <span class="n">time_step_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ryu_dto</span></div>
+
+<div class="viewcode-block" id="RyuManagerServicer.stopRyuMonitor"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer.stopRyuMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">stopRyuMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">StopRyuMsg</span><span class="p">,</span>
+                       <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Stops the Ryu monitor</span>
+
+<span class="sd">        :param request: the gRPC request</span>
+<span class="sd">        :param context: the gRPC context</span>
+<span class="sd">        :return: a clients DTO with the state of the ryu server</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ryu_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ryu_status</span><span class="p">()</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopping Ryu monitor, sending a request to: &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">HTTP</span><span class="o">.</span><span class="n">HTTP_PROTOCOL_PREFIX</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span><span class="si">}</span><span class="s2">&quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">STOP_PRODUCER_HTTP_RESOURCE</span><span class="si">}</span><span class="s2"> ryu_running: </span><span class="si">{</span><span class="n">ryu_running</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ryu_running</span><span class="p">:</span>
+            <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">HTTP</span><span class="o">.</span><span class="n">HTTP_PROTOCOL_PREFIX</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span><span class="si">}</span><span class="s2">&quot;</span>
+                          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">STOP_PRODUCER_HTTP_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">RyuDTO</span><span class="p">(</span><span class="n">ryu_running</span><span class="o">=</span><span class="n">ryu_running</span><span class="p">,</span> <span class="n">monitor_running</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                                 <span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_port</span><span class="p">,</span>
+                                                                 <span class="n">web_port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span><span class="p">,</span>
+                                                                 <span class="n">controller</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span>
+                                                                 <span class="n">kafka_ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span><span class="p">,</span>
+                                                                 <span class="n">kafka_port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span><span class="p">,</span>
+                                                                 <span class="n">time_step_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RyuManagerServicer.startRyuMonitor"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer.startRyuMonitor">[docs]</a>    <span class="k">def</span> <span class="nf">startRyuMonitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">StartRyuMsg</span><span class="p">,</span>
+                        <span class="n">context</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">ServicerContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">RyuDTO</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts the ryu monitor</span>
+
+<span class="sd">        :param request: the gRPC request</span>
+<span class="sd">        :param context: the gRPC context</span>
+<span class="sd">        :return: a clients DTO with the state of the kafka server</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ryu_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ryu_status</span><span class="p">()</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting Ryu monitor, sending a request to:&quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">HTTP</span><span class="o">.</span><span class="n">HTTP_PROTOCOL_PREFIX</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span><span class="si">}</span><span class="s2">&quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">START_PRODUCER_HTTP_RESOURCE</span><span class="si">}</span><span class="s2">, kafka_ip: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">kafka_ip</span><span class="si">}</span><span class="s2">, &quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;kafka port: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">kafka_port</span><span class="si">}</span><span class="s2">, time_step_len: </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">time_step_len</span><span class="si">}</span><span class="s2">,&quot;</span>
+                     <span class="sa">f</span><span class="s2">&quot;ryu_running: </span><span class="si">{</span><span class="n">ryu_running</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">kafka_ip</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">kafka_port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_step_len</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">time_step_len</span>
+        <span class="n">monitor_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">ryu_running</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">HTTP</span><span class="o">.</span><span class="n">HTTP_PROTOCOL_PREFIX</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">START_PRODUCER_HTTP_RESOURCE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="n">constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span><span class="p">,</span>
+                                 <span class="n">constants</span><span class="o">.</span><span class="n">RYU</span><span class="o">.</span><span class="n">TIME_STEP_LEN_SECONDS</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_step_len</span><span class="p">}))</span>
+            <span class="n">monitor_running</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTP</span><span class="o">.</span><span class="n">OK_RESPONSE_CODE</span>
+        <span class="n">ryu_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2</span><span class="o">.</span><span class="n">RyuDTO</span><span class="p">(</span><span class="n">ryu_running</span><span class="o">=</span><span class="n">ryu_running</span><span class="p">,</span>
+                                                                    <span class="n">monitor_running</span><span class="o">=</span><span class="n">monitor_running</span><span class="p">,</span>
+                                                                    <span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_port</span><span class="p">,</span>
+                                                                    <span class="n">web_port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ryu_web_port</span><span class="p">,</span>
+                                                                    <span class="n">controller</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span>
+                                                                    <span class="n">kafka_ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_ip</span><span class="p">,</span>
+                                                                    <span class="n">kafka_port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kafka_port</span><span class="p">,</span>
+                                                                    <span class="n">time_step_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_step_len</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ryu_dto</span></div></div>
+
+
+<div class="viewcode-block" id="serve"><a class="viewcode-back" href="../../../csle_collector.ryu_manager.html#csle_collector.ryu_manager.ryu_manager.serve">[docs]</a><span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50042</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+          <span class="n">log_file_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ryu_manager.log&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Starts the gRPC server for managing the ryu controller</span>
+
+<span class="sd">    :param port: the port that the server will listen to</span>
+<span class="sd">    :param log_dir: the directory to write the log file</span>
+<span class="sd">    :param log_file_name: the file name of the log</span>
+<span class="sd">    :param max_workers: the maximum number of GRPC workers</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">RYU_MANAGER_LOG_DIR</span> <span class="o">=</span> <span class="n">log_dir</span>
+    <span class="n">constants</span><span class="o">.</span><span class="n">LOG_FILES</span><span class="o">.</span><span class="n">RYU_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="n">log_file_name</span>
+    <span class="n">server</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">server</span><span class="p">(</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span><span class="p">))</span>
+    <span class="n">csle_collector</span><span class="o">.</span><span class="n">ryu_manager</span><span class="o">.</span><span class="n">ryu_manager_pb2_grpc</span><span class="o">.</span><span class="n">add_RyuManagerServicer_to_server</span><span class="p">(</span>
+        <span class="n">RyuManagerServicer</span><span class="p">(),</span> <span class="n">server</span><span class="p">)</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">add_insecure_port</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[::]:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RyuManager Server Started, Listening on port: </span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">server</span><span class="o">.</span><span class="n">wait_for_termination</span><span class="p">()</span></div>
+
+
+<span class="c1"># Program entrypoint</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">serve</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

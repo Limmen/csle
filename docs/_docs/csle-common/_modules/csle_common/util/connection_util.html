@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.util.connection_util</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.util.connection_util</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -90,14 +95,14 @@
 
 
 <div class="viewcode-block" id="ConnectionUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.connection_util.ConnectionUtil">[docs]</a><span class="k">class</span> <span class="nc">ConnectionUtil</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class containing utility functions for the connection-related functionality to the emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ConnectionUtil.login_service_helper"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.connection_util.ConnectionUtil.login_service_helper">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">login_service_helper</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span> <span class="n">alive_check</span><span class="p">,</span>
                              <span class="n">service_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">EmulationEnvState</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for logging in to a network service in the emulation</span>
 
 <span class="sd">        :param s: the current state</span>
@@ -305,7 +310,7 @@
                               <span class="n">credentials</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Credential</span><span class="p">],</span>
                               <span class="n">proxy_connections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationConnectionObservationState</span><span class="p">],</span>
                               <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConnectionSetupDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for setting up a SSH connection</span>
 
 <span class="sd">        :param a: the action of the connection</span>
@@ -363,7 +368,7 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_ssh_finalize_connection</span><span class="p">(</span><span class="n">target_machine</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span>
                                  <span class="n">connection_setup_dto</span><span class="p">:</span> <span class="n">ConnectionSetupDTO</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for finalizing a SSH connection and setting up the DTO</span>
 
 <span class="sd">        :param target_machine: the target machine to connect to</span>
@@ -377,7 +382,7 @@
             <span class="n">outdata</span><span class="p">,</span> <span class="n">errdata</span><span class="p">,</span> <span class="n">total_time</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span>
                 <span class="n">cmd</span><span class="o">=</span><span class="s2">&quot;sudo -l&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="o">=</span><span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">target_connections</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="n">root</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;may not run sudo&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">credentials</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">username</span><span class="p">)</span> <span class="ow">in</span> <span class="n">errdata</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> \
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">credentials</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2"> may not run sudo&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">errdata</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> \
                     <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;(ALL) NOPASSWD: ALL&quot;</span> <span class="ow">in</span> <span class="n">outdata</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="ow">or</span>
                          <span class="s2">&quot;(ALL : ALL) ALL&quot;</span> <span class="ow">in</span> <span class="n">outdata</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)):</span>
                 <span class="n">root</span> <span class="o">=</span> <span class="kc">True</span>
@@ -401,7 +406,7 @@
     <span class="k">def</span> <span class="nf">_telnet_setup_connection</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span>
                                  <span class="n">credentials</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Credential</span><span class="p">],</span> <span class="n">proxy_connections</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
                                  <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConnectionSetupDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for setting up a Telnet connection to a target machine</span>
 
 <span class="sd">        :param a: the action of the connection</span>
@@ -468,7 +473,7 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_telnet_finalize_connection</span><span class="p">(</span><span class="n">target_machine</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                     <span class="n">connection_setup_dto</span><span class="p">:</span> <span class="n">ConnectionSetupDTO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for finalizing a Telnet connection to a target machine and creating the DTO</span>
 
 <span class="sd">        :param target_machine: the target machine to connect to</span>
@@ -482,7 +487,7 @@
             <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">target_connections</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;sudo -l</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">target_connections</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">read_until</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TELNET</span><span class="o">.</span><span class="n">PROMPT</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
             <span class="n">root</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="s2">&quot;may not run sudo&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">credentials</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">username</span><span class="p">)</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> \
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">connection_setup_dto</span><span class="o">.</span><span class="n">credentials</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2"> may not run sudo&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> \
                     <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;(ALL) NOPASSWD: ALL&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="ow">or</span>
                          <span class="s2">&quot;(ALL : ALL) ALL&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)):</span>
                 <span class="n">root</span> <span class="o">=</span> <span class="kc">True</span>
@@ -507,7 +512,7 @@
     <span class="k">def</span> <span class="nf">_ftp_setup_connection</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">EmulationAttackerAction</span><span class="p">,</span>
                               <span class="n">credentials</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Credential</span><span class="p">],</span> <span class="n">proxy_connections</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
                               <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConnectionSetupDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for setting up a FTP connection</span>
 
 <span class="sd">        :param a: the action of the connection</span>
@@ -580,7 +585,7 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_ftp_finalize_connection</span><span class="p">(</span><span class="n">target_machine</span><span class="p">:</span> <span class="n">EmulationAttackerMachineObservationState</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                  <span class="n">connection_setup_dto</span><span class="p">:</span> <span class="n">ConnectionSetupDTO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Helper function for creating the connection DTO for FTP</span>
 
 <span class="sd">        :param target_machine: the target machine to connect to</span>
@@ -602,7 +607,7 @@
 
 <div class="viewcode-block" id="ConnectionUtil.find_jump_host_connection"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.connection_util.ConnectionUtil.find_jump_host_connection">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">find_jump_host_connection</span><span class="p">(</span><span class="n">ip</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">EmulationEnvState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationConnectionObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for finding a jump-host from the set of compromised machines to reach a target IP</span>
 
 <span class="sd">        :param ip: the ip to reach</span>
@@ -640,7 +645,7 @@
 
 <div class="viewcode-block" id="ConnectionUtil.test_connection"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.connection_util.ConnectionUtil.test_connection">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">test_connection</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">EmulationConnectionObservationState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for testing if a connection is alive or not</span>
 
 <span class="sd">        :param c: the connection to thest</span>
@@ -655,7 +660,7 @@
 
 <div class="viewcode-block" id="ConnectionUtil.reconnect_ssh"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.connection_util.ConnectionUtil.reconnect_ssh">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">reconnect_ssh</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">EmulationConnectionObservationState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmulationConnectionObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reconnects the given SSH connection if it has died for some reason</span>
 
 <span class="sd">        :param c: the connection to reconnect</span>
@@ -686,7 +691,7 @@
 <div class="viewcode-block" id="ConnectionUtil.reconnect_telnet"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.connection_util.ConnectionUtil.reconnect_telnet">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">reconnect_telnet</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">EmulationConnectionObservationState</span><span class="p">,</span> <span class="n">forward_port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9000</span><span class="p">)</span> \
             <span class="o">-&gt;</span> <span class="n">EmulationConnectionObservationState</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reconnects the given Telnet connection if it has died for some reason</span>
 
 <span class="sd">        :param c: the connection to reconnect</span>
@@ -723,7 +728,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

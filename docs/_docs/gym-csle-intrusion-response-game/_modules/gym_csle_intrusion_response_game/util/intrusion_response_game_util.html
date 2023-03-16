@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gym_csle_intrusion_response_game.util.intrusion_response_game_util &mdash; gym-csle-intrusion-response-game 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            gym-csle-intrusion-response-game
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.constants.html">gym_csle_intrusion_response_game.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.dao.html">gym_csle_intrusion_response_game.dao package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.envs.html">gym_csle_intrusion_response_game.envs package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../gym_csle_intrusion_response_game.util.html">gym_csle_intrusion_response_game.util package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">gym-csle-intrusion-response-game</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">gym_csle_intrusion_response_game.util.intrusion_response_game_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for gym_csle_intrusion_response_game.util.intrusion_response_game_util</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">betabinom</span>
+<span class="kn">from</span> <span class="nn">gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config</span> <span class="kn">import</span> <span class="n">LocalIntrusionResponseGameConfig</span>
+<span class="kn">import</span> <span class="nn">gym_csle_intrusion_response_game.constants.constants</span> <span class="k">as</span> <span class="nn">env_constants</span>
+
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil">[docs]</a><span class="k">class</span> <span class="nc">IntrusionResponseGameUtil</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class with utility functions for the intrusion response game environment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.is_local_state_terminal"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_terminal">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_local_state_terminal</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for checking if a local state is terminal or not</span>
+
+<span class="sd">        :param s: the local state to check</span>
+<span class="sd">        :return: True if terminal, otherwise False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.is_local_state_in_zone"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_in_zone">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_local_state_in_zone</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for checking if a local state is in a given zone or not</span>
+
+<span class="sd">        :param s: the local state to check</span>
+<span class="sd">        :param zone: the zone to check</span>
+<span class="sd">        :return: True if the state is in the given zone, false otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span> <span class="o">==</span> <span class="n">zone</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.is_local_state_compromised"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_compromised">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_local_state_compromised</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for checking if a local state has been compromised</span>
+
+<span class="sd">        :param s: the local state to check</span>
+<span class="sd">        :return: True if compromised, otherwise False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">]</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACK_STATES</span><span class="o">.</span><span class="n">COMPROMISED</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.is_local_state_healthy"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_healthy">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_local_state_healthy</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for checking if a local state is healthy and not discovered nor compromised</span>
+
+<span class="sd">        :param s: the local state to check</span>
+<span class="sd">        :return: True if compromised, otherwise False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">]</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACK_STATES</span><span class="o">.</span><span class="n">HEALTHY</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.is_local_state_recon"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.is_local_state_recon">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_local_state_recon</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for checking if a local state has been discovered by the attacker</span>
+
+<span class="sd">        :param s: the local state to check</span>
+<span class="sd">        :return: True if compromised, otherwise False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">]</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACK_STATES</span><span class="o">.</span><span class="n">RECON</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.are_local_states_equal"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.are_local_states_equal">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">are_local_states_equal</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for checking if two local states are equal</span>
+
+<span class="sd">        :param s: the first local state to check</span>
+<span class="sd">        :param s_prime: the second local state to check</span>
+<span class="sd">        :return: True if equal, otherwise False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span> <span class="o">==</span> <span class="n">s_prime</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span>
+            <span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">]</span> <span class="o">==</span> <span class="n">s_prime</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.are_local_defense_states_equal"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.are_local_defense_states_equal">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">are_local_defense_states_equal</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for checking if two local defense states are equal</span>
+
+<span class="sd">        :param s: the first local state to check</span>
+<span class="sd">        :param s_prime: the second local state to check</span>
+<span class="sd">        :return: True if equal, otherwise False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span> <span class="o">==</span> <span class="n">s_prime</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.are_local_attack_states_equal"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.are_local_attack_states_equal">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">are_local_attack_states_equal</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for checking if two local attack states are equal</span>
+
+<span class="sd">        :param s: the first local state to check</span>
+<span class="sd">        :param s_prime: the second local state to check</span>
+<span class="sd">        :return: True if equal, otherwise False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">]</span> <span class="o">==</span> <span class="n">s_prime</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_state"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_state">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_initial_state</span><span class="p">(</span><span class="n">initial_zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the initial state for a local version of the game</span>
+
+<span class="sd">        :param initial_zone: the initial zone of the local node</span>
+<span class="sd">        :param S: the state space of the local game</span>
+<span class="sd">        :return: the initial state belief</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_in_zone</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">zone</span><span class="o">=</span><span class="n">initial_zone</span><span class="p">)</span> <span class="ow">and</span> \
+                    <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_healthy</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="k">return</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Initial state not recognized&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_state_idx"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_state_idx">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_initial_state_idx</span><span class="p">(</span><span class="n">initial_zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the initial state for a local version of the game</span>
+
+<span class="sd">        :param initial_zone: the initial zone of the local node</span>
+<span class="sd">        :param S: the state space of the local game</span>
+<span class="sd">        :return: the initial state belief</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_in_zone</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">zone</span><span class="o">=</span><span class="n">initial_zone</span><span class="p">)</span> <span class="ow">and</span> \
+                    <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_healthy</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+                <span class="k">return</span> <span class="n">i</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Initial state not recognized&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_state_distribution"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_state_distribution">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_initial_state_distribution</span><span class="p">(</span><span class="n">initial_state_idx</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the initial state distribution</span>
+
+<span class="sd">        :param initial_state_idx: the initial state index</span>
+<span class="sd">        :param S: the state space</span>
+<span class="sd">        :return: the initial state distribution</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="p">),))</span>
+        <span class="n">rho</span><span class="p">[</span><span class="n">initial_state_idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">rho</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_defender_belief"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_defender_belief">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_initial_defender_belief</span><span class="p">(</span><span class="n">S_A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the initial defender belief for a local version of the game</span>
+
+<span class="sd">        :param S_A: the attacker&#39;s state space of the local game</span>
+<span class="sd">        :return: the initial defender belief</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d_b1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">S_A</span><span class="p">),))</span>
+        <span class="n">d_b1</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACK_STATES</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># the node is not compromised or discovered initially</span>
+        <span class="k">return</span> <span class="n">d_b1</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_initial_attacker_belief"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_initial_attacker_belief">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_initial_attacker_belief</span><span class="p">(</span><span class="n">S_D</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">initial_zone</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the initial attacker belief for a local version of the game</span>
+
+<span class="sd">        :param S_D: the defender&#39;s state space of the local game</span>
+<span class="sd">        :param initial_zone: the initial zone of the node</span>
+<span class="sd">        :return: the initial defender belief</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d_a1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">S_D</span><span class="p">),))</span>
+        <span class="c1"># d_a1[initial_zone] = 1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">S_D</span><span class="p">)):</span>
+            <span class="n">d_a1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">S_D</span><span class="p">)</span>  <span class="c1"># The attacker has no clue about the zones initially</span>
+        <span class="k">return</span> <span class="n">d_a1</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_state_space"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_state_space">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_state_space</span><span class="p">(</span><span class="n">number_of_zones</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the state space of the local version of the game</span>
+
+<span class="sd">        :param number_of_zones: the number of zones in the network</span>
+<span class="sd">        :return: the state space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">S</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">TERMINAL_STATE</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">number_of_zones</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">S</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACK_STATES</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">])</span>
+            <span class="n">S</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACK_STATES</span><span class="o">.</span><span class="n">RECON</span><span class="p">])</span>
+            <span class="n">S</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACK_STATES</span><span class="o">.</span><span class="n">COMPROMISED</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">S</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_defender_state_space"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_defender_state_space">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_defender_state_space</span><span class="p">(</span><span class="n">number_of_zones</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the defender state space of the local version of the game</span>
+
+<span class="sd">        :param number_of_zones: the number of zones in the network</span>
+<span class="sd">        :return: the local defender state space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">number_of_zones</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">S</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">S</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_attacker_state_space"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_attacker_state_space">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_attacker_state_space</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the attacker state space of the local version of the game</span>
+
+<span class="sd">        :return: the local attacker state space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">S</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACK_STATES</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">)</span>
+        <span class="n">S</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACK_STATES</span><span class="o">.</span><span class="n">RECON</span><span class="p">)</span>
+        <span class="n">S</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACK_STATES</span><span class="o">.</span><span class="n">COMPROMISED</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">S</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_defender_actions"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_defender_actions">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_defender_actions</span><span class="p">(</span><span class="n">number_of_zones</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the defender&#39;s action space in the local version of the game</span>
+
+<span class="sd">        :param number_of_zones: the number of zones in the game</span>
+<span class="sd">        :return: a vector with the actions of the defender</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">number_of_zones</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_attacker_actions"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_attacker_actions">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_attacker_actions</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the attacker&#39;s action space in the local version of the game</span>
+
+<span class="sd">        :return: a vector with the actions of the defender</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">WAIT</span><span class="p">,</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">RECON</span><span class="p">,</span>
+                         <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">BRUTE_FORCE</span><span class="p">,</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_observation_space"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_observation_space">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_observation_space</span><span class="p">(</span><span class="n">X_max</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the observation space of the local version of the game</span>
+
+<span class="sd">        :param X_max: the maximum observation</span>
+<span class="sd">        :return: a vector with all possible observations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">X_max</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_workflow_utility"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_workflow_utility">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_workflow_utility</span><span class="p">(</span><span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">reachable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">initial_zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The local utility function for workflow QoS</span>
+
+<span class="sd">        :param beta: a scaling parameter indicating how important the workflow is</span>
+<span class="sd">        :param reachable: a boolean flag indicating whether the node is reachable from the public gateway or not</span>
+<span class="sd">        :param s: the local state vector</span>
+<span class="sd">        :param initial_zone: the initial zone of the node in the local version of the game</span>
+<span class="sd">        :return: the workflow utility</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">impact</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">reachable</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_compromised</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> \
+                <span class="ow">not</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ZONES</span><span class="o">.</span><span class="n">SHUTDOWN_ZONE</span><span class="p">,</span>
+                                                              <span class="n">env_constants</span><span class="o">.</span><span class="n">ZONES</span><span class="o">.</span><span class="n">REDIRECTION_ZONE</span><span class="p">]:</span>
+            <span class="n">impact</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">impact</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_in_zone</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">zone</span><span class="o">=</span><span class="n">initial_zone</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.constant_defender_action_costs"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.constant_defender_action_costs">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">constant_defender_action_costs</span><span class="p">(</span><span class="n">A1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">constant_cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a vector with the local defender action costs where each action has the same constant cost</span>
+
+<span class="sd">        :param A1: a vector with the actions of the defender in the local game</span>
+<span class="sd">        :param constant_cost: the constant action cost</span>
+<span class="sd">        :return: a vector with the action costs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">action_costs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">A1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a1</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">DEFENDER_ACTIONS</span><span class="o">.</span><span class="n">WAIT</span><span class="p">:</span>
+                <span class="n">action_costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">action_costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constant_cost</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">action_costs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.zones"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.zones">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">zones</span><span class="p">(</span><span class="n">num_zones</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the vector with the network zones</span>
+
+<span class="sd">        :param num_zones: the number of zones</span>
+<span class="sd">        :return: a vector with the zones</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_zones</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.constant_zone_utilities"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.constant_zone_utilities">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">constant_zone_utilities</span><span class="p">(</span><span class="n">zones</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">constant_utility</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a vector with the zone utilities where each zone has the same constant utility</span>
+
+<span class="sd">        :param zones: the vector with zones</span>
+<span class="sd">        :param constant_utility: the constant utility of a zone</span>
+<span class="sd">        :return: the vector with zone utilities</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Z_U</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">zones</span><span class="p">:</span>
+            <span class="n">Z_U</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constant_utility</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Z_U</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.constant_zone_detection_probabilities"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.constant_zone_detection_probabilities">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">constant_zone_detection_probabilities</span><span class="p">(</span><span class="n">zones</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">constant_detection_prob</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a vector with the zone detection probabilities where each zone as the same uniform detection</span>
+<span class="sd">        probability</span>
+
+<span class="sd">        :param zones: the vector with zones</span>
+<span class="sd">        :param constant_detection_prob: the constant detection probability</span>
+<span class="sd">        :return: the vector with zone detection probabilities</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">zone_detection_probabilities</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">zones</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">z</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ZONES</span><span class="o">.</span><span class="n">SHUTDOWN_ZONE</span><span class="p">:</span>
+                <span class="n">zone_detection_probabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">zone_detection_probabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constant_detection_prob</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">zone_detection_probabilities</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_attack_success_probabilities_uniform"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_attack_success_probabilities_uniform">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_attack_success_probabilities_uniform</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">A2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a vector with the success probabilities of the attacker actions for the local version of the game</span>
+<span class="sd">        where the attacks have the same constant success probability</span>
+
+<span class="sd">        :param A2: the local action space of the attacker</span>
+<span class="sd">        :return: a vector with the attack success probabilities</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">p</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+        <span class="n">A_P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">A2</span><span class="p">),))</span>
+        <span class="n">A_P</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">WAIT</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">A_P</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">RECON</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">A_P</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">BRUTE_FORCE</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="n">A_P</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
+        <span class="k">return</span> <span class="n">A_P</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_intrusion_cost"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_intrusion_cost">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_intrusion_cost</span><span class="p">(</span><span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">D_C</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">reachable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Z_U</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The defender&#39;s local cost function for intrusions</span>
+
+<span class="sd">        :param a1: the defender action</span>
+<span class="sd">        :param D_C: the vector with the costs of the defender actions</span>
+<span class="sd">        :param reachable: a boolean flag indicating whether the node is reachable</span>
+<span class="sd">        :param s: the current state</span>
+<span class="sd">        :param Z_U: the vector with zone utilities</span>
+<span class="sd">        :return: the intrusion cost</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">reachable</span> <span class="ow">or</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ZONES</span><span class="o">.</span><span class="n">SHUTDOWN_ZONE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">D_C</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span>  <span class="c1"># No intrusion cost if the node is not reachable</span>
+        <span class="n">compromised</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">]</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACK_STATES</span><span class="o">.</span><span class="n">COMPROMISED</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">Z_U</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">compromised</span> <span class="o">+</span> <span class="n">D_C</span><span class="p">[</span><span class="n">a1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_defender_utility_function"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_defender_utility_function">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_defender_utility_function</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">reachable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">initial_zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                        <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C_D</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Z_U</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The local utility function of the defender</span>
+
+<span class="sd">        :param s: the current state of the local game</span>
+<span class="sd">        :param a1: the defender action</span>
+<span class="sd">        :param eta: a scaling parameter to balance QoS and security</span>
+<span class="sd">        :param reachable: a boolean flag indicating whether the node is reachable from the public gateway or not</span>
+<span class="sd">        :param initial_zone: the initial zone of the node in the local game</span>
+<span class="sd">        :param beta: a scaling parameter indicating the importance of the workflow of the local game</span>
+<span class="sd">        :param C_D: the vector with the costs of the local defender actions</span>
+<span class="sd">        :param Z_U: the utilities of the zones in the network</span>
+<span class="sd">        :return: the utility of the defender</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_terminal</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">workflow_utility</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_workflow_utility</span><span class="p">(</span><span class="n">beta</span><span class="o">=</span><span class="n">beta</span><span class="p">,</span> <span class="n">reachable</span><span class="o">=</span><span class="n">reachable</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span>
+                                                                            <span class="n">initial_zone</span><span class="o">=</span><span class="n">initial_zone</span><span class="p">)</span>
+        <span class="n">intrusion_cost</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_intrusion_cost</span><span class="p">(</span><span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">D_C</span><span class="o">=</span><span class="n">C_D</span><span class="p">,</span> <span class="n">reachable</span><span class="o">=</span><span class="n">reachable</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span>
+                                                                        <span class="n">Z_U</span><span class="o">=</span><span class="n">Z_U</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">workflow_utility</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">eta</span><span class="p">)</span> <span class="o">*</span> <span class="n">intrusion_cost</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_reward_tensor"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_reward_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_reward_tensor</span><span class="p">(</span><span class="n">eta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C_D</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">reachable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">Z_U</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">initial_zone</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                            <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the defender&#39;s utility tensor of the local version of the game</span>
+
+<span class="sd">        :param eta: a scaling parameter for the local rewards</span>
+<span class="sd">        :param C_D: the vector with the costs of the local defender actions</span>
+<span class="sd">        :param reachable: a boolean flag indicating whether the node of the local game is reachable or not</span>
+<span class="sd">        :param Z_U: the vector with utilities of the different zones in the network</span>
+<span class="sd">        :param initial_zone: the initial zone of the node</span>
+<span class="sd">        :param beta: a scaling parameter for the workflow utility</span>
+<span class="sd">        :param S: the local state space of the game</span>
+<span class="sd">        :param A1: the local action space of the defender</span>
+<span class="sd">        :param A2: teh local action space of the attacker</span>
+<span class="sd">        :return: a |A1|x|A2|x|S| tensor giving the rewards of the state transitions in the local game</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">A1</span><span class="p">:</span>
+            <span class="n">a1_rews</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="n">A2</span><span class="p">:</span>
+                <span class="n">a1_a2_rews</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+                    <span class="n">a1_a2_rews</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_defender_utility_function</span><span class="p">(</span>
+                        <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="n">eta</span><span class="p">,</span> <span class="n">reachable</span><span class="o">=</span><span class="n">reachable</span><span class="p">,</span> <span class="n">initial_zone</span><span class="o">=</span><span class="n">initial_zone</span><span class="p">,</span>
+                        <span class="n">beta</span><span class="o">=</span><span class="n">beta</span><span class="p">,</span> <span class="n">C_D</span><span class="o">=</span><span class="n">C_D</span><span class="p">,</span> <span class="n">Z_U</span><span class="o">=</span><span class="n">Z_U</span>
+                    <span class="p">))</span>
+                <span class="n">a1_rews</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1_a2_rews</span><span class="p">)</span>
+            <span class="n">R</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1_rews</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">R</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_transition_probability"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_transition_probability">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_transition_probability</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_prime</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Z_D_P</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                                     <span class="n">A_P</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the probability of a local state transition</span>
+
+<span class="sd">        :param s: the current state</span>
+<span class="sd">        :param s_prime: the next  state</span>
+<span class="sd">        :param a1: the defender action</span>
+<span class="sd">        :param a2: the attacker action</span>
+<span class="sd">        :param Z_D_P: the zone detection probabilities</span>
+<span class="sd">        :param A_P: the attack success probabilities</span>
+<span class="sd">        :return: the transition probabilitiy</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># If you are in terminal state you stay there</span>
+        <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_terminal</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_terminal</span><span class="p">(</span><span class="n">s_prime</span><span class="p">):</span>
+                <span class="k">return</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="c1"># Detection probability</span>
+        <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_terminal</span><span class="p">(</span><span class="n">s_prime</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a2</span> <span class="o">!=</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">WAIT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Z_D_P</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">P_not_detected</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">a2</span> <span class="o">!=</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">WAIT</span><span class="p">)</span> <span class="o">*</span>
+                          <span class="n">Z_D_P</span><span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># Defender takes defensive action</span>
+        <span class="k">if</span> <span class="n">a1</span> <span class="o">!=</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">DEFENDER_ACTIONS</span><span class="o">.</span><span class="n">WAIT</span><span class="p">:</span>
+            <span class="c1"># Deterministic transition, attacker state is reset and node is migrated to the new zone</span>
+            <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_in_zone</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s_prime</span><span class="p">,</span> <span class="n">zone</span><span class="o">=</span><span class="n">a1</span><span class="p">)</span> \
+                    <span class="ow">and</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_healthy</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s_prime</span><span class="p">):</span>
+                <span class="k">return</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">P_not_detected</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Defender did not take defensive action</span>
+
+            <span class="c1"># If the node is shutdown or traffic redirect, the state remains the same</span>
+            <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ZONES</span><span class="o">.</span><span class="n">SHUTDOWN_ZONE</span><span class="p">,</span>
+                                                         <span class="n">env_constants</span><span class="o">.</span><span class="n">ZONES</span><span class="o">.</span><span class="n">REDIRECTION_ZONE</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">are_local_states_equal</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">s_prime</span><span class="o">=</span><span class="n">s_prime</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">P_not_detected</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="mi">0</span>
+
+            <span class="c1"># If attacker waits, then the state remains the same</span>
+            <span class="k">if</span> <span class="n">a2</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">WAIT</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">are_local_states_equal</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">s_prime</span><span class="o">=</span><span class="n">s_prime</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">P_not_detected</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="mi">0</span>
+
+            <span class="c1"># If the attacker performs recon and the node was not already compromised, then it is discovered</span>
+            <span class="k">if</span> <span class="n">a2</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">RECON</span> <span class="ow">and</span> \
+                    <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">are_local_defense_states_equal</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">s_prime</span><span class="o">=</span><span class="n">s_prime</span><span class="p">)</span> <span class="ow">and</span> \
+                    <span class="ow">not</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_compromised</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span> \
+                    <span class="ow">and</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_recon</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s_prime</span><span class="p">):</span>
+                <span class="k">return</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">P_not_detected</span>
+
+            <span class="c1"># If the attacker performs recon and the node was already compromised, then the state remains the same</span>
+            <span class="k">if</span> <span class="n">a2</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">RECON</span> <span class="ow">and</span> \
+                    <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_compromised</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">)</span> \
+                    <span class="ow">and</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">are_local_states_equal</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">s_prime</span><span class="o">=</span><span class="n">s_prime</span><span class="p">):</span>
+                <span class="k">return</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">P_not_detected</span>
+
+            <span class="c1"># The attacker can only attack nodes it has discovered:</span>
+            <span class="k">if</span> <span class="n">a2</span> <span class="ow">in</span> <span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">BRUTE_FORCE</span><span class="p">,</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">]</span> \
+                    <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">A_STATE_INDEX</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACK_STATES</span><span class="o">.</span><span class="n">HEALTHY</span><span class="p">:</span>
+
+                <span class="c1"># The zone cannot change as a result of an attacker action</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_in_zone</span><span class="p">(</span><span class="n">s_prime</span><span class="p">,</span>
+                                                                        <span class="n">zone</span><span class="o">=</span><span class="n">s</span><span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">STATES</span><span class="o">.</span><span class="n">D_STATE_INDEX</span><span class="p">]):</span>
+                    <span class="k">return</span> <span class="mi">0</span>
+
+                <span class="c1"># The node cannot become undiscovered as a result of an attacker action</span>
+                <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_healthy</span><span class="p">(</span><span class="n">s_prime</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="mi">0</span>
+
+                <span class="c1"># If the node is compromised, it cannot become uncompromised</span>
+                <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_compromised</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> \
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_compromised</span><span class="p">(</span><span class="n">s_prime</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="mi">0</span>
+
+                <span class="c1"># If the node is already compromised, the state remains the same</span>
+                <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_compromised</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">P_not_detected</span>
+
+                <span class="c1"># If the attacker attacks a node that was not already compromised, it is</span>
+                <span class="c1"># compromised with a probability given by A_P.</span>
+                <span class="k">if</span> <span class="n">a2</span> <span class="ow">in</span> <span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">BRUTE_FORCE</span><span class="p">,</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">]</span> \
+                        <span class="ow">and</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_compromised</span><span class="p">(</span><span class="n">s_prime</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="p">(</span><span class="n">A_P</span><span class="p">[</span><span class="n">a2</span><span class="p">])</span> <span class="o">*</span> <span class="n">P_not_detected</span>
+
+                <span class="c1"># If the attacker attacks a node that was not already compromised, it</span>
+                <span class="c1"># remains uncompromised w.p 1-A_P</span>
+                <span class="k">if</span> <span class="n">a2</span> <span class="ow">in</span> <span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">BRUTE_FORCE</span><span class="p">,</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">]</span> \
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_compromised</span><span class="p">(</span><span class="n">s_prime</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">A_P</span><span class="p">[</span><span class="n">a2</span><span class="p">])</span> <span class="o">*</span> <span class="n">P_not_detected</span>
+
+                <span class="c1"># If the attacker attacks a node that is already compromised, it</span>
+                <span class="c1"># remains compromised</span>
+                <span class="k">if</span> <span class="n">a2</span> <span class="ow">in</span> <span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">BRUTE_FORCE</span><span class="p">,</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">]</span> \
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_compromised</span><span class="p">(</span><span class="n">s_prime</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="n">P_not_detected</span>
+
+            <span class="c1"># If the attacker would try to attack a node that it has not discovered (illegal action)</span>
+            <span class="c1"># then the action has no effect</span>
+            <span class="k">if</span> <span class="n">a2</span> <span class="ow">in</span> <span class="p">[</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">BRUTE_FORCE</span><span class="p">,</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">]</span> \
+                    <span class="ow">and</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_healthy</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">and</span> \
+                    <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">are_local_states_equal</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">s_prime</span><span class="o">=</span><span class="n">s_prime</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">P_not_detected</span>
+
+        <span class="c1"># If none of the above cases match, the transition is impossible ans has probability 0</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_transition_tensor"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_transition_tensor">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_transition_tensor</span><span class="p">(</span><span class="n">Z_D</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A_P</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                                <span class="n">A2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the transition tensor of the local game</span>
+
+<span class="sd">        :param Z_D: the zone detection probabilities</span>
+<span class="sd">        :param A_P: the attack success probabilities</span>
+<span class="sd">        :param S: the local state space</span>
+<span class="sd">        :param A1: the local action space of the defender</span>
+<span class="sd">        :param A2: the local action space of the attacker</span>
+<span class="sd">        :return: a |A1|x|A2||S|^2 tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">A1</span><span class="p">:</span>
+            <span class="n">a1_probs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="n">A2</span><span class="p">:</span>
+                <span class="n">a1_a2_probs</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+                    <span class="n">a1_a2_s_probs</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+                        <span class="n">p</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">local_transition_probability</span><span class="p">(</span>
+                            <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">s_prime</span><span class="o">=</span><span class="n">s_prime</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="o">=</span><span class="n">a2</span><span class="p">,</span> <span class="n">Z_D_P</span><span class="o">=</span><span class="n">Z_D</span><span class="p">,</span> <span class="n">A_P</span><span class="o">=</span><span class="n">A_P</span><span class="p">)</span>
+                        <span class="n">a1_a2_s_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">a1_a2_s_probs</span><span class="p">),</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+                    <span class="n">a1_a2_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1_a2_s_probs</span><span class="p">)</span>
+                <span class="n">a1_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1_a2_probs</span><span class="p">)</span>
+            <span class="n">T</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1_probs</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">T</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.local_observation_tensor_betabinom"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.local_observation_tensor_betabinom">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_observation_tensor_betabinom</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">A2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the observation tensor of the local game where the observations follow beta-binomial distributions</span>
+
+<span class="sd">        :param S: the local state space of the game</span>
+<span class="sd">        :param A1: the local action space of the defender</span>
+<span class="sd">        :param A2: the local action space of the attacker</span>
+<span class="sd">        :param O: the local observation space</span>
+<span class="sd">        :return: a |A1|x|A2|x|S|x|O| tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">brute_force_dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">exploit_dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">recon_dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">wait_dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">brute_force_hp_dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">exploit_hp_dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">recon_hp_dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">wait_hp_dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">shutdown_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">))</span>
+        <span class="n">shutdown_dist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+
+        <span class="n">brute_force_hp_rv</span> <span class="o">=</span> <span class="n">betabinom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">recon_hp_rv</span> <span class="o">=</span> <span class="n">betabinom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">exploit_hp_rv</span> <span class="o">=</span> <span class="n">betabinom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">wait_hp_rv</span> <span class="o">=</span> <span class="n">betabinom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">brute_force_rv</span> <span class="o">=</span> <span class="n">betabinom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">recon_rv</span> <span class="o">=</span> <span class="n">betabinom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">exploit_rv</span> <span class="o">=</span> <span class="n">betabinom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">wait_rv</span> <span class="o">=</span> <span class="n">betabinom</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">O</span><span class="p">)):</span>
+            <span class="n">recon_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">recon_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">brute_force_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">brute_force_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">exploit_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exploit_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">wait_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wait_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">recon_hp_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">recon_hp_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">brute_force_hp_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">brute_force_hp_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">exploit_hp_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exploit_hp_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">wait_hp_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wait_hp_rv</span><span class="o">.</span><span class="n">pmf</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">A1</span><span class="p">:</span>
+            <span class="n">a1_probs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="n">A2</span><span class="p">:</span>
+                <span class="n">a1_a2_probs</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_in_zone</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">zone</span><span class="o">=</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ZONES</span><span class="o">.</span><span class="n">SHUTDOWN_ZONE</span><span class="p">):</span>
+                        <span class="n">a1_a2_s_probs</span> <span class="o">=</span> <span class="n">shutdown_dist</span>
+                    <span class="k">elif</span> <span class="n">a2</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">RECON</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_in_zone</span><span class="p">(</span>
+                                <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span>  <span class="n">zone</span><span class="o">=</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ZONES</span><span class="o">.</span><span class="n">REDIRECTION_ZONE</span><span class="p">):</span>
+                            <span class="n">a1_a2_s_probs</span> <span class="o">=</span> <span class="n">recon_hp_dist</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">a1_a2_s_probs</span> <span class="o">=</span> <span class="n">recon_dist</span>
+                    <span class="k">elif</span> <span class="n">a2</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">EXPLOIT</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_in_zone</span><span class="p">(</span>
+                                <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span>  <span class="n">zone</span><span class="o">=</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ZONES</span><span class="o">.</span><span class="n">REDIRECTION_ZONE</span><span class="p">):</span>
+                            <span class="n">a1_a2_s_probs</span> <span class="o">=</span> <span class="n">exploit_hp_dist</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">a1_a2_s_probs</span> <span class="o">=</span> <span class="n">exploit_dist</span>
+                    <span class="k">elif</span> <span class="n">a2</span> <span class="o">==</span> <span class="n">env_constants</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS</span><span class="o">.</span><span class="n">BRUTE_FORCE</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_in_zone</span><span class="p">(</span>
+                                <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span>  <span class="n">zone</span><span class="o">=</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ZONES</span><span class="o">.</span><span class="n">REDIRECTION_ZONE</span><span class="p">):</span>
+                            <span class="n">a1_a2_s_probs</span> <span class="o">=</span> <span class="n">brute_force_hp_dist</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">a1_a2_s_probs</span> <span class="o">=</span> <span class="n">brute_force_dist</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">is_local_state_in_zone</span><span class="p">(</span>
+                                <span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span>  <span class="n">zone</span><span class="o">=</span><span class="n">env_constants</span><span class="o">.</span><span class="n">ZONES</span><span class="o">.</span><span class="n">REDIRECTION_ZONE</span><span class="p">):</span>
+                            <span class="n">a1_a2_s_probs</span> <span class="o">=</span> <span class="n">wait_hp_dist</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">a1_a2_s_probs</span> <span class="o">=</span> <span class="n">wait_dist</span>
+                    <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">a1_a2_s_probs</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+                    <span class="n">a1_a2_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1_a2_s_probs</span><span class="p">)</span>
+                <span class="n">a1_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1_a2_probs</span><span class="p">)</span>
+            <span class="n">Z</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a1_probs</span><span class="p">)</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Z</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.sample_next_state"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.sample_next_state">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">sample_next_state</span><span class="p">(</span><span class="n">T</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Samples the next state</span>
+
+<span class="sd">        :param T: the transition operator</span>
+<span class="sd">        :param s_idx: the current state index</span>
+<span class="sd">        :param a1: the defender action</span>
+<span class="sd">        :param a2: the attacker action</span>
+<span class="sd">        :param S: the state space</span>
+<span class="sd">        :param l: the number of stops remaining</span>
+<span class="sd">        :return: s&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state_probs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s_prime</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="p">)):</span>
+            <span class="n">state_probs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_idx</span><span class="p">][</span><span class="n">s_prime</span><span class="p">])</span>
+        <span class="n">s_prime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="p">)),</span> <span class="n">p</span><span class="o">=</span><span class="n">state_probs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s_prime</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.sample_next_observation"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.sample_next_observation">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">sample_next_observation</span><span class="p">(</span><span class="n">Z</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_prime_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">O</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Samples the next observation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">O</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">Z</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_prime_idx</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.bayes_filter_defender_belief"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.bayes_filter_defender_belief">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">bayes_filter_defender_belief</span><span class="p">(</span><span class="n">s_a_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">d_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                                     <span class="n">config</span><span class="p">:</span> <span class="n">LocalIntrusionResponseGameConfig</span><span class="p">,</span> <span class="n">s_d_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_d</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A Bayesian filter to compute the belief of player 1 of being in s_prime when observing o after</span>
+<span class="sd">        taking action a in belief b given that the opponent follows strategy pi2</span>
+
+<span class="sd">        :param s_a_prime: the attacker state to compute the belief of</span>
+<span class="sd">        :param o: the observation</span>
+<span class="sd">        :param a1: the action of player 1</span>
+<span class="sd">        :param d_b: the current defender belief point</span>
+<span class="sd">        :param pi2: the policy of player 2</span>
+<span class="sd">        :param s_d_prime: the defender state</span>
+<span class="sd">        :param s_d: the previous defender state</span>
+<span class="sd">        :return: b_prime(s_prime)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">s_a</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S_A</span><span class="p">:</span>
+            <span class="n">s_idx</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">states_to_idx</span><span class="p">[(</span><span class="n">s_d</span><span class="p">,</span> <span class="n">s_a</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A2</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">s_prime_a_1</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S_A</span><span class="p">:</span>
+                    <span class="n">s_prime_idx</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">states_to_idx</span><span class="p">[(</span><span class="n">s_d_prime</span><span class="p">,</span> <span class="n">s_prime_a_1</span><span class="p">)]</span>
+                    <span class="n">obs_prob</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_prime_idx</span><span class="p">][</span><span class="n">o</span><span class="p">]</span>
+                    <span class="n">norm</span> <span class="o">+=</span> <span class="n">d_b</span><span class="p">[</span><span class="n">s_a</span><span class="p">]</span> <span class="o">*</span> <span class="n">obs_prob</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_idx</span><span class="p">][</span><span class="n">s_prime_idx</span><span class="p">]</span> <span class="o">*</span> <span class="n">pi2</span><span class="p">[</span><span class="n">s_a</span><span class="p">][</span><span class="n">a2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">s_prime_idx</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">states_to_idx</span><span class="p">[(</span><span class="n">s_d_prime</span><span class="p">,</span> <span class="n">s_a_prime</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">s_a</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S_A</span><span class="p">:</span>
+            <span class="n">s_idx</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">states_to_idx</span><span class="p">[(</span><span class="n">s_d</span><span class="p">,</span> <span class="n">s_a</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">a2</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A2</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">+=</span> <span class="n">config</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_prime_idx</span><span class="p">][</span><span class="n">o</span><span class="p">]</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_idx</span><span class="p">][</span><span class="n">s_prime_idx</span><span class="p">]</span> <span class="o">*</span> \
+                        <span class="n">d_b</span><span class="p">[</span><span class="n">s_a</span><span class="p">]</span> <span class="o">*</span> <span class="n">pi2</span><span class="p">[</span><span class="n">s_a</span><span class="p">][</span><span class="n">a2</span><span class="p">]</span>
+        <span class="n">b_prime_s_prime</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">/</span> <span class="n">norm</span>
+        <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="n">b_prime_s_prime</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;b_prime_s_prime &gt;= 1: </span><span class="si">{</span><span class="n">b_prime_s_prime</span><span class="si">}</span><span class="s2">, a1:</span><span class="si">{</span><span class="n">a1</span><span class="si">}</span><span class="s2">, s_prime:</span><span class="si">{</span><span class="n">s_a_prime</span><span class="si">}</span><span class="s2">, o:</span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">, pi2:</span><span class="si">{</span><span class="n">pi2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="n">b_prime_s_prime</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">b_prime_s_prime</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.next_local_defender_belief"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.next_local_defender_belief">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">next_local_defender_belief</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">d_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                                   <span class="n">config</span><span class="p">:</span> <span class="n">LocalIntrusionResponseGameConfig</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                   <span class="n">s_d_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_d</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the next local belief of the defender using a Bayesian filter</span>
+
+<span class="sd">        :param o: the latest observation</span>
+<span class="sd">        :param a1: the latest action of player 1</span>
+<span class="sd">        :param d_b: the current defender belief</span>
+<span class="sd">        :param pi2: the policy of player 2</span>
+<span class="sd">        :param config: the game config</span>
+<span class="sd">        :param a2: the attacker action (for debugging, should be consistent with pi2)</span>
+<span class="sd">        :param s_a: the true current attacker state (for debugging)</span>
+<span class="sd">        :param s_d: the previous defender state</span>
+<span class="sd">        :param s_d_prime: the new defender state</span>
+<span class="sd">        :return: the new belief</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">b_prime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">S_A</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">s_a_prime</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">S_A</span><span class="p">:</span>
+            <span class="n">b_prime</span><span class="p">[</span><span class="n">s_a_prime</span><span class="p">]</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">bayes_filter_defender_belief</span><span class="p">(</span>
+                <span class="n">s_a_prime</span><span class="o">=</span><span class="n">s_a_prime</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">a1</span><span class="o">=</span><span class="n">a1</span><span class="p">,</span> <span class="n">d_b</span><span class="o">=</span><span class="n">d_b</span><span class="p">,</span> <span class="n">pi2</span><span class="o">=</span><span class="n">pi2</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">s_d_prime</span><span class="o">=</span><span class="n">s_d_prime</span><span class="p">,</span> <span class="n">s_d</span><span class="o">=</span><span class="n">s_d</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">b_prime</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;error, b_prime:</span><span class="si">{</span><span class="n">b_prime</span><span class="si">}</span><span class="s2">, o:</span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">, a1:</span><span class="si">{</span><span class="n">a1</span><span class="si">}</span><span class="s2">, d_b:</span><span class="si">{</span><span class="n">d_b</span><span class="si">}</span><span class="s2">, pi2:</span><span class="si">{</span><span class="n">pi2</span><span class="si">}</span><span class="s2">, &quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;a2: </span><span class="si">{</span><span class="n">a2</span><span class="si">}</span><span class="s2">, s:</span><span class="si">{</span><span class="n">s_a</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">b_prime</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">b_prime</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.sample_attacker_action"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.sample_attacker_action">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">sample_attacker_action</span><span class="p">(</span><span class="n">pi2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Samples the attacker action</span>
+
+<span class="sd">        :param pi2: the attacker action</span>
+<span class="sd">        :param s: the game state</span>
+<span class="sd">        :return: a2 (the attacker action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pi2</span><span class="p">[</span><span class="n">s</span><span class="p">])),</span> <span class="n">p</span><span class="o">=</span><span class="n">pi2</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">a2</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.sample_defender_action"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.sample_defender_action">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">sample_defender_action</span><span class="p">(</span><span class="n">pi1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Samples the defender action</span>
+
+<span class="sd">        :param pi1: the attacker action</span>
+<span class="sd">        :param s: the game state</span>
+<span class="sd">        :return: a1 (the defender action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">a1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pi1</span><span class="p">[</span><span class="n">s</span><span class="p">])),</span> <span class="n">p</span><span class="o">=</span><span class="n">pi1</span><span class="p">[</span><span class="n">s</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">a1</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.next_local_attacker_belief"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.next_local_attacker_belief">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">next_local_attacker_belief</span><span class="p">(</span><span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                                   <span class="n">config</span><span class="p">:</span> <span class="n">LocalIntrusionResponseGameConfig</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_d</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                                   <span class="n">s_a_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the next local belief of the attacker using a Bayesian filter</span>
+
+<span class="sd">        :param o: the latest observation</span>
+<span class="sd">        :param a1: the latest action of player 1 (for debugging, should be consistent with pi1)</span>
+<span class="sd">        :param a_b: the current attacker belief</span>
+<span class="sd">        :param pi1: the policy of player 1</span>
+<span class="sd">        :param config: the game config</span>
+<span class="sd">        :param a2: the attacker action</span>
+<span class="sd">        :param s_d: the true current defender state (for debugging)</span>
+<span class="sd">        :param s_a_prime: the new attacker state</span>
+<span class="sd">        :param s_a: the previous attacker state</span>
+<span class="sd">        :return: the new belief</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">b_prime</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">S_D</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">s_d_prime</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">S_D</span><span class="p">))):</span>
+            <span class="n">b_prime</span><span class="p">[</span><span class="n">s_d_prime</span><span class="p">]</span> <span class="o">=</span> <span class="n">IntrusionResponseGameUtil</span><span class="o">.</span><span class="n">bayes_filter_attacker_belief</span><span class="p">(</span>
+                <span class="n">s_a_prime</span><span class="o">=</span><span class="n">s_a_prime</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">a2</span><span class="o">=</span><span class="n">a2</span><span class="p">,</span> <span class="n">a_b</span><span class="o">=</span><span class="n">a_b</span><span class="p">,</span> <span class="n">pi1</span><span class="o">=</span><span class="n">pi1</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">s_d_prime</span><span class="o">=</span><span class="n">s_d_prime</span><span class="p">,</span> <span class="n">s_a</span><span class="o">=</span><span class="n">s_a</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">b_prime</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;error, b_prime:</span><span class="si">{</span><span class="n">b_prime</span><span class="si">}</span><span class="s2">, o:</span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">, a1:</span><span class="si">{</span><span class="n">a1</span><span class="si">}</span><span class="s2">, d_b:</span><span class="si">{</span><span class="n">a_b</span><span class="si">}</span><span class="s2">, pi1:</span><span class="si">{</span><span class="n">pi1</span><span class="si">}</span><span class="s2">, &quot;</span>
+                  <span class="sa">f</span><span class="s2">&quot;a2: </span><span class="si">{</span><span class="n">a2</span><span class="si">}</span><span class="s2">, s_d:</span><span class="si">{</span><span class="n">s_d</span><span class="si">}</span><span class="s2">, s_a: </span><span class="si">{</span><span class="n">s_a</span><span class="si">}</span><span class="s2">, s_a_prime:</span><span class="si">{</span><span class="n">s_a_prime</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">b_prime</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">b_prime</span></div>
+
+<div class="viewcode-block" id="IntrusionResponseGameUtil.bayes_filter_attacker_belief"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.util.html#gym_csle_intrusion_response_game.util.intrusion_response_game_util.IntrusionResponseGameUtil.bayes_filter_attacker_belief">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">bayes_filter_attacker_belief</span><span class="p">(</span><span class="n">s_a_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">a_b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pi1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                                     <span class="n">config</span><span class="p">:</span> <span class="n">LocalIntrusionResponseGameConfig</span><span class="p">,</span> <span class="n">s_d_prime</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s_a</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A Bayesian filter to compute the belief of player 2 of being in s_prime when observing o after</span>
+<span class="sd">        taking action a in belief b given that the opponent follows strategy pi1</span>
+
+<span class="sd">        :param s_a_prime: the current attacker state</span>
+<span class="sd">        :param s_a_prime: the previous attacker state</span>
+<span class="sd">        :param o: the observation</span>
+<span class="sd">        :param a2: the action of player 2</span>
+<span class="sd">        :param a_b: the current attacker belief point</span>
+<span class="sd">        :param pi1: the policy of player 2</span>
+<span class="sd">        :param s_d_prime: the defender state  to compute the belief of</span>
+<span class="sd">        :return: b_prime(s_prime_d)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">s_d</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">S_D</span><span class="p">))):</span>
+            <span class="n">s_idx</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">states_to_idx</span><span class="p">[(</span><span class="n">s_d</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">s_a</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A1</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">s_prime_d_1</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">S_D</span><span class="p">))):</span>
+                    <span class="n">s_prime_idx</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">states_to_idx</span><span class="p">[(</span><span class="n">s_prime_d_1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">s_a_prime</span><span class="p">)]</span>
+                    <span class="n">obs_prob</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_prime_idx</span><span class="p">][</span><span class="n">o</span><span class="p">]</span>
+                    <span class="n">norm</span> <span class="o">+=</span> <span class="n">a_b</span><span class="p">[</span><span class="n">s_d</span><span class="p">]</span> <span class="o">*</span> <span class="n">obs_prob</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_idx</span><span class="p">][</span><span class="n">s_prime_idx</span><span class="p">]</span> <span class="o">*</span> <span class="n">pi1</span><span class="p">[</span><span class="n">s_d</span><span class="p">][</span><span class="n">a1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">s_prime_idx</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">states_to_idx</span><span class="p">[(</span><span class="n">s_d_prime</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">s_a_prime</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">s_d</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">S_D</span><span class="p">))):</span>
+            <span class="n">s_idx</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">states_to_idx</span><span class="p">[(</span><span class="n">s_d</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">s_a</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">a1</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">A1</span><span class="p">:</span>
+                <span class="n">temp</span> <span class="o">+=</span> <span class="n">config</span><span class="o">.</span><span class="n">Z</span><span class="p">[</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_prime_idx</span><span class="p">][</span><span class="n">o</span><span class="p">]</span> <span class="o">*</span> <span class="n">config</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">a1</span><span class="p">][</span><span class="n">a2</span><span class="p">][</span><span class="n">s_idx</span><span class="p">][</span><span class="n">s_prime_idx</span><span class="p">]</span> <span class="o">*</span> \
+                        <span class="n">a_b</span><span class="p">[</span><span class="n">s_d</span><span class="p">]</span> <span class="o">*</span> <span class="n">pi1</span><span class="p">[</span><span class="n">s_d</span><span class="p">][</span><span class="n">a1</span><span class="p">]</span>
+        <span class="n">b_prime_s_prime</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">/</span> <span class="n">norm</span>
+        <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="n">b_prime_s_prime</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;b_prime_s_prime &gt;= 1: </span><span class="si">{</span><span class="n">b_prime_s_prime</span><span class="si">}</span><span class="s2">, a2:</span><span class="si">{</span><span class="n">a2</span><span class="si">}</span><span class="s2">, s_prime:</span><span class="si">{</span><span class="n">s_a_prime</span><span class="si">}</span><span class="s2">, o:</span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s2">, pi1:</span><span class="si">{</span><span class="n">pi1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">round</span><span class="p">(</span><span class="n">b_prime_s_prime</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">b_prime_s_prime</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

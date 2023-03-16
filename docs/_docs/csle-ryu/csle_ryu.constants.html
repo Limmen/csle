@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>csle_ryu.constants package &mdash; csle-ryu 0.0.1 documentation</title>
@@ -12,9 +12,8 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -27,11 +26,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> csle-ryu
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            csle-ryu
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -40,7 +43,67 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">csle_ryu.constants package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.constants.constants">csle_ryu.constants.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.constants.constants">csle_ryu.constants.constants module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#csle_ryu.constants.constants.CONTROLLERS"><code class="docutils literal notranslate"><span class="pre">CONTROLLERS</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.CONTROLLERS.LEARNING_SWITCH_CONTROLLER"><code class="docutils literal notranslate"><span class="pre">CONTROLLERS.LEARNING_SWITCH_CONTROLLER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.CONTROLLERS.LEARNING_SWITCH_STP_CONTROLLER"><code class="docutils literal notranslate"><span class="pre">CONTROLLERS.LEARNING_SWITCH_STP_CONTROLLER</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#csle_ryu.constants.constants.RYU"><code class="docutils literal notranslate"><span class="pre">RYU</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.APP_LISTS_ARG"><code class="docutils literal notranslate"><span class="pre">RYU.APP_LISTS_ARG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.BITMASK"><code class="docutils literal notranslate"><span class="pre">RYU.BITMASK</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.BYTE_COUNT"><code class="docutils literal notranslate"><span class="pre">RYU.BYTE_COUNT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.CONTROLLERS_PREFIX"><code class="docutils literal notranslate"><span class="pre">RYU.CONTROLLERS_PREFIX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.CONTROLLER_APP"><code class="docutils literal notranslate"><span class="pre">RYU.CONTROLLER_APP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.CONTROLLER_PORT_ARG"><code class="docutils literal notranslate"><span class="pre">RYU.CONTROLLER_PORT_ARG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.DEFAULT_PORT"><code class="docutils literal notranslate"><span class="pre">RYU.DEFAULT_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.DEFAULT_TRANSPORT_PROTOCOL"><code class="docutils literal notranslate"><span class="pre">RYU.DEFAULT_TRANSPORT_PROTOCOL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.ETH_DST"><code class="docutils literal notranslate"><span class="pre">RYU.ETH_DST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.FLOW_COUNT"><code class="docutils literal notranslate"><span class="pre">RYU.FLOW_COUNT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.IN_PORT"><code class="docutils literal notranslate"><span class="pre">RYU.IN_PORT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.KAFKA_CONF"><code class="docutils literal notranslate"><span class="pre">RYU.KAFKA_CONF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.LOG_FILE"><code class="docutils literal notranslate"><span class="pre">RYU.LOG_FILE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.LOG_FILE_ARG"><code class="docutils literal notranslate"><span class="pre">RYU.LOG_FILE_ARG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.NETWORK_ID_FOURTH_OCTET"><code class="docutils literal notranslate"><span class="pre">RYU.NETWORK_ID_FOURTH_OCTET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.NETWORK_ID_THIRD_OCTET"><code class="docutils literal notranslate"><span class="pre">RYU.NETWORK_ID_THIRD_OCTET</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.NORTHBOUND_API_APP_NAME"><code class="docutils literal notranslate"><span class="pre">RYU.NORTHBOUND_API_APP_NAME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.OBSERVE_LINKS"><code class="docutils literal notranslate"><span class="pre">RYU.OBSERVE_LINKS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.OFCTL_GUI_TOPOLOGY"><code class="docutils literal notranslate"><span class="pre">RYU.OFCTL_GUI_TOPOLOGY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.OFCTL_REST_APP"><code class="docutils literal notranslate"><span class="pre">RYU.OFCTL_REST_APP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.OFCTL_REST_QOS_APP"><code class="docutils literal notranslate"><span class="pre">RYU.OFCTL_REST_QOS_APP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.OFCTL_REST_TOPOLOGY"><code class="docutils literal notranslate"><span class="pre">RYU.OFCTL_REST_TOPOLOGY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.OFCTL_WS_TOPOLOGY"><code class="docutils literal notranslate"><span class="pre">RYU.OFCTL_WS_TOPOLOGY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.PACKET_BUFFER_MAX_LEN"><code class="docutils literal notranslate"><span class="pre">RYU.PACKET_BUFFER_MAX_LEN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.PACKET_COUNT"><code class="docutils literal notranslate"><span class="pre">RYU.PACKET_COUNT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.PRODUCER_RUNNING"><code class="docutils literal notranslate"><span class="pre">RYU.PRODUCER_RUNNING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.RYU_MANAGER"><code class="docutils literal notranslate"><span class="pre">RYU.RYU_MANAGER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_AGGREGATE_FLOW_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_DESC_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_DESC_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_FLOW_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_FLOW_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_GROUP_DESC_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_GROUP_DESC_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_GROUP_FEATURES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_GROUP_FEATURES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_GROUP_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_GROUP_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_METER_CONFIG_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_METER_CONFIG_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_METER_FEATURES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_METER_FEATURES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_METER_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_METER_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_PORT_DESC_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_PORT_DESC_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_PORT_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_PORT_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_QUEUE_CONFIG_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_QUEUE_CONFIG_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_QUEUE_DESC_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_QUEUE_DESC_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_QUEUE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_QUEUE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_ROLE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_ROLE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_SWITCHES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_SWITCHES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_TABLE_FEATURES_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_TABLE_FEATURES_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STATS_TABLE_RESOURCE"><code class="docutils literal notranslate"><span class="pre">RYU.STATS_TABLE_RESOURCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.STPLIB"><code class="docutils literal notranslate"><span class="pre">RYU.STPLIB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.SUBNETMASK_SUFFIX"><code class="docutils literal notranslate"><span class="pre">RYU.SUBNETMASK_SUFFIX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.SUFFIX"><code class="docutils literal notranslate"><span class="pre">RYU.SUFFIX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.WEB_APP_PORT_ARG"><code class="docutils literal notranslate"><span class="pre">RYU.WEB_APP_PORT_ARG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_ryu.constants.constants.RYU.WSGI"><code class="docutils literal notranslate"><span class="pre">RYU.WSGI</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_ryu.constants">Module contents</a></li>
 </ul>
 </li>
@@ -62,8 +125,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>csle_ryu.constants package</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">csle_ryu.constants package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/csle_ryu.constants.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -74,12 +137,12 @@
            <div itemprop="articleBody">
              
   <section id="csle-ryu-constants-package">
-<h1>csle_ryu.constants package<a class="headerlink" href="#csle-ryu-constants-package" title="Permalink to this headline"></a></h1>
+<h1>csle_ryu.constants package<a class="headerlink" href="#csle-ryu-constants-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-csle_ryu.constants.constants">
-<span id="csle-ryu-constants-constants-module"></span><h2>csle_ryu.constants.constants module<a class="headerlink" href="#module-csle_ryu.constants.constants" title="Permalink to this headline"></a></h2>
+<span id="csle-ryu-constants-constants-module"></span><h2>csle_ryu.constants.constants module<a class="headerlink" href="#module-csle_ryu.constants.constants" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="csle_ryu.constants.constants.CONTROLLERS">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_ryu.constants.constants.</span></span><span class="sig-name descname"><span class="pre">CONTROLLERS</span></span><a class="reference internal" href="_modules/csle_ryu/constants/constants.html#CONTROLLERS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.constants.constants.CONTROLLERS" title="Permalink to this definition"></a></dt>
@@ -98,68 +161,6 @@
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.KAFKA">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_ryu.constants.constants.</span></span><span class="sig-name descname"><span class="pre">KAFKA</span></span><a class="reference internal" href="_modules/csle_ryu/constants/constants.html#KAFKA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.constants.constants.KAFKA" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>String constants for managing Kafka</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY">
-<span class="sig-name descname"><span class="pre">AUTO_OFFSET_RESET_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'auto.offset.reset'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.KAFKA.AUTO_OFFSET_RESET_PROPERTY" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY">
-<span class="sig-name descname"><span class="pre">BOOTSTRAP_SERVERS_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bootstrap.servers'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.KAFKA.CLIENT_ID_PROPERTY">
-<span class="sig-name descname"><span class="pre">CLIENT_ID_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'client.id'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.KAFKA.CLIENT_ID_PROPERTY" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.KAFKA.EARLIEST_OFFSET">
-<span class="sig-name descname"><span class="pre">EARLIEST_OFFSET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'earliest'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.KAFKA.EARLIEST_OFFSET" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.KAFKA.GROUP_ID_PROPERTY">
-<span class="sig-name descname"><span class="pre">GROUP_ID_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'group.id'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.KAFKA.GROUP_ID_PROPERTY" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.KAFKA.KAFKA_START">
-<span class="sig-name descname"><span class="pre">KAFKA_START</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'service</span> <span class="pre">kafka</span> <span class="pre">start'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.KAFKA.KAFKA_START" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.KAFKA.KAFKA_STATUS">
-<span class="sig-name descname"><span class="pre">KAFKA_STATUS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'service</span> <span class="pre">kafka</span> <span class="pre">status'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.KAFKA.KAFKA_STATUS" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.KAFKA.KAFKA_STOP">
-<span class="sig-name descname"><span class="pre">KAFKA_STOP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'service</span> <span class="pre">kafka</span> <span class="pre">stop'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.KAFKA.KAFKA_STOP" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.KAFKA.PORT">
-<span class="sig-name descname"><span class="pre">PORT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9092</span></em><a class="headerlink" href="#csle_ryu.constants.constants.KAFKA.PORT" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.KAFKA.RETENTION_MS_CONFIG_PROPERTY">
-<span class="sig-name descname"><span class="pre">RETENTION_MS_CONFIG_PROPERTY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'retention.ms'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.KAFKA.RETENTION_MS_CONFIG_PROPERTY" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.KAFKA.TIME_STEP_LEN_SECONDS">
-<span class="sig-name descname"><span class="pre">TIME_STEP_LEN_SECONDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'time_step_len_seconds'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.KAFKA.TIME_STEP_LEN_SECONDS" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_ryu.constants.constants.</span></span><span class="sig-name descname"><span class="pre">RYU</span></span><a class="reference internal" href="_modules/csle_ryu/constants/constants.html#RYU"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.constants.constants.RYU" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -170,8 +171,23 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.BITMASK">
+<span class="sig-name descname"><span class="pre">BITMASK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'255.255.255.248'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.BITMASK" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.BYTE_COUNT">
+<span class="sig-name descname"><span class="pre">BYTE_COUNT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'byte_count'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.BYTE_COUNT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.CONTROLLERS_PREFIX">
 <span class="sig-name descname"><span class="pre">CONTROLLERS_PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'csle_ryu.controllers.'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.CONTROLLERS_PREFIX" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.CONTROLLER_APP">
+<span class="sig-name descname"><span class="pre">CONTROLLER_APP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'controller_app'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.CONTROLLER_APP" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -180,8 +196,53 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.DEFAULT_PORT">
+<span class="sig-name descname"><span class="pre">DEFAULT_PORT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6633</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.DEFAULT_PORT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.DEFAULT_TRANSPORT_PROTOCOL">
+<span class="sig-name descname"><span class="pre">DEFAULT_TRANSPORT_PROTOCOL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'tcp'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.DEFAULT_TRANSPORT_PROTOCOL" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.ETH_DST">
+<span class="sig-name descname"><span class="pre">ETH_DST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'eth_dst'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.ETH_DST" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.FLOW_COUNT">
+<span class="sig-name descname"><span class="pre">FLOW_COUNT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'flow_count'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.FLOW_COUNT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.IN_PORT">
+<span class="sig-name descname"><span class="pre">IN_PORT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'in_port'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.IN_PORT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.KAFKA_CONF">
+<span class="sig-name descname"><span class="pre">KAFKA_CONF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'kafka_conf'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.KAFKA_CONF" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.LOG_FILE">
+<span class="sig-name descname"><span class="pre">LOG_FILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'csle_sdn_controller.log'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.LOG_FILE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.LOG_FILE_ARG">
 <span class="sig-name descname"><span class="pre">LOG_FILE_ARG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'--log-file'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.LOG_FILE_ARG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.NETWORK_ID_FOURTH_OCTET">
+<span class="sig-name descname"><span class="pre">NETWORK_ID_FOURTH_OCTET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">251</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.NETWORK_ID_FOURTH_OCTET" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.NETWORK_ID_THIRD_OCTET">
+<span class="sig-name descname"><span class="pre">NETWORK_ID_THIRD_OCTET</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">252</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.NETWORK_ID_THIRD_OCTET" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -225,13 +286,18 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.RYU_MANAGER">
-<span class="sig-name descname"><span class="pre">RYU_MANAGER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/root/miniconda3/bin/ryu-manager'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.RYU_MANAGER" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.PACKET_COUNT">
+<span class="sig-name descname"><span class="pre">PACKET_COUNT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'packet_count'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.PACKET_COUNT" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.START_PRODUCER_HTTP_RESOURCE">
-<span class="sig-name descname"><span class="pre">START_PRODUCER_HTTP_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/cslenorthboundapi/producer/start'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.START_PRODUCER_HTTP_RESOURCE" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.PRODUCER_RUNNING">
+<span class="sig-name descname"><span class="pre">PRODUCER_RUNNING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'producer_running'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.PRODUCER_RUNNING" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.RYU_MANAGER">
+<span class="sig-name descname"><span class="pre">RYU_MANAGER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/root/miniconda3/bin/ryu-manager'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.RYU_MANAGER" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -325,13 +391,18 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE">
-<span class="sig-name descname"><span class="pre">STATUS_PRODUCER_HTTP_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/cslenorthboundapi/producer/status'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.STPLIB">
+<span class="sig-name descname"><span class="pre">STPLIB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'stplib'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.STPLIB" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.STOP_PRODUCER_HTTP_RESOURCE">
-<span class="sig-name descname"><span class="pre">STOP_PRODUCER_HTTP_RESOURCE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/cslenorthboundapi/producer/stop'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.STOP_PRODUCER_HTTP_RESOURCE" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.SUBNETMASK_SUFFIX">
+<span class="sig-name descname"><span class="pre">SUBNETMASK_SUFFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/29'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.SUBNETMASK_SUFFIX" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.SUFFIX">
+<span class="sig-name descname"><span class="pre">SUFFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_1'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.SUFFIX" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -339,43 +410,16 @@
 <span class="sig-name descname"><span class="pre">WEB_APP_PORT_ARG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'--wsapi-port'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.WEB_APP_PORT_ARG" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.TOPIC_NAMES">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_ryu.constants.constants.</span></span><span class="sig-name descname"><span class="pre">TOPIC_NAMES</span></span><a class="reference internal" href="_modules/csle_ryu/constants/constants.html#TOPIC_NAMES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_ryu.constants.constants.TOPIC_NAMES" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Topic names for SDN statistics</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.TOPIC_NAMES.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME">
-<span class="sig-name descname"><span class="pre">AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'avg_openflow_flow_stats_per_switch_topic'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.TOPIC_NAMES.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.TOPIC_NAMES.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME">
-<span class="sig-name descname"><span class="pre">AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'avg_openflow_port_stats_per_switch_topic'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.TOPIC_NAMES.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.TOPIC_NAMES.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME">
-<span class="sig-name descname"><span class="pre">OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'openflow_flow_agg_stats_topic'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.TOPIC_NAMES.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.TOPIC_NAMES.OPENFLOW_FLOW_STATS_TOPIC_NAME">
-<span class="sig-name descname"><span class="pre">OPENFLOW_FLOW_STATS_TOPIC_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'openflow_flow_stats_topic'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.TOPIC_NAMES.OPENFLOW_FLOW_STATS_TOPIC_NAME" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="csle_ryu.constants.constants.TOPIC_NAMES.OPENFLOW_PORT_STATS_TOPIC_NAME">
-<span class="sig-name descname"><span class="pre">OPENFLOW_PORT_STATS_TOPIC_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'openflow_port_stats_topic'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.TOPIC_NAMES.OPENFLOW_PORT_STATS_TOPIC_NAME" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="csle_ryu.constants.constants.RYU.WSGI">
+<span class="sig-name descname"><span class="pre">WSGI</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'wsgi'</span></em><a class="headerlink" href="#csle_ryu.constants.constants.RYU.WSGI" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-csle_ryu.constants">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_ryu.constants" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-csle_ryu.constants" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 

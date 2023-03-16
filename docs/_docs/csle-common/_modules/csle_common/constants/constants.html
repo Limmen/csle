@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.constants.constants</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -75,8 +80,34 @@
 <span class="kn">import</span> <span class="nn">re</span>
 
 
+<div class="viewcode-block" id="GENERAL"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.GENERAL">[docs]</a><span class="k">class</span> <span class="nc">GENERAL</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    General constants</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">THREAD_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;thread&quot;</span>
+    <span class="n">PORT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;port&quot;</span>
+    <span class="n">IP_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;ip&quot;</span>
+    <span class="n">EMULATION_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;emulation&quot;</span>
+    <span class="n">EXECUTION_ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;execution_id&quot;</span></div>
+
+
+<div class="viewcode-block" id="GRPC_SERVERS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.GRPC_SERVERS">[docs]</a><span class="k">class</span> <span class="nc">GRPC_SERVERS</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to grpc servers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">CLUSTER_MANAGER_PORT</span> <span class="o">=</span> <span class="mi">50041</span>
+    <span class="n">RYU_MANAGER_PORT</span> <span class="o">=</span> <span class="mi">50042</span>
+    <span class="n">TRAFFIC_MANAGER_PORT</span> <span class="o">=</span> <span class="mi">50043</span>
+    <span class="n">CLIENT_MANAGER_PORT</span> <span class="o">=</span> <span class="mi">50044</span>
+    <span class="n">ELK_MANAGER_PORT</span> <span class="o">=</span> <span class="mi">50045</span>
+    <span class="n">DOCKER_STATS_MANAGER_PORT</span> <span class="o">=</span> <span class="mi">50046</span>
+    <span class="n">OSSEC_IDS_MANAGER_PORT</span> <span class="o">=</span> <span class="mi">50047</span>
+    <span class="n">SNORT_IDS_MANAGER_PORT</span> <span class="o">=</span> <span class="mi">50048</span>
+    <span class="n">HOST_MANAGER_PORT</span> <span class="o">=</span> <span class="mi">50049</span></div>
+
+
 <div class="viewcode-block" id="CONFIG_FILE"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CONFIG_FILE">[docs]</a><span class="k">class</span> <span class="nc">CONFIG_FILE</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the config file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CSLE_HOME_ENV_PARAM</span> <span class="o">=</span> <span class="s2">&quot;CSLE_HOME&quot;</span>
@@ -85,51 +116,55 @@
 
 
 <div class="viewcode-block" id="CONTAINER_IMAGES"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CONTAINER_IMAGES">[docs]</a><span class="k">class</span> <span class="nc">CONTAINER_IMAGES</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constants representing container images names</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">SSH_1</span> <span class="o">=</span> <span class="s2">&quot;ssh_1&quot;</span>
-    <span class="n">ROUTER_2</span> <span class="o">=</span> <span class="s2">&quot;router_2&quot;</span>
-    <span class="n">SAMBA_2</span> <span class="o">=</span> <span class="s2">&quot;samba_2&quot;</span>
-    <span class="n">HONEYPOT_1</span> <span class="o">=</span> <span class="s2">&quot;honeypot_1&quot;</span>
-    <span class="n">FTP_1</span> <span class="o">=</span> <span class="s2">&quot;ftp_1&quot;</span>
-    <span class="n">HACKER_KALI_1</span> <span class="o">=</span> <span class="s2">&quot;hacker_kali_1&quot;</span>
-    <span class="n">SHELLSHOCK_1</span> <span class="o">=</span> <span class="s2">&quot;shellshock_1&quot;</span>
-    <span class="n">SQL_INJECTION_1</span> <span class="o">=</span> <span class="s2">&quot;sql_injection_1&quot;</span>
-    <span class="n">CVE_2010_0426_1</span> <span class="o">=</span> <span class="s2">&quot;cve_2010_0426_1&quot;</span>
-    <span class="n">CVE_2015_1427_1</span> <span class="o">=</span> <span class="s2">&quot;cve_2015_1427_1&quot;</span>
-    <span class="n">HONEYPOT_2</span> <span class="o">=</span> <span class="s2">&quot;honeypot_2&quot;</span>
-    <span class="n">SAMBA_1</span> <span class="o">=</span> <span class="s2">&quot;samba_1&quot;</span>
-    <span class="n">CVE_2015_3306_1</span> <span class="o">=</span> <span class="s2">&quot;cve_2015_3306_1&quot;</span>
-    <span class="n">CVE_2015_5602_1</span> <span class="o">=</span> <span class="s2">&quot;cve_2015_5602_1&quot;</span>
-    <span class="n">CVE_2016_10033_1</span> <span class="o">=</span> <span class="s2">&quot;cve_2016_10033_1&quot;</span>
-    <span class="n">CLIENT_1</span> <span class="o">=</span> <span class="s2">&quot;client_1&quot;</span>
-    <span class="n">KAFKA_1</span> <span class="o">=</span> <span class="s2">&quot;kafka_1&quot;</span>
-    <span class="n">ELK_1</span> <span class="o">=</span> <span class="s2">&quot;elk_1&quot;</span>
-    <span class="n">ROUTER_1</span> <span class="o">=</span> <span class="s2">&quot;router_1&quot;</span>
-    <span class="n">TELNET_1</span> <span class="o">=</span> <span class="s2">&quot;telnet_1&quot;</span>
-    <span class="n">SSH_2</span> <span class="o">=</span> <span class="s2">&quot;ssh_2&quot;</span>
-    <span class="n">SSH_3</span> <span class="o">=</span> <span class="s2">&quot;ssh_3&quot;</span>
-    <span class="n">TELNET_2</span> <span class="o">=</span> <span class="s2">&quot;telnet_2&quot;</span>
-    <span class="n">TELNET_3</span> <span class="o">=</span> <span class="s2">&quot;telnet_3&quot;</span>
-    <span class="n">FTP_2</span> <span class="o">=</span> <span class="s2">&quot;ftp_2&quot;</span>
-    <span class="n">OVS_1</span> <span class="o">=</span> <span class="s2">&quot;ovs_1&quot;</span>
-    <span class="n">RYU_1</span> <span class="o">=</span> <span class="s2">&quot;ryu_1&quot;</span>
-    <span class="n">PENGINE_EXPLOIT_1</span> <span class="o">=</span> <span class="s2">&quot;pengine_exploit_1&quot;</span>
-    <span class="n">CVE_2014_0160_1</span> <span class="o">=</span> <span class="s2">&quot;cve_2014_0160_1&quot;</span>
-    <span class="n">SNORT_IDS_IMAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;router_2&quot;</span><span class="p">]</span>
-    <span class="n">OVS_IMAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ovs_1&quot;</span><span class="p">]</span>
-    <span class="n">OSSEC_IDS_IMAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;honeypot_1&quot;</span><span class="p">,</span> <span class="s2">&quot;honeypot_2&quot;</span><span class="p">,</span> <span class="s2">&quot;pengine_exploit_1&quot;</span><span class="p">,</span> <span class="s2">&quot;router_1&quot;</span><span class="p">,</span> <span class="s2">&quot;router_2&quot;</span><span class="p">,</span> <span class="s2">&quot;ssh_1&quot;</span><span class="p">,</span> <span class="s2">&quot;ssh_2&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;ssh_3&quot;</span><span class="p">,</span> <span class="s2">&quot;telnet_1&quot;</span><span class="p">,</span> <span class="s2">&quot;telnet_2&quot;</span><span class="p">,</span> <span class="s2">&quot;telnet_3&quot;</span><span class="p">]</span>
-    <span class="n">ROUTER_IMAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;router_1&quot;</span><span class="p">,</span> <span class="s2">&quot;router_2&quot;</span><span class="p">]</span>
-    <span class="n">HACKER_IMAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hacker_kali_1&quot;</span><span class="p">]</span>
-    <span class="n">CLIENT_IMAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;client_1&quot;</span><span class="p">]</span>
+    <span class="n">CSLE_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;csle_&quot;</span>
+    <span class="n">DOCKERHUB_USERNAME</span> <span class="o">=</span> <span class="s2">&quot;kimham&quot;</span>
+    <span class="n">SSH_1</span> <span class="o">=</span> <span class="s2">&quot;csle_ssh_1&quot;</span>
+    <span class="n">ROUTER_2</span> <span class="o">=</span> <span class="s2">&quot;csle_router_2&quot;</span>
+    <span class="n">SAMBA_2</span> <span class="o">=</span> <span class="s2">&quot;csle_samba_2&quot;</span>
+    <span class="n">HONEYPOT_1</span> <span class="o">=</span> <span class="s2">&quot;csle_honeypot_1&quot;</span>
+    <span class="n">FTP_1</span> <span class="o">=</span> <span class="s2">&quot;csle_ftp_1&quot;</span>
+    <span class="n">HACKER_KALI_1</span> <span class="o">=</span> <span class="s2">&quot;csle_hacker_kali_1&quot;</span>
+    <span class="n">SHELLSHOCK_1</span> <span class="o">=</span> <span class="s2">&quot;csle_shellshock_1&quot;</span>
+    <span class="n">SQL_INJECTION_1</span> <span class="o">=</span> <span class="s2">&quot;csle_sql_injection_1&quot;</span>
+    <span class="n">CVE_2010_0426_1</span> <span class="o">=</span> <span class="s2">&quot;csle_cve_2010_0426_1&quot;</span>
+    <span class="n">CVE_2015_1427_1</span> <span class="o">=</span> <span class="s2">&quot;csle_cve_2015_1427_1&quot;</span>
+    <span class="n">HONEYPOT_2</span> <span class="o">=</span> <span class="s2">&quot;csle_honeypot_2&quot;</span>
+    <span class="n">SAMBA_1</span> <span class="o">=</span> <span class="s2">&quot;csle_samba_1&quot;</span>
+    <span class="n">CVE_2015_3306_1</span> <span class="o">=</span> <span class="s2">&quot;csle_cve_2015_3306_1&quot;</span>
+    <span class="n">CVE_2015_5602_1</span> <span class="o">=</span> <span class="s2">&quot;csle_cve_2015_5602_1&quot;</span>
+    <span class="n">CVE_2016_10033_1</span> <span class="o">=</span> <span class="s2">&quot;csle_cve_2016_10033_1&quot;</span>
+    <span class="n">CLIENT_1</span> <span class="o">=</span> <span class="s2">&quot;csle_client_1&quot;</span>
+    <span class="n">KAFKA_1</span> <span class="o">=</span> <span class="s2">&quot;csle_kafka_1&quot;</span>
+    <span class="n">ELK_1</span> <span class="o">=</span> <span class="s2">&quot;csle_elk_1&quot;</span>
+    <span class="n">ROUTER_1</span> <span class="o">=</span> <span class="s2">&quot;csle_router_1&quot;</span>
+    <span class="n">TELNET_1</span> <span class="o">=</span> <span class="s2">&quot;csle_telnet_1&quot;</span>
+    <span class="n">SSH_2</span> <span class="o">=</span> <span class="s2">&quot;csle_ssh_2&quot;</span>
+    <span class="n">SSH_3</span> <span class="o">=</span> <span class="s2">&quot;csle_ssh_3&quot;</span>
+    <span class="n">TELNET_2</span> <span class="o">=</span> <span class="s2">&quot;csle_telnet_2&quot;</span>
+    <span class="n">TELNET_3</span> <span class="o">=</span> <span class="s2">&quot;csle_telnet_3&quot;</span>
+    <span class="n">FTP_2</span> <span class="o">=</span> <span class="s2">&quot;csle_ftp_2&quot;</span>
+    <span class="n">OVS_1</span> <span class="o">=</span> <span class="s2">&quot;csle_ovs_1&quot;</span>
+    <span class="n">RYU_1</span> <span class="o">=</span> <span class="s2">&quot;csle_ryu_1&quot;</span>
+    <span class="n">PENGINE_EXPLOIT_1</span> <span class="o">=</span> <span class="s2">&quot;csle_pengine_exploit_1&quot;</span>
+    <span class="n">CVE_2014_0160_1</span> <span class="o">=</span> <span class="s2">&quot;csle_cve_2014_0160_1&quot;</span>
+    <span class="n">SNORT_IDS_IMAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;csle_router_2&quot;</span><span class="p">]</span>
+    <span class="n">OVS_IMAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;csle_ovs_1&quot;</span><span class="p">]</span>
+    <span class="n">OSSEC_IDS_IMAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;csle_honeypot_1&quot;</span><span class="p">,</span> <span class="s2">&quot;csle_honeypot_2&quot;</span><span class="p">,</span> <span class="s2">&quot;csle_pengine_exploit_1&quot;</span><span class="p">,</span> <span class="s2">&quot;csle_router_1&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;csle_router_2&quot;</span><span class="p">,</span> <span class="s2">&quot;csle_ssh_1&quot;</span><span class="p">,</span> <span class="s2">&quot;csle_ssh_2&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;csle_ssh_3&quot;</span><span class="p">,</span> <span class="s2">&quot;csle_telnet_1&quot;</span><span class="p">,</span> <span class="s2">&quot;csle_telnet_2&quot;</span><span class="p">,</span> <span class="s2">&quot;csle_telnet_3&quot;</span><span class="p">]</span>
+    <span class="n">ROUTER_IMAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;csle_router_1&quot;</span><span class="p">,</span> <span class="s2">&quot;csle_router_2&quot;</span><span class="p">]</span>
+    <span class="n">HACKER_IMAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;csle_hacker_kali_1&quot;</span><span class="p">]</span>
+    <span class="n">CLIENT_IMAGES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;csle_client_1&quot;</span><span class="p">]</span>
     <span class="n">CADVISOR</span> <span class="o">=</span> <span class="s2">&quot;cadvisor&quot;</span>
+    <span class="n">PGADMIN</span> <span class="o">=</span> <span class="s2">&quot;pgadmin&quot;</span>
     <span class="n">GRAFANA</span> <span class="o">=</span> <span class="s2">&quot;grafana&quot;</span></div>
 
 
 <div class="viewcode-block" id="CONTAINER_OS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CONTAINER_OS">[docs]</a><span class="k">class</span> <span class="nc">CONTAINER_OS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constants representing OS of different containers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SSH_1_OS</span> <span class="o">=</span> <span class="s2">&quot;ubuntu&quot;</span>
@@ -164,7 +199,7 @@
 
 
 <div class="viewcode-block" id="RENDERING"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.RENDERING">[docs]</a><span class="k">class</span> <span class="nc">RENDERING</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Rendering constants</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">RECT_SIZE</span> <span class="o">=</span> <span class="mi">200</span>
@@ -198,7 +233,7 @@
 
 
 <div class="viewcode-block" id="FIREWALL"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.FIREWALL">[docs]</a><span class="k">class</span> <span class="nc">FIREWALL</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Firewall string constants</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">DROP</span> <span class="o">=</span> <span class="s2">&quot;DROP&quot;</span>
@@ -206,7 +241,7 @@
 
 
 <div class="viewcode-block" id="NETWORKING"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.NETWORKING">[docs]</a><span class="k">class</span> <span class="nc">NETWORKING</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Networking string constants</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ETH0</span> <span class="o">=</span> <span class="s2">&quot;eth0&quot;</span>
@@ -216,7 +251,7 @@
 
 
 <div class="viewcode-block" id="SERVICES"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.SERVICES">[docs]</a><span class="k">class</span> <span class="nc">SERVICES</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Services constants</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">service_lookup</span> <span class="o">=</span> <span class="p">{}</span>
@@ -343,7 +378,7 @@
 
 
 <div class="viewcode-block" id="VULNERABILITIES"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.VULNERABILITIES">[docs]</a><span class="k">class</span> <span class="nc">VULNERABILITIES</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Vulnerabilities constants</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">vuln_lookup</span> <span class="o">=</span> <span class="p">{}</span>
@@ -380,7 +415,7 @@
 
 
 <div class="viewcode-block" id="OS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.OS">[docs]</a><span class="k">class</span> <span class="nc">OS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Operating systems constants</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">os_lookup</span> <span class="o">=</span> <span class="p">{}</span>
@@ -400,14 +435,14 @@
 
 
 <div class="viewcode-block" id="SECLISTS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.SECLISTS">[docs]</a><span class="k">class</span> <span class="nc">SECLISTS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to seclists</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">TOP_USERNAMES_SHORTLIST</span> <span class="o">=</span> <span class="s2">&quot;/SecLists/Usernames/top-usernames-shortlist.txt&quot;</span></div>
 
 
 <div class="viewcode-block" id="NMAP"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.NMAP">[docs]</a><span class="k">class</span> <span class="nc">NMAP</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to nmap commands</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SHELL_ESCAPE</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]&#39;</span><span class="p">)</span>
@@ -478,7 +513,7 @@
 
 
 <div class="viewcode-block" id="AUXILLARY"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.AUXILLARY">[docs]</a><span class="k">class</span> <span class="nc">AUXILLARY</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Auxillary constants</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">USER_PLACEHOLDER</span> <span class="o">=</span> <span class="s2">&quot;USER_PLACEHOLDER&quot;</span>
@@ -486,7 +521,7 @@
 
 
 <div class="viewcode-block" id="NMAP_XML"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.NMAP_XML">[docs]</a><span class="k">class</span> <span class="nc">NMAP_XML</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to nmap XML output</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">HOST</span> <span class="o">=</span> <span class="s2">&quot;host&quot;</span>
@@ -552,16 +587,17 @@
 
 
 <div class="viewcode-block" id="SSH"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.SSH">[docs]</a><span class="k">class</span> <span class="nc">SSH</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the SSH service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;ssh&quot;</span>
     <span class="n">DEFAULT_PORT</span> <span class="o">=</span> <span class="mi">22</span>
-    <span class="n">DIRECT_CHANNEL</span> <span class="o">=</span> <span class="s2">&quot;direct-tcpip&quot;</span></div>
+    <span class="n">DIRECT_CHANNEL</span> <span class="o">=</span> <span class="s2">&quot;direct-tcpip&quot;</span>
+    <span class="n">MAX_FILE_READ_BYTES</span> <span class="o">=</span> <span class="mi">5</span></div>
 
 
 <div class="viewcode-block" id="TELNET"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.TELNET">[docs]</a><span class="k">class</span> <span class="nc">TELNET</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the Telnet service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">PROMPT</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;:~$&#39;</span>
@@ -574,7 +610,7 @@
 
 
 <div class="viewcode-block" id="FTP"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.FTP">[docs]</a><span class="k">class</span> <span class="nc">FTP</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the FTP service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">INCORRECT_LOGIN</span> <span class="o">=</span> <span class="s2">&quot;Login incorrect&quot;</span>
@@ -588,7 +624,7 @@
 
 
 <div class="viewcode-block" id="HTTPS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.HTTPS">[docs]</a><span class="k">class</span> <span class="nc">HTTPS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the HTTPS service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;HTTPS&quot;</span>
@@ -603,7 +639,7 @@
 
 
 <div class="viewcode-block" id="RETHINKDB"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.RETHINKDB">[docs]</a><span class="k">class</span> <span class="nc">RETHINKDB</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the RethinkDb service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;rethinkdb&quot;</span>
@@ -611,7 +647,7 @@
 
 
 <div class="viewcode-block" id="COCKROACH"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.COCKROACH">[docs]</a><span class="k">class</span> <span class="nc">COCKROACH</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the Cockroach service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;cockroach&quot;</span>
@@ -619,7 +655,7 @@
 
 
 <div class="viewcode-block" id="TOMCAT"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.TOMCAT">[docs]</a><span class="k">class</span> <span class="nc">TOMCAT</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the TOMCAT service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;tomcat&quot;</span>
@@ -627,7 +663,7 @@
 
 
 <div class="viewcode-block" id="TEAMSPEAK3"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.TEAMSPEAK3">[docs]</a><span class="k">class</span> <span class="nc">TEAMSPEAK3</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the Teamspeak3 service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;teamspeak3&quot;</span>
@@ -635,7 +671,7 @@
 
 
 <div class="viewcode-block" id="IRC"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.IRC">[docs]</a><span class="k">class</span> <span class="nc">IRC</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the IRC service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;irc&quot;</span>
@@ -643,7 +679,7 @@
 
 
 <div class="viewcode-block" id="POSTGRES"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.POSTGRES">[docs]</a><span class="k">class</span> <span class="nc">POSTGRES</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the Postgres service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;postgres&quot;</span>
@@ -651,7 +687,7 @@
 
 
 <div class="viewcode-block" id="SMTP"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.SMTP">[docs]</a><span class="k">class</span> <span class="nc">SMTP</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the SMTP service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;smtp&quot;</span>
@@ -659,7 +695,7 @@
 
 
 <div class="viewcode-block" id="MYSQL"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.MYSQL">[docs]</a><span class="k">class</span> <span class="nc">MYSQL</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the MySQL service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;mysql&quot;</span>
@@ -667,7 +703,7 @@
 
 
 <div class="viewcode-block" id="NTP"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.NTP">[docs]</a><span class="k">class</span> <span class="nc">NTP</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the NTP service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;ntp&quot;</span>
@@ -675,7 +711,7 @@
 
 
 <div class="viewcode-block" id="SNMP"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.SNMP">[docs]</a><span class="k">class</span> <span class="nc">SNMP</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the SNMP service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;snmp&quot;</span>
@@ -683,7 +719,7 @@
 
 
 <div class="viewcode-block" id="HTTP"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.HTTP">[docs]</a><span class="k">class</span> <span class="nc">HTTP</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the DNS service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;http&quot;</span>
@@ -692,7 +728,7 @@
 
 
 <div class="viewcode-block" id="DNS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.DNS">[docs]</a><span class="k">class</span> <span class="nc">DNS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the DNS service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;dns&quot;</span>
@@ -700,7 +736,7 @@
 
 
 <div class="viewcode-block" id="MONGO"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.MONGO">[docs]</a><span class="k">class</span> <span class="nc">MONGO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the MongoDB service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;mongo&quot;</span>
@@ -708,7 +744,7 @@
 
 
 <div class="viewcode-block" id="CASSANDRA"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CASSANDRA">[docs]</a><span class="k">class</span> <span class="nc">CASSANDRA</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the Cassandra service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;cassandra&quot;</span>
@@ -716,7 +752,7 @@
 
 
 <div class="viewcode-block" id="SAMBA"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.SAMBA">[docs]</a><span class="k">class</span> <span class="nc">SAMBA</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the Samba service</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;samba&quot;</span>
@@ -733,7 +769,7 @@
 
 
 <div class="viewcode-block" id="CVE_2010_0426"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CVE_2010_0426">[docs]</a><span class="k">class</span> <span class="nc">CVE_2010_0426</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to CVE-2010-0426</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;sudoedit&quot;</span>
@@ -744,7 +780,7 @@
 
 
 <div class="viewcode-block" id="CVE_2015_5602"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CVE_2015_5602">[docs]</a><span class="k">class</span> <span class="nc">CVE_2015_5602</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to CVE-2015-5602</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;sudoedit&quot;</span>
@@ -755,7 +791,7 @@
 
 
 <div class="viewcode-block" id="CVE_2015_3306"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CVE_2015_3306">[docs]</a><span class="k">class</span> <span class="nc">CVE_2015_3306</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to CVE-2015-3306</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;proftpd&quot;</span>
@@ -766,7 +802,7 @@
 
 
 <div class="viewcode-block" id="CVE_2016_10033"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CVE_2016_10033">[docs]</a><span class="k">class</span> <span class="nc">CVE_2016_10033</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to CVE-2016-10033</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;http&quot;</span>
@@ -777,7 +813,7 @@
 
 
 <div class="viewcode-block" id="CVE_2015_1427"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CVE_2015_1427">[docs]</a><span class="k">class</span> <span class="nc">CVE_2015_1427</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to CVE-2015-1427</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;elasticsearch&quot;</span>
@@ -788,7 +824,7 @@
 
 
 <div class="viewcode-block" id="SHELLSHOCK"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.SHELLSHOCK">[docs]</a><span class="k">class</span> <span class="nc">SHELLSHOCK</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to ShellShock</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;http&quot;</span>
@@ -799,7 +835,7 @@
 
 
 <div class="viewcode-block" id="DVWA_SQL_INJECTION"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.DVWA_SQL_INJECTION">[docs]</a><span class="k">class</span> <span class="nc">DVWA_SQL_INJECTION</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to DVWA SQL Injection Vulnerabilities</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;http&quot;</span>
@@ -811,7 +847,7 @@
 
 
 <div class="viewcode-block" id="PENGINE_EXPLOIT"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.PENGINE_EXPLOIT">[docs]</a><span class="k">class</span> <span class="nc">PENGINE_EXPLOIT</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to Pengine Exploit</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;http&quot;</span>
@@ -822,7 +858,7 @@
 
 
 <div class="viewcode-block" id="COMMON"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.COMMON">[docs]</a><span class="k">class</span> <span class="nc">COMMON</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Common constants</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CVE_FILE</span> <span class="o">=</span> <span class="s2">&quot;/allitems_prep.csv&quot;</span>
@@ -836,7 +872,7 @@
 
 
 <div class="viewcode-block" id="COMMANDS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.COMMANDS">[docs]</a><span class="k">class</span> <span class="nc">COMMANDS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to arbitrary commands</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CHANNEL_WHOAMI</span> <span class="o">=</span> <span class="s2">&quot;whoami</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -895,6 +931,8 @@
                           <span class="s2">&quot;--logfile </span><span class="si">{}</span><span class="s2"> --maxworkers </span><span class="si">{}</span><span class="s2"> &amp;&quot;</span>
     <span class="n">START_ELK_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;sudo nohup /root/miniconda3/bin/python3 /elk_manager.py --port </span><span class="si">{}</span><span class="s2"> --logdir </span><span class="si">{}</span><span class="s2"> --logfile </span><span class="si">{}</span><span class="s2"> &quot;</span> \
                         <span class="s2">&quot;--maxworkers </span><span class="si">{}</span><span class="s2"> &amp;&quot;</span>
+    <span class="n">START_RYU_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;sudo nohup /root/miniconda3/bin/python3 /ryu_manager.py --port </span><span class="si">{}</span><span class="s2"> --logdir </span><span class="si">{}</span><span class="s2"> --logfile </span><span class="si">{}</span><span class="s2"> &quot;</span> \
+                        <span class="s2">&quot;--maxworkers </span><span class="si">{}</span><span class="s2"> &amp;&quot;</span>
     <span class="n">START_SNORT_IDS_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;sudo nohup /root/miniconda3/bin/python3 /snort_ids_manager.py --port </span><span class="si">{}</span><span class="s2"> --logdir </span><span class="si">{}</span><span class="s2"> &quot;</span> \
                               <span class="s2">&quot;--logfile </span><span class="si">{}</span><span class="s2"> --maxworkers </span><span class="si">{}</span><span class="s2"> &amp;&quot;</span>
     <span class="n">START_OSSEC_IDS_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;sudo nohup /root/miniconda3/bin/python3 /ossec_ids_manager.py --port </span><span class="si">{}</span><span class="s2"> --logdir </span><span class="si">{}</span><span class="s2"> &quot;</span> \
@@ -907,6 +945,7 @@
                            <span class="s2">&quot;--controller </span><span class="si">{}</span><span class="s2"> &amp;&quot;</span>
     <span class="n">SEARCH_KAFKA_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;/root/miniconda3/bin/python3 /kafka_manager.py&quot;</span>
     <span class="n">SEARCH_ELK_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;/root/miniconda3/bin/python3 /elk_manager.py&quot;</span>
+    <span class="n">SEARCH_RYU_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;/root/miniconda3/bin/python3 /ryu_manager.py&quot;</span>
     <span class="n">SEARCH_SNORT_IDS_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;/root/miniconda3/bin/python3 /snort_ids_manager.py&quot;</span>
     <span class="n">SEARCH_OSSEC_IDS_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;/root/miniconda3/bin/python3 /ossec_ids_manager.py&quot;</span>
     <span class="n">SEARCH_HOST_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;/root/miniconda3/bin/python3 /host_manager.py&quot;</span>
@@ -917,11 +956,18 @@
     <span class="n">START_DOCKER_STATS_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;nohup csle statsmanager </span><span class="si">{}</span><span class="s2"> &quot;</span> \
                                  <span class="sa">f</span><span class="s2">&quot;&amp; &gt; </span><span class="si">{</span><span class="n">DOCKER_STATS_MANAGER_OUTFILE</span><span class="si">}</span><span class="s2"> &quot;</span> \
                                  <span class="sa">f</span><span class="s2">&quot;&amp;&amp; echo $! &gt; </span><span class="si">{</span><span class="n">DOCKER_STATS_MANAGER_PIDFILE</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">CLUSTER_MANAGER_PIDFILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/clustermanager.pid&quot;</span>
+    <span class="n">CLUSTER_MANAGER_OUTFILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/clustermanager.out&quot;</span>
+    <span class="n">START_CLUSTER_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;nohup csle clustermanager </span><span class="si">{}</span><span class="s2"> &quot;</span> \
+                            <span class="sa">f</span><span class="s2">&quot;&amp; &gt; </span><span class="si">{</span><span class="n">CLUSTER_MANAGER_OUTFILE</span><span class="si">}</span><span class="s2"> &quot;</span> \
+                            <span class="sa">f</span><span class="s2">&quot;&amp;&amp; echo $! &gt; </span><span class="si">{</span><span class="n">CLUSTER_MANAGER_PIDFILE</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">SEARCH_DOCKER_STATS_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;statsmanager&quot;</span>
     <span class="n">SEARCH_PROMETHEUS</span> <span class="o">=</span> <span class="s2">&quot;prometheus&quot;</span>
     <span class="n">PROMETHEUS_PID_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/prometheus.pid&quot;</span>
     <span class="n">PROMETHEUS_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/prometheus.log&quot;</span>
     <span class="n">PROMETHEUS_CONFIG_FILE</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;$</span><span class="si">{</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span><span class="si">}</span><span class="s2">/management-system/prometheus/prometheus.yml&quot;</span>
+    <span class="n">POSTGRESQL_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/var/log/postgresql/&quot;</span>
+    <span class="n">NGINX_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/var/log/nginx/&quot;</span>
     <span class="n">PROMETHEUS_PORT</span> <span class="o">=</span> <span class="mi">9090</span>
     <span class="n">START_PROMETHEUS</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nohup prometheus --config.file=</span><span class="si">{</span><span class="n">PROMETHEUS_CONFIG_FILE</span><span class="si">}</span><span class="s2"> &quot;</span> \
                        <span class="s2">&quot;--storage.tsdb.retention.size=10GB &quot;</span> \
@@ -932,35 +978,58 @@
     <span class="n">NODE_EXPORTER_PORT</span> <span class="o">=</span> <span class="mi">9100</span>
     <span class="n">GRAFANA_PORT</span> <span class="o">=</span> <span class="mi">3000</span>
     <span class="n">MANAGEMENT_SYSTEM_PORT</span> <span class="o">=</span> <span class="mi">7777</span>
+    <span class="n">FLASK_PORT</span> <span class="o">=</span> <span class="mi">7777</span>
     <span class="n">START_GRAFANA</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;docker run -d -p </span><span class="si">{</span><span class="n">GRAFANA_PORT</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">GRAFANA_PORT</span><span class="si">}</span><span class="s2"> --name grafana grafana/grafana&quot;</span>
     <span class="n">CADVISOR_PORT</span> <span class="o">=</span> <span class="mi">8080</span>
+    <span class="n">PGADMIN_PORT</span> <span class="o">=</span> <span class="mi">7778</span>
+    <span class="n">DOCKER_ENGINE_PORT</span> <span class="o">=</span> <span class="mi">2375</span>
     <span class="n">START_CADVISOR</span> <span class="o">=</span> <span class="s2">&quot;docker run  -dt --volume=/:/rootfs:ro   --volume=/var/run:/var/run:ro   &quot;</span> \
                      <span class="s2">&quot;--volume=/sys:/sys:ro   &quot;</span> \
                      <span class="s2">&quot;--volume=/var/lib/docker/:/var/lib/docker:ro   --volume=/dev/disk/:/dev/disk:ro   &quot;</span> \
                      <span class="sa">f</span><span class="s2">&quot;--publish=</span><span class="si">{</span><span class="n">CADVISOR_PORT</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">CADVISOR_PORT</span><span class="si">}</span><span class="s2">  --name=cadvisor  &quot;</span> \
-                     <span class="s2">&quot;google/cadvisor:latest&quot;</span>
+                     <span class="s2">&quot;gcr.io/cadvisor/cadvisor&quot;</span>
+    <span class="n">PGADMIN_USERNAME</span> <span class="o">=</span> <span class="s2">&quot;csle@csle.com&quot;</span>
+    <span class="n">PGADMIN_PW</span> <span class="o">=</span> <span class="s2">&quot;cslePassword&quot;</span>
+    <span class="n">GRAFANA_USERNAME</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+    <span class="n">GRAFANA_PW</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span>
+    <span class="n">START_PGADMIN</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;docker run -p 7778:80 -e &#39;PGADMIN_DEFAULT_EMAIL=</span><span class="si">{</span><span class="n">PGADMIN_USERNAME</span><span class="si">}</span><span class="s2">&#39; -e &quot;</span> \
+                    <span class="sa">f</span><span class="s2">&quot;&#39;PGADMIN_DEFAULT_PASSWORD=</span><span class="si">{</span><span class="n">PGADMIN_PW</span><span class="si">}</span><span class="s2">&#39; -d --name=pgadmin dpage/pgadmin4&quot;</span>
     <span class="n">CONTAINER_LOGS</span> <span class="o">=</span> <span class="s2">&quot;docker logs </span><span class="si">{}</span><span class="s2">&quot;</span>
     <span class="n">CADVISOR_LOGS</span> <span class="o">=</span> <span class="s2">&quot;docker logs cadvisor&quot;</span>
+    <span class="n">PGADMIN_LOGS</span> <span class="o">=</span> <span class="s2">&quot;docker logs pgadmin&quot;</span>
     <span class="n">GRAFANA_LOGS</span> <span class="o">=</span> <span class="s2">&quot;docker logs grafana&quot;</span>
+    <span class="n">DOCKER_ENGINE_LOGS</span> <span class="o">=</span> <span class="s2">&quot;sudo /usr/bin/journalctl -u docker.service -n 100 --no-pager -e&quot;</span>
+    <span class="n">DOCKER_ENGINE_LOGS_ALTERNATIVE</span> <span class="o">=</span> <span class="s2">&quot;sudo /bin/journalctl -u docker.service -n 100 --no-pager -e&quot;</span>
     <span class="n">NODE_EXPORTER_PID_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/node_exporter.pid&quot;</span>
-    <span class="n">MANAGEMENT_SYSTEM_PID_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/management_system.pid&quot;</span>
+    <span class="n">CSLE_MGMT_WEBAPP_PID_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/csle_mgmt_webapp.pid&quot;</span>
     <span class="n">NODE_EXPORTER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/node_exporter.log&quot;</span>
+    <span class="n">FLASK_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/flask.log&quot;</span>
     <span class="n">START_NODE_EXPORTER</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nohup node_exporter &amp; &gt; </span><span class="si">{</span><span class="n">NODE_EXPORTER_LOG_FILE</span><span class="si">}</span><span class="s2"> &amp;&amp; echo $! &quot;</span> \
                           <span class="sa">f</span><span class="s2">&quot;&gt; </span><span class="si">{</span><span class="n">NODE_EXPORTER_PID_FILE</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">BUILD_MONITOR</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cd $</span><span class="si">{</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span><span class="si">}</span><span class="s2">/management-system/csle-mgmt-webapp &amp;&amp; npm run build&quot;</span>
-    <span class="n">START_MONITOR</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nohup python $</span><span class="si">{</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span><span class="si">}</span><span class="s2">/management-system/csle-mgmt-webapp&quot;</span> \
-                    <span class="s2">&quot;/server/server.py &amp;&quot;</span>
+    <span class="n">BUILD_CSLE_MGMT_WEBAPP</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cd $</span><span class="si">{</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span><span class="si">}</span><span class="s2">/management-system/csle-mgmt-webapp &amp;&amp; npm run &quot;</span> \
+                             <span class="sa">f</span><span class="s2">&quot;build&quot;</span>
+    <span class="n">START_CSLE_MGMT_WEBAPP</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nohup python $</span><span class="si">{</span><span class="n">CONFIG_FILE</span><span class="o">.</span><span class="n">CSLE_HOME_ENV_PARAM</span><span class="si">}</span><span class="s2">/management-system/csle-mgmt-webapp&quot;</span> \
+                             <span class="sa">f</span><span class="s2">&quot;/server/server.py &amp; &gt; </span><span class="si">{</span><span class="n">FLASK_LOG_FILE</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">GET_LATEST_PID</span> <span class="o">=</span> <span class="s2">&quot;$!&quot;</span>
     <span class="n">SAVE_PID</span> <span class="o">=</span> <span class="s2">&quot;echo </span><span class="si">{}</span><span class="s2"> &gt; </span><span class="si">{}</span><span class="s2">&quot;</span>
     <span class="n">KILL_PROCESS</span> <span class="o">=</span> <span class="s2">&quot;kill -9 </span><span class="si">{}</span><span class="s2">&quot;</span>
     <span class="n">START_TRAINING_JOB</span> <span class="o">=</span> <span class="s2">&quot;nohup csle trainingjob </span><span class="si">{}</span><span class="s2"> &amp;&quot;</span>
     <span class="n">START_SYSTEM_IDENTIFICATION_JOB</span> <span class="o">=</span> <span class="s2">&quot;nohup csle systemidentificationjob </span><span class="si">{}</span><span class="s2"> &amp;&quot;</span>
     <span class="n">DOCKER_EXEC_COMMAND</span> <span class="o">=</span> <span class="s2">&quot;docker exec&quot;</span>
-    <span class="n">PING</span> <span class="o">=</span> <span class="s2">&quot;ping&quot;</span></div>
+    <span class="n">PING</span> <span class="o">=</span> <span class="s2">&quot;ping&quot;</span>
+    <span class="n">NGINX_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service nginx status&quot;</span>
+    <span class="n">POSTGRESQL_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service postgresql status&quot;</span>
+    <span class="n">DOCKER_ENGINE_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service docker status&quot;</span>
+    <span class="n">POSTGRESQL_START</span> <span class="o">=</span> <span class="s2">&quot;sudo service postgresql start&quot;</span>
+    <span class="n">POSTGRESQL_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo service postgresql stop&quot;</span>
+    <span class="n">NGINX_START</span> <span class="o">=</span> <span class="s2">&quot;sudo service nginx start&quot;</span>
+    <span class="n">NGINX_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo service nginx stop&quot;</span>
+    <span class="n">DOCKER_ENGINE_START</span> <span class="o">=</span> <span class="s2">&quot;sudo service docker start&quot;</span>
+    <span class="n">DOCKER_ENGINE_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo service docker stop&quot;</span></div>
 
 
 <div class="viewcode-block" id="OVS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.OVS">[docs]</a><span class="k">class</span> <span class="nc">OVS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constants related to OVS</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">DEFAULT_BRIDGE_NAME</span> <span class="o">=</span> <span class="s2">&quot;ovs-br0&quot;</span>
@@ -979,7 +1048,7 @@
 
 
 <div class="viewcode-block" id="ETC_HOSTS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.ETC_HOSTS">[docs]</a><span class="k">class</span> <span class="nc">ETC_HOSTS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to /etc/hosts configuration</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">DEFAULT_HOST_LINE_1</span> <span class="o">=</span> <span class="s2">&quot;&#39;127.0.0.1 localhost&#39;&quot;</span>
@@ -992,7 +1061,7 @@
 
 
 <div class="viewcode-block" id="FILE_PATTERNS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.FILE_PATTERNS">[docs]</a><span class="k">class</span> <span class="nc">FILE_PATTERNS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to file patterns for parsing</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">COST_FILE_SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;_cost.txt&quot;</span>
@@ -1001,11 +1070,12 @@
     <span class="n">TXT_FILE_SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;.txt&quot;</span>
     <span class="n">XML_FILE_SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;.xm&quot;</span>
     <span class="n">CSV_SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;.csv&quot;</span>
-    <span class="n">LOG_SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;.log&quot;</span></div>
+    <span class="n">LOG_SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;.log&quot;</span>
+    <span class="n">GZ_SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;.gz&quot;</span></div>
 
 
 <div class="viewcode-block" id="NIKTO"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.NIKTO">[docs]</a><span class="k">class</span> <span class="nc">NIKTO</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to Nikto commands</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">BASE_ARGS</span> <span class="o">=</span> <span class="s2">&quot;-port 80 -Format xml --maxtime 60s -timeout 5 &quot;</span>
@@ -1014,7 +1084,7 @@
 
 
 <div class="viewcode-block" id="NIKTO_XML"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.NIKTO_XML">[docs]</a><span class="k">class</span> <span class="nc">NIKTO_XML</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to Nikto XML parsing</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">NIKTOSCAN</span> <span class="o">=</span> <span class="s2">&quot;niktoscan&quot;</span>
@@ -1033,7 +1103,7 @@
 
 
 <div class="viewcode-block" id="MASSCAN"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.MASSCAN">[docs]</a><span class="k">class</span> <span class="nc">MASSCAN</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to Masscan commands</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">BASE_ARGS</span> <span class="o">=</span> <span class="s2">&quot;-p0-1024 --max-rate 100000 --max-retries 1 --wait 0&quot;</span>
@@ -1042,7 +1112,7 @@
 
 
 <div class="viewcode-block" id="SSH_BACKDOOR"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.SSH_BACKDOOR">[docs]</a><span class="k">class</span> <span class="nc">SSH_BACKDOOR</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to creation of SSH backdoors</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">BACKDOOR_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;ssh_backdoor&quot;</span>
@@ -1050,7 +1120,7 @@
 
 
 <div class="viewcode-block" id="SHELL"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.SHELL">[docs]</a><span class="k">class</span> <span class="nc">SHELL</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to shell commands</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">LIST_ALL_USERS</span> <span class="o">=</span> <span class="s2">&quot;cut -d: -f1 /etc/passwd&quot;</span>
@@ -1060,7 +1130,7 @@
 
 
 <div class="viewcode-block" id="EXPLOIT_VULNERABILITES"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.EXPLOIT_VULNERABILITES">[docs]</a><span class="k">class</span> <span class="nc">EXPLOIT_VULNERABILITES</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to exploit vulnerabilities</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SSH_DICT_SAME_USER_PASS</span> <span class="o">=</span> <span class="s2">&quot;ssh-weak-password&quot;</span>
@@ -1102,21 +1172,21 @@
 
 
 <div class="viewcode-block" id="SUB_PROC_ENV"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.SUB_PROC_ENV">[docs]</a><span class="k">class</span> <span class="nc">SUB_PROC_ENV</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to creation of Sub-proc-env environments</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SLEEP_TIME_STARTUP</span> <span class="o">=</span> <span class="mi">5</span></div>
 
 
 <div class="viewcode-block" id="DUMMY_VEC_ENV"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.DUMMY_VEC_ENV">[docs]</a><span class="k">class</span> <span class="nc">DUMMY_VEC_ENV</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to creation of Sub-proc-env environments</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SLEEP_TIME_STARTUP</span> <span class="o">=</span> <span class="mi">1</span></div>
 
 
 <div class="viewcode-block" id="TRAFFIC_COMMANDS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.TRAFFIC_COMMANDS">[docs]</a><span class="k">class</span> <span class="nc">TRAFFIC_COMMANDS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to traffic commands</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">TRAFFIC_GENERATOR_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;traffic_generator.sh&quot;</span>
@@ -1124,6 +1194,7 @@
     <span class="n">CLIENT_MANAGER_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;client_manager.py&quot;</span>
     <span class="n">KAFKA_MANAGER_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;kafka_manager.py&quot;</span>
     <span class="n">ELK_MANAGER_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;elk_manager.py&quot;</span>
+    <span class="n">RYU_MANAGER_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;ryu_manager.py&quot;</span>
     <span class="n">SNORT_IDS_MANAGER_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;snort_ids_manager.py&quot;</span>
     <span class="n">OSSEC_IDS_MANAGER_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;ossec_ids_manager.py&quot;</span>
     <span class="n">HOST_MANAGER_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;host_manager.py&quot;</span>
@@ -1246,8 +1317,17 @@
     <span class="n">PW</span> <span class="o">=</span> <span class="s2">&quot;agent&quot;</span></div>
 
 
+<div class="viewcode-block" id="CITUS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CITUS">[docs]</a><span class="k">class</span> <span class="nc">CITUS</span><span class="p">:</span>
+    <span class="n">COORDINATOR_PORT</span> <span class="o">=</span> <span class="mi">5432</span></div>
+
+
+<div class="viewcode-block" id="CLUSTER_CONFIG"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CLUSTER_CONFIG">[docs]</a><span class="k">class</span> <span class="nc">CLUSTER_CONFIG</span><span class="p">:</span>
+    <span class="n">LEADER</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">IP</span> <span class="o">=</span> <span class="s2">&quot;127.0.0.1&quot;</span></div>
+
+
 <div class="viewcode-block" id="CSLE_ADMIN"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CSLE_ADMIN">[docs]</a><span class="k">class</span> <span class="nc">CSLE_ADMIN</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the default csle admin account.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SSH_USER</span> <span class="o">=</span> <span class="s2">&quot;csle_admin&quot;</span>  <span class="c1"># Should not be a simple user/pw, the automated attacker will figure it out</span>
@@ -1261,7 +1341,7 @@
 
 
 <div class="viewcode-block" id="CSLE_GUEST"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CSLE_GUEST">[docs]</a><span class="k">class</span> <span class="nc">CSLE_GUEST</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the default csle guest account</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">USER</span> <span class="o">=</span> <span class="s2">&quot;csle_guest&quot;</span>  <span class="c1"># Should not be a simple user/pw combination, the automated attacker will figure it out</span>
@@ -1275,7 +1355,7 @@
 
 
 <div class="viewcode-block" id="SYSTEM_IDENTIFICATION"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.SYSTEM_IDENTIFICATION">[docs]</a><span class="k">class</span> <span class="nc">SYSTEM_IDENTIFICATION</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the system identification process</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">NETWORK_CONF_FILE</span> <span class="o">=</span> <span class="s2">&quot;network_conf.pickle&quot;</span>
@@ -1288,14 +1368,14 @@
 
 
 <div class="viewcode-block" id="AUXILLARY_COMMANDS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.AUXILLARY_COMMANDS">[docs]</a><span class="k">class</span> <span class="nc">AUXILLARY_COMMANDS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to auxillary shell commands</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">WHOAMI</span> <span class="o">=</span> <span class="s2">&quot;whoami&quot;</span></div>
 
 
 <div class="viewcode-block" id="INFO_DICT"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.INFO_DICT">[docs]</a><span class="k">class</span> <span class="nc">INFO_DICT</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants for strings in the info dict of the csle_CTF Environment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">EPISODE_LENGTH</span> <span class="o">=</span> <span class="s2">&quot;episode_length&quot;</span>
@@ -1419,6 +1499,7 @@
     <span class="n">CREATE_USERS_SCRIPT</span> <span class="o">=</span> <span class="s2">&quot;./create_users.py&quot;</span>
     <span class="n">CREATE_TRAFFIC_GENERATORS_SCRIPT</span> <span class="o">=</span> <span class="s2">&quot;./create_traffic_generators.py&quot;</span>
     <span class="n">LIST_NETWORKS_CMD</span> <span class="o">=</span> <span class="s2">&quot;docker network ls&quot;</span>
+    <span class="n">INSPECT_DOCKER_GWBRIDGE</span> <span class="o">=</span> <span class="s2">&quot;docker network inspect docker_gwbridge&quot;</span>
     <span class="n">NETWORK_CONNECT</span> <span class="o">=</span> <span class="s2">&quot;docker network connect&quot;</span>
     <span class="n">LIST_RUNNING_CONTAINERS_CMD</span> <span class="o">=</span> <span class="s2">&quot;docker ps -q&quot;</span>
     <span class="n">INSPECT_CONTAINER_CONFIG_CMD</span> <span class="o">=</span> <span class="s2">&quot;docker inspect&quot;</span>
@@ -1436,6 +1517,8 @@
     <span class="n">IP_PREFIX_LEN_INFO</span> <span class="o">=</span> <span class="s2">&quot;IPPrefixLen&quot;</span>
     <span class="n">HOSTNAME_INFO</span> <span class="o">=</span> <span class="s2">&quot;Hostname&quot;</span>
     <span class="n">CONTAINERS_DIR</span> <span class="o">=</span> <span class="s2">&quot;containers&quot;</span>
+    <span class="n">CONTAINERS_KEY</span> <span class="o">=</span> <span class="s2">&quot;Containers&quot;</span>
+    <span class="n">IPV4_KEY</span> <span class="o">=</span> <span class="s2">&quot;IPv4Address&quot;</span>
     <span class="n">CONTAINER_MAKEFILE_TEMPLATE_NAME</span> <span class="o">=</span> <span class="s2">&quot;Container_Makefile_template&quot;</span>
     <span class="n">CONTAINER_MAKEFILE_TEMPLATE_DIR_RELATIVE</span> <span class="o">=</span> <span class="s2">&quot;/../../../common/&quot;</span>
     <span class="n">MAKEFILE_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;Makefile_template&quot;</span>
@@ -1451,7 +1534,10 @@
         <span class="s2">&quot;docker exec -it $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL) /bin/bash</span><span class="se">\n\n</span><span class="s2">start:</span><span class="se">\n\t</span><span class="s2">&quot;</span> \
         <span class="s2">&quot;docker container start $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)</span><span class="se">\n\n</span><span class="s2">stop:</span><span class="se">\n\t</span><span class="s2">&quot;</span> \
         <span class="s2">&quot;-docker stop $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)</span><span class="se">\n\n</span><span class="s2">clean: stop</span><span class="se">\n\t</span><span class="s2">&quot;</span> \
-        <span class="s2">&quot;-docker rm $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)&quot;</span></div>
+        <span class="s2">&quot;-docker rm $(PROJECT)-$(CONTAINER)$(SUFFIX)-level$(LEVEL)&quot;</span>
+    <span class="n">BRIDGE_NETWORK_DRIVER</span> <span class="o">=</span> <span class="s2">&quot;bridge&quot;</span>
+    <span class="n">OVERLAY_NETWORK_DRIVER</span> <span class="o">=</span> <span class="s2">&quot;overlay&quot;</span>
+    <span class="n">ATTACHABLE_NETWORK_FLAG</span> <span class="o">=</span> <span class="s2">&quot;--attachable&quot;</span></div>
 
 
 <div class="viewcode-block" id="CSLE"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.CSLE">[docs]</a><span class="k">class</span> <span class="nc">CSLE</span><span class="p">:</span>
@@ -1537,7 +1623,7 @@
 
 
 <div class="viewcode-block" id="METADATA_STORE"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.METADATA_STORE">[docs]</a><span class="k">class</span> <span class="nc">METADATA_STORE</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constants related to the metadata store</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">DBNAME</span> <span class="o">=</span> <span class="s2">&quot;csle&quot;</span>
@@ -1572,6 +1658,7 @@
     <span class="n">EMULATION_EXECUTIONS_TABLE</span> <span class="o">=</span> <span class="s2">&quot;emulation_executions&quot;</span>
     <span class="n">EMPIRICAL_SYSTEM_MODELS_TABLE</span> <span class="o">=</span> <span class="s2">&quot;empirical_system_models&quot;</span>
     <span class="n">GP_SYSTEM_MODELS_TABLE</span> <span class="o">=</span> <span class="s2">&quot;gp_system_models&quot;</span>
+    <span class="n">CONFIG_TABLE</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span>
     <span class="n">MANAGEMENT_USERS_TABLE</span> <span class="o">=</span> <span class="s2">&quot;management_users&quot;</span>
     <span class="n">SESSION_TOKENS_TABLE</span> <span class="o">=</span> <span class="s2">&quot;session_tokens&quot;</span>
     <span class="n">TRACES_DATASETS_TABLE</span> <span class="o">=</span> <span class="s2">&quot;traces_datasets&quot;</span>
@@ -1640,7 +1727,7 @@
 
 
 <div class="viewcode-block" id="ENV_CONSTANTS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.ENV_CONSTANTS">[docs]</a><span class="k">class</span> <span class="nc">ENV_CONSTANTS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants  related to emulation environments</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ATTACKER_SSH_RETRY_FIND_FLAG</span> <span class="o">=</span> <span class="mi">5</span>
@@ -1675,21 +1762,21 @@
 
 
 <div class="viewcode-block" id="LOGGING"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.LOGGING">[docs]</a><span class="k">class</span> <span class="nc">LOGGING</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to logging</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">DEFAULT_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/tmp/csle/&quot;</span></div>
 
 
 <div class="viewcode-block" id="SIMULATION"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.SIMULATION">[docs]</a><span class="k">class</span> <span class="nc">SIMULATION</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to simulations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">SIMULATION_ENV_CFG_PATH</span> <span class="o">=</span> <span class="s2">&quot;/config.json&quot;</span></div>
 
 
 <div class="viewcode-block" id="STATIC_ATTACKERS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.STATIC_ATTACKERS">[docs]</a><span class="k">class</span> <span class="nc">STATIC_ATTACKERS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to static attackers</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">EXPERT</span> <span class="o">=</span> <span class="s2">&quot;expert&quot;</span>
@@ -1697,21 +1784,8 @@
     <span class="n">NOVICE</span> <span class="o">=</span> <span class="s2">&quot;novice&quot;</span></div>
 
 
-<div class="viewcode-block" id="RYU_CONTROLLER"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.RYU_CONTROLLER">[docs]</a><span class="k">class</span> <span class="nc">RYU_CONTROLLER</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Constants related to the RYU Controller</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">NETWORK_ID_THIRD_OCTET</span> <span class="o">=</span> <span class="mi">252</span>
-    <span class="n">NETWORK_ID_FOURTH_OCTET</span> <span class="o">=</span> <span class="mi">252</span>
-    <span class="n">SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;_1&quot;</span>
-    <span class="n">DEFAULT_PORT</span> <span class="o">=</span> <span class="mi">6633</span>
-    <span class="n">DEFAULT_TRANSPORT_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;tcp&quot;</span>
-    <span class="n">SUBNETMASK_SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;/29&quot;</span>
-    <span class="n">BITMASK</span> <span class="o">=</span> <span class="s2">&quot;255.255.255.248&quot;</span></div>
-
-
 <div class="viewcode-block" id="OPENFLOW"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.OPENFLOW">[docs]</a><span class="k">class</span> <span class="nc">OPENFLOW</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to OPENFLOW</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">OPENFLOW_V_1_0</span> <span class="o">=</span> <span class="s2">&quot;OpenFlow10&quot;</span>
@@ -1737,6 +1811,35 @@
     <span class="n">NUM_METRICS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;num_metrics&quot;</span>
     <span class="n">CONDITIONS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;conditions&quot;</span>
     <span class="n">METRICS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;metrics&quot;</span></div>
+
+
+<div class="viewcode-block" id="T_SPSA"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.T_SPSA">[docs]</a><span class="k">class</span> <span class="nc">T_SPSA</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants related to T-SPSA</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="s2">&quot;a&quot;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="s2">&quot;c&quot;</span>
+    <span class="n">LAMBDA</span> <span class="o">=</span> <span class="s2">&quot;lambda&quot;</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span>
+    <span class="n">EPSILON</span> <span class="o">=</span> <span class="s2">&quot;epsilon&quot;</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="s2">&quot;N&quot;</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="s2">&quot;L&quot;</span>
+    <span class="n">THETA1</span> <span class="o">=</span> <span class="s2">&quot;theta1&quot;</span>
+    <span class="n">THETAS</span> <span class="o">=</span> <span class="s2">&quot;thetas&quot;</span>
+    <span class="n">THRESHOLDS</span> <span class="o">=</span> <span class="s2">&quot;thresholds&quot;</span>
+    <span class="n">GRADIENT_BATCH_SIZE</span> <span class="o">=</span> <span class="s2">&quot;gradient_batch_size&quot;</span>
+    <span class="n">STOP_DISTRIBUTION_ATTACKER</span> <span class="o">=</span> <span class="s2">&quot;stop_distribution_attacker&quot;</span>
+    <span class="n">STOP_DISTRIBUTION_DEFENDER</span> <span class="o">=</span> <span class="s2">&quot;stop_distribution_defender&quot;</span></div>
+
+
+<div class="viewcode-block" id="NEURAL_NETWORKS"><a class="viewcode-back" href="../../../csle_common.constants.html#csle_common.constants.constants.NEURAL_NETWORKS">[docs]</a><span class="k">class</span> <span class="nc">NEURAL_NETWORKS</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to neural networks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">NUM_NEURONS_PER_HIDDEN_LAYER</span> <span class="o">=</span> <span class="s2">&quot;num_neurons_per_hidden_layer&quot;</span>
+    <span class="n">NUM_HIDDEN_LAYERS</span> <span class="o">=</span> <span class="s2">&quot;num_hidden_layers&quot;</span>
+    <span class="n">ACTIVATION_FUNCTION</span> <span class="o">=</span> <span class="s2">&quot;activation_function&quot;</span>
+    <span class="n">DEVICE</span> <span class="o">=</span> <span class="s2">&quot;device&quot;</span></div>
 </pre></div>
 
            </div>
@@ -1746,7 +1849,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.constants.constants</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -77,18 +80,221 @@
 <span class="kn">import</span> <span class="nn">re</span>
 
 <span class="n">LATEST_VERSION</span> <span class="o">=</span> <span class="s2">&quot;latest&quot;</span>
-<span class="n">INSTALL</span> <span class="o">=</span> <span class="s2">&quot;sudo /root/miniconda3/bin/pip install -U csle-collector&quot;</span>
+<span class="n">INSTALL</span> <span class="o">=</span> <span class="s2">&quot;sudo /root/miniconda3/bin/pip install -U --no-cache-dir csle-collector &quot;</span>
+
+
+<div class="viewcode-block" id="HTTP"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.HTTP">[docs]</a><span class="k">class</span> <span class="nc">HTTP</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to HTTP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">HTTP_PROTOCOL_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;http://&quot;</span>
+    <span class="n">LOCALHOST</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span>
+    <span class="n">GET</span> <span class="o">=</span> <span class="s2">&quot;GET&quot;</span>
+    <span class="n">PUT</span> <span class="o">=</span> <span class="s2">&quot;PUT&quot;</span>
+    <span class="n">POST</span> <span class="o">=</span> <span class="s2">&quot;POST&quot;</span>
+    <span class="n">DELETE</span> <span class="o">=</span> <span class="s2">&quot;DELETE&quot;</span>
+    <span class="n">APPLICATION_JSON_TYPE</span> <span class="o">=</span> <span class="s2">&quot;application/json&quot;</span>
+    <span class="n">OK_RESPONSE_CODE</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="n">INTERNAL_SERVER_ERROR_RESPONSE_CODE</span> <span class="o">=</span> <span class="mi">500</span>
+    <span class="n">BAD_REQUEST_RESPONSE_CODE</span> <span class="o">=</span> <span class="mi">400</span></div>
+
+
+<div class="viewcode-block" id="BEATS"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.BEATS">[docs]</a><span class="k">class</span> <span class="nc">BEATS</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to beats</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RELOAD_ENABLED_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;reload.enabled&quot;</span>
+    <span class="n">SETUP_TEMPLATE_SETTINGS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;setup.template.settings&quot;</span>
+    <span class="n">INDEX_NUM_SHARDS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;index.number_of_shards&quot;</span>
+    <span class="n">SETUP_KIBANA_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;setup.kibana&quot;</span>
+    <span class="n">HOST_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;host&quot;</span>
+    <span class="n">HOSTS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;hosts&quot;</span>
+    <span class="n">ELASTIC_OUTPUT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;output.elasticsearch&quot;</span>
+    <span class="n">PROCESSORS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;processors&quot;</span>
+    <span class="n">ADD_HOST_METADATA_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;add_host_metadata&quot;</span>
+    <span class="n">WHEN_NOT_CONTAIN_TAGS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;when.not.contains.tags&quot;</span>
+    <span class="n">FORWARDED_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;forwarded&quot;</span>
+    <span class="n">MODULE_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;module&quot;</span>
+    <span class="n">LOG_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;log&quot;</span>
+    <span class="n">SYSLOG_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;syslog&quot;</span>
+    <span class="n">AUTH_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;auth&quot;</span>
+    <span class="n">SLOWLOG_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;slowlog&quot;</span>
+    <span class="n">AUDIT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;audit&quot;</span>
+    <span class="n">SERVER_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;server&quot;</span>
+    <span class="n">VAR_INPUT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;var.input&quot;</span>
+    <span class="n">VAR_PATHS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;var.paths&quot;</span>
+    <span class="n">FILE_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;file&quot;</span>
+    <span class="n">TYPE_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;type&quot;</span>
+    <span class="n">FILESTREAM_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;filestream&quot;</span>
+    <span class="n">KAFKA_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;kafka&quot;</span>
+    <span class="n">TOPICS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;topics&quot;</span>
+    <span class="n">GROUP_ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;group_id&quot;</span>
+    <span class="n">ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span>
+    <span class="n">NAME_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
+    <span class="n">ENABLED_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;enabled&quot;</span>
+    <span class="n">PATHS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;paths&quot;</span>
+    <span class="n">PATH_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;path&quot;</span>
+    <span class="n">PERIOD_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;period&quot;</span>
+    <span class="n">METRICSETS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;metricsets&quot;</span></div>
+
+
+<div class="viewcode-block" id="FILEBEAT"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.FILEBEAT">[docs]</a><span class="k">class</span> <span class="nc">FILEBEAT</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to Filebeat</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">FILEBEAT_GROUP_ID</span> <span class="o">=</span> <span class="s2">&quot;filebeat&quot;</span>
+    <span class="n">CONFIG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/etc/filebeat/&quot;</span>
+    <span class="n">CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/etc/filebeat/filebeat.yml&quot;</span>
+    <span class="n">SETUP_CMD</span> <span class="o">=</span> <span class="s2">&quot;filebeat setup -e&quot;</span>
+    <span class="n">SNORT_MODULE</span> <span class="o">=</span> <span class="s2">&quot;snort&quot;</span>
+    <span class="n">ELASTICSEARCH_MODULE</span> <span class="o">=</span> <span class="s2">&quot;elasticsearch&quot;</span>
+    <span class="n">KIBANA_MODULE</span> <span class="o">=</span> <span class="s2">&quot;kibana&quot;</span>
+    <span class="n">SYSTEM_MODULE</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span>
+    <span class="n">KAFKA_MODULE</span> <span class="o">=</span> <span class="s2">&quot;kafka&quot;</span>
+    <span class="n">LOGSTASH_MODULE</span> <span class="o">=</span> <span class="s2">&quot;logstash&quot;</span>
+    <span class="n">ENABLE_MODULE_CMD</span> <span class="o">=</span> <span class="s2">&quot;filebeat modules enable </span><span class="si">{}</span><span class="s2">&quot;</span>
+    <span class="n">MODULES_CONFIG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/etc/filebeat/modules.d/&quot;</span>
+    <span class="n">SNORT_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;snort.yml&quot;</span>
+    <span class="n">LOGSTASH_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;logstash.yml&quot;</span>
+    <span class="n">KIBANA_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;kibana.yml&quot;</span>
+    <span class="n">SYSTEM_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;system.yml&quot;</span>
+    <span class="n">KAFKA_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;kafka.yml&quot;</span>
+    <span class="n">ELASTICSEARCH_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;elasticsearch.yml&quot;</span>
+    <span class="n">INPUTS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;filebeat.inputs&quot;</span>
+    <span class="n">MODULES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;filebeat.config.modules&quot;</span>
+    <span class="n">FILEBEAT_STATUS</span> <span class="o">=</span> <span class="s2">&quot;sudo service filebeat status&quot;</span>
+    <span class="n">FILEBEAT_START</span> <span class="o">=</span> <span class="s2">&quot;sudo service filebeat start&quot;</span>
+    <span class="n">FILEBEAT_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo service filebeat stop&quot;</span></div>
+
+
+<div class="viewcode-block" id="PACKETBEAT"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.PACKETBEAT">[docs]</a><span class="k">class</span> <span class="nc">PACKETBEAT</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to Packetbeat</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">FILEBEAT_GROUP_ID</span> <span class="o">=</span> <span class="s2">&quot;packetbeat&quot;</span>
+    <span class="n">CONFIG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/etc/packetbeat/&quot;</span>
+    <span class="n">CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/etc/packetbeat/packetbeat.yml&quot;</span>
+    <span class="n">SETUP_CMD</span> <span class="o">=</span> <span class="s2">&quot;packetbeat setup -e&quot;</span>
+    <span class="n">PACKETBEAT_STATUS</span> <span class="o">=</span> <span class="s2">&quot;sudo service packetbeat status&quot;</span>
+    <span class="n">PACKETBEAT_START</span> <span class="o">=</span> <span class="s2">&quot;sudo service packetbeat start&quot;</span>
+    <span class="n">PACKETBEAT_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo service packetbeat stop&quot;</span>
+    <span class="n">INTERFACES_TYPE_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;packetbeat.interfaces.type&quot;</span>
+    <span class="n">AF_PACKET_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;af_packet&quot;</span>
+    <span class="n">ANY_DEVICE_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;any&quot;</span>
+    <span class="n">INTERFACES_DEVICE_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;packetbeat.interfaces.device&quot;</span>
+    <span class="n">FLOWS</span> <span class="o">=</span> <span class="s2">&quot;packetbeat.flows&quot;</span>
+    <span class="n">TIMEOUT_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;timeout&quot;</span>
+    <span class="n">PROTOCOLS</span> <span class="o">=</span> <span class="s2">&quot;packetbeat.protocols&quot;</span>
+    <span class="n">ICMP_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;icmp&quot;</span>
+    <span class="n">AMQP_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;amqp&quot;</span>
+    <span class="n">PORTS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;ports&quot;</span>
+    <span class="n">AMQP_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5672</span><span class="p">]</span>
+    <span class="n">CASSANDRA_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;cassandra&quot;</span>
+    <span class="n">CASSANDRA_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9042</span><span class="p">]</span>
+    <span class="n">DHCPV4_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;dhcpv4&quot;</span>
+    <span class="n">DHCPV4_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">67</span><span class="p">,</span> <span class="mi">68</span><span class="p">]</span>
+    <span class="n">DNS_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;dns&quot;</span>
+    <span class="n">DNS_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">53</span><span class="p">]</span>
+    <span class="n">HTTP_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;http&quot;</span>
+    <span class="n">HTTP_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">8080</span><span class="p">,</span> <span class="mi">8000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">8002</span><span class="p">]</span>
+    <span class="n">MEMCACHE_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;memcache&quot;</span>
+    <span class="n">MEMCACHE_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">11211</span><span class="p">]</span>
+    <span class="n">MYSQL_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;mysql&quot;</span>
+    <span class="n">MYSQL_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3306</span><span class="p">,</span> <span class="mi">3307</span><span class="p">]</span>
+    <span class="n">PGSQL_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;pgsql&quot;</span>
+    <span class="n">PGSQL_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5432</span><span class="p">]</span>
+    <span class="n">REDIS_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;redis&quot;</span>
+    <span class="n">REDIS_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6379</span><span class="p">]</span>
+    <span class="n">THRIFT_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;thrift&quot;</span>
+    <span class="n">THRIFT_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9090</span><span class="p">]</span>
+    <span class="n">MONGODB_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;mongodb&quot;</span>
+    <span class="n">MONGODB_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">27017</span><span class="p">]</span>
+    <span class="n">NFS_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;nfs&quot;</span>
+    <span class="n">NFS_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2049</span><span class="p">]</span>
+    <span class="n">TLS_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;tls&quot;</span>
+    <span class="n">TLS_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">443</span><span class="p">,</span> <span class="mi">993</span><span class="p">,</span> <span class="mi">995</span><span class="p">,</span> <span class="mi">5223</span><span class="p">,</span> <span class="mi">8443</span><span class="p">,</span> <span class="mi">8883</span><span class="p">,</span> <span class="mi">9243</span><span class="p">]</span>
+    <span class="n">SIP_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;sip&quot;</span>
+    <span class="n">SIP_PORTS</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9243</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="METRICBEAT"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.METRICBEAT">[docs]</a><span class="k">class</span> <span class="nc">METRICBEAT</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to Metricbeat</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">CONFIG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/etc/metricbeat/&quot;</span>
+    <span class="n">CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/etc/metricbeat/metricbeat.yml&quot;</span>
+    <span class="n">SETUP_CMD</span> <span class="o">=</span> <span class="s2">&quot;metricbeat setup -e&quot;</span>
+    <span class="n">ELASTICSEARCH_MODULE</span> <span class="o">=</span> <span class="s2">&quot;elasticsearch&quot;</span>
+    <span class="n">KIBANA_MODULE</span> <span class="o">=</span> <span class="s2">&quot;kibana&quot;</span>
+    <span class="n">SYSTEM_MODULE</span> <span class="o">=</span> <span class="s2">&quot;system&quot;</span>
+    <span class="n">LINUX_MODULE</span> <span class="o">=</span> <span class="s2">&quot;linux&quot;</span>
+    <span class="n">KAFKA_MODULE</span> <span class="o">=</span> <span class="s2">&quot;kafka&quot;</span>
+    <span class="n">LOGSTASH_MODULE</span> <span class="o">=</span> <span class="s2">&quot;logstash&quot;</span>
+    <span class="n">ENABLE_MODULE_CMD</span> <span class="o">=</span> <span class="s2">&quot;metricbeat modules enable </span><span class="si">{}</span><span class="s2">&quot;</span>
+    <span class="n">MODULES_CONFIG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/etc/metricbeat/modules.d/&quot;</span>
+    <span class="n">SNORT_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;snort.yml&quot;</span>
+    <span class="n">LOGSTASH_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;logstash.yml&quot;</span>
+    <span class="n">KIBANA_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;kibana.yml&quot;</span>
+    <span class="n">SYSTEM_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;system.yml&quot;</span>
+    <span class="n">LINUX_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;linux.yml&quot;</span>
+    <span class="n">KAFKA_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;kafka.yml&quot;</span>
+    <span class="n">ELASTICSEARCH_MODULE_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;elasticsearch.yml&quot;</span>
+    <span class="n">MODULES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;metricbeat.config.modules&quot;</span>
+    <span class="n">METRICBEAT_STATUS</span> <span class="o">=</span> <span class="s2">&quot;sudo service metricbeat status&quot;</span>
+    <span class="n">METRICBEAT_START</span> <span class="o">=</span> <span class="s2">&quot;sudo service metricbeat start&quot;</span>
+    <span class="n">METRICBEAT_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo service metricbeat stop&quot;</span>
+    <span class="n">PROCESSES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;processes&quot;</span>
+    <span class="n">CPU_METRICS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;cpu.metrics&quot;</span>
+    <span class="n">CORE_METRICS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;core.metrics&quot;</span>
+    <span class="n">PERCENTAGES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;percentages&quot;</span>
+    <span class="n">NORMALIZED_PERCENTAGES_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;normalized_percentages&quot;</span>
+    <span class="n">CPU_METRIC</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span>
+    <span class="n">LOAD_METRIC</span> <span class="o">=</span> <span class="s2">&quot;load&quot;</span>
+    <span class="n">MEMORY_METRIC</span> <span class="o">=</span> <span class="s2">&quot;memory&quot;</span>
+    <span class="n">NETWORK_METRIC</span> <span class="o">=</span> <span class="s2">&quot;network&quot;</span>
+    <span class="n">PROCESS_METRIC</span> <span class="o">=</span> <span class="s2">&quot;process&quot;</span>
+    <span class="n">PROCESS_SUMMARY_METRIC</span> <span class="o">=</span> <span class="s2">&quot;process_summary&quot;</span>
+    <span class="n">SOCKET_SUMMARY_METRIC</span> <span class="o">=</span> <span class="s2">&quot;socket_summary&quot;</span>
+    <span class="n">PAGEINFO_METRIC</span> <span class="o">=</span> <span class="s2">&quot;pageinfo&quot;</span>
+    <span class="n">SUMMARY_METRIC</span> <span class="o">=</span> <span class="s2">&quot;memory&quot;</span></div>
+
+
+<div class="viewcode-block" id="HEARTBEAT"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.HEARTBEAT">[docs]</a><span class="k">class</span> <span class="nc">HEARTBEAT</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to heartbeat</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">CONFIG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/etc/heartbeat/&quot;</span>
+    <span class="n">CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/etc/heartbeat/heartbeat.yml&quot;</span>
+    <span class="n">SETUP_CMD</span> <span class="o">=</span> <span class="s2">&quot;heartbeat setup -e&quot;</span>
+    <span class="n">HEARTBEAT_STATUS</span> <span class="o">=</span> <span class="s2">&quot;sudo service heartbeat-elastic status&quot;</span>
+    <span class="n">HEARTBEAT_START</span> <span class="o">=</span> <span class="s2">&quot;sudo service heartbeat-elastic start&quot;</span>
+    <span class="n">HEARTBEAT_STOP</span> <span class="o">=</span> <span class="s2">&quot;sudo service heartbeat-elastic stop&quot;</span>
+    <span class="n">SCHEDULE_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;schedule&quot;</span>
+    <span class="n">ICMP_MONITOR_TYPE</span> <span class="o">=</span> <span class="s2">&quot;icmp&quot;</span>
+    <span class="n">HEARTBEAT_MONITORS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;heartbeat.monitors&quot;</span>
+    <span class="n">CSLE_MONITOR_SERVICE_NAME</span> <span class="o">=</span> <span class="s2">&quot;csle-topology-connection-service&quot;</span>
+    <span class="n">CSLE_MONITOR_SERVICE_ID</span> <span class="o">=</span> <span class="s2">&quot;csle-topology-connection-service-id&quot;</span></div>
 
 
 <div class="viewcode-block" id="GRPC"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.GRPC">[docs]</a><span class="k">class</span> <span class="nc">GRPC</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to GRPC</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">TIMEOUT_SECONDS</span> <span class="o">=</span> <span class="mi">30</span></div>
+    <span class="n">TIMEOUT_SECONDS</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">CONFIG_TIMEOUT_SECONDS</span> <span class="o">=</span> <span class="mi">300</span>
+    <span class="n">OPERATION_TIMEOUT_SECONDS</span> <span class="o">=</span> <span class="mi">30000</span></div>
+
+
+<div class="viewcode-block" id="SYSTEM"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.SYSTEM">[docs]</a><span class="k">class</span> <span class="nc">SYSTEM</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to system</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">AUTH_LOG</span> <span class="o">=</span> <span class="s2">&quot;/var/log/auth.log&quot;</span>
+    <span class="n">SYSLOG</span> <span class="o">=</span> <span class="s2">&quot;/var/log/syslog&quot;</span></div>
 
 
 <div class="viewcode-block" id="LOG_FILES"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.LOG_FILES">[docs]</a><span class="k">class</span> <span class="nc">LOG_FILES</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the log files</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">KAFKA_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;kafka_manager.log&quot;</span>
@@ -100,30 +306,35 @@
     <span class="n">ELK_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;elk_manager.log&quot;</span>
     <span class="n">ELK_MANAGER_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
     <span class="n">DOCKER_STATS_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;docker_stats_manager.log&quot;</span>
+    <span class="n">CLUSTER_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;cluster_manager.log&quot;</span>
     <span class="n">DOCKER_STATS_MANAGER_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/&quot;</span>
+    <span class="n">CLUSTER_MANAGER_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/var/log/csle/&quot;</span>
     <span class="n">HOST_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;host_manager.log&quot;</span>
     <span class="n">HOST_MANAGER_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
     <span class="n">CLIENT_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;client_manager.log&quot;</span>
     <span class="n">CLIENT_MANAGER_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
     <span class="n">TRAFFIC_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;traffic_manager.log&quot;</span>
     <span class="n">TRAFFIC_MANAGER_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
-    <span class="n">KAFKA_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/usr/local/kafka/logs/server.log&quot;</span></div>
+    <span class="n">KAFKA_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/usr/local/kafka/logs/server.log&quot;</span>
+    <span class="n">RYU_MANAGER_LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;ryu_manager.log&quot;</span>
+    <span class="n">RYU_MANAGER_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span></div>
 
 
 <div class="viewcode-block" id="TRAFFIC_GENERATOR"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.TRAFFIC_GENERATOR">[docs]</a><span class="k">class</span> <span class="nc">TRAFFIC_GENERATOR</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the traffic generator</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">START_TRAFFIC_GENERATOR_CMD</span> <span class="o">=</span> <span class="s2">&quot;sudo nohup /traffic_generator.sh &amp;&quot;</span>
-    <span class="n">CHECK_IF_TRAFFIC_GENERATOR_IS_RUNNING</span> <span class="o">=</span> <span class="s2">&quot;ps -aux | grep traffic_generator&quot;</span>
     <span class="n">TRAFFIC_GENERATOR_FILE_NAME</span> <span class="o">=</span> <span class="s2">&quot;traffic_generator.sh&quot;</span>
     <span class="n">CREATE_TRAFFIC_GENERATOR_FILE</span> <span class="o">=</span> <span class="s2">&quot;sudo touch /traffic_generator.sh&quot;</span>
     <span class="n">MAKE_TRAFFIC_GENERATOR_FILE_EXECUTABLE</span> <span class="o">=</span> <span class="s2">&quot;sudo chmod 777 /traffic_generator.sh&quot;</span>
-    <span class="n">REMOVE_OLD_TRAFFIC_GENERATOR_FILE</span> <span class="o">=</span> <span class="s2">&quot;sudo rm -f /traffic_generator.sh&quot;</span></div>
+    <span class="n">REMOVE_OLD_TRAFFIC_GENERATOR_FILE</span> <span class="o">=</span> <span class="s2">&quot;sudo rm -f /traffic_generator.sh&quot;</span>
+    <span class="n">CHECK_IF_TRAFFIC_GENERATOR_IS_RUNNING</span> <span class="o">=</span> <span class="s2">&quot;ps -aux | grep traffic_generator&quot;</span>
+    <span class="n">STOP_TRAFFIC_GENERATOR</span> <span class="o">=</span> <span class="s2">&quot;sudo pkill -f traffic_generator.sh&quot;</span></div>
 
 
 <div class="viewcode-block" id="DOCKER_STATS"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.DOCKER_STATS">[docs]</a><span class="k">class</span> <span class="nc">DOCKER_STATS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to Docker stats</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CPU_STATS</span> <span class="o">=</span> <span class="s2">&quot;cpu_stats&quot;</span>
@@ -164,7 +375,7 @@
 
 
 <div class="viewcode-block" id="OSSEC"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.OSSEC">[docs]</a><span class="k">class</span> <span class="nc">OSSEC</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the OSSEC HIDS</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">MAX_ALERTS</span> <span class="o">=</span> <span class="mi">10000</span>
@@ -241,12 +452,12 @@
     <span class="n">OSSEC_SEVERE_ALERT_LEVEL_THRESHOLD</span> <span class="o">=</span> <span class="mi">10</span>
     <span class="n">STOP_OSSEC_IDS</span> <span class="o">=</span> <span class="s2">&quot;/var/ossec/bin/ossec-control stop&quot;</span>
     <span class="n">START_OSSEC_IDS</span> <span class="o">=</span> <span class="s2">&quot;/var/ossec/bin/ossec-control start&quot;</span>
-    <span class="n">CHECK_IF_OSSEC_IS_RUNNING_CMD</span> <span class="o">=</span> <span class="s2">&quot;ps -aux | grep ossec&quot;</span>
-    <span class="n">OSSEC_RUNNING_SEARCH</span> <span class="o">=</span> <span class="s2">&quot;/var/ossec/bin/ossec-execd&quot;</span></div>
+    <span class="n">CHECK_IF_OSSEC_IS_RUNNING_CMD</span> <span class="o">=</span> <span class="s2">&quot;service ossec status&quot;</span>
+    <span class="n">OSSEC_RUNNING_SEARCH</span> <span class="o">=</span> <span class="s2">&quot;ossec-execd is running&quot;</span></div>
 
 
 <div class="viewcode-block" id="SNORT_IDS_ROUTER"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.SNORT_IDS_ROUTER">[docs]</a><span class="k">class</span> <span class="nc">SNORT_IDS_ROUTER</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the Snort IDS</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">MAX_ALERTS</span> <span class="o">=</span> <span class="mi">10000</span>
@@ -333,11 +544,13 @@
     <span class="n">START_SNORT_IDS</span> <span class="o">=</span> <span class="s2">&quot;sudo snort -D -q -u snort -g snort -c /etc/snort/snort.conf -i eth1:eth0 -l &quot;</span> \
                       <span class="s2">&quot;/var/snort/ -h 55.0.0.0/8 -Q -I --create-pidfile&quot;</span>
     <span class="n">CHECK_IF_SNORT_IS_RUNNING_CMD</span> <span class="o">=</span> <span class="s2">&quot;ps -aux | grep snort.conf&quot;</span>
+    <span class="n">PS_AUX_CMD</span> <span class="o">=</span> <span class="s2">&quot;ps -aux&quot;</span>
+    <span class="n">GREP_SNORT_CONF</span> <span class="o">=</span> <span class="s2">&quot;grep snort.conf&quot;</span>
     <span class="n">SEARCH_SNORT_RUNNING</span> <span class="o">=</span> <span class="s2">&quot;/etc/snort/snort.conf&quot;</span></div>
 
 
 <div class="viewcode-block" id="HOST_METRICS"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.HOST_METRICS">[docs]</a><span class="k">class</span> <span class="nc">HOST_METRICS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the defender&#39;s sensor commands</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">LIST_LOGGED_IN_USERS_CMD</span> <span class="o">=</span> <span class="s2">&quot;users&quot;</span>
@@ -348,8 +561,15 @@
     <span class="n">LIST_NUMBER_OF_PROCESSES</span> <span class="o">=</span> <span class="s2">&quot;ps -e | wc -l&quot;</span></div>
 
 
+<div class="viewcode-block" id="EXTERNAL_NETWORK"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.EXTERNAL_NETWORK">[docs]</a><span class="k">class</span> <span class="nc">EXTERNAL_NETWORK</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to the external network</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">NETWORK_ID_THIRD_OCTET</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+
 <div class="viewcode-block" id="ELK_CONFIG"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.ELK_CONFIG">[docs]</a><span class="k">class</span> <span class="nc">ELK_CONFIG</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the ELK container configuration</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">NETWORK_ID_THIRD_OCTET</span> <span class="o">=</span> <span class="mi">253</span>
@@ -358,7 +578,7 @@
 
 
 <div class="viewcode-block" id="KAFKA_CONFIG"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.KAFKA_CONFIG">[docs]</a><span class="k">class</span> <span class="nc">KAFKA_CONFIG</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the kafka container configuration</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">NETWORK_ID_THIRD_OCTET</span> <span class="o">=</span> <span class="mi">253</span>
@@ -370,11 +590,11 @@
     <span class="n">HOST_METRICS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;host_metrics&quot;</span>
     <span class="n">DOCKER_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;docker_stats&quot;</span>
     <span class="n">DOCKER_HOST_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;docker_host_stats&quot;</span>
-    <span class="n">OPENFLOW_FLOW_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;openflow_flow_stats_topic&quot;</span>
-    <span class="n">OPENFLOW_PORT_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;openflow_port_stats_topic&quot;</span>
-    <span class="n">OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;openflow_flow_agg_stats_topic&quot;</span>
-    <span class="n">AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;avg_openflow_flow_stats_per_switch_topic&quot;</span>
-    <span class="n">AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;avg_openflow_port_stats_per_switch_topic&quot;</span>
+    <span class="n">OPENFLOW_FLOW_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;openflow_flow_stats&quot;</span>
+    <span class="n">OPENFLOW_PORT_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;openflow_port_stats&quot;</span>
+    <span class="n">OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;openflow_flow_agg_stats&quot;</span>
+    <span class="n">AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;avg_openflow_flow_stats_per_switch&quot;</span>
+    <span class="n">AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;avg_openflow_port_stats_per_switch&quot;</span>
     <span class="n">ATTACKER_ACTIONS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;attacker_actions&quot;</span>
     <span class="n">DEFENDER_ACTIONS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;defender_actions&quot;</span>
     <span class="n">CLIENT_POPULATION_TOPIC_ATTRIBUTES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;ip&quot;</span><span class="p">,</span> <span class="s2">&quot;num_clients&quot;</span><span class="p">,</span> <span class="s2">&quot;rate&quot;</span><span class="p">]</span>
@@ -477,7 +697,7 @@
 
 
 <div class="viewcode-block" id="KAFKA"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.KAFKA">[docs]</a><span class="k">class</span> <span class="nc">KAFKA</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constants for managing Kafka</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">KAFKA_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service kafka status&quot;</span>
@@ -489,11 +709,16 @@
     <span class="n">GROUP_ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;group.id&quot;</span>
     <span class="n">AUTO_OFFSET_RESET_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;auto.offset.reset&quot;</span>
     <span class="n">EARLIEST_OFFSET</span> <span class="o">=</span> <span class="s2">&quot;earliest&quot;</span>
-    <span class="n">PORT</span> <span class="o">=</span> <span class="mi">9092</span></div>
+    <span class="n">PORT</span> <span class="o">=</span> <span class="mi">9092</span>
+    <span class="n">EXTERNAL_PORT</span> <span class="o">=</span> <span class="mi">9292</span>
+    <span class="n">INTERNAL_IP_PLACEHOLDER</span> <span class="o">=</span> <span class="s2">&quot;INTERNAL_IP&quot;</span>
+    <span class="n">EXTERNAL_IP_PLACEHOLDER</span> <span class="o">=</span> <span class="s2">&quot;EXTERNAL_IP&quot;</span>
+    <span class="n">DIR</span> <span class="o">=</span> <span class="s2">&quot;/usr/local/kafka/logs/&quot;</span>
+    <span class="n">KAFKA_CONFIG_FILE</span> <span class="o">=</span> <span class="s2">&quot;/usr/local/kafka/config/server.properties&quot;</span></div>
 
 
 <div class="viewcode-block" id="ELK"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.ELK">[docs]</a><span class="k">class</span> <span class="nc">ELK</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constants for managing the ELK stack</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ELK_START</span> <span class="o">=</span> <span class="s2">&quot;nohup /usr/local/bin/start.sh &gt; /elk_server.log &amp;&quot;</span>
@@ -506,7 +731,37 @@
     <span class="n">LOGSTASH_START</span> <span class="o">=</span> <span class="s2">&quot;service logstash start&quot;</span>
     <span class="n">ELASTICSEARCH_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service elasticsearch status&quot;</span>
     <span class="n">KIBANA_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service kibana status&quot;</span>
-    <span class="n">LOGSTASH_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service logstash status&quot;</span></div>
+    <span class="n">LOGSTASH_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service logstash status&quot;</span>
+    <span class="n">ELASTICSEARCH_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/var/log/elasticsearch/&quot;</span>
+    <span class="n">LOGSTASH_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/var/log/logstash/&quot;</span>
+    <span class="n">KIBANA_LOG_DIR</span> <span class="o">=</span> <span class="s2">&quot;/var/log/kibana/&quot;</span></div>
+
+
+<div class="viewcode-block" id="RYU"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.RYU">[docs]</a><span class="k">class</span> <span class="nc">RYU</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constants for managing Ryu</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">CHECK_IF_RYU_CONTROLLER_IS_RUNNING</span> <span class="o">=</span> <span class="s2">&quot;ps -aux | grep ryu_controller.py&quot;</span>
+    <span class="n">STOP_RYU_CONTROLLER</span> <span class="o">=</span> <span class="s2">&quot;sudo pkill -f ryu_controller.py&quot;</span>
+    <span class="n">RYU_CONTROLLER_FILENAME</span> <span class="o">=</span> <span class="s2">&quot;ryu_controller.py&quot;</span>
+    <span class="n">SEARCH_CONTROLLER</span> <span class="o">=</span> <span class="s2">&quot;/root/miniconda3/bin/python3 /ryu_controller.py&quot;</span>
+    <span class="n">START_RYU_CONTROLLER</span> <span class="o">=</span> <span class="s2">&quot;sudo nohup /root/miniconda3/bin/python3 /ryu_controller.py --port </span><span class="si">{}</span><span class="s2"> --webport </span><span class="si">{}</span><span class="s2"> &quot;</span> \
+                           <span class="s2">&quot;--controller </span><span class="si">{}</span><span class="s2"> &amp;&quot;</span>
+    <span class="n">START_PRODUCER_HTTP_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/cslenorthboundapi/producer/start&quot;</span>
+    <span class="n">STOP_PRODUCER_HTTP_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/cslenorthboundapi/producer/stop&quot;</span>
+    <span class="n">STATUS_PRODUCER_HTTP_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/cslenorthboundapi/producer/status&quot;</span>
+    <span class="n">TIME_STEP_LEN_SECONDS</span> <span class="o">=</span> <span class="s2">&quot;time_step_len_seconds&quot;</span>
+    <span class="n">PRODUCER_RUNNING</span> <span class="o">=</span> <span class="s2">&quot;producer_running&quot;</span>
+    <span class="n">KAFKA_CONF</span> <span class="o">=</span> <span class="s2">&quot;kafka_conf&quot;</span></div>
+
+
+<div class="viewcode-block" id="INTERFACES"><a class="viewcode-back" href="../../../csle_collector.constants.html#csle_collector.constants.constants.INTERFACES">[docs]</a><span class="k">class</span> <span class="nc">INTERFACES</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    String constrants related to networking interfaces</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ETH1</span> <span class="o">=</span> <span class="s2">&quot;eth1&quot;</span>
+    <span class="n">ETH0</span> <span class="o">=</span> <span class="s2">&quot;eth0&quot;</span>
+    <span class="n">ADDR</span> <span class="o">=</span> <span class="s2">&quot;addr&quot;</span></div>
 </pre></div>
 
            </div>

@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.controllers.kafka_controller</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.controllers.kafka_controller</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -71,6 +76,7 @@
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 <span class="kn">import</span> <span class="nn">grpc</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_env_config</span> <span class="kn">import</span> <span class="n">EmulationEnvConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.kafka_managers_info</span> <span class="kn">import</span> <span class="n">KafkaManagersInfo</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
@@ -78,6 +84,7 @@
 <span class="kn">import</span> <span class="nn">csle_collector.kafka_manager.kafka_manager_pb2</span>
 <span class="kn">import</span> <span class="nn">csle_collector.kafka_manager.query_kafka_server</span>
 <span class="kn">import</span> <span class="nn">csle_collector.kafka_manager.kafka_manager_util</span>
+<span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">collector_constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.util.emulation_util</span> <span class="kn">import</span> <span class="n">EmulationUtil</span>
 <span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
 
@@ -86,7 +93,7 @@
 
 <div class="viewcode-block" id="KafkaController.start_kafka_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.kafka_controller.KafkaController.start_kafka_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">start_kafka_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for starting the Kafka manager</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -95,7 +102,7 @@
 
         <span class="c1"># Connect</span>
         <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">connect_admin</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
-                                    <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+                                    <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
                                     <span class="n">create_producer</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># Check if kafka_manager is already running</span>
@@ -103,18 +110,20 @@
                <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_COMMANDS</span><span class="o">.</span><span class="n">KAFKA_MANAGER_FILE_NAME</span><span class="p">)</span>
         <span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span>
             <span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
-            <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span>
+                <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SEARCH_KAFKA_MANAGER</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
             <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting the Kafka manager on node &quot;</span>
-                                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="c1"># Stop old background job if running</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SUDO</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SPACE_DELIM</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">PKILL</span> <span class="o">+</span>
                    <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SPACE_DELIM</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_COMMANDS</span><span class="o">.</span><span class="n">KAFKA_MANAGER_FILE_NAME</span><span class="p">)</span>
             <span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span>
                 <span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
-                <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span>
+                    <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">))</span>
 
             <span class="c1"># Start the kafka_manager</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">START_KAFKA_MANAGER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -124,12 +133,13 @@
                 <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">kafka_manager_max_workers</span><span class="p">)</span>
             <span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span>
                 <span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
-                <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span>
+                    <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">))</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="KafkaController.stop_kafka_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.kafka_controller.KafkaController.stop_kafka_manager">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_kafka_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for stopping the Kafka manager</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -138,48 +148,50 @@
 
         <span class="c1"># Connect</span>
         <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">connect_admin</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
-                                    <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+                                    <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
                                     <span class="n">create_producer</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopping the Kafka manager on node &quot;</span>
-                                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># Stop old background job if running</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SUDO</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SPACE_DELIM</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">PKILL</span> <span class="o">+</span>
                <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SPACE_DELIM</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">TRAFFIC_COMMANDS</span><span class="o">.</span><span class="n">KAFKA_MANAGER_FILE_NAME</span><span class="p">)</span>
         <span class="n">o</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">execute_ssh_cmd</span><span class="p">(</span>
             <span class="n">cmd</span><span class="o">=</span><span class="n">cmd</span><span class="p">,</span>
-            <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span>
+                <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">))</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="KafkaController.create_topics"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.kafka_controller.KafkaController.create_topics">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_topics</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">create_topics</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the KafkaManager to create topics according to the given configuration</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation env</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;creating kafka topics on container: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;creating kafka topics on container: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">KafkaController</span><span class="o">.</span><span class="n">start_kafka_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
         <span class="n">kafka_dto</span> <span class="o">=</span> <span class="n">KafkaController</span><span class="o">.</span><span class="n">get_kafka_status_by_port_and_ip</span><span class="p">(</span>
-            <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
             <span class="n">port</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">kafka_manager_port</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">:&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s1">:&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">kafka_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2_grpc</span><span class="o">.</span><span class="n">KafkaManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">kafka_dto</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
                 <span class="c1"># Open a gRPC session</span>
-                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Kafka server is not running, starting it.&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Kafka server is not running, starting it.&quot;</span><span class="p">)</span>
 
                 <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">query_kafka_server</span><span class="o">.</span><span class="n">start_kafka</span><span class="p">(</span><span class="n">stub</span><span class="p">)</span>
                 <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">topics</span><span class="p">:</span>
-                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating topic: </span><span class="si">{</span><span class="n">topic</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating topic: </span><span class="si">{</span><span class="n">topic</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">query_kafka_server</span><span class="o">.</span><span class="n">create_topic</span><span class="p">(</span>
                     <span class="n">stub</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">topic</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">partitions</span><span class="o">=</span><span class="n">topic</span><span class="o">.</span><span class="n">num_partitions</span><span class="p">,</span> <span class="n">replicas</span><span class="o">=</span><span class="n">topic</span><span class="o">.</span><span class="n">num_replicas</span><span class="p">,</span>
                     <span class="n">retention_time_hours</span><span class="o">=</span><span class="n">topic</span><span class="o">.</span><span class="n">retention_time_hours</span>
@@ -188,7 +200,7 @@
 <div class="viewcode-block" id="KafkaController.get_kafka_status"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.kafka_controller.KafkaController.get_kafka_status">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_kafka_status</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2</span><span class="o">.</span><span class="n">KafkaDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for querying the KafkaManager about the status of the Kafka server</span>
 
 <span class="sd">        :param emulation_env_config: the emulation config</span>
@@ -196,14 +208,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">KafkaController</span><span class="o">.</span><span class="n">start_kafka_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
         <span class="n">kafka_dto</span> <span class="o">=</span> <span class="n">KafkaController</span><span class="o">.</span><span class="n">get_kafka_status_by_port_and_ip</span><span class="p">(</span>
-            <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
             <span class="n">port</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">kafka_manager_port</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">kafka_dto</span></div>
 
 <div class="viewcode-block" id="KafkaController.get_kafka_status_by_port_and_ip"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.kafka_controller.KafkaController.get_kafka_status_by_port_and_ip">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_kafka_status_by_port_and_ip</span><span class="p">(</span><span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2</span><span class="o">.</span><span class="n">KafkaDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for querying the KafkaManager about the status of the Kafka server</span>
 
 <span class="sd">        :param ip: the ip where the KafkaManager is running</span>
@@ -219,42 +231,78 @@
             <span class="k">return</span> <span class="n">kafka_dto</span></div>
 
 <div class="viewcode-block" id="KafkaController.stop_kafka_server"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.kafka_controller.KafkaController.stop_kafka_server">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">stop_kafka_server</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> \
+    <span class="k">def</span> <span class="nf">stop_kafka_server</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2</span><span class="o">.</span><span class="n">KafkaDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for requesting the KafkaManager to stop the Kafka server</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: a KafkaDTO with the status of the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Stopping kafka server on container: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Stopping kafka server on container: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">KafkaController</span><span class="o">.</span><span class="n">start_kafka_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
 
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">:&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s1">:&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">kafka_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2_grpc</span><span class="o">.</span><span class="n">KafkaManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
             <span class="n">kafka_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">query_kafka_server</span><span class="o">.</span><span class="n">stop_kafka</span><span class="p">(</span><span class="n">stub</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">kafka_dto</span></div>
 
+<div class="viewcode-block" id="KafkaController.configure_broker_ips"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.kafka_controller.KafkaController.configure_broker_ips">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">configure_broker_ips</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method for configuring the broker IPs on the Kafka container</span>
+
+<span class="sd">        :param emulation_env_config: the emulation env config</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
+<span class="sd">        :return: a KafkaDTO with the status of the server</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Configuring broker IPs on container: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">EmulationUtil</span><span class="o">.</span><span class="n">connect_admin</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
+                                    <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
+        <span class="n">sftp_client</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span>
+            <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span><span class="o">.</span><span class="n">open_sftp</span><span class="p">()</span>
+        <span class="n">remote_file</span> <span class="o">=</span> <span class="n">sftp_client</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">KAFKA_CONFIG_FILE</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">file_contents</span> <span class="o">=</span> <span class="n">remote_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="n">file_contents</span> <span class="o">=</span> <span class="n">file_contents</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">file_contents</span> <span class="o">=</span> <span class="n">file_contents</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">INTERNAL_IP_PLACEHOLDER</span><span class="p">,</span>
+                                                  <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">file_contents</span> <span class="o">=</span> <span class="n">file_contents</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">EXTERNAL_IP_PLACEHOLDER</span><span class="p">,</span>
+                                                  <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">remote_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">remote_file</span> <span class="o">=</span> <span class="n">sftp_client</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">KAFKA_CONFIG_FILE</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">remote_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">file_contents</span><span class="p">)</span>
+            <span class="n">remote_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">remote_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="KafkaController.start_kafka_server"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.kafka_controller.KafkaController.start_kafka_server">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">start_kafka_server</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> \
+    <span class="k">def</span> <span class="nf">start_kafka_server</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2</span><span class="o">.</span><span class="n">KafkaDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Method for requesting the KafkaManager to start the Kafka server</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: a KafkaDTO with the status of the server</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Starting kafka server on container: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Starting kafka server on container: </span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">KafkaController</span><span class="o">.</span><span class="n">start_kafka_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
 
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">:&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s1">:&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">kafka_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
             <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_pb2_grpc</span><span class="o">.</span><span class="n">KafkaManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
             <span class="n">kafka_dto</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">query_kafka_server</span><span class="o">.</span><span class="n">start_kafka</span><span class="p">(</span><span class="n">stub</span><span class="p">)</span>
@@ -262,17 +310,17 @@
 
 <div class="viewcode-block" id="KafkaController.get_kafka_managers_ips"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.kafka_controller.KafkaController.get_kafka_managers_ips">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_kafka_managers_ips</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the IPS of the Kafka managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
 <span class="sd">        :return: the list of IP addresses</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()[</span><span class="mi">0</span><span class="p">]]</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="KafkaController.get_kafka_managers_ports"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.kafka_controller.KafkaController.get_kafka_managers_ports">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_kafka_managers_ports</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that extracts the IPS of the Kafka managers in a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
@@ -281,35 +329,39 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">kafka_manager_port</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="KafkaController.get_kafka_managers_info"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.kafka_controller.KafkaController.get_kafka_managers_info">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_kafka_managers_info</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">active_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">KafkaManagersInfo</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">get_kafka_managers_info</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">active_ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                                <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KafkaManagersInfo</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts the information of the Kafka managers for a given emulation</span>
 
 <span class="sd">        :param emulation_env_config: the configuration of the emulation</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
+<span class="sd">        :param physical_host_ip: the IP of the physical host</span>
 <span class="sd">        :return: a DTO with the status of the Kafka managers</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">kafka_managers_ips</span> <span class="o">=</span> <span class="n">KafkaController</span><span class="o">.</span><span class="n">get_kafka_managers_ips</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
         <span class="n">kafka_managers_ports</span> <span class="o">=</span> <span class="n">KafkaController</span><span class="o">.</span><span class="n">get_kafka_managers_ports</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
         <span class="n">kafka_managers_statuses</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">kafka_managers_running</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">kafka_managers_ips</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">ip</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">active_ips</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">status</span> <span class="o">=</span> <span class="n">KafkaController</span><span class="o">.</span><span class="n">get_kafka_status_by_port_and_ip</span><span class="p">(</span>
-                    <span class="n">port</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">kafka_manager_port</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
-                <span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Could not fetch Kafka manager status on IP:</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">, error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">kafka_managers_statuses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">kafka_managers_statuses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_util</span><span class="o">.</span><span class="n">KafkaManagerUtil</span><span class="o">.</span><span class="n">kafka_dto_empty</span><span class="p">())</span>
-            <span class="n">kafka_managers_running</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">running</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">physical_host_ip</span> <span class="o">==</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">physical_host_ip</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">kafka_managers_ips</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ip</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">active_ips</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="n">KafkaController</span><span class="o">.</span><span class="n">get_kafka_status_by_port_and_ip</span><span class="p">(</span>
+                        <span class="n">port</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">kafka_manager_port</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+                    <span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Could not fetch Kafka manager status on IP:</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">, error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">kafka_managers_statuses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">kafka_managers_statuses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">csle_collector</span><span class="o">.</span><span class="n">kafka_manager</span><span class="o">.</span><span class="n">kafka_manager_util</span><span class="o">.</span><span class="n">KafkaManagerUtil</span><span class="o">.</span><span class="n">kafka_dto_empty</span><span class="p">())</span>
+                <span class="n">kafka_managers_running</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">running</span><span class="p">)</span>
         <span class="n">execution_id</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">execution_id</span>
         <span class="n">emulation_name</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span>
         <span class="n">kafka_manager_info_dto</span> <span class="o">=</span> <span class="n">KafkaManagersInfo</span><span class="p">(</span>
@@ -326,7 +378,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

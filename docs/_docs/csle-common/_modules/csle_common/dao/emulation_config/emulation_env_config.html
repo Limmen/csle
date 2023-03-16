@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -24,22 +23,28 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> csle-common
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.agents.html">csle_common.agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.constants.html">csle_common.constants package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.consumer_threads.html">csle_common.consumer_threads package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.controllers.html">csle_common.controllers package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.dao.html">csle_common.dao package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.envs_model.html">csle_common.envs_model package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.rendering.html">csle_common.rendering package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.logging.html">csle_common.logging package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.metastore.html">csle_common.metastore package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.tunneling.html">csle_common.tunneling package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../csle_common.util.html">csle_common.util package</a></li>
 </ul>
 
@@ -56,9 +61,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>csle_common.dao.emulation_config.emulation_env_config</li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_common.dao.emulation_config.emulation_env_config</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -68,12 +73,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_common.dao.emulation_config.emulation_env_config</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">socket</span>
 <span class="kn">import</span> <span class="nn">paramiko</span>
 <span class="kn">from</span> <span class="nn">confluent_kafka</span> <span class="kn">import</span> <span class="n">Producer</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.containers_config</span> <span class="kn">import</span> <span class="n">ContainersConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.node_container_config</span> <span class="kn">import</span> <span class="n">NodeContainerConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.users_config</span> <span class="kn">import</span> <span class="n">UsersConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.flags_config</span> <span class="kn">import</span> <span class="n">FlagsConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.vulnerabilities_config</span> <span class="kn">import</span> <span class="n">VulnerabilitiesConfig</span>
@@ -89,14 +95,16 @@
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.snort_ids_manager_config</span> <span class="kn">import</span> <span class="n">SnortIDSManagerConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.ossec_ids_manager_config</span> <span class="kn">import</span> <span class="n">OSSECIDSManagerConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.docker_stats_manager_config</span> <span class="kn">import</span> <span class="n">DockerStatsManagerConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.beats_config</span> <span class="kn">import</span> <span class="n">BeatsConfig</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.elk_config</span> <span class="kn">import</span> <span class="n">ElkConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.container_network</span> <span class="kn">import</span> <span class="n">ContainerNetwork</span>
 <span class="kn">from</span> <span class="nn">csle_common.util.ssh_util</span> <span class="kn">import</span> <span class="n">SSHUtil</span>
 <span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
 <span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">collector_constants</span>
 
 
 <div class="viewcode-block" id="EmulationEnvConfig"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig">[docs]</a><span class="k">class</span> <span class="nc">EmulationEnvConfig</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class representing the configuration of an emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -109,9 +117,11 @@
                  <span class="n">host_manager_config</span><span class="p">:</span> <span class="n">HostManagerConfig</span><span class="p">,</span> <span class="n">snort_ids_manager_config</span><span class="p">:</span> <span class="n">SnortIDSManagerConfig</span><span class="p">,</span>
                  <span class="n">ossec_ids_manager_config</span><span class="p">:</span> <span class="n">OSSECIDSManagerConfig</span><span class="p">,</span>
                  <span class="n">docker_stats_manager_config</span><span class="p">:</span> <span class="n">DockerStatsManagerConfig</span><span class="p">,</span> <span class="n">elk_config</span><span class="p">:</span> <span class="n">ElkConfig</span><span class="p">,</span>
+                 <span class="n">beats_config</span><span class="p">:</span> <span class="n">BeatsConfig</span><span class="p">,</span>
                  <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                 <span class="n">csle_collector_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">LATEST_VERSION</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">csle_collector_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">LATEST_VERSION</span><span class="p">,</span>
+                 <span class="n">csle_ryu_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">LATEST_VERSION</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the object</span>
 
 <span class="sd">        :param name: the name of the emulation</span>
@@ -131,11 +141,13 @@
 <span class="sd">        :param snort_ids_manager_config: the Snort IDS manager config</span>
 <span class="sd">        :param ossec_ids_manager_config: the OSSEC IDS manager config</span>
 <span class="sd">        :param docker_stats_manager_config: the Docker stats manager config</span>
+<span class="sd">        :param beats_config: the beats config</span>
 <span class="sd">        :param elk_config: the ELK config</span>
 <span class="sd">        :param level: the level of the emulation</span>
 <span class="sd">        :param version: the version of the emulation</span>
 <span class="sd">        :param execution_id: the execution id of the emulation</span>
 <span class="sd">        :param csle_collector_version: the version of the CSLE collector library</span>
+<span class="sd">        :param csle_ryu_version: the version of the CSLE Ryu library</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">descr</span> <span class="o">=</span> <span class="n">descr</span>
@@ -166,11 +178,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_manager_config</span> <span class="o">=</span> <span class="n">ossec_ids_manager_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">docker_stats_manager_config</span> <span class="o">=</span> <span class="n">docker_stats_manager_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elk_config</span> <span class="o">=</span> <span class="n">elk_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beats_config</span> <span class="o">=</span> <span class="n">beats_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">csle_collector_version</span> <span class="o">=</span> <span class="n">csle_collector_version</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">csle_ryu_version</span> <span class="o">=</span> <span class="n">csle_ryu_version</span>
 
 <div class="viewcode-block" id="EmulationEnvConfig.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationEnvConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation into an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -197,7 +211,8 @@
             <span class="n">ossec_ids_manager_config</span><span class="o">=</span><span class="n">OSSECIDSManagerConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;ossec_ids_manager_config&quot;</span><span class="p">]),</span>
             <span class="n">snort_ids_manager_config</span><span class="o">=</span><span class="n">SnortIDSManagerConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;snort_ids_manager_config&quot;</span><span class="p">]),</span>
             <span class="n">docker_stats_manager_config</span><span class="o">=</span><span class="n">DockerStatsManagerConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_stats_manager_config&quot;</span><span class="p">]),</span>
-            <span class="n">elk_config</span><span class="o">=</span><span class="n">ElkConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;elk_config&quot;</span><span class="p">]),</span> <span class="n">csle_collector_version</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;csle_collector_version&quot;</span><span class="p">]</span>
+            <span class="n">elk_config</span><span class="o">=</span><span class="n">ElkConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;elk_config&quot;</span><span class="p">]),</span> <span class="n">csle_collector_version</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;csle_collector_version&quot;</span><span class="p">],</span>
+            <span class="n">beats_config</span><span class="o">=</span><span class="n">BeatsConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;beats_config&quot;</span><span class="p">]),</span> <span class="n">csle_ryu_version</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;csle_ryu_version&quot;</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;running&quot;</span><span class="p">]</span>
         <span class="n">obj</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;image&quot;</span><span class="p">]</span>
@@ -205,7 +220,7 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -242,11 +257,13 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_stats_manager_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;elk_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;csle_collector_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csle_collector_version</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;beats_config&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">beats_config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;csle_ryu_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">csle_ryu_version</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.connect"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">pw</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
                 <span class="n">create_producer</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connects to the agent&#39;s host with SSH, either directly or through a jumphost</span>
 
 <span class="sd">        :param ip: the ip to connect to</span>
@@ -274,7 +291,7 @@
         <span class="k">return</span> <span class="n">conn</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.get_connection"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.get_connection">[docs]</a>    <span class="k">def</span> <span class="nf">get_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets a connection to a given IP address</span>
 
 <span class="sd">        :param ip: the ip address to get the connection for</span>
@@ -286,7 +303,7 @@
             <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connection to ip:</span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2"> is not activep&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.get_hacker_connection"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.get_hacker_connection">[docs]</a>    <span class="k">def</span> <span class="nf">get_hacker_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets an SSH connection to the hacker agent, creates one if it does not exist</span>
 
 <span class="sd">        :return: SSH connection to the hacker</span>
@@ -298,10 +315,10 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">SSHUtil</span><span class="o">.</span><span class="n">execute_ssh_cmds</span><span class="p">(</span><span class="n">cmds</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ls &gt; /dev/null&quot;</span><span class="p">],</span> <span class="n">conn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="n">hacker_ip</span><span class="p">])</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reconnecting attacker, </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">hacker_ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">AGENT</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">pw</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">AGENT</span><span class="o">.</span><span class="n">PW</span><span class="p">,</span> <span class="n">create_producer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reconnecting attacker, </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span><span class="w"> </span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">hacker_ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">AGENT</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">pw</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">AGENT</span><span class="o">.</span><span class="n">PW</span><span class="p">,</span> <span class="n">create_producer</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">hacker_ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">AGENT</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">pw</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">AGENT</span><span class="o">.</span><span class="n">PW</span><span class="p">,</span> <span class="n">create_producer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">hacker_ip</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">AGENT</span><span class="o">.</span><span class="n">USER</span><span class="p">,</span> <span class="n">pw</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">AGENT</span><span class="o">.</span><span class="n">PW</span><span class="p">,</span> <span class="n">create_producer</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">[</span><span class="n">hacker_ip</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.cleanup"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -310,7 +327,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.create_producer"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.create_producer">[docs]</a>    <span class="k">def</span> <span class="nf">create_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a Kafka producer</span>
 
 <span class="sd">        :return: None</span>
@@ -322,7 +339,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="n">Producer</span><span class="p">(</span><span class="o">**</span><span class="n">conf</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.close_all_connections"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.close_all_connections">[docs]</a>    <span class="k">def</span> <span class="nf">close_all_connections</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Closes the emulation connection</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -332,7 +349,7 @@
 
 <div class="viewcode-block" id="EmulationEnvConfig.check_if_ssh_connection_is_alive"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.check_if_ssh_connection_is_alive">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">check_if_ssh_connection_is_alive</span><span class="p">(</span><span class="n">conn</span><span class="p">:</span> <span class="n">paramiko</span><span class="o">.</span><span class="n">SSHClient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function to check whether a SSH connection is alive or not</span>
 <span class="sd">        :param conn: the connection to check</span>
 <span class="sd">        :return: true or false</span>
@@ -343,14 +360,14 @@
         <span class="k">return</span> <span class="n">alive</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.get_port_forward_port"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.get_port_forward_port">[docs]</a>    <span class="k">def</span> <span class="nf">get_port_forward_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the next port to use for forwarding</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port_forward_port</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">port_forward_port</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.ids"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.ids">[docs]</a>    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the configuration includes an IDS</span>
 
 <span class="sd">        :return: True if it includes an IDS, otherwise False</span>
@@ -360,8 +377,26 @@
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
+<div class="viewcode-block" id="EmulationEnvConfig.get_container_from_ip"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.get_container_from_ip">[docs]</a>    <span class="k">def</span> <span class="nf">get_container_from_ip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">NodeContainerConfig</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for getting a container with a specific IP</span>
+
+<span class="sd">        :param ip: the ip of the container</span>
+<span class="sd">        :return: the container with the given ip or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ip</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span>
+        <span class="k">if</span> <span class="n">ip</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sdn_controller_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ip</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">get_ips</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">c</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return:  a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;name: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, containers_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">containers_config</span><span class="si">}</span><span class="s2">, users_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">users_config</span><span class="si">}</span><span class="s2">, &quot;</span> \
@@ -375,10 +410,11 @@
                <span class="sa">f</span><span class="s2">&quot;snort_ids_manager_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">snort_ids_manager_config</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;ossec_ids_manager_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ossec_ids_manager_config</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;docker_stats_manager_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="si">}</span><span class="s2">, elk_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">elk_config</span><span class="si">}</span><span class="s2">,&quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot; csle_collector_version: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">csle_collector_version</span><span class="si">}</span><span class="s2">&quot;</span>
+               <span class="sa">f</span><span class="s2">&quot; csle_collector_version: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">csle_collector_version</span><span class="si">}</span><span class="s2">, beats_config: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">beats_config</span><span class="si">}</span><span class="s2">,&quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot; csle_ryu_version: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">csle_ryu_version</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="EmulationEnvConfig.get_all_ips"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.get_all_ips">[docs]</a>    <span class="k">def</span> <span class="nf">get_all_ips</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a list of all ip addresses in the emulation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ips</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -389,7 +425,7 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">ips</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.to_json_str"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the DTO into a json string</span>
 
 <span class="sd">        :return: the json string representation of the DTO</span>
@@ -399,7 +435,7 @@
         <span class="k">return</span> <span class="n">json_str</span></div>
 
 <div class="viewcode-block" id="EmulationEnvConfig.to_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the DTO to a json file</span>
 
 <span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
@@ -410,29 +446,46 @@
         <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="EmulationEnvConfig.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationEnvConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads a json file and converts it to a DTO</span>
+
+<span class="sd">        :param json_file_path: the json file path</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">io</span>
+        <span class="kn">import</span> <span class="nn">json</span>
+        <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">EmulationEnvConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div>
+
 <div class="viewcode-block" id="EmulationEnvConfig.copy"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationEnvConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EmulationEnvConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
 
-<div class="viewcode-block" id="EmulationEnvConfig.create_execution_config"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.create_execution_config">[docs]</a>    <span class="k">def</span> <span class="nf">create_execution_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationEnvConfig&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="EmulationEnvConfig.create_execution_config"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.create_execution_config">[docs]</a>    <span class="k">def</span> <span class="nf">create_execution_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">physical_servers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationEnvConfig&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates an execution config from the base config</span>
 
 <span class="sd">        :param ip_first_octet:  the id of the execution</span>
+<span class="sd">        :param physical_servers: the list of physical servers</span>
 <span class="sd">        :return: the created execution config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">config</span><span class="o">.</span><span class="n">execution_id</span> <span class="o">=</span> <span class="n">ip_first_octet</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">containers_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">containers_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span>
+            <span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">,</span> <span class="n">physical_servers</span><span class="o">=</span><span class="n">physical_servers</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">users_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">users_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">flags_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">flags_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">vuln_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">vuln_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">topology_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">topology_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">traffic_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">traffic_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">resources_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">resources_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">kafka_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">kafka_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">,</span>
+                                                                          <span class="n">physical_servers</span><span class="o">=</span><span class="n">physical_servers</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">services_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">services_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">ovs_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">ovs_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">host_manager_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">host_manager_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
@@ -443,16 +496,28 @@
         <span class="n">config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">docker_stats_manager_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span>
             <span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">elk_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span>
-            <span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
+            <span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">,</span> <span class="n">physical_servers</span><span class="o">=</span><span class="n">physical_servers</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">beats_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">beats_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">sdn_controller_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">sdn_controller_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span>
-                <span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">)</span>
+                <span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">,</span> <span class="n">physical_servers</span><span class="o">=</span><span class="n">physical_servers</span><span class="p">)</span>
         <span class="n">static_attacker_sequences</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">static_attacker_sequences</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">static_attacker_sequences</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">create_execution_config</span><span class="p">(</span><span class="n">ip_first_octet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">),</span>
                                                     <span class="n">config</span><span class="o">.</span><span class="n">static_attacker_sequences</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
         <span class="n">config</span><span class="o">.</span><span class="n">static_attacker_sequences</span> <span class="o">=</span> <span class="n">static_attacker_sequences</span>
-        <span class="k">return</span> <span class="n">config</span></div></div>
+        <span class="k">return</span> <span class="n">config</span></div>
+
+<div class="viewcode-block" id="EmulationEnvConfig.get_network_by_name"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig.get_network_by_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_network_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">net_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ContainerNetwork</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets the network by name from the config</span>
+
+<span class="sd">        :param net_name: the name of the network</span>
+<span class="sd">        :return: the network with the given name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">networks</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">net_name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">c</span></div></div>
 </pre></div>
 
            </div>
@@ -462,7 +527,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021, Kim Hammar.</p>
+    <p>&#169; Copyright 2020-2023, Kim Hammar.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

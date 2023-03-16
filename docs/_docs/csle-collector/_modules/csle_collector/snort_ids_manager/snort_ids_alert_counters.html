@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-collector
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -59,9 +62,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_collector.snort_ids_manager.snort_ids_alert_counters</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_collector.snort_ids_manager.snort_ids_alert_counters</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -80,12 +83,12 @@
 
 
 <div class="viewcode-block" id="SnortIdsAlertCounters"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters">[docs]</a><span class="k">class</span> <span class="nc">SnortIdsAlertCounters</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    DTO containing statistics from the Snort IDS log</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">priority_alerts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
@@ -94,11 +97,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="mf">0.0</span>
 
 <div class="viewcode-block" id="SnortIdsAlertCounters.add"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alert_counters</span><span class="p">:</span> <span class="s2">&quot;SnortIdsAlertCounters&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds another alert counters object to this one</span>
 
 <span class="sd">        :param alert_counters: the counters to add</span>
@@ -114,14 +117,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">class_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">alert_counters</span><span class="o">.</span><span class="n">class_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="SnortIdsAlertCounters.count"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.count">[docs]</a>    <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alerts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsFastLogAlert</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Counts the list of alerts</span>
 
 <span class="sd">        :param alerts: list of alerts from the log</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">alerts</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">priority</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">priority_alerts</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">priority</span> <span class="o">-</span> <span class="mi">1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">priority_alerts</span><span class="p">)):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">priority_alerts</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">priority</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">class_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_alerts</span><span class="p">)):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">class_alerts</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">class_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -133,12 +136,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">priority_alerts</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD</span><span class="p">:])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">priority_alerts</span><span class="p">)):</span>
-            <span class="n">priority</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span> <span class="o">-</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">priority</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">priority_alerts</span><span class="p">)</span> <span class="o">-</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span> <span class="o">+=</span> <span class="n">priority</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority_alerts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="SnortIdsAlertCounters.from_kafka_record"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_kafka_record">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SnortIdsAlertCounters&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a kafka record to a DTO</span>
 
 <span class="sd">        :param record: the kafka record to convert</span>
@@ -162,7 +165,7 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="SnortIdsAlertCounters.update_with_kafka_record"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.update_with_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">update_with_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the DTO with a kafka record</span>
 
 <span class="sd">        :param record: the kafka record to use for updating</span>
@@ -185,7 +188,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">priority_alerts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">i</span><span class="p">]))))</span></div>
 
 <div class="viewcode-block" id="SnortIdsAlertCounters.to_kafka_record"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_kafka_record">[docs]</a>    <span class="k">def</span> <span class="nf">to_kafka_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the DTO into a kafka record</span>
 
 <span class="sd">        :param ip: the ip to add to the record in addition to the IDS statistics</span>
@@ -198,7 +201,7 @@
         <span class="k">return</span> <span class="n">record_str</span></div>
 
 <div class="viewcode-block" id="SnortIdsAlertCounters.to_dto"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dto">[docs]</a>    <span class="k">def</span> <span class="nf">to_dto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">snort_ids_manager</span><span class="o">.</span><span class="n">snort_ids_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsLogDTO</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the object into a gRPC DTO for serialization</span>
 
 <span class="sd">        :param ip: the ip to add to the DTO in addition to the statistics</span>
@@ -253,7 +256,7 @@
         <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;total_alerts: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span><span class="si">}</span><span class="s2">, warning_alerts: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span><span class="si">}</span><span class="s2">, &quot;</span> \
@@ -263,7 +266,7 @@
 
 <div class="viewcode-block" id="SnortIdsAlertCounters.from_dict"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;SnortIdsAlertCounters&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representaion of the object into an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -281,14 +284,14 @@
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="SnortIdsAlertCounters.to_dict"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ip</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;class_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_alerts</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;priority_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">priority_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;class_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_alerts</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;priority_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">priority_alerts</span><span class="p">)</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;total_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_alerts</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">warning_alerts</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">severe_alerts</span>
@@ -296,7 +299,7 @@
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="SnortIdsAlertCounters.copy"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SnortIdsAlertCounters&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">SnortIdsAlertCounters</span><span class="p">()</span>
@@ -311,7 +314,7 @@
         <span class="k">return</span> <span class="n">c</span></div>
 
 <div class="viewcode-block" id="SnortIdsAlertCounters.get_deltas"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.get_deltas">[docs]</a>    <span class="k">def</span> <span class="nf">get_deltas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">counters_prime</span><span class="p">:</span> <span class="s2">&quot;SnortIdsAlertCounters&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the deltas between two counters objects</span>
 
 <span class="sd">        :param counters_prime: the counters object to compare with</span>
@@ -320,21 +323,21 @@
         <span class="n">deltas_priority</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">priority_alerts</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
         <span class="n">deltas_class</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">class_alerts</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
         <span class="n">deltas</span> <span class="o">=</span> <span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">total_alerts</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">warning_alerts</span><span class="p">),</span>
-                  <span class="nb">int</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">severe_alerts</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span><span class="p">)]</span>
+                   <span class="nb">int</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">severe_alerts</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">counters_prime</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span><span class="p">)]</span>
                   <span class="o">+</span> <span class="n">deltas_priority</span> <span class="o">+</span> <span class="n">deltas_class</span><span class="p">)</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_ALERTS_LABELS</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">deltas</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">deltas</span><span class="p">),</span> <span class="n">labels</span></div>
 
 <div class="viewcode-block" id="SnortIdsAlertCounters.num_attributes"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.num_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">num_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: The number of attributes of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">10</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">SNORT_IDS_ROUTER</span><span class="o">.</span><span class="n">SNORT_ALERT_IDS_ID</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span></div>
 
 <div class="viewcode-block" id="SnortIdsAlertCounters.schema"><a class="viewcode-back" href="../../../csle_collector.snort_ids_manager.html#csle_collector.snort_ids_manager.snort_ids_alert_counters.SnortIdsAlertCounters.schema">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">schema</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;SnortIdsAlertCounters&quot;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: get the schema of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">SnortIdsAlertCounters</span><span class="p">()</span></div></div>

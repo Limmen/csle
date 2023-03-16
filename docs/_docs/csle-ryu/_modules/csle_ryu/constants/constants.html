@@ -11,9 +11,8 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -24,11 +23,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> csle-ryu
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            csle-ryu
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -54,9 +57,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>csle_ryu.constants.constants</li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">csle_ryu.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -66,10 +69,12 @@
            <div itemprop="articleBody">
              
   <h1>Source code for csle_ryu.constants.constants</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="n">INSTALL</span> <span class="o">=</span> <span class="s2">&quot;sudo /root/miniconda3/bin/pip install -U --no-cache-dir csle-ryu &quot;</span>
+<span class="n">LATEST_VERSION</span> <span class="o">=</span> <span class="s2">&quot;latest&quot;</span>
+
 
 <div class="viewcode-block" id="RYU"><a class="viewcode-back" href="../../../csle_ryu.constants.html#csle_ryu.constants.constants.RYU">[docs]</a><span class="k">class</span> <span class="nc">RYU</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constants related to RYU</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CONTROLLERS_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;csle_ryu.controllers.&quot;</span>
@@ -82,13 +87,11 @@
     <span class="n">APP_LISTS_ARG</span> <span class="o">=</span> <span class="s2">&quot;--app-lists&quot;</span>
     <span class="n">LOG_FILE_ARG</span> <span class="o">=</span> <span class="s2">&quot;--log-file&quot;</span>
     <span class="n">CONTROLLER_PORT_ARG</span> <span class="o">=</span> <span class="s2">&quot;--ofp-tcp-listen-port&quot;</span>
+    <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="s2">&quot;csle_sdn_controller.log&quot;</span>
     <span class="n">WEB_APP_PORT_ARG</span> <span class="o">=</span> <span class="s2">&quot;--wsapi-port&quot;</span>
     <span class="n">RYU_MANAGER</span> <span class="o">=</span> <span class="s2">&quot;/root/miniconda3/bin/ryu-manager&quot;</span>
     <span class="n">PACKET_BUFFER_MAX_LEN</span> <span class="o">=</span> <span class="mi">512</span>
     <span class="n">NORTHBOUND_API_APP_NAME</span> <span class="o">=</span> <span class="s2">&quot;csle_api_app&quot;</span>
-    <span class="n">START_PRODUCER_HTTP_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/cslenorthboundapi/producer/start&quot;</span>
-    <span class="n">STOP_PRODUCER_HTTP_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/cslenorthboundapi/producer/stop&quot;</span>
-    <span class="n">STATUS_PRODUCER_HTTP_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/cslenorthboundapi/producer/status&quot;</span>
     <span class="n">STATS_SWITCHES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/switches&quot;</span>
     <span class="n">STATS_DESC_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/desc&quot;</span>
     <span class="n">STATS_FLOW_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/flow&quot;</span>
@@ -106,43 +109,32 @@
     <span class="n">STATS_METER_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/meter&quot;</span>
     <span class="n">STATS_METER_CONFIG_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/meterconfig&quot;</span>
     <span class="n">STATS_METER_FEATURES_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/meterfeatures&quot;</span>
-    <span class="n">STATS_ROLE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/role&quot;</span></div>
+    <span class="n">STATS_ROLE_RESOURCE</span> <span class="o">=</span> <span class="s2">&quot;/stats/role&quot;</span>
+    <span class="n">WSGI</span> <span class="o">=</span> <span class="s2">&quot;wsgi&quot;</span>
+    <span class="n">CONTROLLER_APP</span> <span class="o">=</span> <span class="s2">&quot;controller_app&quot;</span>
+    <span class="n">NETWORK_ID_THIRD_OCTET</span> <span class="o">=</span> <span class="mi">252</span>
+    <span class="n">NETWORK_ID_FOURTH_OCTET</span> <span class="o">=</span> <span class="mi">251</span>
+    <span class="n">SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;_1&quot;</span>
+    <span class="n">DEFAULT_PORT</span> <span class="o">=</span> <span class="mi">6633</span>
+    <span class="n">DEFAULT_TRANSPORT_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;tcp&quot;</span>
+    <span class="n">SUBNETMASK_SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;/29&quot;</span>
+    <span class="n">BITMASK</span> <span class="o">=</span> <span class="s2">&quot;255.255.255.248&quot;</span>
+    <span class="n">STPLIB</span> <span class="o">=</span> <span class="s2">&quot;stplib&quot;</span>
+    <span class="n">BYTE_COUNT</span> <span class="o">=</span> <span class="s2">&quot;byte_count&quot;</span>
+    <span class="n">PACKET_COUNT</span> <span class="o">=</span> <span class="s2">&quot;packet_count&quot;</span>
+    <span class="n">FLOW_COUNT</span> <span class="o">=</span> <span class="s2">&quot;flow_count&quot;</span>
+    <span class="n">IN_PORT</span> <span class="o">=</span> <span class="s2">&quot;in_port&quot;</span>
+    <span class="n">ETH_DST</span> <span class="o">=</span> <span class="s2">&quot;eth_dst&quot;</span>
+    <span class="n">PRODUCER_RUNNING</span> <span class="o">=</span> <span class="s2">&quot;producer_running&quot;</span>
+    <span class="n">KAFKA_CONF</span> <span class="o">=</span> <span class="s2">&quot;kafka_conf&quot;</span></div>
 
 
 <div class="viewcode-block" id="CONTROLLERS"><a class="viewcode-back" href="../../../csle_ryu.constants.html#csle_ryu.constants.constants.CONTROLLERS">[docs]</a><span class="k">class</span> <span class="nc">CONTROLLERS</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    RYU Controllers in CSLE</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">LEARNING_SWITCH_CONTROLLER</span> <span class="o">=</span> <span class="s2">&quot;learning_switch_controller&quot;</span>
     <span class="n">LEARNING_SWITCH_STP_CONTROLLER</span> <span class="o">=</span> <span class="s2">&quot;learning_switch_stp_controller&quot;</span></div>
-
-
-<div class="viewcode-block" id="TOPIC_NAMES"><a class="viewcode-back" href="../../../csle_ryu.constants.html#csle_ryu.constants.constants.TOPIC_NAMES">[docs]</a><span class="k">class</span> <span class="nc">TOPIC_NAMES</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Topic names for SDN statistics</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;openflow_flow_agg_stats_topic&quot;</span>
-    <span class="n">OPENFLOW_FLOW_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;openflow_flow_stats_topic&quot;</span>
-    <span class="n">OPENFLOW_PORT_STATS_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;openflow_port_stats_topic&quot;</span>
-    <span class="n">AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;avg_openflow_flow_stats_per_switch_topic&quot;</span>
-    <span class="n">AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME</span> <span class="o">=</span> <span class="s2">&quot;avg_openflow_port_stats_per_switch_topic&quot;</span></div>
-
-
-<div class="viewcode-block" id="KAFKA"><a class="viewcode-back" href="../../../csle_ryu.constants.html#csle_ryu.constants.constants.KAFKA">[docs]</a><span class="k">class</span> <span class="nc">KAFKA</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    String constants for managing Kafka</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">KAFKA_STATUS</span> <span class="o">=</span> <span class="s2">&quot;service kafka status&quot;</span>
-    <span class="n">KAFKA_STOP</span> <span class="o">=</span> <span class="s2">&quot;service kafka stop&quot;</span>
-    <span class="n">KAFKA_START</span> <span class="o">=</span> <span class="s2">&quot;service kafka start&quot;</span>
-    <span class="n">RETENTION_MS_CONFIG_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;retention.ms&quot;</span>
-    <span class="n">BOOTSTRAP_SERVERS_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;bootstrap.servers&quot;</span>
-    <span class="n">CLIENT_ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;client.id&quot;</span>
-    <span class="n">GROUP_ID_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;group.id&quot;</span>
-    <span class="n">AUTO_OFFSET_RESET_PROPERTY</span> <span class="o">=</span> <span class="s2">&quot;auto.offset.reset&quot;</span>
-    <span class="n">EARLIEST_OFFSET</span> <span class="o">=</span> <span class="s2">&quot;earliest&quot;</span>
-    <span class="n">PORT</span> <span class="o">=</span> <span class="mi">9092</span>
-    <span class="n">TIME_STEP_LEN_SECONDS</span> <span class="o">=</span> <span class="s2">&quot;time_step_len_seconds&quot;</span></div>
 </pre></div>
 
            </div>
