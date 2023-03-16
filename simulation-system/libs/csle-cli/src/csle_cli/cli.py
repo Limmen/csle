@@ -5,12 +5,10 @@ To see options, run:
 `csle --help`
 """
 from typing import List, Tuple, Union
-import time
 import click
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.util.cluster_util import ClusterUtil
 from csle_common.util.general_util import GeneralUtil
-from csle_common.logging.log import Logger
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 from csle_cluster.cluster_manager.cluster_manager_pb2 import DockerContainerDTO, ContainerImageDTO
 

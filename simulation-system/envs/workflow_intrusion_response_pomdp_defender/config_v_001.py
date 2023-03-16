@@ -347,7 +347,7 @@ def default_input_config(local_attacker_action_space_config: ActionSpaceConfig,
         value_function=None, q_table=None,
         lookup_table=list(local_attacker_stage_strategy.tolist()),
         agent_type=AgentType.RANDOM, avg_R=-1)
-    Z_D_P=IntrusionResponseGameUtil.constant_zone_detection_probabilities(
+    Z_D_P = IntrusionResponseGameUtil.constant_zone_detection_probabilities(
         zones=zones, constant_detection_prob=detection_probability)
     C_D = IntrusionResponseGameUtil.constant_defender_action_costs(A1=local_A1, constant_cost=defender_action_cost)
     Z_U = IntrusionResponseGameUtil.constant_zone_utilities(zones=zones, constant_utility=zone_utility)
@@ -359,11 +359,11 @@ def default_input_config(local_attacker_action_space_config: ActionSpaceConfig,
     for node in nodes:
         initial_zones.append(np.random.choice(zones))
         attacker_strategies.append(attacker_strategy)
-    initial_zones=np.array(initial_zones)
+    initial_zones = np.array(initial_zones)
     game_config = WorkflowIntrusionResponseGameConfig(
         env_name="csle-intrusion-response-game-workflow-pomdp-defender-v1",
         nodes=nodes, initial_zones=initial_zones, X_max=X_max, beta=beta, gamma=gamma,
-        zones=zones, Z_D_P=Z_D_P,C_D=C_D, A_P=A_P, Z_U=Z_U, adjacency_matrix=adjacency_matrix, eta=eta,
+        zones=zones, Z_D_P=Z_D_P, C_D=C_D, A_P=A_P, Z_U=Z_U, adjacency_matrix=adjacency_matrix, eta=eta,
         gw_reachable=gw_reachable)
     input_config = WorkflowIntrusionResponsePOMDPDefenderConfig(
         game_config=game_config, env_name="csle-intrusion-response-game-workflow-pomdp-defender-v1",
@@ -379,20 +379,20 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    gw_reachable = np.array([0,1,2])
+    gw_reachable = np.array([0, 1, 2])
     adjacency_matrix = [
-        [1,0,0,1,1,0,0],
-        [0,1,0,1,0,1,0],
-        [0,0,1,0,1,1,0],
-        [0,0,0,1,0,0,1],
-        [0,0,0,0,1,0,1],
-        [0,0,0,0,0,1,1]
+        [1, 0, 0, 1, 1, 0, 0],
+        [0, 1, 0, 1, 0, 1, 0],
+        [0, 0, 1, 0, 1, 1, 0],
+        [0, 0, 0, 1, 0, 0, 1],
+        [0, 0, 0, 0, 1, 0, 1],
+        [0, 0, 0, 0, 0, 1, 1]
     ]
     adjacency_matrix = np.array(adjacency_matrix)
     config = default_config(name="csle-intrusion-response-game-workflow-pomdp-defender-001", version="0.0.1",
                             number_of_zones=5, X_max=10, beta=10, reachable=True, initial_zone=3,
                             attack_success_probability=0.3, eta=0.5, defender_action_cost=1, zone_utility=10,
-                            detection_probability=0.1, num_nodes = 6, adjacency_matrix=adjacency_matrix,
+                            detection_probability=0.1, num_nodes=6, adjacency_matrix=adjacency_matrix,
                             gw_reachable=gw_reachable, gamma=0.99)
     if args.install:
         SimulationEnvController.install_simulation(config=config)

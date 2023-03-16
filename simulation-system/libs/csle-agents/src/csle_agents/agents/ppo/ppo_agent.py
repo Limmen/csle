@@ -32,6 +32,7 @@ class PPOAgent(BaseAgent):
     """
     A PPO agent using the implementation from OpenAI baselines
     """
+
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None):
@@ -223,6 +224,7 @@ class PPOTrainingCallback(BaseCallback):
     """
     Callback for monitoring PPO training
     """
+
     def __init__(self, exp_result: ExperimentResult, seed: int, random_seeds: List[int],
                  training_job: TrainingJobConfig, exp_execution: ExperimentExecution,
                  max_steps: int, simulation_name: str, start: float,
@@ -315,7 +317,8 @@ class PPOTrainingCallback(BaseCallback):
         This event is triggered before updating the policy.
         """
         Logger.__call__().get_logger().info(f"Training iteration: {self.iter}, seed:{self.seed}, "
-                                            f"progress: {round(100*round(self.num_timesteps/self.max_steps,2),2)}%")
+                                            f"progress: "
+                                            f"{round(100 * round(self.num_timesteps / self.max_steps, 2), 2)}%")
         ts = time.time()
         save_path = self.save_dir + f"/ppo_model{self.iter}_{ts}.zip"
 
@@ -348,7 +351,7 @@ class PPOTrainingCallback(BaseCallback):
                 while not done and t <= max_horizon:
                     a = policy.action(o=o)
                     o, r, done, info = self.env.step(a)
-                    cumulative_reward += r* math.pow(
+                    cumulative_reward += r * math.pow(
                         self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value, t)
                     t += 1
                     Logger.__call__().get_logger().debug(f"t:{t}, a1:{a}, r:{r}, info:{info}, done:{done}")
@@ -372,7 +375,7 @@ class PPOTrainingCallback(BaseCallback):
             avg_random_return = np.mean(avg_random_returns)
             avg_upper_bound = np.mean(avg_upper_bounds)
             policy.avg_R = avg_R
-            time_elapsed_minutes = (time.time() - self.start)//60
+            time_elapsed_minutes = (time.time() - self.start) // 60
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON].append(round(avg_T, 3))
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN].append(

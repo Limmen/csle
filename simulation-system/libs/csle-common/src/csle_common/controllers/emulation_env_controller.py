@@ -452,17 +452,15 @@ class EmulationEnvController:
         :param logger: the logger to use for logging
         :return: None
         """
-        logger.info(f"Starting container with image:{image} and name:csle_{name}-"
-                                            f"{version.replace('.', '')}")
+        logger.info(f"Starting container with image:{image} and name:csle_{name}-{version.replace('.', '')}")
         if create_network:
             net_id = random.randint(128, 254)
             sub_net_id = random.randint(2, 254)
             host_id = random.randint(2, 254)
             net_name = f"csle_custom_net_{name}_{net_id}"
             ip = f"55.{net_id}.{sub_net_id}.{host_id}"
-            ContainerController.create_network(name=net_name,
-                                               subnetmask=f"55.{net_id}.0.0/16",
-                                               existing_network_names=[])
+            ContainerController.create_network(
+                name=net_name, subnetmask=f"55.{net_id}.0.0/16", existing_network_names=[])
             cmd = f"docker container run -dt --name csle_{name}-{version.replace('.', '')} " \
                   f"--hostname={name} " \
                   f"-e TZ=Europe/Stockholm " \

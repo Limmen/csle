@@ -76,7 +76,7 @@ def default_config(name: str, number_of_zones: int, X_max: int, beta: float, rea
     initial_state_distribution_config = default_initial_state_distribution_config(initial_zone=initial_zone,
                                                                                   number_of_zones=number_of_zones)
     input_config = default_input_config(
-        joint_action_space_config = joint_action_space_config,
+        joint_action_space_config=joint_action_space_config,
         number_of_zones=number_of_zones,
         attack_success_probability=attack_success_probability, beta=beta, eta=eta,
         defender_action_cost=defender_action_cost, zone_utility=zone_utility,
@@ -332,7 +332,7 @@ def default_input_config(joint_action_space_config: JointActionSpaceConfig,
     for i, s_d in enumerate(IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)):
         local_defender_stage_strategy[i][env_constants.DEFENDER_ACTIONS.WAIT] = 0.8
         for z in zones:
-            local_defender_stage_strategy[i][z] = 0.2/len(zones)
+            local_defender_stage_strategy[i][z] = 0.2 / len(zones)
     local_defender_strategy = TabularPolicy(
         player_type=PlayerType.DEFENDER,
         actions=joint_action_space_config.action_spaces[0].actions,
@@ -340,7 +340,7 @@ def default_input_config(joint_action_space_config: JointActionSpaceConfig,
         value_function=None, q_table=None,
         lookup_table=list(local_defender_stage_strategy.tolist()),
         agent_type=AgentType.RANDOM, avg_R=-1)
-    Z_D_P=IntrusionResponseGameUtil.constant_zone_detection_probabilities(
+    Z_D_P = IntrusionResponseGameUtil.constant_zone_detection_probabilities(
         zones=zones, constant_detection_prob=detection_probability)
     C_D = IntrusionResponseGameUtil.constant_defender_action_costs(A1=local_A1, constant_cost=defender_action_cost)
     Z_U = IntrusionResponseGameUtil.constant_zone_utilities(zones=zones, constant_utility=zone_utility)
@@ -352,11 +352,11 @@ def default_input_config(joint_action_space_config: JointActionSpaceConfig,
     for _ in nodes:
         initial_zones.append(np.random.choice(zones))
         local_defender_strategies.append(local_defender_strategy)
-    initial_zones=np.array(initial_zones)
+    initial_zones = np.array(initial_zones)
     game_config = WorkflowIntrusionResponseGameConfig(
         env_name="csle-intrusion-response-game-workflow-v1",
         nodes=nodes, initial_zones=initial_zones, X_max=X_max, beta=beta, gamma=gamma,
-        zones=zones, Z_D_P=Z_D_P,C_D=C_D, A_P=A_P, Z_U=Z_U, adjacency_matrix=adjacency_matrix, eta=eta,
+        zones=zones, Z_D_P=Z_D_P, C_D=C_D, A_P=A_P, Z_U=Z_U, adjacency_matrix=adjacency_matrix, eta=eta,
         gw_reachable=gw_reachable)
     input_config = WorkflowIntrusionResponsePOMDPAttackerConfig(
         game_config=game_config, env_name="csle-intrusion-response-game-workflow-pomdp-attacker-v1",
@@ -372,20 +372,20 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    gw_reachable = np.array([0,1,2])
+    gw_reachable = np.array([0, 1, 2])
     adjacency_matrix = [
-        [1,0,0,1,1,0,0],
-        [0,1,0,1,0,1,0],
-        [0,0,1,0,1,1,0],
-        [0,0,0,1,0,0,1],
-        [0,0,0,0,1,0,1],
-        [0,0,0,0,0,1,1]
+        [1, 0, 0, 1, 1, 0, 0],
+        [0, 1, 0, 1, 0, 1, 0],
+        [0, 0, 1, 0, 1, 1, 0],
+        [0, 0, 0, 1, 0, 0, 1],
+        [0, 0, 0, 0, 1, 0, 1],
+        [0, 0, 0, 0, 0, 1, 1]
     ]
     adjacency_matrix = np.array(adjacency_matrix)
     config = default_config(name="csle-intrusion-response-game-workflow-pomdp-attacker-001", version="0.0.1",
                             number_of_zones=5, X_max=10, beta=10, reachable=True, initial_zone=3,
                             attack_success_probability=0.3, eta=0.5, defender_action_cost=1, zone_utility=10,
-                            detection_probability=0.1, num_nodes = 6, adjacency_matrix=adjacency_matrix,
+                            detection_probability=0.1, num_nodes=6, adjacency_matrix=adjacency_matrix,
                             gw_reachable=gw_reachable, gamma=0.99)
     if args.install:
         SimulationEnvController.install_simulation(config=config)

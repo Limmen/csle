@@ -1671,8 +1671,8 @@ class ClusterManagerUtil:
                             tunnels_dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT,
                             local_port=local_ryu_port,
                             remote_port=execution.emulation_env_config.sdn_controller_config.controller_web_api_port,
-                            remote_ip=
-                            execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                            remote_ip=(
+                                execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip),
                             emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
                     except Exception:
                         local_ryu_port = local_ryu_port + 100
@@ -1680,8 +1680,8 @@ class ClusterManagerUtil:
                             tunnels_dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT,
                             local_port=local_ryu_port,
                             remote_port=execution.emulation_env_config.sdn_controller_config.controller_web_api_port,
-                            remote_ip=
-                            execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                            remote_ip=(
+                                execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip),
                             emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
                 else:
                     tunnel_thread_dict = cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT[
@@ -1696,10 +1696,10 @@ class ClusterManagerUtil:
                             EmulationEnvController.create_ssh_tunnel(
                                 tunnels_dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT,
                                 local_port=local_ryu_port,
-                                remote_port=execution.emulation_env_config.sdn_controller_config
-                                    .controller_web_api_port,
-                                remote_ip=
-                                execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                                remote_port=(
+                                    execution.emulation_env_config.sdn_controller_config.controller_web_api_port),
+                                remote_ip=(
+                                    execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip),
                                 emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
                     except Exception:
                         tunnel_thread_dict[cluster_constants.RYU_TUNNELS.THREAD_PROPERTY].shutdown()
@@ -1712,8 +1712,8 @@ class ClusterManagerUtil:
                             tunnels_dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT,
                             local_port=local_ryu_port,
                             remote_port=execution.emulation_env_config.sdn_controller_config.controller_web_api_port,
-                            remote_ip=
-                            execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
+                            remote_ip=(
+                                execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip),
                             emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
             return local_ryu_port
         except Exception as e:
@@ -1859,23 +1859,23 @@ class ClusterManagerUtil:
         stopped_containers = list(filter(lambda x: x.name not in running_container_names, stopped_containers))
         merged_snort_ids_managers_info = snort_ids_managers_info[0]
         for snort_ids_manager_info in snort_ids_managers_info[1:]:
-            merged_snort_ids_managers_info.ips = list(merged_snort_ids_managers_info.ips) + \
-                                                 list(snort_ids_manager_info.ips)
-            merged_snort_ids_managers_info.ports = list(merged_snort_ids_managers_info.ports) + \
-                                                   list(snort_ids_manager_info.ports)
+            merged_snort_ids_managers_info.ips = (list(merged_snort_ids_managers_info.ips) +
+                                                  list(snort_ids_manager_info.ips))
+            merged_snort_ids_managers_info.ports = (list(merged_snort_ids_managers_info.ports) +
+                                                    list(snort_ids_manager_info.ports))
             merged_snort_ids_managers_info.snort_ids_managers_running = \
                 list(merged_snort_ids_managers_info.snort_ids_managers_running) + \
                 list(snort_ids_manager_info.snort_ids_managers_running)
             merged_snort_ids_managers_info.snort_ids_managers_statuses = \
-                list(merged_snort_ids_managers_info.snort_ids_managers_statuses) + \
-                list(snort_ids_manager_info.snort_ids_managers_statuses)
+                (list(merged_snort_ids_managers_info.snort_ids_managers_statuses) +
+                 list(snort_ids_manager_info.snort_ids_managers_statuses))
 
         merged_ossec_ids_managers_info = ossec_ids_managers_info[0]
         for ossec_ids_manager_info in ossec_ids_managers_info[1:]:
-            merged_ossec_ids_managers_info.ips = list(merged_ossec_ids_managers_info.ips) + \
-                                                 list(ossec_ids_manager_info.ips)
-            merged_ossec_ids_managers_info.ports = list(merged_ossec_ids_managers_info.ports) + \
-                                                   list(ossec_ids_manager_info.ports)
+            merged_ossec_ids_managers_info.ips = (list(merged_ossec_ids_managers_info.ips) +
+                                                  list(ossec_ids_manager_info.ips))
+            merged_ossec_ids_managers_info.ports = (list(merged_ossec_ids_managers_info.ports) +
+                                                    list(ossec_ids_manager_info.ports))
             merged_ossec_ids_managers_info.ossec_ids_managers_running = \
                 list(merged_ossec_ids_managers_info.ossec_ids_managers_running) + \
                 list(ossec_ids_manager_info.ossec_ids_managers_running)
@@ -1885,8 +1885,7 @@ class ClusterManagerUtil:
 
         merged_kafka_managers_info = kafka_managers_info[0]
         for kafka_manager_info in kafka_managers_info[1:]:
-            merged_kafka_managers_info.ips = list(merged_kafka_managers_info.ips) + \
-                                             list(kafka_manager_info.ips)
+            merged_kafka_managers_info.ips = list(merged_kafka_managers_info.ips) + list(kafka_manager_info.ips)
             merged_kafka_managers_info.ports = list(merged_kafka_managers_info.ports) + list(kafka_manager_info.ports)
             merged_kafka_managers_info.kafka_managers_running = \
                 list(merged_kafka_managers_info.kafka_managers_running) + \
@@ -1899,18 +1898,17 @@ class ClusterManagerUtil:
         for host_manager_info in host_managers_info[1:]:
             merged_host_managers_info.ips = list(merged_host_managers_info.ips) + list(host_manager_info.ips)
             merged_host_managers_info.ports = list(merged_host_managers_info.ports) + list(host_manager_info.ports)
-            merged_host_managers_info.host_managers_running = \
-                list(merged_host_managers_info.host_managers_running) + \
-                list(host_manager_info.host_managers_running)
+            merged_host_managers_info.host_managers_running = (list(merged_host_managers_info.host_managers_running) +
+                                                               list(host_manager_info.host_managers_running))
             merged_host_managers_info.host_managers_statuses = \
-                list(merged_host_managers_info.host_managers_statuses) + \
-                list(host_manager_info.host_managers_statuses)
+                (list(merged_host_managers_info.host_managers_statuses) +
+                 list(host_manager_info.host_managers_statuses))
 
         merged_client_managers_info = client_managers_info[0]
         for client_manager_info in client_managers_info[1:]:
             merged_client_managers_info.ips = list(merged_client_managers_info.ips) + list(client_manager_info.ips)
-            merged_client_managers_info.ports = list(merged_client_managers_info.ports) + \
-                                                list(client_manager_info.ports)
+            merged_client_managers_info.ports = (list(merged_client_managers_info.ports) +
+                                                 list(client_manager_info.ports))
             merged_client_managers_info.client_managers_running = \
                 list(merged_client_managers_info.client_managers_running) + \
                 list(client_manager_info.client_managers_running)
@@ -1920,10 +1918,10 @@ class ClusterManagerUtil:
 
         merged_docker_stats_managers_info = docker_stats_managers_info[0]
         for docker_stats_manager_info in docker_stats_managers_info[1:]:
-            merged_docker_stats_managers_info.ips = list(merged_docker_stats_managers_info.ips) + \
-                                                    list(docker_stats_manager_info.ips)
-            merged_docker_stats_managers_info.ports = list(merged_docker_stats_managers_info.ports) + \
-                                                      list(docker_stats_manager_info.ports)
+            merged_docker_stats_managers_info.ips = (list(merged_docker_stats_managers_info.ips) +
+                                                     list(docker_stats_manager_info.ips))
+            merged_docker_stats_managers_info.ports = (list(merged_docker_stats_managers_info.ports) +
+                                                       list(docker_stats_manager_info.ports))
             merged_docker_stats_managers_info.docker_stats_managers_running = \
                 list(merged_docker_stats_managers_info.docker_stats_managers_running) + \
                 list(docker_stats_manager_info.docker_stats_managers_running)
@@ -1934,8 +1932,8 @@ class ClusterManagerUtil:
         merged_traffic_managers_info = traffic_managers_info[0]
         for traffic_manager_info in traffic_managers_info[1:]:
             merged_traffic_managers_info.ips = list(merged_traffic_managers_info.ips) + list(traffic_manager_info.ips)
-            merged_traffic_managers_info.ports = list(merged_traffic_managers_info.ports) \
-                                                 + list(traffic_manager_info.ports)
+            merged_traffic_managers_info.ports = (list(merged_traffic_managers_info.ports)
+                                                  + list(traffic_manager_info.ports))
             merged_traffic_managers_info.traffic_managers_running = \
                 list(merged_traffic_managers_info.traffic_managers_running) + \
                 list(traffic_manager_info.traffic_managers_running)
@@ -2230,8 +2228,8 @@ class ClusterManagerUtil:
         :return: an empty HostMetricsDataDTO
         """
         return cluster_manager_pb2.HostMetricsDataDTO(num_logged_in_users=0, num_failed_login_attempts=0,
-                                                  num_open_connections=0, num_login_events=0, num_processes=0,
-                                                  num_users=0, ip="", ts=0.0)
+                                                      num_open_connections=0, num_login_events=0, num_processes=0,
+                                                      num_users=0, ip="", ts=0.0)
 
     @staticmethod
     def host_metrics_dto_to_dict(host_metrics_dto: cluster_manager_pb2.HostMetricsDataDTO) -> Dict[str, Any]:

@@ -1,4 +1,3 @@
-from typing import List
 import numpy as np
 from scipy.stats import betabinom
 from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
@@ -546,7 +545,7 @@ class IntrusionResponseGameUtil:
                         p = IntrusionResponseGameUtil.local_transition_probability(
                             s=s, s_prime=s_prime, a1=a1, a2=a2, Z_D_P=Z_D, A_P=A_P)
                         a1_a2_s_probs.append(p)
-                    assert round(sum(a1_a2_s_probs),3) == 1
+                    assert round(sum(a1_a2_s_probs), 3) == 1
                     a1_a2_probs.append(a1_a2_s_probs)
                 a1_probs.append(a1_a2_probs)
             T.append(a1_probs)
@@ -573,7 +572,7 @@ class IntrusionResponseGameUtil:
         recon_hp_dist = []
         wait_hp_dist = []
         shutdown_dist = np.zeros(len(O))
-        shutdown_dist[0]=1
+        shutdown_dist[0] = 1
 
         brute_force_hp_rv = betabinom(n=len(O) - 1, a=4, b=0.7)
         recon_hp_rv = betabinom(n=len(O) - 1, a=3, b=0.7)
@@ -604,25 +603,25 @@ class IntrusionResponseGameUtil:
                         a1_a2_s_probs = shutdown_dist
                     elif a2 == env_constants.ATTACKER_ACTIONS.RECON:
                         if IntrusionResponseGameUtil.is_local_state_in_zone(
-                                s=s,  zone=env_constants.ZONES.REDIRECTION_ZONE):
+                                s=s, zone=env_constants.ZONES.REDIRECTION_ZONE):
                             a1_a2_s_probs = recon_hp_dist
                         else:
                             a1_a2_s_probs = recon_dist
                     elif a2 == env_constants.ATTACKER_ACTIONS.EXPLOIT:
                         if IntrusionResponseGameUtil.is_local_state_in_zone(
-                                s=s,  zone=env_constants.ZONES.REDIRECTION_ZONE):
+                                s=s, zone=env_constants.ZONES.REDIRECTION_ZONE):
                             a1_a2_s_probs = exploit_hp_dist
                         else:
                             a1_a2_s_probs = exploit_dist
                     elif a2 == env_constants.ATTACKER_ACTIONS.BRUTE_FORCE:
                         if IntrusionResponseGameUtil.is_local_state_in_zone(
-                                s=s,  zone=env_constants.ZONES.REDIRECTION_ZONE):
+                                s=s, zone=env_constants.ZONES.REDIRECTION_ZONE):
                             a1_a2_s_probs = brute_force_hp_dist
                         else:
                             a1_a2_s_probs = brute_force_dist
                     else:
                         if IntrusionResponseGameUtil.is_local_state_in_zone(
-                                s=s,  zone=env_constants.ZONES.REDIRECTION_ZONE):
+                                s=s, zone=env_constants.ZONES.REDIRECTION_ZONE):
                             a1_a2_s_probs = wait_hp_dist
                         else:
                             a1_a2_s_probs = wait_dist
@@ -690,8 +689,9 @@ class IntrusionResponseGameUtil:
         for s_a in config.S_A:
             s_idx = config.states_to_idx[(s_d, s_a)]
             for a2 in config.A2:
-                temp += config.Z[a1][a2][s_prime_idx][o] * config.T[0][a1][a2][s_idx][s_prime_idx] * \
-                        d_b[s_a] * pi2[s_a][a2]
+                temp += \
+                    (config.Z[a1][a2][s_prime_idx][o] *
+                     config.T[0][a1][a2][s_idx][s_prime_idx] * d_b[s_a] * pi2[s_a][a2])
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_a_prime}, o:{o}, pi2:{pi2}")
@@ -809,8 +809,9 @@ class IntrusionResponseGameUtil:
         for s_d in list(range(len(config.S_D))):
             s_idx = config.states_to_idx[(s_d + 1, s_a)]
             for a1 in config.A1:
-                temp += config.Z[a1][a2][s_prime_idx][o] * config.T[0][a1][a2][s_idx][s_prime_idx] * \
-                        a_b[s_d] * pi1[s_d][a1]
+                temp += \
+                    (config.Z[a1][a2][s_prime_idx][o]
+                     * config.T[0][a1][a2][s_idx][s_prime_idx] * a_b[s_d] * pi1[s_d][a1])
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 2) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a2:{a2}, s_prime:{s_a_prime}, o:{o}, pi1:{pi1}")

@@ -10,7 +10,6 @@ import csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
 import csle_collector.docker_stats_manager.query_docker_stats_manager
 import csle_collector.docker_stats_manager.docker_stats_util
-import csle_collector.constants.constants as collector_constants
 from csle_common.util.docker_util import DockerUtil
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.containers_config import ContainersConfig

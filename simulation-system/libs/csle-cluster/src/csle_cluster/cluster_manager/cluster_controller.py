@@ -3731,7 +3731,8 @@ class ClusterController:
         if execution.emulation_env_config.sdn_controller_config is not None:
             for ip in physical_servers:
                 if execution.emulation_env_config.sdn_controller_config.container.physical_host_ip == ip:
-                    Logger.__call__().get_logger().info(f"Starting SDN controller monitor on containers on server: {ip}")
+                    Logger.__call__().get_logger().info(
+                        f"Starting SDN controller monitor on containers on server: {ip}")
                     ClusterController.start_sdn_controller_monitor(
                         ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                         emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
@@ -3833,7 +3834,8 @@ class ClusterController:
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
             time.sleep(10)
-            Logger.__call__().get_logger().info(f"Starting the OSSEC IDSes monitor threads on containers on server: {ip}")
+            Logger.__call__().get_logger().info(
+                f"Starting the OSSEC IDSes monitor threads on containers on server: {ip}")
             ClusterController.start_ossec_idses_monitor_threads(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)

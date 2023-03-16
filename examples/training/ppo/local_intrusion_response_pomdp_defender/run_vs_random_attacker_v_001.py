@@ -112,7 +112,7 @@ if __name__ == '__main__':
         [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable, beta=beta,
                                                        S=S, Z_U=Z_U, initial_zone=initial_zone)])
     d_b1 = IntrusionResponseGameUtil.local_initial_defender_belief(S_A=S_A)
-    a_b1 = IntrusionResponseGameUtil.local_initial_attacker_belief(S_D=S_D,initial_zone=initial_zone)
+    a_b1 = IntrusionResponseGameUtil.local_initial_attacker_belief(S_D=S_D, initial_zone=initial_zone)
     initial_state_idx = states_to_idx[(initial_state[env_constants.STATES.D_STATE_INDEX],
                                        initial_state[env_constants.STATES.A_STATE_INDEX])]
     env_name = "csle-intrusion-response-game-pomdp-defender-v1"

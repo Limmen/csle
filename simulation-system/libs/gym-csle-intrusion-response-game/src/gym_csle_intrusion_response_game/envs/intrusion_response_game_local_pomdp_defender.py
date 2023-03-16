@@ -83,10 +83,10 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             done = False
             t = 0
             cumulative_reward = 0
-            while not done  and t <= max_horizon:
+            while not done and t <= max_horizon:
                 a1 = np.random.choice(self.config.local_intrusion_response_game_config.A1)
                 o, r, done, info = self.step(a1)
-                cumulative_reward += r* math.pow(self.config.local_intrusion_response_game_config.gamma, t)
+                cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
         return np.mean(np.array(returns))
@@ -107,12 +107,12 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             done = False
             t = 0
             cumulative_reward = 0
-            while not done  and t <= max_horizon:
+            while not done and t <= max_horizon:
                 a1 = 0
                 if self.state.attacker_state() == env_constants.ATTACK_STATES.COMPROMISED:
                     a1 = initial_zone
                 o, r, done, info = self.step(a1)
-                cumulative_reward += r* math.pow(self.config.local_intrusion_response_game_config.gamma, t)
+                cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
         return np.mean(np.array(returns))
@@ -129,7 +129,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         # Extract the defender action
         if isinstance(a1, list):
             a1 = a1[0]
-        a1=int(a1)
+        a1 = int(a1)
 
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))

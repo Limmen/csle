@@ -345,7 +345,7 @@ def default_input_config(attacker_observation_space_config: ObservationSpaceConf
         C_D=IntrusionResponseGameUtil.constant_defender_action_costs(A1=A1, constant_cost=defender_action_cost),
         S_A=S_A, S_D=S_D,
         Z_D_P=IntrusionResponseGameUtil.constant_zone_detection_probabilities(
-            zones=zones,  constant_detection_prob=detection_probability),
+            zones=zones, constant_detection_prob=detection_probability),
         Z_U=IntrusionResponseGameUtil.constant_zone_utilities(zones=zones, constant_utility=zone_utility),
         beta=beta, eta=eta, s_1_idx=IntrusionResponseGameUtil.local_initial_state_idx(initial_zone=initial_zone, S=S)
     )
@@ -354,7 +354,7 @@ def default_input_config(attacker_observation_space_config: ObservationSpaceConf
     for i, s_d in enumerate(IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)):
         defender_stage_strategy[i][env_constants.DEFENDER_ACTIONS.WAIT] = 0.8
         for z in zones:
-            defender_stage_strategy[i][z] = 0.2/len(zones)
+            defender_stage_strategy[i][z] = 0.2 / len(zones)
     defender_strategy = TabularPolicy(
         player_type=PlayerType.DEFENDER,
         actions=defender_action_space_config.actions,

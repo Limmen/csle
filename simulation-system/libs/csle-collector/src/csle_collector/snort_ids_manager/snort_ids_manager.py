@@ -84,7 +84,7 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
 
         :return: status and list of topics
         """
-        logging.info(f"Checking if Snort is running")
+        logging.info("Checking if Snort is running")
         ps_res = subprocess.Popen(constants.SNORT_IDS_ROUTER.PS_AUX_CMD.split(" "), stdout=subprocess.PIPE)
         status_output = subprocess.run(constants.SNORT_IDS_ROUTER.GREP_SNORT_CONF.split(" "), stdin=ps_res.stdout,
                                        capture_output=True, text=True).stdout

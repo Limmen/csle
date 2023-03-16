@@ -83,10 +83,10 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
             done = False
             t = 0
             cumulative_reward = 0
-            while not done  and t <= max_horizon:
+            while not done and t <= max_horizon:
                 a2 = np.random.choice(self.config.local_intrusion_response_game_config.A2)
                 o, r, done, info = self.step(a2)
-                cumulative_reward += r* math.pow(self.config.local_intrusion_response_game_config.gamma, t)
+                cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
         return np.mean(np.array(returns))
@@ -100,21 +100,19 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         """
         max_horizon = 1000
         returns = []
-        initial_zone = self.config.local_intrusion_response_game_config.S[
-            self.config.local_intrusion_response_game_config.s_1_idx][env_constants.STATES.D_STATE_INDEX]
         for i in range(samples):
             o = self.reset()
             done = False
             t = 0
             cumulative_reward = 0
-            while not done  and t <= max_horizon:
+            while not done and t <= max_horizon:
                 a2 = 0
                 if self.state.attacker_state() == env_constants.ATTACK_STATES.HEALTHY:
                     a2 = env_constants.ATTACKER_ACTIONS.RECON
                 elif self.state.attacker_state() == env_constants.ATTACK_STATES.RECON:
                     a2 = env_constants.ATTACKER_ACTIONS.EXPLOIT
                 o, r, done, info = self.step(a2)
-                cumulative_reward += r* math.pow(self.config.local_intrusion_response_game_config.gamma, t)
+                cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
         return np.mean(np.array(returns))
@@ -134,7 +132,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
 
         # Get defender action from static strategy
         pi1 = np.array(self.static_defender_strategy.stage_policy(self.latest_defender_obs))
-        a1 = IntrusionResponseGameUtil.sample_defender_action(pi1=pi1, s=self.state.defender_state()-1)
+        a1 = IntrusionResponseGameUtil.sample_defender_action(pi1=pi1, s=self.state.defender_state() - 1)
 
         # Save current attacker state (needed later for updating the belief)
         s_a = self.state.attacker_state()

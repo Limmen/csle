@@ -19,7 +19,6 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_config.emulation_metrics_time_series import EmulationMetricsTimeSeries
-from csle_common.logging.log import Logger
 
 
 class ReadEmulationStatisticsUtil:

@@ -124,7 +124,7 @@ def emulation_execution_info(execution_id: int):
             ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
             port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
             ip_first_octet=execution.ip_first_octet)
-        kibana_tunnels_dto=ClusterController.list_kibana_tunnels(
+        kibana_tunnels_dto = ClusterController.list_kibana_tunnels(
             ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
             port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
@@ -138,7 +138,7 @@ def emulation_execution_info(execution_id: int):
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
-            ryu_tunnels_dto=ClusterController.list_ryu_tunnels(
+            ryu_tunnels_dto = ClusterController.list_ryu_tunnels(
                 ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
             for ryu_tunnel_dto in ryu_tunnels_dto.tunnels:
@@ -741,7 +741,8 @@ def start_stop_ossec_manager(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.stop_ossec_ids_managers(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=execution.emulation_name,
                         ip_first_octet=execution.ip_first_octet)
             else:
                 Logger.__call__().get_logger().info(
@@ -749,7 +750,8 @@ def start_stop_ossec_manager(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.stop_ossec_ids_manager(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=execution.emulation_name,
                         ip_first_octet=execution.ip_first_octet, container_ip=ip)
         if start:
             if ip == api_constants.MGMT_WEBAPP.START_ALL_PROPERTY:
@@ -758,7 +760,8 @@ def start_stop_ossec_manager(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.start_ossec_ids_managers(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=execution.emulation_name,
                         ip_first_octet=execution.ip_first_octet)
             else:
                 Logger.__call__().get_logger().info(
@@ -766,7 +769,8 @@ def start_stop_ossec_manager(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.start_ossec_ids_manager(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=execution.emulation_name,
                         ip_first_octet=execution.ip_first_octet, container_ip=ip)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
@@ -844,7 +848,8 @@ def start_stop_ossec_ids(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.start_ossec_ids(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=execution.emulation_name,
                         ip_first_octet=execution.ip_first_octet, container_ip=ip)
         time.sleep(30)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
@@ -1002,7 +1007,8 @@ def start_stop_host_manager(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.start_host_manager(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=execution.emulation_name,
                         ip_first_octet=execution.ip_first_octet, container_ip=ip)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
@@ -1052,7 +1058,8 @@ def start_stop_host_monitor_thread(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.stop_host_monitor_threads(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=execution.emulation_name,
                         ip_first_octet=execution.ip_first_octet)
             else:
                 Logger.__call__().get_logger().info(
@@ -1060,7 +1067,8 @@ def start_stop_host_monitor_thread(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.stop_host_monitor_thread(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=execution.emulation_name,
                         ip_first_octet=execution.ip_first_octet, container_ip=ip)
         if start:
             if ip == api_constants.MGMT_WEBAPP.START_ALL_PROPERTY:
@@ -1069,7 +1077,8 @@ def start_stop_host_monitor_thread(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.start_host_monitor_threads(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=execution.emulation_name,
                         ip_first_octet=execution.ip_first_octet)
             else:
                 Logger.__call__().get_logger().info(
@@ -1077,7 +1086,8 @@ def start_stop_host_monitor_thread(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.start_host_monitor_thread(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=execution.emulation_name,
                         ip_first_octet=execution.ip_first_octet, container_ip=ip)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
         response = jsonify(execution_info.to_dict())
@@ -1144,7 +1154,8 @@ def start_stop_container(execution_id: int):
                     f"execution id: {execution.ip_first_octet}")
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.start_containers_of_execution(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=execution.emulation_name,
                         ip_first_octet=execution.ip_first_octet)
             Logger.__call__().get_logger().info(
                 f"Starting container: {container_name}, on emulation: {execution.emulation_env_config.name}, "
@@ -1215,7 +1226,7 @@ def start_stop_elk_manager(execution_id: int):
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
-            kibana_tunnels_dto=ClusterController.list_kibana_tunnels(
+            kibana_tunnels_dto = ClusterController.list_kibana_tunnels(
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
             for kibana_tunnel_dto in kibana_tunnels_dto.tunnels:
@@ -1285,7 +1296,7 @@ def start_stop_elk_stack(execution_id: int):
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
-            kibana_tunnels_dto=ClusterController.list_kibana_tunnels(
+            kibana_tunnels_dto = ClusterController.list_kibana_tunnels(
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
             for kibana_tunnel_dto in kibana_tunnels_dto.tunnels:
@@ -1353,7 +1364,7 @@ def start_stop_elastic(execution_id: int):
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
-            kibana_tunnels_dto=ClusterController.list_kibana_tunnels(
+            kibana_tunnels_dto = ClusterController.list_kibana_tunnels(
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
             for kibana_tunnel_dto in kibana_tunnels_dto.tunnels:
@@ -1421,7 +1432,7 @@ def start_stop_logstash(execution_id: int):
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
-            kibana_tunnels_dto=ClusterController.list_kibana_tunnels(
+            kibana_tunnels_dto = ClusterController.list_kibana_tunnels(
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
             for kibana_tunnel_dto in kibana_tunnels_dto.tunnels:
@@ -1493,7 +1504,7 @@ def start_stop_kibana(execution_id: int):
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
-            kibana_tunnels_dto=ClusterController.list_kibana_tunnels(
+            kibana_tunnels_dto = ClusterController.list_kibana_tunnels(
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
             for kibana_tunnel_dto in kibana_tunnels_dto.tunnels:
@@ -2041,7 +2052,7 @@ def start_stop_ryu_manager(execution_id: int):
                 ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
-            ryu_tunnels_dto=ClusterController.list_ryu_tunnels(
+            ryu_tunnels_dto = ClusterController.list_ryu_tunnels(
                 ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
             for ryu_tunnel_dto in ryu_tunnels_dto.tunnels:
@@ -2118,7 +2129,7 @@ def start_stop_ryu_controller(execution_id: int):
                 ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
-            ryu_tunnels_dto=ClusterController.list_ryu_tunnels(
+            ryu_tunnels_dto = ClusterController.list_ryu_tunnels(
                 ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
             for ryu_tunnel_dto in ryu_tunnels_dto.tunnels:
@@ -2187,7 +2198,7 @@ def start_stop_ryu_monitor(execution_id: int):
                 ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
-            ryu_tunnels_dto=ClusterController.list_ryu_tunnels(
+            ryu_tunnels_dto = ClusterController.list_ryu_tunnels(
                 ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
             for ryu_tunnel_dto in ryu_tunnels_dto.tunnels:
@@ -2222,13 +2233,12 @@ def get_sdn_switches_of_execution(execution_id: int):
     execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
 
     response_data = {}
-    config = MetastoreFacade.get_config(id=1)
     if execution is not None and execution.emulation_env_config.sdn_controller_config is not None:
         ClusterController.create_ryu_tunnel(
             ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
             port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
             ip_first_octet=execution.ip_first_octet)
-        ryu_tunnels_dto=ClusterController.list_ryu_tunnels(
+        ryu_tunnels_dto = ClusterController.list_ryu_tunnels(
             ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
             port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         local_ryu_port = -1

@@ -78,5 +78,5 @@ class SnortIdsManagersInfo:
         :return: an empty version of the DTO
         """
         return SnortIdsManagersInfo(
-            ips = [], ports = [], emulation_name="", execution_id=-1, snort_ids_managers_statuses=[],
+            ips=[], ports=[], emulation_name="", execution_id=-1, snort_ids_managers_statuses=[],
             snort_ids_managers_running=[])

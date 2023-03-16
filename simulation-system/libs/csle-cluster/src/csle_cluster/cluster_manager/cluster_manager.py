@@ -433,8 +433,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logs = []
         for f in os.listdir(path):
             item = os.path.join(path, f)
-            if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item \
-                    and not constants.FILE_PATTERNS.GZ_SUFFIX in item:
+            if os.path.isfile(item) and constants.FILE_PATTERNS.LOG_SUFFIX in item and \
+                    constants.FILE_PATTERNS.GZ_SUFFIX not in item:
                 with open(item, 'r') as fp:
                     data = ClusterManagerUtil.tail(fp, window=100).split("\n")
                     logs = data
@@ -3333,8 +3333,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is not None:
             status_dtos = OSSECIDSController.get_ossec_idses_monitor_threads_statuses(
                 emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip())
-            status_dtos = list(map(lambda x: ClusterManagerUtil.convert_ossec_ids_monitor_dto_to_ossec_ids_status_dto(x),
-                                   status_dtos))
+            status_dtos = list(
+                map(lambda x: ClusterManagerUtil.convert_ossec_ids_monitor_dto_to_ossec_ids_status_dto(x),
+                    status_dtos))
             return csle_cluster.cluster_manager.cluster_manager_pb2.OSSECIdsMonitorThreadStatusesDTO(
                 ossecIDSStatuses=status_dtos
             )
@@ -3543,8 +3544,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is not None:
             status_dtos = SnortIDSController.get_snort_idses_monitor_threads_statuses(
                 emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip())
-            status_dtos = list(map(lambda x: ClusterManagerUtil.convert_snort_ids_monitor_dto_to_snort_ids_status_dto(x),
-                                   status_dtos))
+            status_dtos = list(
+                map(lambda x: ClusterManagerUtil.convert_snort_ids_monitor_dto_to_snort_ids_status_dto(x),
+                    status_dtos))
             return csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsMonitorThreadStatusesDTO(
                 snortIDSStatuses=status_dtos
             )
@@ -3852,7 +3854,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an KibanaTunnelsDTO
         """
-        logging.info(f"Gets the Kibana tunnels")
+        logging.info("Gets the Kibana tunnels")
         return ClusterManagerUtil.create_kibana_tunnels_dto_from_dict(
             dict=cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT)
 
@@ -3866,7 +3868,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a RyuTunnelsDTO
         """
-        logging.info(f"Gets the Ryu tunnels")
+        logging.info("Gets the Ryu tunnels")
         return ClusterManagerUtil.create_ryu_tunnels_dto_from_dict(
             dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT)
 
@@ -3963,8 +3965,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         HostController.stop_host_monitor_threads(emulation_env_config=execution.emulation_env_config,
-                                                  physical_host_ip=GeneralUtil.get_host_ip(),
-                                                  logger=logging.getLogger())
+                                                 physical_host_ip=GeneralUtil.get_host_ip(),
+                                                 logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def stopHostMonitorThread(
@@ -3986,15 +3988,15 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
         if container_config is not None:
             HostController.stop_host_monitor_thread(emulation_env_config=execution.emulation_env_config,
-                                                     ip=container_config.docker_gw_bridge_ip,
-                                                     logger=logging.getLogger())
+                                                    ip=container_config.docker_gw_bridge_ip,
+                                                    logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
 
     def startRyuMonitor(
-        self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartRyuMonitorThreadMsg,
-        context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartRyuMonitorThreadMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Starts the Ryu monitor thread for a given execution
 
@@ -4057,7 +4059,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                 execution.emulation_env_config.sdn_controller_config is None \
                 or execution.emulation_env_config.sdn_controller_config.container.physical_host_ip \
                 != GeneralUtil.get_host_ip():
-           return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
+            return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
         else:
             path = f"/{ryu_constants.RYU.LOG_FILE}"
             return ClusterManagerUtil.get_logs(
@@ -4160,10 +4162,10 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if container_config is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=[])
         else:
-            path = (execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
-                ip=request.containerIp).traffic_manager_log_dir +
-                    execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
-                        ip=request.containerIp).traffic_manager_log_file)
+            path = execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
+                ip=request.containerIp).traffic_manager_log_dir
+            path = path + execution.emulation_env_config.traffic_config.get_node_traffic_config_by_ip(
+                ip=request.containerIp).traffic_manager_log_file
             return ClusterManagerUtil.get_logs(
                 execution=execution,
                 ip=container_config.docker_gw_bridge_ip,
@@ -4339,7 +4341,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                     execution.emulation_env_config.kafka_config.kafka_manager_log_file)
             return ClusterManagerUtil.get_logs(
                 execution=execution,
-                ip=execution.emulation_env_config.kafka_config.container.docker_gw_bridge_ip,  path=path)
+                ip=execution.emulation_env_config.kafka_config.container.docker_gw_bridge_ip, path=path)
 
     def getClientManagerLogsMsg(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetClientManagerLogsMsg,
@@ -4397,7 +4399,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=data)
 
     def getClusterManagerLogs(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetClusterManagerLogsMsg,
-                     context: grpc.ServicerContext) \
+                              context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
         Gets the logs of the cluster manager
@@ -4418,7 +4420,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
 
     def getExecutionTimeSeriesData(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetExecutionTimeSeriesDataMsg,
-                              context: grpc.ServicerContext) \
+            context: grpc.ServicerContext) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.EmulationMetricsTimeSeriesDTO:
         """
         Gets time-series data of an emulation execution

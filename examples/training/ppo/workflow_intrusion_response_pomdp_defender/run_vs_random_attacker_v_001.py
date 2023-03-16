@@ -83,7 +83,7 @@ if __name__ == '__main__':
             agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
                                               descr="the number of stop actions"),
             agents_constants.COMMON.NUM_NODES: HParam(value=num_nodes, name=agents_constants.COMMON.NUM_NODES,
-                                              descr="the number of nodes in the network")
+                                                      descr="the number of nodes in the network")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
@@ -122,14 +122,14 @@ if __name__ == '__main__':
         value_function=None, q_table=None,
         lookup_table=list(attacker_stage_strategy.tolist()),
         agent_type=AgentType.RANDOM, avg_R=-1)
-    gw_reachable = np.array([0,1,2])
+    gw_reachable = np.array([0, 1, 2])
     adjacency_matrix = [
-        [1,0,0,1,1,0,0],
-        [0,1,0,1,0,1,0],
-        [0,0,1,0,1,1,0],
-        [0,0,0,1,0,0,1],
-        [0,0,0,0,1,0,1],
-        [0,0,0,0,0,1,1]
+        [1, 0, 0, 1, 1, 0, 0],
+        [0, 1, 0, 1, 0, 1, 0],
+        [0, 0, 1, 0, 1, 1, 0],
+        [0, 0, 0, 1, 0, 0, 1],
+        [0, 0, 0, 0, 1, 0, 1],
+        [0, 0, 0, 0, 0, 1, 1]
     ]
     adjacency_matrix = np.array(adjacency_matrix)
     nodes = np.array(list(range(num_nodes)))
@@ -138,11 +138,11 @@ if __name__ == '__main__':
     for node in nodes:
         initial_zones.append(np.random.choice(zones))
         attacker_strategies.append(attacker_strategy)
-    initial_zones=np.array(initial_zones)
-    simulation_env_config.simulation_env_input_config.game_config= WorkflowIntrusionResponseGameConfig(
+    initial_zones = np.array(initial_zones)
+    simulation_env_config.simulation_env_input_config.game_config = WorkflowIntrusionResponseGameConfig(
         env_name="csle-intrusion-response-game-workflow-pomdp-defender-v1",
         nodes=nodes, initial_zones=initial_zones, X_max=X_max, beta=beta, gamma=gamma,
-        zones=zones, Z_D_P=Z_D_P,C_D=C_D, A_P=A_P, Z_U=Z_U, adjacency_matrix=adjacency_matrix, eta=eta,
+        zones=zones, Z_D_P=Z_D_P, C_D=C_D, A_P=A_P, Z_U=Z_U, adjacency_matrix=adjacency_matrix, eta=eta,
         gw_reachable=gw_reachable
     )
     simulation_env_config.simulation_env_input_config.attacker_strategies = attacker_strategies

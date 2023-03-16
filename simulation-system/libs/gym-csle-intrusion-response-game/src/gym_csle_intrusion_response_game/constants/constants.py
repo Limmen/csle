@@ -11,6 +11,7 @@ class ZONES:
     REDIRECTION_ZONE = 2
     SHUTDOWN_ZONE = 1
 
+
 class STATES:
     """
     Constants related to the state space of the game

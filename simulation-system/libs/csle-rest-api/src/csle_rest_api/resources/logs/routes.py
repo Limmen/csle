@@ -337,7 +337,6 @@ def client_manager_logs():
     if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
     if emulation is not None and execution_id is not None:
@@ -370,7 +369,6 @@ def kafka_manager_logs():
     if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
     if emulation is not None and execution_id is not None:
@@ -403,7 +401,6 @@ def kafka_logs():
     if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
     if emulation is not None and execution_id is not None:

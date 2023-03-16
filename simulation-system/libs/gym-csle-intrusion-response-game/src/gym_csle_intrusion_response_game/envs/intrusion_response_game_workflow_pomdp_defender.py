@@ -50,7 +50,7 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
             Z_U = np.array([0, 1, 3, 3.5, 4])
             R = np.array(
                 [IntrusionResponseGameUtil.local_reward_tensor(
-                    eta=self.config.game_config.eta,  C_D=self.config.game_config.C_D, A1=A1, A2=A2,
+                    eta=self.config.game_config.eta, C_D=self.config.game_config.C_D, A1=A1, A2=A2,
                     reachable=reachable, beta=self.config.game_config.beta, S=S, Z_U=Z_U,
                     initial_zone=self.config.game_config.initial_zones[node])])
             d_b1 = IntrusionResponseGameUtil.local_initial_defender_belief(S_A=S_A)
@@ -127,7 +127,7 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
             local_a1 = a1[i]
             local_o, local_r, local_done, _ = local_env.step(a1=local_a1)
             if local_done:
-                done=True
+                done = True
             r = r + local_r
             defender_obs = defender_obs + local_o.tolist()
             s = s + local_env.state.state_vector().tolist()

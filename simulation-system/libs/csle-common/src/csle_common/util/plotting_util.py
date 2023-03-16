@@ -65,4 +65,4 @@ class PlottingUtil:
         :param min_val: the minimuim value for the normalization
         :return: the normalized vector
         """
-        return np.array(list(map(lambda x: (x-min_val)/(max_val-min_val), vec.tolist())))
+        return np.array(list(map(lambda x: (x - min_val) / (max_val - min_val), vec.tolist())))
