@@ -26,7 +26,7 @@ def start_docker_stats_monitor(
         emulation: str, execution_first_ip_octet: int, kafka_ip: str, stats_queue_maxsize: int,
         time_step_len_seconds: int, kafka_port: int,
         containers: List[csle_collector.docker_stats_manager.docker_stats_manager_pb2.ContainerIp],
-        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
         -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
     """
     Sends a request to the docker stats manager to start a new monitor thread
@@ -54,7 +54,7 @@ def start_docker_stats_monitor(
 
 def stop_docker_stats_monitor(
         stub: csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub,
-        emulation: str, execution_first_ip_octet: int, timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        emulation: str, execution_first_ip_octet: int, timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
         -> csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
     """
     Sends a request to the docker stats manager to start a new monitor thread
