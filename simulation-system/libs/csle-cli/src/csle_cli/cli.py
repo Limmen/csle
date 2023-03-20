@@ -569,10 +569,19 @@ def clean_all_emulation_executions(emulation_env_config: "EmulationEnvConfig") -
     from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho(f"Cleaning emulation {emulation_env_config.name}", bold=False)
     config = MetastoreFacade.get_config(id=1)
+    leader = None
     for node in config.cluster_config.cluster_nodes:
-        click.secho(f"Cleaning containers of emulation {emulation_env_config.name} on server {node.ip}", bold=False)
-        ClusterController.clean_all_executions_of_emulation(
-            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name)
+        if not node.leader:
+            click.secho(f"Cleaning containers of emulation {emulation_env_config.name} on server {node.ip}", bold=False)
+            ClusterController.clean_all_executions_of_emulation(
+                ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name)
+        else:
+            leader = node
+    # Clean the leader last since it will remove the overlay networks
+    click.secho(f"Cleaning containers of emulation {emulation_env_config.name} on server {leader.ip}", bold=False)
+    ClusterController.clean_all_executions_of_emulation(
+        ip=leader.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name)
+
     executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
         emulation_name=emulation_env_config.name)
     for exec in executions:
@@ -591,10 +600,22 @@ def clean_emulation_execution(emulation_env_config: "EmulationEnvConfig", execut
     from csle_common.metastore.metastore_facade import MetastoreFacade
     click.secho(f"Cleaning execution {execution_id} of emulation {emulation_env_config.name}", bold=False)
     config = MetastoreFacade.get_config(id=1)
+    leader = None
     for node in config.cluster_config.cluster_nodes:
-        ClusterController.clean_execution(
-            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name,
-            ip_first_octet=execution_id)
+        if not node.leader:
+            click.secho(f"Cleaning containers of emulation {emulation_env_config.name} and execution id:{execution_id} "
+                        f"on server {node.ip}", bold=False)
+            ClusterController.clean_execution(
+                ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name,
+                ip_first_octet=execution_id)
+        else:
+            leader = node
+    # Clean the leader last since it will remove the overlay networks
+    click.secho(f"Cleaning containers of emulation {emulation_env_config.name} and execution id:{execution_id} "
+                f"on server {leader.ip}", bold=False)
+    ClusterController.clean_execution(
+        ip=leader.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name,
+        ip_first_octet=execution_id)
     execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                         emulation_name=emulation_env_config.name)
     if execution is not None:
