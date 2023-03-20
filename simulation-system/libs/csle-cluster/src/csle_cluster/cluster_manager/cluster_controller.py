@@ -3639,9 +3639,12 @@ class ClusterController:
                                                             ip_first_octet=execution.ip_first_octet)
 
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating networks --")
-        ClusterController.create_emulation_networks(
-            ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
-            ip_first_octet=execution.ip_first_octet)
+        config = MetastoreFacade.get_config(id=1)
+        for node in config.cluster_config.cluster_nodes:
+            if node.leader:
+                ClusterController.create_emulation_networks(
+                    ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
+                    ip_first_octet=execution.ip_first_octet)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Connect containers to networks --")

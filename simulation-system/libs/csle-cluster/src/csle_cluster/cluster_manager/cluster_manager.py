@@ -1971,7 +1971,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logging.info(f"Creates networks for emulation: {request.emulation} and execution id:{request.ipFirstOctet}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
-        if execution is None:
+        config = MetastoreFacade.get_config(id=1)
+        leader = ClusterUtil.am_i_leader(ip=GeneralUtil.get_host_ip(), config=config)
+        if execution is None or not leader:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         ContainerController.create_networks(containers_config=execution.emulation_env_config.containers_config)
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
