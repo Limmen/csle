@@ -412,7 +412,8 @@ class EmulationEnvConfig:
         config.kafka_config = config.kafka_config.create_execution_config(ip_first_octet=ip_first_octet,
                                                                           physical_servers=physical_servers)
         config.services_config = config.services_config.create_execution_config(ip_first_octet=ip_first_octet)
-        config.ovs_config = config.ovs_config.create_execution_config(ip_first_octet=ip_first_octet)
+        config.ovs_config = config.ovs_config.create_execution_config(ip_first_octet=ip_first_octet,
+                                                                      physical_servers=physical_servers)
         config.host_manager_config = config.host_manager_config.create_execution_config(ip_first_octet=ip_first_octet)
         config.snort_ids_manager_config = config.snort_ids_manager_config.create_execution_config(
             ip_first_octet=ip_first_octet)

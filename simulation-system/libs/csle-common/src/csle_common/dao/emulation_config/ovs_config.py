@@ -82,14 +82,16 @@ class OVSConfig:
         """
         return OVSConfig.from_dict(self.to_dict())
 
-    def create_execution_config(self, ip_first_octet: int) -> "OVSConfig":
+    def create_execution_config(self, ip_first_octet: int, physical_servers: List[str]) -> "OVSConfig":
         """
         Creates a new config for an execution
 
         :param ip_first_octet: the first octet of the IP of the new execution
+        :param physical_servers: the list of physical servers of the execution
         :return: the new config
         """
         config = self.copy()
-        config.switch_configs = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
+        config.switch_configs = list(map(lambda x: x.create_execution_config(
+            ip_first_octet=ip_first_octet, physical_servers=physical_servers),
                                          config.switch_configs))
         return config

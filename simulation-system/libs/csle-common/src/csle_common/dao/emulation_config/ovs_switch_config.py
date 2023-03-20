@@ -113,11 +113,12 @@ class OvsSwitchConfig:
         """
         return OvsSwitchConfig.from_dict(self.to_dict())
 
-    def create_execution_config(self, ip_first_octet: int) -> "OvsSwitchConfig":
+    def create_execution_config(self, ip_first_octet: int, physical_servers: List[str]) -> "OvsSwitchConfig":
         """
         Creates a new config for an execution
 
         :param ip_first_octet: the first octet of the IP of the new execution
+        :param physical_servers: the list of physical servers of the execution
         :return: the new config
         """
         config = self.copy()
@@ -125,4 +126,5 @@ class OvsSwitchConfig:
         config.controller_ip = GeneralUtil.replace_first_octet_of_ip(ip=config.controller_ip,
                                                                      ip_first_octet=ip_first_octet)
         config.container_name = f"{config.container_name}-{ip_first_octet}"
+        config.physical_host_ip = physical_servers[0]  # TODO Update this
         return config
