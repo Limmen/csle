@@ -391,6 +391,7 @@ class ContainerController:
             time.sleep(2)
 
             for ip_net in c.ips_and_networks:
+                time.sleep(2)
                 ip, net = ip_net
                 cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                       f"{container_name}"
@@ -434,6 +435,7 @@ class ContainerController:
         time.sleep(2)
 
         for ip_net in container.ips_and_networks:
+            time.sleep(2)
             ip, net = ip_net
             cmd = f"{constants.DOCKER.NETWORK_CONNECT} --ip {ip} {net.name} " \
                   f"{container_name}"
