@@ -1622,7 +1622,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a GetNumActiveClientsMsg
         """
-        logging.info(f"Gets the number of active clients in execution with id: {request.ipFirstOctet} "
+        logging.info(f"Getting the number of active clients in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -1721,7 +1721,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a ClientManagersInfoDTO
         """
-        logging.info(f"Gets the info of client managers in execution with id: {request.ipFirstOctet} "
+        logging.info(f"Getting the info of client managers in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -1745,7 +1745,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a TrafficManagersInfoDTO
         """
-        logging.info(f"Gets the info of traffic managers in execution with id: {request.ipFirstOctet} "
+        logging.info(f"Getting the info of traffic managers in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -2063,7 +2063,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a DockerStatsManagersInfoDTO
         """
-        logging.info(f"Gets the info of docker stats managers in execution with id: {request.ipFirstOctet} "
+        logging.info(f"Getting the info of docker stats managers in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -2309,7 +2309,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a ElkManagersInfoDTO
         """
-        logging.info(f"Gets the info of elk managers in execution with id: {request.ipFirstOctet} "
+        logging.info(f"Getting the info of elk managers in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -2885,7 +2885,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a HostManagerStatusesDTO
         """
-        logging.info(f"Gets the host monitor thread statuses "
+        logging.info(f"Getting the host monitor thread statuses "
                      f"in execution with id: {request.ipFirstOctet} and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -2913,7 +2913,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a HostManagersInfoDTO
         """
-        logging.info(f"Gets the info of host managers in execution with id: {request.ipFirstOctet} "
+        logging.info(f"Getting the info of host managers in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -3066,7 +3066,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a KafkaManagersInfoDTO
         """
-        logging.info(f"Gets the info of kafka managers in execution with id: {request.ipFirstOctet} "
+        logging.info(f"Getting the info of kafka managers in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -3364,7 +3364,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a OSSECIdsManagersInfoDTO
         """
-        logging.info(f"Gets the info of OSSEC IDS managers in execution with id: {request.ipFirstOctet} "
+        logging.info(f"Getting the info of OSSEC IDS managers in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -3503,7 +3503,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a RyuManagersInfoDTO
         """
-        logging.info(f"Gets the info of Ryu managers in execution with id: {request.ipFirstOctet} "
+        logging.info(f"Getting the info of Ryu managers in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -3820,7 +3820,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a SnortIdsManagersInfoDTO
         """
-        logging.info(f"Gets the info of Snort IDS managers in execution with id: {request.ipFirstOctet} "
+        logging.info(f"Getting the info of Snort IDS managers in execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -3843,7 +3843,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an ExecutionInfoDTO
         """
-        logging.info(f"Gets the info of the execution with id: {request.ipFirstOctet} "
+        logging.info(f"Getting the info of the execution with id: {request.ipFirstOctet} "
                      f"and emulation: {request.emulation}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
@@ -3864,7 +3864,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an KibanaTunnelsDTO
         """
-        logging.info("Gets the Kibana tunnels")
+        logging.info("Getting the Kibana tunnels")
         return ClusterManagerUtil.create_kibana_tunnels_dto_from_dict(
             dict=cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT)
 
@@ -3878,7 +3878,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: a RyuTunnelsDTO
         """
-        logging.info("Gets the Ryu tunnels")
+        logging.info("Getting the Ryu tunnels")
         return ClusterManagerUtil.create_ryu_tunnels_dto_from_dict(
             dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT)
 
