@@ -358,5 +358,6 @@ class ELKController:
         emulation_name = emulation_env_config.name
         elk_manager_info_dto = ELKManagersInfo(
             elk_managers_running=elk_managers_running, ips=elk_managers_ips, execution_id=execution_id,
-            emulation_name=emulation_name, elk_managers_statuses=elk_managers_statuses, ports=elk_managers_ports)
+            emulation_name=emulation_name, elk_managers_statuses=elk_managers_statuses, ports=elk_managers_ports,
+            physical_server_ip=emulation_env_config.elk_config.container.physical_host_ip)
         return elk_manager_info_dto

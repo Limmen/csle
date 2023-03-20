@@ -997,7 +997,7 @@ class ClusterManagerUtil:
             elkManagersRunning=elk_managers_dto.elk_managers_running,
             elkManagersStatuses=list(map(
                 lambda x: ClusterManagerUtil.convert_elk_dto(x), elk_managers_dto.elk_managers_statuses)),
-            localKibanaPort=elk_managers_dto.local_kibana_port
+            localKibanaPort=elk_managers_dto.local_kibana_port, physicalServerIp=elk_managers_dto.physical_server_ip
         )
 
     @staticmethod
@@ -1018,7 +1018,8 @@ class ClusterManagerUtil:
             elk_managers_running=elk_managers_dto.elkManagersRunning,
             elk_managers_statuses=list(map(
                 lambda x: ClusterManagerUtil.convert_elk_dto_reverse(x), elk_managers_dto.elkManagersStatuses)),
-            local_kibana_port=elk_managers_dto.localKibanaPort
+            local_kibana_port=elk_managers_dto.localKibanaPort,
+            physical_server_ip=elk_managers_dto.physicalServerIp
         )
 
     @staticmethod
@@ -1039,7 +1040,9 @@ class ClusterManagerUtil:
             ryuManagersRunning=ryu_managers_info_dto.ryu_managers_running,
             ryuManagersStatuses=list(
                 map(lambda x: ClusterManagerUtil.convert_ryu_dto_to_ryu_status_dto(x),
-                    ryu_managers_info_dto.ryu_managers_statuses))
+                    ryu_managers_info_dto.ryu_managers_statuses)),
+            physicalServerIp=ryu_managers_info_dto.physical_server_ip,
+            localControllerWebPort=ryu_managers_info_dto.local_controller_web_port
         )
 
     @staticmethod
@@ -1060,7 +1063,9 @@ class ClusterManagerUtil:
             ryu_managers_running=ryu_managers_info_dto.ryuManagersRunning,
             ryu_managers_statuses=list(
                 map(lambda x: ClusterManagerUtil.convert_ryu_dto_to_ryu_status_dto_reverse(x),
-                    ryu_managers_info_dto.ryuManagersStatuses))
+                    ryu_managers_info_dto.ryuManagersStatuses)),
+            physical_server_ip=ryu_managers_info_dto.physicalServerIp,
+            local_controller_web_port=ryu_managers_info_dto.localControllerWebPort
         )
 
     @staticmethod
@@ -1436,7 +1441,7 @@ class ClusterManagerUtil:
         """
         return cluster_manager_pb2.ElkManagersInfoDTO(
             ips=[], ports=[], emulationName="", executionId="", elkManagersRunning=[], elkManagersStatuses=[],
-            localKibanaPort=-1
+            localKibanaPort=-1, physicalServerIp = ""
         )
 
     @staticmethod
@@ -1445,7 +1450,8 @@ class ClusterManagerUtil:
         :return: an empty RyuManagersInfoDTO
         """
         return cluster_manager_pb2.RyuManagersInfoDTO(
-            ips=[], ports=[], emulationName="", executionId=-1, ryuManagersRunning=[], ryuManagersStatuses=[]
+            ips=[], ports=[], emulationName="", executionId=-1, ryuManagersRunning=[], ryuManagersStatuses=[],
+            physicalServerIp = "", localControllerWebPort=-1
         )
 
     @staticmethod

@@ -290,5 +290,6 @@ class SDNControllerManager:
         emulation_name = emulation_env_config.name
         ryu_manager_info_dto = RyuManagersInfo(
             ryu_managers_running=ryu_managers_running, ips=ryu_managers_ips, execution_id=execution_id,
-            emulation_name=emulation_name, ryu_managers_statuses=ryu_managers_statuses, ports=ryu_managers_ports)
+            emulation_name=emulation_name, ryu_managers_statuses=ryu_managers_statuses, ports=ryu_managers_ports,
+            physical_server_ip=emulation_env_config.sdn_controller_config.container.physical_host_ip)
         return ryu_manager_info_dto

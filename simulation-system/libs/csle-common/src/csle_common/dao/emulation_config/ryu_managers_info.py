@@ -12,7 +12,8 @@ class RyuManagersInfo:
     def __init__(self, ips: List[str], ports: List[int],
                  emulation_name: str, execution_id: int,
                  ryu_managers_statuses: List[csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO],
-                 ryu_managers_running: List[bool], local_controller_web_port: int = -1):
+                 ryu_managers_running: List[bool], local_controller_web_port: int = -1,
+                 physical_server_ip: str = ""):
         """
         Initializes the DTO
 
@@ -23,6 +24,7 @@ class RyuManagersInfo:
         :param execution_id: the ID of the corresponding emulation execution
         :param ryu_managers_statuses: a list of statuses of the Ryu managers
         :param local_controller_web_port: the local port that is forwarded to the SDN controller's web api
+        :param physical_server_ip: the ip of the physical server where Ryu is running
         """
         self.ryu_managers_running = ryu_managers_running
         self.ips = ips
@@ -31,6 +33,7 @@ class RyuManagersInfo:
         self.execution_id = execution_id
         self.ryu_managers_statuses = ryu_managers_statuses
         self.local_controller_web_port = local_controller_web_port
+        self.physical_server_ip = physical_server_ip
 
     def __str__(self):
         """
@@ -41,7 +44,8 @@ class RyuManagersInfo:
                f"execution_id: {self.execution_id}, " \
                f"ryu_managers_statuses: {list(map(lambda x: str(x), self.ryu_managers_statuses))}, " \
                f"ports: {list(map(lambda x: str(x), self.ports))}," \
-               f"local_controller_web_port: {self.local_controller_web_port}"
+               f"local_controller_web_port: {self.local_controller_web_port}, " \
+               f"physical_server_ip: {self.physical_server_ip}"
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -54,6 +58,7 @@ class RyuManagersInfo:
         d["emulation_name"] = self.emulation_name
         d["execution_id"] = self.execution_id
         d["local_controller_web_port"] = self.local_controller_web_port
+        d["physical_server_ip"] = self.physical_server_ip
         d["ryu_managers_statuses"] = list(map(
             lambda x: ryu_manager_util.RyuManagerUtil.ryu_dto_to_dict(x), self.ryu_managers_statuses))
         return d
@@ -70,5 +75,6 @@ class RyuManagersInfo:
                               ryu_managers_statuses=list(map(
                                   lambda x: ryu_manager_util.RyuManagerUtil.ryu_dto_to_dict(x),
                                   d["ryu_managers_statuses"])),
-                              local_controller_web_port=d["local_controller_web_port"])
+                              local_controller_web_port=d["local_controller_web_port"],
+                              physical_server_ip=d["physical_server_ip"])
         return dto

@@ -1100,6 +1100,8 @@ message RyuManagersInfoDTO {
   int32 executionId = 4;
   repeated bool ryuManagersRunning = 5;
   repeated RyuManagerStatusDTO ryuManagersStatuses = 6;
+  int32 localControllerWebPort = 7;
+  string physicalServerIp = 8;
 }
 
 //Message that the server returns when asked about the status of the Ryu manager
@@ -1230,6 +1232,7 @@ message ElkManagersInfoDTO {
   repeated bool elkManagersRunning = 5;
   repeated ElkStatusDTO elkManagersStatuses = 6;
   int32 localKibanaPort = 7;
+  string physicalServerIp = 8;
 }
 
 // Message that the client sends when requesting to stop logstash for a specific execution
