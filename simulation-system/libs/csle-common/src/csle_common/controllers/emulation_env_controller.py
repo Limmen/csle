@@ -348,15 +348,15 @@ class EmulationEnvController:
                 raise ValueError(f"Container resources not found for container with ips:{ips}, "
                                  f"resources:{emulation_env_config.resources_config}")
             name = c.get_full_name()
-            logger.info(f"Starting container:{name}")
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
                   f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
                   f"-e TZ=Europe/Stockholm " \
                   f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
                   f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
-                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE " \
+                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE --privileged " \
                   f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
+            logger.info(f"Starting container:{name} with cmd: {cmd}")
             subprocess.call(cmd, shell=True)
 
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_host_ip:
@@ -364,15 +364,15 @@ class EmulationEnvController:
             c = emulation_env_config.kafka_config.container
             container_resources: NodeResourcesConfig = emulation_env_config.kafka_config.resources
             name = c.get_full_name()
-            logger.info(f"Starting container:{name}")
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
                   f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
                   f"-e TZ=Europe/Stockholm " \
                   f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
                   f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
-                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE " \
+                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE --privileged " \
                   f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
+            logger.info(f"Starting container:{name}, cmd: {cmd}")
             subprocess.call(cmd, shell=True)
 
         if emulation_env_config.elk_config.container.physical_host_ip == physical_host_ip:
@@ -380,15 +380,15 @@ class EmulationEnvController:
             c = emulation_env_config.elk_config.container
             container_resources: NodeResourcesConfig = emulation_env_config.elk_config.resources
             name = c.get_full_name()
-            logger.info(f"Starting container:{name}")
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
                   f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
                   f"-e TZ=Europe/Stockholm " \
                   f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
                   f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
-                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE " \
+                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE --privileged " \
                   f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
+            logger.info(f"Starting container:{name}, cmd: {cmd}")
             subprocess.call(cmd, shell=True)
 
         if emulation_env_config.sdn_controller_config is not None \
@@ -397,15 +397,15 @@ class EmulationEnvController:
             c = emulation_env_config.sdn_controller_config.container
             container_resources: NodeResourcesConfig = emulation_env_config.sdn_controller_config.resources
             name = c.get_full_name()
-            logger.info(f"Starting container:{name}")
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
                   f"--label cfg={path + constants.DOCKER.EMULATION_ENV_CFG_PATH} " \
                   f"-e TZ=Europe/Stockholm " \
                   f"--label emulation={emulation_env_config.name} --network=none --publish-all=true " \
                   f"--memory={container_resources.available_memory_gb}G --cpus={container_resources.num_cpus} " \
-                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE " \
+                  f"--restart={c.restart_policy} --cap-add NET_ADMIN --cap-add=SYS_NICE --privileged " \
                   f"{constants.CONTAINER_IMAGES.DOCKERHUB_USERNAME}/{c.name}:{c.version}"
+            logger.info(f"Starting container:{name}, cmd: {cmd}")
             subprocess.call(cmd, shell=True)
 
     @staticmethod
@@ -469,14 +469,16 @@ class EmulationEnvController:
                   f"-e TZ=Europe/Stockholm " \
                   f"--network={net_name} --ip {ip} --publish-all=true " \
                   f"--memory={memory}G --cpus={num_cpus} " \
-                  f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN --cap-add=SYS_NICE {image}"
+                  f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN --privileged " \
+                  f"--cap-add=SYS_NICE {image}"
         else:
             cmd = f"docker container run -dt --name csle-{name}-{version.replace('.', '')} " \
                   f"--hostname={name} " \
                   f"-e TZ=Europe/Stockholm --net=none " \
                   f"--publish-all=true " \
                   f"--memory={memory}G --cpus={num_cpus} " \
-                  f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN --cap-add=SYS_NICE {image}"
+                  f"--restart={constants.DOCKER.ON_FAILURE_3} --cap-add NET_ADMIN --privileged " \
+                  f"--cap-add=SYS_NICE {image}"
         subprocess.call(cmd, shell=True)
 
     @staticmethod
