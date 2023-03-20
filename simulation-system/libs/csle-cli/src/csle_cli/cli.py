@@ -40,7 +40,13 @@ def init() -> None:
         ManagementUtil.create_default_management_guest_account()
 
 
-def start_cluster_manager(host_ip: str):
+def start_cluster_manager(host_ip: str) -> None:
+    """
+    Starts the cluster manager on a given host ip
+
+    :param host_ip: the host ip where to start the cluster manager
+    :return: None
+    """
     import csle_common.constants.constants as constants
     import csle_collector.constants.constants as collector_constants
     import subprocess
