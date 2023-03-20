@@ -1493,7 +1493,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
             DefaultNetworkFirewallConfig(
                 ip=None,
                 default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.11",
+                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.14",
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
@@ -1620,7 +1620,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
             DefaultNetworkFirewallConfig(
                 ip=None,
                 default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.19",
+                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.22",
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
@@ -2231,10 +2231,10 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
              f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.77",
              None),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.11",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.14",
              None),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.19",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.22",
              None)
         ])
 
@@ -2699,7 +2699,7 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
                  interface=constants.NETWORKING.ETH0
              )),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.11",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.14",
              ContainerNetwork(
                  name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                       f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_3",
@@ -2712,7 +2712,7 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
                  interface=constants.NETWORKING.ETH2
              )),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.19",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.22",
              ContainerNetwork(
                  name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                       f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_4",
@@ -2751,10 +2751,10 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
              f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.77",
              None),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.11",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.14",
              None),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.19",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.22",
              None)
         ])
 
@@ -2781,7 +2781,7 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
             ),
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.11",
+                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.14",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
@@ -2799,7 +2799,7 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
             ),
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.19",
+                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.22",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,

@@ -77,6 +77,8 @@ class OVSController:
         """
         for ovs_sw in emulation_env_config.ovs_config.switch_configs:
             if ovs_sw.physical_host_ip != physical_server_ip:
+                logger.info(f"Wrong host IP of switch: {ovs_sw.container_name}, {ovs_sw.physical_host_ip}, "
+                            f"{physical_server_ip}")
                 continue
             logger.info(f"Configuring OVS bridge on container: {ovs_sw.container_name}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ovs_sw.docker_gw_bridge_ip)
