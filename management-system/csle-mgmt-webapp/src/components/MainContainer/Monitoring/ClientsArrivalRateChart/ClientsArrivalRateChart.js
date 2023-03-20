@@ -46,7 +46,7 @@ const ClientsArrivalRateChart = React.memo((props) => {
                             <Label value="Time-step t" offset={-20} position="insideBottom" className="largeFont"/>
                         </XAxis>
                         <YAxis type="number">
-                            <Label angle={270} value="# Proecsses" offset={0} position="insideLeft"
+                            <Label angle={270} value="Clients arrival rate" offset={0} position="insideLeft"
                                    className="largeFont"
                                    dy={50}/>
                         </YAxis>
