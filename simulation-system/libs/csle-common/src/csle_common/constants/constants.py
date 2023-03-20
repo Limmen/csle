@@ -173,6 +173,13 @@ class NETWORKING:
     ETH1 = "eth1"
     ETH2 = "eth2"
     ETH3 = "eth3"
+    ETH4 = "eth4"
+    ETH5 = "eth5"
+    ETH6 = "eth6"
+    ETH7 = "eth7"
+    ETH8 = "eth8"
+    ETH9 = "eth9"
+    ETH10 = "eth10"
 
 
 class SERVICES:
