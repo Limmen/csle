@@ -693,7 +693,7 @@ class HostController:
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
         if initial_start:
             node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=ips)
-            if not node_beats_config.start_filebeat_automatically:
+            if node_beats_config is None or not node_beats_config.start_filebeat_automatically:
                 return
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ips[0], port=emulation_env_config.host_manager_config.host_manager_port)
@@ -722,7 +722,7 @@ class HostController:
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
         if initial_start:
             node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=ips)
-            if not node_beats_config.start_packetbeat_automatically:
+            if node_beats_config is None or not node_beats_config.start_packetbeat_automatically:
                 return
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ips[0], port=emulation_env_config.host_manager_config.host_manager_port)
@@ -751,7 +751,7 @@ class HostController:
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
         if initial_start:
             node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=ips)
-            if not node_beats_config.start_metricbeat_automatically:
+            if node_beats_config is None or not node_beats_config.start_metricbeat_automatically:
                 return
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ips[0], port=emulation_env_config.host_manager_config.host_manager_port)
@@ -781,7 +781,7 @@ class HostController:
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
         if initial_start:
             node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=ips)
-            if not node_beats_config.start_heartbeat_automatically:
+            if node_beats_config is None or not node_beats_config.start_heartbeat_automatically:
                 return
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ips[0], port=emulation_env_config.host_manager_config.host_manager_port)
@@ -808,6 +808,8 @@ class HostController:
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
         node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
+        if node_beats_config is None:
+            return
         kafka_topics = list(map(lambda topic: topic.name, emulation_env_config.kafka_config.topics))
 
         # Open a gRPC session
@@ -872,6 +874,8 @@ class HostController:
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
         node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
+        if node_beats_config is None:
+            return
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -905,6 +909,8 @@ class HostController:
         """
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
         node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
+        if node_beats_config is None:
+            return
 
         # Open a gRPC session
         with grpc.insecure_channel(

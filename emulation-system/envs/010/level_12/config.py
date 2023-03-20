@@ -3282,7 +3282,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}."
+                           f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
                         log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
