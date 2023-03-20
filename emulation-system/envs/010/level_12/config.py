@@ -2639,7 +2639,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
                f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.78",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}."
-                          f"3",
+                          f"77",
             controller_port=ryu_constants.RYU.DEFAULT_PORT,
             controller_transport_protocol=ryu_constants.RYU.DEFAULT_TRANSPORT_PROTOCOL,
             openflow_protocols=[constants.OPENFLOW.OPENFLOW_V_1_3]
