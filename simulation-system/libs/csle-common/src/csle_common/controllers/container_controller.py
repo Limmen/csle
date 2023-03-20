@@ -414,8 +414,13 @@ class ContainerController:
                                                              logger=logger)
         if emulation_env_config.sdn_controller_config is not None and \
                 emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
+            # Connect controller
             ContainerController.connect_container_to_network(
                 container=emulation_env_config.sdn_controller_config.container, logger=logger)
+            # Update IPs of OVS switches
+            for ovs_sw in emulation_env_config.ovs_config.switch_configs:
+                node_container_config = emulation_env_config.containers_config.get_container_from_ip(ovs_sw.ip)
+                ovs_sw.docker_gw_bridge_ip = node_container_config.docker_gw_bridge_ip
 
     @staticmethod
     def connect_container_to_network(container: NodeContainerConfig, logger: logging.Logger) -> None:

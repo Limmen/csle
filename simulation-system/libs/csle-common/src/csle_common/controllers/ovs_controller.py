@@ -80,7 +80,8 @@ class OVSController:
                 logger.info(f"Wrong host IP of switch: {ovs_sw.container_name}, {ovs_sw.physical_host_ip}, "
                             f"{physical_server_ip}")
                 continue
-            logger.info(f"Configuring OVS bridge on container: {ovs_sw.container_name}")
+            logger.info(f"Configuring OVS bridge on container: {ovs_sw.container_name}, "
+                        f"physical host: {ovs_sw.physical_host_ip}, gw ip: {ovs_sw.docker_gw_bridge_ip}")
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ovs_sw.docker_gw_bridge_ip)
             bridge_name = constants.OVS.DEFAULT_BRIDGE_NAME
             cmd = f"{constants.COMMANDS.SUDO} {constants.OVS.OVS_VSCTL} set bridge {bridge_name} " \
