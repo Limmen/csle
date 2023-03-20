@@ -601,8 +601,6 @@ class ContainerController:
                 ipam=ipam_config,
                 attachable=True
             )
-        else:
-            logger.info(f"Network with name: {name} already exists")
 
     @staticmethod
     def remove_network(name: str, logger: logging.Logger) -> None:

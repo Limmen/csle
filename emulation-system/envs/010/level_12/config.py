@@ -2217,7 +2217,7 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
         num_cpus=min(8, multiprocessing.cpu_count()), available_memory_gb=4,
         ips_and_network_configs=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.3",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.77",
              None),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.11",
@@ -2673,7 +2673,7 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
         os=constants.CONTAINER_OS.RYU_1_OS,
         ips_and_networks=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.3",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.77",
              ContainerNetwork(
                  name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                       f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}_2",
@@ -2735,7 +2735,7 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
         num_cpus=min(8, multiprocessing.cpu_count()), available_memory_gb=4,
         ips_and_network_configs=[
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.3",
+             f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.77",
              None),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.11",
@@ -2750,7 +2750,7 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.3",
+                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.77",
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
@@ -3259,7 +3259,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                           f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}."
                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
                         log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
