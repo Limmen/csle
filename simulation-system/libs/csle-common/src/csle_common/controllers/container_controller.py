@@ -603,29 +603,31 @@ class ContainerController:
             )
 
     @staticmethod
-    def remove_network(name: str) -> None:
+    def remove_network(name: str, logger: logging.Logger) -> None:
         """
         Removes a network
 
         :param name: the name of the network to remove
+        :param logger: the logger to use for logging
         :return: None
         """
         client_1 = docker.from_env()
         networks = client_1.networks.list()
         for net in networks:
             if net.name == name:
-                Logger.__call__().get_logger().info(f"Removing network: {net.name}")
+                logger.info(f"Removing network: {net.name}")
                 try:
                     net.remove()
                 except Exception:
                     pass
 
     @staticmethod
-    def remove_networks(names: List[str]) -> bool:
+    def remove_networks(names: List[str], logger: logging.Logger) -> bool:
         """
         Removes a network
 
         :param name: the name of the network to remove
+        :param logger: the logger to use for logging
         :return: True if at least one of the networks were successfully removed
         """
         client_1 = docker.from_env()
@@ -633,7 +635,7 @@ class ContainerController:
         network_removed = False
         for net in networks:
             if net.name in names:
-                Logger.__call__().get_logger().info(f"Removing network: {net.name}")
+                logger.info(f"Removing network: {net.name}")
                 try:
                     net.remove()
                     network_removed = True
@@ -642,24 +644,27 @@ class ContainerController:
         return network_removed
 
     @staticmethod
-    def rm_all_networks() -> None:
+    def rm_all_networks(logger: logging.Logger) -> None:
         """
         A utility function for removing all csle networks
 
+        :param logger: the logger to use for logging
         :return: None
         """
         client_1 = docker.from_env()
         networks = client_1.networks.list()
         networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
         for net in networks:
-            Logger.__call__().get_logger().info(f"Removing network:{net.name}")
-            ContainerController.remove_network(name=net.name)
+            logger.info(f"Removing network:{net.name}")
+            ContainerController.remove_network(name=net.name, logger=logger)
 
     @staticmethod
-    def rm_network(name) -> bool:
+    def rm_network(name, logger: logging.Logger) -> bool:
         """
         A utility function for removing a network with a specific name
 
+        :param name: the name of the network to remove
+        :param logger: the logger to use for logging
         :return: True if it was removed or False otherwise
         """
         client_1 = docker.from_env()
@@ -667,7 +672,7 @@ class ContainerController:
         networks = list(filter(lambda x: constants.CSLE.NAME in x.name, networks))
         for net in networks:
             if net == name:
-                ContainerController.remove_network(name=net.name)
+                ContainerController.remove_network(name=net.name, logger=logger)
                 return True
         return False
 
@@ -700,7 +705,7 @@ class ContainerController:
             networks = ContainerController.list_all_networks()
             Logger.__call__().get_logger().info(networks)
         elif cmd == constants.MANAGEMENT.RM_NETWORKS:
-            ContainerController.rm_all_networks()
+            ContainerController.rm_all_networks(logger=Logger.__call__().get_logger())
         else:
             raise ValueError("Command: {} not recognized".format(cmd))
 

@@ -47,7 +47,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         dir = collector_constants.LOG_FILES.CLUSTER_MANAGER_LOG_DIR
         logfile = os.path.join(dir, file_name)
         logging.basicConfig(filename=logfile, level=logging.INFO)
-        logging.info("Setting up ClusterManager")
+        logging.info(f"Setting up ClusterManager, logfile: {logfile}")
 
     def getNodeStatus(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNodeStatusMsg,
                       context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.NodeStatusDTO:
@@ -1968,7 +1968,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        logging.info(f"Creates networks for emulation: {request.emulation} and execution id:{request.ipFirstOctet}")
+        logging.info(f"Creating networks for emulation: {request.emulation} and execution id:{request.ipFirstOctet}")
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=request.ipFirstOctet,
                                                             emulation_name=request.emulation)
         config = MetastoreFacade.get_config(id=1)
@@ -2027,7 +2027,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :param context: the gRPC context
         :return: an OperationOutcomeDTO
         """
-        outcome = ContainerController.remove_networks(names=request.networks)
+        outcome = ContainerController.remove_networks(names=request.networks, logger=logging.getLogger())
         if outcome:
             logging.info(f"Removing docker networks: {list(request.networks)}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=outcome)
@@ -2043,7 +2043,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: an OperationOutcomeDTO
         """
         logging.info("Removing all docker networks")
-        ContainerController.rm_all_networks()
+        ContainerController.rm_all_networks(logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def getDockerStatsManagersInfo(

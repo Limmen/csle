@@ -271,26 +271,27 @@ class EmulationEnvController:
                                                 logger=Logger.__call__().get_logger())
 
     @staticmethod
-    def delete_networks_of_emulation_env_config(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) \
-            -> None:
+    def delete_networks_of_emulation_env_config(emulation_env_config: EmulationEnvConfig,
+                                                physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Deletes the docker networks
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the ip of the physical server to remove the networks
+        :param logger: the logger to use for logging
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip == physical_server_ip:
                 for ip_net in c.ips_and_networks:
                     ip, net = ip_net
-                    ContainerController.remove_network(name=net.name)
+                    ContainerController.remove_network(name=net.name, logger=logger)
 
         c = emulation_env_config.kafka_config.container
         if c.physical_host_ip == physical_server_ip:
             for ip_net in c.ips_and_networks:
                 ip, net = ip_net
-                ContainerController.remove_network(name=net.name)
+                ContainerController.remove_network(name=net.name, logger=logger)
 
     @staticmethod
     def create_execution(emulation_env_config: EmulationEnvConfig, physical_servers: List[str]) -> EmulationExecution:
@@ -544,7 +545,7 @@ class EmulationEnvController:
             except Exception:
                 pass
             EmulationEnvController.delete_networks_of_emulation_env_config(
-                emulation_env_config=exec.emulation_env_config, physical_server_ip=physical_server_ip)
+                emulation_env_config=exec.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger)
 
     @staticmethod
     def clean_emulation_execution(emulation_env_config: EmulationEnvConfig, execution_id: int,
@@ -568,7 +569,7 @@ class EmulationEnvController:
         except Exception:
             pass
         EmulationEnvController.delete_networks_of_emulation_env_config(
-            emulation_env_config=execution.emulation_env_config, physical_server_ip=physical_server_ip)
+            emulation_env_config=execution.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger)
 
     @staticmethod
     def clean_all_executions(physical_server_ip: str, logger: logging.Logger) -> None:
@@ -589,7 +590,7 @@ class EmulationEnvController:
             except Exception:
                 pass
             EmulationEnvController.delete_networks_of_emulation_env_config(
-                emulation_env_config=exec.emulation_env_config, physical_server_ip=physical_server_ip)
+                emulation_env_config=exec.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger)
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod
