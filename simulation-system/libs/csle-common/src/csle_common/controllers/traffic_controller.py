@@ -69,9 +69,6 @@ class TrafficController:
                                                     ip=node_traffic_config.docker_gw_bridge_ip))
 
         if constants.COMMANDS.SEARCH_TRAFFIC_MANAGER not in str(o):
-            logger.info(f"Starting traffic manager on node "
-                        f"{node_traffic_config.docker_gw_bridge_ip}")
-
             # Stop old background job if running
             cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
                    constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.TRAFFIC_MANAGER_FILE_NAME)
@@ -83,6 +80,8 @@ class TrafficController:
                                                                   node_traffic_config.traffic_manager_log_dir,
                                                                   node_traffic_config.traffic_manager_log_file,
                                                                   node_traffic_config.traffic_manager_max_workers)
+            logger.info(f"Starting traffic manager on node "
+                        f"{node_traffic_config.docker_gw_bridge_ip}, with cmd:{cmd}")
             o, e, _ = EmulationUtil.execute_ssh_cmd(
                 cmd=cmd, conn=emulation_env_config.get_connection(ip=node_traffic_config.docker_gw_bridge_ip))
             time.sleep(2)

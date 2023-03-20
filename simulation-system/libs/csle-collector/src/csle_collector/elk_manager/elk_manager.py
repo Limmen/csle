@@ -24,7 +24,10 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         logging.basicConfig(filename=f"{constants.LOG_FILES.ELK_MANAGER_LOG_DIR}"
                                      f"{constants.LOG_FILES.ELK_MANAGER_LOG_FILE}", level=logging.INFO)
         self.hostname = socket.gethostname()
-        self.ip = netifaces.ifaddresses(constants.INTERFACES.ETH0)[netifaces.AF_INET][0][constants.INTERFACES.ADDR]
+        try:
+            self.ip = netifaces.ifaddresses(constants.INTERFACES.ETH0)[netifaces.AF_INET][0][constants.INTERFACES.ADDR]
+        except:
+            self.ip = socket.gethostbyname(self.hostname)
         logging.info(f"Setting up ElkManager hostname: {self.hostname} ip: {self.ip}")
 
     def _get_elk_status(self) -> Tuple[bool, bool, bool]:

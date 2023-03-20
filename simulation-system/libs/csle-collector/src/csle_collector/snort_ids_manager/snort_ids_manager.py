@@ -71,7 +71,10 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         logging.basicConfig(filename=f"{constants.LOG_FILES.SNORT_IDS_MANAGER_LOG_DIR}"
                                      f"{constants.LOG_FILES.SNORT_IDS_MANAGER_LOG_FILE}", level=logging.INFO)
         self.hostname = socket.gethostname()
-        self.ip = netifaces.ifaddresses(constants.INTERFACES.ETH0)[netifaces.AF_INET][0][constants.INTERFACES.ADDR]
+        try:
+            self.ip = netifaces.ifaddresses(constants.INTERFACES.ETH0)[netifaces.AF_INET][0][constants.INTERFACES.ADDR]
+        except:
+            self.ip = socket.gethostbyname(self.hostname)
         self.conf = {
             constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.ip}:{constants.KAFKA.PORT}",
             constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
