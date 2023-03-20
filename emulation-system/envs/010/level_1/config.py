@@ -524,9 +524,12 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
     ]
 
     config = KafkaConfig(container=container, resources=resources, topics=topics, firewall_config=firewall_config,
-                         version=version, kafka_port=9092, kafka_port_external=9292, kafka_manager_port=50051,
-                         time_step_len_seconds=15, kafka_manager_log_file="kafka_manager.log",
-                         kafka_manager_log_dir="/", kafka_manager_max_workers=10)
+                         version=version, kafka_port=9092, kafka_port_external=9292,
+                         kafka_manager_port=collector_constants.MANAGER_PORTS.KAFKA_MANAGER_DEFAULT_PORT,
+                         time_step_len_seconds=15,
+                         kafka_manager_log_file=collector_constants.LOG_FILES.KAFKA_MANAGER_LOG_FILE,
+                         kafka_manager_log_dir=collector_constants.LOG_FILES.KAFKA_MANAGER_LOG_DIR,
+                         kafka_manager_max_workers=10)
     return config
 
 
@@ -1145,37 +1148,42 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.HONEYPOT_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10
-                          ),
+                          traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
+                          traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
+                          traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
+                          traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.ROUTER_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10
-                          ),
+                          traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
+                          traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
+                          traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
+                          traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.SSH_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10
-                          ),
+                          traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
+                          traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
+                          traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
+                          traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.TELNET_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10
-                          ),
+                          traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
+                          traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
+                          traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
+                          traffic_manager_max_workers=10),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
                           commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.FTP_1]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-                          traffic_manager_port=50043, traffic_manager_log_file="traffic_manager.log",
-                          traffic_manager_log_dir="/", traffic_manager_max_workers=10
-                          )
+                          traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
+                          traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
+                          traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
+                          traffic_manager_max_workers=10)
     ]
     client_population_config = ClientPopulationConfig(
         networks=[ContainerNetwork(
@@ -1187,10 +1195,12 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
         )],
         ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
         client_process_type=ClientPopulationProcessType.POISSON,
-        lamb=0.025, mu=1, client_manager_port=50044, num_commands=2, client_time_step_len_seconds=15,
+        lamb=0.025, mu=1, client_manager_port=collector_constants.MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT,
+        num_commands=2, client_time_step_len_seconds=15,
         time_scaling_factor=0.01, period_scaling_factor=20,
-        client_manager_log_dir="/", client_manager_log_file="client_manager.log", client_manager_max_workers=10
-    )
+        client_manager_log_dir=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR,
+        client_manager_log_file=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE,
+        client_manager_max_workers=10)
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
                                  client_population_config=client_population_config)
     return traffic_conf
@@ -1419,8 +1429,10 @@ def default_host_manager_config(network_id: int, level: int, version: str) -> Ho
     :param version: the version of the emulation
     :return: the host manager configuration
     """
-    config = HostManagerConfig(version=version, time_step_len_seconds=15, host_manager_port=50049,
-                               host_manager_log_file="host_manager.log", host_manager_log_dir="/",
+    config = HostManagerConfig(version=version, time_step_len_seconds=15,
+                               host_manager_port=collector_constants.MANAGER_PORTS.HOST_MANAGER_DEFAULT_PORT,
+                               host_manager_log_file=collector_constants.LOG_FILES.HOST_MANAGER_LOG_FILE,
+                               host_manager_log_dir=collector_constants.LOG_FILES.HOST_MANAGER_LOG_DIR,
                                host_manager_max_workers=10)
     return config
 
@@ -1434,9 +1446,12 @@ def default_snort_ids_manager_config(network_id: int, level: int, version: str) 
     :param version: the version of the emulation
     :return: the Snort IDS manager configuration
     """
-    config = SnortIDSManagerConfig(version=version, time_step_len_seconds=15, snort_ids_manager_port=50048,
-                                   snort_ids_manager_log_dir="/", snort_ids_manager_log_file="snort_ids_manager.log",
-                                   snort_ids_manager_max_workers=10)
+    config = SnortIDSManagerConfig(
+        version=version, time_step_len_seconds=15,
+        snort_ids_manager_port=collector_constants.MANAGER_PORTS.SNORT_IDS_MANAGER_DEFAULT_PORT,
+        snort_ids_manager_log_dir=collector_constants.LOG_FILES.SNORT_IDS_MANAGER_LOG_DIR,
+        snort_ids_manager_log_file=collector_constants.LOG_FILES.SNORT_IDS_MANAGER_LOG_FILE,
+        snort_ids_manager_max_workers=10)
     return config
 
 
@@ -1449,9 +1464,12 @@ def default_ossec_ids_manager_config(network_id: int, level: int, version: str) 
     :param version: the version of the emulation
     :return: the OSSEC IDS manager configuration
     """
-    config = OSSECIDSManagerConfig(version=version, time_step_len_seconds=15, ossec_ids_manager_port=50047,
-                                   ossec_ids_manager_log_file="ossec_ids_manager.log", ossec_ids_manager_log_dir="/",
-                                   ossec_ids_manager_max_workers=10)
+    config = OSSECIDSManagerConfig(
+        version=version, time_step_len_seconds=15,
+        ossec_ids_manager_port=collector_constants.MANAGER_PORTS.OSSEC_IDS_MANAGER_DEFAULT_PORT,
+        ossec_ids_manager_log_file=collector_constants.LOG_FILES.OSSEC_IDS_MANAGER_LOG_FILE,
+        ossec_ids_manager_log_dir=collector_constants.LOG_FILES.OSSEC_IDS_MANAGER_LOG_DIR,
+        ossec_ids_manager_max_workers=10)
     return config
 
 
@@ -1464,9 +1482,12 @@ def default_docker_stats_manager_config(network_id: int, level: int, version: st
     :param version: the version of the emulation
     :return: the docker stats manager configuration
     """
-    config = DockerStatsManagerConfig(version=version, time_step_len_seconds=15, docker_stats_manager_port=50046,
-                                      docker_stats_manager_log_file="docker_stats_manager.log",
-                                      docker_stats_manager_log_dir="/", docker_stats_manager_max_workers=10)
+    config = DockerStatsManagerConfig(
+        version=version, time_step_len_seconds=15,
+        docker_stats_manager_port=collector_constants.MANAGER_PORTS.DOCKER_STATS_MANAGER_DEFAULT_PORT,
+        docker_stats_manager_log_file=collector_constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_FILE,
+        docker_stats_manager_log_dir=collector_constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_DIR,
+        docker_stats_manager_max_workers=10)
     return config
 
 
@@ -1537,9 +1558,13 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
         output_drop=set(), input_drop=set(), forward_drop=set(), routes=set())
 
     config = ElkConfig(version=version, time_step_len_seconds=15, elastic_port=9200, kibana_port=5601,
-                       logstash_port=5044, elk_manager_port=50045, container=container,
+                       logstash_port=5044,
+                       elk_manager_port=collector_constants.MANAGER_PORTS.ELK_MANAGER_DEFAULT_PORT,
+                       container=container,
                        resources=resources, firewall_config=firewall_config,
-                       elk_manager_log_file="elk_manager.log", elk_manager_log_dir="/", elk_manager_max_workers=10)
+                       elk_manager_log_file=collector_constants.LOG_FILES.ELK_MANAGER_LOG_FILE,
+                       elk_manager_log_dir=collector_constants.LOG_FILES.ELK_MANAGER_LOG_DIR,
+                       elk_manager_max_workers=10)
     return config
 
 
@@ -1552,8 +1577,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
     """
     beat_configs = [
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.21",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -1571,8 +1595,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         ]
                         ),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -1590,8 +1613,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         ]
                         ),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -1608,8 +1630,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.3",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -1626,8 +1647,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.79",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -1646,8 +1666,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE,
                                           collector_constants.FILEBEAT.KAFKA_MODULE],
                         kafka_input=True, start_filebeat_automatically=False,
@@ -1710,8 +1729,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.254",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -1729,8 +1747,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.191",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
