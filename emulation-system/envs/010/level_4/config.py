@@ -133,7 +133,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                  f"{network_id}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                     interface=constants.NETWORKING.ETH1,
+                     interface=constants.NETWORKING.ETH2,
                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                  ))
             ],
@@ -160,7 +160,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                                  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                                     interface=constants.NETWORKING.ETH1,
+                                     interface=constants.NETWORKING.ETH2,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  ))
                             ],
@@ -190,7 +190,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                                  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                                     interface=constants.NETWORKING.ETH1,
+                                     interface=constants.NETWORKING.ETH2,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  ))
                             ],
@@ -219,7 +219,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                                  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                                     interface=constants.NETWORKING.ETH1,
+                                     interface=constants.NETWORKING.ETH2,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  ))
                             ],
@@ -246,7 +246,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                                     f"{network_id}.1{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                                        interface=constants.NETWORKING.ETH1,
+                                        interface=constants.NETWORKING.ETH2,
                                         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                     )),
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
@@ -259,7 +259,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                                  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                                     interface=constants.NETWORKING.ETH2,
+                                     interface=constants.NETWORKING.ETH3,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  ))
                             ],
@@ -288,7 +288,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                                  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                                     interface=constants.NETWORKING.ETH1,
+                                     interface=constants.NETWORKING.ETH2,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  ))
                             ],
@@ -317,7 +317,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                                  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
                                                  f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                                     interface=constants.NETWORKING.ETH1,
+                                     interface=constants.NETWORKING.ETH2,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  ))
                             ],
@@ -502,7 +502,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                  f""f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.10",
                  NodeNetworkConfig(
-                     interface=constants.NETWORKING.ETH1,
+                     interface=constants.NETWORKING.ETH2,
                      limit_packets_queue=30000, packet_delay_ms=2,
                      packet_delay_jitter_ms=0.5, packet_delay_correlation_percentage=25,
                      packet_delay_distribution=PacketDelayDistributionType.PARETO,
