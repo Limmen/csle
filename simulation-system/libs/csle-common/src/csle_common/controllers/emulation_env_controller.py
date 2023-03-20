@@ -272,24 +272,26 @@ class EmulationEnvController:
 
     @staticmethod
     def delete_networks_of_emulation_env_config(emulation_env_config: EmulationEnvConfig,
-                                                physical_server_ip: str, logger: logging.Logger) -> None:
+                                                physical_server_ip: str, logger: logging.Logger,
+                                                leader: bool = False) -> None:
         """
         Deletes the docker networks
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the ip of the physical server to remove the networks
+        :param leader: boolean flag indicating whether this node is the leader in the Swarm cluster
         :param logger: the logger to use for logging
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
-            if c.physical_host_ip == physical_server_ip:
+            if c.physical_host_ip == physical_server_ip or leader:
                 for ip_net in c.ips_and_networks:
                     ip, net = ip_net
                     ContainerController.remove_network(name=net.name, logger=logger)
 
         c = emulation_env_config.kafka_config.container
         if c.physical_host_ip == physical_server_ip:
-            for ip_net in c.ips_and_networks:
+            for ip_net in c.ips_and_networks or leader:
                 ip, net = ip_net
                 ContainerController.remove_network(name=net.name, logger=logger)
 
@@ -525,12 +527,13 @@ class EmulationEnvController:
 
     @staticmethod
     def clean_all_emulation_executions(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
-                                       logger: logging.Logger) -> None:
+                                       logger: logging.Logger, leader: bool = False) -> None:
         """
         Cleans an emulation
 
         :param emulation_env_config: the config of the emulation to clean
         :param physical_server_ip: the ip of the physical server to clean the emulation executions
+        :param leader: boolean flag indicating whether this node is the leader in the Swarm cluster or not
         :param logger: the logger to use for logging
         :return: None
         """
@@ -545,17 +548,19 @@ class EmulationEnvController:
             except Exception:
                 pass
             EmulationEnvController.delete_networks_of_emulation_env_config(
-                emulation_env_config=exec.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger)
+                emulation_env_config=exec.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger,
+                leader=leader)
 
     @staticmethod
     def clean_emulation_execution(emulation_env_config: EmulationEnvConfig, execution_id: int,
-                                  physical_server_ip: str, logger: logging.Logger) -> None:
+                                  physical_server_ip: str, logger: logging.Logger, leader: bool = False) -> None:
         """
         Cleans an emulation execution
 
         :param execution_id: the id of the execution to clean
         :param emulation_env_config: the config of the emulation to clean
         :param physical_server_ip: the ip of the physical server to clean the execution
+        :param leader: boolean flag indicating whether this node is the leader or not
         :param logger: the logger to use for logging
         :return: None
         """
@@ -569,15 +574,17 @@ class EmulationEnvController:
         except Exception:
             pass
         EmulationEnvController.delete_networks_of_emulation_env_config(
-            emulation_env_config=execution.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger)
+            emulation_env_config=execution.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger,
+            leader=leader)
 
     @staticmethod
-    def clean_all_executions(physical_server_ip: str, logger: logging.Logger) -> None:
+    def clean_all_executions(physical_server_ip: str, logger: logging.Logger, leader: bool = False) -> None:
         """
         Cleans all executions of a given emulation on a given physical server
 
-        :param emulation_env_config: the config of the emulation to clean
         :param physical_server_ip: the ip of the physical server to clean the executions
+        :param logger: the logger to use for logging
+        :param leader: boolean flag indicating whether this node is the leader or not
         :return: None
         """
         executions = MetastoreFacade.list_emulation_executions()
@@ -590,7 +597,8 @@ class EmulationEnvController:
             except Exception:
                 pass
             EmulationEnvController.delete_networks_of_emulation_env_config(
-                emulation_env_config=exec.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger)
+                emulation_env_config=exec.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger,
+                leader=leader)
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod

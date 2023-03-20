@@ -360,13 +360,11 @@ class ContainerController:
         :param containers_config: the containers configuration
         :return: None
         """
-        logger.info(f"Creating networks")
         for c in containers_config.containers:
             for ip_net in c.ips_and_networks:
                 existing_networks = ContainerController.get_network_references()
                 existing_networks = list(map(lambda x: x.name, existing_networks))
                 ip, net = ip_net
-                logger.info(f"Creating network: {net.name}")
                 ContainerController.create_network_from_dto(network_dto=net, existing_network_names=existing_networks,
                                                             logger=logger)
 
@@ -568,7 +566,6 @@ class ContainerController:
         driver = constants.DOCKER.BRIDGE_NETWORK_DRIVER
         if len(config.cluster_config.cluster_nodes) > 0:
             driver = constants.DOCKER.OVERLAY_NETWORK_DRIVER
-        logger.info(f"Creating network: {network_dto.name}")
         ContainerController.create_network(name=network_dto.name, subnetmask=network_dto.subnet_mask,
                                            existing_network_names=existing_network_names, driver=driver,
                                            logger=logger)
