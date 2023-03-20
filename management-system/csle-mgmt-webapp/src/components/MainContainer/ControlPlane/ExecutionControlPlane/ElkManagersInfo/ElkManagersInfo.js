@@ -39,7 +39,7 @@ const ElkManagersInfo = (props) => {
                     delay={{show: 0, hide: 0}}
                     overlay={renderKibanaTooltip}
                 >
-                    <a href={`${HTTP_PREFIX}${ip}:${props.port}`} target="_blank" rel="noopener noreferrer">
+                    <a href={`${HTTP_PREFIX}${props.ip}:${props.port}`} target="_blank" rel="noopener noreferrer">
                         <Button variant="light" className="startButton" size="sm">
                             <img src={KibanaImg} alt="Kibana" className="img-fluid"/>
                         </Button>
@@ -194,6 +194,7 @@ const ElkManagersInfo = (props) => {
                                             name={props.elkManagersInfo.ips[index]}
                                             port={props.elkManagersInfo.local_kibana_port}
                                             running={status.kibanaRunning}
+                                            ip={props.elkManagersInfo.physical_server_ip}
                                         />
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(

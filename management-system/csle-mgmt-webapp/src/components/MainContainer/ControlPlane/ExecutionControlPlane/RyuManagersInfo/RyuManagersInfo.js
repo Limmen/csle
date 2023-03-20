@@ -36,7 +36,7 @@ const RyuManagersInfo = (props) => {
                     delay={{show: 0, hide: 0}}
                     overlay={renderRyuTooltip}
                 >
-                    <a href={`${HTTP_PREFIX}${ip}:${props.port}`} target="_blank" rel="noopener noreferrer">
+                    <a href={`${HTTP_PREFIX}${props.ip}:${props.port}`} target="_blank" rel="noopener noreferrer">
                         <Button variant="light" className="startButton" size="sm">
                             <img src={RyuImg} alt="Ryu" className="img-fluid elastic"/>
                         </Button>
@@ -116,6 +116,7 @@ const RyuManagersInfo = (props) => {
                                             name={props.ryuManagersInfo.ips[index]}
                                             port={props.ryuManagersInfo.local_controller_web_port}
                                             running={status.ryu_running}
+                                            ip={props.ryuManagersInfo.physical_server_ip}
                                         />
                                         <SpinnerOrButton
                                             loading={props.loadingEntities.includes(
