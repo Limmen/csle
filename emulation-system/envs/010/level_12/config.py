@@ -2832,7 +2832,7 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
         controller_port=ryu_constants.RYU.DEFAULT_PORT, time_step_len_seconds=15,
         controller_web_api_port=8080, controller_module_name=ryu_constants.CONTROLLERS.LEARNING_SWITCH_CONTROLLER,
         firewall_config=firewall_config, manager_port=50042, manager_max_workers=10, manager_log_dir="/",
-        manager_log_file="ryu_manager.log")
+        manager_log_file=collector_constants.LOG_FILES.RYU_MANAGER_LOG_FILE)
 
     return sdn_controller_config
 
@@ -2847,7 +2847,8 @@ def default_host_manager_config(network_id: int, level: int, version: str) -> Ho
     :return: the host manager configuration
     """
     config = HostManagerConfig(version=version, time_step_len_seconds=15, host_manager_port=50049,
-                               host_manager_log_file="host_manager.log", host_manager_log_dir="/",
+                               host_manager_log_file=collector_constants.LOG_FILES.HOST_MANAGER_LOG_FILE,
+                               host_manager_log_dir=collector_constants.LOG_FILES.HOST_MANAGER_LOG_DIR,
                                host_manager_max_workers=10)
     return config
 
@@ -2862,7 +2863,8 @@ def default_snort_ids_manager_config(network_id: int, level: int, version: str) 
     :return: the Snort IDS manager configuration
     """
     config = SnortIDSManagerConfig(version=version, time_step_len_seconds=15, snort_ids_manager_port=50048,
-                                   snort_ids_manager_log_dir="/", snort_ids_manager_log_file="snort_ids_manager.log",
+                                   snort_ids_manager_log_dir=collector_constants.LOG_FILES.SNORT_IDS_MANAGER_LOG_DIR,
+                                   snort_ids_manager_log_file=collector_constants.LOG_FILES.SNORT_IDS_MANAGER_LOG_FILE,
                                    snort_ids_manager_max_workers=10)
     return config
 
@@ -2877,7 +2879,8 @@ def default_ossec_ids_manager_config(network_id: int, level: int, version: str) 
     :return: the OSSEC IDS manager configuration
     """
     config = OSSECIDSManagerConfig(version=version, time_step_len_seconds=15, ossec_ids_manager_port=50047,
-                                   ossec_ids_manager_log_file="ossec_ids_manager.log", ossec_ids_manager_log_dir="/",
+                                   ossec_ids_manager_log_file=collector_constants.LOG_FILES.OSSEC_IDS_MANAGER_LOG_FILE,
+                                   ossec_ids_manager_log_dir=collector_constants.LOG_FILES.OSSEC_IDS_MANAGER_LOG_DIR,
                                    ossec_ids_manager_max_workers=10)
     return config
 
@@ -2891,9 +2894,11 @@ def default_docker_stats_manager_config(network_id: int, level: int, version: st
     :param version: the version of the emulation
     :return: the docker stats manager configuration
     """
-    config = DockerStatsManagerConfig(version=version, time_step_len_seconds=15, docker_stats_manager_port=50046,
-                                      docker_stats_manager_log_file="docker_stats_manager.log",
-                                      docker_stats_manager_log_dir="/", docker_stats_manager_max_workers=10)
+    config = DockerStatsManagerConfig(
+        version=version, time_step_len_seconds=15, docker_stats_manager_port=50046,
+        docker_stats_manager_log_file=collector_constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_FILE,
+        docker_stats_manager_log_dir=collector_constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_DIR,
+        docker_stats_manager_max_workers=10)
     return config
 
 
@@ -2966,7 +2971,9 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
     config = ElkConfig(version=version, time_step_len_seconds=15, elastic_port=9200, kibana_port=5601,
                        logstash_port=5044, elk_manager_port=50045, container=container,
                        resources=resources, firewall_config=firewall_config,
-                       elk_manager_log_file="elk_manager.log", elk_manager_log_dir="/", elk_manager_max_workers=10)
+                       elk_manager_log_file=collector_constants.LOG_FILES.ELK_MANAGER_LOG_FILE,
+                       elk_manager_log_dir=collector_constants.LOG_FILES.ELK_MANAGER_LOG_DIR,
+                       elk_manager_max_workers=10)
     return config
 
 
@@ -2979,8 +2986,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
     """
     node_beats_configs = [
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.10",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE,
                                           collector_constants.FILEBEAT.SNORT_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
@@ -3001,8 +3007,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.5",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -3022,8 +3027,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.8",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -3043,8 +3047,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.41",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -3064,8 +3067,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.6.42",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -3085,8 +3087,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.78",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -3106,8 +3107,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.3",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -3127,8 +3127,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}"
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.31",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -3150,8 +3149,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE,
                                           collector_constants.FILEBEAT.KAFKA_MODULE],
                         kafka_input=True, start_filebeat_automatically=False,
@@ -3220,8 +3218,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.254",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -3242,8 +3239,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                         ]),
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.191",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,
@@ -3265,8 +3261,7 @@ def default_beats_config(network_id: int) -> BeatsConfig:
         NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
                            f"{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
-                        log_files_paths=["/*.log",
-                                         "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
+                        log_files_paths=["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"],
                         filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
                         kafka_input=False, start_filebeat_automatically=False,
                         start_packetbeat_automatically=False,

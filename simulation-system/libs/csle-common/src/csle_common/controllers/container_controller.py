@@ -352,10 +352,11 @@ class ContainerController:
         return networks
 
     @staticmethod
-    def create_networks(containers_config: ContainersConfig) -> None:
+    def create_networks(containers_config: ContainersConfig, logger: logging.Logger) -> None:
         """
         Creates docker networks for a given containers configuration
 
+        :param logger: the logger to use for logging
         :param containers_config: the containers configuration
         :return: None
         """
@@ -364,7 +365,8 @@ class ContainerController:
                 existing_networks = ContainerController.get_network_references()
                 existing_networks = list(map(lambda x: x.name, existing_networks))
                 ip, net = ip_net
-                ContainerController.create_network_from_dto(network_dto=net, existing_network_names=existing_networks)
+                ContainerController.create_network_from_dto(network_dto=net, existing_network_names=existing_networks,
+                                                            logger=logger)
 
     @staticmethod
     def connect_containers_to_networks(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
@@ -550,11 +552,14 @@ class ContainerController:
             return None
 
     @staticmethod
-    def create_network_from_dto(network_dto: ContainerNetwork, existing_network_names=None) -> None:
+    def create_network_from_dto(network_dto: ContainerNetwork, logger: logging.Logger,
+                                existing_network_names=None) -> None:
         """
         Creates a network from a given DTO representing the network
 
+        :param network_dto: details of the network to create
         :param existing_network_names: list of network names, if not None, check if network exists befeore creating
+        :param logger: the logger to use for logging
         :return: None
         """
         config = Config.get_current_config()
@@ -562,15 +567,18 @@ class ContainerController:
         if len(config.cluster_config.cluster_nodes) > 0:
             driver = constants.DOCKER.OVERLAY_NETWORK_DRIVER
         ContainerController.create_network(name=network_dto.name, subnetmask=network_dto.subnet_mask,
-                                           existing_network_names=existing_network_names, driver=driver)
+                                           existing_network_names=existing_network_names, driver=driver,
+                                           logger=logger)
 
     @staticmethod
-    def create_network(name: str, subnetmask: str, driver: str = "bridge", existing_network_names: List = None) -> None:
+    def create_network(name: str, subnetmask: str, logger: logging.Logger,
+                       driver: str = "bridge", existing_network_names: List = None) -> None:
         """
         Creates a network
 
         :param name: the name of the network to create
         :param subnetmask: the subnetmask of the network to create
+        :param logger: the logger to use for logging
         :param driver: the driver of the network to create
         :param existing_network_names: list of network names, if not None, check if network exists befeore creating
         :return: None
@@ -586,8 +594,7 @@ class ContainerController:
         if existing_network_names is not None:
             network_names = existing_network_names
         if name not in network_names:
-            Logger.__call__().get_logger().info(f"Creating network: {name}, subnetmask: {subnetmask}, "
-                                                f"driver: {driver}")
+            logger.info(f"Creating network: {name}, subnetmask: {subnetmask}, driver: {driver}")
             client_1.networks.create(
                 name,
                 driver=driver,
