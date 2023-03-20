@@ -396,6 +396,9 @@ class ContainerController:
                 subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
 
                 if c.docker_gw_bridge_ip == "" or c.docker_gw_bridge_ip is None:
+                    # Wait to make sure docker networks are updated
+                    time.sleep(2)
+                    # Extract the docker bridge gateway IP
                     container_id = DockerUtil.get_container_hex_id(name=container_name)
                     docker_gw_bridge_ip = DockerUtil.get_docker_gw_bridge_ip(container_id=container_id)
                     c.docker_gw_bridge_ip = docker_gw_bridge_ip
@@ -435,6 +438,9 @@ class ContainerController:
             logger.info(f"Connecting container:{container_name} to network:{net.name} with ip: {ip}")
             subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
             if container.docker_gw_bridge_ip == "" or container.docker_gw_bridge_ip is None:
+                # Wait to make sure docker networks are updated
+                time.sleep(2)
+                # Extract the docker bridge gateway IP
                 container_id = DockerUtil.get_container_hex_id(name=container_name)
                 docker_gw_bridge_ip = DockerUtil.get_docker_gw_bridge_ip(container_id=container_id)
                 container.docker_gw_bridge_ip = docker_gw_bridge_ip
