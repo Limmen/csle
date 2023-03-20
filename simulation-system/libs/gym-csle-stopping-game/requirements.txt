@@ -1,5 +1,5 @@
-csle-common==0.1.7
-csle-collector==0.1.7
-csle-attacker==0.1.7
-csle-defender==0.1.7
+csle-common==0.1.8
+csle-collector==0.1.8
+csle-attacker==0.1.8
+csle-defender==0.1.8
 gym==0.21
