@@ -365,8 +365,10 @@ class ContainerController:
                 existing_networks = ContainerController.get_network_references()
                 existing_networks = list(map(lambda x: x.name, existing_networks))
                 ip, net = ip_net
-                ContainerController.create_network_from_dto(network_dto=net, existing_network_names=existing_networks,
-                                                            logger=logger)
+                if net.name != "":
+                    ContainerController.create_network_from_dto(network_dto=net,
+                                                                existing_network_names=existing_networks,
+                                                                logger=logger)
 
     @staticmethod
     def connect_containers_to_networks(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
