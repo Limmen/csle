@@ -71,7 +71,8 @@ class HostController:
                                                 conn=emulation_env_config.get_connection(ip=ip))
 
         if constants.COMMANDS.SEARCH_HOST_MANAGER not in str(o):
-            logger.info(f"Host manager is not running on: {ip}, starting it. Output of {cmd} was: {str(o)}")
+            logger.info(f"Host manager is not running on: {ip}, starting it. Output of {cmd} was: {str(o)}, "
+                        f"err output was: {str(e)}")
 
             # Stop old background job if running
             cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
