@@ -298,81 +298,81 @@ message DockerStatsDict {
 message AvgPortStatisticDTO {
   float timestamp = 1;
   string datapath_id = 2;
-  int32 total_num_received_packets = 3;
-  int32 total_num_received_bytes = 4;
-  int32 total_num_received_errors = 5;
-  int32 total_num_transmitted_packets = 6;
-  int32 total_num_transmitted_bytes = 7;
-  int32 total_num_transmitted_errors = 8;
-  int32 total_num_received_dropped = 9;
-  int32 total_num_transmitted_dropped = 10;
-  int32 total_num_received_frame_errors = 11;
-  int32 total_num_received_overrun_errors = 12;
-  int32 total_num_received_crc_errors = 13;
-  int32 total_num_collisions = 14;
-  int32 avg_duration_nanoseconds = 15;
-  int32 avg_duration_seconds = 16;
+  int64 total_num_received_packets = 3;
+  int64 total_num_received_bytes = 4;
+  int64 total_num_received_errors = 5;
+  int64 total_num_transmitted_packets = 6;
+  int64 total_num_transmitted_bytes = 7;
+  int64 total_num_transmitted_errors = 8;
+  int64 total_num_received_dropped = 9;
+  int64 total_num_transmitted_dropped = 10;
+  int64 total_num_received_frame_errors = 11;
+  int64 total_num_received_overrun_errors = 12;
+  int64 total_num_received_crc_errors = 13;
+  int64 total_num_collisions = 14;
+  int64 avg_duration_nanoseconds = 15;
+  int64 avg_duration_seconds = 16;
 }
 
 // DTO with data about avg flow statistics
 message AvgFlowStatisticDTO {
   float timestamp = 1;
   string datapath_id = 2;
-  int32 total_num_packets = 3;
-  int32 total_num_bytes = 4;
-  int32 avg_duration_nanoseconds = 5;
-  int32 avg_duration_seconds = 6;
-  int32 avg_hard_timeout = 7;
-  int32 avg_idle_timeout = 8;
-  int32 avg_priority = 9;
-  int32 avg_cookie = 10;
+  int64 total_num_packets = 3;
+  int64 total_num_bytes = 4;
+  int64 avg_duration_nanoseconds = 5;
+  int64 avg_duration_seconds = 6;
+  int64 avg_hard_timeout = 7;
+  int64 avg_idle_timeout = 8;
+  int64 avg_priority = 9;
+  int64 avg_cookie = 10;
 }
 
 // DTO with data about agg flow statistics
 message AggFlowStatisticDTO {
   float timestamp = 1;
   string datapath_id = 2;
-  int32 total_num_packets = 3;
-  int32 total_num_bytes = 4;
-  int32 total_num_flows = 5;
+  int64 total_num_packets = 3;
+  int64 total_num_bytes = 4;
+  int64 total_num_flows = 5;
 }
 
 // DTO with data about port statistics
 message PortStatisticDTO {
   float timestamp = 1;
   string datapath_id = 2;
-  int32 port = 3;
-  int32 num_received_packets = 4;
-  int32 num_received_bytes = 5;
-  int32 num_received_errors = 6;
-  int32 num_transmitted_packets = 7;
-  int32 num_transmitted_bytes = 8;
-  int32 num_transmitted_errors = 9;
-  int32 num_received_dropped = 10;
-  int32 num_transmitted_dropped = 11;
-  int32 num_received_frame_errors = 12;
-  int32 num_received_overrun_errors = 13;
-  int32 num_received_crc_errors = 14;
-  int32 num_collisions = 15;
-  int32 duration_nanoseconds = 16;
-  int32 duration_seconds = 17;
+  int64 port = 3;
+  int64 num_received_packets = 4;
+  int64 num_received_bytes = 5;
+  int64 num_received_errors = 6;
+  int64 num_transmitted_packets = 7;
+  int64 num_transmitted_bytes = 8;
+  int64 num_transmitted_errors = 9;
+  int64 num_received_dropped = 10;
+  int64 num_transmitted_dropped = 11;
+  int64 num_received_frame_errors = 12;
+  int64 num_received_overrun_errors = 13;
+  int64 num_received_crc_errors = 14;
+  int64 num_collisions = 15;
+  int64 duration_nanoseconds = 16;
+  int64 duration_seconds = 17;
 }
 
 // DTO with data about flow statistics
 message FlowStatisticDTO {
   float timestamp = 1;
   string datapath_id = 2;
-  int32 in_port = 3;
-  int32 out_port = 4;
+  int64 in_port = 3;
+  int64 out_port = 4;
   string dst_mac_address = 5;
-  int32 num_packets = 6;
-  int32 num_bytes = 7;
-  int32 duration_nanoseconds = 8;
-  int32 duration_seconds = 9;
-  int32 hard_timeout = 10;
-  int32 idle_timeout = 11;
-  int32 priority = 12;
-  int32 cookie = 13;
+  int64 num_packets = 6;
+  int64 num_bytes = 7;
+  int64 duration_nanoseconds = 8;
+  int64 duration_seconds = 9;
+  int64 hard_timeout = 10;
+  int64 idle_timeout = 11;
+  int64 priority = 12;
+  int64 cookie = 13;
 }
 
 // DTO with data about OSSEC IDS alerts
