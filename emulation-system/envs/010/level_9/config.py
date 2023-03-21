@@ -91,7 +91,8 @@ def default_config(name: str, network_id: int = 9, level: int = 9, version: str 
             "attacker."
     static_attackers_cfg = default_static_attacker_sequences(topology_cfg.subnetwork_masks)
     ovs_cfg = default_ovs_config(network_id=network_id, level=level, version=version)
-    sdn_controller_cfg = default_sdn_controller_config(network_id=network_id, level=level, version=version)
+    sdn_controller_cfg = default_sdn_controller_config(network_id=network_id, level=level, version=version,
+                                                       time_step_len_seconds=time_step_len_seconds)
     host_manager_cfg = default_host_manager_config(network_id=network_id, level=level, version=version,
                                                    time_step_len_seconds=time_step_len_seconds)
     snort_ids_manager_cfg = default_snort_ids_manager_config(network_id=network_id, level=level, version=version,
@@ -5059,13 +5060,15 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
     return ovs_config
 
 
-def default_sdn_controller_config(network_id: int, level: int, version: str) -> Union[None, SDNControllerConfig]:
+def default_sdn_controller_config(network_id: int, level: int, version: str, time_step_len_seconds: int) \
+        -> Union[None, SDNControllerConfig]:
     """
     Generates the default SDN controller config
 
     :param network_id: the network id of the emulation
     :param level: the level of the emulation
     :param version: the version of the emulation
+    :param time_step_len_seconds: default length of a time-step in the emulation
     :return: the default SDN Controller config
     """
     return None
