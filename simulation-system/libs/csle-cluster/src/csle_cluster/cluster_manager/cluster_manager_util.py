@@ -3428,7 +3428,7 @@ class ClusterManagerUtil:
         else:
             d = {}
             for ds in avg_port_statistics_dict:
-                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_avg_port_statistic_dto_reverse(x), ds.dto))
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_avg_port_statistic_dto_reverse(x), ds.dtos))
             return d
 
     @staticmethod
