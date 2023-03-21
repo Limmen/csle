@@ -53,7 +53,7 @@ from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
 
 
-def default_config(name: str, network_id: int = 12, level: int = 13, version: str = "0.1.0",
+def default_config(name: str, network_id: int = 13, level: int = 13, version: str = "0.1.0",
                    time_step_len_seconds: int = 30) -> EmulationEnvConfig:
     """
     Returns the default configuration of the emulation environment
