@@ -557,7 +557,7 @@ class TrafficController:
                     port=emulation_env_config.traffic_config.client_population_config.client_manager_port)
                 running = True
             except Exception as e:
-                logger.debug(
+                logger.info(
                     f"Could not fetch client manager status on IP:{ip}, error: {str(e)}, {repr(e)}")
             if status is not None:
                 client_managers_statuses.append(status)

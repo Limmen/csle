@@ -89,7 +89,7 @@ class ReadEmulationStatisticsUtil:
                        collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME,
                        collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME
                        ]
-        logger.info(f"Reading time-series data for the last {time_window_minutes} from topics: {topic_names}")
+        logger.info(f"Reading time-series data for the last {time_window_minutes} minutes from topics: {topic_names}")
         start_consume_ts = time.time()
         kafka_conf = {
             collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY:

@@ -89,7 +89,7 @@ class ArrivalThread(threading.Thread):
         self.rate = self.lamb
         self.time_scaling_factor = time_scaling_factor
         self.period_scaling_factor = period_scaling_factor
-        logging.info(f"Starting arrival thread, lambda:{lamb}, mu:{mu}, num:commands:{num_commands}, "
+        logging.info(f"Starting arrival thread, lambda:{lamb}, mu:{mu}, num_commands:{num_commands}, "
                      f"commands:{commands}, sine_modulated: {sine_modulated}, "
                      f"time_scaling_factor: {time_scaling_factor}, period_scaling_factor: {period_scaling_factor}")
 
