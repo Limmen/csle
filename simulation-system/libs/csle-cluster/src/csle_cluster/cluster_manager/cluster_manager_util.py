@@ -2072,12 +2072,8 @@ class ClusterManagerUtil:
         :return: the converted objected
         """
         if client_population_metrics is None:
-            logging.info("EMPTY clients")
             return ClusterManagerUtil.get_empty_client_population_metrics_dto()
         else:
-            logging.info("CLIENTS DTO")
-            logging.info(str(client_population_metrics))
-            logging.info(f"rate: {client_population_metrics.rate}")
             return cluster_manager_pb2.ClientPopulationMetricsDTO(
                 ip=client_population_metrics.ip, ts=client_population_metrics.ts,
                 num_clients=client_population_metrics.num_clients, rate=client_population_metrics.rate
