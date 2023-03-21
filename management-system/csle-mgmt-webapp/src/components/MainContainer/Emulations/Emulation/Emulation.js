@@ -1440,7 +1440,7 @@ const Emulation = (props) => {
                                                 <td>{getBoolStr(emulation.beats_config.reload_enabled)}</td>
                                                 <td>{convertListToCommaSeparatedString(node_beats_config.filebeat_modules)}</td>
                                                 <td>{convertListToCommaSeparatedString(node_beats_config.heartbeat_hosts_to_monitor)}</td>
-                                                <td>{node_beats_config.kafka_input}</td>
+                                                <td>{getBoolStr(node_beats_config.kafka_input)}</td>
                                                 <td>{convertListToCommaSeparatedString(node_beats_config.log_files_paths)}</td>
                                                 <td>{convertListToCommaSeparatedString(node_beats_config.metricbeat_modules)}</td>
                                                 <td>{node_beats_config.start_filebeat_automatically.toString()}</td>

@@ -55,13 +55,18 @@ class HostMonitorThread(threading.Thread):
         logging.info("HostMonitor [Running]")
         while self.running:
             time.sleep(self.time_step_len_seconds)
-            host_metrics = HostManagerUtil.read_host_metrics(failed_auth_last_ts=self.failed_auth_last_ts,
-                                                             login_last_ts=self.login_last_ts)
-            record = host_metrics.to_kafka_record(ip=self.ip)
-            self.producer.produce(constants.KAFKA_CONFIG.HOST_METRICS_TOPIC_NAME, record)
-            self.producer.poll(0)
-            self.failed_auth_last_ts = HostManagerUtil.read_latest_ts_auth()
-            self.login_last_ts = HostManagerUtil.read_latest_ts_login()
+            try:
+                host_metrics = HostManagerUtil.read_host_metrics(failed_auth_last_ts=self.failed_auth_last_ts,
+                                                                 login_last_ts=self.login_last_ts)
+                record = host_metrics.to_kafka_record(ip=self.ip)
+                self.producer.produce(constants.KAFKA_CONFIG.HOST_METRICS_TOPIC_NAME, record)
+                self.producer.poll(0)
+                self.failed_auth_last_ts = HostManagerUtil.read_latest_ts_auth()
+                self.login_last_ts = HostManagerUtil.read_latest_ts_login()
+            except Exception as e:
+                logging.info(f"[Monitor thread], "
+                             f"There was an exception reading host metrics and producing to kafka: "
+                             f"{str(e)}, {repr(e)}")
 
 
 class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer):

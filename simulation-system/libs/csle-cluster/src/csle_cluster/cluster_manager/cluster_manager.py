@@ -2399,7 +2399,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
         if container_config is not None:
             HostController.start_host_manager(emulation_env_config=execution.emulation_env_config,
-                                              ip=container_config.docker_gw_bridge_ip)
+                                              ip=container_config.docker_gw_bridge_ip, logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -2892,7 +2892,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is not None:
             host_statuses_and_ips = \
                 HostController.get_host_monitor_threads_statuses(emulation_env_config=execution.emulation_env_config,
-                                                                 physical_server_ip=GeneralUtil.get_host_ip())
+                                                                 physical_server_ip=GeneralUtil.get_host_ip(),
+                                                                 logger=logging.getLogger())
             host_statuses = list(map(lambda x: ClusterManagerUtil.convert_host_status_to_host_manager_status_dto(x),
                                      host_statuses_and_ips))
             return csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusesDTO(

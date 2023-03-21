@@ -20,40 +20,45 @@ class HostController:
     """
 
     @staticmethod
-    def start_host_managers(emulation_env_config: EmulationEnvConfig) -> None:
+    def start_host_managers(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         Utility method for checking if the host manager is running and starting it if it is not running
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: None
         """
 
         # Start host managers on emulation containers
         for c in emulation_env_config.containers_config.containers:
             # Connect
-            HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip)
+            HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=c.docker_gw_bridge_ip,
+                                              logger=logger)
 
         # Start host manager on kafka container
         HostController.start_host_manager(emulation_env_config=emulation_env_config,
-                                          ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip)
+                                          ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
+                                          logger=logger)
 
         # Start host manager on ELK container
         HostController.start_host_manager(emulation_env_config=emulation_env_config,
-                                          ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip)
+                                          ip=emulation_env_config.elk_config.container.docker_gw_bridge_ip,
+                                          logger=logger)
 
         if emulation_env_config.sdn_controller_config is not None:
             # Start host manager on SDN controller container
             HostController.start_host_manager(
                 emulation_env_config=emulation_env_config,
-                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip)
+                ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip, logger=logger)
 
     @staticmethod
-    def start_host_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def start_host_manager(emulation_env_config: EmulationEnvConfig, ip: str, logger: logging.Logger) -> None:
         """
         Utility method for starting the host manager on a specific container
 
         :param emulation_env_config: the emulation env config
         :param ip: the ip of the container
+        :param logger: the logger to use for logging
         :return: None
         """
         # Connect
@@ -66,7 +71,7 @@ class HostController:
                                                 conn=emulation_env_config.get_connection(ip=ip))
 
         if constants.COMMANDS.SEARCH_HOST_MANAGER not in str(o):
-            Logger.__call__().get_logger().info(f"Starting host manager on node {ip}")
+            logger.info(f"Host manager is not running on: {ip}, starting it. Output of {cmd} was: {str(o)}")
 
             # Stop old background job if running
             cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -662,7 +667,7 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip, logger=logger)
 
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ip, port=emulation_env_config.host_manager_config.host_manager_port)
@@ -690,7 +695,7 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0], logger=logger)
         if initial_start:
             node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=ips)
             if node_beats_config is None or not node_beats_config.start_filebeat_automatically:
@@ -719,7 +724,7 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0], logger=logger)
         if initial_start:
             node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=ips)
             if node_beats_config is None or not node_beats_config.start_packetbeat_automatically:
@@ -748,7 +753,7 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0], logger=logger)
         if initial_start:
             node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=ips)
             if node_beats_config is None or not node_beats_config.start_metricbeat_automatically:
@@ -778,7 +783,7 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0])
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0], logger=logger)
         if initial_start:
             node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=ips)
             if node_beats_config is None or not node_beats_config.start_heartbeat_automatically:
@@ -806,7 +811,8 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip,
+                                          logger=logger)
         node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
         if node_beats_config is None:
             return
@@ -844,7 +850,8 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip,
+                                          logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -872,7 +879,8 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip,
+                                          logger=logger)
         node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
         if node_beats_config is None:
             return
@@ -907,7 +915,8 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip)
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=container.docker_gw_bridge_ip,
+                                          logger=logger)
         node_beats_config = emulation_env_config.beats_config.get_node_beats_config_by_ips(ips=container.get_ips())
         if node_beats_config is None:
             return
@@ -972,7 +981,7 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -992,7 +1001,7 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -1012,7 +1021,7 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -1032,7 +1041,7 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -1052,7 +1061,7 @@ class HostController:
         :param logger: the logger to use for logging
         :return: None
         """
-        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip)
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ip, logger=logger)
 
         # Open a gRPC session
         with grpc.insecure_channel(
@@ -1063,17 +1072,19 @@ class HostController:
             csle_collector.host_manager.query_host_manager.stop_heartbeat(stub=stub)
 
     @staticmethod
-    def get_host_monitor_threads_statuses(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> \
+    def get_host_monitor_threads_statuses(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                                          logger: logging.Logger) -> \
             List[Tuple[csle_collector.host_manager.host_manager_pb2.HostStatusDTO, str]]:
         """
         A method that sends a request to the HostManager on every container to get the status of the Host monitor thread
 
         :param emulation_env_config: the emulation config
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: List of monitor thread statuses
         """
         statuses = []
-        HostController.start_host_managers(emulation_env_config=emulation_env_config)
+        HostController.start_host_managers(emulation_env_config=emulation_env_config, logger=logger)
 
         # Get statuses of emulation containers
         for c in emulation_env_config.containers_config.containers:
