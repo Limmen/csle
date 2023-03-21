@@ -142,9 +142,9 @@ def list_csle_gym_envs() -> None:
     import csle_common.constants.constants as constants
 
     click.secho("Registered OpenAI gym environments:", fg="magenta", bold=True)
-    for env in gym.envs.registry.all():
-        if constants.CSLE.NAME in env.id:
-            click.secho(f"{env.id}", bold=False)
+    for env_name, env_obj in gym.envs.registry.items():
+        if constants.CSLE.NAME in env_name:
+            click.secho(f"{env_name}", bold=False)
 
 
 def emulation_shell_complete(ctx, param, incomplete) -> List[str]:
