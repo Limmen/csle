@@ -9,7 +9,6 @@ import LogsButton from "../LogsButton/LogsButton";
 import KibanaImg from './Kibana.png'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import serverIp from "../../../../Common/serverIp";
 import {
     ELK_STACK_SUBRESOURCE,
     LOGSTASH_SUBRESOURCE,
@@ -23,7 +22,6 @@ import ElasticImg from "./../../../Emulations/Emulation/Elastic.png"
  * Subcomponent of the /control-plane page that contains information about ELK managers
  */
 const ElkManagersInfo = (props) => {
-    const ip = serverIp;
 
     const renderKibanaTooltip = (props) => {
         return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">

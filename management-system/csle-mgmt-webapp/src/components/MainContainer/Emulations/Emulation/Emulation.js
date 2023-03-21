@@ -18,7 +18,7 @@ import KafkaImg from "./Kafka.png"
 import DockerImg from "./Docker.png"
 import OssecImg from "./Ossec.png"
 import BeatsImg from "./Beats.png"
-
+import getBoolStr from "../../../Common/getBoolStr";
 
 /**
  * Component representing the /emulations/<id> resource
@@ -49,7 +49,6 @@ const Emulation = (props) => {
     const [ovsSwitchesOpen, setOvsSwitchesOpen] = useState(false);
     const [sdnControllerConfigOpen, setSdnControllerConfigOpen] = useState(false);
     const [beatsOpen, setBeatsOpen] = useState(false);
-
     const emulation = props.emulation
 
     const startorStopEmulationPre = (emulation) => {
@@ -1374,6 +1373,8 @@ const Emulation = (props) => {
                                             <th>Controller port</th>
                                             <th>Controller transport protocol</th>
                                             <th>IP</th>
+                                            <th>External IP</th>
+                                            <th>Physical host</th>
                                             <th>OpenFlow protocols</th>
                                         </tr>
                                         </thead>
@@ -1381,10 +1382,12 @@ const Emulation = (props) => {
                                         {emulation.ovs_config.switch_configs.map((switch_config, index) =>
                                             <tr key={switch_config.container_name + "-" + index}>
                                                 <td>{switch_config.container_name}</td>
-                                                <td>{switch_config.controler_ip}</td>
+                                                <td>{switch_config.controller_ip}</td>
                                                 <td>{switch_config.controller_port}</td>
                                                 <td>{switch_config.controller_transport_protocol}</td>
                                                 <td>{switch_config.ip}</td>
+                                                <td>{switch_config.docker_gw_bridge_ip}</td>
+                                                <td>{switch_config.physical_host_ip}</td>
                                                 <td>{switch_config.openflow_protocols.join(", ")}</td>
                                             </tr>
                                         )}
@@ -1434,7 +1437,7 @@ const Emulation = (props) => {
                                             <tr key={node_beats_config.ip + "-" + index}>
                                                 <td>{node_beats_config.ip}</td>
                                                 <td>{emulation.beats_config.num_elastic_shards}</td>
-                                                <td>{emulation.beats_config.reload_enabled}</td>
+                                                <td>{getBoolStr(emulation.beats_config.reload_enabled)}</td>
                                                 <td>{convertListToCommaSeparatedString(node_beats_config.filebeat_modules)}</td>
                                                 <td>{convertListToCommaSeparatedString(node_beats_config.heartbeat_hosts_to_monitor)}</td>
                                                 <td>{node_beats_config.kafka_input}</td>

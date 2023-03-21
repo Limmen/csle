@@ -9,7 +9,6 @@ import LogsButton from "../LogsButton/LogsButton";
 import RyuImg from './Ryu.png'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import serverIp from "../../../../Common/serverIp";
 import {
     RYU_MONITOR_SUBRESOURCE,
     RYU_MANAGER_SUBRESOURCE,
@@ -20,7 +19,6 @@ import {
  * Subcomponent of the /control-plane page that contains information about Ryu managers
  */
 const RyuManagersInfo = (props) => {
-    const ip = serverIp;
 
     const renderRyuTooltip = (props) => {
         return (<Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
