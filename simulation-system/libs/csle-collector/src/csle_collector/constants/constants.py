@@ -682,6 +682,9 @@ class ELK:
     ELASTICSEARCH_LOG_DIR = "/var/log/elasticsearch/"
     LOGSTASH_LOG_DIR = "/var/log/logstash/"
     KIBANA_LOG_DIR = "/var/log/kibana/"
+    ELASTIC_PORT = 9200
+    KIBANA_PORT = 5601
+    LOGSTASH_PORT = 5044
 
 
 class RYU:

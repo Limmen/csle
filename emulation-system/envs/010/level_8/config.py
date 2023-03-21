@@ -4887,8 +4887,10 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
         forward_accept=set([]),
         output_drop=set(), input_drop=set(), forward_drop=set(), routes=set())
 
-    config = ElkConfig(version=version, time_step_len_seconds=15, elastic_port=9200, kibana_port=5601,
-                       logstash_port=5044,
+    config = ElkConfig(version=version, time_step_len_seconds=15,
+                       elastic_port=collector_constants.ELK.ELASTIC_PORT,
+                       kibana_port=collector_constants.ELK.KIBANA_PORT,
+                       logstash_port=collector_constants.ELK.LOGSTASH_PORT,
                        elk_manager_port=collector_constants.MANAGER_PORTS.ELK_MANAGER_DEFAULT_PORT,
                        container=container,
                        resources=resources, firewall_config=firewall_config,
