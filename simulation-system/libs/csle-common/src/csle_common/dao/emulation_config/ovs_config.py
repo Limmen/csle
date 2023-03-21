@@ -92,6 +92,5 @@ class OVSConfig:
         """
         config = self.copy()
         config.switch_configs = list(map(lambda x: x.create_execution_config(
-            ip_first_octet=ip_first_octet, physical_servers=physical_servers),
-                                         config.switch_configs))
+            ip_first_octet=ip_first_octet, physical_servers=physical_servers), config.switch_configs))
         return config

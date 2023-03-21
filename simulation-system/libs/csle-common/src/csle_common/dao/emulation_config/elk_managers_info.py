@@ -13,7 +13,7 @@ class ELKManagersInfo:
                  emulation_name: str, execution_id: int,
                  elk_managers_statuses: List[csle_collector.elk_manager.elk_manager_pb2.ElkDTO],
                  elk_managers_running: List[bool], local_kibana_port: int = -1,
-                 physical_server_ip = ""):
+                 physical_server_ip=""):
         """
         Initializes the DTO
 

@@ -83,7 +83,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         self.hostname = socket.gethostname()
         try:
             self.ip = netifaces.ifaddresses(constants.INTERFACES.ETH0)[netifaces.AF_INET][0][constants.INTERFACES.ADDR]
-        except:
+        except Exception:
             self.ip = socket.gethostbyname(self.hostname)
         self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.ip}:{constants.KAFKA.PORT}",
                      constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}

@@ -2868,7 +2868,8 @@ def default_sdn_controller_config(network_id: int, level: int, version: str, tim
     return sdn_controller_config
 
 
-def default_host_manager_config(network_id: int, level: int, version: str, time_step_len_seconds: int) -> HostManagerConfig:
+def default_host_manager_config(network_id: int, level: int, version: str,
+                                time_step_len_seconds: int) -> HostManagerConfig:
     """
     Generates the default host manager configuration
 

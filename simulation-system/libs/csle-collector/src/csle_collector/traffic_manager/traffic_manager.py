@@ -27,7 +27,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
         self.hostname = socket.gethostname()
         try:
             self.ip = netifaces.ifaddresses(constants.INTERFACES.ETH0)[netifaces.AF_INET][0][constants.INTERFACES.ADDR]
-        except:
+        except Exception:
             self.ip = socket.gethostbyname(self.hostname)
         logging.info(f"Setting up TrafficManager hostname: {self.hostname} ip: {self.ip}")
 

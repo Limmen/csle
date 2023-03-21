@@ -26,7 +26,7 @@ class ElkManagerServicer(csle_collector.elk_manager.elk_manager_pb2_grpc.ElkMana
         self.hostname = socket.gethostname()
         try:
             self.ip = netifaces.ifaddresses(constants.INTERFACES.ETH0)[netifaces.AF_INET][0][constants.INTERFACES.ADDR]
-        except:
+        except Exception:
             self.ip = socket.gethostbyname(self.hostname)
         logging.info(f"Setting up ElkManager hostname: {self.hostname} ip: {self.ip}")
 

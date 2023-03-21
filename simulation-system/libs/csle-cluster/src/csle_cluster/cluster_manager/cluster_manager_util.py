@@ -1441,7 +1441,7 @@ class ClusterManagerUtil:
         """
         return cluster_manager_pb2.ElkManagersInfoDTO(
             ips=[], ports=[], emulationName="", executionId="", elkManagersRunning=[], elkManagersStatuses=[],
-            localKibanaPort=-1, physicalServerIp = ""
+            localKibanaPort=-1, physicalServerIp=""
         )
 
     @staticmethod
@@ -1451,7 +1451,7 @@ class ClusterManagerUtil:
         """
         return cluster_manager_pb2.RyuManagersInfoDTO(
             ips=[], ports=[], emulationName="", executionId=-1, ryuManagersRunning=[], ryuManagersStatuses=[],
-            physicalServerIp = "", localControllerWebPort=-1
+            physicalServerIp="", localControllerWebPort=-1
         )
 
     @staticmethod

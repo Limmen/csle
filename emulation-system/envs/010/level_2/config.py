@@ -2377,6 +2377,7 @@ def default_sdn_controller_config(network_id: int, level: int, version: str, tim
     """
     return None
 
+
 def default_host_manager_config(network_id: int, level: int, version: str, time_step_len_seconds: int) \
         -> HostManagerConfig:
     """

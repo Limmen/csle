@@ -1980,7 +1980,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         config = MetastoreFacade.get_config(id=1)
         leader = ClusterUtil.am_i_leader(ip=GeneralUtil.get_host_ip(), config=config)
         if execution is None or not leader:
-            logging.info(f"Not leader, skipping creating networks")
+            logging.info("Not leader, skipping creating networks")
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         ContainerController.create_networks(containers_config=execution.emulation_env_config.containers_config,
                                             logger=logging.getLogger())
