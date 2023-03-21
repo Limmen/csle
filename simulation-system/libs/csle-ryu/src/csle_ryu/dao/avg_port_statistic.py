@@ -7,7 +7,7 @@ class AvgPortStatistic:
     DTO containing data with average port statistics from an OpenFlow switch
     """
 
-    def __init__(self, timestamp: float, datapath_id: int, total_num_received_packets: int,
+    def __init__(self, timestamp: float, datapath_id: str, total_num_received_packets: int,
                  total_num_received_bytes: int, total_num_received_errors: int, total_num_transmitted_packets: int,
                  total_num_transmitted_bytes: int, total_num_transmitted_errors: int, total_num_received_dropped: int,
                  total_num_transmitted_dropped, total_num_received_frame_errors, total_num_received_overrun_errors,
@@ -168,7 +168,7 @@ class AvgPortStatistic:
         :return: the DTO
         """
         parts = record.split(",")
-        obj = AvgPortStatistic(timestamp=float(parts[0]), datapath_id=int(parts[1]),
+        obj = AvgPortStatistic(timestamp=float(parts[0]), datapath_id=parts[1],
                                total_num_received_packets=int(parts[2]),
                                total_num_received_bytes=int(parts[3]),
                                total_num_received_errors=int(parts[4]),
@@ -211,7 +211,7 @@ class AvgPortStatistic:
         """
         parts = record.split(",")
         self.timestamp = float(parts[0])
-        self.datapath_id = int(parts[1])
+        self.datapath_id = parts[1]
         self.total_num_received_packets = int(parts[2])
         self.total_num_received_bytes = int(parts[3])
         self.total_num_received_errors = int(parts[4])
@@ -228,7 +228,7 @@ class AvgPortStatistic:
         self.avg_duration_seconds = int(parts[15])
 
     @staticmethod
-    def average_port_statistics(timestamp: float, datapath_id: int,
+    def average_port_statistics(timestamp: float, datapath_id: str,
                                 port_statistics: List[PortStatistic]) -> "AvgPortStatistic":
         """
         Computes the average metrics from a list of flow statistics

@@ -2604,7 +2604,7 @@ class ClusterManagerUtil:
         :return: an empty FlowStatisticDTO
         """
         return cluster_manager_pb2.FlowStatisticDTO(
-            timestamp=0.0, datapath_id=-1, in_port=-1, out_port=-1, dst_mac_address="", num_packets=-1,
+            timestamp=0.0, datapath_id="", in_port=-1, out_port=-1, dst_mac_address="", num_packets=-1,
             num_bytes=-1, duration_nanoseconds=-1, duration_seconds=-1, hard_timeout=-1, idle_timeout=-1,
             priority=-1, cookie=-1)
 
@@ -2696,7 +2696,7 @@ class ClusterManagerUtil:
         :return: an empty PortStatisticDTO
         """
         return cluster_manager_pb2.PortStatisticDTO(
-            timestamp=0.0, datapath_id=-1, port=-1, num_received_packets=-1, num_received_bytes=-1,
+            timestamp=0.0, datapath_id="", port=-1, num_received_packets=-1, num_received_bytes=-1,
             num_received_errors=-1, num_transmitted_packets=-1, num_transmitted_bytes=-1, num_transmitted_errors=-1,
             num_received_dropped=-1, num_transmitted_dropped=-1, num_received_frame_errors=-1,
             num_received_overrun_errors=-1, num_received_crc_errors=-1, num_collisions=-1, duration_nanoseconds=-1,
@@ -2773,7 +2773,7 @@ class ClusterManagerUtil:
         :return: an empty AggFlowStatisticDTO
         """
         return cluster_manager_pb2.AggFlowStatisticDTO(
-            timestamp=0.0, datapath_id=-1, total_num_packets=-1, total_num_bytes=-1, total_num_flows=-1)
+            timestamp=0.0, datapath_id="", total_num_packets=-1, total_num_bytes=-1, total_num_flows=-1)
 
     @staticmethod
     def agg_flow_statistic_dto_to_dict(agg_flow_statistic_dto: cluster_manager_pb2.AggFlowStatisticDTO) \
@@ -2845,7 +2845,7 @@ class ClusterManagerUtil:
         :return: an empty AvgFlowStatisticDTO
         """
         return cluster_manager_pb2.AvgFlowStatisticDTO(
-            timestamp=0.0, datapath_id=-1, total_num_packets=-1, total_num_bytes=-1,
+            timestamp=0.0, datapath_id="", total_num_packets=-1, total_num_bytes=-1,
             avg_duration_nanoseconds=-1, avg_duration_seconds=-1, avg_hard_timeout=-1, avg_idle_timeout=-1,
             avg_priority=-1, avg_cookie=-1)
 
@@ -2935,7 +2935,7 @@ class ClusterManagerUtil:
         :return: an empty AvgPortStatisticDTO
         """
         return cluster_manager_pb2.AvgPortStatisticDTO(
-            timestamp=0.0, datapath_id=-1, total_num_received_packets=0, total_num_received_bytes=0,
+            timestamp=0.0, datapath_id="", total_num_received_packets=0, total_num_received_bytes=0,
             total_num_received_errors=0, total_num_transmitted_packets=0, total_num_transmitted_bytes=0,
             total_num_transmitted_errors=0, total_num_received_dropped=0, total_num_transmitted_dropped=0,
             total_num_received_frame_errors=0, total_num_received_overrun_errors=0,

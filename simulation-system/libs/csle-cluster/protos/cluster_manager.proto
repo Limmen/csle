@@ -297,7 +297,7 @@ message DockerStatsDict {
 // DTO with data about avg flow statistics
 message AvgPortStatisticDTO {
   float timestamp = 1;
-  int32 datapath_id = 2;
+  string datapath_id = 2;
   int32 total_num_received_packets = 3;
   int32 total_num_received_bytes = 4;
   int32 total_num_received_errors = 5;
@@ -317,7 +317,7 @@ message AvgPortStatisticDTO {
 // DTO with data about avg flow statistics
 message AvgFlowStatisticDTO {
   float timestamp = 1;
-  int32 datapath_id = 2;
+  string datapath_id = 2;
   int32 total_num_packets = 3;
   int32 total_num_bytes = 4;
   int32 avg_duration_nanoseconds = 5;
@@ -331,7 +331,7 @@ message AvgFlowStatisticDTO {
 // DTO with data about agg flow statistics
 message AggFlowStatisticDTO {
   float timestamp = 1;
-  int32 datapath_id = 2;
+  string datapath_id = 2;
   int32 total_num_packets = 3;
   int32 total_num_bytes = 4;
   int32 total_num_flows = 5;
@@ -340,7 +340,7 @@ message AggFlowStatisticDTO {
 // DTO with data about port statistics
 message PortStatisticDTO {
   float timestamp = 1;
-  int32 datapath_id = 2;
+  string datapath_id = 2;
   int32 port = 3;
   int32 num_received_packets = 4;
   int32 num_received_bytes = 5;
@@ -361,7 +361,7 @@ message PortStatisticDTO {
 // DTO with data about flow statistics
 message FlowStatisticDTO {
   float timestamp = 1;
-  int32 datapath_id = 2;
+  string datapath_id = 2;
   int32 in_port = 3;
   int32 out_port = 4;
   string dst_mac_address = 5;

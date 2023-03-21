@@ -6,7 +6,7 @@ class PortStatistic:
     DTO containing data with port statistics from an OpenFlow switch
     """
 
-    def __init__(self, timestamp: float, datapath_id: int, port: int, num_received_packets: int,
+    def __init__(self, timestamp: float, datapath_id: str, port: int, num_received_packets: int,
                  num_received_bytes: int, num_received_errors: int, num_transmitted_packets: int,
                  num_transmitted_bytes: int, num_transmitted_errors: int, num_received_dropped: int,
                  num_transmitted_dropped: int, num_received_frame_errors: int, num_received_overrun_errors: int,
@@ -165,7 +165,7 @@ class PortStatistic:
         :return: the DTO
         """
         parts = record.split(",")
-        obj = PortStatistic(timestamp=float(parts[0]), datapath_id=int(parts[1]), port=int(parts[2]),
+        obj = PortStatistic(timestamp=float(parts[0]), datapath_id=parts[1], port=int(parts[2]),
                             num_received_packets=int(parts[3]),
                             num_received_bytes=int(parts[4]), num_received_errors=int(parts[5]),
                             num_transmitted_packets=int(parts[6]), num_transmitted_bytes=int(parts[7]),
@@ -199,7 +199,7 @@ class PortStatistic:
         """
         parts = record.split(",")
         self.timestamp = float(parts[0])
-        self.datapath_id = int(parts[1])
+        self.datapath_id = parts[1]
         self.port = int(parts[2])
         self.num_received_packets = int(parts[3])
         self.num_received_bytes = int(parts[4])

@@ -7,7 +7,7 @@ class AvgFlowStatistic:
     DTO containing avg data of a flow statistics returned by an OpenFlow switch
     """
 
-    def __init__(self, timestamp: float, datapath_id: int,
+    def __init__(self, timestamp: float, datapath_id: str,
                  total_num_packets: int, total_num_bytes: int, avg_duration_nanoseconds: int, avg_duration_seconds: int,
                  avg_hard_timeout: int, avg_idle_timeout: int, avg_priority: int, avg_cookie: int):
         """
@@ -133,7 +133,7 @@ class AvgFlowStatistic:
         :return: the DTO
         """
         parts = record.split(",")
-        obj = AvgFlowStatistic(timestamp=float(parts[0]), datapath_id=int(parts[1]),
+        obj = AvgFlowStatistic(timestamp=float(parts[0]), datapath_id=parts[1],
                                total_num_packets=int(parts[2]),
                                total_num_bytes=int(parts[3]), avg_duration_nanoseconds=int(parts[4]),
                                avg_duration_seconds=int(parts[5]),
@@ -162,7 +162,7 @@ class AvgFlowStatistic:
         """
         parts = record.split(",")
         self.timestamp = float(parts[0])
-        self.datapath_id = int(parts[1])
+        self.datapath_id = parts[1]
         self.total_num_packets = int(parts[2])
         self.total_num_bytes = int(parts[3])
         self.avg_duration_nanoseconds = int(parts[4])
@@ -173,7 +173,7 @@ class AvgFlowStatistic:
         self.avg_cookie = int(parts[9])
 
     @staticmethod
-    def average_flow_statistics(timestamp: float, datapath_id: int,
+    def average_flow_statistics(timestamp: float, datapath_id: str,
                                 flow_statistics: List[FlowStatistic]) -> "AvgFlowStatistic":
         """
         Computes the average metrics from a list of flow statistics

@@ -6,7 +6,7 @@ class AggFlowStatistic:
     DTO containing aggregated flow statistics of an OpenFlow switch
     """
 
-    def __init__(self, timestamp: float, datapath_id: int, total_num_packets: int, total_num_bytes: int,
+    def __init__(self, timestamp: float, datapath_id: str, total_num_packets: int, total_num_bytes: int,
                  total_num_flows: int):
         """
         Initializes the DTO
@@ -108,7 +108,7 @@ class AggFlowStatistic:
         :return: the DTO
         """
         parts = record.split(",")
-        obj = AggFlowStatistic(timestamp=float(parts[0]), datapath_id=int(parts[1]), total_num_packets=int(parts[2]),
+        obj = AggFlowStatistic(timestamp=float(parts[0]), datapath_id=parts[1], total_num_packets=int(parts[2]),
                                total_num_bytes=int(parts[3]), total_num_flows=int(parts[4]))
         return obj
 
@@ -130,7 +130,7 @@ class AggFlowStatistic:
         """
         parts = record.split(",")
         self.timestamp = float(parts[0])
-        self.datapath_id = int(parts[1])
+        self.datapath_id = parts[1]
         self.total_num_packets = int(parts[2])
         self.total_num_bytes = int(parts[3])
         self.total_num_flows = int(parts[4])
