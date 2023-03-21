@@ -50,7 +50,8 @@ from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
 
 
-def default_config(name: str, network_id: int = 10, level: int = 10, version: str = "0.1.0") -> EmulationEnvConfig:
+def default_config(name: str, network_id: int = 10, level: int = 10, version: str = "0.1.0",
+                   time_step_len_seconds: int = 15) -> EmulationEnvConfig:
     """
     Returns the default configuration of the emulation environment
 
@@ -58,16 +59,18 @@ def default_config(name: str, network_id: int = 10, level: int = 10, version: st
     :param network_id: the network id of the emulation
     :param level: the level of the emulation
     :param version: the version of the emulation
+    :param time_step_len_seconds: default length of a time-step in the emulation
     :return: the emulation environment configuration
     """
     containers_cfg = default_containers_config(network_id=network_id, level=level, version=version)
     flags_cfg = default_flags_config(network_id=network_id)
     resources_cfg = default_resource_constraints_config(network_id=network_id, level=level)
     topology_cfg = default_topology_config(network_id=network_id)
-    traffic_cfg = default_traffic_config(network_id=network_id)
+    traffic_cfg = default_traffic_config(network_id=network_id, time_step_len_seconds=time_step_len_seconds)
     users_cfg = default_users_config(network_id=network_id)
     vuln_cfg = default_vulns_config(network_id=network_id)
-    kafka_cfg = default_kafka_config(network_id=network_id, level=level, version=version)
+    kafka_cfg = default_kafka_config(network_id=network_id, level=level, version=version,
+                                     time_step_len_seconds=time_step_len_seconds)
     services_cfg = default_services_config(network_id=network_id)
     descr = "An emulation environment with a set of nodes that run common " \
             "networked services such as SSH, FTP, Telnet, IRC, Kafka, " \
@@ -84,11 +87,16 @@ def default_config(name: str, network_id: int = 10, level: int = 10, version: st
     static_attackers_cfg = default_static_attacker_sequences(topology_cfg.subnetwork_masks)
     ovs_cfg = default_ovs_config(network_id=network_id, level=level, version=version)
     sdn_controller_cfg = default_sdn_controller_config(network_id=network_id, level=level, version=version)
-    host_manager_cfg = default_host_manager_config(network_id=network_id, level=level, version=version)
-    snort_ids_manager_cfg = default_snort_ids_manager_config(network_id=network_id, level=level, version=version)
-    ossec_ids_manager_cfg = default_ossec_ids_manager_config(network_id=network_id, level=level, version=version)
-    docker_stats_manager_cfg = default_docker_stats_manager_config(network_id=network_id, level=level, version=version)
-    elk_cfg = default_elk_config(network_id=network_id, level=level, version=version)
+    host_manager_cfg = default_host_manager_config(network_id=network_id, level=level, version=version,
+                                                   time_step_len_seconds=time_step_len_seconds)
+    snort_ids_manager_cfg = default_snort_ids_manager_config(network_id=network_id, level=level, version=version,
+                                                             time_step_len_seconds=time_step_len_seconds)
+    ossec_ids_manager_cfg = default_ossec_ids_manager_config(network_id=network_id, level=level, version=version,
+                                                             time_step_len_seconds=time_step_len_seconds)
+    docker_stats_manager_cfg = default_docker_stats_manager_config(network_id=network_id, level=level, version=version,
+                                                                   time_step_len_seconds=time_step_len_seconds)
+    elk_cfg = default_elk_config(network_id=network_id, level=level, version=version,
+                                 time_step_len_seconds=time_step_len_seconds)
     beats_cfg = default_beats_config(network_id=network_id)
     emulation_env_cfg = EmulationEnvConfig(
         name=name, containers_config=containers_cfg, users_config=users_cfg, flags_config=flags_cfg,
@@ -2092,11 +2100,12 @@ def default_topology_config(network_id: int) -> TopologyConfig:
     return topology
 
 
-def default_traffic_config(network_id: int) -> TrafficConfig:
+def default_traffic_config(network_id: int, time_step_len_seconds: int) -> TrafficConfig:
     """
     Generates default traffic config
 
     :param network_id: the network id
+    :param time_step_len_seconds: default length of a time-step in the emulation
     :return: the traffic configuration
     """
     traffic_generators = [
@@ -2249,7 +2258,7 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
         client_process_type=ClientPopulationProcessType.POISSON,
         lamb=0.025, mu=1,
         client_manager_port=collector_constants.MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT,
-        num_commands=2, client_time_step_len_seconds=1,
+        num_commands=2, client_time_step_len_seconds=time_step_len_seconds,
         time_scaling_factor=0.01, period_scaling_factor=20,
         client_manager_log_dir=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR,
         client_manager_log_file=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE,
@@ -2259,13 +2268,14 @@ def default_traffic_config(network_id: int) -> TrafficConfig:
     return traffic_conf
 
 
-def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConfig:
+def default_kafka_config(network_id: int, level: int, version: str, time_step_len_seconds: int) -> KafkaConfig:
     """
     Generates the default kafka configuration
 
     :param network_id: the id of the emulation network
     :param level: the level of the emulation
     :param version: the version of the emulation
+    :param time_step_len_seconds: default length of a time-step in the emulation
     :return: the kafka configuration
     """
     container = NodeContainerConfig(
@@ -2424,7 +2434,7 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
                          kafka_port=collector_constants.KAFKA.PORT,
                          kafka_port_external=collector_constants.KAFKA.EXTERNAL_PORT,
                          kafka_manager_port=collector_constants.MANAGER_PORTS.KAFKA_MANAGER_DEFAULT_PORT,
-                         time_step_len_seconds=15,
+                         time_step_len_seconds=time_step_len_seconds,
                          firewall_config=firewall_config,
                          kafka_manager_log_file=collector_constants.LOG_FILES.KAFKA_MANAGER_LOG_FILE,
                          kafka_manager_log_dir=collector_constants.LOG_FILES.KAFKA_MANAGER_LOG_DIR,
@@ -2917,16 +2927,18 @@ def default_sdn_controller_config(network_id: int, level: int, version: str) -> 
     return None
 
 
-def default_host_manager_config(network_id: int, level: int, version: str) -> HostManagerConfig:
+def default_host_manager_config(network_id: int, level: int, version: str, time_step_len_seconds: int) \
+        -> HostManagerConfig:
     """
     Generates the default host manager configuration
 
     :param network_id: the id of the emulation network
     :param level: the level of the emulation
     :param version: the version of the emulation
+    :param time_step_len_seconds: default length of a time-step in the emulation
     :return: the host manager configuration
     """
-    config = HostManagerConfig(version=version, time_step_len_seconds=15,
+    config = HostManagerConfig(version=version, time_step_len_seconds=time_step_len_seconds,
                                host_manager_port=collector_constants.MANAGER_PORTS.HOST_MANAGER_DEFAULT_PORT,
                                host_manager_log_file=collector_constants.LOG_FILES.HOST_MANAGER_LOG_FILE,
                                host_manager_log_dir=collector_constants.LOG_FILES.HOST_MANAGER_LOG_DIR,
@@ -2934,17 +2946,19 @@ def default_host_manager_config(network_id: int, level: int, version: str) -> Ho
     return config
 
 
-def default_snort_ids_manager_config(network_id: int, level: int, version: str) -> SnortIDSManagerConfig:
+def default_snort_ids_manager_config(network_id: int, level: int, version: str, time_step_len_seconds: int) \
+        -> SnortIDSManagerConfig:
     """
     Generates the default Snort IDS manager configuration
 
     :param network_id: the id of the emulation network
     :param level: the level of the emulation
     :param version: the version of the emulation
+    :param time_step_len_seconds: default length of a time-step in the emulation
     :return: the Snort IDS manager configuration
     """
     config = SnortIDSManagerConfig(
-        version=version, time_step_len_seconds=15,
+        version=version, time_step_len_seconds=time_step_len_seconds,
         snort_ids_manager_port=collector_constants.MANAGER_PORTS.SNORT_IDS_MANAGER_DEFAULT_PORT,
         snort_ids_manager_log_dir=collector_constants.LOG_FILES.SNORT_IDS_MANAGER_LOG_DIR,
         snort_ids_manager_log_file=collector_constants.LOG_FILES.SNORT_IDS_MANAGER_LOG_FILE,
@@ -2952,17 +2966,19 @@ def default_snort_ids_manager_config(network_id: int, level: int, version: str) 
     return config
 
 
-def default_ossec_ids_manager_config(network_id: int, level: int, version: str) -> OSSECIDSManagerConfig:
+def default_ossec_ids_manager_config(network_id: int, level: int, version: str, time_step_len_seconds: int) \
+        -> OSSECIDSManagerConfig:
     """
     Generates the default OSSEC IDS manager configuration
 
     :param network_id: the id of the emulation network
     :param level: the level of the emulation
     :param version: the version of the emulation
+    :param time_step_len_seconds: default length of a time-step in the emulation
     :return: the OSSEC IDS manager configuration
     """
     config = OSSECIDSManagerConfig(
-        version=version, time_step_len_seconds=15,
+        version=version, time_step_len_seconds=time_step_len_seconds,
         ossec_ids_manager_port=collector_constants.MANAGER_PORTS.OSSEC_IDS_MANAGER_DEFAULT_PORT,
         ossec_ids_manager_log_file=collector_constants.LOG_FILES.OSSEC_IDS_MANAGER_LOG_FILE,
         ossec_ids_manager_log_dir=collector_constants.LOG_FILES.OSSEC_IDS_MANAGER_LOG_DIR,
@@ -2970,17 +2986,19 @@ def default_ossec_ids_manager_config(network_id: int, level: int, version: str) 
     return config
 
 
-def default_docker_stats_manager_config(network_id: int, level: int, version: str) -> DockerStatsManagerConfig:
+def default_docker_stats_manager_config(network_id: int, level: int, version: str, time_step_len_seconds: int) \
+        -> DockerStatsManagerConfig:
     """
     Generates the default docker stats manager configuration
 
     :param network_id: the id of the emulation network
     :param level: the level of the emulation
     :param version: the version of the emulation
+    :param time_step_len_seconds: default length of a time-step in the emulation
     :return: the docker stats manager configuration
     """
     config = DockerStatsManagerConfig(
-        version=version, time_step_len_seconds=15,
+        version=version, time_step_len_seconds=time_step_len_seconds,
         docker_stats_manager_port=collector_constants.MANAGER_PORTS.DOCKER_STATS_MANAGER_DEFAULT_PORT,
         docker_stats_manager_log_file=collector_constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_FILE,
         docker_stats_manager_log_dir=collector_constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_DIR,
@@ -2988,13 +3006,14 @@ def default_docker_stats_manager_config(network_id: int, level: int, version: st
     return config
 
 
-def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
+def default_elk_config(network_id: int, level: int, version: str, time_step_len_seconds: int) -> ElkConfig:
     """
     Generates the default ELK configuration
 
     :param network_id: the id of the emulation network
     :param level: the level of the emulation
     :param version: the version of the emulation
+    :param time_step_len_seconds: default length of a time-step in the emulation
     :return: the ELK configuration
     """
     container = NodeContainerConfig(
@@ -3054,7 +3073,7 @@ def default_elk_config(network_id: int, level: int, version: str) -> ElkConfig:
         forward_accept=set([]),
         output_drop=set(), input_drop=set(), forward_drop=set(), routes=set())
 
-    config = ElkConfig(version=version, time_step_len_seconds=15,
+    config = ElkConfig(version=version, time_step_len_seconds=time_step_len_seconds,
                        elastic_port=collector_constants.ELK.ELASTIC_PORT,
                        kibana_port=collector_constants.ELK.KIBANA_PORT,
                        logstash_port=collector_constants.ELK.LOGSTASH_PORT,
@@ -3497,7 +3516,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--uninstall", help="Boolean parameter, if true, uninstall config",
                         action="store_true")
     args = parser.parse_args()
-    config = default_config(name="csle-level10-010", network_id=10, level=10, version="0.1.0")
+    config = default_config(name="csle-level10-010", network_id=10, level=10, version="0.1.0", time_step_len_seconds=30)
     ExperimentUtil.write_emulation_config_file(config, ExperimentUtil.default_emulation_config_path())
 
     if args.install:
