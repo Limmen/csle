@@ -528,6 +528,7 @@ class KAFKA_CONFIG:
     """
     Constants related to the kafka container configuration
     """
+    DEFAULT_RETENTION_TIME_HOURS = 240
     NETWORK_ID_THIRD_OCTET = 253
     NETWORK_ID_FOURTH_OCTET = 253
     SUFFIX = "_1"
