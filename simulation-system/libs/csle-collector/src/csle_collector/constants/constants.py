@@ -528,6 +528,7 @@ class KAFKA_CONFIG:
     """
     Constants related to the kafka container configuration
     """
+    DEFAULT_NUM_PARTITIONS = 1
     DEFAULT_NUM_REPLICAS = 1
     DEFAULT_RETENTION_TIME_HOURS = 240
     NETWORK_ID_THIRD_OCTET = 253
