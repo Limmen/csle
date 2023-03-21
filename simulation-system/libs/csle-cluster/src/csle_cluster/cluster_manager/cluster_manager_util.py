@@ -2567,8 +2567,8 @@ class ClusterManagerUtil:
         if flow_statistic is None:
             return ClusterManagerUtil.get_empty_flow_statistic_dto()
         else:
-            print("CONVERTING:")
-            print(flow_statistic)
+            logging.info("CONVERTING:")
+            logging.info(flow_statistic)
             return cluster_manager_pb2.FlowStatisticDTO(
                 timestamp=flow_statistic.timestamp, datapath_id=flow_statistic.datapath_id,
                 in_port=flow_statistic.in_port, out_port=flow_statistic.out_port,
