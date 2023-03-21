@@ -35,15 +35,17 @@ class TopologyController:
             for route in node_fw_config.routes:
                 target, gw = route
                 cmd = f"{constants.COMMANDS.SUDO_ADD_ROUTE} {target} gw {gw}"
+                logger.info(f"Adding route: {cmd} to routing table of node: {ip}")
                 EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                               wait_for_completion=True)
 
             for default_network_fw_config in node_fw_config.ips_gw_default_policy_networks:
                 if default_network_fw_config.default_gw is not None:
                     cmd = f"{constants.COMMANDS.SUDO_ADD_ROUTE} " \
-                          f"-net {default_network_fw_config.network.subnet_mask.replace('/24', '')} " \
+                          f"-net {default_network_fw_config.network.subnet_mask.split('/')[0]} " \
                           f"{constants.COMMANDS.NETMASK} {default_network_fw_config.network.bitmask} " \
                           f"gw {default_network_fw_config.default_gw}"
+                    logger.info(f"Adding default gw: {cmd} to routing table of node: {ip}")
                     EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip),
                                                   wait_for_completion=True)
 

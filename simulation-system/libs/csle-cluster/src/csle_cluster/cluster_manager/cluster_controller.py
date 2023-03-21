@@ -3664,24 +3664,24 @@ class ClusterController:
         execution = EmulationEnvController.update_execution_config_w_docker_gw_bridge_ip(
             execution=execution)
 
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Install csle-collector --")
-        for ip in physical_servers:
-            Logger.__call__().get_logger().info(f"Installing libraries on containers in "
-                                                f"emulation {execution.emulation_env_config.name} "
-                                                f"deployed on server: {ip}")
-            ClusterController.install_libraries(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply kafka config --")
-        for ip in physical_servers:
-            if execution.emulation_env_config.kafka_config.container.physical_host_ip == ip:
-                Logger.__call__().get_logger().info(f"Applying Kafka config to containers in "
-                                                    f"emulation: {execution.emulation_env_config.name} on server: {ip}")
-                ClusterController.apply_kafka_config(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                                     emulation=execution.emulation_name,
-                                                     ip_first_octet=execution.ip_first_octet)
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Install csle-collector --")
+        # for ip in physical_servers:
+        #     Logger.__call__().get_logger().info(f"Installing libraries on containers in "
+        #                                         f"emulation {execution.emulation_env_config.name} "
+        #                                         f"deployed on server: {ip}")
+        #     ClusterController.install_libraries(
+        #         ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+        #         emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply kafka config --")
+        # for ip in physical_servers:
+        #     if execution.emulation_env_config.kafka_config.container.physical_host_ip == ip:
+        #         Logger.__call__().get_logger().info(f"Applying Kafka config to containers in "
+        #                                             f"emulation: {execution.emulation_env_config.name} on server: {ip}")
+        #         ClusterController.apply_kafka_config(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+        #                                              emulation=execution.emulation_name,
+        #                                              ip_first_octet=execution.ip_first_octet)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start SDN controller --")
@@ -3696,12 +3696,21 @@ class ClusterController:
                                                            ip_first_octet=execution.ip_first_octet)
             time.sleep(10)
 
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
+        # for ip in physical_servers:
+        #     Logger.__call__().get_logger().info(f"Applying resource constraints to containers "
+        #                                         f"in emulation:{execution.emulation_env_config.name} on server: {ip}")
+        #     ClusterController.apply_resource_constraints(
+        #         ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+        #         emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
         for ip in physical_servers:
-            Logger.__call__().get_logger().info(f"Applying resource constraints to containers "
-                                                f"in emulation:{execution.emulation_env_config.name} on server: {ip}")
-            ClusterController.apply_resource_constraints(
+            Logger.__call__().get_logger().info(f"Creating topology on containers in "
+                                                f"emulation: {execution.emulation_env_config.name} on server: {ip}")
+            ClusterController.create_topology(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
 
@@ -3722,6 +3731,36 @@ class ClusterController:
             ClusterController.ping_execution(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create OVS switches --")
+        for ip in physical_servers:
+            Logger.__call__().get_logger().info(f"Creating OVS switches on containers in "
+                                                f"emulation: {execution.emulation_env_config.name} on server: {ip}")
+            ClusterController.create_ovs_switches(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Tests connections with Ping --")
+        for ip in physical_servers:
+            Logger.__call__().get_logger().info(f"Testing Ping connections for containers in "
+                                                f"emulation: {execution.emulation_env_config.name} on server: {ip}")
+            ClusterController.ping_execution(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
+        for ip in physical_servers:
+            Logger.__call__().get_logger().info(f"Creating topology on containers in "
+                                                f"emulation: {execution.emulation_env_config.name} on server: {ip}")
+            ClusterController.create_topology(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+
+        import sys
+        sys.exit(0)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")

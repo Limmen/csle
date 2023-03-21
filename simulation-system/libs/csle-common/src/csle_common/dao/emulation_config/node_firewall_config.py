@@ -1,4 +1,4 @@
-from typing import Set, List, Dict, Any
+from typing import Set, List, Dict, Any, Tuple
 from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
 from csle_common.util.general_util import GeneralUtil
 
@@ -11,7 +11,7 @@ class NodeFirewallConfig:
     def __init__(self, ips_gw_default_policy_networks: List[DefaultNetworkFirewallConfig],
                  hostname: str, output_accept: Set[str], input_accept: Set[str],
                  forward_accept: Set[str], output_drop: Set[str], input_drop: Set[str],
-                 forward_drop: Set[str], routes: Set[str], docker_gw_bridge_ip: str = "",
+                 forward_drop: Set[str], routes: Set[Tuple[str, str]], docker_gw_bridge_ip: str = "",
                  physical_host_ip: str = ""):
         """
         Initializes the DTO
@@ -65,7 +65,7 @@ class NodeFirewallConfig:
             output_drop=set(d["output_drop"]),
             input_drop=set(d["input_drop"]),
             forward_drop=set(d["forward_drop"]),
-            routes=set(d["routes"]),
+            routes=set(list(map(lambda x: tuple(x), d["routes"]))),
             docker_gw_bridge_ip=d["docker_gw_bridge_ip"],
             physical_host_ip=d["physical_host_ip"]
         )
@@ -170,8 +170,8 @@ class NodeFirewallConfig:
             lambda x: GeneralUtil.replace_first_octet_of_ip(
                 ip=x, ip_first_octet=ip_first_octet), list(config.forward_drop))))
         config.routes = set(list(map(
-            lambda x: GeneralUtil.replace_first_octet_of_ip(
-                ip=x, ip_first_octet=ip_first_octet), list(config.routes))))
+            lambda x: GeneralUtil.replace_first_octet_of_ip_tuple(
+                tuple_of_ips=x, ip_first_octet=ip_first_octet), list(config.routes))))
         config.ips_gw_default_policy_networks = list(map(lambda x: x.create_execution_config(
             ip_first_octet=ip_first_octet), config.ips_gw_default_policy_networks))
         return config
