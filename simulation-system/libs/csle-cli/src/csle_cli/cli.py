@@ -138,7 +138,7 @@ def list_csle_gym_envs() -> None:
 
     :return: None
     """
-    import gym
+    import gymnasium as gym
     import csle_common.constants.constants as constants
 
     click.secho("Registered OpenAI gym environments:", fg="magenta", bold=True)

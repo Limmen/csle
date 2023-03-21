@@ -1,5 +1,5 @@
 from typing import Dict, Any
-import gym
+import gymnasium as gym
 import numpy as np
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
 

@@ -1,5 +1,5 @@
 from typing import List
-import gym
+import gymnasium as gym
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
 from csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions import EmulationAttackerNMAPActions

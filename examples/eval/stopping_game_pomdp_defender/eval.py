@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy

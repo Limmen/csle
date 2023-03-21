@@ -1,7 +1,7 @@
 import math
 from typing import Union, List, Dict, Optional, Tuple
 import time
-import gym
+import gymnasium as gym
 import os
 import numpy as np
 import pulp

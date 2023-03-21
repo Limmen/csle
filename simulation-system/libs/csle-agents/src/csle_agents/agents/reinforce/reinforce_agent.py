@@ -1,7 +1,7 @@
 import math
 from typing import Union, List, Dict, Optional
 import time
-import gym
+import gymnasium as gym
 import os
 import torch
 import numpy as np

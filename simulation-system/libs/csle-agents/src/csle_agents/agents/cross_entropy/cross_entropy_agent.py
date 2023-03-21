@@ -2,7 +2,7 @@ import math
 from typing import Union, List, Dict, Optional
 import random
 import time
-import gym
+import gymnasium as gym
 import os
 import numpy as np
 from scipy import stats

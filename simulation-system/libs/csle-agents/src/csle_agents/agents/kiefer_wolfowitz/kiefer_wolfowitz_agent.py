@@ -1,7 +1,7 @@
 import math
 from typing import Union, List, Dict, Optional
 import time
-import gym
+import gymnasium as gym
 import os
 import numpy as np
 import gym_csle_stopping_game.constants.constants as env_constants

@@ -1,5 +1,5 @@
 import numpy as np
-import gym
+import gymnasium as gym
 from csle_common.metastore.metastore_facade import MetastoreFacade
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil

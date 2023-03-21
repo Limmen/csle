@@ -1,6 +1,6 @@
 from typing import Dict, Any
 import numpy as np
-import gym
+import gymnasium as gym
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 
 

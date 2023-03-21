@@ -1,5 +1,5 @@
 from typing import Tuple, List
-import gym
+import gymnasium as gym
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig

@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 

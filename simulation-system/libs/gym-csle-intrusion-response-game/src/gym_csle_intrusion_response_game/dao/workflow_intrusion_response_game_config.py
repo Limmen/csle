@@ -1,5 +1,5 @@
 from typing import Dict, Any
-import gym
+import gymnasium as gym
 import numpy as np
 
 

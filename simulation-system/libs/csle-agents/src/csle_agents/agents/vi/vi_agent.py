@@ -3,7 +3,7 @@ from typing import List, Optional, Tuple
 import time
 import os
 import numpy as np
-import gym
+import gymnasium as gym
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.experiment_result import ExperimentResult

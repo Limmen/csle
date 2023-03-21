@@ -1,6 +1,6 @@
 from typing import List
 from abc import ABC, abstractmethod
-import gym
+import gymnasium as gym
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 
 

@@ -1,7 +1,7 @@
 import random
 from typing import List, Optional, Dict, Tuple
 import time
-import gym
+import gymnasium as gym
 import os
 import sys
 import numpy as np

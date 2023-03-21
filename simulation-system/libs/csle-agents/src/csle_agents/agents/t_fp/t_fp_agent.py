@@ -1,6 +1,6 @@
 from typing import Union, List, Dict, Tuple, Optional
 import time
-import gym
+import gymnasium as gym
 import os
 import math
 import numpy as np

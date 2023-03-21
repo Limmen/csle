@@ -12,6 +12,7 @@ An OpenAI gym reinforcement learning environment that represents an intrusion re
 - `csle-attacker`
 - `csle-defender`
 - `csle-collector`
+- `gymnasium` for specifying the RL environment API
 
 ## Development Requirements
 

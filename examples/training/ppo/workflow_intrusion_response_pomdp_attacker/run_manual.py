@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 from csle_common.metastore.metastore_facade import MetastoreFacade
 
 if __name__ == '__main__':
