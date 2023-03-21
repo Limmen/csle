@@ -217,8 +217,8 @@ class HostController:
 
         if emulation_env_config.sdn_controller_config is not None \
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_server_ip:
-            # Start packetbeat on the SDN controller container
-            HostController.start_packetbeat(
+            # Start filebeat on the SDN controller container
+            HostController.start_filebeat(
                 emulation_env_config=emulation_env_config,
                 ips=([emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip] +
                      emulation_env_config.sdn_controller_config.container.get_ips()),
@@ -703,8 +703,7 @@ class HostController:
         host_monitor_dto = HostController.get_host_monitor_thread_status_by_port_and_ip(
             ip=ips[0], port=emulation_env_config.host_manager_config.host_manager_port)
         if not host_monitor_dto.filebeat_running:
-            logger.info(
-                f"Filebeat is not running on {ips[0]}, starting it.")
+            logger.info(f"Filebeat is not running on {ips[0]}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:

@@ -205,7 +205,7 @@ class SDNControllerManager:
                 f'{emulation_env_config.sdn_controller_config.manager_port}') as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
             ryu_dto = csle_collector.ryu_manager.query_ryu_server.start_ryu_monitor(
-                stub, kafka_ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip,
+                stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
                 kafka_port=emulation_env_config.kafka_config.kafka_port,
                 time_step_len=emulation_env_config.sdn_controller_config.time_step_len_seconds)
             return ryu_dto
