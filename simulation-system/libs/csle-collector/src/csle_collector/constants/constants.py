@@ -242,6 +242,7 @@ class LOG_FILES:
     KAFKA_LOG_FILE = "/usr/local/kafka/logs/server.log"
     RYU_MANAGER_LOG_FILE = "ryu_manager.log"
     RYU_MANAGER_LOG_DIR = "/"
+    DEFAULT_LOG_FILE_PATHS = ["/*.log", "/var/log/*.log", "/var/log/*/*.log", "/var/log/*/*/*.log"]
 
 
 class MANAGER_PORTS:
