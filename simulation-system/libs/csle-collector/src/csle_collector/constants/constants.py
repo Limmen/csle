@@ -259,6 +259,14 @@ class MANAGER_PORTS:
     ELK_MANAGER_DEFAULT_PORT = 50045
     KAFKA_MANAGER_DEFAULT_PORT = 50051
 
+
+class GRPC_WORKERS:
+    """
+    Constants related to the number of GRPC workers
+    """
+    DEFAULT_MAX_NUM_WORKERS = 10
+
+
 class TRAFFIC_GENERATOR:
     """
     Constants related to the traffic generator
