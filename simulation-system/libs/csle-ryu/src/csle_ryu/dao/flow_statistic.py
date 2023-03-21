@@ -6,7 +6,7 @@ class FlowStatistic:
     DTO containing data of a flow statistic returned by an OpenFlow switch
     """
 
-    def __init__(self, timestamp: float, datapath_id: str, in_port: int, out_port: int, dst_mac_address: str,
+    def __init__(self, timestamp: float, datapath_id: str, in_port: str, out_port: str, dst_mac_address: str,
                  num_packets: int, num_bytes: int, duration_nanoseconds: int, duration_seconds: int, hard_timeout: int,
                  idle_timeout: int, priority: int, cookie: int):
         """
@@ -137,8 +137,8 @@ class FlowStatistic:
         :return: the DTO
         """
         parts = record.split(",")
-        obj = FlowStatistic(timestamp=float(parts[0]), datapath_id=parts[1], in_port=int(parts[2]),
-                            out_port=int(parts[3]), dst_mac_address=parts[4], num_packets=int(parts[5]),
+        obj = FlowStatistic(timestamp=float(parts[0]), datapath_id=parts[1], in_port=parts[2],
+                            out_port=parts[3], dst_mac_address=parts[4], num_packets=int(parts[5]),
                             num_bytes=int(parts[6]), duration_nanoseconds=int(parts[7]),
                             duration_seconds=int(parts[8]),
                             hard_timeout=int(parts[9]), idle_timeout=int(parts[10]), priority=int(parts[11]),
@@ -165,8 +165,8 @@ class FlowStatistic:
         parts = record.split(",")
         self.timestamp = float(parts[0])
         self.datapath_id = parts[1]
-        self.in_port = int(parts[2])
-        self.out_port = int(parts[3])
+        self.in_port = parts[2]
+        self.out_port = parts[3]
         self.dst_mac_address = int(parts[4])
         self.num_packets = int(parts[5])
         self.num_bytes = int(parts[6])

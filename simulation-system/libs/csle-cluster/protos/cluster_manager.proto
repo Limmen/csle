@@ -362,8 +362,8 @@ message PortStatisticDTO {
 message FlowStatisticDTO {
   float timestamp = 1;
   string datapath_id = 2;
-  int64 in_port = 3;
-  int64 out_port = 4;
+  string in_port = 3;
+  string out_port = 4;
   string dst_mac_address = 5;
   int64 num_packets = 6;
   int64 num_bytes = 7;

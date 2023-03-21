@@ -2567,8 +2567,6 @@ class ClusterManagerUtil:
         if flow_statistic is None:
             return ClusterManagerUtil.get_empty_flow_statistic_dto()
         else:
-            logging.info("CONVERTING:")
-            logging.info(flow_statistic)
             return cluster_manager_pb2.FlowStatisticDTO(
                 timestamp=flow_statistic.timestamp, datapath_id=flow_statistic.datapath_id,
                 in_port=flow_statistic.in_port, out_port=flow_statistic.out_port,
@@ -2606,7 +2604,7 @@ class ClusterManagerUtil:
         :return: an empty FlowStatisticDTO
         """
         return cluster_manager_pb2.FlowStatisticDTO(
-            timestamp=0.0, datapath_id="", in_port=-1, out_port=-1, dst_mac_address="", num_packets=-1,
+            timestamp=0.0, datapath_id="", in_port="", out_port="", dst_mac_address="", num_packets=-1,
             num_bytes=-1, duration_nanoseconds=-1, duration_seconds=-1, hard_timeout=-1, idle_timeout=-1,
             priority=-1, cookie=-1)
 
