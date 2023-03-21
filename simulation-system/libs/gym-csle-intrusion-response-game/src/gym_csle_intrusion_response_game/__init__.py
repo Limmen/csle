@@ -2,7 +2,7 @@
 Register OpenAI Envs
 """
 from . __version__ import __version__
-from gym.envs.registration import register
+from gymnasium.envs.registration import register
 
 register(
     id='csle-intrusion-response-game-local-pomdp-defender-v1',
