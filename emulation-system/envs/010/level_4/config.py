@@ -1404,7 +1404,9 @@ def default_kafka_config(network_id: int, level: int, version: str) -> KafkaConf
     ]
 
     config = KafkaConfig(container=container, resources=resources, topics=topics, firewall_config=firewall_config,
-                         version=version, kafka_port=9092, kafka_port_external=9292,
+                         version=version,
+                         kafka_port=collector_constants.KAFKA.PORT,
+                         kafka_port_external=collector_constants.KAFKA.EXTERNAL_PORT,
                          kafka_manager_port=collector_constants.MANAGER_PORTS.KAFKA_MANAGER_DEFAULT_PORT,
                          time_step_len_seconds=15,
                          kafka_manager_log_file=collector_constants.LOG_FILES.KAFKA_MANAGER_LOG_FILE,
