@@ -129,7 +129,7 @@ const SDNController = (props) => {
                                     <td>{props.execution.emulation_env_config.sdn_controller_config.controller_module_name}</td>
                                     <td>{props.execution.emulation_env_config.sdn_controller_config.controller_port}</td>
                                     <td>
-                                        <a href={`${HTTP_PREFIX}${ip}:${localSdnControllerWebApiPort}`}
+                                        <a href={`${HTTP_PREFIX}${props.execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:${localSdnControllerWebApiPort}`}
                                            target="_blank" rel="noopener noreferrer">
                                             {props.execution.emulation_env_config.sdn_controller_config.controller_web_api_port}
                                         </a>
@@ -183,6 +183,8 @@ const SDNController = (props) => {
                                         <th>Controller port</th>
                                         <th>Controller transport protocol</th>
                                         <th>IP</th>
+                                        <th>External IP</th>
+                                        <th>Physical host</th>
                                         <th>OpenFlow protocols</th>
                                     </tr>
                                     </thead>
@@ -191,10 +193,12 @@ const SDNController = (props) => {
                                         (switch_config, index) =>
                                             <tr key={switch_config.container_name + "-" + index}>
                                                 <td>{switch_config.container_name}</td>
-                                                <td>{switch_config.controler_ip}</td>
+                                                <td>{switch_config.controller_ip}</td>
                                                 <td>{switch_config.controller_port}</td>
                                                 <td>{switch_config.controller_transport_protocol}</td>
                                                 <td>{switch_config.ip}</td>
+                                                <td>{switch_config.docker_gw_bridge_ip}</td>
+                                                <td>{switch_config.physical_host_ip}</td>
                                                 <td>{switch_config.openflow_protocols.join(", ")}</td>
                                             </tr>
                                     )}

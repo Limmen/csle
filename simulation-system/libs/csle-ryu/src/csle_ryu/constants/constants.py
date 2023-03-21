@@ -47,7 +47,9 @@ class RYU:
     DEFAULT_PORT = 6633
     DEFAULT_TRANSPORT_PROTOCOL = "tcp"
     SUBNETMASK_SUFFIX = "/29"
+    FULL_SUBNETMASK_SUFFIX = "/24"
     BITMASK = "255.255.255.248"
+    FULL_BITMASK = "255.255.255.0"
     STPLIB = "stplib"
     BYTE_COUNT = "byte_count"
     PACKET_COUNT = "packet_count"
