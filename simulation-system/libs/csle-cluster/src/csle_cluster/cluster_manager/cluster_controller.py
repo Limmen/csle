@@ -3732,7 +3732,7 @@ class ClusterController:
             ClusterController.create_ovs_switches(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
-        #
+
         # current_step += 1
         # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Tests connections with Ping --")
         # for ip in physical_servers:
