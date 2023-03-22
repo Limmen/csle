@@ -3697,33 +3697,15 @@ class ClusterController:
                                                            ip_first_octet=execution.ip_first_octet)
             time.sleep(10)
 
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
-        for ip in physical_servers:
-            Logger.__call__().get_logger().info(f"Applying resource constraints to containers "
-                                                f"in emulation:{execution.emulation_env_config.name} on server: {ip}")
-            ClusterController.apply_resource_constraints(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create OVS switches --")
-        for ip in physical_servers:
-            Logger.__call__().get_logger().info(f"Creating OVS switches on containers in "
-                                                f"emulation: {execution.emulation_env_config.name} on server: {ip}")
-            ClusterController.create_ovs_switches(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
-
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Tests connections with Ping --")
-        for ip in physical_servers:
-            Logger.__call__().get_logger().info(f"Testing Ping connections for containers in "
-                                                f"emulation: {execution.emulation_env_config.name} on server: {ip}")
-            ClusterController.ping_execution(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
-
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating resource constraints --")
+        # for ip in physical_servers:
+        #     Logger.__call__().get_logger().info(f"Applying resource constraints to containers "
+        #                                         f"in emulation:{execution.emulation_env_config.name} on server: {ip}")
+        #     ClusterController.apply_resource_constraints(
+        #         ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+        #         emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+        #
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Create OVS switches --")
         for ip in physical_servers:
@@ -3733,14 +3715,32 @@ class ClusterController:
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
 
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Tests connections with Ping --")
+        # for ip in physical_servers:
+        #     Logger.__call__().get_logger().info(f"Testing Ping connections for containers in "
+        #                                         f"emulation: {execution.emulation_env_config.name} on server: {ip}")
+        #     ClusterController.ping_execution(
+        #         ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+        #         emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+        #
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Tests connections with Ping --")
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Update OVS switches --")
         for ip in physical_servers:
-            Logger.__call__().get_logger().info(f"Testing Ping connections for containers in "
+            Logger.__call__().get_logger().info(f"Creating OVS switches on containers in "
                                                 f"emulation: {execution.emulation_env_config.name} on server: {ip}")
-            ClusterController.ping_execution(
+            ClusterController.create_ovs_switches(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+        #
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Tests connections with Ping --")
+        # for ip in physical_servers:
+        #     Logger.__call__().get_logger().info(f"Testing Ping connections for containers in "
+        #                                         f"emulation: {execution.emulation_env_config.name} on server: {ip}")
+        #     ClusterController.ping_execution(
+        #         ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+        #         emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
@@ -3750,6 +3750,9 @@ class ClusterController:
             ClusterController.create_topology(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+
+        import sys
+        sys.exit(0)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Configure OVS switches --")
