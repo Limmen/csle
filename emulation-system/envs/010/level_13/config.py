@@ -484,40 +484,40 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_8"),
-        # NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
-        #                     os=constants.CONTAINER_OS.OVS_1_OS,
-        #                     ips_and_networks=[
-        #                         (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
-        #                          ContainerNetwork(
-        #                              name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_10",
-        #                              subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-        #                                          f"{network_id}.10{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-        #                              subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-        #                              interface=constants.NETWORKING.ETH0,
-        #                              bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-        #                          )),
-        #                         (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.34",
-        #                          ContainerNetwork(
-        #                              name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_11",
-        #                              subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-        #                                          f"{network_id}.11{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-        #                              subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-        #                              interface=constants.NETWORKING.ETH2,
-        #                              bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-        #                          )),
-        #                         (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.34",
-        #                          ContainerNetwork(
-        #                              name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
-        #                              subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-        #                                          f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-        #                              subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-        #                              interface=constants.NETWORKING.ETH3,
-        #                              bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-        #                          ))
-        #                     ],
-        #                     version=version, level=str(level),
-        #                     restart_policy=constants.DOCKER.ON_FAILURE_3,
-        #                     suffix="_9"),
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
+                            os=constants.CONTAINER_OS.OVS_1_OS,
+                            ips_and_networks=[
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_10",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.10{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH0,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 )),
+                                # (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.34",
+                                #  ContainerNetwork(
+                                #      name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_11",
+                                #      subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                #                  f"{network_id}.11{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                #      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                #      interface=constants.NETWORKING.ETH2,
+                                #      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                #  )),
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.34",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH3,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 ))
+                            ],
+                            version=version, level=str(level),
+                            restart_policy=constants.DOCKER.ON_FAILURE_3,
+                            suffix="_9")
         # NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
         #                     os=constants.CONTAINER_OS.OVS_1_OS,
         #                     ips_and_networks=[
@@ -570,7 +570,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.31",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.32"
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.33",
-            # f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
             # f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.35"
         ],
         networks=[
@@ -658,13 +658,13 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                 subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                 bitmask=constants.CSLE.CSLE_EDGE_BITMASK
             ),
-            # ContainerNetwork(
-            #     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
-            #     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-            #                 f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-            #     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-            #     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-            # ),
+            ContainerNetwork(
+                name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
+                subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                            f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            ),
             # ContainerNetwork(
             #     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_14",
             #     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
@@ -1134,58 +1134,58 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
                      rate_limit_mbit=1000, packet_overhead_bytes=0,
                      cell_overhead_bytes=0
                  ))
+            ]),
+        NodeResourcesConfig(
+            container_name=f"{constants.CSLE.NAME}-"
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_9-{constants.CSLE.LEVEL}{level}",
+            num_cpus=1, available_memory_gb=4,
+            ips_and_network_configs=[
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
+                 NodeNetworkConfig(
+                     interface=constants.NETWORKING.ETH0,
+                     limit_packets_queue=30000, packet_delay_ms=0.1,
+                     packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                     packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                     packet_loss_type=PacketLossType.GEMODEL,
+                     loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                     loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                     packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                     packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                     packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                     rate_limit_mbit=1000, packet_overhead_bytes=0,
+                     cell_overhead_bytes=0
+                 )),
+                # (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.34",
+                #  NodeNetworkConfig(
+                #      interface=constants.NETWORKING.ETH2,
+                #      limit_packets_queue=30000, packet_delay_ms=0.1,
+                #      packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                #      packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                #      packet_loss_type=PacketLossType.GEMODEL,
+                #      loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                #      loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                #      packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                #      packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                #      packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                #      rate_limit_mbit=1000, packet_overhead_bytes=0,
+                #      cell_overhead_bytes=0
+                #  )),
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.34",
+                 NodeNetworkConfig(
+                     interface=constants.NETWORKING.ETH3,
+                     limit_packets_queue=30000, packet_delay_ms=0.1,
+                     packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                     packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                     packet_loss_type=PacketLossType.GEMODEL,
+                     loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                     loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                     packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                     packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                     packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                     rate_limit_mbit=1000, packet_overhead_bytes=0,
+                     cell_overhead_bytes=0
+                 ))
             ])
-        # NodeResourcesConfig(
-        #     container_name=f"{constants.CSLE.NAME}-"
-        #                    f"{constants.CONTAINER_IMAGES.OVS_1}_9-{constants.CSLE.LEVEL}{level}",
-        #     num_cpus=1, available_memory_gb=4,
-        #     ips_and_network_configs=[
-        #         (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
-        #          NodeNetworkConfig(
-        #              interface=constants.NETWORKING.ETH0,
-        #              limit_packets_queue=30000, packet_delay_ms=0.1,
-        #              packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
-        #              packet_delay_distribution=PacketDelayDistributionType.PARETO,
-        #              packet_loss_type=PacketLossType.GEMODEL,
-        #              loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
-        #              loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
-        #              packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
-        #              packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-        #              packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
-        #              rate_limit_mbit=1000, packet_overhead_bytes=0,
-        #              cell_overhead_bytes=0
-        #          )),
-        #         (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.34",
-        #          NodeNetworkConfig(
-        #              interface=constants.NETWORKING.ETH2,
-        #              limit_packets_queue=30000, packet_delay_ms=0.1,
-        #              packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
-        #              packet_delay_distribution=PacketDelayDistributionType.PARETO,
-        #              packet_loss_type=PacketLossType.GEMODEL,
-        #              loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
-        #              loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
-        #              packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
-        #              packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-        #              packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
-        #              rate_limit_mbit=1000, packet_overhead_bytes=0,
-        #              cell_overhead_bytes=0
-        #          )),
-        #         (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.34",
-        #          NodeNetworkConfig(
-        #              interface=constants.NETWORKING.ETH3,
-        #              limit_packets_queue=30000, packet_delay_ms=0.1,
-        #              packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
-        #              packet_delay_distribution=PacketDelayDistributionType.PARETO,
-        #              packet_loss_type=PacketLossType.GEMODEL,
-        #              loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
-        #              loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
-        #              packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
-        #              packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
-        #              packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
-        #              rate_limit_mbit=1000, packet_overhead_bytes=0,
-        #              cell_overhead_bytes=0
-        #          ))
-        #     ]),
         # NodeResourcesConfig(
         #     container_name=f"{constants.CSLE.NAME}-"
         #                    f"{constants.CONTAINER_IMAGES.OVS_1}_10-{constants.CSLE.LEVEL}{level}",
@@ -1954,20 +1954,20 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
-            # DefaultNetworkFirewallConfig(
-            #     ip=None,
-            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.22",
-            #     default_input=constants.FIREWALL.ACCEPT,
-            #     default_output=constants.FIREWALL.ACCEPT,
-            #     default_forward=constants.FIREWALL.ACCEPT,
-            #     network=ContainerNetwork(
-            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
-            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-            #                     f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-            #     )
-            # ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.22",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
             # DefaultNetworkFirewallConfig(
             #     ip=None,
             #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.22",
@@ -2359,20 +2359,20 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
-            # DefaultNetworkFirewallConfig(
-            #     ip=None,
-            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.28",
-            #     default_input=constants.FIREWALL.ACCEPT,
-            #     default_output=constants.FIREWALL.ACCEPT,
-            #     default_forward=constants.FIREWALL.ACCEPT,
-            #     network=ContainerNetwork(
-            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
-            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-            #                     f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-            #     )
-            # ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.28",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
             # DefaultNetworkFirewallConfig(
             #     ip=None,
             #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.4.28",
@@ -2778,20 +2778,20 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
-            # DefaultNetworkFirewallConfig(
-            #     ip=None,
-            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.31",
-            #     default_input=constants.FIREWALL.ACCEPT,
-            #     default_output=constants.FIREWALL.ACCEPT,
-            #     default_forward=constants.FIREWALL.ACCEPT,
-            #     network=ContainerNetwork(
-            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
-            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-            #                     f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-            #     )
-            # ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.31",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
             # DefaultNetworkFirewallConfig(
             #     ip=None,
             #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.30",
@@ -3616,20 +3616,20 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
-            # DefaultNetworkFirewallConfig(
-            #     ip=None,
-            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.28",
-            #     default_input=constants.FIREWALL.ACCEPT,
-            #     default_output=constants.FIREWALL.ACCEPT,
-            #     default_forward=constants.FIREWALL.ACCEPT,
-            #     network=ContainerNetwork(
-            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
-            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-            #                     f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-            #     )
-            # ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.28",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
             # DefaultNetworkFirewallConfig(
             #     ip=None,
             #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.35",
@@ -4035,20 +4035,20 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
-            # DefaultNetworkFirewallConfig(
-            #     ip=None,
-            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.28",
-            #     default_input=constants.FIREWALL.ACCEPT,
-            #     default_output=constants.FIREWALL.ACCEPT,
-            #     default_forward=constants.FIREWALL.ACCEPT,
-            #     network=ContainerNetwork(
-            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
-            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-            #                     f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-            #     )
-            # ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.28",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
             # DefaultNetworkFirewallConfig(
             #     ip=None,
             #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.35",
@@ -4454,20 +4454,20 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
-            # DefaultNetworkFirewallConfig(
-            #     ip=None,
-            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
-            #     default_input=constants.FIREWALL.ACCEPT,
-            #     default_output=constants.FIREWALL.ACCEPT,
-            #     default_forward=constants.FIREWALL.ACCEPT,
-            #     network=ContainerNetwork(
-            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
-            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-            #                     f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-            #     )
-            # ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
             # DefaultNetworkFirewallConfig(
             #     ip=None,
             #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.28",
@@ -4873,20 +4873,20 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
-            # DefaultNetworkFirewallConfig(
-            #     ip=None,
-            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.34",
-            #     default_input=constants.FIREWALL.ACCEPT,
-            #     default_output=constants.FIREWALL.ACCEPT,
-            #     default_forward=constants.FIREWALL.ACCEPT,
-            #     network=ContainerNetwork(
-            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
-            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-            #                     f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-            #     )
-            # ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.27",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
             # DefaultNetworkFirewallConfig(
             #     ip=None,
             #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.28",
@@ -5292,20 +5292,20 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
-            # DefaultNetworkFirewallConfig(
-            #     ip=None,
-            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.29",
-            #     default_input=constants.FIREWALL.ACCEPT,
-            #     default_output=constants.FIREWALL.ACCEPT,
-            #     default_forward=constants.FIREWALL.ACCEPT,
-            #     network=ContainerNetwork(
-            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
-            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-            #                     f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-            #     )
-            # ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.29",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_13",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
             # DefaultNetworkFirewallConfig(
             #     ip=None,
             #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.29",
@@ -5557,20 +5557,20 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
-            DefaultNetworkFirewallConfig(
-                ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.34",
-                default_gw=None,
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_11",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.11{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.34",
+            #     default_gw=None,
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_11",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.11{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.34",
                 default_gw=None,
@@ -5718,6 +5718,20 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                 default_output=constants.FIREWALL.ACCEPT,
                 default_forward=constants.FIREWALL.ACCEPT,
                 network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_11",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.11{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
+            DefaultNetworkFirewallConfig(
+                ip=None,
+                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_12",
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.12{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
@@ -5725,202 +5739,202 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
             ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_14",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.14{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_15",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.15{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_16",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.16{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_17",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.17{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_18",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.18{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_19",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.19{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.41",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_20",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.20{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.42",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_21",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.21{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_22",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.22{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_23",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.23{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_24",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.24{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_25",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.25{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_26",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.26{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
-            DefaultNetworkFirewallConfig(
-                ip=None,
-                default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
-                default_input=constants.FIREWALL.ACCEPT,
-                default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.ACCEPT,
-                network=ContainerNetwork(
-                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_27",
-                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                f"{network_id}.27{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-                )
-            ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_14",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.14{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_15",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.15{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_16",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.16{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_17",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.17{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_18",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.18{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_19",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.19{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.41",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_20",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.20{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.42",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_21",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.21{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_22",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.22{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_23",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.23{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_24",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.24{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_25",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.25{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_26",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.26{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
+            # DefaultNetworkFirewallConfig(
+            #     ip=None,
+            #     default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
+            #     default_input=constants.FIREWALL.ACCEPT,
+            #     default_output=constants.FIREWALL.ACCEPT,
+            #     default_forward=constants.FIREWALL.ACCEPT,
+            #     network=ContainerNetwork(
+            #         name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_27",
+            #         subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+            #                     f"{network_id}.27{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            #         subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            #         bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+            #     )
+            # ),
             DefaultNetworkFirewallConfig(
                 ip=None,
                 default_gw=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.31",
@@ -6379,7 +6393,8 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         input_accept=set([]),
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
-    node_configs = [node_1, node_2, node_3, node_4, node_5, node_6, node_7, node_8, node_9, node_10, node_11, node_12]
+    node_configs = [node_1, node_2, node_3, node_4, node_5, node_6, node_7, node_8, node_9, node_10, node_11, node_12,
+                    node_13]
     # node_configs = [node_1, node_2, node_3, node_4, node_5, node_6, node_7, node_8, node_9, node_10, node_11, node_12,
     #                 node_13, node_14]
     topology = TopologyConfig(node_configs=node_configs,
@@ -6408,8 +6423,8 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                                   f"{network_id}.11{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                   f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                   f"{network_id}.12{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-                                  # f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                                  # f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                  f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                  f"{network_id}.13{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                   # f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                   # f"{network_id}.14{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                   f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
@@ -6511,14 +6526,14 @@ def default_traffic_config(network_id: int, time_step_len_seconds: int = 15) -> 
                           traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
                           traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
                           traffic_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS),
-        # NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
-        #                   commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.OVS_1]
-        #                             + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
-        #                                 constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
-        #                   traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
-        #                   traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
-        #                   traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
-        #                   traffic_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS),
+        NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.OVS_1]
+                                    + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
+                                        constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
+                          traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
+                          traffic_manager_log_file=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_FILE,
+                          traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
+                          traffic_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS)
         # NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.35",
         #                   commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.OVS_1]
         #                             + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
@@ -6643,10 +6658,10 @@ def default_kafka_config(network_id: int, level: int, version: str, time_step_le
              f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10"),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.33",
              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10"),
+            (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
+             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10")
-            # (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
-            #  f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-            #  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10"),
             # (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.35",
             #  f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
             #  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10")
@@ -6810,10 +6825,10 @@ def default_users_config(network_id: int) -> UsersConfig:
             User(username="john", pw="doe", root=True),
             User(username="vagrant", pw="test_pw1", root=False)
         ]),
-        # NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34", users=[
-        #     User(username="john", pw="doe", root=True),
-        #     User(username="vagrant", pw="test_pw1", root=False)
-        # ]),
+        NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34", users=[
+            User(username="john", pw="doe", root=True),
+            User(username="vagrant", pw="test_pw1", root=False)
+        ]),
         # NodeUsersConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.35", users=[
         #     User(username="john", pw="doe", root=True),
         #     User(username="vagrant", pw="test_pw1", root=False)
@@ -6928,14 +6943,14 @@ def default_services_config(network_id: int) -> ServicesConfig:
                 NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
                                name=constants.SSH.SERVICE_NAME, credentials=[])
             ]
-        )
-        # NodeServicesConfig(
-        #     ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
-        #     services=[
-        #         NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
-        #                        name=constants.SSH.SERVICE_NAME, credentials=[])
-        #     ]
-        # ),
+        ),
+        NodeServicesConfig(
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
+            services=[
+                NetworkService(protocol=TransportProtocol.TCP, port=constants.SSH.DEFAULT_PORT,
+                               name=constants.SSH.SERVICE_NAME, credentials=[])
+            ]
+        ),
         # NodeServicesConfig(
         #     ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.35",
         #     services=[
@@ -7048,16 +7063,16 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
             controller_transport_protocol=ryu_constants.RYU.DEFAULT_TRANSPORT_PROTOCOL,
             openflow_protocols=[constants.OPENFLOW.OPENFLOW_V_1_3]
         ),
-        # OvsSwitchConfig(
-        #     container_name=f"{constants.CSLE.NAME}-"
-        #                    f"{constants.CONTAINER_IMAGES.OVS_1}_9-{constants.CSLE.LEVEL}{level}",
-        #     ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
-        #     controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-        #                   f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
-        #     controller_port=ryu_constants.RYU.DEFAULT_PORT,
-        #     controller_transport_protocol=ryu_constants.RYU.DEFAULT_TRANSPORT_PROTOCOL,
-        #     openflow_protocols=[constants.OPENFLOW.OPENFLOW_V_1_3]
-        # ),
+        OvsSwitchConfig(
+            container_name=f"{constants.CSLE.NAME}-"
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_9-{constants.CSLE.LEVEL}{level}",
+            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
+            controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                          f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
+            controller_port=ryu_constants.RYU.DEFAULT_PORT,
+            controller_transport_protocol=ryu_constants.RYU.DEFAULT_TRANSPORT_PROTOCOL,
+            openflow_protocols=[constants.OPENFLOW.OPENFLOW_V_1_3]
+        )
         # OvsSwitchConfig(
         #     container_name=f"{constants.CSLE.NAME}-"
         #                    f"{constants.CONTAINER_IMAGES.OVS_1}_10-{constants.CSLE.LEVEL}{level}",
@@ -7342,10 +7357,10 @@ def default_elk_config(network_id: int, level: int, version: str, time_step_len_
              f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10"),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.33",
              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10"),
+            (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
+             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10")
-            # (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
-            #  f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-            #  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10"),
             # (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.35",
             #  f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
             #  f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10")
@@ -7555,23 +7570,23 @@ def default_beats_config(network_id: int) -> BeatsConfig:
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
                             f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
                         ]),
-        # NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
-        #                 log_files_paths=collector_constants.LOG_FILES.DEFAULT_LOG_FILE_PATHS,
-        #                 filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
-        #                 kafka_input=False, start_filebeat_automatically=False,
-        #                 start_packetbeat_automatically=False,
-        #                 metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
-        #                                     collector_constants.METRICBEAT.LINUX_MODULE],
-        #                 start_metricbeat_automatically=False,
-        #                 start_heartbeat_automatically=False,
-        #                 heartbeat_hosts_to_monitor=[
-        #                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-        #                     f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
-        #                     f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
-        #                     f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-        #                     f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
-        #                     f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
-        #                 ]),
+        NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
+                        log_files_paths=collector_constants.LOG_FILES.DEFAULT_LOG_FILE_PATHS,
+                        filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],
+                        kafka_input=False, start_filebeat_automatically=False,
+                        start_packetbeat_automatically=False,
+                        metricbeat_modules=[collector_constants.METRICBEAT.SYSTEM_MODULE,
+                                            collector_constants.METRICBEAT.LINUX_MODULE],
+                        start_metricbeat_automatically=False,
+                        start_heartbeat_automatically=False,
+                        heartbeat_hosts_to_monitor=[
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_FOURTH_OCTET}",
+                            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_THIRD_OCTET}."
+                            f"{collector_constants.ELK_CONFIG.NETWORK_ID_FOURTH_OCTET}"
+                        ]),
         # NodeBeatsConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.35",
         #                 log_files_paths=collector_constants.LOG_FILES.DEFAULT_LOG_FILE_PATHS,
         #                 filebeat_modules=[collector_constants.FILEBEAT.SYSTEM_MODULE],

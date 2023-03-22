@@ -3727,7 +3727,7 @@ class ClusterController:
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Update OVS switches --")
         for ip in physical_servers:
-            Logger.__call__().get_logger().info(f"Creating OVS switches on containers in "
+            Logger.__call__().get_logger().info(f"Updating OVS switches on containers in "
                                                 f"emulation: {execution.emulation_env_config.name} on server: {ip}")
             ClusterController.create_ovs_switches(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
