@@ -3742,14 +3742,14 @@ class ClusterController:
         #         ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
         #         emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
 
-        current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
-        for ip in physical_servers:
-            Logger.__call__().get_logger().info(f"Creating topology on containers in "
-                                                f"emulation: {execution.emulation_env_config.name} on server: {ip}")
-            ClusterController.create_topology(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+        # current_step += 1
+        # Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating topology --")
+        # for ip in physical_servers:
+        #     Logger.__call__().get_logger().info(f"Creating topology on containers in "
+        #                                         f"emulation: {execution.emulation_env_config.name} on server: {ip}")
+        #     ClusterController.create_topology(
+        #         ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+        #         emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
 
         import sys
         sys.exit(0)
