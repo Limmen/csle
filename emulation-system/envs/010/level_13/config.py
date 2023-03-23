@@ -325,8 +325,8 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_2"),
-        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
-                            os=constants.CONTAINER_OS.OVS_1_OS,
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.ROUTER_2}",
+                            os=constants.CONTAINER_OS.ROUTER_2_OS,
                             ips_and_networks=[
                                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.23",
                                  ContainerNetwork(
@@ -344,6 +344,19 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                                                  f"{network_id}.6{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                                      subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                                      interface=constants.NETWORKING.ETH2,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 )),
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.23",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                                          f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH3,
                                      bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                                  ))
                             ],
@@ -374,7 +387,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_4"),
+                            suffix="_3"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -399,7 +412,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_5"),
+                            suffix="_4"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -424,7 +437,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_6"),
+                            suffix="_5"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -449,7 +462,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_7"),
+                            suffix="_6"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -474,7 +487,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_8"),
+                            suffix="_7"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -499,7 +512,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_9"),
+                            suffix="_8"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -524,7 +537,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_10"),
+                            suffix="_9"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -549,7 +562,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_11"),
+                            suffix="_10"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -574,7 +587,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_12"),
+                            suffix="_11"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -599,7 +612,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_13"),
+                            suffix="_12"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -624,7 +637,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_14"),
+                            suffix="_13"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -649,7 +662,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_15"),
+                            suffix="_14"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -674,7 +687,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_16"),
+                            suffix="_15"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -699,7 +712,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_17"),
+                            suffix="_16"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -724,7 +737,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_18"),
+                            suffix="_17"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -749,7 +762,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_19"),
+                            suffix="_18"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -774,7 +787,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_20"),
+                            suffix="_19"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -799,7 +812,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_21"),
+                            suffix="_20"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -824,7 +837,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_22"),
+                            suffix="_21"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -849,7 +862,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_23"),
+                            suffix="_22"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.ROUTER_2}",
                             os=constants.CONTAINER_OS.ROUTER_2_OS,
                             ips_and_networks=[
@@ -887,7 +900,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_3"),
+                            suffix="_4"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -912,7 +925,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_24"),
+                            suffix="_23"),
         NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.OVS_1}",
                             os=constants.CONTAINER_OS.OVS_1_OS,
                             ips_and_networks=[
@@ -937,7 +950,7 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
-                            suffix="_25")
+                            suffix="_24")
     ]
     containers_cfg = ContainersConfig(
         containers=containers,
@@ -1413,7 +1426,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
             ]),
         NodeResourcesConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_3-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.ROUTER_2}_3-{constants.CSLE.LEVEL}{level}",
             num_cpus=1, available_memory_gb=4,
             ips_and_network_configs=[
                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.23",
@@ -2169,7 +2182,7 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
             ]),
         NodeResourcesConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.ROUTER_2}_3-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.ROUTER_2}_4-{constants.CSLE.LEVEL}{level}",
             num_cpus=1, available_memory_gb=4,
             ips_and_network_configs=[
                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.120",
@@ -2327,7 +2340,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                 default_gw=None,
                 default_input=constants.FIREWALL.ACCEPT,
                 default_output=constants.FIREWALL.ACCEPT,
-                default_forward=constants.FIREWALL.DROP,
+                default_forward=constants.FIREWALL.ACCEPT,
                 network=ContainerNetwork(
                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
                          f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
@@ -4233,7 +4246,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_7 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_3",
+        hostname=f"{constants.CONTAINER_IMAGES.ROUTER_2}_3",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.23",
@@ -4259,6 +4272,23 @@ def default_topology_config(network_id: int) -> TopologyConfig:
                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_6",
                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
                                 f"{network_id}.6{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                    subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                    bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                )
+            ),
+            DefaultNetworkFirewallConfig(
+                ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                   f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.23",
+                default_gw=None,
+                default_input=constants.FIREWALL.ACCEPT,
+                default_output=constants.FIREWALL.ACCEPT,
+                default_forward=constants.FIREWALL.ACCEPT,
+                network=ContainerNetwork(
+                    name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                         f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                    subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                f"{network_id}.{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
                 )
@@ -4694,7 +4724,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_8 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_4",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_3",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.29",
@@ -5155,7 +5185,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_9 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_5",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_4",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.30",
@@ -5616,7 +5646,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_10 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_6",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_5",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.31",
@@ -6077,7 +6107,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_11 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_7",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_6",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.32",
@@ -6538,7 +6568,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_12 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_8",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_7",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.33",
@@ -6999,7 +7029,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_13 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_9",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_8",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
@@ -7461,7 +7491,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
     )
 
     node_14 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_10",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_9",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.35",
@@ -7922,7 +7952,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_15 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_11",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_10",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.36",
@@ -8384,7 +8414,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
     )
 
     node_16 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_12",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_11",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.37",
@@ -8846,7 +8876,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
     )
 
     node_17 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_13",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_12",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.38",
@@ -9307,7 +9337,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_18 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_14",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_13",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.39",
@@ -9769,7 +9799,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
     )
 
     node_19 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_15",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_14",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.40",
@@ -10230,7 +10260,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_20 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_16",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_15",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.12.41",
@@ -10280,7 +10310,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_21 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_17",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_16",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.42",
@@ -10330,7 +10360,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_22 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_18",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_17",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.14.43",
@@ -10380,7 +10410,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_23 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_19",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_18",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.15.44",
@@ -10430,7 +10460,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_24 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_20",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_19",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.16.45",
@@ -10480,7 +10510,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_25 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_21",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_20",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.17.46",
@@ -10530,7 +10560,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_26 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_22",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_21",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.18.47",
@@ -10580,7 +10610,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_27 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_23",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_22",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.19.48",
@@ -10630,7 +10660,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         forward_accept=set(), output_drop=set(), input_drop=set(), routes=set(), forward_drop=set()
     )
     node_28 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.ROUTER_2}_3",
+        hostname=f"{constants.CONTAINER_IMAGES.ROUTER_2}_4",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.2.120",
@@ -11053,7 +11083,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
         output_drop=set(), input_drop=set(), forward_drop=set(), routes=set())
 
     node_29 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_24",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_23",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.28.3",
@@ -11104,7 +11134,7 @@ def default_topology_config(network_id: int) -> TopologyConfig:
     )
 
     node_30 = NodeFirewallConfig(
-        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_25",
+        hostname=f"{constants.CONTAINER_IMAGES.OVS_1}_24",
         ips_gw_default_policy_networks=[
             DefaultNetworkFirewallConfig(
                 ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.28.12",
@@ -11263,7 +11293,7 @@ def default_traffic_config(network_id: int, time_step_len_seconds: int = 15) -> 
                           traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
                           traffic_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS),
         NodeTrafficConfig(ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.23",
-                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.OVS_1]
+                          commands=(constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.CONTAINER_IMAGES.ROUTER_2]
                                     + constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[
                                         constants.TRAFFIC_COMMANDS.GENERIC_COMMANDS]),
                           traffic_manager_port=collector_constants.MANAGER_PORTS.TRAFFIC_MANAGER_DEFAULT_PORT,
@@ -11560,9 +11590,6 @@ def default_kafka_config(network_id: int, level: int, version: str, time_step_le
              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10"),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.22",
-             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10"),
-            (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.23",
              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10"),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.29",
@@ -12151,16 +12178,6 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
                            f"{constants.CONTAINER_IMAGES.OVS_1}_3-{constants.CSLE.LEVEL}{level}",
-            ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.23",
-            controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-                          f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
-            controller_port=ryu_constants.RYU.DEFAULT_PORT,
-            controller_transport_protocol=ryu_constants.RYU.DEFAULT_TRANSPORT_PROTOCOL,
-            openflow_protocols=[constants.OPENFLOW.OPENFLOW_V_1_3]
-        ),
-        OvsSwitchConfig(
-            container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_4-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.29",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12170,7 +12187,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_5-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_4-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.30",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12180,7 +12197,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_6-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_5-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.31",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12190,7 +12207,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_7-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_6-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.32",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12200,7 +12217,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_8-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_7-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.33",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12210,7 +12227,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_9-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_8-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.34",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12220,7 +12237,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_10-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_9-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.8.35",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12230,7 +12247,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_11-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_10-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.10.36",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12240,7 +12257,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_12-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_11-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.37",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12250,7 +12267,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_13-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_12-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.38",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12260,7 +12277,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_14-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_13-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.9.39",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12270,7 +12287,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_15-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_14-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.11.40",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12280,7 +12297,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_16-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_15-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.12.41",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12290,7 +12307,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_17-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_16-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.13.42",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12300,7 +12317,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_18-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_17-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.14.43",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12310,7 +12327,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_19-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_18-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.15.44",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12320,7 +12337,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_20-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_19-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.16.45",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12330,7 +12347,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_21-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_20-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.17.46",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12340,7 +12357,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_22-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_21-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.18.47",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12350,7 +12367,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_23-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_22-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.19.48",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12360,7 +12377,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_24-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_23-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.28.3",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12370,7 +12387,7 @@ def default_ovs_config(network_id: int, level: int, version: str) -> OVSConfig:
         ),
         OvsSwitchConfig(
             container_name=f"{constants.CSLE.NAME}-"
-                           f"{constants.CONTAINER_IMAGES.OVS_1}_25-{constants.CSLE.LEVEL}{level}",
+                           f"{constants.CONTAINER_IMAGES.OVS_1}_24-{constants.CSLE.LEVEL}{level}",
             ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.28.12",
             controller_ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
                           f"{ryu_constants.RYU.NETWORK_ID_THIRD_OCTET}.{ryu_constants.RYU.NETWORK_ID_FOURTH_OCTET}",
@@ -12633,9 +12650,6 @@ def default_elk_config(network_id: int, level: int, version: str, time_step_len_
              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10"),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.3.22",
-             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
-             f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10"),
-            (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.5.23",
              f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
              f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.10"),
             (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.7.29",
