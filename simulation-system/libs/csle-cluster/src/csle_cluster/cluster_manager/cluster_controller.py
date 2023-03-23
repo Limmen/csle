@@ -3639,6 +3639,7 @@ class ClusterController:
                                                             emulation=execution.emulation_name,
                                                             ip_first_octet=execution.ip_first_octet)
 
+        current_step = 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Creating networks for emulation: "
                                             f"{execution.emulation_env_config.name} --")
         config = MetastoreFacade.get_config(id=1)
