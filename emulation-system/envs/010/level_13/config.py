@@ -1069,6 +1069,122 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
                             ],
                             version=version, level=str(level),
                             restart_policy=constants.DOCKER.ON_FAILURE_3,
+                            suffix="_4"),
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
+                            os=constants.CONTAINER_OS.HONEYPOT_2_OS,
+                            ips_and_networks=[
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.17",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_30",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.30{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH0,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 )),
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.17",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                                          f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH2,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 ))
+                            ],
+                            version=version, level=str(level),
+                            restart_policy=constants.DOCKER.ON_FAILURE_3,
+                            suffix="_1"),
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
+                            os=constants.CONTAINER_OS.HONEYPOT_2_OS,
+                            ips_and_networks=[
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.18",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_30",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.30{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH0,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 )),
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.18",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                                          f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH2,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 ))
+                            ],
+                            version=version, level=str(level),
+                            restart_policy=constants.DOCKER.ON_FAILURE_3,
+                            suffix="_2"),
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
+                            os=constants.CONTAINER_OS.HONEYPOT_2_OS,
+                            ips_and_networks=[
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.19",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_30",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.30{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH0,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 )),
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.19",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                                          f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH2,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 ))
+                            ],
+                            version=version, level=str(level),
+                            restart_policy=constants.DOCKER.ON_FAILURE_3,
+                            suffix="_3"),
+        NodeContainerConfig(name=f"{constants.CONTAINER_IMAGES.HONEYPOT_2}",
+                            os=constants.CONTAINER_OS.HONEYPOT_2_OS,
+                            ips_and_networks=[
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.20",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_30",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}.30{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH0,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 )),
+                                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
+                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}.20",
+                                 ContainerNetwork(
+                                     name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_"
+                                          f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}",
+                                     subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                                                 f"{network_id}."
+                                                 f"{collector_constants.KAFKA_CONFIG.NETWORK_ID_THIRD_OCTET}"
+                                                 f"{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+                                     subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+                                     interface=constants.NETWORKING.ETH2,
+                                     bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+                                 ))
+                            ],
+                            version=version, level=str(level),
+                            restart_policy=constants.DOCKER.ON_FAILURE_3,
                             suffix="_4")
     ]
     containers_cfg = ContainersConfig(
@@ -1109,7 +1225,11 @@ def default_containers_config(network_id: int, level: int, version: str) -> Cont
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.13",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.14",
             f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.15",
-            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.16"
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.16",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.17",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.18",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.19",
+            f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.20"
         ],
         networks=[
             ContainerNetwork(
@@ -2495,6 +2615,90 @@ def default_resource_constraints_config(network_id: int, level: int) -> Resource
             num_cpus=1, available_memory_gb=4,
             ips_and_network_configs=[
                 (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.16",
+                 NodeNetworkConfig(
+                     interface=constants.NETWORKING.ETH0,
+                     limit_packets_queue=30000, packet_delay_ms=0.1,
+                     packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                     packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                     packet_loss_type=PacketLossType.GEMODEL,
+                     loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                     loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                     packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                     packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                     packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                     rate_limit_mbit=1000, packet_overhead_bytes=0,
+                     cell_overhead_bytes=0
+                 ))
+            ]),
+        NodeResourcesConfig(
+            container_name=f"{constants.CSLE.NAME}-"
+                           f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_1-{constants.CSLE.LEVEL}{level}",
+            num_cpus=1, available_memory_gb=4,
+            ips_and_network_configs=[
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.17",
+                 NodeNetworkConfig(
+                     interface=constants.NETWORKING.ETH0,
+                     limit_packets_queue=30000, packet_delay_ms=0.1,
+                     packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                     packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                     packet_loss_type=PacketLossType.GEMODEL,
+                     loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                     loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                     packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                     packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                     packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                     rate_limit_mbit=1000, packet_overhead_bytes=0,
+                     cell_overhead_bytes=0
+                 ))
+            ]),
+        NodeResourcesConfig(
+            container_name=f"{constants.CSLE.NAME}-"
+                           f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_2-{constants.CSLE.LEVEL}{level}",
+            num_cpus=1, available_memory_gb=4,
+            ips_and_network_configs=[
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.18",
+                 NodeNetworkConfig(
+                     interface=constants.NETWORKING.ETH0,
+                     limit_packets_queue=30000, packet_delay_ms=0.1,
+                     packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                     packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                     packet_loss_type=PacketLossType.GEMODEL,
+                     loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                     loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                     packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                     packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                     packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                     rate_limit_mbit=1000, packet_overhead_bytes=0,
+                     cell_overhead_bytes=0
+                 ))
+            ]),
+        NodeResourcesConfig(
+            container_name=f"{constants.CSLE.NAME}-"
+                           f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_3-{constants.CSLE.LEVEL}{level}",
+            num_cpus=1, available_memory_gb=4,
+            ips_and_network_configs=[
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.19",
+                 NodeNetworkConfig(
+                     interface=constants.NETWORKING.ETH0,
+                     limit_packets_queue=30000, packet_delay_ms=0.1,
+                     packet_delay_jitter_ms=0.025, packet_delay_correlation_percentage=25,
+                     packet_delay_distribution=PacketDelayDistributionType.PARETO,
+                     packet_loss_type=PacketLossType.GEMODEL,
+                     loss_gemodel_p=0.0001, loss_gemodel_r=0.999,
+                     loss_gemodel_k=0.9999, loss_gemodel_h=0.0001, packet_corrupt_percentage=0.00001,
+                     packet_corrupt_correlation_percentage=25, packet_duplicate_percentage=0.00001,
+                     packet_duplicate_correlation_percentage=25, packet_reorder_percentage=0.0025,
+                     packet_reorder_correlation_percentage=25, packet_reorder_gap=5,
+                     rate_limit_mbit=1000, packet_overhead_bytes=0,
+                     cell_overhead_bytes=0
+                 ))
+            ]),
+        NodeResourcesConfig(
+            container_name=f"{constants.CSLE.NAME}-"
+                           f"{constants.CONTAINER_IMAGES.HONEYPOT_2}_1-{constants.CSLE.LEVEL}{level}",
+            num_cpus=1, available_memory_gb=4,
+            ips_and_network_configs=[
+                (f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.30.20",
                  NodeNetworkConfig(
                      interface=constants.NETWORKING.ETH0,
                      limit_packets_queue=30000, packet_delay_ms=0.1,
