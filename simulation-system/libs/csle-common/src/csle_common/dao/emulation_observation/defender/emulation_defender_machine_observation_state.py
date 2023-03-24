@@ -47,10 +47,10 @@ class EmulationDefenderMachineObservationState:
         :return: None
         """
         self.host_metrics_consumer_thread = HostMetricsConsumerThread(
-            host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
             kafka_port=self.kafka_config.kafka_port, host_metrics=self.host_metrics)
         self.docker_stats_consumer_thread = DockerHostStatsConsumerThread(
-            host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
             kafka_port=self.kafka_config.kafka_port, docker_stats=self.docker_stats)
         self.host_metrics_consumer_thread.start()
         self.docker_stats_consumer_thread.start()

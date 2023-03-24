@@ -92,31 +92,31 @@ class EmulationDefenderObservationState:
             machines=self.machines
         )
         self.docker_stats_consumer_thread = DockerStatsConsumerThread(
-            kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
             kafka_port=self.kafka_config.kafka_port,
             docker_stats=self.docker_stats)
         self.client_population_consumer_thread = ClientPopulationConsumerThread(
-            kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
             kafka_port=self.kafka_config.kafka_port,
             client_population_metrics=self.client_population_metrics
         )
         self.snort_ids_log_consumer_thread = SnortIdsLogConsumerThread(
-            kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
             kafka_port=self.kafka_config.kafka_port,
             snort_ids_alert_counters=self.snort_ids_alert_counters
         )
         self.ossec_ids_log_consumer_thread = OSSECIdsLogConsumerThread(
-            kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
             kafka_port=self.kafka_config.kafka_port,
             ossec_ids_alert_counters=self.ossec_ids_alert_counters
         )
         self.attacker_actions_consumer_thread = AttackerActionsConsumerThread(
-            kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
             kafka_port=self.kafka_config.kafka_port,
             attacker_actions=self.attacker_actions
         )
         self.defender_actions_consumer_thread = DefenderActionsConsumerThread(
-            kafka_server_ip=self.kafka_config.container.get_ips()[0],
+            kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
             kafka_port=self.kafka_config.kafka_port,
             defender_actions=self.defender_actions
         )
