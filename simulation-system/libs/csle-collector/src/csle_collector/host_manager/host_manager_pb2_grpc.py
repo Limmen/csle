@@ -95,6 +95,16 @@ class HostManagerStub(object):
                 request_serializer=host__manager__pb2.ConfigHeartbeatMsg.SerializeToString,
                 response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
                 )
+        self.stopSpark = channel.unary_unary(
+                '/HostManager/stopSpark',
+                request_serializer=host__manager__pb2.StopSparkMsg.SerializeToString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
+                )
+        self.startSpark = channel.unary_unary(
+                '/HostManager/startSpark',
+                request_serializer=host__manager__pb2.StartSparkMsg.SerializeToString,
+                response_deserializer=host__manager__pb2.HostStatusDTO.FromString,
+                )
 
 
 class HostManagerServicer(object):
@@ -197,6 +207,18 @@ class HostManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def stopSpark(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startSpark(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_HostManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -278,6 +300,16 @@ def add_HostManagerServicer_to_server(servicer, server):
             'configHeartbeat': grpc.unary_unary_rpc_method_handler(
                     servicer.configHeartbeat,
                     request_deserializer=host__manager__pb2.ConfigHeartbeatMsg.FromString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
+            ),
+            'stopSpark': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopSpark,
+                    request_deserializer=host__manager__pb2.StopSparkMsg.FromString,
+                    response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
+            ),
+            'startSpark': grpc.unary_unary_rpc_method_handler(
+                    servicer.startSpark,
+                    request_deserializer=host__manager__pb2.StartSparkMsg.FromString,
                     response_serializer=host__manager__pb2.HostStatusDTO.SerializeToString,
             ),
     }
@@ -559,6 +591,40 @@ class HostManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/HostManager/configHeartbeat',
             host__manager__pb2.ConfigHeartbeatMsg.SerializeToString,
+            host__manager__pb2.HostStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopSpark(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HostManager/stopSpark',
+            host__manager__pb2.StopSparkMsg.SerializeToString,
+            host__manager__pb2.HostStatusDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startSpark(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HostManager/startSpark',
+            host__manager__pb2.StartSparkMsg.SerializeToString,
             host__manager__pb2.HostStatusDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

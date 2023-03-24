@@ -1055,6 +1055,26 @@ class ClusterManagerStub(object):
                 request_serializer=cluster__manager__pb2.GetExecutionTimeSeriesDataMsg.SerializeToString,
                 response_deserializer=cluster__manager__pb2.EmulationMetricsTimeSeriesDTO.FromString,
                 )
+        self.startSparkServers = channel.unary_unary(
+                '/ClusterManager/startSparkServers',
+                request_serializer=cluster__manager__pb2.StartSparkServersMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopSparkServers = channel.unary_unary(
+                '/ClusterManager/stopSparkServers',
+                request_serializer=cluster__manager__pb2.StopSparkServersMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.startSparkServer = channel.unary_unary(
+                '/ClusterManager/startSparkServer',
+                request_serializer=cluster__manager__pb2.StartSparkServerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
+        self.stopSparkServer = channel.unary_unary(
+                '/ClusterManager/stopSparkServer',
+                request_serializer=cluster__manager__pb2.StopSparkServerMsg.SerializeToString,
+                response_deserializer=cluster__manager__pb2.OperationOutcomeDTO.FromString,
+                )
 
 
 class ClusterManagerServicer(object):
@@ -2309,6 +2329,30 @@ class ClusterManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def startSparkServers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopSparkServers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def startSparkServer(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopSparkServer(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ClusterManagerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -3351,6 +3395,26 @@ def add_ClusterManagerServicer_to_server(servicer, server):
                     servicer.getExecutionTimeSeriesData,
                     request_deserializer=cluster__manager__pb2.GetExecutionTimeSeriesDataMsg.FromString,
                     response_serializer=cluster__manager__pb2.EmulationMetricsTimeSeriesDTO.SerializeToString,
+            ),
+            'startSparkServers': grpc.unary_unary_rpc_method_handler(
+                    servicer.startSparkServers,
+                    request_deserializer=cluster__manager__pb2.StartSparkServersMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopSparkServers': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopSparkServers,
+                    request_deserializer=cluster__manager__pb2.StopSparkServersMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'startSparkServer': grpc.unary_unary_rpc_method_handler(
+                    servicer.startSparkServer,
+                    request_deserializer=cluster__manager__pb2.StartSparkServerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
+            ),
+            'stopSparkServer': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopSparkServer,
+                    request_deserializer=cluster__manager__pb2.StopSparkServerMsg.FromString,
+                    response_serializer=cluster__manager__pb2.OperationOutcomeDTO.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -6896,5 +6960,73 @@ class ClusterManager(object):
         return grpc.experimental.unary_unary(request, target, '/ClusterManager/getExecutionTimeSeriesData',
             cluster__manager__pb2.GetExecutionTimeSeriesDataMsg.SerializeToString,
             cluster__manager__pb2.EmulationMetricsTimeSeriesDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startSparkServers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSparkServers',
+            cluster__manager__pb2.StartSparkServersMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopSparkServers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopSparkServers',
+            cluster__manager__pb2.StopSparkServersMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startSparkServer(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/startSparkServer',
+            cluster__manager__pb2.StartSparkServerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopSparkServer(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClusterManager/stopSparkServer',
+            cluster__manager__pb2.StopSparkServerMsg.SerializeToString,
+            cluster__manager__pb2.OperationOutcomeDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

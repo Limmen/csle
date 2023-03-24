@@ -18,7 +18,15 @@ service HostManager {
   rpc stopHeartbeat(StopHeartbeatMsg) returns (HostStatusDTO) {}
   rpc startHeartbeat(StartHeartbeatMsg) returns (HostStatusDTO) {}
   rpc configHeartbeat(ConfigHeartbeatMsg) returns (HostStatusDTO) {}
+  rpc stopSpark(StopSparkMsg) returns (HostStatusDTO) {}
+  rpc startSpark(StartSparkMsg) returns (HostStatusDTO) {}
 }
+
+// Message that the client sends to stop spark
+message StopSparkMsg {}
+
+// Message that the client sends to start spark
+message StartSparkMsg {}
 
 // Message that the client sends to stop the HostMonitor
 message StopHostMonitorMsg {}

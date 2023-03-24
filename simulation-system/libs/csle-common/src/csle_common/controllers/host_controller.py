@@ -800,6 +800,80 @@ class HostController:
                 csle_collector.host_manager.query_host_manager.start_heartbeat(stub=stub)
 
     @staticmethod
+    def start_sparks(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) -> None:
+        """
+        Utility function for starting Spark on compute nodes
+
+        :param emulation_config: the emulation env configuration
+        :param physical_server_ip: the ip of the phsyical server
+        :param logger: the logger to use for logging
+        :return: None
+        """
+        for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
+            for ids_image in constants.CONTAINER_IMAGES.SPARK_IMAGES:
+                if ids_image in c.name:
+                    logger.info(f"Starting Spark on IP: {c.docker_gw_bridge_ip}")
+                    HostController.start_spark(emulation_env_config=emulation_env_config, ips=[c.docker_gw_bridge_ip],
+                                               logger=logger)
+
+    @staticmethod
+    def stop_sparks(emulation_env_config: EmulationEnvConfig, physical_server_ip: str, logger: logging.Logger) -> None:
+        """
+        Utility function for stopping Spark on compute nodes
+
+        :param emulation_config: the emulation env configuration
+        :param physical_server_ip: the ip of the phsyical server
+        :param logger: the logger to use for logging
+        :return: None
+        """
+        for c in emulation_env_config.containers_config.containers:
+            if c.physical_host_ip != physical_server_ip:
+                continue
+            for ids_image in constants.CONTAINER_IMAGES.SPARK_IMAGES:
+                if ids_image in c.name:
+                    logger.info(f"Stopping Spark on IP: {c.docker_gw_bridge_ip}")
+                    HostController.stop_spark(emulation_env_config=emulation_env_config, ips=[c.docker_gw_bridge_ip],
+                                               logger=logger)
+
+    @staticmethod
+    def start_spark(emulation_env_config: EmulationEnvConfig, ips: List[str], logger: logging.Logger) -> None:
+        """
+        A method that sends a request to the HostManager on a specific IP
+        to start the Host manager and spark
+
+        :param emulation_env_config: the emulation env config
+        :param ips: IPs of the container
+        :param logger: the logger to use for logging
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0], logger=logger)
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+            stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+            csle_collector.host_manager.query_host_manager.start_spark(stub=stub)
+
+    @staticmethod
+    def stop_spark(emulation_env_config: EmulationEnvConfig, ips: List[str], logger: logging.Logger) -> None:
+        """
+        A method that sends a request to the HostManager on a specific IP
+        to stop spark
+
+        :param emulation_env_config: the emulation env config
+        :param ips: IPs of the container
+        :param logger: the logger to use for logging
+        :return: None
+        """
+        HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0], logger=logger)
+        # Open a gRPC session
+        with grpc.insecure_channel(
+                f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+            stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
+            csle_collector.host_manager.query_host_manager.stop_spark(stub=stub)
+
+    @staticmethod
     def config_filebeat(emulation_env_config: EmulationEnvConfig, container: NodeContainerConfig,
                         logger: logging.Logger) -> None:
         """

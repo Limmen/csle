@@ -78,6 +78,7 @@ class CONTAINER_IMAGES:
     SPARK_1 = "csle_spark_1"
     SNORT_IDS_IMAGES = [ROUTER_2]
     OVS_IMAGES = [OVS_1]
+    SPARK_IMAGES = [SPARK_1]
     OSSEC_IDS_IMAGES = [HONEYPOT_1, HONEYPOT_2, PENGINE_EXPLOIT_1, ROUTER_1,
                         ROUTER_2, SSH_1, SSH_2, SSH_3, TELNET_1, TELNET_2, TELNET_3, SPARK_1]
     ROUTER_IMAGES = [ROUTER_1, ROUTER_2]
@@ -653,11 +654,20 @@ class SNMP:
 
 class HTTP:
     """
-    Constants related to the DNS service
+    Constants related to the HTTP service
     """
     SERVICE_NAME = "http"
     DEFAULT_PORT = 80
     HTTP_PROTOCOL_PREFIX = "http://"
+
+
+class SPARK:
+    """
+    Constants related to the spark service
+    """
+    SERVICE_NAME = "spark"
+    DEFAULT_PORT = 7077
+    SPARK_PROTOCOL_PREFIX = "spark://"
 
 
 class DNS:
@@ -1242,6 +1252,12 @@ class TRAFFIC_COMMANDS:
         f"{CONTAINER_IMAGES.CVE_2014_0160_1}": [
             "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
             "timeout 5 curl {}:443 > /dev/null 2>&1"],
+        f"{CONTAINER_IMAGES.SPARK_1}": [
+            "timeout 5 sshpass -p 'testcsleuser' ssh -oStrictHostKeyChecking=no {} > /dev/null 2>&1",
+            "timeout 5 curl {}:8080 > /dev/null 2>&1",
+            "timeout 5 curl {}:8081 > /dev/null 2>&1",
+            "/root/miniconda3/bin/python3 /spark_job.py --sparkmaster {} > /dev/null 2>&1"
+        ]
     }
 
 

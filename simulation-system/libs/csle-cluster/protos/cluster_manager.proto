@@ -212,7 +212,39 @@ service ClusterManager {
   rpc getContainerLogs(GetContainerLogsMsg) returns (LogsDTO) {}
   rpc getClusterManagerLogs(GetClusterManagerLogsMsg) returns (LogsDTO) {}
   rpc getExecutionTimeSeriesData(GetExecutionTimeSeriesDataMsg) returns (EmulationMetricsTimeSeriesDTO) {}
+  rpc startSparkServers(StartSparkServersMsg) returns (OperationOutcomeDTO) {}
+  rpc stopSparkServers(StopSparkServersMsg) returns (OperationOutcomeDTO) {}
+  rpc startSparkServer(StartSparkServerMsg) returns (OperationOutcomeDTO) {}
+  rpc stopSparkServer(StopSparkServerMsg) returns (OperationOutcomeDTO) {}
 }
+
+// Message that the client sends when requesting to start a specific Spark server
+message StartSparkServerMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
+}
+
+// Message that the client sends when requesting to stop a specific Spark server
+message StopSparkServerMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+  string containerIp = 3;
+}
+
+// Message that the client sends when requesting to start the spark servers of a given execution
+message StartSparkServersMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+// Message that the client sends when requesting to stop the spark servers of a given execution
+message StopSparkServersMsg {
+  string emulation = 1;
+  int32 ipFirstOctet = 2;
+}
+
+
 
 // Message that the client sends to get the flask logs
 message GetExecutionTimeSeriesDataMsg {

@@ -321,3 +321,34 @@ def config_heartbeat(
             elastic_port=elastic_port, num_elastic_shards=num_elastic_shards, hosts_to_monitor=hosts_to_monitor)
     host_dto = stub.configHeartbeat(config_heartbeat_msg, timeout=timeout)
     return host_dto
+
+
+def start_spark(
+        stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+    """
+    Sends a request to the Host manager to start spark
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a HostDTO describing the host status
+    """
+    start_spark_msg = csle_collector.host_manager.host_manager_pb2.StartSparkMsg()
+    host_dto = stub.startSpark(start_spark_msg, timeout=timeout)
+    return host_dto
+
+
+def stop_spark(
+        stub: csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub,
+        timeout=constants.GRPC.TIMEOUT_SECONDS) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+    """
+    Sends a request to the Host manager to stop spark
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :return: a HostDTO describing the host status
+    """
+    stop_spark_msg = \
+        csle_collector.host_manager.host_manager_pb2.StopSparkMsg()
+    host_dto = stub.stopSpark(stop_spark_msg, timeout=timeout)
+    return host_dto

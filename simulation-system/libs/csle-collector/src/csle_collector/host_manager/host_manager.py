@@ -4,6 +4,7 @@ import socket
 import netifaces
 import time
 import grpc
+import os
 import threading
 from concurrent import futures
 import subprocess
@@ -503,6 +504,56 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           metricbeat_running=metricbeat_status,
                                                                           heartbeat_running=heartbeat_status)
 
+    def startSpark(self, request: csle_collector.host_manager.host_manager_pb2.StartSparkMsg,
+                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+        """
+        Starts Spark
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the Host
+        """
+        logging.info("Starting spark")
+        HostManagerServicer._start_spark()
+        logging.info("Started spark")
+        monitor_running = False
+        if self.host_monitor_thread is not None:
+            monitor_running = self.host_monitor_thread.running
+        packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        filebeat_status = HostManagerServicer._get_filebeat_status()
+        metricbeat_status = HostManagerServicer._get_metricbeat_status()
+        heartbeat_status = HostManagerServicer._get_heartbeat_status()
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
+                                                                          filebeat_running=filebeat_status,
+                                                                          packetbeat_running=packetbeat_status,
+                                                                          metricbeat_running=metricbeat_status,
+                                                                          heartbeat_running=heartbeat_status)
+
+    def stopSpark(self, request: csle_collector.host_manager.host_manager_pb2.StopSparkMsg,
+                   context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+        """
+        Stops Spark
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a DTO with the status of the Host
+        """
+        logging.info("Stopping spark")
+        HostManagerServicer._stop_spark()
+        logging.info("Stopped spark")
+        monitor_running = False
+        if self.host_monitor_thread is not None:
+            monitor_running = self.host_monitor_thread.running
+        packetbeat_status = HostManagerServicer._get_packetbeat_status()
+        filebeat_status = HostManagerServicer._get_filebeat_status()
+        metricbeat_status = HostManagerServicer._get_metricbeat_status()
+        heartbeat_status = HostManagerServicer._get_heartbeat_status()
+        return csle_collector.host_manager.host_manager_pb2.HostStatusDTO(monitor_running=monitor_running,
+                                                                          filebeat_running=filebeat_status,
+                                                                          packetbeat_running=packetbeat_status,
+                                                                          metricbeat_running=metricbeat_status,
+                                                                          heartbeat_running=heartbeat_status)
+
     @staticmethod
     def _get_filebeat_status() -> bool:
         """
@@ -988,6 +1039,52 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info(f"Stopping heartbeat with command: {constants.HEARTBEAT.HEARTBEAT_STOP}")
         output = subprocess.run(constants.HEARTBEAT.HEARTBEAT_STOP.split(" "), capture_output=True, text=True)
         logging.info(f"Stopped heartbeat, output:{output.stdout}, err output: {output.stderr} ")
+
+    @staticmethod
+    def _read_pid_file(path: str) -> int:
+        """
+        Reads the PID from a pidfile
+
+        :param path: the path to the file
+        :return: the parsed pid, or -1 if the pidfile could not be read
+        """
+        if os.path.exists(path):
+            pid = int(open(path, "r").read())
+            return pid
+        return -1
+
+    @staticmethod
+    def _start_spark() -> None:
+        """
+        Utility method to start spark
+
+        :return: None
+        """
+        logging.info(f"Starting spark master with command: {constants.SPARK.START_SPARK_MASTER}")
+        output = subprocess.run(constants.SPARK.START_SPARK_MASTER.split(" "), capture_output=True, text=True)
+        logging.info(f"Started spark master, stdout:{output.stdout}, stderr: {output.stderr}")
+        time.sleep(5)
+        logging.info(f"Starting spark worker with command: {constants.SPARK.START_SPARK_WORKER}")
+        output = subprocess.run(constants.SPARK.START_SPARK_WORKER.split(" "), capture_output=True, text=True)
+        logging.info(f"Started spark worker, stdout:{output.stdout}, stderr: {output.stderr}")
+
+    @staticmethod
+    def _stop_spark() -> None:
+        """
+        Utility method to stop spark
+
+        :return: None
+        """
+        worker_pid = HostManagerServicer._read_pid_file(constants.SPARK.SPARK_WORKER_PID_FILE)
+        logging.info(f"Stopping spark worker with command: {constants.SPARK.STOP_SPARK_WORKER.format(worker_pid)}")
+        output = subprocess.run(constants.SPARK.STOP_SPARK_WORKER.format(worker_pid).split(" "),
+                                capture_output=True, text=True)
+        logging.info(f"Stopped the spark worker, output:{output.stdout}, err output: {output.stderr} ")
+        master_pid = HostManagerServicer._read_pid_file(constants.SPARK.SPARK_MASTER_PID_FILE)
+        logging.info(f"Stopping spark master with command: {constants.SPARK.STOP_SPARK_MASTER.format(master_pid)}")
+        output = subprocess.run(constants.SPARK.STOP_SPARK_MASTER.format(master_pid).split(" "),
+                                capture_output=True, text=True)
+        logging.info(f"Stopped the spark master, output:{output.stdout}, err output: {output.stderr} ")
 
     @staticmethod
     def _set_heartbeat_config(kibana_ip: str, kibana_port: int, elastic_ip: str,
