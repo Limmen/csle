@@ -107,7 +107,7 @@ blank_1:
 	docker build --no-cache -f ./blank_1/docker/Dockerfile ./blank_1/docker/ -t $(DOCKERHUB_USER)/csle_blank_1:$(VERSION)
 
 blank_2:
-	docker build --no-cache -f ./blank_1/docker/Dockerfile ./blank_2/docker/ -t $(DOCKERHUB_USER)/csle_blank_2:$(VERSION)
+	docker build --no-cache -f ./blank_2/docker/Dockerfile ./blank_2/docker/ -t $(DOCKERHUB_USER)/csle_blank_2:$(VERSION)
 
 pengine_exploit_1:
 	docker build --no-cache -f ./pengine_exploit_1/docker/Dockerfile ./pengine_exploit_1/docker/ -t $(DOCKERHUB_USER)/csle_pengine_exploit_1:$(VERSION)

@@ -4,15 +4,23 @@ USER root
 
 # Install dependencies
 RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata
+RUN echo "snort snort/address_range string 172.18.1.0/24" | debconf-set-selections && \
+    echo "snort snort/interface string eth0" | debconf-set-selections && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y install snort
+
 RUN echo "postfix postfix/mailname string csle" | debconf-set-selections &&\
         echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
-        echo "snort snort/address_range string 172.18.1.0/24" | debconf-set-selections &&\
-        apt-get -y install --fix-missing lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop ssh openssh-server \
+        echo "snort snort/address_range string 172.18.1.0/24" | debconf-set-selections && \
+        echo "snort snort/interface string eth0" | debconf-set-selections && \
+        apt-get -y install --fix-missing lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop  \
+        ssh openssh-server \
         ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host dnsutils git \
-        swi-prolog openjdk-8-jdk sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip snort arptables \
-        irssi irssi-scripts screen postgresql-client-common snmp mongodb-clients postgresql-client smbclient fail2ban \
+        swi-prolog openjdk-8-jdk sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables \
+        irssi irssi-scripts screen postgresql-client-common snmp postgresql-client smbclient fail2ban \
         rsyslog netcat traceroute sysstat iproute2 iperf3 libpcap-dev libpcre3-dev libdumbnet-dev flex bison lsof  \
-        default-jre default-jdk
+        default-jre default-jdk build-essential wget zlib1g-dev libpcre2-dev libevent-dev libssl-dev libsystemd-dev \
+        jq gpg
 
 # Add users script
 ADD docker_files/common/make_root_users.sh /make_root_users.sh
@@ -82,8 +90,8 @@ RUN mv /etc/inspircd/inspircd.conf /etc/inspircd/inspircd.conf.bak
 ADD docker_files/common/inspircd.conf /etc/inspircd/inspircd.conf
 
 # setup Postgres
-RUN mv /etc/postgresql/12/main/postgresql.conf /etc/postgresql/12/main/postgresql.conf.bak
-ADD docker_files/common/postgresql.conf /etc/postgresql/12/main/postgresql.conf
+RUN mv /etc/postgresql/14/main/postgresql.conf /etc/postgresql/14/main/postgresql.conf.bak
+ADD docker_files/common/postgresql.conf /etc/postgresql/14/main/postgresql.conf
 
 # Telnet config (disabled by default for security reasons)
 ADD docker_files/common/telnet /etc/xinetd.d/telnet
@@ -163,8 +171,17 @@ ADD docker_files/common/dropsid.conf /pulledpork/etc/dropsid.conf
 RUN /pulledpork/pulledpork.pl -c /pulledpork/etc/pulledpork.conf -l -P -E -H SIGHUP
 
 # Setup OSSEC
-ADD docker_files/common/atomic.sh /atomic.sh
-RUN chmod 777 /atomic.sh && ./atomic.sh && apt-get update && apt-get -y install ossec-hids-server
+RUN apt-get install -y build-essential wget zlib1g-dev libpcre2-dev libevent-dev libssl-dev libsystemd-dev jq gpg
+RUN wget http://www.ossec.net/files/OSSEC-ARCHIVE-KEY.asc && \
+    wget https://github.com/ossec/ossec-hids/releases/download/3.7.0/ossec-hids-3.7.0.tar.gz.asc && \
+    gpg --import OSSEC-ARCHIVE-KEY.asc
+RUN wget https://github.com/ossec/ossec-hids/archive/3.7.0.tar.gz && \
+    gpg --verify ossec-hids-3.7.0.tar.gz.asc 3.7.0.tar.gz
+RUN tar -zxvf 3.7.0.tar.gz && cd ossec-hids-3.7.0/ && \
+    wget https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.40/pcre2-10.40.tar.gz && \
+    tar -zxvf pcre2-10.40.tar.gz -C src/external/
+ADD docker_files/common/preloaded-vars.conf /ossec-hids-3.7.0/etc/preloaded-vars.conf
+RUN PCRE2_SYSTEM=yes /ossec-hids-3.7.0/install.sh
 
 # DWVA WebApp Exploit
 ADD docker_files/common/sql_injection_exploit.sh /sql_injection_exploit.sh
