@@ -76,6 +76,9 @@ more specific Docker images.
 - `elk_base` ([elk_base](./docker_files/elk_base)): a base image with the ELK stack
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_elk_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_elk_base/)
      - OS: Ubuntu:20.
+- `spark_base` ([spark_base](./docker_files/spark_base)): a base image with Spark
+  - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_spark_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_spark_base/)
+  - OS: Ubuntu:22.
 
 ## Useful commands
 
@@ -107,6 +110,7 @@ make pengine_exploit_base # Build pengine_exploit_base
 make ovs_base # Build ovs_base
 make ryu_base # Build ryu_base
 make elk_base # Build elk_base
+make spark_base # Build elk_base
 
 make rm_kali_base # Remove kali_base
 make rm_ubuntu_20_base # Remove ubuntu_20_base
@@ -129,6 +133,7 @@ make rm_pengine_exploit_base # Remove pengine_exploit_base
 make rm_ovs_base # Remove ovs_base
 make rm_ryu_base # Remove ryu_base
 make rm_elk_base # Remove elk_base
+make rm_spark_base # Remove spark_base
 
 make push_kali_base # Push kali_base to DockerHub
 make push_ubuntu_20_base # Push ubuntu_20_base to DockerHub
@@ -151,6 +156,7 @@ make push_pengine_exploit_base # Push pengine_exploit_base to DockerHub
 make push_ovs_base # Push ovs_base to DockerHub
 make push_ryu_base # Push ryu_base to DockerHub
 make push_elk_base # Push elk_base to DockerHub
+make push_spark_base # Push spark_base to DockerHub
 
 make pull_kali_base # pull kali_base from DockerHub
 make pull_ubuntu_20_base # pull ubuntu_20_base from DockerHub
@@ -173,6 +179,7 @@ make pull_pengine_exploit_base # pull pengine_exploit_base from DockerHub
 make pull_ovs_base # pull ovs_base from DockerHub
 make pull_ryu_base # pull ryu_base from DockerHub
 make pull_elk_base # pull elk_base from DockerHub
+make pull_spark_base # pull spark_base from DockerHub
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images

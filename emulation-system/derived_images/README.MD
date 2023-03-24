@@ -157,6 +157,11 @@ generate containers for emulating various network infrastructures.
      - OS: Ubuntu:20.
      - Inherits from `ubuntu_20_base`.
      - Services: Kafka, SSH
+- `spark_1` ([spark_1](./spark_1)): an image with Spark
+  - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_spark_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_spark_1/)
+  - OS: Ubuntu:22.
+  - Inherits from `spark_base`.
+  - Services: Spark, SSH
 
 ## Useful commands
 
@@ -197,6 +202,7 @@ make ovs_1 # Build ovs_1
 make ryu_1 # Build ryu_1
 make elk_1 # Build elk_1
 make kafka_1 # Build kafka_1
+make spark_1 # Build spark_1
 
 make rm_samba_1 # Remove samba_1
 make rm_shellshock_1 # Remove shellshock_1
@@ -228,6 +234,7 @@ make rm_ovs_1 # Remove ovs_1
 make rm_ryu_1 # Remove ryu_1
 make rm_elk_1 # Remove elk_1
 make rm_kafka_1 # Remove kafka_1
+make rm_spark_1 # Remove spark_1
 
 make push_samba_1 # Push samba_1 to DockerHub
 make push_shellshock_1 # Push shellshock_1 to DockerHub
@@ -258,6 +265,7 @@ make push_ovs_1 # Push ovs_1 to DockerHub
 make push_ryu_1 # Push ryu_1 to DockerHub
 make push_elk_1 # Push elk_1 to DockerHub
 make push_kafka_1 # Push kafka_1 to DockerHub
+make push_spark_1 # Push spark_1 to DockerHub
 
 make pull_samba_1 # pull samba_1 from DockerHub
 make pull_shellshock_1 # pull shellshock_1 from DockerHub
@@ -288,6 +296,7 @@ make pull_ovs_1 # pull ovs_1 from DockerHub
 make pull_ryu_1 # pull ryu_1 from DockerHub
 make pull_elk_1 # pull elk_1 from DockerHub
 make pull_kafka_1 # pull kafka_1 from DockerHub
+make pull_spark_1 # pull spark_1 from DockerHub
 
 docker container ls --all # list all running containers
 docker image ls --all # list all images

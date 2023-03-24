@@ -29,7 +29,7 @@ VERSION=0.1.0
     pull_cve_2015_5602_1 pull_client_1 \
     pull_blank_1 pull_blank_2 pull_pengine_exploit_1 cve_2014_0160_1 pull_cve_2014_0160_1 \
     pull_kafka_1 pull_ovs_1 pull_ryu_1 \
-    pull_elk_1
+    pull_elk_1 spark_1 rm_spark_1 push_spark_1 pull_spark_1
 
 all: build
 
@@ -120,6 +120,9 @@ kafka_1:
 
 ovs_1:
 	docker build --no-cache -f ./ovs_1/docker/Dockerfile ./ovs_1/docker/ -t $(DOCKERHUB_USER)/csle_ovs_1:$(VERSION)
+
+spark_1:
+	docker build --no-cache -f ./spark_1/docker/Dockerfile ./spark_1/docker/ -t $(DOCKERHUB_USER)/csle_spark_1:$(VERSION)
 
 ryu_1:
 	docker build --no-cache -f ./ryu_1/docker/Dockerfile ./ryu_1/docker/ -t $(DOCKERHUB_USER)/csle_ryu_1:$(VERSION)
@@ -215,6 +218,9 @@ rm_kafka_1:
 
 rm_ovs_1:
 	-docker rmi $(DOCKERHUB_USER)/csle_ovs_1:$(VERSION)
+
+rm_spark_1:
+	-docker rmi $(DOCKERHUB_USER)/csle_spark_1:$(VERSION)
 
 rm_ryu_1:
 	-docker rmi $(DOCKERHUB_USER)/csle_ryu_1:$(VERSION)
@@ -312,6 +318,9 @@ push_kafka_1:
 push_ovs_1:
 	-docker push $(DOCKERHUB_USER)/csle_ovs_1:$(VERSION)
 
+push_spark_1:
+	-docker push $(DOCKERHUB_USER)/csle_spark_1:$(VERSION)
+
 push_ryu_1:
 	-docker push $(DOCKERHUB_USER)/csle_ryu_1:$(VERSION)
 
@@ -408,6 +417,9 @@ pull_kafka_1:
 pull_ovs_1:
 	-docker pull $(DOCKERHUB_USER)/csle_ovs_1:$(VERSION)
 
+pull_spark_1:
+	-docker pull $(DOCKERHUB_USER)/csle_spark_1:$(VERSION)
+
 pull_ryu_1:
 	-docker pull $(DOCKERHUB_USER)/csle_ryu_1:$(VERSION)
 
@@ -447,6 +459,7 @@ build:
 	docker build --no-cache -f ./ovs_1/docker/Dockerfile ./ovs_1/docker/ -t $(DOCKERHUB_USER)/csle_ovs_1:$(VERSION)
 	docker build --no-cache -f ./ryu_1/docker/Dockerfile ./ryu_1/docker/ -t $(DOCKERHUB_USER)/csle_ryu_1:$(VERSION)
 	docker build --no-cache -f ./elk_1/docker/Dockerfile ./elk_1/docker/ -t $(DOCKERHUB_USER)/csle_elk_1:$(VERSION)
+	docker build --no-cache -f ./spark_1/docker/Dockerfile ./spark_1/docker/ -t $(DOCKERHUB_USER)/csle_spark_1:$(VERSION)
 
 # Removing all images sequentially
 rm_image:
@@ -481,6 +494,7 @@ rm_image:
 	-docker rmi $(DOCKERHUB_USER)/csle_ovs_1:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_ryu_1:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_elk_1:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/csle_spark_1:$(VERSION)
 
 
 # Pushing all images sequentially
@@ -516,6 +530,7 @@ push:
 	-docker push $(DOCKERHUB_USER)/csle_ovs_1:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_ryu_1:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_elk_1:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_spark_1:$(VERSION)
 
 
 # Pullin all images sequentially
@@ -551,3 +566,4 @@ pull:
 	-docker pull $(DOCKERHUB_USER)/csle_ovs_1:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_ryu_1:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_elk_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_spark_1:$(VERSION)

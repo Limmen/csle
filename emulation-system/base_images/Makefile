@@ -21,13 +21,16 @@ VERSION=0.1.0
     pull_sql_injection_base pull_debian_jessie_base pull_cve_2015_3306_base \
     pull_cve_2015_1427_base pull_cve_2016_10033_base pull_cve_2010_0426_base pull_cve_2015_5602_base \
     pull_blank_ubuntu_20 pull_blank_ubuntu_22 pull_pengine_exploit_base cve_2014_0160_base pull_cve_2014_0160_base \
-    pull_ovs_base pull_ryu_base pull_elk_base
+    pull_ovs_base pull_ryu_base pull_elk_base spark_base rm_spark_base push_spark_base pull_spark_base
 
 all: build
 
 # Targets for building all of the base images
 kali_base:
 	docker build . --no-cache -f ./docker_files/kali_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
+
+spark_base:
+	docker build . --no-cache -f ./docker_files/spark_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_spark_base:$(VERSION)
 
 ubuntu_20_base:
 	docker build . --no-cache -f ./docker_files/ubuntu_20_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
@@ -96,6 +99,9 @@ elk_base:
 rm_kali_base:
 	-docker rmi $(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
 
+rm_spark_base:
+	-docker rmi $(DOCKERHUB_USER)/csle_spark_base:$(VERSION)
+
 rm_ubuntu_20_base:
 	-docker rmi $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
 
@@ -163,6 +169,9 @@ rm_elk_base:
 push_kali_base:
 	-docker push $(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
 
+push_spark_base:
+	-docker push $(DOCKERHUB_USER)/csle_spark_base:$(VERSION)
+
 push_ubuntu_20_base:
 	-docker push $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
 
@@ -229,6 +238,9 @@ push_elk_base:
 # Targets for pulling all of the base images from DockerHub
 pull_kali_base:
 	-docker pull $(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
+
+pull_spark_base:
+	-docker pull $(DOCKERHUB_USER)/csle_spark_base:$(VERSION)
 
 pull_ubuntu_20_base:
 	-docker pull $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
@@ -317,6 +329,7 @@ build:
 	docker build . --no-cache -f ./docker_files/ovs_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/ryu_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/elk_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/spark_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_spark_base:$(VERSION)
 
 # Remove all base images
 rm_image:
@@ -342,6 +355,7 @@ rm_image:
 	-docker rmi $(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/csle_spark_base:$(VERSION)
 
 
 # Push all base images
@@ -368,6 +382,7 @@ push:
 	-docker push $(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_spark_base:$(VERSION)
 
 
 # Pull all base images
@@ -394,3 +409,4 @@ pull:
 	-docker pull $(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_spark_base:$(VERSION)
