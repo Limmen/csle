@@ -145,7 +145,9 @@ ADD docker_files/common/index.html /web/static/index.html
 SHELL ["conda", "run", "-n", "base", "/bin/bash", "-c"]
 RUN pip install flask &&\
     pip install waitress &&\
-    pip install csle-collector
+    pip install csle-collector &&\
+    pip install pyspark &&\
+    pip install netifaces
 
 # Setup glassfish
 RUN wget --no-check-certificate http://download.oracle.com/glassfish/5.0.1/nightly/latest-glassfish.zip &&\
@@ -267,6 +269,10 @@ RUN curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-8.
     dpkg -i auditbeat-8.3.3-amd64.deb &&\
     curl -L -O https://artifacts.elastic.co/downloads/beats/heartbeat/heartbeat-8.3.3-amd64.deb &&\
     dpkg -i heartbeat-8.3.3-amd64.deb
+
+# Spark job
+ADD docker_files/common/spark_job.py /spark_job.py
+RUN chmod 777 /spark_job.py
 
 # Add Tini
 ENV TINI_VERSION v0.19.0

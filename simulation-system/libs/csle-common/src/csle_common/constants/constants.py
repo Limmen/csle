@@ -75,14 +75,14 @@ class CONTAINER_IMAGES:
     RYU_1 = "csle_ryu_1"
     PENGINE_EXPLOIT_1 = "csle_pengine_exploit_1"
     CVE_2014_0160_1 = "csle_cve_2014_0160_1"
-    SNORT_IDS_IMAGES = ["csle_router_2"]
-    OVS_IMAGES = ["csle_ovs_1"]
-    OSSEC_IDS_IMAGES = ["csle_honeypot_1", "csle_honeypot_2", "csle_pengine_exploit_1", "csle_router_1",
-                        "csle_router_2", "csle_ssh_1", "csle_ssh_2",
-                        "csle_ssh_3", "csle_telnet_1", "csle_telnet_2", "csle_telnet_3"]
-    ROUTER_IMAGES = ["csle_router_1", "csle_router_2"]
-    HACKER_IMAGES = ["csle_hacker_kali_1"]
-    CLIENT_IMAGES = ["csle_client_1"]
+    SPARK_1 = "csle_spark_1"
+    SNORT_IDS_IMAGES = [ROUTER_2]
+    OVS_IMAGES = [OVS_1]
+    OSSEC_IDS_IMAGES = [HONEYPOT_1, HONEYPOT_2, PENGINE_EXPLOIT_1, ROUTER_1,
+                        ROUTER_2, SSH_1, SSH_2, SSH_3, TELNET_1, TELNET_2, TELNET_3, SPARK_1]
+    ROUTER_IMAGES = [ROUTER_1, ROUTER_2]
+    HACKER_IMAGES = [HACKER_KALI_1]
+    CLIENT_IMAGES = [CLIENT_1]
     CADVISOR = "cadvisor"
     PGADMIN = "pgadmin"
     GRAFANA = "grafana"
@@ -121,6 +121,7 @@ class CONTAINER_OS:
     FTP_2_OS = "ubuntu"
     PENGINE_EXPLOIT_1_OS = "ubuntu"
     CVE_2014_0160_1_OS = "debian"
+    SPARK_1_OS = "spark"
 
 
 class RENDERING:
