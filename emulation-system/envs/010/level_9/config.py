@@ -4021,7 +4021,7 @@ def default_traffic_config(network_id: int, time_step_len_seconds: int) -> Traff
         ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}."
            f"{collector_constants.EXTERNAL_NETWORK.NETWORK_ID_THIRD_OCTET}.254",
         client_process_type=ClientPopulationProcessType.POISSON,
-        lamb=20, mu=4, client_manager_port=collector_constants.MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT,
+        lamb=80, mu=4, client_manager_port=collector_constants.MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT,
         num_commands=2, client_time_step_len_seconds=time_step_len_seconds,
         time_scaling_factor=0.01, period_scaling_factor=20,
         client_manager_log_dir=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR,
