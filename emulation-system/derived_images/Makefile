@@ -4,13 +4,13 @@ VERSION=0.1.0
 .PHONY: all build rm_image \
 	ftp_1 ftp_2 hacker_kali_1 honeypot_1 honeypot_2 ssh_1 ssh_2 ssh_3 telnet_1 telnet_2 telnet_3 router_1 \
 	router_2 samba_1 samba_2 shellshock_1 sql_injection_1 cve_2015_3306_1 cve_2015_1427_1 cve_2016_10033_1 \
-	cve_2010_0426_1 cve_2015_5602_1 client_1 blank_1 pengine_exploit_1 \
+	cve_2010_0426_1 cve_2015_5602_1 client_1 blank_1 blank_2 pengine_exploit_1 \
 	rm_ftp_1 rm_ftp_2 rm_hacker_kali_1 \
 	rm_honeypot_1 \
 	rm_honeypot_2 rm_ssh_1 rm_ssh_2 rm_ssh_3 rm_telnet_1 rm_telnet_2 rm_telnet_3 rm_router_1 \
 	rm_router_2 rm_samba_1 rm_samba_2 rm_shellshock_1 rm_sql_injection_1 rm_cve_2015_3306_1 rm_cve_2015_1427_1 \
 	rm_cve_2016_10033_1 \
-	rm_cve_2010_0426_1 rm_cve_2015_5602_1 rm_client_1 rm_blank_1 rm_pengine_exploit_1 cve_2014_0160_1 \
+	rm_cve_2010_0426_1 rm_cve_2015_5602_1 rm_client_1 rm_blank_1 rm_blank_2 rm_pengine_exploit_1 cve_2014_0160_1 \
 	rm_cve_2014_0160_1 kafka_1 ovs_1 ryu_1 elk_1 rm_kafka_1 rm_ovs_1 rm_ryu_1 rm_elk_1 \
 	push_ftp_1 push_ftp_2 push_hacker_kali_1 push_honeypot_1 push_honeypot_2 push_ssh_1 push_ssh_2 \
 	push_ssh_3 push_telnet_1 \
@@ -18,7 +18,8 @@ VERSION=0.1.0
 	push_sql_injection_1 \
 	push_cve_2015_3306_1 push_cve_2015_1427_1 push_cve_2016_10033_1 push_cve_2010_0426_1 \
     push_cve_2015_5602_1 push_client_1 \
-    push_blank_1 push_pengine_exploit_1 cve_2014_0160_1 push_cve_2014_0160_1 push_kafka_1 push_ovs_1 push_ryu_1 \
+    push_blank_1 push_blank_2 push_pengine_exploit_1 cve_2014_0160_1 push_cve_2014_0160_1 \
+    push_kafka_1 push_ovs_1 push_ryu_1 \
     push_elk_1 \
     pull_ftp_1 pull_ftp_2 pull_hacker_kali_1 pull_honeypot_1 pull_honeypot_2 pull_ssh_1 pull_ssh_2 \
     pull_ssh_3 pull_telnet_1 \
@@ -26,7 +27,8 @@ VERSION=0.1.0
     pull_sql_injection_1 \
     pull_cve_2015_3306_1 pull_cve_2015_1427_1 pull_cve_2016_10033_1 pull_cve_2010_0426_1 \
     pull_cve_2015_5602_1 pull_client_1 \
-    pull_blank_1 pull_pengine_exploit_1 cve_2014_0160_1 pull_cve_2014_0160_1 pull_kafka_1 pull_ovs_1 pull_ryu_1 \
+    pull_blank_1 pull_blank_2 pull_pengine_exploit_1 cve_2014_0160_1 pull_cve_2014_0160_1 \
+    pull_kafka_1 pull_ovs_1 pull_ryu_1 \
     pull_elk_1
 
 all: build
@@ -103,6 +105,9 @@ client_1:
 
 blank_1:
 	docker build --no-cache -f ./blank_1/docker/Dockerfile ./blank_1/docker/ -t $(DOCKERHUB_USER)/csle_blank_1:$(VERSION)
+
+blank_2:
+	docker build --no-cache -f ./blank_1/docker/Dockerfile ./blank_2/docker/ -t $(DOCKERHUB_USER)/csle_blank_2:$(VERSION)
 
 pengine_exploit_1:
 	docker build --no-cache -f ./pengine_exploit_1/docker/Dockerfile ./pengine_exploit_1/docker/ -t $(DOCKERHUB_USER)/csle_pengine_exploit_1:$(VERSION)
@@ -195,6 +200,9 @@ rm_client_1:
 
 rm_blank_1:
 	-docker rmi $(DOCKERHUB_USER)/csle_blank_1:$(VERSION)
+
+rm_blank_2:
+	-docker rmi $(DOCKERHUB_USER)/csle_blank_2:$(VERSION)
 
 rm_pengine_exploit_1:
 	-docker rmi $(DOCKERHUB_USER)/csle_pengine_exploit_1:$(VERSION)
@@ -289,6 +297,9 @@ push_client_1:
 push_blank_1:
 	-docker push $(DOCKERHUB_USER)/csle_blank_1:$(VERSION)
 
+push_blank_2:
+	-docker push $(DOCKERHUB_USER)/csle_blank_2:$(VERSION)
+
 push_pengine_exploit_1:
 	-docker push $(DOCKERHUB_USER)/csle_pengine_exploit_1:$(VERSION)
 
@@ -382,6 +393,9 @@ pull_client_1:
 pull_blank_1:
 	-docker pull $(DOCKERHUB_USER)/csle_blank_1:$(VERSION)
 
+pull_blank_2:
+	-docker pull $(DOCKERHUB_USER)/csle_blank_2:$(VERSION)
+
 pull_pengine_exploit_1:
 	-docker pull $(DOCKERHUB_USER)/csle_pengine_exploit_1:$(VERSION)
 
@@ -426,6 +440,7 @@ build:
 	docker build --no-cache -f ./cve_2015_5602_1/docker/Dockerfile ./cve_2015_5602_1/docker/ -t $(DOCKERHUB_USER)/csle_cve_2015_5602_1:$(VERSION)
 	docker build --no-cache -f ./client_1/docker/Dockerfile ./client_1/docker/ -t $(DOCKERHUB_USER)/csle_client_1:$(VERSION)
 	docker build --no-cache -f ./blank_1/docker/Dockerfile ./blank_1/docker/ -t $(DOCKERHUB_USER)/csle_blank_1:$(VERSION)
+	docker build --no-cache -f ./blank_2/docker/Dockerfile ./blank_2/docker/ -t $(DOCKERHUB_USER)/csle_blank_2:$(VERSION)
 	docker build --no-cache -f ./pengine_exploit_1/docker/Dockerfile ./pengine_exploit_1/docker/ -t $(DOCKERHUB_USER)/csle_pengine_exploit_1:$(VERSION)
 	docker build --no-cache -f ./cve_2014_0160_1/docker/Dockerfile ./cve_2014_0160_1/docker/ -t $(DOCKERHUB_USER)/csle_cve_2014_0160_1:$(VERSION)
 	docker build --no-cache -f ./kafka_1/docker/Dockerfile ./kafka_1/docker/ -t $(DOCKERHUB_USER)/csle_kafka_1:$(VERSION)
@@ -459,6 +474,7 @@ rm_image:
 	-docker rmi $(DOCKERHUB_USER)/csle_cve_2015_5602_1:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_client_1:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_blank_1:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/csle_blank_2:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_pengine_exploit_1:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_cve_2014_0160_1:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_kafka_1:$(VERSION)
@@ -493,6 +509,7 @@ push:
 	-docker push $(DOCKERHUB_USER)/csle_cve_2015_5602_1:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_client_1:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_blank_1:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_blank_2:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_pengine_exploit_1:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_cve_2014_0160_1:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_kafka_1:$(VERSION)
@@ -527,6 +544,7 @@ pull:
 	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_5602_1:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_client_1:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_blank_1:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_blank_2:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_pengine_exploit_1:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_cve_2014_0160_1:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_kafka_1:$(VERSION)

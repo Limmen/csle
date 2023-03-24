@@ -1,22 +1,26 @@
 DOCKERHUB_USER=kimham
 VERSION=0.1.0
 
-.PHONY: all build rm_image kali_base ubuntu_20_base ubuntu_14_base ssh_base samba_base \
+.PHONY: all build rm_image kali_base ubuntu_20_base ubuntu_22_base ubuntu_14_base ssh_base samba_base \
 	shellshock_base shellshock_debian_wheezy_base sql_injection_base \
 	debian_jessie_base cve_2015_3306_base cve_2015_1427_base cve_2016_10033_base cve_2010_0426_base cve_2015_5602_base \
-	blank_ubuntu_20 pengine_exploit_base rm_kali_base rm_ubuntu_20_base rm_ubuntu_14_base rm_ssh_base rm_samba_base \
+	blank_ubuntu_20 blank_ubuntu_22 pengine_exploit_base rm_kali_base rm_ubuntu_20_base rm_ubuntu_22_base \
+	rm_ubuntu_14_base rm_ssh_base rm_samba_base \
 	rm_shellshock_base rm_sql_injection_base rm_debian_jessie_base rm_cve_2015_3306_base rm_cve_2015_1427_base \
 	rm_cve_2016_10033_base rm_cve_2010_0426_base rm_cve_2015_5602_base rm_shellshock_debian_wheezy_base \
-	rm_blank_ubuntu_20 rm_pengine_exploit_base cve_2014_0160_base rm_cve_2014_0160_base rm_ovs_base rm_ryu_base \
-	rm_elk_base push_kali_base push_ubuntu_20_base push_ubuntu_14_base push_ssh_base push_samba_base \
+	rm_blank_ubuntu_20 rm_blank_ubuntu_22 rm_pengine_exploit_base cve_2014_0160_base \
+	rm_cve_2014_0160_base rm_ovs_base rm_ryu_base \
+	rm_elk_base push_kali_base push_ubuntu_20_base push_ubuntu_22_base \
+	push_ubuntu_14_base push_ssh_base push_samba_base \
 	push_shellshock_base push_sql_injection_base push_debian_jessie_base push_cve_2015_3306_base \
 	push_cve_2015_1427_base push_cve_2016_10033_base push_cve_2010_0426_base push_cve_2015_5602_base \
-    push_blank_ubuntu_20 push_pengine_exploit_base cve_2014_0160_base push_cve_2014_0160_base \
-    push_ovs_base push_ryu_base push_elk_base pull_kali_base pull_ubuntu_20_base push_shellshock_debian_wheezy_base \
+    push_blank_ubuntu_20 push_blank_ubuntu_22 push_pengine_exploit_base cve_2014_0160_base push_cve_2014_0160_base \
+    push_ovs_base push_ryu_base push_elk_base pull_kali_base pull_ubuntu_20_base pull_ubuntu_22_base \
+    push_shellshock_debian_wheezy_base \
     pull_ubuntu_14_base pull_ssh_base pull_samba_base pull_shellshock_base pull_shellshock_debian_wheezy_base \
     pull_sql_injection_base pull_debian_jessie_base pull_cve_2015_3306_base \
     pull_cve_2015_1427_base pull_cve_2016_10033_base pull_cve_2010_0426_base pull_cve_2015_5602_base \
-    pull_blank_ubuntu_20 pull_pengine_exploit_base cve_2014_0160_base pull_cve_2014_0160_base \
+    pull_blank_ubuntu_20 pull_blank_ubuntu_22 pull_pengine_exploit_base cve_2014_0160_base pull_cve_2014_0160_base \
     pull_ovs_base pull_ryu_base pull_elk_base
 
 all: build
@@ -27,6 +31,9 @@ kali_base:
 
 ubuntu_20_base:
 	docker build . --no-cache -f ./docker_files/ubuntu_20_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
+
+ubuntu_22_base:
+	docker build . --no-cache -f ./docker_files/ubuntu_22_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ubuntu_22_base:$(VERSION)
 
 ubuntu_14_base:
 	docker build . --no-cache -f ./docker_files/ubuntu_14_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
@@ -67,6 +74,9 @@ cve_2015_5602_base:
 blank_ubuntu_20:
 	docker build . --no-cache -f ./docker_files/blank_ubuntu_20/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
 
+blank_ubuntu_22:
+	docker build . --no-cache -f ./docker_files/blank_ubuntu_22/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_blank_ubuntu_22:$(VERSION)
+
 pengine_exploit_base:
 	docker build . --no-cache -f ./docker_files/pengine_exploit_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
 
@@ -88,6 +98,9 @@ rm_kali_base:
 
 rm_ubuntu_20_base:
 	-docker rmi $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
+
+rm_ubuntu_22_base:
+	-docker rmi $(DOCKERHUB_USER)/csle_ubuntu_22_base:$(VERSION)
 
 rm_ubuntu_14_base:
 	-docker rmi $(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
@@ -128,6 +141,9 @@ rm_cve_2015_5602_base:
 rm_blank_ubuntu_20:
 	-docker rmi $(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
 
+rm_blank_ubuntu_22:
+	-docker rmi $(DOCKERHUB_USER)/csle_blank_ubuntu_22:$(VERSION)
+
 rm_pengine_exploit_base:
 	-docker rmi $(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
 
@@ -149,6 +165,9 @@ push_kali_base:
 
 push_ubuntu_20_base:
 	-docker push $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
+
+push_ubuntu_22_base:
+	-docker push $(DOCKERHUB_USER)/csle_ubuntu_22_base:$(VERSION)
 
 push_ubuntu_14_base:
 	-docker push $(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
@@ -189,6 +208,9 @@ push_cve_2015_5602_base:
 push_blank_ubuntu_20:
 	-docker push $(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
 
+push_blank_ubuntu_22:
+	-docker push $(DOCKERHUB_USER)/csle_blank_ubuntu_22:$(VERSION)
+
 push_pengine_exploit_base:
 	-docker push $(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
 
@@ -210,6 +232,9 @@ pull_kali_base:
 
 pull_ubuntu_20_base:
 	-docker pull $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
+
+pull_ubuntu_22_base:
+	-docker pull $(DOCKERHUB_USER)/csle_ubuntu_22_base:$(VERSION)
 
 pull_ubuntu_14_base:
 	-docker pull $(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
@@ -250,6 +275,9 @@ pull_cve_2015_5602_base:
 pull_blank_ubuntu_20:
 	-docker pull $(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
 
+pull_blank_ubuntu_22:
+	-docker pull $(DOCKERHUB_USER)/csle_blank_ubuntu_22:$(VERSION)
+
 pull_pengine_exploit_base:
 	-docker pull $(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
 
@@ -269,6 +297,7 @@ pull_elk_base:
 build:
 	docker build . --no-cache -f ./docker_files/kali_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/ubuntu_20_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
+	docker build . --no-cache -f ./docker_files/ubuntu_22_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ubuntu_22_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/ubuntu_14_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/ssh_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/samba_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
@@ -282,6 +311,7 @@ build:
 	docker build . --no-cache -f ./docker_files/cve_2010_0426_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_cve_2010_0426_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/cve_2015_5602_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_cve_2015_5602_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/blank_ubuntu_20/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
+	docker build . --no-cache -f ./docker_files/blank_ubuntu_22/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_blank_ubuntu_22:$(VERSION)
 	docker build . --no-cache -f ./docker_files/pengine_exploit_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/cve_2014_0160_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_cve_2014_0160_base:$(VERSION)
 	docker build . --no-cache -f ./docker_files/ovs_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
@@ -292,6 +322,7 @@ build:
 rm_image:
 	-docker rmi $(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/csle_ubuntu_22_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
@@ -305,6 +336,7 @@ rm_image:
 	-docker rmi $(DOCKERHUB_USER)/csle_cve_2010_0426_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_cve_2015_5602_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
+	-docker rmi $(DOCKERHUB_USER)/csle_blank_ubuntu_22:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_cve_2014_0160_base:$(VERSION)
 	-docker rmi $(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
@@ -316,6 +348,7 @@ rm_image:
 push:
 	-docker push $(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_ubuntu_22_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
@@ -329,6 +362,7 @@ push:
 	-docker push $(DOCKERHUB_USER)/csle_cve_2010_0426_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_cve_2015_5602_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_blank_ubuntu_22:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_cve_2014_0160_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)
@@ -340,6 +374,7 @@ push:
 pull:
 	-docker pull $(DOCKERHUB_USER)/csle_kali_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_ubuntu_20_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_ubuntu_22_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_ubuntu_14_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
@@ -353,6 +388,7 @@ pull:
 	-docker pull $(DOCKERHUB_USER)/csle_cve_2010_0426_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_5602_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_blank_ubuntu_20:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_blank_ubuntu_22:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_pengine_exploit_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_cve_2014_0160_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_ovs_base:$(VERSION)

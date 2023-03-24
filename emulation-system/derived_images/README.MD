@@ -127,6 +127,11 @@ generate containers for emulating various network infrastructures.
     - OS: Ubuntu:20. 
     - Inherits from `blank_ubuntu_20`.
     - Services: None
+- `blank_2` ([blank_2](./blank_2)): a blank image for testing purposes
+    - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_blank_2?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_blank_2/)
+    - OS: Ubuntu:22.
+    - Inherits from `blank_ubuntu_22`.
+    - Services: None  
 - `pengine_exploit_1` ([pengine_exploit_1](./pengine_exploit_1)): an image with a vulnerable Prolog SLD Pengine Server
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_pengine_exploit_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_pengine_exploit_1/)
      - OS: Ubuntu:20. 
@@ -186,6 +191,7 @@ make telnet_2 # Build telnet_2
 make telnet_3 # Build telnet_3
 make client_1 # Build client_1
 make blank_1 # Build blank_1
+make blank_2 # Build blank_2
 make pengine_exploit_1 # Build pengine_exploit_1
 make ovs_1 # Build ovs_1
 make ryu_1 # Build ryu_1
@@ -216,6 +222,7 @@ make rm_telnet_2 # Remove telnet_2
 make rm_telnet_3 # Remove telnet_3
 make rm_client_1 # Remove client_1
 make rm_blank_1 # Remove blank_1
+make rm_blank_2 # Remove blank_2
 make rm_pengine_exploit_1 # Remove pengine_exploit_1
 make rm_ovs_1 # Remove ovs_1
 make rm_ryu_1 # Remove ryu_1
@@ -245,7 +252,7 @@ make push_telnet_1 # Push telnet_1 to DockerHub
 make push_telnet_2 # Push telnet_2 to DockerHub
 make push_telnet_3 # Push telnet_3 to DockerHub
 make push_client_1 # Push client_1 to DockerHub
-make push_blank_1 # Push blank_1 to DockerHub
+make push_blank_2 # Push blank_2 to DockerHub
 make push_pengine_exploit_1 # Push pengine_exploit_1 to DockerHub
 make push_ovs_1 # Push ovs_1 to DockerHub
 make push_ryu_1 # Push ryu_1 to DockerHub
@@ -275,7 +282,7 @@ make pull_telnet_1 # pull telnet_1 from DockerHub
 make pull_telnet_2 # pull telnet_2 from DockerHub
 make pull_telnet_3 # pull telnet_3 from DockerHub
 make pull_client_1 # pull client_1 from DockerHub
-make pull_blank_1 # pull blank_1 from DockerHub
+make pull_blank_2 # pull blank_2 from DockerHub
 make pull_pengine_exploit_1 # pull pengine_exploit_1 from DockerHub
 make pull_ovs_1 # pull ovs_1 from DockerHub
 make pull_ryu_1 # pull ryu_1 from DockerHub
