@@ -96,18 +96,21 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
             if self.producer_running:
                 for dp in self.datapaths.values():
                     self._request_stats(dp)
-                    response = requests.get(f"{collector_constants.HTTP.HTTP_PROTOCOL_PREFIX}"
-                                            f"{collector_constants.HTTP.LOCALHOST}:8080"
-                                            f"{constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dp.id}")
-                    aggflows = json.loads(response.content)[str(dp.id)][0]
-                    agg_flow_stat = AggFlowStatistic(timestamp=time.time(), datapath_id=dp.id,
-                                                     total_num_bytes=aggflows[constants.RYU.BYTE_COUNT],
-                                                     total_num_packets=aggflows[constants.RYU.PACKET_COUNT],
-                                                     total_num_flows=aggflows[constants.RYU.FLOW_COUNT])
-                    if self.producer_running:
-                        self.producer.produce(collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME,
-                                              agg_flow_stat.to_kafka_record())
-                        self.producer.poll(0)
+                    try:
+                        response = requests.get(f"{collector_constants.HTTP.HTTP_PROTOCOL_PREFIX}"
+                                                f"{collector_constants.HTTP.LOCALHOST}:8080"
+                                                f"{constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dp.id}")
+                        aggflows = json.loads(response.content)[str(dp.id)][0]
+                        agg_flow_stat = AggFlowStatistic(timestamp=time.time(), datapath_id=dp.id,
+                                                         total_num_bytes=aggflows[constants.RYU.BYTE_COUNT],
+                                                         total_num_packets=aggflows[constants.RYU.PACKET_COUNT],
+                                                         total_num_flows=aggflows[constants.RYU.FLOW_COUNT])
+                        if self.producer_running:
+                            self.producer.produce(collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME,
+                                                  agg_flow_stat.to_kafka_record())
+                            self.producer.poll(0)
+                    except Exception as e:
+                        self.logger.warning(f"There was an error parsing the flow statistics: {str(e)}, {repr(e)}")
             hub.sleep(self.time_step_len_seconds)
 
     def _request_stats(self, datapath) -> None:

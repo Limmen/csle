@@ -1,4 +1,4 @@
-csle-collector==0.1.13
+csle-collector==0.1.14
 ryu==4.34
 eventlet==0.30.2
 confluent-kafka==1.9.2
