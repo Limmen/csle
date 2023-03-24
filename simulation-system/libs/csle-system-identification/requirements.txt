@@ -1,5 +1,5 @@
-csle-common==0.1.11
-csle-collector==0.1.11
-csle-attacker==0.1.11
-csle-defender==0.1.11
+csle-common==0.1.12
+csle-collector==0.1.12
+csle-attacker==0.1.12
+csle-defender==0.1.12
 gpytorch==1.9.0
