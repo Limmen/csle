@@ -19,6 +19,7 @@ from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresh
 from csle_common.dao.training.mixed_multi_threshold_stopping_policy import MixedMultiThresholdStoppingPolicy
 from csle_common.dao.training.policy import Policy
 import csle_common.constants.constants as constants
+from csle_common.util.general_util import GeneralUtil
 from csle_agents.agents.base.base_agent import BaseAgent
 from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_agents.constants.constants as agents_constants
@@ -129,7 +130,8 @@ class TFPAgent(BaseAgent):
                 experiment_result=exp_result, progress_percentage=0, pid=pid,
                 emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
-                log_file_path=Logger.__call__().get_log_file_path(), descr=descr)
+                log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
+                physical_host_ip=GeneralUtil.get_host_ip())
             training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
             self.training_job.id = training_job_id
         else:

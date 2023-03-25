@@ -20,6 +20,7 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actio
     import EmulationAttackerStoppingActions
 from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions \
     import EmulationDefenderStoppingActions
+from csle_common.util.general_util import GeneralUtil
 
 
 class Emulator:
@@ -84,7 +85,7 @@ class Emulator:
                 pid=pid, descr=descr, repeat_times=repeat_times, emulation_statistic_id=statistics_id, traces=[],
                 num_sequences_completed=0, save_emulation_traces_every=save_emulation_traces_every,
                 num_cached_traces=emulation_traces_to_save_with_data_collection_job,
-                log_file_path=Logger.__call__().get_log_file_path())
+                log_file_path=Logger.__call__().get_log_file_path(), physical_host_ip=GeneralUtil.get_host_ip())
             job_id = MetastoreFacade.save_data_collection_job(
                 data_collection_job=data_collection_job)
             data_collection_job.id = job_id

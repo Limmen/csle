@@ -233,7 +233,7 @@ class EmulationEnvConfig:
 
         :return: SSH connection to the hacker
         """
-        hacker_ip = self.containers_config.agent_ip
+        hacker_ip = self.containers_config.get_agent_container().docker_gw_bridge_ip
         if hacker_ip in self.connections and self.connections[hacker_ip] is not None \
                 and self.connections[hacker_ip].get_transport() is not None \
                 and self.connections[hacker_ip].get_transport().is_active():

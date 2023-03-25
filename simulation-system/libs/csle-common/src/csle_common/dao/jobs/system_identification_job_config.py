@@ -11,9 +11,8 @@ class SystemIdentificationJobConfig:
 
     def __init__(self, emulation_env_name: str, emulation_statistics_id: int,
                  progress_percentage: float, pid: int, log_file_path: str,
-                 system_identification_config: SystemIdentificationConfig,
-                 descr: str = "",
-                 system_model: SystemModel = None):
+                 system_identification_config: SystemIdentificationConfig, physical_host_ip: str,
+                 descr: str = "", system_model: SystemModel = None):
         """
         Initializes the DTO
 
@@ -25,6 +24,7 @@ class SystemIdentificationJobConfig:
         :param descr: a description of the job
         :param system_model: fitted system model
         :param system_identification_config: the config of the system identification algorithm
+        :param physical_host_ip: the IP of the physical host where the job is running
         """
         self.emulation_env_name = emulation_env_name
         self.emulation_statistics_id = emulation_statistics_id
@@ -36,6 +36,7 @@ class SystemIdentificationJobConfig:
         self.system_identification_config = system_identification_config
         self.id = -1
         self.running = False
+        self.physical_host_ip = physical_host_ip
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -55,6 +56,7 @@ class SystemIdentificationJobConfig:
         d["system_identification_config"] = self.system_identification_config.to_dict()
         d["id"] = self.id
         d["running"] = self.running
+        d["physical_host_ip"] = self.physical_host_ip
         return d
 
     @staticmethod
@@ -71,7 +73,8 @@ class SystemIdentificationJobConfig:
             emulation_env_name=d["emulation_env_name"], pid=d["pid"],
             progress_percentage=d["progress_percentage"], emulation_statistics_id=d["emulation_statistics_id"],
             descr=d["descr"], log_file_path=d["log_file_path"], system_model=system_model,
-            system_identification_config=SystemIdentificationConfig.from_dict(d["system_identification_config"])
+            system_identification_config=SystemIdentificationConfig.from_dict(d["system_identification_config"]),
+            physical_host_ip=d["physical_host_ip"]
         )
         if "id" in d:
             obj.id = d["id"]

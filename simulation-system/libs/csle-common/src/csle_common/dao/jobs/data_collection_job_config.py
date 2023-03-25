@@ -13,7 +13,7 @@ class DataCollectionJobConfig:
                  progress_percentage: float, attacker_sequence: List[EmulationAttackerAction], pid: int,
                  repeat_times: int, emulation_statistic_id: int, num_sequences_completed: int,
                  traces: List[EmulationTrace], save_emulation_traces_every: int, num_cached_traces: int,
-                 defender_sequence: List[EmulationDefenderAction], log_file_path: str,
+                 defender_sequence: List[EmulationDefenderAction], log_file_path: str, physical_host_ip: str,
                  descr: str = ""):
         """
         Initializes the DTO
@@ -30,6 +30,7 @@ class DataCollectionJobConfig:
         :param emulation_statistic_id: the id of the emulation statistic
         :param save_emulation_traces_every: the frequency to save emulation traces to the metastore
         :param num_cached_traces: the number of emulation traces to keep with the job metadata
+        :param physical_host_ip: the IP of the physical host where the job is running
         """
         self.emulation_env_name = emulation_env_name
         self.progress_percentage = round(progress_percentage, 3)
@@ -48,6 +49,7 @@ class DataCollectionJobConfig:
         self.save_emulation_traces_every = save_emulation_traces_every
         self.num_cached_traces = num_cached_traces
         self.log_file_path = log_file_path
+        self.physical_host_ip = physical_host_ip
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -71,6 +73,7 @@ class DataCollectionJobConfig:
         d["save_emulation_traces_every"] = self.save_emulation_traces_every
         d["num_cached_traces"] = self.num_cached_traces
         d["log_file_path"] = self.log_file_path
+        d["physical_host_ip"] = self.physical_host_ip
         return d
 
     @staticmethod
@@ -90,8 +93,7 @@ class DataCollectionJobConfig:
             traces=list(map(lambda x: EmulationTrace.from_dict(x), d["traces"])),
             num_sequences_completed=d["num_sequences_completed"],
             save_emulation_traces_every=d["save_emulation_traces_every"], num_cached_traces=d["num_cached_traces"],
-            log_file_path=d["log_file_path"]
-        )
+            log_file_path=d["log_file_path"], physical_host_ip=d["physical_host_ip"])
         obj.id = d["id"]
         obj.running = d["running"]
         return obj
@@ -109,7 +111,8 @@ class DataCollectionJobConfig:
                f"num_sequences_completed: {self.num_sequences_completed}, " \
                f"traces: {list(map(lambda x: str(x), self.traces))}, " \
                f"save_emulation_traces_every: {self.save_emulation_traces_every}, " \
-               f"num_cached_traces: {self.num_cached_traces}, log_file_path: {self.log_file_path}"
+               f"num_cached_traces: {self.num_cached_traces}, log_file_path: {self.log_file_path}, " \
+               f"physical_host_ip: {self.physical_host_ip}"
 
     def to_json_str(self) -> str:
         """

@@ -32,17 +32,18 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actio
     import EmulationAttackerStoppingActions
 from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions \
     import EmulationDefenderStoppingActions
-import csle_agents.constants.constants as agents_constants
-from csle_system_identification.expectation_maximization.expectation_maximization_algorithm \
-    import ExpectationMaximizationAlgorithm
 from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
-from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
-import csle_system_identification.constants.constants as system_identification_constants
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
 from csle_common.dao.training.policy import Policy
 from csle_common.util.read_emulation_statistics_util import ReadEmulationStatisticsUtil
 from csle_common.dao.emulation_config.static_emulation_attacker_type import StaticEmulationAttackerType
 from csle_common.dao.emulation_config.emulation_statistics_windowed import EmulationStatisticsWindowed
+from csle_common.util.general_util import GeneralUtil
+import csle_system_identification.constants.constants as system_identification_constants
+from csle_system_identification.expectation_maximization.expectation_maximization_algorithm \
+    import ExpectationMaximizationAlgorithm
+from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
+import csle_agents.constants.constants as agents_constants
 
 
 class DataCollectorProcess(threading.Thread):
@@ -91,7 +92,7 @@ class DataCollectorProcess(threading.Thread):
             traces=[],
             num_sequences_completed=0, save_emulation_traces_every=1000000,
             num_cached_traces=emulation_traces_to_save_with_data_collection_job,
-            log_file_path=Logger.__call__().get_log_file_path())
+            log_file_path=Logger.__call__().get_log_file_path(), physical_host_ip=GeneralUtil.get_host_ip())
         self.job_id = MetastoreFacade.save_data_collection_job(
             data_collection_job=self.data_collection_job)
         self.data_collection_job.id = self.job_id
@@ -860,7 +861,8 @@ class DynaSecAgent(BaseAgent):
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
                 emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
-                log_file_path=Logger.__call__().get_log_file_path(), descr=descr)
+                log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
+                physical_host_ip=GeneralUtil.get_host_ip())
             if self.save_to_metastore:
                 training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
                 self.training_job.id = training_job_id

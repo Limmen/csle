@@ -12,7 +12,7 @@ class TrainingJobConfig:
     def __init__(self, simulation_env_name: str, experiment_config: ExperimentConfig,
                  progress_percentage: float, pid: int, experiment_result: ExperimentResult,
                  emulation_env_name: Union[str, None], simulation_traces: List[SimulationTrace],
-                 num_cached_traces: int, log_file_path: str, descr: str) -> None:
+                 num_cached_traces: int, log_file_path: str, descr: str, physical_host_ip: str) -> None:
         """
         Initializes the DTO
 
@@ -27,6 +27,7 @@ class TrainingJobConfig:
         :param simulation_traces: the list of simulation traces
         :param num_cached_traces: number of cached simulation traces
         :param descr: description of the job
+        :param physical_host_ip: the IP of the physical host where the job is running
         """
         self.simulation_env_name = simulation_env_name
         self.emulation_env_name = emulation_env_name
@@ -40,6 +41,7 @@ class TrainingJobConfig:
         self.num_cached_traces = num_cached_traces
         self.log_file_path = log_file_path
         self.descr = descr
+        self.physical_host_ip = physical_host_ip
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -58,6 +60,7 @@ class TrainingJobConfig:
         d["num_cached_traces"] = self.num_cached_traces
         d["log_file_path"] = self.log_file_path
         d["descr"] = self.descr
+        d["physical_host_ip"] = self.physical_host_ip
         return d
 
     @staticmethod
@@ -74,7 +77,8 @@ class TrainingJobConfig:
             experiment_result=ExperimentResult.from_dict(d["experiment_result"]),
             emulation_env_name=d["emulation_env_name"],
             simulation_traces=list(map(lambda x: SimulationTrace.from_dict(x), d["simulation_traces"])),
-            num_cached_traces=d["num_cached_traces"], log_file_path=d["log_file_path"], descr=d["descr"])
+            num_cached_traces=d["num_cached_traces"], log_file_path=d["log_file_path"], descr=d["descr"],
+            physical_host_ip=d["physical_host_ip"])
         obj.id = d["id"]
         obj.running = d["running"]
         return obj
@@ -88,7 +92,8 @@ class TrainingJobConfig:
                f"id: {self.id}, experiment_result: {self.experiment_result}, running: {self.running}, " \
                f"emulation_env_name: {self.emulation_env_name}, " \
                f"simulation_traces: {list(map(lambda x: str(x), self.simulation_traces))}," \
-               f"num_cached_traces: {self.num_cached_traces}, log_file_path: {self.log_file_path}, descr: {self.descr}"
+               f"num_cached_traces: {self.num_cached_traces}, log_file_path: {self.log_file_path}, " \
+               f"descr: {self.descr}, physical_host_ip: {self.physical_host_ip}"
 
     def to_json_str(self) -> str:
         """

@@ -24,6 +24,7 @@ from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.player_type import PlayerType
+from csle_common.util.general_util import GeneralUtil
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -64,7 +65,8 @@ class PPOAgent(BaseAgent):
                 progress_percentage=0, pid=pid, experiment_result=exp_result,
                 emulation_env_name=self.emulation_env_config.name, simulation_traces=[],
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
-                log_file_path=Logger.__call__().get_log_file_path(), descr=descr)
+                log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
+                physical_host_ip=GeneralUtil.get_host_ip())
             training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
             self.training_job.id = training_job_id
         else:

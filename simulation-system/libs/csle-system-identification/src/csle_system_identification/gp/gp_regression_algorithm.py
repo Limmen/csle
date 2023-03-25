@@ -9,9 +9,10 @@ from csle_common.dao.system_identification.system_identification_config import S
 from csle_common.dao.system_identification.gp_system_model import GPSystemModel
 from csle_common.dao.system_identification.gp_conditional import GPConditional
 from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
-import csle_system_identification.constants.constants as system_identification_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.logging.log import Logger
+from csle_common.util.general_util import GeneralUtil
+import csle_system_identification.constants.constants as system_identification_constants
 from csle_system_identification.gp.gp_regression_model_with_gauissan_noise import GPRegressionModelWithGaussianNoise
 
 
@@ -52,8 +53,8 @@ class GPRegressionAlgorithm(BaseSystemIdentificationAlgorithm):
                 emulation_env_name=self.emulation_env_config.name,
                 emulation_statistics_id=self.emulation_statistics.id, pid=pid, progress_percentage=0,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr, system_model=None,
-                system_identification_config=self.system_identification_config
-            )
+                system_identification_config=self.system_identification_config,
+                physical_host_ip=GeneralUtil.get_host_ip())
             system_identification_job_id = MetastoreFacade.save_system_identification_job(
                 system_identification_job=self.system_identification_job)
             self.system_identification_job.id = system_identification_job_id
