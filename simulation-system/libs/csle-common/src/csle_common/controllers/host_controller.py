@@ -810,7 +810,6 @@ class HostController:
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
-            logger.info(f"Start spark? {c.name},  {constants.CONTAINER_IMAGES.SPARK_IMAGES}")
             if c.physical_host_ip != physical_server_ip:
                 continue
             for ids_image in constants.CONTAINER_IMAGES.SPARK_IMAGES:

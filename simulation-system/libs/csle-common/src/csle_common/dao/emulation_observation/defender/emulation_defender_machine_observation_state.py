@@ -6,9 +6,13 @@ from csle_common.dao.emulation_observation.common.emulation_connection_observati
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.consumer_threads.host_metrics_consumer_thread import HostMetricsConsumerThread
 from csle_common.consumer_threads.docker_host_stats_consumer_thread import DockerHostStatsConsumerThread
+from csle_common.consumer_threads.snort_ids_log_consumer_thread import SnortIdsLogConsumerThread
+from csle_common.consumer_threads.ossec_ids_log_consumer_thread import OSSECIdsLogConsumerThread
 from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_collector.host_manager.host_metrics import HostMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
+from csle_collector.snort_ids_manager.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
+from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
 
 
 class EmulationDefenderMachineObservationState:
@@ -17,7 +21,9 @@ class EmulationDefenderMachineObservationState:
     """
 
     def __init__(self, ips: List[str], kafka_config: KafkaConfig,
-                 host_metrics: HostMetrics = None, docker_stats: DockerStats = None):
+                 host_metrics: HostMetrics = None, docker_stats: DockerStats = None,
+                 snort_ids_ip_alert_counters: SnortIdsIPAlertCounters = None,
+                 ossec_ids_alert_counters: OSSECIdsAlertCounters = None):
         """
         Initializes the DTO
 
@@ -25,6 +31,8 @@ class EmulationDefenderMachineObservationState:
         :param kafka_config: the kafka config
         :param host_metrics: the host metrics object
         :param docker_stats: the docker stats object
+        :param snort_ids_ip_alert_counters: the snort ids ip alert counter object
+        :param ossec_ids_alert_counters: the ossec ids alert counter object
         """
         self.ips = ips
         self.os = "unknown"
@@ -37,8 +45,16 @@ class EmulationDefenderMachineObservationState:
         self.docker_stats = docker_stats
         if self.docker_stats is None:
             self.docker_stats = DockerStats()
+        self.snort_ids_ip_alert_counters = snort_ids_ip_alert_counters
+        if self.snort_ids_ip_alert_counters is None:
+            self.snort_ids_ip_alert_counters = SnortIdsIPAlertCounters()
+        self.ossec_ids_alert_counters = ossec_ids_alert_counters
+        if self.ossec_ids_alert_counters is None:
+            self.ossec_ids_alert_counters = OSSECIdsAlertCounters()
         self.host_metrics_consumer_thread = None
         self.docker_stats_consumer_thread = None
+        self.snort_ids_log_consumer_thread = None
+        self.ossec_ids_log_consumer_thread = None
 
     def start_monitor_threads(self) -> None:
         """
@@ -52,8 +68,16 @@ class EmulationDefenderMachineObservationState:
         self.docker_stats_consumer_thread = DockerHostStatsConsumerThread(
             host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
             kafka_port=self.kafka_config.kafka_port, docker_stats=self.docker_stats)
+        self.snort_ids_log_consumer_thread = SnortIdsLogConsumerThread(
+            host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
+            kafka_port=self.kafka_config.kafka_port, snort_ids_alert_counters=self.snort_ids_ip_alert_counters)
+        self.ossec_ids_log_consumer_thread = OSSECIdsLogConsumerThread(
+            host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
+            kafka_port=self.kafka_config.kafka_port, ossec_ids_alert_counters=self.ossec_ids_alert_counters)
         self.host_metrics_consumer_thread.start()
         self.docker_stats_consumer_thread.start()
+        self.snort_ids_log_consumer_thread.start()
+        self.ossec_ids_log_consumer_thread.start()
 
     @staticmethod
     def from_container(container: NodeContainerConfig, kafka_config: KafkaConfig):
@@ -84,7 +108,10 @@ class EmulationDefenderMachineObservationState:
         obj = EmulationDefenderMachineObservationState(
             ips=d["ips"], kafka_config=kafka_config,
             host_metrics=HostMetrics.from_dict(d["host_metrics"]),
-            docker_stats=DockerStats.from_dict(d["docker_stats"]))
+            docker_stats=DockerStats.from_dict(d["docker_stats"]),
+            snort_ids_ip_alert_counters=SnortIdsIPAlertCounters.from_dict(d["snort_ids_ip_alert_counters"]),
+            ossec_ids_alert_counters=OSSECIdsAlertCounters.from_dict(d["ossec_ids_alert_counters"])
+        )
         obj.os = d["os"]
         obj.ports = list(map(lambda x: EmulationPortObservationState.from_dict(x), d["ports"]))
         obj.ssh_connections = list(map(lambda x: EmulationConnectionObservationState.from_dict(x),
@@ -102,6 +129,7 @@ class EmulationDefenderMachineObservationState:
         d["ssh_connections"] = list(map(lambda x: x.to_dict(), self.ssh_connections))
         d["host_metrics"] = self.host_metrics.to_dict()
         d["docker_stats"] = self.docker_stats.to_dict()
+        d["ossec_ids_alert_counters"] = self.ossec_ids_alert_counters.to_dict()
         if self.kafka_config is not None:
             d["kafka_config"] = self.kafka_config.to_dict()
         else:
@@ -114,7 +142,9 @@ class EmulationDefenderMachineObservationState:
         """
         return f"ips:{self.ips}, os:{self.os}, ports: {list(map(lambda x: str(x), self.ports))}, " \
                f"ssh_connections: {list(map(lambda x: str(x), self.ssh_connections))}, " \
-               f"host_metrics: {self.host_metrics}, docker_stats: {self.docker_stats}"
+               f"host_metrics: {self.host_metrics}, docker_stats: {self.docker_stats}, " \
+               f"snort_ids_ip_alert_counters: {self.snort_ids_ip_alert_counters}, " \
+               f"ossec_ids_alert_counters: {self.ossec_ids_alert_counters}"
 
     def sort_ports(self) -> None:
         """
@@ -136,6 +166,15 @@ class EmulationDefenderMachineObservationState:
         if self.docker_stats_consumer_thread is not None:
             self.docker_stats_consumer_thread.running = False
             self.docker_stats_consumer_thread.consumer.close()
+        if self.host_metrics_consumer_thread is not None:
+            self.host_metrics_consumer_thread.running = False
+            self.host_metrics_consumer_thread.consumer.close()
+        if self.snort_ids_log_consumer_thread is not None:
+            self.snort_ids_log_consumer_thread.running = False
+            self.snort_ids_log_consumer_thread.consumer.close()
+        if self.ossec_ids_log_consumer_thread is not None:
+            self.ossec_ids_alert_counters.running = False
+            self.ossec_ids_log_consumer_thread.consumer.close()
         for c in self.ssh_connections:
             c.cleanup()
 
@@ -151,6 +190,8 @@ class EmulationDefenderMachineObservationState:
         m_copy.ssh_connections = self.ssh_connections
         m_copy.host_metrics = self.host_metrics.copy()
         m_copy.docker_stats = self.docker_stats.copy()
+        m_copy.snort_ids_ip_alert_counters = self.snort_ids_ip_alert_counters.copy()
+        m_copy.ossec_ids_alert_counters = self.ossec_ids_alert_counters.copy()
         return m_copy
 
     def to_json_str(self) -> str:
@@ -211,4 +252,6 @@ class EmulationDefenderMachineObservationState:
         """
         return EmulationDefenderMachineObservationState(ips=[""], kafka_config=KafkaConfig.schema(),
                                                         host_metrics=HostMetrics.schema(),
-                                                        docker_stats=DockerStats.schema())
+                                                        docker_stats=DockerStats.schema(),
+                                                        snort_ids_ip_alert_counters=SnortIdsIPAlertCounters.schema(),
+                                                        ossec_ids_alert_counters=OSSECIdsAlertCounters.schema())

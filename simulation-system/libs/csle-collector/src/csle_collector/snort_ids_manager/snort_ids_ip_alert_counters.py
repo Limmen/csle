@@ -91,7 +91,7 @@ class SnortIdsIPAlertCounters:
             obj.priority_alerts.append(int(round(float(parts[i]))))
         return obj
 
-    def update_with_kafka_record(self, record: str) -> None:
+    def update_with_kafka_record(self, record: str, ip: str) -> None:
         """
         Updates the DTO with a kafka record
 
@@ -99,21 +99,21 @@ class SnortIdsIPAlertCounters:
         :return: None
         """
         parts = record.split(",")
-        self.ts = float(parts[0])
-        self.ip = parts[1]
-        self.alert_ip = parts[2]
-        self.total_alerts = int(round(float(parts[3])))
-        self.warning_alerts = int(round(float(parts[4])))
-        self.severe_alerts = int(round(float(parts[5])))
-        self.alerts_weighted_by_priority = int(round(float(parts[6])))
-
-        self.class_alerts = []
-        self.priority_alerts = []
-        for i in range(7, len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values())) + 7):
-            self.class_alerts.append(int(round(float(parts[i]))))
-        for i in range(len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values())) + 7,
-                       len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values())) + 11):
-            self.priority_alerts.append(int(round(float(parts[i]))))
+        if parts[2] == ip:
+            self.ts = float(parts[0])
+            self.ip = parts[1]
+            self.alert_ip = parts[2]
+            self.total_alerts = int(round(float(parts[3])))
+            self.warning_alerts = int(round(float(parts[4])))
+            self.severe_alerts = int(round(float(parts[5])))
+            self.alerts_weighted_by_priority = int(round(float(parts[6])))
+            self.class_alerts = []
+            self.priority_alerts = []
+            for i in range(7, len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values())) + 7):
+                self.class_alerts.append(int(round(float(parts[i]))))
+            for i in range(len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values())) + 7,
+                           len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values())) + 11):
+                self.priority_alerts.append(int(round(float(parts[i]))))
 
     def to_kafka_record(self, ip: str) -> str:
         """
