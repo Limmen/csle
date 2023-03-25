@@ -160,8 +160,7 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         if not snort_running:
             cmd = constants.SNORT_IDS_ROUTER.START_SNORT_IDS.format(request.ingress_interface, request.egress_interface,
                                                                     request.subnetmask)
-            result = subprocess.run(constants.SNORT_IDS_ROUTER.START_SNORT_IDS.split(" "),
-                                    capture_output=True, text=True)
+            result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
             logging.info(f"Started the Snort IDS, stdout:{result.stdout}, stderr: {result.stderr}, cmd: {cmd}")
         logging.info("Started the SnortIDS")
         return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
