@@ -151,7 +151,10 @@ class Emulator:
                     emulation_env_config=emulation_env_config, attacker_action=a2, defender_action=a1,
                     sleep_time=sleep_time, trace=emulation_trace, s=s)
                 emulation_statistics.update_delta_statistics(s=old_state, s_prime=s, a1=a1, a2=a2)
-                total_steps = (1 / intrusion_start_p) * repeat_times
+                if intrusion_start_p > 0:
+                    total_steps = (1 / intrusion_start_p) * repeat_times
+                else:
+                    total_steps = trace_len
                 collected_steps += 1
                 data_collection_job.num_collected_steps = collected_steps
                 data_collection_job.progress_percentage = (round(collected_steps / total_steps, 2))
