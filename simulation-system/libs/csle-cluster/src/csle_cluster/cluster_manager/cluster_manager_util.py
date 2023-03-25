@@ -3237,6 +3237,132 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
+    def convert_snort_ids_alert_counters_dict(
+            snort_ids_alert_counters_d: Dict[str, List[SnortIdsAlertCounters]]) \
+            -> List[cluster_manager_pb2.SnortIdsAlertCountersDict]:
+        """
+        Converts a dict to list of SnortIdsAlertCountersDict
+
+        :param snort_ids_alert_counters_d: the dict to convert
+        :return: the converted objected
+        """
+        if snort_ids_alert_counters_d is None:
+            return ClusterManagerUtil.get_empty_snort_ids_alert_counters_dict()
+        else:
+            snort_ids_alerts_dict_list = []
+            for k, v in snort_ids_alert_counters_d.items():
+                snort_ids_alerts_dict_list.append(cluster_manager_pb2.SnortIdsAlertCountersDict(
+                    key=k, dtos=list(map(lambda x: ClusterManagerUtil.convert_snort_ids_alert_counters_dto(x), v))))
+            return snort_ids_alerts_dict_list
+
+    @staticmethod
+    def convert_snort_ids_alert_counters_dict_reverse(
+            snort_ids_alerts_counters_dict: List[cluster_manager_pb2.SnortIdsAlertCountersDict]) \
+            -> Dict[str, List[SnortIdsAlertCounters]]:
+        """
+        Converts a list of SnortIdsIpAlertCountersDict to a dict
+
+        :param snort_ids_alerts_counters_dict: the list to convert
+        :return: the converted DTO
+        """
+        if snort_ids_alerts_counters_dict is None:
+            return ClusterManagerUtil.convert_snort_ids_alert_counters_dict_reverse(
+                ClusterManagerUtil.get_empty_snort_ids_alert_counters_dict())
+        else:
+            d = {}
+            for ds in snort_ids_alerts_counters_dict:
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_snort_ids_alert_counters_dto_reverse(x),
+                                     ds.dtos))
+            return d
+
+    @staticmethod
+    def get_empty_snort_ids_alert_counters_dict() -> List[cluster_manager_pb2.SnortIdsAlertCountersDict]:
+        """
+        :return: an empty SnortIdsAlertCountersDict
+        """
+        return []
+
+    @staticmethod
+    def snort_ids_alert_counters_dict_to_dict(
+            snort_ids_alert_counters_dict: cluster_manager_pb2.SnortIdsAlertCountersDict) -> Dict[str, Any]:
+        """
+        Converts a DTO to a dict
+
+        :param snort_ids_alert_counters_dict: the DTO to convert
+        :return: the dict
+        """
+        d = {}
+        d["key"] = snort_ids_alert_counters_dict.key
+        dtos = []
+        for dto in snort_ids_alert_counters_dict.dtos.items():
+            dtos.append(ClusterManagerUtil.snort_ids_alert_counters_dto_to_dict(dto))
+        d["dtos"] = dtos
+        return d
+
+    @staticmethod
+    def convert_snort_ids_rule_counters_dict(
+            snort_ids_rule_counters_d: Dict[str, List[SnortIdsRuleCounters]]) \
+            -> List[cluster_manager_pb2.SnortIdsRuleCountersDict]:
+        """
+        Converts a dict to list of SnortIdsRuleCountersDict
+
+        :param snort_ids_rule_counters_d: the dict to convert
+        :return: the converted objected
+        """
+        if snort_ids_rule_counters_d is None:
+            return ClusterManagerUtil.get_empty_snort_ids_rule_counters_dict()
+        else:
+            snort_ids_rule_dict_list = []
+            for k, v in snort_ids_rule_counters_d.items():
+                snort_ids_rule_dict_list.append(cluster_manager_pb2.SnortIdsRuleCountersDict(
+                    key=k, dtos=list(map(lambda x: ClusterManagerUtil.convert_snort_ids_rule_counters_dto(x), v))))
+            return snort_ids_rule_dict_list
+
+    @staticmethod
+    def convert_snort_ids_rule_counters_dict_reverse(
+            snort_ids_rule_counters_dict: List[cluster_manager_pb2.SnortIdsRuleCountersDict]) \
+            -> Dict[str, List[SnortIdsRuleCounters]]:
+        """
+        Converts a list of SnortIdsRuleCountersDict to a dict
+
+        :param snort_ids_rule_counters_dict: the list to convert
+        :return: the converted DTO
+        """
+        if snort_ids_rule_counters_dict is None:
+            return ClusterManagerUtil.convert_snort_ids_rule_counters_dict_reverse(
+                ClusterManagerUtil.get_empty_snort_ids_rule_counters_dict())
+        else:
+            d = {}
+            for ds in snort_ids_rule_counters_dict:
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_snort_ids_rule_counters_dto_reverse(x),
+                                     ds.dtos))
+            return d
+
+    @staticmethod
+    def get_empty_snort_ids_rule_counters_dict() -> List[cluster_manager_pb2.SnortIdsRuleCountersDict]:
+        """
+        :return: an empty SnortIdsRuleCountersDict
+        """
+        return []
+
+    @staticmethod
+    def snort_ids_rule_counters_dict_to_dict(
+            snort_ids_rule_counters_dict: cluster_manager_pb2.SnortIdsAlertCountersDict) -> Dict[str, Any]:
+        """
+        Converts a DTO to a dict
+
+        :param snort_ids_rule_counters_dict: the DTO to convert
+        :return: the dict
+        """
+        d = {}
+        d["key"] = snort_ids_rule_counters_dict.key
+        dtos = []
+        for dto in snort_ids_rule_counters_dict.dtos.items():
+            dtos.append(ClusterManagerUtil.snort_ids_rule_counters_dto_to_dict(dto))
+        d["dtos"] = dtos
+        return d
+
+    @staticmethod
     def convert_host_metrics_dict(host_metrics_dict: Dict[str, List[HostMetrics]]) \
             -> List[cluster_manager_pb2.HostMetricsDict]:
         """
@@ -3689,7 +3815,9 @@ class ClusterManagerUtil:
             agg_openflow_flow_metrics_per_switch=ClusterManagerUtil.get_empty_avg_flow_statistic_dict(),
             agg_openflow_flow_stats=[ClusterManagerUtil.get_empty_agg_flow_statistic_dto()],
             snort_ids_rule_metrics = [ClusterManagerUtil.get_empty_snort_ids_rule_counters_dto()],
-            snort_ids_ip_metrics = ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dict()
+            snort_ids_ip_metrics = ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dict(),
+            snort_alert_metrics_per_ids = ClusterManagerUtil.get_empty_snort_ids_alert_counters_dict(),
+            snort_rule_metrics_per_ids = ClusterManagerUtil.get_empty_snort_ids_rule_counters_dict()
         )
 
     @staticmethod
@@ -3718,7 +3846,7 @@ class ClusterManagerUtil:
                 attacker_actions=list(map(lambda x: ClusterManagerUtil.convert_emulation_attacker_action_dto(x),
                                           time_series_dto.attacker_actions)),
                 snort_ids_metrics=list(map(lambda x: ClusterManagerUtil.convert_snort_ids_alert_counters_dto(x),
-                                           time_series_dto.snort_ids_metrics)),
+                                           time_series_dto.agg_snort_ids_metrics)),
                 emulation_id=time_series_dto.emulation_env_config.id,
                 ossec_host_alert_counters=ClusterManagerUtil.convert_ossec_ids_alert_counters_dict(
                     time_series_dto.ossec_host_alert_counters),
@@ -3746,9 +3874,13 @@ class ClusterManagerUtil:
                 agg_openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_agg_flow_statistic_dto(x),
                                                  time_series_dto.agg_openflow_flow_stats)),
                 snort_ids_rule_metrics=list(map(lambda x: ClusterManagerUtil.convert_snort_ids_rule_counters_dto(x),
-                                           time_series_dto.snort_ids_rule_metrics)),
+                                                time_series_dto.agg_snort_ids_rule_metrics)),
                 snort_ids_ip_metrics=ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict(
-                    time_series_dto.snort_ids_ip_metrics)
+                    time_series_dto.snort_ids_ip_metrics),
+                snort_rule_metrics_per_ids=ClusterManagerUtil.convert_snort_ids_rule_counters_dict(
+                    time_series_dto.snort_rule_metrics_per_ids),
+                snort_alert_metrics_per_ids=ClusterManagerUtil.convert_snort_ids_alert_counters_dict(
+                    time_series_dto.snort_alert_metrics_per_ids)
             )
 
     @staticmethod
@@ -3779,8 +3911,8 @@ class ClusterManagerUtil:
                                           time_series_dto.defender_actions)),
                 attacker_actions=list(map(lambda x: ClusterManagerUtil.convert_emulation_attacker_action_dto_reverse(x),
                                           time_series_dto.attacker_actions)),
-                snort_ids_metrics=list(map(lambda x: ClusterManagerUtil.convert_snort_ids_alert_counters_dto_reverse(x),
-                                           time_series_dto.snort_ids_metrics)),
+                agg_snort_ids_metrics=list(map(lambda x: ClusterManagerUtil.convert_snort_ids_alert_counters_dto_reverse(x),
+                                               time_series_dto.agg_snort_ids_metrics)),
                 emulation_env_config=emulation_config,
                 ossec_host_alert_counters=ClusterManagerUtil.convert_ossec_ids_alert_counters_dict_reverse(
                     time_series_dto.ossec_host_alert_counters),
@@ -3807,11 +3939,15 @@ class ClusterManagerUtil:
                     time_series_dto.agg_openflow_flow_metrics_per_switch),
                 agg_openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_agg_flow_statistic_dto_reverse(x),
                                                  time_series_dto.agg_openflow_flow_stats)),
-                snort_ids_rule_metrics=list(
+                agg_snort_ids_rule_metrics=list(
                     map(lambda x: ClusterManagerUtil.convert_snort_ids_rule_counters_dto_reverse(x),
-                        time_series_dto.snort_ids_rule_metrics)),
+                        time_series_dto.agg_snort_ids_rule_metrics)),
                 snort_ids_ip_metrics=ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict_reverse(
-                    time_series_dto.snort_ids_ip_metrics)
+                    time_series_dto.snort_ids_ip_metrics),
+                snort_rule_metrics_per_ids=ClusterManagerUtil.convert_snort_ids_rule_counters_dict_reverse(
+                    time_series_dto.snort_rule_metrics_per_ids),
+                snort_alert_metrics_per_ids=ClusterManagerUtil.convert_snort_ids_alert_counters_dict_reverse(
+                    time_series_dto.snort_alert_metrics_per_ids)
             )
 
     @staticmethod
@@ -3839,7 +3975,7 @@ class ClusterManagerUtil:
         d["attacker_actions"] = list(map(lambda x: ClusterManagerUtil.emulation_attacker_action_dto_to_dict(x),
                                          time_series_dto.attacker_actions))
         d["snort_ids_metrics"] = list(map(lambda x: ClusterManagerUtil.snort_ids_alert_counters_dto_to_dict(x),
-                                          time_series_dto.snort_ids_metrics))
+                                          time_series_dto.agg_snort_ids_metrics))
         d["emulation_id"] = time_series_dto.emulation_id
         d["ossec_host_alert_counters"] = list(map(lambda x: ClusterManagerUtil.ossec_ids_alert_counters_dict_to_dict(x),
                                                   time_series_dto.ossec_host_alert_counters))
@@ -3870,7 +4006,12 @@ class ClusterManagerUtil:
         d["agg_openflow_flow_stats"] = list(map(lambda x: ClusterManagerUtil.agg_flow_statistic_dto_to_dict(x),
                                                 time_series_dto.agg_openflow_flow_stats))
         d["snort_ids_rule_metrics"] = list(map(lambda x: ClusterManagerUtil.snort_ids_rule_counters_dto_to_dict(x),
-                                          time_series_dto.snort_ids_rule_metrics))
+                                               time_series_dto.agg_snort_ids_rule_metrics))
         d["snort_ids_ip_metrics"] = list(map(lambda x: ClusterManagerUtil.snort_ids_ip_alert_counters_dict_to_dict(x),
                                      time_series_dto.snort_ids_ip_metrics))
+        d["snort_rule_metrics_per_ids"] = list(map(lambda x: ClusterManagerUtil.snort_ids_rule_counters_dict_to_dict(x),
+                                             time_series_dto.snort_rule_metrics_per_ids))
+        d["snort_alert_metrics_per_ids"] = list(
+            map(lambda x: ClusterManagerUtil.snort_ids_alert_counters_dict_to_dict(x),
+                time_series_dto.snort_alert_metrics_per_ids))
         return d

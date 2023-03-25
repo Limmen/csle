@@ -25,7 +25,7 @@ class EmulationMetricsTimeSeries:
                  docker_host_stats: Dict[str, List[DockerStats]], host_metrics: Dict[str, List[HostMetrics]],
                  aggregated_host_metrics: List[HostMetrics],
                  defender_actions: List[EmulationDefenderAction], attacker_actions: List[EmulationAttackerAction],
-                 snort_ids_metrics: List[SnortIdsAlertCounters], emulation_env_config: EmulationEnvConfig,
+                 agg_snort_ids_metrics: List[SnortIdsAlertCounters], emulation_env_config: EmulationEnvConfig,
                  ossec_host_alert_counters: Dict[str, List[OSSECIdsAlertCounters]],
                  aggregated_ossec_host_alert_counters: List[OSSECIdsAlertCounters],
                  openflow_flow_stats: List[FlowStatistic], openflow_port_stats: List[PortStatistic],
@@ -37,7 +37,9 @@ class EmulationMetricsTimeSeries:
                  agg_openflow_flow_metrics_per_switch: Dict[str, List[AggFlowStatistic]],
                  agg_openflow_flow_stats: List[AggFlowStatistic],
                  snort_ids_ip_metrics: Dict[str, List[SnortIdsIPAlertCounters]],
-                 snort_ids_rule_metrics: List[SnortIdsRuleCounters]):
+                 agg_snort_ids_rule_metrics: List[SnortIdsRuleCounters],
+                 snort_alert_metrics_per_ids: Dict[str, List[SnortIdsAlertCounters]],
+                 snort_rule_metrics_per_ids: Dict[str, List[SnortIdsRuleCounters]]):
         """
         Initializes the DTO
 
@@ -48,7 +50,7 @@ class EmulationMetricsTimeSeries:
         :param aggregated_host_metrics: Time series data with aggregated host metrics
         :param defender_actions: Time series data with defender actions
         :param attacker_actions: Time series data with attacker actions
-        :param snort_ids_metrics: Time series data with Snort IDS metrics
+        :param agg_snort_ids_metrics: Time series data with Snort IDS metrics
         :param emulation_env_config: the emulation config
         :param ossec_host_alert_counters: Time series data with ossec alert counters per host
         :param aggregated_ossec_host_alert_counters: Time series data with aggregated ossec alert counters
@@ -63,7 +65,9 @@ class EmulationMetricsTimeSeries:
         :param agg_openflow_flow_stats: aggregated openflow flow statistics
         :param agg_openflow_flow_metrics_per_switch: aggregated openflow flow statistics aggregatd per switch
         :param snort_ids_ip_metrics: Time series data with Snort IDS metrics per IP
-        :param snort_ids_rule_metrics: Time series data with Snort IDS metrics per rule
+        :param agg_snort_ids_rule_metrics: Time series data with Snort IDS metrics per rule
+        :param snort_alert_metrics_per_ids: Time series data with Snort IDS alert metrics per IDS
+        :param snort_rule_metrics_per_ids: Time series data with Snort IDS rule metrics per IDS
         """
         self.client_metrics = client_metrics
         self.aggregated_docker_stats = aggregated_docker_stats
@@ -71,7 +75,7 @@ class EmulationMetricsTimeSeries:
         self.host_metrics = host_metrics
         self.defender_actions = defender_actions
         self.attacker_actions = attacker_actions
-        self.snort_ids_metrics = snort_ids_metrics
+        self.agg_snort_ids_metrics = agg_snort_ids_metrics
         self.aggregated_host_metrics = aggregated_host_metrics
         self.emulation_env_config = emulation_env_config
         self.ossec_host_alert_counters = ossec_host_alert_counters
@@ -87,7 +91,9 @@ class EmulationMetricsTimeSeries:
         self.agg_openflow_flow_stats = agg_openflow_flow_stats
         self.agg_openflow_flow_metrics_per_switch = agg_openflow_flow_metrics_per_switch
         self.snort_ids_ip_metrics = snort_ids_ip_metrics
-        self.snort_ids_rule_metrics = snort_ids_rule_metrics
+        self.agg_snort_ids_rule_metrics = agg_snort_ids_rule_metrics
+        self.snort_alert_metrics_per_ids = snort_alert_metrics_per_ids
+        self.snort_rule_metrics_per_ids = snort_rule_metrics_per_ids
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationMetricsTimeSeries":
@@ -131,6 +137,14 @@ class EmulationMetricsTimeSeries:
         for k, v in d["snort_ids_ip_metrics"].items():
             snort_ids_ip_metrics[k] = list(map(lambda x: SnortIdsIPAlertCounters.from_dict(x), v))
 
+        snort_alert_metrics_per_ids = {}
+        for k, v in d["snort_alert_metrics_per_ids"].items():
+            snort_alert_metrics_per_ids[k] = list(map(lambda x: SnortIdsAlertCounters.from_dict(x), v))
+
+        snort_rule_metrics_per_ids = {}
+        for k, v in d["snort_rule_metrics_per_ids"].items():
+            snort_rule_metrics_per_ids[k] = list(map(lambda x: SnortIdsRuleCounters.from_dict(x), v))
+
         obj = EmulationMetricsTimeSeries(
             client_metrics=list(map(lambda x: ClientPopulationMetrics.from_dict(x), d["client_metrics"])),
             aggregated_docker_stats=list(map(lambda x: DockerStats.from_dict(x), d["aggregated_docker_stats"])),
@@ -138,7 +152,7 @@ class EmulationMetricsTimeSeries:
             host_metrics=host_metrics,
             defender_actions=list(map(lambda x: EmulationDefenderAction.from_dict(x), d["defender_actions"])),
             attacker_actions=list(map(lambda x: EmulationAttackerAction.from_dict(x), d["attacker_actions"])),
-            snort_ids_metrics=list(map(lambda x: SnortIdsAlertCounters.from_dict(x), d["snort_ids_metrics"])),
+            agg_snort_ids_metrics=list(map(lambda x: SnortIdsAlertCounters.from_dict(x), d["agg_snort_ids_metrics"])),
             aggregated_host_metrics=list(map(lambda x: HostMetrics.from_dict(x), d["aggregated_host_metrics"])),
             emulation_env_config=EmulationEnvConfig.from_dict(d["emulation_env_config"]),
             ossec_host_alert_counters=ossec_host_alerts,
@@ -154,8 +168,10 @@ class EmulationMetricsTimeSeries:
             agg_openflow_flow_stats=list(map(lambda x: AggFlowStatistic.from_dict(x), d["agg_openflow_flow_stats"])),
             agg_openflow_flow_metrics_per_switch=agg_openflow_flow_metrics_per_switch,
             snort_ids_ip_metrics=snort_ids_ip_metrics,
-            snort_ids_rule_metrics=list(map(lambda x: SnortIdsRuleCounters.from_dict(x), d["snort_ids_rule_metrics"]))
-        )
+            agg_snort_ids_rule_metrics=list(map(lambda x: SnortIdsRuleCounters.from_dict(x),
+                                                d["agg_snort_ids_rule_metrics"])),
+            snort_alert_metrics_per_ids=snort_alert_metrics_per_ids,
+            snort_rule_metrics_per_ids=snort_rule_metrics_per_ids)
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -173,7 +189,7 @@ class EmulationMetricsTimeSeries:
             d["host_metrics"][k] = list(map(lambda x: x.to_dict(), v))
         d["defender_actions"] = list(map(lambda x: x.to_dict(), self.defender_actions))
         d["attacker_actions"] = list(map(lambda x: x.to_dict(), self.attacker_actions))
-        d["snort_ids_metrics"] = list(map(lambda x: x.to_dict(), self.snort_ids_metrics))
+        d["agg_snort_ids_metrics"] = list(map(lambda x: x.to_dict(), self.agg_snort_ids_metrics))
         d["aggregated_host_metrics"] = list(map(lambda x: x.to_dict(), self.aggregated_host_metrics))
         d["emulation_env_config"] = self.emulation_env_config.to_dict()
         d["aggregated_ossec_host_alert_counters"] = list(map(lambda x: x.to_dict(),
@@ -212,7 +228,16 @@ class EmulationMetricsTimeSeries:
         for k, v in self.snort_ids_ip_metrics.items():
             d["snort_ids_ip_metrics"][k] = list(map(lambda x: x.to_dict(), v))
 
-        d["snort_ids_rule_metrics"] = list(map(lambda x: x.to_dict(), self.snort_ids_rule_metrics))
+        d["agg_snort_ids_rule_metrics"] = list(map(lambda x: x.to_dict(), self.agg_snort_ids_rule_metrics))
+
+        d["snort_alert_metrics_per_ids"] = {}
+        for k, v in self.snort_alert_metrics_per_ids.items():
+            d["snort_alert_metrics_per_ids"][k] = list(map(lambda x: x.to_dict(), v))
+
+        d["snort_rule_metrics_per_ids"] = {}
+        for k, v in self.snort_rule_metrics_per_ids.items():
+            d["snort_rule_metrics_per_ids"][k] = list(map(lambda x: x.to_dict(), v))
+
         return d
 
     def __str__(self) -> str:
@@ -225,7 +250,7 @@ class EmulationMetricsTimeSeries:
                f"host_metrics: {list(map(lambda x: str(x), self.host_metrics))}," \
                f"defender_actions: {list(map(lambda x: str(x), self.defender_actions))}," \
                f"attacker_actions: {list(map(lambda x: str(x), self.attacker_actions))}," \
-               f"snort_ids_metrics: {list(map(lambda x: str(x), self.snort_ids_metrics))}," \
+               f"agg_snort_ids_metrics: {list(map(lambda x: str(x), self.agg_snort_ids_metrics))}," \
                f"aggregated_host_metrics: {list(map(lambda x: str(x), self.aggregated_host_metrics))}," \
                f"config: {self.emulation_env_config}," \
                f"aggregated_ossec_host_alert_counters: {self.aggregated_ossec_host_alert_counters}," \
@@ -240,7 +265,9 @@ class EmulationMetricsTimeSeries:
                f"agg_openflow_flow_stats: {self.agg_openflow_flow_stats}," \
                f"agg_openflow_flow_metrics_per_switch: {self.agg_openflow_flow_metrics_per_switch}," \
                f"snort_ids_ip_metrics: {self.snort_ids_ip_metrics}," \
-               f"snort_ids_rule_metrics: {self.snort_ids_rule_metrics}"
+               f"agg_snort_ids_rule_metrics: {self.agg_snort_ids_rule_metrics}," \
+               f"snort_alert_metrics_per_ids: {self.snort_alert_metrics_per_ids}," \
+               f"snort_rule_metrics_per_ids: {self.snort_rule_metrics_per_ids}"
 
     def to_json_str(self) -> str:
         """
