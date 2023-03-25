@@ -8,6 +8,7 @@ import PidsChart from "../PidsChart/PidsChart";
 import LoginsChart from "../LoginsChart/LoginsChart";
 import ConnectionsChart from "../ConnectionsChart/ConnectionsChart";
 import OssecAlertsChart from "../OssecAlertsChart/OssecAlertsChart";
+import SnortAlertsChart from "../SnortAlertsChart/SnortAlertsChart";
 
 /**
  * Component containing a plot showing a number of container-specific plots
@@ -80,6 +81,10 @@ const ContainerMetrics = React.memo((props) => {
                                           animationDurationFactor={props.animationDurationFactor}/>
                     </div>
                     <div className="col-sm-6 chartsCol">
+                        <h3 className="chartsTitle">Snort IDS Alerts</h3>
+                        <SnortAlertsChart stats={props.snortAlerts}
+                                          animation={props.animation} animationDuration={props.animationDuration}
+                                          animationDurationFactor={props.animationDurationFactor}/>
                     </div>
                 </div>
             </div>

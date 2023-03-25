@@ -273,6 +273,14 @@ const Monitoring = (props) => {
         }
     }
 
+    const getSnortHostMetrics = () => {
+        if (monitoringData !== null) {
+            return monitoringData.snort_ids_ip_metrics[selectedContainer.label]
+        } else {
+            return null
+        }
+    }
+
     const getAggregatedOSSECHostMetrics = () => {
         if (monitoringData !== null) {
             return monitoringData.aggregated_ossec_host_alert_counters
@@ -532,7 +540,9 @@ const Monitoring = (props) => {
                                       dockerMetrics={getDockerMetrics()}
                                       ossecAlerts={getOSSECHostMetrics()}
                                       animation={props.animation} animationDuration={props.animationDuration.value}
-                                      animationDurationFactor={props.animationDurationFactor}/>
+                                      animationDurationFactor={props.animationDurationFactor}
+                                      snortAlerts={getSnortHostMetrics()}
+                    />
 
                     <div className="row hostMetricsDropdownRow">
                         <div className="col-sm-12">
