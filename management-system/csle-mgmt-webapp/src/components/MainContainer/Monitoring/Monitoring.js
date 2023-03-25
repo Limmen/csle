@@ -8,6 +8,7 @@ import Modal from 'react-bootstrap/Modal'
 import ContainerMetrics from "./ContainerMetrics/ContainerMetrics";
 import AggregateMetrics from "./AggregateMetrics/AggregateMetrics";
 import OpenFlowSwitchesStats from "./OpenFlowSwitchesStats/OpenFlowSwitchesStats";
+import SnortAlertsChart from "./SnortAlertsChart/SnortAlertsChart";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import DataCollection from './MonitoringSetup.png'
@@ -112,6 +113,8 @@ const Monitoring = (props) => {
     const [showInfoModal, setShowInfoModal] = useState(false);
     const [openFlowSwitchesOptions, setOpenFlowSwitchesOptions] = useState([]);
     const [selectedOpenFlowSwitch, setSelectedOpenFlowSwitch] = useState(null);
+    const [snortIdsOptions, setSnortIdsOptions] = useState([]);
+    const [selectedSnortIds, setSelectedSnortIds] = useState(null);
     const ip = serverIp
     const port = serverPort
     const alert = useAlert();
@@ -157,6 +160,18 @@ const Monitoring = (props) => {
                 setOpenFlowSwitchesOptions(openFlowSwitchesOptions)
                 if (openFlowSwitchesOptions.length > 0) {
                     setSelectedOpenFlowSwitch(openFlowSwitchesOptions[0])
+                }
+
+                var snortIdsOptions = []
+                snortIdsOptions = Object.keys(response.snort_alert_metrics_per_ids).map((snort_ids_ip, index) => {
+                    return {
+                        value: snort_ids_ip,
+                        label: snort_ids_ip
+                    }
+                })
+                setSnortIdsOptions(snortIdsOptions)
+                if (snortIdsOptions.length > 0) {
+                    setSelectedSnortIds(snortIdsOptions[0])
                 }
             })
             .catch(error => console.log("error:" + error)),
@@ -259,7 +274,15 @@ const Monitoring = (props) => {
 
     const getSnortIdsMetrics = () => {
         if (monitoringData !== null) {
-            return monitoringData.snort_ids_metrics
+            return monitoringData.agg_snort_ids_metrics
+        } else {
+            return null
+        }
+    }
+
+    const getSpecificSnortIdsMetrics = () => {
+        if (monitoringData !== null && selectedSnortIds !== null) {
+            return monitoringData.snort_alert_metrics_per_ids[selectedSnortIds.label]
         } else {
             return null
         }
@@ -340,6 +363,10 @@ const Monitoring = (props) => {
 
     const updateOpenFlowSwitch = (openFlowSwitch) => {
         setSelectedOpenFlowSwitch(openFlowSwitch)
+    }
+
+    const updateSnortIds = (snortIds) => {
+        setSelectedSnortIds(snortIds)
     }
 
     const refresh = () => {
@@ -564,6 +591,23 @@ const Monitoring = (props) => {
                                            aggFlowStats={getAggFlowStats()}
                                            animation={props.animation} animationDuration={props.animationDuration.value}
                                            animationDurationFactor={props.animationDurationFactor}/>
+
+                    <div className="row hostMetricsDropdownRow">
+                        <div className="col-sm-12">
+                            <h5 className="text-center inline-block monitoringHeader">
+                                <SelectSnortIdsDropdownOrSpinner
+                                    loading={props.loadingSelectedEmulationExecution}
+                                    selectedEmulation={props.selectedEmulationExecution.emulation_env_config}
+                                    selectedIds={props.selectedIds}
+                                    snortIdsOptions={props.snortIdsOptions}
+                                />
+                            </h5>
+                        </div>
+                    </div>
+                    <hr/>
+                    <SnortAlertsChart stats={getSpecificSnortIdsMetrics()}
+                                      animation={props.animation} animationDuration={props.animationDuration}
+                                      animationDurationFactor={props.animationDurationFactor}/>
                 </div>
             )
         }
@@ -698,6 +742,38 @@ const Monitoring = (props) => {
         }
     }
 
+    const SelectSnortIdsDropdownOrSpinner = (props) => {
+        if (!props.loading && (props.selectedEmulation === null || props.selectedIds === null)) {
+            return (<></>)
+        }
+        if ((props.loading || props.selectedEmulation === null) || props.selectedIds === null) {
+            return (
+                <Spinner animation="border" role="status" className="dropdownSpinner">
+                    <span className="visually-hidden"></span>
+                </Spinner>)
+        } else {
+            return (
+                <div>
+                    <h4>
+                        IDS alerts from Snort IDS with IP:
+                        <div className="conditionalDist inline-block selectEmulation">
+                            <div className="conditionalDist inline-block" style={{width: "300px"}}>
+                                <Select
+                                    style={{display: 'inline-block', width: "1000px"}}
+                                    value={props.selectedIds}
+                                    defaultValue={props.selectedIds}
+                                    options={props.snortIdsOptions}
+                                    onChange={updateSnortIds}
+                                    placeholder="Select a Snort IDS"
+                                />
+                            </div>
+                        </div>
+                    </h4>
+                </div>
+            )
+        }
+    }
+
 
     useEffect(() => {
         setLoading(true)
@@ -749,6 +825,8 @@ const Monitoring = (props) => {
                                    selectedSwitch={selectedOpenFlowSwitch}
                                    switchesOptions={openFlowSwitchesOptions}
                                    loadingMonitoringData={loadingMonitoringData}
+                                   snortIdsOptions={snortIdsOptions}
+                                   selectedIds={selectedSnortIds}
             />
         </div>
     );
