@@ -67,6 +67,7 @@ class ReadEmulationStatisticsUtil:
             docker_host_stats[c.get_full_name()] = []
             host_metrics[c.get_full_name()] = []
             ossec_host_ids_metrics[c.get_full_name()] = []
+            snort_ids_ip_metrics[c.get_full_name()] = []
 
         host_metrics[emulation_env_config.kafka_config.container.get_full_name()] = []
         docker_host_stats[emulation_env_config.kafka_config.container.get_full_name()] = []
