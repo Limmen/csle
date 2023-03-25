@@ -2,7 +2,7 @@
 \connect csle
 
 -- Try Dropping the database --
-DROP DATABASE csle
+DROP DATABASE csle WITH (FORCE) ;
 
 -- Drop the  CITUS extension --
 DROP EXTENSION citus CASCADE ;
@@ -14,4 +14,4 @@ REVOKE CONNECT ON DATABASE csle FROM public;
 SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'csle';
 
 -- Drop the database --
-DROP DATABASE csle
+DROP DATABASE csle WITH (FORCE);
