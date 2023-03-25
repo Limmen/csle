@@ -1336,11 +1336,14 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE)
                 data_collection_job_json = json.dumps(data_collection_job.to_dict(), indent=4,
                                                       sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} "
-                            f"(config, emulation_name, pid) "
-                            f"VALUES (%s, %s, %s) RETURNING id", (data_collection_job_json,
+                            f"(id, config, emulation_name, pid) "
+                            f"VALUES (%s, %s, %s, %s) RETURNING id", (id, data_collection_job_json,
                                                                   data_collection_job.emulation_env_name,
                                                                   data_collection_job.pid))
                 id_of_new_row = cur.fetchone()[0]
