@@ -104,36 +104,36 @@ class EmulationDefenderObservationState:
         )
         self.docker_stats_consumer_thread = DockerStatsConsumerThread(
             kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
-            kafka_port=self.kafka_config.kafka_port,
+            kafka_port=self.kafka_config.kafka_port_external,
             docker_stats=self.docker_stats)
         self.client_population_consumer_thread = ClientPopulationConsumerThread(
             kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
-            kafka_port=self.kafka_config.kafka_port,
+            kafka_port=self.kafka_config.kafka_port_external,
             client_population_metrics=self.client_population_metrics
         )
         self.aggregated_snort_ids_log_consumer_thread = AggregatedSnortIdsLogConsumerThread(
             kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
-            kafka_port=self.kafka_config.kafka_port,
+            kafka_port=self.kafka_config.kafka_port_external,
             snort_ids_alert_counters=self.snort_ids_alert_counters
         )
         self.aggregated_snort_ids_rule_log_consumer_thread = AggregatedSnortIdsRuleLogConsumerThread(
             kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
-            kafka_port=self.kafka_config.kafka_port,
+            kafka_port=self.kafka_config.kafka_port_external,
             snort_ids_rule_counters=self.snort_ids_rule_counters
         )
         self.aggregated_ossec_ids_log_consumer_thread = AggregatedOSSECIdsLogConsumerThread(
             kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
-            kafka_port=self.kafka_config.kafka_port,
+            kafka_port=self.kafka_config.kafka_port_external,
             ossec_ids_alert_counters=self.ossec_ids_alert_counters
         )
         self.attacker_actions_consumer_thread = AttackerActionsConsumerThread(
             kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
-            kafka_port=self.kafka_config.kafka_port,
+            kafka_port=self.kafka_config.kafka_port_external,
             attacker_actions=self.attacker_actions
         )
         self.defender_actions_consumer_thread = DefenderActionsConsumerThread(
             kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
-            kafka_port=self.kafka_config.kafka_port,
+            kafka_port=self.kafka_config.kafka_port_external,
             defender_actions=self.defender_actions
         )
         self.aggregated_host_metrics_thread.start()

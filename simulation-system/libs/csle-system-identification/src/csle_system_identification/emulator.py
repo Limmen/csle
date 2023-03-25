@@ -106,6 +106,7 @@ class Emulator:
         emulation_traces = []
         collected_steps = 0
         for i in range(repeat_times):
+            intrusion_start_time = -1
             if intrusion_start_p > 0:
                 intrusion_start_time = np.random.geometric(p=intrusion_start_p, size=1)[0]
                 attacker_wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * intrusion_start_time

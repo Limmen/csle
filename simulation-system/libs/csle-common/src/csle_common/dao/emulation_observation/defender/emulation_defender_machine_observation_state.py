@@ -64,16 +64,16 @@ class EmulationDefenderMachineObservationState:
         """
         self.host_metrics_consumer_thread = HostMetricsConsumerThread(
             host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
-            kafka_port=self.kafka_config.kafka_port, host_metrics=self.host_metrics)
+            kafka_port=self.kafka_config.kafka_port_external, host_metrics=self.host_metrics)
         self.docker_stats_consumer_thread = DockerHostStatsConsumerThread(
             host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
-            kafka_port=self.kafka_config.kafka_port, docker_stats=self.docker_stats)
+            kafka_port=self.kafka_config.kafka_port_external, docker_stats=self.docker_stats)
         self.snort_ids_log_consumer_thread = SnortIdsLogConsumerThread(
             host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
-            kafka_port=self.kafka_config.kafka_port, snort_ids_alert_counters=self.snort_ids_ip_alert_counters)
+            kafka_port=self.kafka_config.kafka_port_external, snort_ids_alert_counters=self.snort_ids_ip_alert_counters)
         self.ossec_ids_log_consumer_thread = OSSECIdsLogConsumerThread(
             host_ip=self.ips[0], kafka_server_ip=self.kafka_config.container.docker_gw_bridge_ip,
-            kafka_port=self.kafka_config.kafka_port, ossec_ids_alert_counters=self.ossec_ids_alert_counters)
+            kafka_port=self.kafka_config.kafka_port_external, ossec_ids_alert_counters=self.ossec_ids_alert_counters)
         self.host_metrics_consumer_thread.start()
         self.docker_stats_consumer_thread.start()
         self.snort_ids_log_consumer_thread.start()
