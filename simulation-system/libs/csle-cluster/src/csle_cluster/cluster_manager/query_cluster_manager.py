@@ -4116,7 +4116,7 @@ def get_cluster_manager_logs(
 def get_execution_time_series_data(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
         emulation: str, ip_first_octet: int, minutes: int,
-        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
         -> csle_cluster.cluster_manager.cluster_manager_pb2.EmulationMetricsTimeSeriesDTO:
     """
     Fetches the logs of the cluster manager on a given physical node
