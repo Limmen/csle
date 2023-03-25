@@ -386,9 +386,13 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns on distributed tables properly
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_TRACES_TABLE)
                 config_json_str = json.dumps(emulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
-                cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_TRACES_TABLE} (emulation_name, trace) "
-                            f"VALUES (%s, %s) RETURNING id", (emulation_trace.emulation_name, config_json_str))
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_TRACES_TABLE} "
+                            f"(id, emulation_name, trace) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (id, emulation_trace.emulation_name, config_json_str))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Emulation trace for "
