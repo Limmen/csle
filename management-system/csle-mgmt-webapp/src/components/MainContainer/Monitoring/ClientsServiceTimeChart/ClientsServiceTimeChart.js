@@ -1,5 +1,5 @@
 import React from 'react';
-import './ClientsArrivalRateChart.css';
+import './ClientsServiceTimeChart.css';
 import {
     CartesianGrid,
     Label,
@@ -14,7 +14,7 @@ import {
 /**
  * Component containing a plot showing the client arrivals over time
  */
-const ClientsArrivalRateChart = React.memo((props) => {
+const ClientsServiceTimeChart = React.memo((props) => {
         const width = 500
         const height = 200
         const margin = {
@@ -28,7 +28,7 @@ const ClientsArrivalRateChart = React.memo((props) => {
             const data = props.stats.map((client_metrics, index) => {
                 return {
                     "t": (index + 1),
-                    "Clients arrival rate": parseInt(client_metrics.rate)
+                    "Clients avg service time": parseInt(client_metrics.service_time)
                 }
             })
             var domain = [0, Math.max(1, data.length)]
@@ -46,7 +46,7 @@ const ClientsArrivalRateChart = React.memo((props) => {
                             <Label value="Time-step t" offset={-20} position="insideBottom" className="largeFont"/>
                         </XAxis>
                         <YAxis type="number">
-                            <Label angle={270} value="Clients arrival rate" offset={0} position="insideLeft"
+                            <Label angle={270} value="Clients average service time" offset={0} position="insideLeft"
                                    className="largeFont"
                                    dy={50}/>
                         </YAxis>
@@ -54,7 +54,7 @@ const ClientsArrivalRateChart = React.memo((props) => {
                         <Legend verticalAlign="top" wrapperStyle={{position: 'relative', fontSize: '15px'}}
                                 className="largeFont"/>
                         <Line isAnimationActive={props.animation} animation={props.animation} type="monotone"
-                              dataKey="Clients arrival rate"
+                              dataKey="Clients avg service time"
                               stroke="#8884d8" addDot={false} activeDot={{r: 8}}
                               animationEasing={'linear'}
                               animationDuration={((1 - (props.animationDuration / 100)) * props.animationDurationFactor)}/>
@@ -70,8 +70,8 @@ const ClientsArrivalRateChart = React.memo((props) => {
     }
 )
 
-ClientsArrivalRateChart.propTypes = {};
+ClientsServiceTimeChart.propTypes = {};
 
-ClientsArrivalRateChart.defaultProps = {};
+ClientsServiceTimeChart.defaultProps = {};
 
-export default ClientsArrivalRateChart;
+export default ClientsServiceTimeChart;

@@ -268,7 +268,7 @@ class NorthBoundRestAPIController(ControllerBase):
         try:
             kafka_conf = req.json if req.body else {}
         except ValueError:
-            raise Response(status=collector_constants.HTTP.BAD_REQUEST_RESPONSE_CODE)
+            return Response(status=collector_constants.HTTP.BAD_REQUEST_RESPONSE_CODE)
         if collector_constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY in kafka_conf \
                 and collector_constants.RYU.TIME_STEP_LEN_SECONDS in kafka_conf:
             self.controller_app.kafka_conf = {
