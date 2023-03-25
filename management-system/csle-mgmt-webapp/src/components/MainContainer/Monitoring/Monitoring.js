@@ -144,6 +144,8 @@ const Monitoring = (props) => {
                     return
                 }
                 setMonitoringData(response)
+                console.log(response)
+
                 setLoadingMonitoringData(false)
                 var openFlowSwitchesOptions = []
                 openFlowSwitchesOptions = Object.keys(response.openflow_port_avg_metrics_per_switch).map((dpid, index) => {
