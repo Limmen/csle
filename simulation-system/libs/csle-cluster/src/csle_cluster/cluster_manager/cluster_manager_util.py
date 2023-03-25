@@ -2425,10 +2425,10 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.get_empty_snort_ids_alert_counters_dto()
         else:
             return cluster_manager_pb2.SnortIdsAlertCountersDTO(
-                priority_alerts=snort_ids_alert_counters.priority_alerts,
-                class_alerts=snort_ids_alert_counters.class_alerts,
-                severe_alerts=snort_ids_alert_counters.severe_alerts,
-                warning_alerts=snort_ids_alert_counters.warning_alerts,
+                priority_alerts=list(map(lambda x: int(x), snort_ids_alert_counters.priority_alerts)),
+                class_alerts=list(map(lambda x: int(x), snort_ids_alert_counters.class_alerts)),
+                severe_alerts=int(snort_ids_alert_counters.severe_alerts),
+                warning_alerts=int(snort_ids_alert_counters.warning_alerts),
                 alerts_weighted_by_priority=snort_ids_alert_counters.alerts_weighted_by_priority,
                 ip=snort_ids_alert_counters.ip, ts=snort_ids_alert_counters.ts
             )

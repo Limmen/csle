@@ -28,9 +28,9 @@ class SnortIdsRuleCounters:
         """
         for k,v in alert_counters.rule_alerts.items():
             if k not in self.rule_alerts:
-                self.rule_alerts[k] = alert_counters.rule_alerts[k]
+                self.rule_alerts[k] = int(alert_counters.rule_alerts[k])
             else:
-                self.rule_alerts[k] = self.rule_alerts[k] + alert_counters.rule_alerts[k]
+                self.rule_alerts[k] = int(self.rule_alerts[k] + alert_counters.rule_alerts[k])
 
     def count(self, alerts: List[SnortIdsFastLogAlert]) -> None:
         """
