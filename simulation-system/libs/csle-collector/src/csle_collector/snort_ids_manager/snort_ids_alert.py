@@ -8,17 +8,24 @@ class SnortIdsFastLogAlert:
     DTO representing an alert entry in the fast log of Snort
     """
 
-    def __init__(self, timestamp: float, priority: int, class_id: int) -> None:
+    def __init__(self, timestamp: float, priority: int, class_id: int, source_ip: str, target_ip: str, rule_id :str) \
+            -> None:
         """
         Initializes the DTO
 
         :param timestamp: the timestamp of the record
         :param priority: the priority of the record
         :param class_id: the class id of the record
+        :param source_ip: the source ip of the record
+        :param target_ip: the target ip of the record
+        :param rule_id: the id of the Snort rule relating to the record
         """
         self.timestamp = timestamp
         self.priority = priority
         self.class_id = class_id
+        self.source_ip = source_ip
+        self.target_ip = target_ip
+        self.rule_id = rule_id
 
 
 class SnortIdsAlert:
@@ -186,5 +193,21 @@ class SnortIdsAlert:
                     ts = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
             else:
                 ts = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
-        fast_log_alert = SnortIdsFastLogAlert(timestamp=ts, priority=priority, class_id=alert_class_id)
+
+        source_ip = ""
+        target_ip = ""
+        ips_match = re.findall(constants.SNORT_IDS_ROUTER.IPS_REGEX, fast_log_str)
+        if len(ips_match) > 0:
+            ips = ips_match[0].replace(" ", "").split("->")
+            source_ip = ips[0]
+            target_ip = ips[1]
+
+        rule_id = ""
+        rule_match = re.findall(constants.SNORT_IDS_ROUTER.RULE_ID_REGEX, fast_log_str)
+        if len(rule_match) > 0:
+            rule_id = rule_match[0].replace("[", "").replace(":", "-")
+
+
+        fast_log_alert = SnortIdsFastLogAlert(timestamp=ts, priority=priority, class_id=alert_class_id,
+                                              source_ip=source_ip, target_ip=target_ip, rule_id=rule_id)
         return fast_log_alert

@@ -416,6 +416,8 @@ class SNORT_IDS_ROUTER:
     TAIL_FAST_LOG_COMMAND = "sudo tail -" + str(str(MAX_ALERTS))
     TAIL_ALERTS_LATEST_COMMAND = "sudo tail -1"
     PRIORITY_REGEX = re.compile(r"Priority: \d")
+    IPS_REGEX = re.compile(r"\d{1,3}.\d{1,3}\.\d{1,3}\.\d{1,3} -> \d{1,3}.\d{1,3}\.\d{1,3}\.\d{1,3}")
+    RULE_ID_REGEX = re.compile(r"\[\d{1,3}\:\d{1,3}")
     CLASSIFICATION_REGEX = re.compile(r"(?<=Classification: )(.*?)(?=])")
     SNORT_SEVERE_ALERT_PRIORITY_THRESHOLD = 2
     SNORT_ALERT_IDS_ID = {}
@@ -536,6 +538,8 @@ class KAFKA_CONFIG:
     SUFFIX = "_1"
     CLIENT_POPULATION_TOPIC_NAME = "client_population"
     SNORT_IDS_LOG_TOPIC_NAME = "snort_ids_log"
+    SNORT_IDS_RULE_LOG_TOPIC_NAME = "snort_ids_rule_log"
+    SNORT_IDS_IP_LOG_TOPIC_NAME = "snort_ids_ip_log"
     OSSEC_IDS_LOG_TOPIC_NAME = "ossec_ids_log"
     HOST_METRICS_TOPIC_NAME = "host_metrics"
     DOCKER_STATS_TOPIC_NAME = "docker_stats"
@@ -571,6 +575,20 @@ class KAFKA_CONFIG:
                                       "connection_attempt_alerts", "attacks_alerts", "adduser_alerts", "sshd_alerts",
                                       "ids_alerts", "firewall_alerts", "squid_alerts",
                                       "apache_alerts", "syslog_alerts"]
+    SNORT_IDS_RULE_LOG_ATTRIBUTES = ["timestamp", "ip", "alert_rule_id", "num_alerts"]
+    SNORT_IDS_IP_LOG_ATTRIBUTES = ["timestamp", "ip", "alert_ip", "attempted-admin", "attempted-user",
+                                   "inappropriate-content", "policy-violation", "shellcode-detect",
+                                   "successful-admin", "successful-user", "trojan-activity", "unsuccessful-user",
+                                   "web-application-attack", "attempted-dos", "attempted-recon", "bad-unknown",
+                                   "default-login-attempt", "denial-of-service", "misc-attack",
+                                   "non-standard-protocol", "rpc-portmap-decode", "successful-dos",
+                                   "successful-recon-largescale", "successful-recon-limited",
+                                   "suspicious-filename-detect", "suspicious-login", "system-call-detect",
+                                   "unusual-client-port-connection", "web-application-activity", "icmp-event",
+                                   "misc-activity", "network-scan", "not-suspicious", "protocol-command-decode",
+                                   "string-detect", "unknown", "tcp-connection", "priority_1", "priority_2",
+                                   "priority_3", "priority_4", "alerts_weighted_by_priority", "total_alerts",
+                                   "severe_alerts", "warning_alerts"]
     HOST_METRICS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "num_logged_in_users", "num_failed_login_attempts",
                                      "num_open_connections", "num_login_events", "num_processes", "num_users"]
     DOCKER_STATS_TOPIC_ATTRIBUTES = ["timestamp", "ip", "cpu_percent", "mem_current", "mem_total",
