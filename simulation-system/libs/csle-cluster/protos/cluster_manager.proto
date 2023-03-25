@@ -278,8 +278,8 @@ message EmulationMetricsTimeSeriesDTO {
   repeated AggFlowStatisticDTO agg_openflow_flow_stats = 21;
   repeated SnortIdsRuleCountersDTO snort_ids_rule_metrics = 22;
   repeated SnortIdsIpAlertCountersDict snort_ids_ip_metrics = 23;
-  repeated SnortIdsAlertCountersDict snort_rule_metrics_per_ids = 24;
-  repeated SnortIdsRuleCountersDict snort_alert_metrics_per_ids = 25;
+  repeated SnortIdsRuleCountersDict snort_rule_metrics_per_ids = 24;
+  repeated SnortIdsAlertCountersDict snort_alert_metrics_per_ids = 25;
 }
 
 // Dict which maps a string key to a AvgPortStatisticDTO
