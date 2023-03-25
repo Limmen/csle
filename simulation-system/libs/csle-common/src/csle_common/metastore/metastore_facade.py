@@ -411,13 +411,15 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}")
+                id=1
                 ids = cur.fetchall()
                 print(ids)
                 config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO "
                             f"{constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
-                            f"(emulation_name, statistics) "
-                            f"VALUES (%s, %s) RETURNING id", (emulation_statistics.emulation_name, config_json_str))
+                            f"(id, emulation_name, statistics) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (id, emulation_statistics.emulation_name,
+                                                                  config_json_str))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Statistics for emulation "
