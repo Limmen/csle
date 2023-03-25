@@ -410,10 +410,13 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                # Need to manually set the ID since CITUS does not handle serial columns on distributed tables properly
                 cur.execute(f"SELECT id FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}")
                 id=1
                 ids = cur.fetchall()
-                print(ids)
+                if len(ids) > 0:
+                    id = max(list(map(lambda x: x[0], ids))) + 1
+                
                 config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO "
                             f"{constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
