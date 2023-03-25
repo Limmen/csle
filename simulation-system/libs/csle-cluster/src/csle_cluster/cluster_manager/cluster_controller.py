@@ -3666,16 +3666,6 @@ class ClusterController:
             execution=execution)
 
         current_step += 1
-        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Installing python libraries --")
-        for ip in physical_servers:
-            Logger.__call__().get_logger().info(f"Installing libraries on containers in "
-                                                f"emulation {execution.emulation_env_config.name} "
-                                                f"deployed on server: {ip}")
-            ClusterController.install_libraries(
-                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
-
-        current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Start Spark instances --")
         for ip in physical_servers:
             Logger.__call__().get_logger().info(f"-- Starting spark instances of"
@@ -3684,6 +3674,16 @@ class ClusterController:
             ClusterController.start_spark_servers(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
+
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Installing python libraries --")
+        for ip in physical_servers:
+            Logger.__call__().get_logger().info(f"Installing libraries on containers in "
+                                                f"emulation {execution.emulation_env_config.name} "
+                                                f"deployed on server: {ip}")
+            ClusterController.install_libraries(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
 
         current_step += 1
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Apply kafka config --")

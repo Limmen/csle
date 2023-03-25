@@ -8,7 +8,7 @@ import Modal from 'react-bootstrap/Modal'
 import ContainerMetrics from "./ContainerMetrics/ContainerMetrics";
 import AggregateMetrics from "./AggregateMetrics/AggregateMetrics";
 import OpenFlowSwitchesStats from "./OpenFlowSwitchesStats/OpenFlowSwitchesStats";
-import SnortAlertsChart from "./SnortAlertsChart/SnortAlertsChart";
+import SnortMetrics from "./SnortMetrics/SnortMetrics";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import DataCollection from './MonitoringSetup.png'
@@ -605,9 +605,13 @@ const Monitoring = (props) => {
                         </div>
                     </div>
                     <hr/>
-                    <SnortAlertsChart stats={getSpecificSnortIdsMetrics()}
-                                      animation={props.animation} animationDuration={props.animationDuration}
-                                      animationDurationFactor={props.animationDurationFactor}/>
+                    <SnortMetrics key={`snort-${props.animationDuration.value}`}
+                                      loading={props.loadingSelectedEmulationExecution}
+                                      animation={props.animation}
+                                      animationDuration={props.animationDuration.value}
+                                      animationDurationFactor={props.animationDurationFactor}
+                                      snortIdsMetrics={getSpecificSnortIdsMetrics()}
+                    />
                 </div>
             )
         }
