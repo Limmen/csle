@@ -527,7 +527,7 @@ class SSH:
     SERVICE_NAME = "ssh"
     DEFAULT_PORT = 22
     DIRECT_CHANNEL = "direct-tcpip"
-    MAX_FILE_READ_BYTES = 500000000
+    MAX_FILE_READ_BYTES = 50000
 
 
 class TELNET:

@@ -31,7 +31,11 @@ message StartSnortIdsMonitorMsg {
 message StopSnortIdsMsg {}
 
 // Message that the client sends to start the Snort IDS
-message StartSnortIdsMsg {}
+message StartSnortIdsMsg {
+  string ingress_interface = 1;
+  string egress_interface = 2;
+  string subnetmask = 3;
+}
 
 // Message that the client sends to get the status of the SnortIdsMonitor
 message GetSnortIdsMonitorStatusMsg {}

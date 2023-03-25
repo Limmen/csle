@@ -2076,8 +2076,8 @@ class ClusterManagerUtil:
         else:
             return cluster_manager_pb2.ClientPopulationMetricsDTO(
                 ip=client_population_metrics.ip, ts=client_population_metrics.ts,
-                num_clients=client_population_metrics.num_clients, rate=client_population_metrics.rate
-            )
+                num_clients=client_population_metrics.num_clients, rate=client_population_metrics.rate,
+                service_time=client_population_metrics.service_time)
 
     @staticmethod
     def convert_client_population_metrics_dto_reverse(
@@ -2094,7 +2094,8 @@ class ClusterManagerUtil:
         else:
             return ClientPopulationMetrics(
                 ip=client_population_metrics_dto.ip, ts=client_population_metrics_dto.ts,
-                num_clients=client_population_metrics_dto.num_clients, rate=client_population_metrics_dto.rate
+                num_clients=client_population_metrics_dto.num_clients, rate=client_population_metrics_dto.rate,
+                service_time=client_population_metrics_dto.service_time
             )
 
     @staticmethod
@@ -2102,7 +2103,7 @@ class ClusterManagerUtil:
         """
         :return: an empty ClientPopulationMetricsDTO
         """
-        return cluster_manager_pb2.ClientPopulationMetricsDTO(ip="", ts=-1., num_clients=0, rate=0.)
+        return cluster_manager_pb2.ClientPopulationMetricsDTO(ip="", ts=-1., num_clients=0, rate=0., service_time=0.)
 
     @staticmethod
     def client_population_metrics_dto_to_dict(
@@ -2118,6 +2119,7 @@ class ClusterManagerUtil:
         d["ts"] = client_population_metrics_dto.ts
         d["num_clients"] = client_population_metrics_dto.num_clients
         d["rate"] = client_population_metrics_dto.rate
+        d["service_time"] = client_population_metrics_dto.service_time
         return d
 
     @staticmethod

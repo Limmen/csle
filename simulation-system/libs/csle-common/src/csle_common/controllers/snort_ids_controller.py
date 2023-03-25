@@ -11,7 +11,6 @@ import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 import csle_collector.snort_ids_manager.query_snort_ids_manager
 import csle_collector.snort_ids_manager.snort_ids_manager_util
 from csle_common.util.emulation_util import EmulationUtil
-from csle_common.logging.log import Logger
 
 
 class SnortIDSController:
@@ -25,7 +24,7 @@ class SnortIDSController:
         """
         Utility function for starting the Snort IDSes
 
-        :param emulation_config: the emulation env configuration
+        :param emulation_env_config: the emulation env configuration
         :param physical_server_ip: the ip of the phsyical server
         :param logger: the logger to use for logging
         :return: None
@@ -37,15 +36,17 @@ class SnortIDSController:
                 if ids_image in c.name:
                     logger.info(f"Starting the Snort IDS on IP: {c.docker_gw_bridge_ip}")
                     SnortIDSController.start_snort_ids(emulation_env_config=emulation_env_config,
-                                                       ip=c.docker_gw_bridge_ip)
+                                                       ip=c.docker_gw_bridge_ip, logger=logger)
 
     @staticmethod
-    def stop_snort_idses(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def stop_snort_idses(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                         logger: logging.Logger) -> None:
         """
         Utility function for stopping the Snort IDSes
 
-        :param emulation_config: the emulation env configuration
+        :param emulation_env_config: the emulation env configuration
         :param physical_server_ip: the ip of the physical server
+        :param logger: the logger to use for logging
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
@@ -54,45 +55,53 @@ class SnortIDSController:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
                     SnortIDSController.stop_snort_ids(emulation_env_config=emulation_env_config,
-                                                      ip=c.docker_gw_bridge_ip)
+                                                      ip=c.docker_gw_bridge_ip, logger=logger)
 
     @staticmethod
-    def start_snort_ids(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def start_snort_ids(emulation_env_config: EmulationEnvConfig, ip: str, logger: logging.Logger) -> None:
         """
         Utility function for starting the Snort IDS on a specific IP
 
-        :param emulation_config: the emulation env configuration
+        :param emulation_env_config: the emulation env configuration
         :param ip: the ip of the container
+        :param logger: the logger to use for logging
         :return: None
         """
-        SnortIDSController.start_snort_manager(emulation_env_config=emulation_env_config, ip=ip)
+        SnortIDSController.start_snort_manager(emulation_env_config=emulation_env_config, ip=ip, logger=logger)
         ids_monitor_dto = SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port(
             port=emulation_env_config.snort_ids_manager_config.snort_ids_manager_port, ip=ip)
         if not ids_monitor_dto.snort_ids_running:
-            Logger.__call__().get_logger().info(
-                f"Snort IDS is not running on {ip}, starting it.")
+            logger.info(f"Snort IDS is not running on {ip}, starting it.")
+            subnetmask = f"{emulation_env_config.execution_id}.{emulation_env_config.level}" \
+                          f"{constants.CSLE.CSLE_LEVEL_SUBNETMASK_SUFFIX}"
+            ingress_interface = constants.NETWORKING.ETH2
+            egress_interface = constants.NETWORKING.ETH0
+            logger.info(f"Subnetmask: {subnetmask}, ingress interface: {ingress_interface}, "
+                        f"egress interface: {egress_interface}")
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{ip}:'
                     f'{emulation_env_config.snort_ids_manager_config.snort_ids_manager_port}') as channel:
                 stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
-                csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids(stub=stub)
+                csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids(
+                    stub=stub, ingress_interface=ingress_interface, egress_interface=egress_interface,
+                    subnetmask=subnetmask)
 
     @staticmethod
-    def stop_snort_ids(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def stop_snort_ids(emulation_env_config: EmulationEnvConfig, ip: str, logger: logging.Logger) -> None:
         """
         Utility function for stopping the Snort IDS on a specific IP
 
-        :param emulation_config: the emulation env configuration
+        :param emulation_env_config: the emulation env configuration
         :param ip: the ip of the container
+        :param logger: the logger to use for logging
         :return: None
         """
-        SnortIDSController.start_snort_manager(emulation_env_config=emulation_env_config, ip=ip)
+        SnortIDSController.start_snort_manager(emulation_env_config=emulation_env_config, ip=ip, logger=logger)
         ids_monitor_dto = SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port(
             port=emulation_env_config.snort_ids_manager_config.snort_ids_manager_port, ip=ip)
         if ids_monitor_dto.snort_ids_running:
-            Logger.__call__().get_logger().info(
-                f"Snort IDS is running on {ip}, stopping it.")
+            logger.info(f"Snort IDS is running on {ip}, stopping it.")
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{ip}:'
@@ -101,12 +110,14 @@ class SnortIDSController:
                 csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids(stub=stub)
 
     @staticmethod
-    def start_snort_managers(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def start_snort_managers(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                             logger: logging.Logger) -> None:
         """
         Utility function for starting snort IDS managers
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the physical server ip
+        :param logger: the logger to use for logging
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
@@ -115,15 +126,16 @@ class SnortIDSController:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
                     SnortIDSController.start_snort_manager(emulation_env_config=emulation_env_config,
-                                                           ip=c.docker_gw_bridge_ip)
+                                                           ip=c.docker_gw_bridge_ip, logger=logger)
 
     @staticmethod
-    def start_snort_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def start_snort_manager(emulation_env_config: EmulationEnvConfig, ip: str, logger: logging.Logger) -> None:
         """
         Utility function for starting the snort IDS manager on a specific IP
 
         :param emulation_env_config: the emulation env config
         :param ip: IP of the container
+        :param logger: the logger to use for logging
         :return: None
         """
         # Connect
@@ -135,7 +147,7 @@ class SnortIDSController:
         o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=emulation_env_config.get_connection(ip=ip))
 
         if constants.COMMANDS.SEARCH_SNORT_IDS_MANAGER not in str(o):
-            Logger.__call__().get_logger().info(f"Starting Snort IDS manager on node {ip}")
+            logger.info(f"Starting Snort IDS manager on node {ip}")
 
             # Stop old background job if running
             cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
@@ -154,12 +166,14 @@ class SnortIDSController:
             time.sleep(2)
 
     @staticmethod
-    def stop_snort_managers(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def stop_snort_managers(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                            logger: logging.Logger) -> None:
         """
         Utility function for stopping snort IDS managers
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the physical server ip
+        :param logger: the logger to use for logging
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
@@ -168,20 +182,21 @@ class SnortIDSController:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
                     SnortIDSController.stop_snort_manager(emulation_env_config=emulation_env_config,
-                                                          ip=c.docker_gw_bridge_ip)
+                                                          ip=c.docker_gw_bridge_ip, logger=logger)
 
     @staticmethod
-    def stop_snort_manager(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def stop_snort_manager(emulation_env_config: EmulationEnvConfig, ip: str, logger: logging.Logger) -> None:
         """
         Utility function for stopping the snort IDS manager on a specific IP
 
         :param emulation_env_config: the emulation env config
         :param ip: the IP of the container
+        :param logger: the logger to use for logging
         :return: None
         """
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=ip)
-        Logger.__call__().get_logger().info(f"Stopping Snort IDS manager on node {ip}")
+        logger.info(f"Stopping Snort IDS manager on node {ip}")
 
         cmd = (constants.COMMANDS.SUDO + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PKILL +
                constants.COMMANDS.SPACE_DELIM + constants.TRAFFIC_COMMANDS.SNORT_IDS_MANAGER_FILE_NAME)
@@ -208,25 +223,26 @@ class SnortIDSController:
                 if ids_image in c.name:
                     logger.info(f"Starting Snort IDS monitor thread on IP: {c.docker_gw_bridge_ip}")
                     SnortIDSController.start_snort_idses_monitor_thread(emulation_env_config=emulation_env_config,
-                                                                        ip=c.docker_gw_bridge_ip)
+                                                                        ip=c.docker_gw_bridge_ip, logger=logger)
 
     @staticmethod
-    def start_snort_idses_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def start_snort_idses_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str,
+                                         logger: logging.Logger) -> None:
         """
         A method that sends a request to the SnortIDSManager on a specific container that runs
         an IDS to start the IDS manager and the monitor thread
 
         :param emulation_env_config: the emulation env config
         :param ip: the ip of the container
+        :param logger: the logger to use for logging
         :return: None
         """
-        SnortIDSController.start_snort_manager(emulation_env_config=emulation_env_config, ip=ip)
+        SnortIDSController.start_snort_manager(emulation_env_config=emulation_env_config, ip=ip, logger=logger)
 
         ids_monitor_dto = SnortIDSController.get_snort_idses_monitor_threads_statuses_by_ip_and_port(
             port=emulation_env_config.snort_ids_manager_config.snort_ids_manager_port, ip=ip)
         if not ids_monitor_dto.monitor_running:
-            Logger.__call__().get_logger().info(
-                f"Snort IDS monitor thread is not running on {ip}, starting it.")
+            logger.info(f"Snort IDS monitor thread is not running on {ip}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{ip}:'
@@ -239,13 +255,15 @@ class SnortIDSController:
                     time_step_len_seconds=emulation_env_config.snort_ids_manager_config.time_step_len_seconds)
 
     @staticmethod
-    def stop_snort_idses_monitor_threads(emulation_env_config: EmulationEnvConfig, physical_server_ip: str) -> None:
+    def stop_snort_idses_monitor_threads(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
+                                         logger: logging.Logger) -> None:
         """
         A method that sends a request to the SnortIDSManager on every container that runs
         an IDS to stop the monitor threads
 
         :param emulation_env_config: the emulation env config
         :param physical_server_ip: the physical server ip
+        :param logger: the logger to use for logging
         :return: None
         """
         for c in emulation_env_config.containers_config.containers:
@@ -254,31 +272,32 @@ class SnortIDSController:
             for ids_image in constants.CONTAINER_IMAGES.SNORT_IDS_IMAGES:
                 if ids_image in c.name:
                     SnortIDSController.stop_snort_idses_monitor_thread(emulation_env_config=emulation_env_config,
-                                                                       ip=c.docker_gw_bridge_ip)
+                                                                       ip=c.docker_gw_bridge_ip, logger=logger)
 
     @staticmethod
-    def stop_snort_idses_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str) -> None:
+    def stop_snort_idses_monitor_thread(emulation_env_config: EmulationEnvConfig, ip: str,
+                                        logger: logging.Logger) -> None:
         """
         A method that sends a request to the SnortIDSManager on a specific container that runs
         an IDS to stop the monitor threads
 
         :param emulation_env_config: the emulation env config
         :param ip: the IP of the container
+        :param logger: the logger to use for logging
         :return: None
         """
-        SnortIDSController.start_snort_manager(emulation_env_config=emulation_env_config, ip=ip)
+        SnortIDSController.start_snort_manager(emulation_env_config=emulation_env_config, ip=ip, logger=logger)
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{ip}:'
                 f'{emulation_env_config.snort_ids_manager_config.snort_ids_manager_port}') as channel:
             stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
-            Logger.__call__().get_logger().info(
-                f"Stopping the Snort IDS monitor thread on {ip}.")
+            logger.info(f"Stopping the Snort IDS monitor thread on {ip}.")
             csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids_monitor(stub=stub)
 
     @staticmethod
     def get_snort_idses_monitor_threads_statuses(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
-                                                 start_if_stopped: bool = True) -> \
+                                                 logger: logging.Logger, start_if_stopped: bool = True) -> \
             List[csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO]:
         """
         A method that sends a request to the SnortIDSManager on every container to get the status of the
@@ -287,12 +306,14 @@ class SnortIDSController:
         :param emulation_env_config: the emulation config
         :param start_if_stopped: whether to start the IDS monitor if it is stopped
         :param physical_server_ip: the physical server IP
+        :param logger: the logger to use for logging
         :return: List of monitor thread statuses
         """
         statuses = []
         if start_if_stopped:
             SnortIDSController.start_snort_managers(emulation_env_config=emulation_env_config,
-                                                    physical_server_ip=physical_server_ip)
+                                                    physical_server_ip=physical_server_ip,
+                                                    logger=logger)
 
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:

@@ -3534,7 +3534,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         SnortIDSController.stop_snort_idses(
-            emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip())
+            emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip(),
+            logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def getSnortIdsMonitorThreadStatuses(
@@ -3554,17 +3555,16 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                                                             emulation_name=request.emulation)
         if execution is not None:
             status_dtos = SnortIDSController.get_snort_idses_monitor_threads_statuses(
-                emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip())
+                emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip(),
+                logger=logging.getLogger())
             status_dtos = list(
                 map(lambda x: ClusterManagerUtil.convert_snort_ids_monitor_dto_to_snort_ids_status_dto(x),
                     status_dtos))
             return csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsMonitorThreadStatusesDTO(
-                snortIDSStatuses=status_dtos
-            )
+                snortIDSStatuses=status_dtos)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsMonitorThreadStatusesDTO(
-                snortIDSStatuses=[]
-            )
+                snortIDSStatuses=[])
 
     def stopSnortIdsesMonitorThreads(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopSnortIdsesMonitorThreadsMsg,
@@ -3583,7 +3583,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         SnortIDSController.stop_snort_idses_monitor_threads(
-            emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip())
+            emulation_env_config=execution.emulation_env_config, physical_server_ip=GeneralUtil.get_host_ip(),
+            logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def stopSnortIds(
@@ -3605,7 +3606,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
         if container_config is not None:
             SnortIDSController.stop_snort_ids(emulation_env_config=execution.emulation_env_config,
-                                              ip=container_config.docker_gw_bridge_ip)
+                                              ip=container_config.docker_gw_bridge_ip,
+                                              logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3629,7 +3631,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
         if container_config is not None:
             SnortIDSController.stop_snort_idses_monitor_thread(emulation_env_config=execution.emulation_env_config,
-                                                               ip=container_config.docker_gw_bridge_ip)
+                                                               ip=container_config.docker_gw_bridge_ip,
+                                                               logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3653,7 +3656,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
         if container_config is not None:
             SnortIDSController.start_snort_ids(emulation_env_config=execution.emulation_env_config,
-                                               ip=container_config.docker_gw_bridge_ip)
+                                               ip=container_config.docker_gw_bridge_ip,
+                                               logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3677,7 +3681,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
         if container_config is not None:
             SnortIDSController.start_snort_idses_monitor_thread(emulation_env_config=execution.emulation_env_config,
-                                                                ip=container_config.docker_gw_bridge_ip)
+                                                                ip=container_config.docker_gw_bridge_ip,
+                                                                logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3720,7 +3725,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         SnortIDSController.start_snort_managers(emulation_env_config=execution.emulation_env_config,
-                                                physical_server_ip=GeneralUtil.get_host_ip())
+                                                physical_server_ip=GeneralUtil.get_host_ip(),
+                                                logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def stopSnortIdsManagers(
@@ -3740,7 +3746,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         SnortIDSController.stop_snort_managers(emulation_env_config=execution.emulation_env_config,
-                                               physical_server_ip=GeneralUtil.get_host_ip())
+                                               physical_server_ip=GeneralUtil.get_host_ip(),
+                                               logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def startSnortIdsManager(
@@ -3762,7 +3769,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
         if container_config is not None:
             SnortIDSController.start_snort_manager(emulation_env_config=execution.emulation_env_config,
-                                                   ip=container_config.docker_gw_bridge_ip)
+                                                   ip=container_config.docker_gw_bridge_ip,
+                                                   logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3786,7 +3794,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
         if container_config is not None:
             SnortIDSController.stop_snort_manager(emulation_env_config=execution.emulation_env_config,
-                                                  ip=container_config.docker_gw_bridge_ip)
+                                                  ip=container_config.docker_gw_bridge_ip,
+                                                  logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -3808,7 +3817,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         SnortIDSController.stop_snort_idses_monitor_threads(emulation_env_config=execution.emulation_env_config,
-                                                            physical_server_ip=GeneralUtil.get_host_ip())
+                                                            physical_server_ip=GeneralUtil.get_host_ip(),
+                                                            logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def getSnortIdsManagersInfo(

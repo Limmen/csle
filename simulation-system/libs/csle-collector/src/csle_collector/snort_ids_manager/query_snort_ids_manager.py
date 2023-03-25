@@ -79,17 +79,22 @@ def stop_snort_ids(
 
 def start_snort_ids(
         stub: csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub,
-        timeout=constants.GRPC.TIMEOUT_SECONDS) \
+        ingress_interface: str, egress_interface: str, subnetmask: str, timeout=constants.GRPC.TIMEOUT_SECONDS) \
         -> csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
     """
     Sends a request to the IDS manager to start the Snort IDS
 
     :param stub: the stub to send the remote gRPC to the server
     :param timeout: the GRPC timeout (seconds)
+    :param ingress_interface: the ingress interface that Snort will listen to
+    :param egress_interface: the egress interface that Snort will listen to
+    :param subnetmask: the subnetmask that Snort will listen to
     :return: an IdsMonitorDTO describing the status of the IDS and its monitor thread
     """
     start_ids_msg = \
-        csle_collector.snort_ids_manager.snort_ids_manager_pb2.StartSnortIdsMsg()
+        csle_collector.snort_ids_manager.snort_ids_manager_pb2.StartSnortIdsMsg(
+            ingress_interface=ingress_interface, egress_interface=egress_interface, subnetmask=subnetmask
+        )
     ids_monitor_dto = stub.startSnortIds(start_ids_msg, timeout=timeout)
     return ids_monitor_dto
 

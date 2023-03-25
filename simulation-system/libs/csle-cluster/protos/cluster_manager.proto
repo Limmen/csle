@@ -497,6 +497,7 @@ message ClientPopulationMetricsDTO {
   float ts = 2;
   int32 num_clients = 3;
   float rate = 4;
+  float service_time = 5;
 }
 
 // Message that the client sends to get the flask logs

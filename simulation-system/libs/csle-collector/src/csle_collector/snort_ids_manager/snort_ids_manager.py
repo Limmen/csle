@@ -146,19 +146,23 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         :param context: the gRPC context
         :return: a DTO with the status of the IDS and its monitor thread
         """
-        logging.info("Starting the SnortIDS")
+        logging.info(f"Starting the SnortIDS, ingress interface: {request.ingress_interface}, "
+                     f"egress interface: {request.egress_interface}, subnetmask: {request.subnetmask}")
         monitor_running = False
         if self.ids_monitor_thread is not None:
             monitor_running = self.ids_monitor_thread.running
         snort_running = self._is_snort_running()
         if snort_running:
-            result = subprocess.run(constants.SNORT_IDS_ROUTER.STOP_SNORT_IDS.split(" "),
+            cmd = constants.SNORT_IDS_ROUTER.STOP_SNORT_IDS
+            result = subprocess.run(cmd.split(" "),
                                     capture_output=True, text=True)
-            logging.info(f"Stopped the Snort IDS, stdout:{result.stdout}, stderr: {result.stderr}")
+            logging.info(f"Stopped the Snort IDS, stdout:{result.stdout}, stderr: {result.stderr}, cmd: {cmd}")
         if not snort_running:
+            cmd = constants.SNORT_IDS_ROUTER.START_SNORT_IDS.format(request.ingress_interface, request.egress_interface,
+                                                                    request.subnetmask)
             result = subprocess.run(constants.SNORT_IDS_ROUTER.START_SNORT_IDS.split(" "),
                                     capture_output=True, text=True)
-            logging.info(f"Started the Snort IDS, stdout:{result.stdout}, stderr: {result.stderr}")
+            logging.info(f"Started the Snort IDS, stdout:{result.stdout}, stderr: {result.stderr}, cmd: {cmd}")
         logging.info("Started the SnortIDS")
         return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
             monitor_running=monitor_running, snort_ids_running=True)
