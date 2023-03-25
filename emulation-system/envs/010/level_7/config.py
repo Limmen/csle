@@ -2187,7 +2187,7 @@ def default_kafka_config(network_id: int, level: int, version: str, time_step_le
             num_replicas=collector_constants.KAFKA_CONFIG.DEFAULT_NUM_REPLICAS,
             num_partitions=collector_constants.KAFKA_CONFIG.DEFAULT_NUM_PARTITIONS,
             retention_time_hours=collector_constants.KAFKA_CONFIG.DEFAULT_RETENTION_TIME_HOURS,
-            attributes=collector_constants.KAFKA_CONFIG.SNORT_IDS_RULE_LOG_TOPIC_NAME
+            attributes=collector_constants.KAFKA_CONFIG.SNORT_IDS_RULE_LOG_ATTRIBUTES
         ),
         KafkaTopic(
             name=collector_constants.KAFKA_CONFIG.SNORT_IDS_IP_LOG_TOPIC_NAME,

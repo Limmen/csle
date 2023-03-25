@@ -410,6 +410,9 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                cur.execute(f"SELECT id FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}")
+                ids = cur.fetchall()
+                print(ids)
                 config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO "
                             f"{constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
