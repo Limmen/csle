@@ -44,3 +44,19 @@ class GeneralUtil:
         index_of_first_octet_end = tuple_of_ips[1].find(".")
         second_ip = str(ip_first_octet) + tuple_of_ips[1][index_of_first_octet_end:]
         return (first_ip, second_ip)
+
+    @staticmethod
+    def get_latest_table_id(cur, table_name: str) -> int:
+        """
+        Gets the next ID for a table with a serial column primary key
+
+        :param cur: the postgres connection cursor
+        :param table_name: the table name
+        :return: the next id
+        """
+        cur.execute(f"SELECT id FROM {table_name}")
+        id=1
+        ids = cur.fetchall()
+        if len(ids) > 0:
+            id = max(list(map(lambda x: x[0], ids))) + 1
+        return id

@@ -31,6 +31,7 @@ from csle_common.dao.management.session_token import SessionToken
 from csle_common.dao.datasets.traces_dataset import TracesDataset
 from csle_common.dao.datasets.statistics_dataset import StatisticsDataset
 from csle_common.dao.emulation_config.config import Config
+from csle_common.util.general_util import GeneralUtil
 
 
 class MetastoreFacade:
@@ -411,12 +412,8 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 # Need to manually set the ID since CITUS does not handle serial columns on distributed tables properly
-                cur.execute(f"SELECT id FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}")
-                id=1
-                ids = cur.fetchall()
-                if len(ids) > 0:
-                    id = max(list(map(lambda x: x[0], ids))) + 1
-                
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.EMULATION_STATISTICS_TABLE)
                 config_json_str = json.dumps(emulation_statistics.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO "
                             f"{constants.METADATA_STORE.EMULATION_STATISTICS_TABLE} "
