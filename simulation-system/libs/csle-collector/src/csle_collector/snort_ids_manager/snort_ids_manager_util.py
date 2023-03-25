@@ -1,8 +1,10 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 import datetime
 import subprocess
 from csle_collector.snort_ids_manager.snort_ids_alert import SnortIdsAlert, SnortIdsFastLogAlert
 from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.snort_ids_manager.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_collector.snort_ids_manager.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 import csle_collector.constants.constants as constants
 
@@ -79,7 +81,8 @@ class SnortIdsManagerUtil:
             return alerts[0].timestamp
 
     @staticmethod
-    def read_snort_ids_data(episode_last_alert_ts: datetime) -> SnortIdsAlertCounters:
+    def read_snort_ids_data(episode_last_alert_ts: datetime) -> Tuple[SnortIdsAlertCounters, SnortIdsRuleCounters,
+                                                                      List[SnortIdsIPAlertCounters]]:
         """
         Measures metrics from the Snort ids
 
@@ -96,10 +99,20 @@ class SnortIdsManagerUtil:
         # alerts = list(filter(lambda x: x.timestamp > episode_last_alert_ts, alerts))
         fast_logs = list(filter(lambda x: x.timestamp > episode_last_alert_ts, fast_logs))
 
-        counters = SnortIdsAlertCounters()
-        counters.count(fast_logs)
-
-        return counters
+        agg_counters = SnortIdsAlertCounters()
+        agg_counters.count(fast_logs)
+        rule_counters = SnortIdsRuleCounters()
+        rule_counters.count(fast_logs)
+        ip_counters = []
+        ips = set()
+        for fl in fast_logs:
+            ips.add(fl.target_ip)
+        for ip in ips:
+            ip_counter = SnortIdsIPAlertCounters()
+            ip_counter.alert_ip = ip
+            ip_counter.count(fast_logs)
+            ip_counters.append(ip_counter)
+        return agg_counters, rule_counters, ip_counters
 
     @staticmethod
     def snort_ids_monitor_dto_to_dict(

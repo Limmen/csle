@@ -52,10 +52,18 @@ class SnortIDSMonitorThread(threading.Thread):
         """
         while self.running:
             time.sleep(self.time_step_len_seconds)
-            alert_counters = SnortIdsManagerUtil.read_snort_ids_data(self.latest_ts)
-            record = alert_counters.to_kafka_record(ip=self.ip)
+            agg_alert_counters, rule_alert_counters, ip_alert_counters = \
+                SnortIdsManagerUtil.read_snort_ids_data(self.latest_ts)
+            record = agg_alert_counters.to_kafka_record(ip=self.ip)
             self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME, record)
             self.producer.poll(0)
+            record = rule_alert_counters.to_kafka_record(ip=self.ip)
+            self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_RULE_LOG_TOPIC_NAME, record)
+            self.producer.poll(0)
+            for ip_alert_counter in ip_alert_counters:
+                record = ip_alert_counter.to_kafka_record(ip=self.ip)
+                self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_IP_LOG_TOPIC_NAME, record)
+                self.producer.poll(0)
             self.latest_ts = time.time()
 
 
@@ -107,8 +115,9 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         :param context: the gRPC context
         :return: a DTO with IDS statistics
         """
-        alert_counters = SnortIdsManagerUtil.read_snort_ids_data(request.timestamp)
-        ids_log_dto = alert_counters.to_dto(ip=self.ip)
+        agg_alert_counters, rule_alert_counters, ip_alert_counters = \
+            SnortIdsManagerUtil.read_snort_ids_data(request.timestamp)
+        ids_log_dto = agg_alert_counters.to_dto(ip=self.ip)
         return ids_log_dto
 
     def startSnortIdsMonitor(
