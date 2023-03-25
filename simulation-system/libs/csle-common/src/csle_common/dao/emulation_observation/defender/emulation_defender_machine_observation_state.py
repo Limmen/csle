@@ -130,6 +130,7 @@ class EmulationDefenderMachineObservationState:
         d["host_metrics"] = self.host_metrics.to_dict()
         d["docker_stats"] = self.docker_stats.to_dict()
         d["ossec_ids_alert_counters"] = self.ossec_ids_alert_counters.to_dict()
+        d["snort_ids_ip_alert_counters"] = self.snort_ids_ip_alert_counters.to_dict()
         if self.kafka_config is not None:
             d["kafka_config"] = self.kafka_config.to_dict()
         else:

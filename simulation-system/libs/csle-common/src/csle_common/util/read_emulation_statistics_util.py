@@ -223,7 +223,8 @@ class ReadEmulationStatisticsUtil:
                     elif topic == collector_constants.KAFKA_CONFIG.SNORT_IDS_IP_LOG_TOPIC_NAME:
                         metrics = SnortIdsIPAlertCounters.from_kafka_record(record=msg.value().decode())
                         c = emulation_env_config.get_container_from_ip(metrics.alert_ip)
-                        snort_ids_ip_metrics[c.get_full_name()].append(metrics)
+                        if c is not None:
+                            snort_ids_ip_metrics[c.get_full_name()].append(metrics)
                     if host_metrics_counter >= len(emulation_env_config.containers_config.containers):
                         agg_host_metrics_dto = ReadEmulationStatisticsUtil.average_host_metrics(
                             host_metrics=total_host_metrics)
