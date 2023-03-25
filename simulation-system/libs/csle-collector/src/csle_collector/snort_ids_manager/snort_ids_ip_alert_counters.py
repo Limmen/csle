@@ -48,7 +48,7 @@ class SnortIdsIPAlertCounters:
         :param alerts: list of alerts from the log
         :return: None
         """
-        alerts = list(map(lambda x: x.target_ip == self.alert_ip, alerts))
+        alerts = list(filter(lambda x: x.target_ip == self.alert_ip, alerts))
         for a in alerts:
             if a.priority - 1 in range(0, len(self.priority_alerts)):
                 self.priority_alerts[a.priority] += 1

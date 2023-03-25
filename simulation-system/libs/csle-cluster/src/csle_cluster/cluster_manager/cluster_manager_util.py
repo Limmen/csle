@@ -24,6 +24,8 @@ from csle_common.dao.emulation_config.emulation_metrics_time_series import Emula
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.snort_ids_manager.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_collector.snort_ids_manager.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
 from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
@@ -2484,6 +2486,145 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
+    def convert_snort_ids_rule_counters_dto(snort_ids_rule_counters: SnortIdsRuleCounters) \
+            -> cluster_manager_pb2.SnortIdsRuleCountersDTO:
+        """
+        Converts a SnortIdsRuleCounters object to a SnortIdsRuleCountersDTO
+
+        :param snort_ids_rule_counters: the object to convert
+        :return: the converted objected
+        """
+        if snort_ids_rule_counters is None:
+            return ClusterManagerUtil.get_empty_snort_ids_rule_counters_dto()
+        else:
+            rule_ids = list(snort_ids_rule_counters.rule_alerts.keys())
+            rule_counters = list(snort_ids_rule_counters.rule_alerts.values())
+            return cluster_manager_pb2.SnortIdsRuleCountersDTO(
+                rule_ids=rule_ids, rule_alert_counts=rule_counters, ip=snort_ids_rule_counters.ip,
+                ts=snort_ids_rule_counters.ts)
+
+    @staticmethod
+    def convert_snort_ids_rule_counters_dto_reverse(
+            snort_ids_rule_counters_dto: cluster_manager_pb2.SnortIdsRuleCountersDTO) -> SnortIdsRuleCounters:
+        """
+        Converts a SnortIdsRuleCountersDTO to a SnortIdsRuleCounters
+
+        :param snort_ids_rule_counters_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if snort_ids_rule_counters_dto is None:
+            return ClusterManagerUtil.convert_snort_ids_rule_counters_dto_reverse(
+                ClusterManagerUtil.get_empty_snort_ids_rule_counters_dto())
+        else:
+            dto = SnortIdsRuleCounters()
+            rule_alerts = {}
+            for i in range(len(snort_ids_rule_counters_dto.rule_ids)):
+                rule_alerts[snort_ids_rule_counters_dto.rule_ids[i]] = snort_ids_rule_counters_dto.rule_alert_counts[i]
+            dto.rule_alerts = rule_alerts
+            dto.ip = snort_ids_rule_counters_dto.ip
+            dto.ts = snort_ids_rule_counters_dto.ts
+            return dto
+
+    @staticmethod
+    def get_empty_snort_ids_rule_counters_dto() -> cluster_manager_pb2.SnortIdsRuleCountersDTO:
+        """
+        :return: an empty SnortIdsAlertCountersDTO
+        """
+        return cluster_manager_pb2.SnortIdsRuleCountersDTO(ip="", ts=0.0, rule_ids=[], rule_alert_counts=[])
+
+    @staticmethod
+    def snort_ids_rule_counters_dto_to_dict(
+            snort_ids_rule_counters_dto: cluster_manager_pb2.SnortIdsRuleCountersDTO) -> Dict[str, Any]:
+        """
+        Converts a SnortIdsRuleCountersDTO to a dict
+
+        :param snort_ids_rule_counters_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ip"] = snort_ids_rule_counters_dto.ip
+        d["ts"] = snort_ids_rule_counters_dto.ts
+        d["rule_ids"] = list(snort_ids_rule_counters_dto.rule_ids)
+        d["rule_alert_counts"] = list(snort_ids_rule_counters_dto.rule_alert_counts)
+        return d
+
+    @staticmethod
+    def convert_snort_ids_ip_alert_counters_dto(snort_ids_ip_alert_counters: SnortIdsIPAlertCounters) \
+            -> cluster_manager_pb2.SnortIdsIpAlertCountersDTO:
+        """
+        Converts a SnortIdsIPAlertCounters object to a SnortIdsIpAlertCountersDTO
+
+        :param snort_ids_ip_alert_counters: the object to convert
+        :return: the converted objected
+        """
+        if snort_ids_ip_alert_counters is None:
+            return ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dto()
+        else:
+            return cluster_manager_pb2.SnortIdsIpAlertCountersDTO(
+                priority_alerts=snort_ids_ip_alert_counters.priority_alerts,
+                class_alerts=snort_ids_ip_alert_counters.class_alerts,
+                severe_alerts=snort_ids_ip_alert_counters.severe_alerts,
+                warning_alerts=snort_ids_ip_alert_counters.warning_alerts,
+                alerts_weighted_by_priority=snort_ids_ip_alert_counters.alerts_weighted_by_priority,
+                ip=snort_ids_ip_alert_counters.ip, ts=snort_ids_ip_alert_counters.ts,
+                alert_ip=snort_ids_ip_alert_counters.alert_ip
+            )
+
+    @staticmethod
+    def convert_snort_ids_ip_alert_counters_dto_reverse(
+            snort_ids_ip_alert_counters_dto: cluster_manager_pb2.SnortIdsIpAlertCountersDTO) -> SnortIdsIPAlertCounters:
+        """
+        Converts a SnortIdsIpAlertCountersDTO to a SnortIdsIPAlertCounters
+
+        :param snort_ids_ip_alert_counters_dto: the DTO to convert
+        :return: the converted DTO
+        """
+        if snort_ids_ip_alert_counters_dto is None:
+            return ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto_reverse(
+                ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dto())
+        else:
+            dto = SnortIdsIPAlertCounters()
+            dto.priority_alerts = snort_ids_ip_alert_counters_dto.priority_alerts
+            dto.class_alerts = snort_ids_ip_alert_counters_dto.class_alerts
+            dto.severe_alerts = snort_ids_ip_alert_counters_dto.severe_alerts
+            dto.warning_alerts = snort_ids_ip_alert_counters_dto.warning_alerts
+            dto.alerts_weighted_by_priority = snort_ids_ip_alert_counters_dto.alerts_weighted_by_priority
+            dto.ip = snort_ids_ip_alert_counters_dto.ip
+            dto.ts = snort_ids_ip_alert_counters_dto.ts
+            dto.alert_ip = snort_ids_ip_alert_counters_dto.alert_ip
+            return dto
+
+    @staticmethod
+    def get_empty_snort_ids_ip_alert_counters_dto() -> cluster_manager_pb2.SnortIdsIpAlertCountersDTO:
+        """
+        :return: an empty SnortIdsAlertCountersDTO
+        """
+        return cluster_manager_pb2.SnortIdsIpAlertCountersDTO(
+            priority_alerts=[], class_alerts=[], severe_alerts=0, warning_alerts=0, alerts_weighted_by_priority=0.0,
+            ip="", ts=0.0, alert_ip = "")
+
+    @staticmethod
+    def snort_ids_ip_alert_counters_dto_to_dict(
+            snort_ids_alert_counters_dto: cluster_manager_pb2.SnortIdsIpAlertCountersDTO) -> Dict[str, Any]:
+        """
+        Converts a SnortIdsAlertCountersDTO to a dict
+
+        :param snort_ids_alert_counters_dto: the dto to convert
+        :return: a dict representation of the DTO
+        """
+        d = {}
+        d["ip"] = snort_ids_alert_counters_dto.ip
+        d["alert_ip"] = snort_ids_alert_counters_dto.alert_ip
+        d["ts"] = snort_ids_alert_counters_dto.ts
+        d["class_alerts"] = snort_ids_alert_counters_dto.class_alerts
+        d["priority_alerts"] = snort_ids_alert_counters_dto.priority_alerts
+        d["total_alerts"] = snort_ids_alert_counters_dto.total_alerts
+        d["warning_alerts"] = snort_ids_alert_counters_dto.warning_alerts
+        d["severe_alerts"] = snort_ids_alert_counters_dto.severe_alerts
+        d["alerts_weighted_by_priority"] = snort_ids_alert_counters_dto.alerts_weighted_by_priority
+        return d
+
+    @staticmethod
     def convert_ossec_ids_alert_counters_dto(ossec_ids_alert_counters: OSSECIdsAlertCounters) \
             -> cluster_manager_pb2.OSSECIdsAlertCountersDTO:
         """
@@ -3033,6 +3174,69 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
+    def convert_snort_ids_ip_alert_counters_dict(
+            snort_ids_ip_alert_counters_d: Dict[str, List[SnortIdsIPAlertCounters]]) \
+            -> List[cluster_manager_pb2.SnortIdsIpAlertCountersDict]:
+        """
+        Converts a dict to list of SnortIdsIpAlertCountersDict
+
+        :param snort_ids_ip_alert_counters_d: the dict to convert
+        :return: the converted objected
+        """
+        if snort_ids_ip_alert_counters_d is None:
+            return ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dict()
+        else:
+            snort_ids_ip_alerts_dict_list = []
+            for k, v in snort_ids_ip_alert_counters_d.items():
+                snort_ids_ip_alerts_dict_list.append(cluster_manager_pb2.SnortIdsIpAlertCountersDict(
+                    key=k, dtos=list(map(lambda x: ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto(x), v))))
+            return snort_ids_ip_alerts_dict_list
+
+    @staticmethod
+    def convert_snort_ids_ip_alert_counters_dict_reverse(
+            snort_ids_ip_alerts_counters_dict: List[cluster_manager_pb2.SnortIdsIpAlertCountersDict]) \
+            -> Dict[str, List[SnortIdsIPAlertCounters]]:
+        """
+        Converts a list of SnortIdsIpAlertCountersDict to a dict
+
+        :param snort_ids_ip_alerts_counters_dict: the list to convert
+        :return: the converted DTO
+        """
+        if snort_ids_ip_alerts_counters_dict is None:
+            return ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict_reverse(
+                ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dict())
+        else:
+            d = {}
+            for ds in snort_ids_ip_alerts_counters_dict:
+                d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto_reverse(x),
+                                     ds.dtos))
+            return d
+
+    @staticmethod
+    def get_empty_snort_ids_ip_alert_counters_dict() -> List[cluster_manager_pb2.SnortIdsIpAlertCountersDict]:
+        """
+        :return: an empty SnortIdsIpAlertCountersDict
+        """
+        return []
+
+    @staticmethod
+    def snort_ids_ip_alert_counters_dict_to_dict(
+            snort_ids_ip_alert_counters_dict: cluster_manager_pb2.SnortIdsIpAlertCountersDict) -> Dict[str, Any]:
+        """
+        Converts a DTO to a dict
+
+        :param snort_ids_ip_alert_counters_dict: the DTO to convert
+        :return: the dict
+        """
+        d = {}
+        d["key"] = snort_ids_ip_alert_counters_dict.key
+        dtos = []
+        for dto in snort_ids_ip_alert_counters_dict.dtos.items():
+            dtos.append(ClusterManagerUtil.snort_ids_ip_alert_counters_dto_to_dict(dto))
+        d["dtos"] = dtos
+        return d
+
+    @staticmethod
     def convert_host_metrics_dict(host_metrics_dict: Dict[str, List[HostMetrics]]) \
             -> List[cluster_manager_pb2.HostMetricsDict]:
         """
@@ -3483,7 +3687,9 @@ class ClusterManagerUtil:
             openflow_flow_avg_metrics_per_switch=ClusterManagerUtil.get_empty_flow_statistic_dict(),
             openflow_port_avg_metrics_per_switch=ClusterManagerUtil.get_empty_avg_port_statistic_dict(),
             agg_openflow_flow_metrics_per_switch=ClusterManagerUtil.get_empty_avg_flow_statistic_dict(),
-            agg_openflow_flow_stats=[ClusterManagerUtil.get_empty_agg_flow_statistic_dto()]
+            agg_openflow_flow_stats=[ClusterManagerUtil.get_empty_agg_flow_statistic_dto()],
+            snort_ids_rule_metrics = [ClusterManagerUtil.get_empty_snort_ids_rule_counters_dto()],
+            snort_ids_ip_metrics = ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dict()
         )
 
     @staticmethod
@@ -3538,7 +3744,11 @@ class ClusterManagerUtil:
                 agg_openflow_flow_metrics_per_switch=ClusterManagerUtil.convert_agg_flow_statistic_dict(
                     time_series_dto.agg_openflow_flow_metrics_per_switch),
                 agg_openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_agg_flow_statistic_dto(x),
-                                                 time_series_dto.agg_openflow_flow_stats))
+                                                 time_series_dto.agg_openflow_flow_stats)),
+                snort_ids_rule_metrics=list(map(lambda x: ClusterManagerUtil.convert_snort_ids_rule_counters_dto(x),
+                                           time_series_dto.snort_ids_rule_metrics)),
+                snort_ids_ip_metrics=ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict(
+                    time_series_dto.snort_ids_ip_metrics)
             )
 
     @staticmethod
@@ -3596,7 +3806,12 @@ class ClusterManagerUtil:
                 agg_openflow_flow_metrics_per_switch=ClusterManagerUtil.convert_agg_flow_statistic_dict_reverse(
                     time_series_dto.agg_openflow_flow_metrics_per_switch),
                 agg_openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_agg_flow_statistic_dto_reverse(x),
-                                                 time_series_dto.agg_openflow_flow_stats))
+                                                 time_series_dto.agg_openflow_flow_stats)),
+                snort_ids_rule_metrics=list(
+                    map(lambda x: ClusterManagerUtil.convert_snort_ids_rule_counters_dto_reverse(x),
+                        time_series_dto.snort_ids_rule_metrics)),
+                snort_ids_ip_metrics=ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict_reverse(
+                    time_series_dto.snort_ids_ip_metrics)
             )
 
     @staticmethod
@@ -3654,4 +3869,8 @@ class ClusterManagerUtil:
                 time_series_dto.agg_openflow_flow_metrics_per_switch))
         d["agg_openflow_flow_stats"] = list(map(lambda x: ClusterManagerUtil.agg_flow_statistic_dto_to_dict(x),
                                                 time_series_dto.agg_openflow_flow_stats))
+        d["snort_ids_rule_metrics"] = list(map(lambda x: ClusterManagerUtil.snort_ids_rule_counters_dto_to_dict(x),
+                                          time_series_dto.snort_ids_rule_metrics))
+        d["snort_ids_ip_metrics"] = list(map(lambda x: ClusterManagerUtil.snort_ids_ip_alert_counters_dict_to_dict(x),
+                                     time_series_dto.snort_ids_ip_metrics))
         return d

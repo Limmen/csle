@@ -4047,6 +4047,17 @@ class ClusterController:
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         time.sleep(2)
 
+        current_step += 1
+        Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting the Host managers "
+                                            f"and host monitors --")
+        for ip in physical_servers:
+            Logger.__call__().get_logger().info(f"Starting the host managers on containers "
+                                                f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
+            ClusterController.start_host_managers(
+                ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
+        time.sleep(10)
+
     @staticmethod
     def get_ryu_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int) \
             -> Dict[str, Any]:

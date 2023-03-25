@@ -11,6 +11,8 @@ from csle_ryu.dao.port_statistic import PortStatistic
 import csle_collector.constants.constants as collector_constants
 import csle_common.constants.constants as constants
 from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.snort_ids_manager.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_collector.snort_ids_manager.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
 from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
@@ -41,6 +43,8 @@ class ReadEmulationStatisticsUtil:
         defender_actions = []
         attacker_actions = []
         snort_ids_metrics = []
+        snort_ids_ip_metrics = {}
+        snort_ids_rule_metrics = []
         total_host_metrics = []
         ossec_host_ids_metrics = {}
         total_ossec_metrics = []
@@ -74,6 +78,7 @@ class ReadEmulationStatisticsUtil:
             host_metrics[emulation_env_config.sdn_controller_config.container.get_full_name()] = []
             docker_host_stats[emulation_env_config.sdn_controller_config.container.get_full_name()] = []
             ossec_host_ids_metrics[emulation_env_config.sdn_controller_config.container.get_full_name()] = []
+            snort_ids_ip_metrics[emulation_env_config.sdn_controller_config.container.get_full_name()] = []
 
         topic_names = [collector_constants.KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME,
                        collector_constants.KAFKA_CONFIG.DOCKER_HOST_STATS_TOPIC_NAME,
@@ -87,8 +92,9 @@ class ReadEmulationStatisticsUtil:
                        collector_constants.KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_NAME,
                        collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME,
                        collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME,
-                       collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME
-                       ]
+                       collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.SNORT_IDS_IP_LOG_TOPIC_NAME,
+                       collector_constants.KAFKA_CONFIG.SNORT_IDS_RULE_LOG_TOPIC_NAME]
         logger.info(f"Reading time-series data for the last {time_window_minutes} minutes from topics: {topic_names}")
         start_consume_ts = time.time()
         kafka_conf = {
@@ -151,6 +157,9 @@ class ReadEmulationStatisticsUtil:
                         docker_host_stats[c.get_full_name()].append(stats)
                     elif topic == collector_constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME:
                         snort_ids_metrics.append(SnortIdsAlertCounters.from_kafka_record(record=msg.value().decode()))
+                    elif topic == collector_constants.KAFKA_CONFIG.SNORT_IDS_RULE_LOG_TOPIC_NAME:
+                        snort_ids_rule_metrics.append(SnortIdsRuleCounters.from_kafka_record(
+                            record=msg.value().decode()))
                     elif topic == collector_constants.KAFKA_CONFIG.CLIENT_POPULATION_TOPIC_NAME:
                         client_metrics.append(ClientPopulationMetrics.from_kafka_record(record=msg.value().decode()))
                     elif topic == collector_constants.KAFKA_CONFIG.OPENFLOW_FLOW_STATS_TOPIC_NAME:
@@ -188,6 +197,10 @@ class ReadEmulationStatisticsUtil:
                             agg_openflow_flow_metrics_per_switch[str(agg_flow_statistics_record.datapath_id)] = []
                         agg_openflow_flow_metrics_per_switch[str(agg_flow_statistics_record.datapath_id)].append(
                             agg_flow_statistics_record)
+                    elif topic == collector_constants.KAFKA_CONFIG.SNORT_IDS_IP_LOG_TOPIC_NAME:
+                        metrics = SnortIdsIPAlertCounters.from_kafka_record(record=msg.value().decode())
+                        c = emulation_env_config.get_container_from_ip(metrics.ip)
+                        snort_ids_ip_metrics[c.get_full_name()].append(metrics)
                     if host_metrics_counter >= len(emulation_env_config.containers_config.containers):
                         agg_host_metrics_dto = ReadEmulationStatisticsUtil.average_host_metrics(
                             host_metrics=total_host_metrics)
@@ -216,8 +229,8 @@ class ReadEmulationStatisticsUtil:
             openflow_flow_avg_metrics_per_switch=openflow_flow_avg_metrics_per_switch,
             openflow_port_avg_metrics_per_switch=openflow_port_avg_metrics_per_switch,
             agg_openflow_flow_stats=agg_openflow_flow_stats,
-            agg_openflow_flow_metrics_per_switch=agg_openflow_flow_metrics_per_switch
-        )
+            agg_openflow_flow_metrics_per_switch=agg_openflow_flow_metrics_per_switch,
+            snort_ids_rule_metrics=snort_ids_rule_metrics, snort_ids_ip_metrics=snort_ids_ip_metrics)
         return dto
 
     @staticmethod

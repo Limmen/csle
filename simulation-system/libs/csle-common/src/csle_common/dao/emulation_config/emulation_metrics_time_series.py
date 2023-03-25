@@ -1,5 +1,7 @@
 from typing import List, Dict, Any
 from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.snort_ids_manager.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
+from csle_collector.snort_ids_manager.snort_ids_rule_counters import SnortIdsRuleCounters
 from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
@@ -33,8 +35,9 @@ class EmulationMetricsTimeSeries:
                  openflow_flow_avg_metrics_per_switch: Dict[str, List[AvgFlowStatistic]],
                  openflow_port_avg_metrics_per_switch: Dict[str, List[AvgPortStatistic]],
                  agg_openflow_flow_metrics_per_switch: Dict[str, List[AggFlowStatistic]],
-                 agg_openflow_flow_stats: List[AggFlowStatistic]
-                 ):
+                 agg_openflow_flow_stats: List[AggFlowStatistic],
+                 snort_ids_ip_metrics: Dict[str, List[SnortIdsIPAlertCounters]],
+                 snort_ids_rule_metrics: List[SnortIdsRuleCounters]):
         """
         Initializes the DTO
 
@@ -59,6 +62,8 @@ class EmulationMetricsTimeSeries:
         :param openflow_port_avg_metrics_per_switch: average openflow port statistics per aggregated per switch
         :param agg_openflow_flow_stats: aggregated openflow flow statistics
         :param agg_openflow_flow_metrics_per_switch: aggregated openflow flow statistics aggregatd per switch
+        :param snort_ids_ip_metrics: Time series data with Snort IDS metrics per IP
+        :param snort_ids_rule_metrics: Time series data with Snort IDS metrics per rule
         """
         self.client_metrics = client_metrics
         self.aggregated_docker_stats = aggregated_docker_stats
@@ -81,6 +86,8 @@ class EmulationMetricsTimeSeries:
         self.openflow_port_avg_metrics_per_switch = openflow_port_avg_metrics_per_switch
         self.agg_openflow_flow_stats = agg_openflow_flow_stats
         self.agg_openflow_flow_metrics_per_switch = agg_openflow_flow_metrics_per_switch
+        self.snort_ids_ip_metrics = snort_ids_ip_metrics
+        self.snort_ids_rule_metrics = snort_ids_rule_metrics
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "EmulationMetricsTimeSeries":
@@ -120,6 +127,10 @@ class EmulationMetricsTimeSeries:
         for k, v in d["agg_openflow_flow_metrics_per_switch"].items():
             agg_openflow_flow_metrics_per_switch[k] = list(map(lambda x: AggFlowStatistic.from_dict(x), v))
 
+        snort_ids_ip_metrics = {}
+        for k, v in d["snort_ids_ip_metrics"].items():
+            snort_ids_ip_metrics[k] = list(map(lambda x: SnortIdsIPAlertCounters.from_dict(x), v))
+
         obj = EmulationMetricsTimeSeries(
             client_metrics=list(map(lambda x: ClientPopulationMetrics.from_dict(x), d["client_metrics"])),
             aggregated_docker_stats=list(map(lambda x: DockerStats.from_dict(x), d["aggregated_docker_stats"])),
@@ -141,7 +152,9 @@ class EmulationMetricsTimeSeries:
             openflow_flow_avg_metrics_per_switch=openflow_flow_avg_metrics_per_switch,
             openflow_port_avg_metrics_per_switch=openflow_port_avg_metrics_per_switch,
             agg_openflow_flow_stats=list(map(lambda x: AggFlowStatistic.from_dict(x), d["agg_openflow_flow_stats"])),
-            agg_openflow_flow_metrics_per_switch=agg_openflow_flow_metrics_per_switch
+            agg_openflow_flow_metrics_per_switch=agg_openflow_flow_metrics_per_switch,
+            snort_ids_ip_metrics=snort_ids_ip_metrics,
+            snort_ids_rule_metrics=list(map(lambda x: SnortIdsRuleCounters.from_dict(x), d["snort_ids_rule_metrics"]))
         )
         return obj
 
@@ -194,6 +207,12 @@ class EmulationMetricsTimeSeries:
             d["agg_openflow_flow_metrics_per_switch"][k] = list(map(lambda x: x.to_dict(), v))
 
         d["agg_openflow_flow_stats"] = list(map(lambda x: x.to_dict(), self.agg_openflow_flow_stats))
+
+        d["snort_ids_ip_metrics"] = {}
+        for k, v in self.snort_ids_ip_metrics.items():
+            d["snort_ids_ip_metrics"][k] = list(map(lambda x: x.to_dict(), v))
+
+        d["snort_ids_rule_metrics"] = list(map(lambda x: x.to_dict(), self.snort_ids_rule_metrics))
         return d
 
     def __str__(self) -> str:
@@ -219,7 +238,9 @@ class EmulationMetricsTimeSeries:
                f"openflow_flow_avg_metrics_per_switch: {self.openflow_flow_avg_metrics_per_switch}," \
                f"openflow_port_avg_metrics_per_switch: {self.openflow_port_avg_metrics_per_switch}," \
                f"agg_openflow_flow_stats: {self.agg_openflow_flow_stats}," \
-               f"agg_openflow_flow_metrics_per_switch: {self.agg_openflow_flow_metrics_per_switch}"
+               f"agg_openflow_flow_metrics_per_switch: {self.agg_openflow_flow_metrics_per_switch}," \
+               f"snort_ids_ip_metrics: {self.snort_ids_ip_metrics}," \
+               f"snort_ids_rule_metrics: {self.snort_ids_rule_metrics}"
 
     def to_json_str(self) -> str:
         """
