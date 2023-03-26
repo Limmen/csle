@@ -144,16 +144,8 @@ class ManagementSystemController:
         cmd = constants.COMMANDS.BUILD_CSLE_MGMT_WEBAPP
         logger.info(f"Building the web app with the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        while True:
-            out = p.stdout.read(1)
-            if p.poll() is not None:
-                break
-            if out != '':
-                try:
-                    sys.stdout.write(out.decode("utf-8"))
-                except Exception:
-                    pass
-                sys.stdout.flush()
+        (output, err) = p.communicate()
+        logger.info(f"Build output, stdout: {output.decode('utf-8')}, stderr: {err.decode('utf-8')}")
         cmd = constants.COMMANDS.START_CSLE_MGMT_WEBAPP
         logger.info(f"Starting flask with the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
