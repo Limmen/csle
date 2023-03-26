@@ -344,7 +344,6 @@ const ContainerTerminal = (props) => {
 
     const setupConnection = (containerIp, physical_host) => {
         term.open(document.getElementById('sshTerminal'));
-        console.log("HELLO")
         fitAddon.fit();
         term.resize(15, 60);
         fitAddon.fit();
@@ -383,8 +382,6 @@ const ContainerTerminal = (props) => {
         function fitToscreen() {
             fitAddon.fit();
             const dims = {cols: term.cols, rows: term.rows, token: props.sessionData.token};
-            console.log("fit to screen, dims:")
-            console.log(dims)
             socket.emit(WS_RESIZE_MSG, dims);
         }
 

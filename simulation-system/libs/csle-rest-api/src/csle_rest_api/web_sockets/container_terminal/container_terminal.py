@@ -27,9 +27,7 @@ def get_container_terminal_bp(app):
         :param ypix: the number of y pixels of the new size
         :return:
         """
-        print(f"Resize: col: {col}, row: {row}, xpix: {xpix}, ypix: {ypix}")
-        ssh_channel.resize_pty(width=col, height=row, width_pixels=col, height_pixels=row)
-        # ssh_channel.resize_pty(width=col, height=row, width_pixels=xpix, height_pixels=ypix)
+        ssh_channel.resize_pty(width=col, height=row, width_pixels=xpix, height_pixels=ypix)
 
     def ssh_connect(ip: str) -> paramiko.SSHClient:
         """
