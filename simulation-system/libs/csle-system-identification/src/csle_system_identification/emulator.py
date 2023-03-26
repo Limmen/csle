@@ -108,17 +108,16 @@ class Emulator:
         for i in range(repeat_times):
             intrusion_start_time = -1
             if intrusion_start_p > 0:
-                # intrusion_start_time = np.random.geometric(p=intrusion_start_p, size=1)[0]
-                intrusion_start_time = 2
+                intrusion_start_time = np.random.geometric(p=intrusion_start_p, size=1)[0]
                 attacker_wait_seq = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * intrusion_start_time
                 defender_wait_seq = [EmulationDefenderStoppingActions.CONTINUE(index=-1)] * intrusion_start_time
                 full_attacker_sequence = attacker_wait_seq
                 full_defender_sequence = defender_wait_seq
-                for i in range(len(attacker_sequence)):
+                for j in range(len(attacker_sequence)):
                     num_wait_steps = np.random.geometric(p=intrusion_continue, size=1)[0] - 1
                     wait_steps = [EmulationAttackerStoppingActions.CONTINUE(index=-1)] * num_wait_steps
                     full_attacker_sequence = full_attacker_sequence + wait_steps
-                    full_attacker_sequence = full_attacker_sequence + [attacker_sequence[i]]
+                    full_attacker_sequence = full_attacker_sequence + [attacker_sequence[j]]
                     full_defender_sequence = full_defender_sequence + [
                         EmulationDefenderStoppingActions.CONTINUE(index=-1)] * (num_wait_steps + 1)
             else:
