@@ -342,7 +342,7 @@ const ContainerTerminal = (props) => {
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchSelectedExecution,
         fetchExecutionInfo, location.state]);
 
-    const setupConnection = (containerIp) => {
+    const setupConnection = (containerIp, physical_host) => {
         term.open(document.getElementById('sshTerminal'));
         fitAddon.fit();
         term.resize(15, 40);
@@ -352,7 +352,7 @@ const ContainerTerminal = (props) => {
             socket.emit(WS_CONTAINER_TERMINAL_INPUT_MSG,
                 {input: data, token: props.sessionData.token});
         });
-        const socket = io.connect(`${ip}:${port}/${WS_CONTAINER_TERMINAL_NAMESPACE}?${TOKEN_QUERY_PARAM}` +
+        const socket = io.connect(`${physical_host}:${port}/${WS_CONTAINER_TERMINAL_NAMESPACE}?${TOKEN_QUERY_PARAM}` +
             `=${props.sessionData.token}&${IP_QUERY_PARAM}=${containerIp.replaceAll('.', '-')}`, {'forceNew': true});
         setSocketState(socket)
         const status = document.getElementById("status");
@@ -416,8 +416,8 @@ const ContainerTerminal = (props) => {
             overlay={startShellTooltip}
         >
             <Button variant="secondary" className="connectButton" size="sm"
-                    onClick={() =>  setupConnection(props.ip)}>
-                Connect to {props.ip}
+                    onClick={() =>  setupConnection(props.ip, props.host)}>
+                Connect to {props.ip} on host: {props.host}
                 <i className="fa fa-terminal connectButtonText" aria-hidden="true"/>
             </Button>
         </OverlayTrigger>
@@ -426,7 +426,9 @@ const ContainerTerminal = (props) => {
     const TerminalConnect = (props) => {
         if(props.socketState == null){
             return (
-                <StartTerminalButton ip={props.selectedRunningContainer.value.docker_gw_bridge_ip}/>
+                <StartTerminalButton ip={props.selectedRunningContainer.value.docker_gw_bridge_ip}
+                                     host={props.selectedRunningContainer.value.physical_host_ip}
+                />
             )
         } else {
             return(
@@ -440,7 +442,8 @@ const ContainerTerminal = (props) => {
                         </Button>
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-                    Terminal to IP: {props.selectedRunningContainer.value.docker_gw_bridge_ip}
+                    Terminal to IP: {props.selectedRunningContainer.value.docker_gw_bridge_ip} on host:
+                    {props.selectedRunningContainer.value.physical_host_ip}
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}
