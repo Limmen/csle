@@ -160,9 +160,8 @@ class ManagementSystemController:
         cmd = cmd.replace(f"${constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM}",
                           os.environ[constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM])
         logger.info(f"Starting flask with the command: {cmd}")
-        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=False)
-        p.communicate()
-        pid = p.pid + 1
+        p = subprocess.Popen(cmd.split(" "), stdout=subprocess.DEVNULL, shell=False)
+        pid = p.pid
 
         cmd = constants.COMMANDS.SAVE_PID.format(pid, constants.COMMANDS.CSLE_MGMT_WEBAPP_PID_FILE)
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
