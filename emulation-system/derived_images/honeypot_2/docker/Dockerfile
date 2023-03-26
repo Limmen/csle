@@ -15,5 +15,8 @@ RUN service ntp restart
 # SSH
 RUN service ssh start
 
+# timezone env with default
+ENV TZ=Europe/Stockholm
+
 # CMD to run when container starts, starts the services (e.g. telnet and SSH)
 CMD ["/start.sh"]

@@ -52,18 +52,21 @@ class SnortIDSMonitorThread(threading.Thread):
         """
         while self.running:
             time.sleep(self.time_step_len_seconds)
-            agg_alert_counters, rule_alert_counters, ip_alert_counters = \
-                SnortIdsManagerUtil.read_snort_ids_data(self.latest_ts)
-            record = agg_alert_counters.to_kafka_record(ip=self.ip)
-            self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME, record)
-            self.producer.poll(0)
-            record = rule_alert_counters.to_kafka_record(ip=self.ip)
-            self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_RULE_LOG_TOPIC_NAME, record)
-            self.producer.poll(0)
-            for ip_alert_counter in ip_alert_counters:
-                record = ip_alert_counter.to_kafka_record(ip=self.ip)
-                self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_IP_LOG_TOPIC_NAME, record)
+            try:
+                agg_alert_counters, rule_alert_counters, ip_alert_counters = \
+                    SnortIdsManagerUtil.read_snort_ids_data(self.latest_ts)
+                record = agg_alert_counters.to_kafka_record(ip=self.ip)
+                self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME, record)
                 self.producer.poll(0)
+                record = rule_alert_counters.to_kafka_record(ip=self.ip)
+                self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_RULE_LOG_TOPIC_NAME, record)
+                self.producer.poll(0)
+                for ip_alert_counter in ip_alert_counters:
+                    record = ip_alert_counter.to_kafka_record(ip=self.ip)
+                    self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_IP_LOG_TOPIC_NAME, record)
+                    self.producer.poll(0)
+            except Exception as e:
+                logging.info(f"There was an exception parsing the Snort logs: {str(e)}, {repr(e)}")
             self.latest_ts = time.time()
 
 
@@ -172,6 +175,10 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
             result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
             logging.info(f"Started the Snort IDS, stdout:{result.stdout}, stderr: {result.stderr}, cmd: {cmd}")
         logging.info("Started the SnortIDS")
+        cmd = constants.SNORT_IDS_ROUTER.SNORT_LOG_DIR_PERMISSION_CMD
+        logging.info(f"Changing permissions of the snort log directory")
+        result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
+        logging.info(f"Changed the log dir permissions, stdout:{result.stdout}, stderr: {result.stderr}, cmd: {cmd}")
         return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
             monitor_running=monitor_running, snort_ids_running=True)
 

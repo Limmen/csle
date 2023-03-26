@@ -71,8 +71,6 @@ const Emulations = (props) => {
                 if (response === null) {
                     return
                 }
-                console.log("got emu")
-                console.log(response)
                 setSelectedEmulation(response)
                 setLoadingSelectedEmulation(false)
             })

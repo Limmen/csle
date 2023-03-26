@@ -156,7 +156,7 @@ class EmulationDefenderObservationState:
         :return: the created instance
         """
         try:
-            obj = EmulationDefenderObservationState(kafka_config=d["kafka_config"])
+            obj = EmulationDefenderObservationState(kafka_config=KafkaConfig.from_dict(d["kafka_config"]))
         except Exception:
             obj = EmulationDefenderObservationState(kafka_config=None)
         obj.machines = list(map(lambda x: EmulationDefenderMachineObservationState.from_dict(d=x), d["machines"]))

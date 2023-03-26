@@ -9,5 +9,8 @@ RUN chmod 777 /start.sh
 # SSH
 RUN service ssh start
 
+# timezone env with default
+ENV TZ=Europe/Stockholm
+
 # CMD to run when container starts
 CMD ["/start.sh"]

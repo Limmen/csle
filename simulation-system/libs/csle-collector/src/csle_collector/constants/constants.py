@@ -492,6 +492,7 @@ class SNORT_IDS_ROUTER:
     STOP_SNORT_IDS = "kill -9 $(pgrep snort)"
     START_SNORT_IDS = "sudo snort -D -q -c /etc/snort/snort.conf -i {}:{} -l " \
                       "/var/snort/ -h {} -Q -I --create-pidfile"
+    SNORT_LOG_DIR_PERMISSION_CMD = "sudo chmod -R 777 /var/snort"
     CHECK_IF_SNORT_IS_RUNNING_CMD = "ps -aux | grep snort.conf"
     PS_AUX_CMD = "ps -aux"
     GREP_SNORT_CONF = "grep snort.conf"

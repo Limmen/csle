@@ -6,6 +6,9 @@ USER root
 ADD start.sh /start.sh
 RUN chmod 777 /start.sh
 
+# timezone env with default
+ENV TZ=Europe/Stockholm
+
 # Override base image's entrypoint
 ENTRYPOINT ["/usr/bin/env"]
 

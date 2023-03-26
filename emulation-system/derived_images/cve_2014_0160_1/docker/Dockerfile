@@ -8,5 +8,8 @@ RUN chmod 777 /start.sh
 
 # nmap -sV -p 443 --script=ssl-heartbleed 55.144.78.232
 
+# timezone env with default
+ENV TZ=Europe/Stockholm
+
 # CMD to run when container starts, starts the services
 CMD ["/start.sh"]
