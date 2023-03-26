@@ -65,9 +65,10 @@ class EmulationUtil:
         record = action.to_kafka_record()
         if emulation_env_config.producer is None and create_producer:
             emulation_env_config.create_producer()
-        emulation_env_config.producer.produce(collector_constants.KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME, record)
-        emulation_env_config.producer.poll(0)
-        emulation_env_config.producer.flush()
+        if emulation_env_config.producer is not None:
+            emulation_env_config.producer.produce(collector_constants.KAFKA_CONFIG.ATTACKER_ACTIONS_TOPIC_NAME, record)
+            emulation_env_config.producer.poll(0)
+            emulation_env_config.producer.flush()
 
     @staticmethod
     def _check_if_ssh_server_is_running(conn, telnet: bool = False) -> bool:
