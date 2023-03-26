@@ -39,7 +39,6 @@ import {
     INFO_SUBRESOURCE,
     IP_QUERY_PARAM
 } from "../../Common/constants";
-import getIps from "../../Common/getIps";
 
 /**
  * Component representing the /container-terminal-page
@@ -220,7 +219,7 @@ const ContainerTerminal = (props) => {
                     var match = false
                     if(location.state !== null && location.state.ip !== null) {
                         for (let i = 0; i < rContainerIds.length; i++) {
-                            if(getIps(rContainerIds[i].value.ips_and_networks).includes(location.state.ip)) {
+                            if(props.selectedRunningContainer.value.docker_gw_bridge_ip === location.state.ip) {
                                 match = true
                                 setSelectedRunningContainer(rContainerIds[i])
                             }
@@ -427,7 +426,7 @@ const ContainerTerminal = (props) => {
     const TerminalConnect = (props) => {
         if(props.socketState == null){
             return (
-                <StartTerminalButton ip={getIps(props.selectedRunningContainer.value.ips_and_networks)[0]}/>
+                <StartTerminalButton ip={props.selectedRunningContainer.value.docker_gw_bridge_ip}/>
             )
         } else {
             return(
@@ -441,7 +440,7 @@ const ContainerTerminal = (props) => {
                         </Button>
                     </OverlayTrigger>
                     <InfoModal show={showInfoModal} onHide={() => setShowInfoModal(false)}/>
-                    Terminal to IP: {getIps(props.selectedRunningContainer.value.ips_and_networks)[0]}
+                    Terminal to IP: {props.selectedRunningContainer.value.docker_gw_bridge_ip}
                     <OverlayTrigger
                         placement="right"
                         delay={{show: 0, hide: 0}}

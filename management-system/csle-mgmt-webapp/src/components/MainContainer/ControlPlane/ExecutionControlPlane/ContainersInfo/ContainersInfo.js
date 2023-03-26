@@ -88,7 +88,7 @@ const ContainersInfo = (props) => {
                                             loading={props.loadingEntities.includes(
                                                 `${CONTAINER_SUBRESOURCE}-${container.full_name_str}`)}
                                             name={container.full_name_str}
-                                            ip={getIps(container.ips_and_networks)[0]}
+                                            ip={container.ips_and_networks.docker_gw_bridge_ip}
                                             executionId={props.executionId}
                                             emulation={props.emulation}
                                         />
