@@ -5,6 +5,7 @@ import docker
 import os
 import csle_common.constants.constants as constants
 import sys
+import shutil
 
 
 class ManagementSystemController:
@@ -155,6 +156,8 @@ class ManagementSystemController:
                     pass
                 sys.stdout.flush()
         cmd = constants.COMMANDS.START_CSLE_MGMT_WEBAPP
+        full_python_path = shutil.which("python")
+        cmd = cmd.replace("python", full_python_path)
         logger.info(f"Starting flask with the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=False)
         p.communicate()
