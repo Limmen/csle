@@ -3,7 +3,6 @@ import time
 import numpy as np
 import csle_collector.constants.constants as constants
 from csle_collector.snort_ids_manager.snort_ids_alert import SnortIdsFastLogAlert
-import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 
 
 class SnortIdsIPAlertCounters:

@@ -265,7 +265,8 @@ class EmulationDefenderObservationState:
             self.aggregated_snort_ids_log_consumer_thread.get_aggregated_ids_alert_counters()
         self.avg_snort_ids_rule_counters = \
             self.aggregated_snort_ids_rule_log_consumer_thread.get_aggregated_ids_rule_counters()
-        self.avg_ossec_ids_alert_counters = self.aggregated_ossec_ids_log_consumer_thread.get_aggregated_ids_alert_counters()
+        self.avg_ossec_ids_alert_counters = \
+            self.aggregated_ossec_ids_log_consumer_thread.get_aggregated_ids_alert_counters()
         self.avg_docker_stats = self.docker_stats_consumer_thread.get_average_docker_stats()
         self.avg_aggregated_host_metrics = self.aggregated_host_metrics_thread.get_average_aggregated_host_metrics()
         self.avg_client_population_metrics = \

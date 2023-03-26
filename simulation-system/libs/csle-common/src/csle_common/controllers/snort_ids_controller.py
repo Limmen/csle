@@ -73,7 +73,7 @@ class SnortIDSController:
         if not ids_monitor_dto.snort_ids_running:
             logger.info(f"Snort IDS is not running on {ip}, starting it.")
             subnetmask = f"{emulation_env_config.execution_id}.{emulation_env_config.level}" \
-                          f"{constants.CSLE.CSLE_LEVEL_SUBNETMASK_SUFFIX}"
+                         f"{constants.CSLE.CSLE_LEVEL_SUBNETMASK_SUFFIX}"
             ingress_interface = constants.NETWORKING.ETH2
             egress_interface = constants.NETWORKING.ETH0
             logger.info(f"Subnetmask: {subnetmask}, ingress interface: {ingress_interface}, "

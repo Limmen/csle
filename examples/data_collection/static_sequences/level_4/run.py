@@ -8,7 +8,6 @@ from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actio
     import EmulationDefenderStoppingActions
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.controllers.container_controller import ContainerController
 from csle_system_identification.emulator import Emulator
 
 
@@ -67,6 +66,7 @@ def passive_defender_sequence(length: int, emulation_env_config: EmulationEnvCon
     """
     seq = [EmulationDefenderStoppingActions.CONTINUE(index=-1)] * length
     return seq
+
 
 def passive_attacker_sequence(length: int, emulation_env_config: EmulationEnvConfig) -> List[EmulationAttackerAction]:
     """

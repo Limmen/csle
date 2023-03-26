@@ -11,9 +11,8 @@ class OSSECIdsLogConsumerThread(threading.Thread):
     Thread that polls the OSSEC IDS log to get the latest metrics
     """
 
-    def __init__(self, host_ip: str,
-                kafka_server_ip: str, kafka_port: int, ossec_ids_alert_counters: OSSECIdsAlertCounters,
-                 auto_offset_reset: str = "latest") -> None:
+    def __init__(self, host_ip: str, kafka_server_ip: str, kafka_port: int,
+                 ossec_ids_alert_counters: OSSECIdsAlertCounters, auto_offset_reset: str = "latest") -> None:
         """
         Initializes the thread
 

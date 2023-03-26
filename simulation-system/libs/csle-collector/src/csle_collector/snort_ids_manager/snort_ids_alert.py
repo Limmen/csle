@@ -8,7 +8,7 @@ class SnortIdsFastLogAlert:
     DTO representing an alert entry in the fast log of Snort
     """
 
-    def __init__(self, timestamp: float, priority: int, class_id: int, source_ip: str, target_ip: str, rule_id :str) \
+    def __init__(self, timestamp: float, priority: int, class_id: int, source_ip: str, target_ip: str, rule_id: str) \
             -> None:
         """
         Initializes the DTO
@@ -206,7 +206,6 @@ class SnortIdsAlert:
         rule_match = re.findall(constants.SNORT_IDS_ROUTER.RULE_ID_REGEX, fast_log_str)
         if len(rule_match) > 0:
             rule_id = rule_match[0].replace("[", "").replace(":", "-")
-
 
         fast_log_alert = SnortIdsFastLogAlert(timestamp=ts, priority=priority, class_id=alert_class_id,
                                               source_ip=source_ip, target_ip=target_ip, rule_id=rule_id)

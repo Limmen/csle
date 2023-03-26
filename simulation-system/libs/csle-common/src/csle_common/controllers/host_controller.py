@@ -834,8 +834,8 @@ class HostController:
             for ids_image in constants.CONTAINER_IMAGES.SPARK_IMAGES:
                 if ids_image in c.name:
                     logger.info(f"Stopping Spark on IP: {c.docker_gw_bridge_ip}")
-                    HostController.stop_spark(emulation_env_config=emulation_env_config, ips=[c.docker_gw_bridge_ip],
-                                               logger=logger)
+                    HostController.stop_spark(emulation_env_config=emulation_env_config,
+                                              ips=[c.docker_gw_bridge_ip], logger=logger)
 
     @staticmethod
     def start_spark(emulation_env_config: EmulationEnvConfig, ips: List[str], logger: logging.Logger) -> None:

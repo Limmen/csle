@@ -4507,7 +4507,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
         if container_config is not None and container_config.physical_host_ip == GeneralUtil.get_host_ip():
             HostController.stop_spark(emulation_env_config=execution.emulation_env_config,
-                                       ips=[container_config.docker_gw_bridge_ip], logger=logging.getLogger())
+                                      ips=[container_config.docker_gw_bridge_ip], logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
@@ -4550,8 +4550,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         HostController.stop_sparks(emulation_env_config=execution.emulation_env_config,
-                                    physical_server_ip=GeneralUtil.get_host_ip(),
-                                    logger=logging.getLogger())
+                                   physical_server_ip=GeneralUtil.get_host_ip(), logger=logging.getLogger())
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,

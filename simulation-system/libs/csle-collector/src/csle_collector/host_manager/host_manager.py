@@ -505,7 +505,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           heartbeat_running=heartbeat_status)
 
     def startSpark(self, request: csle_collector.host_manager.host_manager_pb2.StartSparkMsg,
-                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+                   context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
         Starts Spark
 
@@ -530,7 +530,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           heartbeat_running=heartbeat_status)
 
     def stopSpark(self, request: csle_collector.host_manager.host_manager_pb2.StopSparkMsg,
-                   context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
+                  context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostStatusDTO:
         """
         Stops Spark
 

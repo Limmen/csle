@@ -1,9 +1,6 @@
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
 import time
-import numpy as np
-import csle_collector.constants.constants as constants
 from csle_collector.snort_ids_manager.snort_ids_alert import SnortIdsFastLogAlert
-import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 
 
 class SnortIdsRuleCounters:
@@ -26,7 +23,7 @@ class SnortIdsRuleCounters:
         :param alert_counters: the counters to add
         :return: None
         """
-        for k,v in alert_counters.rule_alerts.items():
+        for k, v in alert_counters.rule_alerts.items():
             if k not in self.rule_alerts:
                 self.rule_alerts[k] = int(alert_counters.rule_alerts[k])
             else:
@@ -41,7 +38,7 @@ class SnortIdsRuleCounters:
         """
         for a in alerts:
             if a.rule_id not in self.rule_alerts:
-                self.rule_alerts[a.rule_id]=1
+                self.rule_alerts[a.rule_id] = 1
             else:
                 self.rule_alerts[a.rule_id] = self.rule_alerts[a.rule_id] + 1
 
@@ -93,7 +90,7 @@ class SnortIdsRuleCounters:
         """
         ts = time.time()
         record_list = [ts, ip]
-        for k,v in self.rule_alerts.items():
+        for k, v in self.rule_alerts.items():
             record_list.append(f"{k}:{v}")
         record_str = ",".join(list(map(lambda x: str(x), record_list)))
         return record_str

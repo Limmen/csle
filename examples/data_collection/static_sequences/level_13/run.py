@@ -67,6 +67,7 @@ def passive_defender_sequence(length: int, emulation_env_config: EmulationEnvCon
     seq = [EmulationDefenderStoppingActions.CONTINUE(index=-1)] * length
     return seq
 
+
 def passive_attacker_sequence(length: int, emulation_env_config: EmulationEnvConfig) -> List[EmulationAttackerAction]:
     """
     Returns a sequence of actions representing a passive attacker

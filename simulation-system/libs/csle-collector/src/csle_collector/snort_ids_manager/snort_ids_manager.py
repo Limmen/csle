@@ -176,7 +176,7 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
             logging.info(f"Started the Snort IDS, stdout:{result.stdout}, stderr: {result.stderr}, cmd: {cmd}")
         logging.info("Started the SnortIDS")
         cmd = constants.SNORT_IDS_ROUTER.SNORT_LOG_DIR_PERMISSION_CMD
-        logging.info(f"Changing permissions of the snort log directory")
+        logging.info("Changing permissions of the snort log directory")
         result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         logging.info(f"Changed the log dir permissions, stdout:{result.stdout}, stderr: {result.stderr}, cmd: {cmd}")
         return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(

@@ -55,7 +55,7 @@ class GeneralUtil:
         :return: the next id
         """
         cur.execute(f"SELECT id FROM {table_name}")
-        id=1
+        id = 1
         ids = cur.fetchall()
         if len(ids) > 0:
             id = max(list(map(lambda x: x[0], ids))) + 1

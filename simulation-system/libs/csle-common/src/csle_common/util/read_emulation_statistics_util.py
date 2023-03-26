@@ -254,7 +254,8 @@ class ReadEmulationStatisticsUtil:
         consumer.close()
         dto = EmulationMetricsTimeSeries(
             client_metrics=client_metrics, aggregated_docker_stats=agg_docker_stats, host_metrics=host_metrics,
-            docker_host_stats=docker_host_stats, agg_snort_ids_metrics=snort_ids_metrics, attacker_actions=attacker_actions,
+            docker_host_stats=docker_host_stats, agg_snort_ids_metrics=snort_ids_metrics,
+            attacker_actions=attacker_actions,
             defender_actions=defender_actions, aggregated_host_metrics=aggregated_host_metrics,
             emulation_env_config=emulation_env_config, aggregated_ossec_host_alert_counters=aggregated_ossec_metrics,
             ossec_host_alert_counters=ossec_host_ids_metrics,

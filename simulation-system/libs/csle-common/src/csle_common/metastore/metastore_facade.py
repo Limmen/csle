@@ -1347,9 +1347,9 @@ class MetastoreFacade:
                                                       sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE} "
                             f"(id, config, emulation_name, pid) "
-                            f"VALUES (%s, %s, %s, %s) RETURNING id", (id, data_collection_job_json,
-                                                                  data_collection_job.emulation_env_name,
-                                                                  data_collection_job.pid))
+                            f"VALUES (%s, %s, %s, %s) RETURNING id",
+                            (id, data_collection_job_json, data_collection_job.emulation_env_name,
+                             data_collection_job.pid))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
                 Logger.__call__().get_logger().debug("Data collection job saved successfully")
