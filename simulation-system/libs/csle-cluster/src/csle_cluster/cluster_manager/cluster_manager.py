@@ -4552,6 +4552,21 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         HostController.stop_sparks(emulation_env_config=execution.emulation_env_config,
                                    physical_server_ip=GeneralUtil.get_host_ip(), logger=logging.getLogger())
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
+    def checkPid(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.CheckPidMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Checks the status of a PID
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Checking the status of PID: {request.pid}")
+        running = ManagementSystemController.is_pid_running(pid=request.pid)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=running)
 
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,

@@ -4219,3 +4219,20 @@ def stop_spark_server(
     )
     operation_outcome = stub.stopSparkServer(operation_msg, timeout=timeout)
     return operation_outcome
+
+
+def check_pid(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        pid: int, timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Checks the status of a PID
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param pid: the pid to check
+    :return: the operation outcome
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.CheckPidMsg(pid=pid)
+    operation_outcome = stub.checkPid(operation_msg, timeout=timeout)
+    return operation_outcome
