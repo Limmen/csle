@@ -204,11 +204,11 @@ class Emulator:
         logger.info(f"Executing attacker action:{attacker_action.name} on machine index: {attacker_action.index}, "
                      f"ips:{attacker_action.ips}")
         s_prime = Attacker.attacker_transition(s=s, attacker_action=attacker_action)
-        logger.info(f"Attacker action complete, attacker state:{s_prime.attacker_obs_state}")
+        logger.debug(f"Attacker action complete, attacker state:{s_prime.attacker_obs_state}")
         EnvDynamicsUtil.cache_attacker_action(a=attacker_action, s=s_prime)
-        logger.info(f"Executing defender action:{defender_action.name} on machine index: {defender_action.index}")
+        logger.debug(f"Executing defender action:{defender_action.name} on machine index: {defender_action.index}")
         s_prime_prime = Defender.defender_transition(s=s_prime, defender_action=defender_action)
-        logger.info(f"Defender action complete, defender state:{s_prime.defender_obs_state}, "
+        logger.debug(f"Defender action complete, defender state:{s_prime.defender_obs_state}, "
                      f"ips:{defender_action.ips}")
         sys.stdout.flush()
         EnvDynamicsUtil.cache_defender_action(a=defender_action, s=s_prime_prime)
