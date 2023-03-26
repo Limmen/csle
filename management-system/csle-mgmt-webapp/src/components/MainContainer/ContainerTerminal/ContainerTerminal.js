@@ -217,9 +217,9 @@ const ContainerTerminal = (props) => {
                 setFilteredRunningContainerIds(rContainerIds)
                 if (rContainerIds.length > 0) {
                     var match = false
-                    if(location.state !== null && location.state.ip !== null) {
+                    if(location.state !== null && location.state.ip !== null && location.state.ip !== undefined) {
                         for (let i = 0; i < rContainerIds.length; i++) {
-                            if(props.selectedRunningContainer.value.docker_gw_bridge_ip === location.state.ip) {
+                            if(rContainerIds[i].value.docker_gw_bridge_ip === location.state.ip) {
                                 match = true
                                 setSelectedRunningContainer(rContainerIds[i])
                             }
