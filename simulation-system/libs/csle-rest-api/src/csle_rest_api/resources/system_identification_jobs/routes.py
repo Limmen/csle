@@ -6,9 +6,8 @@ from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.util.emulation_util import EmulationUtil
-from csle_common.controllers.management_system_controller import ManagementSystemController
 from csle_system_identification.job_controllers.system_identification_job_manager import SystemIdentificationJobManager
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 
@@ -43,7 +42,8 @@ def system_identification_jobs():
         system_identification_jobs = MetastoreFacade.list_system_identification_jobs()
         alive_jobs = []
         for job in system_identification_jobs:
-            if EmulationUtil.check_pid(job.pid):
+            if ClusterController.check_pid(ip=job.physical_host_ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                           pid=job.pid).outcome:
                 job.running = True
             alive_jobs.append(job)
         system_identification_jobs_dicts = list(map(lambda x: x.to_dict(), alive_jobs))
@@ -53,7 +53,8 @@ def system_identification_jobs():
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         jobs = MetastoreFacade.list_system_identification_jobs()
         for job in jobs:
-            ManagementSystemController.stop_pid(job.pid)
+            ClusterController.stop_pid(ip=job.physical_host_ip,
+                                       port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, pid=job.pid)
             MetastoreFacade.remove_system_identification_job(system_identification_job=job)
         time.sleep(2)
         response = jsonify({})
@@ -65,13 +66,14 @@ def system_identification_jobs_ids():
     """
     :return: An HTTP response with all system-identification jobs ids
     """
-    system_identification_jobs_ids = MetastoreFacade.list_system_identification_jobs_ids()
+    system_identification_jobs = MetastoreFacade.list_system_identification_jobs()
     response_dicts = []
-    for tup in system_identification_jobs_ids:
+    for job in system_identification_jobs:
         response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
-            api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: EmulationUtil.check_pid(tup[2])
+            api_constants.MGMT_WEBAPP.ID_PROPERTY: job.id,
+            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: job.emulation_env_name,
+            api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: ClusterController.check_pid(
+                ip=job.physical_host_ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, pid=job.pid).outcome
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -100,11 +102,13 @@ def system_identification_policy(job_id: int):
     response = jsonify({})
     if job is not None:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-            if EmulationUtil.check_pid(job.pid):
+            if ClusterController.check_pid(ip=job.physical_host_ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                                           pid=job.pid).outcome:
                 job.running = True
             response = jsonify(job.to_dict())
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-            ManagementSystemController.stop_pid(job.pid)
+            ClusterController.stop_pid(ip=job.physical_host_ip,
+                                       port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, pid=job.pid)
             MetastoreFacade.remove_system_identification_job(system_identification_job=job)
             time.sleep(2)
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
@@ -117,7 +121,8 @@ def system_identification_policy(job_id: int):
                     system_identification_job=job)
                 time.sleep(4)
             else:
-                ManagementSystemController.stop_pid(pid=job.pid)
+                ClusterController.stop_pid(ip=job.physical_host_ip,
+                                           port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, pid=job.pid)
                 time.sleep(2)
 
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")

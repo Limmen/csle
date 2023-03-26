@@ -4236,3 +4236,20 @@ def check_pid(
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.CheckPidMsg(pid=pid)
     operation_outcome = stub.checkPid(operation_msg, timeout=timeout)
     return operation_outcome
+
+
+def stop_pid(
+        stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
+        pid: int, timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \
+        -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+    """
+    Stops a PID
+
+    :param stub: the stub to send the remote gRPC to the server
+    :param timeout: the GRPC timeout (seconds)
+    :param pid: the pid to check
+    :return: the operation outcome
+    """
+    operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.StopPidMsg(pid=pid)
+    operation_outcome = stub.stopPid(operation_msg, timeout=timeout)
+    return operation_outcome

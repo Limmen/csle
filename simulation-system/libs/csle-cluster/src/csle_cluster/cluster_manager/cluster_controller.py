@@ -4463,3 +4463,19 @@ class ClusterController:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.check_pid(stub=stub, pid=pid)
             return operation_outcome_dto
+
+    @staticmethod
+    def stop_pid(ip: str, port: int, pid: int) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops a PID of a specific server
+
+        :param ip: the ip of the physical node
+        :param port: the port of the cluster manager
+        :param pid: the PID to check
+        :return: The operation outcome
+        """
+        # Open a gRPC session
+        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_pid(stub=stub, pid=pid)
+            return operation_outcome_dto

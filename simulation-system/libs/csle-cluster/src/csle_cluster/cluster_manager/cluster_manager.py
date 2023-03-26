@@ -4568,6 +4568,20 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         running = ManagementSystemController.is_pid_running(pid=request.pid)
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=running)
 
+    def stopPid(
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopPidMsg,
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+        """
+        Stops a PID
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: an OperationOutcomeDTO
+        """
+        logging.info(f"Stopping PID: {request.pid}")
+        ManagementSystemController.stop_pid(pid=request.pid)
+        return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
+
 
 def serve(port: int = 50041, log_dir: str = "/var/log/csle/", max_workers: int = 10,
           log_file_name: str = "cluster_manager.log") -> None:

@@ -217,6 +217,12 @@ service ClusterManager {
   rpc startSparkServer(StartSparkServerMsg) returns (OperationOutcomeDTO) {}
   rpc stopSparkServer(StopSparkServerMsg) returns (OperationOutcomeDTO) {}
   rpc checkPid(CheckPidMsg) returns (OperationOutcomeDTO) {}
+  rpc stopPid(StopPidMsg) returns (OperationOutcomeDTO) {}
+}
+
+// Message that the client sends when requesting to start stop a PID
+message StopPidMsg {
+  int32 pid = 1;
 }
 
 // Message that the client sends when requesting to start check the status of a PID
