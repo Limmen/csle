@@ -469,6 +469,7 @@ class ContainerController:
         """
         if not ManagementSystemController.is_statsmanager_running():
             ManagementSystemController.start_docker_stats_manager(
+                logger=logger,
                 port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
                 log_dir=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir,
                 log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
@@ -501,16 +502,19 @@ class ContainerController:
                 containers=container_ip_dtos, execution_first_ip_octet=execution.ip_first_octet)
 
     @staticmethod
-    def stop_docker_stats_thread(execution: EmulationExecution, physical_server_ip: str) -> None:
+    def stop_docker_stats_thread(execution: EmulationExecution, physical_server_ip: str,
+                                 logger: logging.Logger) -> None:
         """
         Sends a request to the docker stats manager on the docker host for stopping a docker stats monitor thread
 
+        :param logger: the logger to use for logging
         :param execution: the execution of the emulation for which the monitor should be stopped
         :param physical_server_ip: the ip of the physical server
         :return: None
         """
         if not ManagementSystemController.is_statsmanager_running():
             ManagementSystemController.start_docker_stats_manager(
+                logger=logger,
                 port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
                 log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
                 log_dir=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir,

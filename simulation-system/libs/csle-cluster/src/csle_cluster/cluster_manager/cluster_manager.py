@@ -90,7 +90,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of PostgreSQL
         """
         logging.info(f"Starting postgresql with command: {constants.COMMANDS.POSTGRESQL_START}")
-        operation_status, stdout, stderr = ManagementSystemController.start_postgresql()
+        operation_status, stdout, stderr = ManagementSystemController.start_postgresql(logger=logging.getLogger())
         logging.info(f"Started postgresql, stdout:{stdout}, stderr: {stderr}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
@@ -105,7 +105,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of PostgreSQL
         """
         logging.info(f"Stopping postgresql with command: {constants.COMMANDS.POSTGRESQL_STOP}")
-        operation_status, stdout, stderr = ManagementSystemController.stop_postgresql()
+        operation_status, stdout, stderr = ManagementSystemController.stop_postgresql(logger=logging.getLogger())
         logging.info(f"Stopped postgresql, stdout:{stdout}, stderr: {stderr}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
@@ -120,7 +120,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of  the Docker egine
         """
         logging.info(f"Starting the docker engine with command: {constants.COMMANDS.DOCKER_ENGINE_START}")
-        operation_status, stdout, stderr = ManagementSystemController.start_docker_engine()
+        operation_status, stdout, stderr = ManagementSystemController.start_docker_engine(logger=logging.getLogger())
         logging.info(f"Started the docker engine, stdout:{stdout}, stderr: {stderr}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
@@ -135,7 +135,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of the Docker Engine
         """
         logging.info(f"Stopping the Docker engine with command: {constants.COMMANDS.DOCKER_ENGINE_STOP}")
-        operation_status, stdout, stderr = ManagementSystemController.stop_docker_engine()
+        operation_status, stdout, stderr = ManagementSystemController.stop_docker_engine(logger=logging.getLogger())
         logging.info(f"Stopped the Docker engine, stdout:{stdout}, stderr: {stderr}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
@@ -150,7 +150,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of Nginx
         """
         logging.info(f"Starting nginx with command: {constants.COMMANDS.NGINX_START}")
-        operation_status, stdout, stderr = ManagementSystemController.start_nginx()
+        operation_status, stdout, stderr = ManagementSystemController.start_nginx(logger=logging.getLogger())
         logging.info(f"Started nginx, stdout:{stdout}, stderr: {stderr}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
@@ -165,7 +165,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of Nginx
         """
         logging.info(f"Stopping Nginx with command: {constants.COMMANDS.NGINX_STOP}")
-        operation_status, stdout, stderr = ManagementSystemController.stop_nginx()
+        operation_status, stdout, stderr = ManagementSystemController.stop_nginx(logger=logging.getLogger())
         logging.info(f"Stopped Nginx, stdout:{stdout}, stderr: {stderr}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
@@ -180,7 +180,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of cAdvisor
         """
         logging.info("Starting cAdvisor")
-        ManagementSystemController.start_cadvisor()
+        ManagementSystemController.start_cadvisor(logger=logging.getLogger())
         logging.info("Started cAdvisor")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
@@ -210,7 +210,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of node exporter
         """
         logging.info("Starting node exporter")
-        ManagementSystemController.start_node_exporter()
+        ManagementSystemController.start_node_exporter(logger=logging.getLogger())
         logging.info("Started node exporter")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
@@ -225,7 +225,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of node exporter
         """
         logging.info("Stopping node exporter")
-        ManagementSystemController.stop_node_exporter()
+        ManagementSystemController.stop_node_exporter(logger=logging.getLogger())
         logging.info("Stopped node exporter")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
@@ -240,7 +240,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of grafana
         """
         logging.info("Starting grafana")
-        ManagementSystemController.start_grafana()
+        ManagementSystemController.start_grafana(logger=logging.getLogger())
         logging.info("Started grafana")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
@@ -270,7 +270,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of Prometheus
         """
         logging.info("Starting Prometheus")
-        ManagementSystemController.start_prometheus()
+        ManagementSystemController.start_prometheus(logger=logging.getLogger())
         logging.info("Started Prometheus")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
@@ -285,7 +285,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of Prometheus
         """
         logging.info("Stopping Prometheus")
-        ManagementSystemController.stop_prometheus()
+        ManagementSystemController.stop_prometheus(logger=logging.getLogger())
         logging.info("Stopped Prometheus")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
@@ -300,7 +300,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of pgAdmin
         """
         logging.info("Starting pgAdmin")
-        ManagementSystemController.start_pgadmin()
+        ManagementSystemController.start_pgadmin(logger=logging.getLogger())
         logging.info("Started pgAdmin")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
@@ -330,7 +330,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of flask
         """
         logging.info("Starting flask")
-        ManagementSystemController.start_flask()
+        ManagementSystemController.start_flask(logger=logging.getLogger())
         logging.info("Started flask")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
@@ -345,7 +345,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of flask
         """
         logging.info("Stopping flask")
-        ManagementSystemController.stop_flask()
+        ManagementSystemController.stop_flask(logger=logging.getLogger())
         logging.info("Stopped flask")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
@@ -360,7 +360,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of the docker statsmanager
         """
         logging.info("Starting the docker statsmanager")
-        ManagementSystemController.start_docker_stats_manager()
+        ManagementSystemController.start_docker_stats_manager(logger=logging.getLogger())
         logging.info("Started the docker statsmanager")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=True)
 
@@ -375,7 +375,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with the status of the docker statsmanager
         """
         logging.info("Stopping the Docker statsmanager")
-        ManagementSystemController.stop_docker_stats_manager()
+        ManagementSystemController.stop_docker_stats_manager(logger=logging.getLogger())
         logging.info("Stopped the Docker statsmanager")
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
@@ -2003,7 +2003,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         ContainerController.stop_docker_stats_thread(execution=execution,
-                                                     physical_server_ip=GeneralUtil.get_host_ip())
+                                                     physical_server_ip=GeneralUtil.get_host_ip(),
+                                                     logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def getDockerStatsManagerStatus(

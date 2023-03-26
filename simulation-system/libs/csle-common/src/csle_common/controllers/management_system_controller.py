@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 import subprocess
 import docker
@@ -112,30 +113,36 @@ class ManagementSystemController:
         return constants.COMMANDS.SEARCH_MONITOR in output and str(pid) in output
 
     @staticmethod
-    def start_node_exporter() -> bool:
+    def start_node_exporter(logger: logging.Logger) -> bool:
         """
         Starts the node exporter
 
+        :param logger: the logger to use for logging
         :return: True if it was started, False otherwise
         """
         if ManagementSystemController.is_node_exporter_running():
+            logger.info("Node exporter is already running")
             return False
         cmd = constants.COMMANDS.START_NODE_EXPORTER
+        logger.info(f"Starting node exporter by running the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         p.communicate()
         return True
 
     @staticmethod
-    def start_flask() -> bool:
+    def start_flask(logger: logging.Logger) -> bool:
         """
         Starts the Flask REST API Server
 
+        :param logger: the logger to use for logging
         :return: True if it was started, False otherwise
         """
         if ManagementSystemController.is_flask_running():
+            logger.info("Flask is already running")
             return False
 
         cmd = constants.COMMANDS.BUILD_CSLE_MGMT_WEBAPP
+        logger.info(f"Building the web app with the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         while True:
             out = p.stdout.read(1)
@@ -147,8 +154,8 @@ class ManagementSystemController:
                 except Exception:
                     pass
                 sys.stdout.flush()
-
         cmd = constants.COMMANDS.START_CSLE_MGMT_WEBAPP
+        logger.info(f"Starting flask with the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         p.communicate()
         pid = p.pid + 1
@@ -159,60 +166,72 @@ class ManagementSystemController:
         return True
 
     @staticmethod
-    def stop_node_exporter() -> bool:
+    def stop_node_exporter(logger: logging.Logger) -> bool:
         """
         Stops the node exporter
 
+        :param logger: the logger to use for logging
         :return: True if it was stopped, False otherwise
         """
         if not ManagementSystemController.is_node_exporter_running():
+            logger.info("Node exporter is not running")
             return False
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.NODE_EXPORTER_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
+        logger.info(f"Stopping node exporter by running the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         p.communicate()
         return True
 
     @staticmethod
-    def stop_flask() -> bool:
+    def stop_flask(logger: logging.Logger) -> bool:
         """
         Stops the flask REST API
 
+        :param logger: the logger to use for logging
         :return: True if it was stopped, False otherwise
         """
         if not ManagementSystemController.is_flask_running():
+            logger.info("Flask is not running")
             return False
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.CSLE_MGMT_WEBAPP_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
+        logger.info(f"Stopping flask by running the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         p.communicate()
         return True
 
     @staticmethod
-    def start_prometheus() -> bool:
+    def start_prometheus(logger: logging.Logger) -> bool:
         """
         Starts Prometheus
 
+        :param logger: the logger to use for logging
         :return: True if it was started, False otherwise
         """
         if ManagementSystemController.is_prometheus_running():
+            logger.info("Prometheus is already running")
             return False
         cmd = constants.COMMANDS.START_PROMETHEUS
+        logger.info(f"Starting Prometheus by running the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         p.communicate()
         return True
 
     @staticmethod
-    def stop_prometheus() -> bool:
+    def stop_prometheus(logger: logging.getLogger()) -> bool:
         """
         Stops Prometheus
 
+        :param logger: the logger to use for logging
         :return: True if it was stopped, False otherwise
         """
         if not ManagementSystemController.is_prometheus_running():
+            logger.info("Prometheus is not running")
             return False
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.PROMETHEUS_PID_FILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
+        logger.info(f"Stopping Prometheus by running the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         p.communicate()
         return True
@@ -268,11 +287,15 @@ class ManagementSystemController:
         return False
 
     @staticmethod
-    def start_cadvisor() -> bool:
+    def start_cadvisor(logger: logging.Logger) -> bool:
         """
+        Starts cAdvisor
+
+        :param logger: the logger to use for logging
         :return: True if cadvisor was started, otherwise False
         """
         if ManagementSystemController.is_cadvisor_running():
+            logger.info("cAdvisor is already running")
             return False
         client_1 = docker.from_env()
         containers = client_1.containers.list(all=True)
@@ -284,76 +307,117 @@ class ManagementSystemController:
                     c.start()
                     return True
         cmd = constants.COMMANDS.START_CADVISOR
+        logger.info(f"Starting cAdvisor by running the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
         return True
 
     @staticmethod
-    def start_postgresql() -> (bool, Any, Any):
+    def start_postgresql(logger: logging.Logger) -> (bool, Any, Any):
         """
+        Starts PostgreSQL
+
+        :param logger: the logger to use for logging
         :return: True if postgresql was started, otherwise False
         """
         if ManagementSystemController.is_postgresql_running():
+            logger.info("PostgreSQL is already running")
             return False, None, None
-        output = subprocess.run(constants.COMMANDS.POSTGRESQL_START.split(" "), capture_output=True, text=True)
+        cmd = constants.COMMANDS.POSTGRESQL_START
+        logger.info(f"Starting PostgreSQL by running the command: {cmd}")
+        output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         return True, output.stdout, output.stderr
 
     @staticmethod
-    def stop_postgresql() -> (bool, Any, Any):
+    def stop_postgresql(logger: logging.Logger) -> (bool, Any, Any):
         """
+        Stops PostgreSQL
+
+        :param logger: the logger to use for logging
         :return: True if postgresql was stopped, otherwise False
         """
         if not ManagementSystemController.is_postgresql_running():
+            logger.info("PostgreSQL is not running")
             return False, None, None
+        cmd = constants.COMMANDS.POSTGRESQL_STOP
+        logger.info(f"Stopping PostgreSQL by running the command: {cmd}")
         output = subprocess.run(constants.COMMANDS.POSTGRESQL_STOP.split(" "), capture_output=True, text=True)
         return True, output.stdout, output.stderr
 
     @staticmethod
-    def start_nginx() -> (bool, Any, Any):
+    def start_nginx(logger: logging.Logger) -> (bool, Any, Any):
         """
+        Starts Nginx
+
+        :param logger: the logger to use for logging
         :return: True if nginx was started, otherwise False
         """
         if ManagementSystemController.is_nginx_running():
+            logger.info("Nginx is already running")
             return False, None, None
-        output = subprocess.run(constants.COMMANDS.NGINX_START.split(" "), capture_output=True, text=True)
+        cmd = constants.COMMANDS.NGINX_START
+        logger.info(f"Starting Nginx by running the command: {cmd}")
+        output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         return True, output.stdout, output.stderr
 
     @staticmethod
-    def stop_nginx() -> (bool, Any, Any):
+    def stop_nginx(logger: logging.Logger) -> (bool, Any, Any):
         """
+        Stops Nginx
+
+        :param logger: the logger to use for logging
         :return: True if postgresql was stopped, otherwise False
         """
         if not ManagementSystemController.is_nginx_running():
+            logger.info("Nginx is not running")
             return False, None, None
-        output = subprocess.run(constants.COMMANDS.NGINX_STOP.split(" "), capture_output=True, text=True)
+        cmd = constants.COMMANDS.NGINX_STOP
+        logger.info(f"Stopping Nginx by running the command: {cmd}")
+        output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         return True, output.stdout, output.stderr
 
     @staticmethod
-    def start_docker_engine() -> (bool, Any, Any):
+    def start_docker_engine(logger: logging.Logger) -> (bool, Any, Any):
         """
+        Starts the Docker engine
+
+        :param logger: the logger to use for logging
         :return: True if nginx was started, otherwise False
         """
         if ManagementSystemController.is_docker_engine_running():
+            logger.info("The Docker engine is already running")
             return False, None, None
-        output = subprocess.run(constants.COMMANDS.DOCKER_ENGINE_START.split(" "), capture_output=True, text=True)
+        cmd = constants.COMMANDS.DOCKER_ENGINE_START
+        logger.info(f"Starting the Docker engine by running the command: {cmd}")
+        output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         return True, output.stdout, output.stderr
 
     @staticmethod
-    def stop_docker_engine() -> (bool, Any, Any):
+    def stop_docker_engine(logger: logging.Logger) -> (bool, Any, Any):
         """
+        Stops the Docker engine
+
+        :param logger: the logger to use for logging
         :return: True if postgresql was stopped, otherwise False
         """
         if not ManagementSystemController.is_docker_engine_running():
+            logger.info("The Docker engine is not running")
             return False, None, None
-        output = subprocess.run(constants.COMMANDS.DOCKER_ENGINE_STOP.split(" "), capture_output=True, text=True)
+        cmd = constants.COMMANDS.DOCKER_ENGINE_STOP
+        logger.info(f"Stopping the Docker engine by running the command: {cmd}")
+        output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         return True, output.stdout, output.stderr
 
     @staticmethod
-    def start_pgadmin() -> bool:
+    def start_pgadmin(logger: logging.Logger) -> bool:
         """
+        Starts pgAdmin
+
+        :param logger: the logger to use for logging
         :return: True if pgadmin was started, otherwise False
         """
         if ManagementSystemController.is_pgadmin_running():
+            logger.info("pgAdmin is already running")
             return False
         client_1 = docker.from_env()
         containers = client_1.containers.list(all=True)
@@ -365,6 +429,7 @@ class ManagementSystemController:
                     c.start()
                     return True
         cmd = constants.COMMANDS.START_PGADMIN
+        logger.info(f"Starting pgAdmin by running the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
         return True
@@ -372,6 +437,8 @@ class ManagementSystemController:
     @staticmethod
     def stop_grafana() -> bool:
         """
+        Stops Grafana
+
         :return: True if grafana was stopped, otherwise False
         """
         client_1 = docker.from_env()
@@ -383,11 +450,15 @@ class ManagementSystemController:
         return False
 
     @staticmethod
-    def start_grafana() -> bool:
+    def start_grafana(logger: logging.Logger) -> bool:
         """
+        Starts Grafana
+
+        :param logger: the logger to use for logging
         :return: True if grafana was started, otherwise False
         """
         if ManagementSystemController.is_grafana_running():
+            logger.info("Grafana is already runnign")
             return False
         client_1 = docker.from_env()
         containers = client_1.containers.list(all=True)
@@ -399,6 +470,7 @@ class ManagementSystemController:
                     c.start()
                     return True
         cmd = constants.COMMANDS.START_GRAFANA
+        logger.info(f"Starting Grafana by running the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
         return True
@@ -434,12 +506,13 @@ class ManagementSystemController:
         return constants.COMMANDS.SEARCH_DOCKER_STATS_MANAGER in output and str(pid) in output
 
     @staticmethod
-    def start_docker_stats_manager(log_file: str = "docker_stats_manager.log",
+    def start_docker_stats_manager(logger: logging.Logger, log_file: str = "docker_stats_manager.log",
                                    log_dir: str = "/var/log/csle", max_workers: int = 10,
                                    port: int = 50046) -> bool:
         """
         Starts the docker stats manager on the docker host if it is not already started
 
+        :param logger: the logger to use for logging
         :param port: the port that the docker stats manager will listen to
         :param log_file: log file of the docker stats manager
         :param log_dir: log dir of the docker stats manager
@@ -447,23 +520,28 @@ class ManagementSystemController:
         :return: True if it was started, False otherwise
         """
         if ManagementSystemController.is_statsmanager_running():
+            logger.info("The docker statsmanager is already running")
             return False
         cmd = constants.COMMANDS.START_DOCKER_STATS_MANAGER.format(port, log_dir, log_file, max_workers)
+        logger.info(f"Starting the Docker stats manager by running the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
         return True
 
     @staticmethod
-    def stop_docker_stats_manager() -> bool:
+    def stop_docker_stats_manager(logger: logging.Logger) -> bool:
         """
         Stops the statsmanager
 
+        :param logger: the logger to use for logging
         :return: True if it was stopped, False otherwise
         """
         if not ManagementSystemController.is_statsmanager_running():
+            logger.info("The statsmanager is not running")
             return False
         pid = ManagementSystemController.read_pid_file(constants.COMMANDS.DOCKER_STATS_MANAGER_PIDFILE)
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
+        logger.info(f"Stopping the statsmanager by running the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         (output, err) = p.communicate()
         return True

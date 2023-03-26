@@ -49,7 +49,8 @@ class EmulationEnvController:
         for exec in executions:
             EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip,
                                                    logger=logger)
-            ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip)
+            ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip,
+                                                         logger=logger)
 
     @staticmethod
     def stop_execution_of_emulation(emulation_env_config: EmulationEnvConfig, execution_id: int,
@@ -67,7 +68,8 @@ class EmulationEnvController:
                                                             ip_first_octet=execution_id)
         EmulationEnvController.stop_containers(execution=execution, physical_server_ip=physical_server_ip,
                                                logger=logger)
-        ContainerController.stop_docker_stats_thread(execution=execution, physical_server_ip=physical_server_ip)
+        ContainerController.stop_docker_stats_thread(execution=execution, physical_server_ip=physical_server_ip,
+                                                     logger=logger)
 
     @staticmethod
     def stop_all_executions(physical_server_ip: str, logger: logging.Logger) -> None:
@@ -82,7 +84,8 @@ class EmulationEnvController:
         for exec in executions:
             EmulationEnvController.stop_containers(execution=exec, physical_server_ip=physical_server_ip,
                                                    logger=logger)
-            ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip)
+            ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip,
+                                                         logger=logger)
 
     @staticmethod
     def install_csle_collector_and_ryu_libraries(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
@@ -546,7 +549,8 @@ class EmulationEnvController:
                                                    logger=logger)
             EmulationEnvController.rm_containers(execution=exec, physical_server_ip=physical_server_ip, logger=logger)
             try:
-                ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip)
+                ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip,
+                                                             logger=logger)
             except Exception:
                 pass
             EmulationEnvController.delete_networks_of_emulation_env_config(
@@ -572,7 +576,8 @@ class EmulationEnvController:
                                                logger=logger)
         EmulationEnvController.rm_containers(execution=execution, physical_server_ip=physical_server_ip, logger=logger)
         try:
-            ContainerController.stop_docker_stats_thread(execution=execution, physical_server_ip=physical_server_ip)
+            ContainerController.stop_docker_stats_thread(execution=execution, physical_server_ip=physical_server_ip,
+                                                         logger=logger)
         except Exception:
             pass
         EmulationEnvController.delete_networks_of_emulation_env_config(
@@ -595,7 +600,8 @@ class EmulationEnvController:
                                                    logger=logger)
             EmulationEnvController.rm_containers(execution=exec, physical_server_ip=physical_server_ip, logger=logger)
             try:
-                ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip)
+                ContainerController.stop_docker_stats_thread(execution=exec, physical_server_ip=physical_server_ip,
+                                                             logger=logger)
             except Exception:
                 pass
             EmulationEnvController.delete_networks_of_emulation_env_config(
