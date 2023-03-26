@@ -751,7 +751,14 @@ class EnvDynamicsUtil:
         merged_machines = []
         ips: Set[str] = set()
         for m in machines:
+            ip_suffixes = list(map(lambda x: x.split(".")[-1]))
+            for m1 in machines:
+                for ip in m1.ips:
+                    if ip.split(".")[-1] in ip_suffixes and ip not in m.ips:
+                        m.ips = set(list(m.ips + m1.ips))
+        for m in machines:
             if not m.ips_match(list(ips)):
+                print(f"did not match: {m.ips}, and {ips}")
                 merged_m = m
                 for m2 in machines:
                     if m2.ips == merged_m.ips:
