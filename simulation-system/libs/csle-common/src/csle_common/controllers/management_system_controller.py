@@ -156,8 +156,9 @@ class ManagementSystemController:
                     pass
                 sys.stdout.flush()
         cmd = constants.COMMANDS.START_CSLE_MGMT_WEBAPP
-        full_python_path = shutil.which("python")
-        cmd = cmd.replace("python", full_python_path)
+        cmd = cmd.replace("python", shutil.which("python"))
+        cmd = cmd.replace(f"${constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM}",
+                          os.environ[constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM])
         logger.info(f"Starting flask with the command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=False)
         p.communicate()
