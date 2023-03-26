@@ -61,19 +61,17 @@ class EnvDynamicsUtil:
         for n_m in new_machines_obs:
             if emulation_env_config.containers_config.agent_ip in n_m.ips:
                 continue
-            exists = False
             merged_m = n_m
             for i, o_m in enumerate(old_machines_obs):
-                if n_m.ips == o_m.ips:
+                if n_m.ips_match(o_m.ips):
                     merged_m = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(o_m, n_m, action)
-                    exists = True
             attacker_machine_observations.append(merged_m)
 
         # Add old machines to merged state
         for o_m in old_machines_obs:
             exists = False
             for m_m in attacker_machine_observations:
-                if o_m.ips == m_m.ips:
+                if o_m.ips_match(m_m.ips):
                     exists = True
             if not exists:
                 attacker_machine_observations.append(o_m)
@@ -758,7 +756,6 @@ class EnvDynamicsUtil:
                         m.ips = list(set(m.ips + m1.ips))
         for m in machines:
             if not m.ips_match(list(ips)):
-                print(f"did not match: {m.ips}, and {ips}")
                 merged_m = m
                 for m2 in machines:
                     if m2.ips == merged_m.ips:
