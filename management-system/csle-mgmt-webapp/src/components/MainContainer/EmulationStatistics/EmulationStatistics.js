@@ -698,7 +698,7 @@ const EmulationStatistics = (props) => {
                                 <div id="initialCountsBody" className="cardBodyHidden">
                                     <div className="col-sm-12 conditionalHisto">
                                         <h3 className="chartsTitle">
-                                            {"Initial counts of::" + props.selectedMetric.value} (downsampled to 100 samples)
+                                            {"Initial counts of:" + props.selectedMetric.value} (downsampled to 100 samples)
                                         </h3>
                                         <ConditionalHistogramDistribution
                                             data={props.selectedEmulationStatistic.initial_distributions_counts}

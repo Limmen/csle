@@ -418,7 +418,8 @@ const Emulation = (props) => {
                                         </tr>
                                         <tr>
                                             <td>csle-ryu
-                                                version</td>
+                                                version
+                                            </td>
                                             <td>{emulation.csle_ryu_version}</td>
                                         </tr>
                                         <tr>
@@ -1326,17 +1327,16 @@ const Emulation = (props) => {
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    {Object.keys(emulation.static_attacker_sequences).map((attackerName, index) =>
-                                                        emulation.static_attacker_sequences[attackerName].map((action, index2) =>
-                                                            <tr key={attackerName + "-" + index + "-" + index2}>
-                                                                <td>{attackerName}</td>
-                                                                <td>{index2}</td>
-                                                                <td>{action.name}</td>
-                                                                <td>{action.id}</td>
-                                                                <td>{action.index}</td>
-                                                                <td>{action.cmds.join(",")}</td>
-                                                                <td>{action.descr}</td>
-                                                            </tr>)
+                                                    {emulation.static_attacker_sequences[attackerName].map((action, index2) =>
+                                                        <tr key={attackerName + "-" + index + "-" + index2}>
+                                                            <td>{attackerName}</td>
+                                                            <td>{index2}</td>
+                                                            <td>{action.name}</td>
+                                                            <td>{action.id}</td>
+                                                            <td>{action.index}</td>
+                                                            <td>{action.cmds.join(",")}</td>
+                                                            <td>{action.descr}</td>
+                                                        </tr>
                                                     )}
                                                     </tbody>
                                                 </Table>
