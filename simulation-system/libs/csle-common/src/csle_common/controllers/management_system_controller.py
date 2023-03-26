@@ -156,7 +156,7 @@ class ManagementSystemController:
                 sys.stdout.flush()
         cmd = constants.COMMANDS.START_CSLE_MGMT_WEBAPP
         logger.info(f"Starting flask with the command: {cmd}")
-        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
+        p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=False)
         p.communicate()
         pid = p.pid + 1
 
