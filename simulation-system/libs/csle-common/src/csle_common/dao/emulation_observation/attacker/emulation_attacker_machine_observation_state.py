@@ -210,7 +210,7 @@ class EmulationAttackerMachineObservationState:
     @staticmethod
     def from_nmap_result(nmap_host_result: NmapHostResult) -> "EmulationAttackerMachineObservationState":
         """
-        Converts the NmapHostResultDTO into a a AttackerMachineObservationState
+        Converts the NmapHostResultDTO into a AttackerMachineObservationState
 
         :return: the created AttackerMachineObservationState
         """
@@ -239,6 +239,8 @@ class EmulationAttackerMachineObservationState:
         """
         for ip in self.ips:
             if ip in ips:
+                return True
+            if ip.split(".")[-1] in list(map(lambda x: x.split(".")[-1], ips)):
                 return True
         return False
 
