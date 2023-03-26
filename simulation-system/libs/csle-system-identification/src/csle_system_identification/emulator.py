@@ -204,6 +204,7 @@ class Emulator:
                                                                   emulation_env_config=emulation_env_config)
         logger.info(f"Executing attacker action:{attacker_action.name} on machine index: {attacker_action.index}, "
                      f"ips:{attacker_action.ips}")
+        logger.info(f"Machines: {list(map(lambda x: x.ips, s.attacker_obs_state.machines))}")
         s_prime = Attacker.attacker_transition(s=s, attacker_action=attacker_action)
         logger.debug(f"Attacker action complete, attacker state:{s_prime.attacker_obs_state}")
         EnvDynamicsUtil.cache_attacker_action(a=attacker_action, s=s_prime)
