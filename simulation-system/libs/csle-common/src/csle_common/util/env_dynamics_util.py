@@ -764,5 +764,5 @@ class EnvDynamicsUtil:
                     if m2.ips == merged_m.ips:
                         merged_m = EnvDynamicsUtil.merge_new_machine_obs_with_old_machine_obs(merged_m, m2, action)
                 merged_machines.append(merged_m)
-                ips.union(set(m.ips))
+                ips = ips.union(set(m.ips))
         return merged_machines
