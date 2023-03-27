@@ -104,6 +104,7 @@ class Emulator:
         s = EmulationEnvState(emulation_env_config=emulation_env_config)
         emulation_statistics.initial_distributions_counts = emulation_statistics.initialize_machine_counters(
             s=s, d=emulation_statistics.initial_distributions_counts)
+        print(list(emulation_statistics.initial_distributions_counts.keys()))
         s.initialize_defender_machines()
         emulation_traces = []
         collected_steps = 0
