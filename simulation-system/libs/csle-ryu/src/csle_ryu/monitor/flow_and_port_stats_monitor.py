@@ -99,7 +99,8 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                     try:
                         response = requests.get(f"{collector_constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                                                 f"{collector_constants.HTTP.LOCALHOST}:8080"
-                                                f"{constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dp.id}")
+                                                f"{constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dp.id}",
+                                                timeout=constants.RYU.TIMEOUT)
                         aggflows = json.loads(response.content)[str(dp.id)][0]
                         agg_flow_stat = AggFlowStatistic(timestamp=time.time(), datapath_id=dp.id,
                                                          total_num_bytes=aggflows[constants.RYU.BYTE_COUNT],

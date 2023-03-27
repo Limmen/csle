@@ -659,6 +659,7 @@ class HTTP:
     SERVICE_NAME = "http"
     DEFAULT_PORT = 80
     HTTP_PROTOCOL_PREFIX = "http://"
+    DEFAULT_TIMEOUT = 5
 
 
 class SPARK:

@@ -58,6 +58,7 @@ class RYU:
     ETH_DST = "eth_dst"
     PRODUCER_RUNNING = "producer_running"
     KAFKA_CONF = "kafka_conf"
+    TIMEOUT = 5
 
 
 class CONTROLLERS:

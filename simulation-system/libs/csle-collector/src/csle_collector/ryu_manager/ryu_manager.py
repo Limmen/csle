@@ -1,8 +1,9 @@
 import logging
+import threading
+import time
 from concurrent import futures
 import grpc
 import socket
-import os
 import subprocess
 import json
 import netifaces
@@ -10,6 +11,65 @@ import requests
 import csle_collector.ryu_manager.ryu_manager_pb2_grpc
 import csle_collector.ryu_manager.ryu_manager_pb2
 import csle_collector.constants.constants as constants
+
+
+class FailureDetector(threading.Thread):
+    """
+    Thread representing a client
+    """
+
+    def __init__(self, sleep_time: int, ip: str, ryu_web_port: int, ryu_port: int, controller: str, kafka_ip: str,
+                 kafka_port: int) -> None:
+        """
+        Initializes the failure detector
+
+        :param sleep_time: the period to check  for failures
+        :param ip: the ip of the host
+        :param ryu_web_port: the Ryu web port
+        :param ryu_port: the Ryu port
+        :param controller: the Ryu controller module
+        :param kafka_ip: the Kafka IP
+        :param kafka_port: the Kafka port
+        """
+        threading.Thread.__init__(self)
+        self.sleep_time = sleep_time
+        self.ip = ip
+        self.ryu_web_port = ryu_web_port
+        self.ryu_port = ryu_port
+        self.controller = controller
+        self.kafka_ip = kafka_ip
+        self.kafka_port = kafka_port
+
+    def run(self) -> None:
+        """
+        The failure detector loop
+
+        :return: None
+        """
+        done = False
+        while not done:
+            status_url = f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}" \
+                         f"{constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE}"
+            logging.info(f"Checking monitor status by sending a request to: {status_url}")
+            try:
+                response = requests.get(status_url, timeout=constants.RYU.REQUEST_TIMEOUT_S)
+            except Exception as e:
+                logging.info(f"Restarting Ryu..")
+                cmd = constants.RYU.STOP_RYU_CONTROLLER
+                logging.info(f"Stopping ryu with command: {cmd}")
+                result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
+                logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
+                cmd = constants.RYU.START_RYU_CONTROLLER.format(self.ryu_port, self.ryu_web_port, self.controller)
+                logging.info(f"Starting RYU controller with command: {cmd}")
+                result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
+                logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
+                start_url = f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}" \
+                            f"{constants.RYU.START_PRODUCER_HTTP_RESOURCE}"
+                logging.info(f"Starting the RYU monitor by sending a PUT request to: {start_url}")
+                requests.put(start_url, data=json.dumps({constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: self.kafka_ip,
+                                                         constants.RYU.TIME_STEP_LEN_SECONDS: self.time_step_len}),
+                             timeout=constants.RYU.REQUEST_TIMEOUT_S)
+            time.sleep(self.sleep_time)
 
 
 class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerServicer):
@@ -35,6 +95,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         self.kafka_ip = ""
         self.kafka_port = 9092
         self.time_step_len = 30
+        self.fd = None
         logging.info(f"Setting up RyuManager hostname: {self.hostname} ip: {self.ip}")
 
     def _get_ryu_status(self) -> bool:
@@ -62,12 +123,30 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
 
         :return: status
         """
-        logging.info("Checking monitor status by sending a request to: "
-                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}"
-                     f"{constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE}")
-        response = requests.get(
-            f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}"
-            f"{constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE}")
+        status_url = f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}" \
+                     f"{constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE}"
+        logging.info(f"Checking monitor status by sending a request to: {status_url}")
+        try:
+            response = requests.get(status_url, timeout=constants.RYU.REQUEST_TIMEOUT_S)
+        except Exception as e:
+            logging.info(f"Timeout trying to check monitor status: {str(e)}, {repr(e)}")
+            logging.info(f"Restarting Ryu..")
+            cmd = constants.RYU.STOP_RYU_CONTROLLER
+            logging.info(f"Stopping ryu with command: {cmd}")
+            result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
+            logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
+            cmd = constants.RYU.START_RYU_CONTROLLER.format(self.ryu_port, self.ryu_web_port, self.controller)
+            logging.info(f"Starting RYU controller with command: {cmd}")
+            result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
+            logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
+            start_url = f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}" \
+                  f"{constants.RYU.START_PRODUCER_HTTP_RESOURCE}"
+            logging.info(f"Starting the RYU monitor by sending a PUT request to: {start_url}")
+            requests.put(start_url, data=json.dumps({constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: self.kafka_ip,
+                                               constants.RYU.TIME_STEP_LEN_SECONDS: self.time_step_len}),
+                         timeout=constants.RYU.REQUEST_TIMEOUT_S)
+            response = requests.get(status_url, timeout=constants.RYU.REQUEST_TIMEOUT_S)
+
         logging.info(f"Response: {response.json()}")
         monitor_running = response.json()[constants.RYU.PRODUCER_RUNNING]
         return monitor_running
@@ -137,10 +216,18 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         if not ryu_running:
             # Stop old background job if running
             cmd = constants.RYU.STOP_RYU_CONTROLLER
-            os.system(cmd)
+            subprocess.run(cmd.split(" "), capture_output=True, text=True)
+            if self.fd is not None:
+                self.fd.done = True
+                self.fd = None
             cmd = constants.RYU.START_RYU_CONTROLLER.format(self.ryu_port, self.ryu_web_port, self.controller)
             logging.info(f"Starting RYU controller with command: {cmd}")
-            os.system(cmd)
+            result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
+            logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
+            logging.info(f"Starting the failure detector thread")
+            fd = FailureDetector(sleep_time=30, ip=self.ip, ryu_web_port=self.ryu_web_port, ryu_port=self.ryu_port,
+                                 controller=self.controller, kafka_ip=self.kafka_ip, kafka_port=self.kafka_port)
+            fd.start()
 
         ryu_dto = csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO(ryu_running=True, monitor_running=False,
                                                                     port=self.ryu_port,
@@ -166,7 +253,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
                      f"{constants.RYU.STOP_PRODUCER_HTTP_RESOURCE} ryu_running: {ryu_running}")
         if ryu_running:
             requests.post(f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}"
-                          f"{constants.RYU.STOP_PRODUCER_HTTP_RESOURCE}")
+                          f"{constants.RYU.STOP_PRODUCER_HTTP_RESOURCE}", timeout=constants.RYU.REQUEST_TIMEOUT_S)
         return csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO(ryu_running=ryu_running, monitor_running=False,
                                                                  port=self.ryu_port,
                                                                  web_port=self.ryu_web_port,
@@ -199,7 +286,8 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
                 f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}"
                 f"{constants.RYU.START_PRODUCER_HTTP_RESOURCE}",
                 data=json.dumps({constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: self.kafka_ip,
-                                 constants.RYU.TIME_STEP_LEN_SECONDS: self.time_step_len}))
+                                 constants.RYU.TIME_STEP_LEN_SECONDS: self.time_step_len}),
+                timeout=constants.RYU.REQUEST_TIMEOUT_S)
             monitor_running = response.status_code == constants.HTTP.OK_RESPONSE_CODE
         ryu_dto = csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO(ryu_running=ryu_running,
                                                                     monitor_running=monitor_running,

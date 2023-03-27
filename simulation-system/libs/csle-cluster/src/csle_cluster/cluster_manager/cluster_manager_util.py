@@ -1616,7 +1616,7 @@ class ClusterManagerUtil:
                     execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip]
                 try:
                     response = get(f'{constants.HTTP.HTTP_PROTOCOL_PREFIX}{constants.COMMON.LOCALHOST}:'
-                                   f'{local_kibana_port}')
+                                   f'{local_kibana_port}', timeout=constants.HTTP.DEFAULT_TIMEOUT)
                     if response.status_code != constants.HTTPS.OK_STATUS_CODE:
                         tunnel_thread_dict[cluster_constants.KIBANA_TUNNELS.THREAD_PROPERTY].shutdown()
                         del cluster_constants.KIBANA_TUNNELS.KIBANA_TUNNELS_DICT[
@@ -1696,7 +1696,7 @@ class ClusterManagerUtil:
                         execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip]
                     try:
                         response = get(f'{constants.HTTP.HTTP_PROTOCOL_PREFIX}{constants.COMMON.LOCALHOST}:'
-                                       f'{local_ryu_port}')
+                                       f'{local_ryu_port}', timeout=constants.HTTP.DEFAULT_TIMEOUT)
                         if response.status_code != constants.HTTPS.OK_STATUS_CODE:
                             tunnel_thread_dict[cluster_constants.RYU_TUNNELS.THREAD_PROPERTY].shutdown()
                             del cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT[

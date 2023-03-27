@@ -2251,7 +2251,9 @@ def get_sdn_switches_of_execution(execution_id: int):
                 f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                 f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                 f"{local_ryu_port}"
-                f"{ryu_constants.RYU.STATS_SWITCHES_RESOURCE}")
+                f"{ryu_constants.RYU.STATS_SWITCHES_RESOURCE}",
+                timeout=constants.HTTP.DEFAULT_TIMEOUT
+            )
             switches = json.loads(response.content)
             switches_dicts = []
             for dpid in switches:
@@ -2259,7 +2261,8 @@ def get_sdn_switches_of_execution(execution_id: int):
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_DESC_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_DESC_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict = {}
                 sw_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY] = dpid
                 sw_dict[api_constants.MGMT_WEBAPP.DESC_PROPERTY] = json.loads(response.content)[str(dpid)]
@@ -2267,19 +2270,22 @@ def get_sdn_switches_of_execution(execution_id: int):
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_FLOW_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_FLOW_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.FLOWS_PROPERTY] = json.loads(response.content)[str(dpid)]
                 response = requests.get(
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.AGG_FLOWS_PROPERTY] = json.loads(response.content)[str(dpid)][0]
                 response = requests.get(
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_TABLE_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_TABLE_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 tables = json.loads(response.content)[str(dpid)]
                 tables = list(filter(lambda x: x[api_constants.MGMT_WEBAPP.ACTIVE_COUNT_PROPERTY] > 0, tables))
                 filtered_table_ids = list(map(lambda x: x[api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY], tables))
@@ -2288,7 +2294,8 @@ def get_sdn_switches_of_execution(execution_id: int):
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_TABLE_FEATURES_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_TABLE_FEATURES_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 tablefeatures = json.loads(response.content)[str(dpid)]
                 tablefeatures = list(filter(
                     lambda x: x[api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY] in filtered_table_ids, tablefeatures))
@@ -2297,71 +2304,82 @@ def get_sdn_switches_of_execution(execution_id: int):
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_PORT_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_PORT_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.PORT_STATS_PROPERTY] = json.loads(response.content)[str(dpid)]
                 response = requests.get(
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_PORT_DESC_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_PORT_DESC_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.PORT_DESCS_PROPERTY] = json.loads(response.content)[str(dpid)]
                 response = requests.get(
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_QUEUE_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_QUEUE_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.QUEUES_PROPERTY] = json.loads(response.content)[str(dpid)]
                 response = requests.get(
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_QUEUE_CONFIG_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_QUEUE_CONFIG_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.QUEUE_CONFIGS_PROPERTY] = \
                     json.loads(response.content)[str(dpid)][0]
                 response = requests.get(
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_GROUP_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_GROUP_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.GROUPS_PROPERTY] = json.loads(response.content)[str(dpid)]
                 response = requests.get(
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_GROUP_DESC_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_GROUP_DESC_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.GROUP_DESCS_PROPERTY] = json.loads(response.content)[str(dpid)]
                 response = requests.get(
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_GROUP_FEATURES_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_GROUP_FEATURES_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.GROUP_FEATURES_PROPERTY] = \
                     json.loads(response.content)[str(dpid)][0]
                 response = requests.get(
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_METER_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_METER_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.METERS_PROPERTY] = json.loads(response.content)[str(dpid)]
                 response = requests.get(
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_METER_CONFIG_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_METER_CONFIG_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.METER_CONFIGS_PROPERTY] = \
                     json.loads(response.content)[str(dpid)]
                 response = requests.get(
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_METER_FEATURES_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_METER_FEATURES_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.METER_FEATURES_PROPERTY] = \
                     json.loads(response.content)[str(dpid)][0]
                 response = requests.get(
                     f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}"
                     f"{execution.emulation_env_config.sdn_controller_config.container.physical_host_ip}:"
                     f"{local_ryu_port}"
-                    f"{ryu_constants.RYU.STATS_ROLE_RESOURCE}/{dpid}")
+                    f"{ryu_constants.RYU.STATS_ROLE_RESOURCE}/{dpid}",
+                    timeout=constants.HTTP.DEFAULT_TIMEOUT)
                 sw_dict[api_constants.MGMT_WEBAPP.ROLES_PROPERTY] = json.loads(response.content)[str(dpid)][0]
                 switches_dicts.append(sw_dict)
             response_data = {}
