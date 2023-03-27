@@ -28,9 +28,11 @@ class EmulationStatistics:
             d={}, agg_labels=collector_constants.KAFKA_CONFIG.ALL_INITIAL_AGG_LABELS)
         self.conditionals_counts = {}
         self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL] = \
-            EmulationStatistics.initialize_counters(d={}, agg_labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_AGG_LABELS)
+            EmulationStatistics.initialize_counters(d={},
+                                                    agg_labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_AGG_LABELS)
         self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL] = \
-            EmulationStatistics.initialize_counters(d={}, agg_labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_AGG_LABELS)
+            EmulationStatistics.initialize_counters(d={},
+                                                    agg_labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_AGG_LABELS)
         self.id = -1
         self.means = {}
         self.stds = {}
@@ -65,12 +67,14 @@ class EmulationStatistics:
         return d
 
     @staticmethod
-    def initialize_machine_counters(d: Dict[str, Dict[int, int]], s: EmulationEnvState) -> Dict[str, Dict[int, int]]:
+    def initialize_machine_counters(d: Dict[str, Dict[int, int]], s: EmulationEnvState, labels: List[str]) \
+            -> Dict[str, Dict[int, int]]:
         """
         Initializes counters for a given dict
 
         :param d: the dict to initialize
         :param s: the state with the list of machines
+        :param labels: the labels to initialize
         :return: the initialized dict
         """
         labels = collector_constants.KAFKA_CONFIG.ALL_INITIAL_MACHINE_LABELS
@@ -79,6 +83,28 @@ class EmulationStatistics:
                 lbl = f"{label}_{machine.ips[0]}"
                 d[lbl] = {}
         return d
+
+    def initialize_machines(self, s: EmulationEnvState) -> None:
+        """
+        Initializes counters for a given dict
+
+        :param d: the dict to initialize
+        :param s: the state with the list of machines
+        :return: the initialized dict
+        """
+        self.initial_distributions_counts = EmulationStatistics.initialize_machine_counters(
+            d=self.initial_distributions_counts, s=s,
+            labels=collector_constants.KAFKA_CONFIG.ALL_INITIAL_MACHINE_LABELS)
+        self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL] = \
+            EmulationStatistics.initialize_machine_counters(
+                s=s,
+                d=self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL],
+                labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_MACHINE_LABELS)
+        self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL] = \
+            EmulationStatistics.initialize_machine_counters(
+                s=s,
+                d=self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL],
+                labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_MACHINE_LABELS)
 
     def update_counters(self, d: Dict, s: EmulationEnvState, s_prime: EmulationEnvState) -> None:
         """
@@ -207,7 +233,13 @@ class EmulationStatistics:
         # Action conditionals
         if f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}" not in self.conditionals_counts:
             self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"] = \
-                EmulationStatistics.initialize_counters(d={}, agg_labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_AGG_LABELS)
+                EmulationStatistics.initialize_counters(
+                    d={}, agg_labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_AGG_LABELS)
+            self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"] = \
+                EmulationStatistics.initialize_machine_counters(
+                    s=s,
+                    d=self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"],
+                    labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_MACHINE_LABELS)
         self.update_counters(
             d=self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"], s=s, s_prime=s_prime)
 

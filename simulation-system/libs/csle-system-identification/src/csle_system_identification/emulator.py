@@ -3,6 +3,7 @@ import time
 import os
 import sys
 import numpy as np
+import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
@@ -103,8 +104,7 @@ class Emulator:
         # Start the collection
         s = EmulationEnvState(emulation_env_config=emulation_env_config)
         s.initialize_defender_machines()
-        emulation_statistics.initial_distributions_counts = emulation_statistics.initialize_machine_counters(
-            s=s, d=emulation_statistics.initial_distributions_counts)
+        emulation_statistics.initialize_machines(s=s)
         emulation_traces = []
         collected_steps = 0
         for i in range(repeat_times):

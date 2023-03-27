@@ -127,8 +127,9 @@ class EmulationEnvState:
         :return: the machine if is found, otherwise None
         """
         for m in self.attacker_obs_state.machines:
-            if ip in m.ips:
-                return m
+            for m_ip in m.ips:
+                if m_ip == ip:
+                    return m
         return None
 
     def get_defender_machine(self, ip: str) -> Union[EmulationDefenderMachineObservationState, None]:
