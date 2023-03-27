@@ -1,6 +1,6 @@
 # OS
 # debian:9.2
-FROM vulnerables/web-dvwa
+FROM vulnerables/web-dvwa as img
 USER root
 
 # Install dependencies
