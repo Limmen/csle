@@ -59,9 +59,13 @@ class FailureDetector(threading.Thread):
                 logging.info(f"Stopping ryu with command: {cmd}")
                 result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
                 logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
+                cmd = constants.RYU.STOP_RYU_CONTROLLER_MANAGER
+                logging.info(f"Stopping ryu with command: {cmd}")
+                result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
+                logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
                 cmd = constants.RYU.START_RYU_CONTROLLER.format(self.ryu_port, self.ryu_web_port, self.controller)
                 logging.info(f"Starting RYU controller with command: {cmd}")
-                subprocess.Popen(cmd.split(" "), stdout=subprocess.DEVNULL, shell=False)
+                subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 start_url = f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}" \
                             f"{constants.RYU.START_PRODUCER_HTTP_RESOURCE}"
                 logging.info(f"Starting the RYU monitor by sending a PUT request to: {start_url}")
@@ -134,9 +138,13 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
             logging.info(f"Stopping ryu with command: {cmd}")
             result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
             logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
+            cmd = constants.RYU.STOP_RYU_CONTROLLER_MANAGER
+            logging.info(f"Stopping ryu with command: {cmd}")
+            result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
+            logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
             cmd = constants.RYU.START_RYU_CONTROLLER.format(self.ryu_port, self.ryu_web_port, self.controller)
             logging.info(f"Starting RYU controller with command: {cmd}")
-            subprocess.Popen(cmd.split(" "), stdout=subprocess.DEVNULL, shell=False)
+            subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             start_url = f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}" \
                   f"{constants.RYU.START_PRODUCER_HTTP_RESOURCE}"
             logging.info(f"Starting the RYU monitor by sending a PUT request to: {start_url}")
@@ -186,6 +194,10 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         logging.info(f"Stopping ryu with command: {cmd}")
         result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
         logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
+        cmd = constants.RYU.STOP_RYU_CONTROLLER_MANAGER
+        logging.info(f"Stopping ryu with command: {cmd}")
+        result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
+        logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
         return csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO(ryu_running=False, monitor_running=False,
                                                                  port=self.ryu_port,
                                                                  web_port=self.ryu_web_port,
@@ -215,12 +227,14 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
             # Stop old background job if running
             cmd = constants.RYU.STOP_RYU_CONTROLLER
             subprocess.run(cmd.split(" "), capture_output=True, text=True)
+            cmd = constants.RYU.STOP_RYU_CONTROLLER_MANAGER
+            subprocess.run(cmd.split(" "), capture_output=True, text=True)
             if self.fd is not None:
                 self.fd.done = True
                 self.fd = None
             cmd = constants.RYU.START_RYU_CONTROLLER.format(self.ryu_port, self.ryu_web_port, self.controller)
             logging.info(f"Starting RYU controller with command: {cmd}")
-            subprocess.Popen(cmd.split(" "), stdout=subprocess.DEVNULL, shell=False)
+            subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             logging.info(f"Starting the failure detector thread")
             time.sleep(2)
             fd = FailureDetector(sleep_time=30, ip=self.ip, ryu_web_port=self.ryu_web_port, ryu_port=self.ryu_port,

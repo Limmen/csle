@@ -719,7 +719,8 @@ class RYU:
     String constants for managing Ryu
     """
     CHECK_IF_RYU_CONTROLLER_IS_RUNNING = "ps -aux | grep ryu_controller.py"
-    STOP_RYU_CONTROLLER = "sudo pkill -f ryu_controller.py && sudo pkill -f ryu-manager"
+    STOP_RYU_CONTROLLER = "sudo pkill -f ryu_controller.py"
+    STOP_RYU_CONTROLLER_MANAGER = "sudo pkill -f ryu-manager"
     RYU_CONTROLLER_FILENAME = "ryu_controller.py"
     SEARCH_CONTROLLER = "/root/miniconda3/bin/python3 /ryu_controller.py"
     START_RYU_CONTROLLER = "sudo nohup /root/miniconda3/bin/python3 /ryu_controller.py --port {} --webport {} " \
