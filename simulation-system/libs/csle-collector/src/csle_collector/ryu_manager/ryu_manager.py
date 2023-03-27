@@ -61,8 +61,7 @@ class FailureDetector(threading.Thread):
                 logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
                 cmd = constants.RYU.START_RYU_CONTROLLER.format(self.ryu_port, self.ryu_web_port, self.controller)
                 logging.info(f"Starting RYU controller with command: {cmd}")
-                result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
-                logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
+                subprocess.Popen(cmd.split(" "), stdout=subprocess.DEVNULL, shell=False)
                 start_url = f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}" \
                             f"{constants.RYU.START_PRODUCER_HTTP_RESOURCE}"
                 logging.info(f"Starting the RYU monitor by sending a PUT request to: {start_url}")
@@ -137,8 +136,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
             logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
             cmd = constants.RYU.START_RYU_CONTROLLER.format(self.ryu_port, self.ryu_web_port, self.controller)
             logging.info(f"Starting RYU controller with command: {cmd}")
-            result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
-            logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
+            subprocess.Popen(cmd.split(" "), stdout=subprocess.DEVNULL, shell=False)
             start_url = f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}" \
                   f"{constants.RYU.START_PRODUCER_HTTP_RESOURCE}"
             logging.info(f"Starting the RYU monitor by sending a PUT request to: {start_url}")
@@ -222,9 +220,9 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
                 self.fd = None
             cmd = constants.RYU.START_RYU_CONTROLLER.format(self.ryu_port, self.ryu_web_port, self.controller)
             logging.info(f"Starting RYU controller with command: {cmd}")
-            result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
-            logging.info(f"Stdout: {result.stdout}, stderr: {result.stderr}")
+            subprocess.Popen(cmd.split(" "), stdout=subprocess.DEVNULL, shell=False)
             logging.info(f"Starting the failure detector thread")
+            time.sleep(2)
             fd = FailureDetector(sleep_time=30, ip=self.ip, ryu_web_port=self.ryu_web_port, ryu_port=self.ryu_port,
                                  controller=self.controller, kafka_ip=self.kafka_ip, kafka_port=self.kafka_port)
             fd.start()
