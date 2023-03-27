@@ -139,8 +139,9 @@ class EmulationEnvState:
         :return: the machine if found otherwise None
         """
         for m in self.defender_obs_state.machines:
-            if m.ips == ip:
-                return m
+            for m_ip in m.ips:
+                if m_ip == ip:
+                    return m
         return None
 
     def copy(self) -> "EmulationEnvState":

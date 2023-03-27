@@ -105,7 +105,6 @@ class Emulator:
         s.initialize_defender_machines()
         emulation_statistics.initial_distributions_counts = emulation_statistics.initialize_machine_counters(
             s=s, d=emulation_statistics.initial_distributions_counts)
-        print(list(emulation_statistics.initial_distributions_counts.keys()))
         emulation_traces = []
         collected_steps = 0
         for i in range(repeat_times):
