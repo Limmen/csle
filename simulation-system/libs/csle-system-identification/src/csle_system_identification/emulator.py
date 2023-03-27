@@ -43,7 +43,7 @@ class Emulator:
 
         :param emulation_env_config: the configuration of the emulation
         :param attacker_sequence: the sequence of attacker actions
-        :param defender_sequence: the sequenceo of defender actions
+        :param defender_sequence: the sequence of defender actions
         :param repeat_times: the number of times to repeat the sequences
         :param sleep_time: the number of seconds to sleep between time-steps
         :param save_dir: the directory to save the collected traces
@@ -102,6 +102,8 @@ class Emulator:
 
         # Start the collection
         s = EmulationEnvState(emulation_env_config=emulation_env_config)
+        emulation_statistics.initial_distributions_counts = emulation_statistics.initialize_machine_counters(
+            s=s, d=emulation_statistics.initial_distributions_counts)
         s.initialize_defender_machines()
         emulation_traces = []
         collected_steps = 0

@@ -3419,7 +3419,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         if execution.emulation_env_config.sdn_controller_config.container.physical_host_ip == GeneralUtil.get_host_ip():
-            SDNControllerManager.stop_ryu_manager(emulation_env_config=execution.emulation_env_config)
+            SDNControllerManager.stop_ryu_manager(emulation_env_config=execution.emulation_env_config,
+                                                  logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
         else:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)

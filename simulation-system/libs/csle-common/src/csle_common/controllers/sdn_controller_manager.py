@@ -39,6 +39,7 @@ class SDNControllerManager:
             cmd=cmd,
             conn=emulation_env_config.get_connection(
                 ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip))
+        logger.info(f"Ryu manager running?, cmd: {cmd}, out:{o.decode()}, err: {e.decode()}")
 
         if constants.COMMANDS.SEARCH_RYU_MANAGER not in str(o):
             logger.info(
@@ -63,14 +64,16 @@ class SDNControllerManager:
                 cmd=cmd,
                 conn=emulation_env_config.get_connection(
                     ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip))
+            logger.info(f"Starting the Ryu manager, cmd: {cmd}, out:{o.decode()}, err: {e.decode()}")
             time.sleep(2)
 
     @staticmethod
-    def stop_ryu_manager(emulation_env_config: EmulationEnvConfig) -> None:
+    def stop_ryu_manager(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) -> None:
         """
         Utility method for stopping the Ryu manager
 
         :param emulation_env_config: the emulation env config
+        :param logger: the logger to use for logging
         :return: None
         """
         # Connect
@@ -78,7 +81,7 @@ class SDNControllerManager:
                                     ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
                                     create_producer=False)
 
-        Logger.__call__().get_logger().info(
+        logger.info(
             f"Stopping ryu manager on node: "
             f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
 
@@ -89,7 +92,7 @@ class SDNControllerManager:
             cmd=cmd,
             conn=emulation_env_config.get_connection(
                 ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip))
-
+        logger.info(f"Stopping the Ryu manager, cmd: {cmd}, out:{o.decode()}, err: {e.decode()}")
         time.sleep(2)
 
     @staticmethod

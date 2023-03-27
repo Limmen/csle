@@ -25,12 +25,12 @@ class EmulationStatistics:
         self.emulation_name = emulation_name
         self.descr = descr
         self.initial_distributions_counts = self.initialize_counters(
-            d={}, labels=collector_constants.KAFKA_CONFIG.ALL_INITIAL_LABELS)
+            d={}, agg_labels=collector_constants.KAFKA_CONFIG.ALL_INITIAL_AGG_LABELS)
         self.conditionals_counts = {}
         self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL] = \
-            EmulationStatistics.initialize_counters(d={}, labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_LABELS)
+            EmulationStatistics.initialize_counters(d={}, agg_labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_AGG_LABELS)
         self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL] = \
-            EmulationStatistics.initialize_counters(d={}, labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_LABELS)
+            EmulationStatistics.initialize_counters(d={}, agg_labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_AGG_LABELS)
         self.id = -1
         self.means = {}
         self.stds = {}
@@ -50,16 +50,34 @@ class EmulationStatistics:
         self.metrics = []
 
     @staticmethod
-    def initialize_counters(d: Dict[str, Dict[int, int]], labels: List[str]) -> Dict[str, Dict[int, int]]:
+    def initialize_counters(d: Dict[str, Dict[int, int]], agg_labels: List[str]) \
+            -> Dict[str, Dict[int, int]]:
         """
         Initializes counters for a given dict
-        :param d: the dict to initialzie
-        :return: the initialized dict
-        """
 
-        for label in labels:
+        :param d: the dict to initialize
+        :param agg_labels: the labels
+        :return: the updated dict
+        """
+        for label in agg_labels:
             d[label] = {}
 
+        return d
+
+    @staticmethod
+    def initialize_machine_counters(d: Dict[str, Dict[int, int]], s: EmulationEnvState) -> Dict[str, Dict[int, int]]:
+        """
+        Initializes counters for a given dict
+
+        :param d: the dict to initialize
+        :param s: the state with the list of machines
+        :return: the initialized dict
+        """
+        labels = collector_constants.KAFKA_CONFIG.ALL_INITIAL_MACHINE_LABELS
+        for label in labels:
+            for machine in s.defender_obs_state.machines:
+                lbl = f"{label}_{machine.ips[0]}"
+                d[lbl] = {}
         return d
 
     def update_counters(self, d: Dict, s: EmulationEnvState, s_prime: EmulationEnvState) -> None:
@@ -80,6 +98,17 @@ class EmulationStatistics:
                 d[snort_alert_labels[i]][snort_alert_deltas[i]] += 1
             else:
                 d[snort_alert_labels[i]][snort_alert_deltas[i]] = 1
+        for machine in s.defender_obs_state.machines:
+            s_prime_machine = s_prime.get_defender_machine(ip=machine.ips[0])
+            snort_alert_deltas, snort_alert_labels = machine.snort_ids_ip_alert_counters.get_deltas(
+                s_prime_machine.snort_ids_ip_alert_counters)
+            for i in range(len(snort_alert_deltas)):
+                lbl = f"{snort_alert_labels[i]}_{machine.ips[0]}"
+                if snort_alert_deltas[i] in d[lbl]:
+                    d[lbl][snort_alert_deltas[i]] += 1
+                else:
+                    d[lbl][snort_alert_deltas[i]] = 1
+
 
         # OSSEC alerts
         ossec_alert_deltas, ossec_alert_labels = s.defender_obs_state.avg_ossec_ids_alert_counters.get_deltas(
@@ -90,6 +119,17 @@ class EmulationStatistics:
             else:
                 d[ossec_alert_labels[i]][ossec_alert_deltas[i]] = 1
 
+        for machine in s.defender_obs_state.machines:
+            s_prime_machine = s_prime.get_defender_machine(ip=machine.ips[0])
+            ossec_alert_deltas, ossec_alert_labels = machine.ossec_ids_alert_counters.get_deltas(
+                s_prime_machine.ossec_ids_alert_counters)
+            for i in range(len(ossec_alert_deltas)):
+                lbl = f"{ossec_alert_labels[i]}_{machine.ips[0]}"
+                if ossec_alert_deltas[i] in d[lbl]:
+                    d[lbl][ossec_alert_deltas[i]] += 1
+                else:
+                    d[lbl][ossec_alert_deltas[i]] = 1
+
         # Docker stats
         docker_stats_deltas, docker_stats_labels = s.defender_obs_state.avg_docker_stats.get_deltas(
             stats_prime=s_prime.defender_obs_state.avg_docker_stats)
@@ -98,6 +138,17 @@ class EmulationStatistics:
                 d[docker_stats_labels[i]][docker_stats_deltas[i]] += 1
             else:
                 d[docker_stats_labels[i]][docker_stats_deltas[i]] = 1
+
+        for machine in s.defender_obs_state.machines:
+            s_prime_machine = s_prime.get_defender_machine(ip=machine.ips[0])
+            docker_stats_deltas, docker_stats_labels = machine.docker_stats.get_deltas(
+                stats_prime=s_prime_machine.docker_stats)
+            for i in range(len(docker_stats_deltas)):
+                lbl = f"{docker_stats_labels[i]}_{machine.ips[0]}"
+                if docker_stats_deltas[i] in d[lbl]:
+                    d[lbl][docker_stats_deltas[i]] += 1
+                else:
+                    d[lbl][docker_stats_deltas[i]] = 1
 
         # Client metrics
         client_population_metrics_deltas, client_population_metrics_labels = (
@@ -118,6 +169,17 @@ class EmulationStatistics:
                 d[aggregated_host_metrics_labels[i]][aggregated_host_metrics_deltas[i]] += 1
             else:
                 d[aggregated_host_metrics_labels[i]][aggregated_host_metrics_deltas[i]] = 1
+
+        for machine in s.defender_obs_state.machines:
+            s_prime_machine = s_prime.get_defender_machine(ip=machine.ips[0])
+            host_metrics_deltas, host_metrics_labels = machine.host_metrics.get_deltas(
+                stats_prime=s_prime_machine.host_metrics)
+            for i in range(len(host_metrics_deltas)):
+                lbl = f"{host_metrics_labels[i]}_{machine.ips[0]}"
+                if host_metrics_deltas[i] in d[lbl]:
+                    d[lbl][host_metrics_deltas[i]] += 1
+                else:
+                    d[lbl][host_metrics_deltas[i]] = 1
 
     def update_delta_statistics(self, s: EmulationEnvState, s_prime: EmulationEnvState, a1: EmulationDefenderAction,
                                 a2: EmulationAttackerAction) -> None:
@@ -145,7 +207,7 @@ class EmulationStatistics:
         # Action conditionals
         if f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}" not in self.conditionals_counts:
             self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"] = \
-                EmulationStatistics.initialize_counters(d={}, labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_LABELS)
+                EmulationStatistics.initialize_counters(d={}, agg_labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_AGG_LABELS)
         self.update_counters(
             d=self.conditionals_counts[f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}"], s=s, s_prime=s_prime)
 
@@ -162,6 +224,12 @@ class EmulationStatistics:
                 self.initial_distributions_counts[snort_alert_labels[i]][0] += 1
             else:
                 self.initial_distributions_counts[snort_alert_labels[i]][0] = 1
+            for machine in s.defender_obs_state.machines:
+                lbl = f"{snort_alert_labels[i]}_{machine.ips[0]}"
+                if 0 in self.initial_distributions_counts[lbl]:
+                    self.initial_distributions_counts[lbl][0] += 1
+                else:
+                    self.initial_distributions_counts[lbl][0] = 1
 
         ossec_alert_labels = collector_constants.KAFKA_CONFIG.OSSEC_IDS_ALERTS_LABELS
         for i in range(len(ossec_alert_labels)):
@@ -169,6 +237,12 @@ class EmulationStatistics:
                 self.initial_distributions_counts[ossec_alert_labels[i]][0] += 1
             else:
                 self.initial_distributions_counts[ossec_alert_labels[i]][0] = 1
+            for machine in s.defender_obs_state.machines:
+                lbl = f"{ossec_alert_labels[i]}_{machine.ips[0]}"
+                if 0 in self.initial_distributions_counts[lbl]:
+                    self.initial_distributions_counts[lbl][0] += 1
+                else:
+                    self.initial_distributions_counts[lbl][0] = 1
 
         docker_stats_values, docker_stats_labels = s.defender_obs_state.docker_stats.get_values()
         for i in range(len(docker_stats_values)):
@@ -176,6 +250,14 @@ class EmulationStatistics:
                 self.initial_distributions_counts[docker_stats_labels[i]][docker_stats_values[i]] += 1
             else:
                 self.initial_distributions_counts[docker_stats_labels[i]][docker_stats_values[i]] = 1
+        for machine in s.defender_obs_state.machines:
+            m_values, m_labels = machine.docker_stats.get_values()
+            for i in range(len(m_values)):
+                lbl = f"{m_labels[i]}_{machine.ips[0]}"
+                if m_values[i] in self.initial_distributions_counts[lbl]:
+                    self.initial_distributions_counts[lbl][m_values[i]] += 1
+                else:
+                    self.initial_distributions_counts[lbl][m_values[i]] = 1
 
         client_population_metrics_values, client_population_metrics_labels = \
             s.defender_obs_state.client_population_metrics.get_values()
@@ -187,6 +269,7 @@ class EmulationStatistics:
             else:
                 self.initial_distributions_counts[
                     client_population_metrics_labels[i]][client_population_metrics_values[i]] = 1
+
         aggregated_host_metrics_values, aggregated_host_metrics_labels = \
             s.defender_obs_state.aggregated_host_metrics.get_values()
         for i in range(len(aggregated_host_metrics_values)):
@@ -197,6 +280,16 @@ class EmulationStatistics:
             else:
                 self.initial_distributions_counts[aggregated_host_metrics_labels[i]][
                     aggregated_host_metrics_values[i]] = 1
+
+        for machine in s.defender_obs_state.machines:
+            m_values, m_labels = machine.host_metrics.get_values()
+            for i in range(len(m_values)):
+                lbl = f"{m_labels[i]}_{machine.ips[0]}"
+                if (m_values[i] in self.initial_distributions_counts[lbl]):
+                    self.initial_distributions_counts[lbl][m_values[i]] += 1
+                else:
+                    self.initial_distributions_counts[lbl][m_values[i]] = 1
+
 
     def compute_descriptive_statistics_and_distributions(self) -> None:
         """
