@@ -45,8 +45,6 @@ if __name__ == '__main__':
     condition = "A:Continue_D:Continue_M:[]"
     # print(statistic.conditionals_probs[condition].keys())
     print(statistic.conditionals_probs[condition][metric])
-    print(statistic.conditionals_probs[condition]["adduser_alerts"])
-    print(statistic.means[condition]["adduser_alerts"])
     # returns = []
     # confidence = 0.95
     # running_avg = 30
