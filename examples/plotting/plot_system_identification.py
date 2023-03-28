@@ -4,9 +4,9 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.plotting_util import PlottingUtil
 
 
-def plot_returns(returns_means, returns_stds, file_name: str, fontsize: int = 18) -> None:
+def plot_system_identification(returns_means, returns_stds, file_name: str, fontsize: int = 18) -> None:
     """
-    Plots the returns
+    Plots the results of Bayesian optimization
 
     :param bo_results: a DTO with the results
     :param file_name: the file name to save the resulting plots
@@ -39,23 +39,29 @@ def plot_returns(returns_means, returns_stds, file_name: str, fontsize: int = 18
 
 
 if __name__ == '__main__':
-    experiment = MetastoreFacade.get_experiment_execution(id=132)
-    metric = "running_average_return"
-    returns = []
-    confidence = 0.95
-    running_avg = 30
-    # avg_rewards_data = np.array(avg_rewards_data_novice_ppo).reshape(max_len, num_seeds)
-    seeds = list(experiment.result.all_metrics.keys())
-    # seeds = [seeds[0]]
-    print(seeds)
-    for seed in seeds:
-        returns.append(PlottingUtil.running_average(experiment.result.all_metrics[seed][metric], running_avg))
-    returns = np.array(returns)
-    returns = returns.reshape((returns.shape[1], len(seeds)))
-    avg_returns_means = np.array(list(map(lambda x: PlottingUtil.mean_confidence_interval(
-        data=x, confidence=confidence)[0], returns)))
-    avg_returns_stds = np.array(list(map(lambda x: PlottingUtil.mean_confidence_interval(
-        data=x, confidence=confidence)[1], returns)))
-    print(returns.shape)
-    print(avg_returns_stds)
-    plot_returns(returns_means=avg_returns_means, returns_stds=avg_returns_stds, file_name="returns")
+    statistic = MetastoreFacade.get_emulation_statistic(id=1)
+    ip = "15.13.2.10"
+    metric = f"alerts_weighted_by_priority_{ip}"
+    condition = "A:Continue_D:Continue_M:[]"
+    # print(statistic.conditionals_probs[condition].keys())
+    print(statistic.conditionals_probs[condition][metric])
+    print(statistic.conditionals_probs[condition]["adduser_alerts"])
+    print(statistic.means[condition]["adduser_alerts"])
+    # returns = []
+    # confidence = 0.95
+    # running_avg = 30
+    # # avg_rewards_data = np.array(avg_rewards_data_novice_ppo).reshape(max_len, num_seeds)
+    # seeds = list(experiment.result.all_metrics.keys())
+    # # seeds = [seeds[0]]
+    # print(seeds)
+    # for seed in seeds:
+    #     returns.append(PlottingUtil.running_average(experiment.result.all_metrics[seed][metric], running_avg))
+    # returns = np.array(returns)
+    # returns = returns.reshape((returns.shape[1], len(seeds)))
+    # avg_returns_means = np.array(list(map(lambda x: PlottingUtil.mean_confidence_interval(
+    #     data=x, confidence=confidence)[0], returns)))
+    # avg_returns_stds = np.array(list(map(lambda x: PlottingUtil.mean_confidence_interval(
+    #     data=x, confidence=confidence)[1], returns)))
+    # print(returns.shape)
+    # print(avg_returns_stds)
+    # plot_returns(returns_means=avg_returns_means, returns_stds=avg_returns_stds, file_name="returns")

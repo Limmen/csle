@@ -205,6 +205,8 @@ const EmulationStatistics = (props) => {
     const updateEmulationStatisticId = (emulationStatisticId) => {
         setSelectedEmulationStatisticId(emulationStatisticId)
         fetchEmulationStatistic(emulationStatisticId)
+        setSelectedConditionals(null)
+        setSelectedMetric(null)
         setLoadingSelectedEmulationStatistic(true)
     }
 
