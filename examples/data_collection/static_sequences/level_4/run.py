@@ -9,6 +9,11 @@ from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actio
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_system_identification.emulator import Emulator
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_nmap_actions import EmulationAttackerNMAPActions
+from csle_common.dao.emulation_action.attacker.emulation_attacker_shell_actions import EmulationAttackerShellActions
+from csle_common.dao.emulation_action.attacker.emulation_attacker_network_service_actions \
+    import EmulationAttackerNetworkServiceActions
 
 
 def expert_attacker_sequence(wait_steps: int, emulation_env_config: EmulationEnvConfig) \
@@ -87,12 +92,26 @@ def run() -> None:
     :return: None
     """
     executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name="csle-level4-010")
+    # print(executions[0].ip_first_octet)
+    # print(executions[1].ip_first_octet)
     emulation_env_config = executions[0].emulation_env_config
     assert emulation_env_config is not None
     trace_len = 30
-    attacker_sequence = passive_attacker_sequence(length=trace_len,
-                                                  emulation_env_config=emulation_env_config)
-    defender_sequence = passive_defender_sequence(length=trace_len,
+    subnet_masks = emulation_env_config.topology_config.subnetwork_masks
+    attacker_sequence = [EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=subnet_masks),
+                         EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
+                         EmulationAttackerNMAPActions.TELNET_SAME_USER_PASS_DICTIONARY(index=0),
+                         EmulationAttackerNMAPActions.FTP_SAME_USER_PASS_DICTIONARY(index=0),
+                         EmulationAttackerNMAPActions.TCP_SYN_STEALTH_SCAN(index=-1, ips=subnet_masks),
+                         EmulationAttackerShellActions.SHELLSHOCK_EXPLOIT(index=0),
+                         EmulationAttackerNMAPActions.SSH_SAME_USER_PASS_DICTIONARY(index=0),
+                         EmulationAttackerNMAPActions.PING_SCAN(index=-1, ips=subnet_masks),
+                         EmulationAttackerShellActions.SAMBACRY_EXPLOIT(index=0),
+                         EmulationAttackerNetworkServiceActions.SERVICE_LOGIN(index=-1),
+                         EmulationAttackerShellActions.DVWA_SQL_INJECTION(index=0),
+                         EmulationAttackerShellActions.CVE_2015_1427_EXPLOIT(index=0)
+                         ]
+    defender_sequence = passive_defender_sequence(length=len(attacker_sequence),
                                                   emulation_env_config=emulation_env_config)
     # em_statistic = MetastoreFacade.get_emulation_statistic(id=3)
     em_statistic = None
@@ -102,7 +121,7 @@ def run() -> None:
                                   descr="Passive system observation",
                                   save_emulation_traces_every=1,
                                   emulation_traces_to_save_with_data_collection_job=1,
-                                  emulation_statistics=em_statistic, intrusion_start_p=0.0,
+                                  emulation_statistics=em_statistic, intrusion_start_p=1,
                                   intrusion_continue=1, trace_len=trace_len)
 
 

@@ -52,7 +52,7 @@ class ExportUtil:
     @staticmethod
     def export_emulation_traces_to_disk_json(num_traces_per_file: int, output_dir: str, zip_file_output: str,
                                              max_num_traces: int, added_by: str = "unknown", offset: int = 0,
-                                             file_start_id: int = 1) -> None:
+                                             file_start_id: int = 1, emulation_traces_ids = None) -> None:
         """
         Exports emulation traces from the metastore to disk
 
@@ -63,6 +63,7 @@ class ExportUtil:
         :param added_by: the person who added the dataset
         :param offset: the trace id offset
         :param file_start_id: the id of the first file to write
+        :param emulation_traces_ids: the ids of the traces to export
         :return: None
         """
         Logger.__call__().get_logger().info(f"Exporting emulation traces to disk (json), output dir: {output_dir}, "
@@ -70,8 +71,9 @@ class ExportUtil:
                                             f"num traces per file: {num_traces_per_file}")
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-        emulation_traces_ids = MetastoreFacade.list_emulation_traces_ids()
-        emulation_traces_ids = emulation_traces_ids[offset:]
+        if emulation_traces_ids is None:
+            emulation_traces_ids = MetastoreFacade.list_emulation_traces_ids()
+            emulation_traces_ids = emulation_traces_ids[offset:]
         if len(emulation_traces_ids) > max_num_traces:
             emulation_traces_ids = emulation_traces_ids[0:max_num_traces]
         traces = []
