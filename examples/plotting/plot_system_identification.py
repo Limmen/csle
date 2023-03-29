@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
@@ -7,11 +7,10 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.util.plotting_util import PlottingUtil
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from sklearn.mixture import GaussianMixture
+from csle_common.util.export_util import ExportUtil
 
 
-def plot_hist(statistic: EmulationStatistics, ips: List[str], condition: str, metric: str) -> None:
-    times = np.arange(1, 101, 1)
-
+def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str], condition: str, metric: str) -> None:
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts,amsmath}')
     plt.rcParams['font.family'] = ['serif']
@@ -36,6 +35,8 @@ def plot_hist(statistic: EmulationStatistics, ips: List[str], condition: str, me
         x = statistic.conditionals_counts[condition][metric.format(ip)]
         if max(list(x.keys())) > max_val:
             max_val = max(list(x.keys()))
+    if max(list(attack_counts.keys())) > max_val:
+        max_val = max(list(attack_counts.keys()))
 
     for i, ip in enumerate(ips):
         x = statistic.conditionals_counts[condition][metric.format(ip)]
@@ -59,10 +60,19 @@ def plot_hist(statistic: EmulationStatistics, ips: List[str], condition: str, me
             d_arr = np.array(dist)
             combined_dist = combined_dist + d_arr
         combined_distribution = list(combined_dist)
-        n, bins, patches = ax[row][col].hist(x, cumulative=False, density=True, bins=15, alpha=1, color="red",
-                                   edgecolor='black', linewidth=1, ls="dashdot")
+        n, bins, patches = ax[row][col].hist(x, cumulative=False, density=True, bins=10, alpha=1, color="red",
+                                   edgecolor='black', linewidth=1, ls="dashdot", label="no intrusion")
+        attack_counts_temp = attack_counts.copy()
+        for k,v in x.items():
+            if k in attack_counts_temp:
+                attack_counts_temp[k] = attack_counts_temp[k] + v
+            else:
+                attack_counts_temp[k] = v
+        n, bins, patches = ax[row][col].hist(attack_counts_temp,
+                                             cumulative=False, density=True, bins=20, alpha=0.4, color="blue",
+                                             edgecolor='black', linewidth=1, ls="dashed", label="intrusion")
         # ax[row][col].plot(sample_space, combined_distribution, 'k--', label='Theoretical', linewidth=2.5)
-        ax[row][col].set_title(r"$Z_{" + str(i+1) + "}$", fontsize=fontsize)
+        ax[row][col].set_title(r"$Z_{\mathbf{O}_{" + str(i+1) + "}}$", fontsize=fontsize)
         # ax[row][col].set_xlabel(r"IDPS alerts weighted by priority", fontsize=fontsize)
         # ax[row][col].set_ylabel(r"$Z_i$", fontsize=fontsize)
         ax[row][col].set_yticks([])
@@ -82,15 +92,23 @@ def plot_hist(statistic: EmulationStatistics, ips: List[str], condition: str, me
             ax[row][col].set_ylabel(r"probability", fontsize=fontsize)
         if row != nrows-1:
             ax[row][col].set_xticks([])
-        # else:
-            # ax[row][col].set_xlabel(r"\# weighted alerts", fontsize=fontsize)
+        else:
+            ax[row][col].set_xlabel(r"$\mathcal{O}$", fontsize=fontsize)
         if col == ncols-1:
             col = 0
             row = row + 1
         else:
             col = col + 1
+    fig.suptitle(r"Distributions of \# alerts weighted by priority $Z_{\mathbf{O}_i}(\mathbf{O}_i \mid \mathbf{S}^{(\mathrm{D})}_i, \mathbf{A}^{(\mathrm{A})}_{i})$ per node $i \in \mathcal{V}$", fontsize=18)
+    handles, labels = ax[0][0].get_legend_handles_labels()
+    # handles_2, labels_2 = ax[1][1].get_legend_handles_labels()
+    # handles = handles + handles_2
+    # labels = labels+labels_2
+    fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.52, 0.0),
+               ncol=8, fancybox=True, shadow=False, handletextpad=0.4, labelspacing=0.5, columnspacing=0.65,
+               prop={'size': fontsize})
     fig.tight_layout()
-    plt.subplots_adjust(wspace=0, hspace=0.2)
+    plt.subplots_adjust(wspace=0, hspace=0.2, bottom=0.077)
     plt.show()
     # plt.subplots_adjust(wspace=0, hspace=0)
     fig.savefig("geo_only_2" + ".png", format="png", dpi=600)
@@ -98,6 +116,19 @@ def plot_hist(statistic: EmulationStatistics, ips: List[str], condition: str, me
 
 
 if __name__ == '__main__':
+    attack_statistic = MetastoreFacade.get_emulation_statistic(id=3)
+    print(attack_statistic.conditionals_counts["intrusion"].keys())
+    # attack_counts = attack_statistic.conditionals_counts["intrusion"]["alerts_weighted_by_priority"]
+    attack_counts = attack_statistic.conditionals_counts["intrusion"]["alerts_weighted_by_priority_16.4.2.3"]
+    conditions = ["A:Continue_D:Continue_M:[]", "A:DVWA SQL Injection Exploit_D:Continue_M:[]",
+                  "A:FTP dictionary attack for username=pw_D:Continue_M:[]", "A:Network service login_D:Continue_M:[]",
+                  "A:Ping Scan_D:Continue_M:[]", "A:SSH dictionary attack for username=pw_D:Continue_M:[]",
+                  "A:Sambacry Explolit_D:Continue_M:[]", "A:ShellShock Explolit_D:Continue_M:[]",
+                  "A:TCP SYN (Stealth) Scan_D:Continue_M:[]",
+                  "A:Telnet dictionary attack for username=pw_D:Continue_M:[]",
+    "A:CVE-2015-1427 exploit_D:Continue_M:[]"
+                  ]
+    print(attack_counts)
     statistic = MetastoreFacade.get_emulation_statistic(id=1)
     metric = "alerts_weighted_by_priority_{}"
     condition = "A:Continue_D:Continue_M:[]"
@@ -114,22 +145,12 @@ if __name__ == '__main__':
         '15.13.24.57', '15.13.24.58', '15.13.25.59', '15.13.25.60', '15.13.26.61', '15.13.26.62',
         '15.13.27.63', '15.13.27.64'
     ]
-    plot_hist(statistic, ips=ips, metric=metric, condition=condition)
-    # returns = []
-    # confidence = 0.95
-    # running_avg = 30
-    # # avg_rewards_data = np.array(avg_rewards_data_novice_ppo).reshape(max_len, num_seeds)
-    # seeds = list(experiment.result.all_metrics.keys())
-    # # seeds = [seeds[0]]
-    # print(seeds)
-    # for seed in seeds:
-    #     returns.append(PlottingUtil.running_average(experiment.result.all_metrics[seed][metric], running_avg))
-    # returns = np.array(returns)
-    # returns = returns.reshape((returns.shape[1], len(seeds)))
-    # avg_returns_means = np.array(list(map(lambda x: PlottingUtil.mean_confidence_interval(
-    #     data=x, confidence=confidence)[0], returns)))
-    # avg_returns_stds = np.array(list(map(lambda x: PlottingUtil.mean_confidence_interval(
-    #     data=x, confidence=confidence)[1], returns)))
-    # print(returns.shape)
-    # print(avg_returns_stds)
-    # plot_returns(returns_means=avg_returns_means, returns_stds=avg_returns_stds, file_name="returns")
+    plot_hist(statistic, ips=ips, metric=metric, condition=condition, attack_counts=attack_counts)
+    # ExportUtil.export_emulation_statistics_to_disk_json(
+    #     output_dir="/home/kim/statistics_dataset_29_mar_23_json",
+    #     zip_file_output="/home/kim/statistics_dataset_29_mar_23_json.zip", added_by="Kim Hammar",
+    #     statistics_id=1)
+    # ExportUtil.export_emulation_statistics_to_disk_json(
+    #     output_dir="/home/kim/statistics_dataset_29_mar_23_json",
+    #     zip_file_output="/home/kim/statistics_dataset_29_mar_23_json.zip", added_by="Kim Hammar",
+    #     statistics_id=3)
