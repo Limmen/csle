@@ -92,7 +92,7 @@ def run() -> None:
                                   save_emulation_traces_every=1,
                                   emulation_traces_to_save_with_data_collection_job=1,
                                   emulation_statistics=em_statistic, intrusion_start_p=0.2,
-                                  intrusion_continue=1)
+                                  intrusion_continue=1, restart_client_population=True)
 
 
 # Program entrypoint

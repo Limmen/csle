@@ -22,6 +22,7 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actio
 from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions \
     import EmulationDefenderStoppingActions
 from csle_common.util.general_util import GeneralUtil
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
 
 class Emulator:
@@ -38,7 +39,8 @@ class Emulator:
             data_collection_job: Optional[DataCollectionJobConfig] = None,
             save_emulation_traces_every: int = 10,
             emulation_traces_to_save_with_data_collection_job: int = 3,
-            intrusion_start_p: float = 0.1, intrusion_continue: float = 0.3, trace_len: int = 30) -> None:
+            intrusion_start_p: float = 0.1, intrusion_continue: float = 0.3, trace_len: int = 30,
+            restart_client_population: bool = False) -> None:
         """
         Runs an attacker and defender sequence in the emulation <repeat_times> times
 
@@ -59,6 +61,7 @@ class Emulator:
         :param intrusion_continue: the p parameter for the geometric distribution that determines
                                    when an intrusion continues
         :param trace_len: fixed trace length
+        :param restart_client_population: whether to restart the client population after each trace.
         :return: None
         """
         logger = Logger.__call__().get_logger()
@@ -143,6 +146,20 @@ class Emulator:
                 data_collection_job.traces = traces[-data_collection_job.num_cached_traces:]
             else:
                 data_collection_job.traces = traces
+
+            if restart_client_population:
+                ClusterController.stop_client_population(
+                    ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
+                    port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
+                    emulation=emulation_env_config.name)
+                time.sleep(5)
+                ClusterController.start_client_population(
+                    ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
+                    port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
+                    emulation=emulation_env_config.name
+                )
+                time.sleep(15)
+
             for t in range(T):
                 old_state = s.copy()
                 a1 = full_defender_sequence[t]
@@ -169,6 +186,20 @@ class Emulator:
                 MetastoreFacade.update_data_collection_job(data_collection_job=data_collection_job,
                                                            id=data_collection_job.id)
                 MetastoreFacade.update_emulation_statistic(emulation_statistics=emulation_statistics, id=statistics_id)
+
+                if restart_client_population:
+                    ClusterController.stop_client_population(
+                        ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
+                        port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
+                        emulation=emulation_env_config.name)
+                    time.sleep(5)
+                    ClusterController.start_client_population(
+                        ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
+                        port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        ip_first_octet=emulation_env_config.execution_id,
+                        emulation=emulation_env_config.name
+                    )
+                    time.sleep(15)
 
             if save and i % save_emulation_traces_every == 0:
                 MetastoreFacade.save_emulation_trace(emulation_trace)
