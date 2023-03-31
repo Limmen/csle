@@ -15,7 +15,7 @@ class ClientPopulationConfig:
                  num_commands: int = 5,
                  client_time_step_len_seconds: int = 1, time_scaling_factor: float = 0.01,
                  period_scaling_factor: float = 20, docker_gw_bridge_ip: str = "", physical_host_ip: str = "",
-                 exponents = None, factors = None, breakpoints = None, breakvalues = None):
+                 exponents=None, factors=None, breakpoints=None, breakvalues=None):
         """
         Creates a ClientPopulationConfig DTO Object
 
@@ -75,7 +75,7 @@ class ClientPopulationConfig:
             client_manager_log_dir=d["client_manager_log_dir"], client_manager_log_file=d["client_manager_log_file"],
             client_manager_max_workers=d["client_manager_max_workers"],
             docker_gw_bridge_ip=d["docker_gw_bridge_ip"], physical_host_ip=d["physical_host_ip"],
-            exponents = d["exponents"],  factors=d["factors"], breakpoints=d["breakpoints"],
+            exponents=d["exponents"], factors=d["factors"], breakpoints=d["breakpoints"],
             breakvalues=d["breakvalues"]
         )
         return obj

@@ -145,12 +145,12 @@ if __name__ == '__main__':
         '15.13.24.57', '15.13.24.58', '15.13.25.59', '15.13.25.60', '15.13.26.61', '15.13.26.62',
         '15.13.27.63', '15.13.27.64'
     ]
-    plot_hist(statistic, ips=ips, metric=metric, condition=condition, attack_counts=attack_counts)
-    # ExportUtil.export_emulation_statistics_to_disk_json(
-    #     output_dir="/home/kim/statistics_dataset_29_mar_23_json",
-    #     zip_file_output="/home/kim/statistics_dataset_29_mar_23_json.zip", added_by="Kim Hammar",
-    #     statistics_id=1)
-    # ExportUtil.export_emulation_statistics_to_disk_json(
-    #     output_dir="/home/kim/statistics_dataset_29_mar_23_json",
-    #     zip_file_output="/home/kim/statistics_dataset_29_mar_23_json.zip", added_by="Kim Hammar",
-    #     statistics_id=3)
+    # plot_hist(statistic, ips=ips, metric=metric, condition=condition, attack_counts=attack_counts)
+    ExportUtil.export_emulation_statistics_to_disk_json(
+        output_dir="/home/kim/statistics_dataset_31_mar_defender_23_json",
+        zip_file_output="/home/kim/statistics_dataset_31_mar_defender_23_json.zip", added_by="Kim Hammar",
+        statistics_id=1)
+    ExportUtil.export_emulation_statistics_to_disk_json(
+        output_dir="/home/kim/statistics_dataset_31_mar_attacker_23_json",
+        zip_file_output="/home/kim/statistics_dataset_31_mar_attacker_23_json.zip", added_by="Kim Hammar",
+        statistics_id=3)

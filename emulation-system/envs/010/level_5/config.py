@@ -1845,7 +1845,8 @@ def default_traffic_config(network_id: int, time_step_len_seconds: int) -> Traff
         time_scaling_factor=0.01, period_scaling_factor=20,
         client_manager_log_dir=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR,
         client_manager_log_file=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE,
-        client_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS)
+        client_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS,
+        exponents=None, factors=None, breakpoints=None, breakvalues=None)
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
                                  client_population_config=client_population_config)
     return traffic_conf
