@@ -15,7 +15,7 @@ def get_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Clie
     :return: a clientsDTO describing the state of the clients
     """
     get_clients_dto_msg = csle_collector.client_manager.client_manager_pb2.GetClientsMsg()
-    clients_dto = stub.getClients(get_clients_dto_msg)
+    clients_dto = stub.getClients(get_clients_dto_msg, timeout=timeout)
     return clients_dto
 
 
@@ -29,13 +29,15 @@ def stop_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cli
     :return: a clientsDTO describing the state of the clients
     """
     stop_clients_msg = csle_collector.client_manager.client_manager_pb2.StopClientsMsg()
-    clients_dto = stub.stopClients(stop_clients_msg)
+    clients_dto = stub.stopClients(stop_clients_msg, timeout=timeout)
     return clients_dto
 
 
 def start_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub,
                   mu: float, lamb: float, time_step_len_seconds: int, commands: List[str], num_commands: int = 2,
                   sine_modulated: bool = False, time_scaling_factor: float = 0.01, period_scaling_factor: float = 20,
+                  spiking: bool = False, exponents : List[float]= None, factors: List[float] = None,
+                  breakpoints: List[int] = None, breakvalues: List[float] = None, piece_wise_constant: bool = False,
                   timeout=constants.GRPC.TIMEOUT_SECONDS):
     """
     Starts the client arrival process
@@ -49,14 +51,20 @@ def start_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cl
     :param time_scaling_factor: the time scaling factor for the sine modulated arrival process
     :param period_scaling_factor: the period scaling factor for the sine modulated arrival process
     :param timeout: the GRPC timeout (seconds)
+    :param spiking: boolean flag indicating whether the arrival process is spiking or not
+    :param exponents: list of exponents for spiking arrival process
+    :param factors: list of factors for spiking arrival process
+    :param piece_wise_constant: boolean flag indicating whether the arrival process is piece-wise constant or not
+    :param breakpoints: list of breakpoints for piece-wise constant arrival process
+    :param breakvalues: list of breakvalues for piece-wise constant arrival process
     :return: a clientsDTO describing the state of the clients
     """
     start_clients_msg = csle_collector.client_manager.client_manager_pb2.StartClientsMsg(
         mu=mu, lamb=lamb, time_step_len_seconds=time_step_len_seconds, commands=commands,
         num_commands=num_commands, sine_modulated=sine_modulated, period_scaling_factor=period_scaling_factor,
-        time_scaling_factor=time_scaling_factor
-    )
-    clients_dto = stub.startClients(start_clients_msg)
+        time_scaling_factor=time_scaling_factor, spiking=spiking, exponents=exponents, factors=factors,
+        breakpoints=breakpoints, breakvalues=breakvalues, piece_wise_constant=piece_wise_constant)
+    clients_dto = stub.startClients(start_clients_msg, timeout=timeout)
     return clients_dto
 
 

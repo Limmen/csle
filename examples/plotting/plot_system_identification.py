@@ -25,7 +25,7 @@ def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str
 
     ncols= 8
     nrows = 8
-    fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(13, 13))
+    fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(16, 13))
     col = 0
     row = 0
     print(statistic.conditionals_counts[condition].keys())
@@ -116,7 +116,7 @@ def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str
 
 
 if __name__ == '__main__':
-    attack_statistic = MetastoreFacade.get_emulation_statistic(id=3)
+    attack_statistic = MetastoreFacade.get_emulation_statistic(id=2)
     print(attack_statistic.conditionals_counts["intrusion"].keys())
     # attack_counts = attack_statistic.conditionals_counts["intrusion"]["alerts_weighted_by_priority"]
     attack_counts = attack_statistic.conditionals_counts["intrusion"]["alerts_weighted_by_priority_16.4.2.3"]
@@ -145,12 +145,12 @@ if __name__ == '__main__':
         '15.13.24.57', '15.13.24.58', '15.13.25.59', '15.13.25.60', '15.13.26.61', '15.13.26.62',
         '15.13.27.63', '15.13.27.64'
     ]
-    # plot_hist(statistic, ips=ips, metric=metric, condition=condition, attack_counts=attack_counts)
-    ExportUtil.export_emulation_statistics_to_disk_json(
-        output_dir="/home/kim/statistics_dataset_31_mar_defender_23_json",
-        zip_file_output="/home/kim/statistics_dataset_31_mar_defender_23_json.zip", added_by="Kim Hammar",
-        statistics_id=1)
-    ExportUtil.export_emulation_statistics_to_disk_json(
-        output_dir="/home/kim/statistics_dataset_31_mar_attacker_23_json",
-        zip_file_output="/home/kim/statistics_dataset_31_mar_attacker_23_json.zip", added_by="Kim Hammar",
-        statistics_id=3)
+    plot_hist(statistic, ips=ips, metric=metric, condition=condition, attack_counts=attack_counts)
+    # ExportUtil.export_emulation_statistics_to_disk_json(
+    #     output_dir="/home/kim/statistics_dataset_31_mar_defender_23_json",
+    #     zip_file_output="/home/kim/statistics_dataset_31_mar_defender_23_json.zip", added_by="Kim Hammar",
+    #     statistics_id=1)
+    # ExportUtil.export_emulation_statistics_to_disk_json(
+    #     output_dir="/home/kim/statistics_dataset_31_mar_attacker_23_json",
+    #     zip_file_output="/home/kim/statistics_dataset_31_mar_attacker_23_json.zip", added_by="Kim Hammar",
+    #     statistics_id=3)

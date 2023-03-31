@@ -351,6 +351,14 @@ class TrafficController:
             if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
                     ClientPopulationProcessType.SINE_MODULATED_POISSON):
                 sine_modulated = True
+            spiking = False
+            if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
+                    ClientPopulationProcessType.SPIKING):
+                spiking=True
+            piece_wise_constant =False
+            if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
+                    ClientPopulationProcessType.PIECE_WISE_CONSTANT):
+                piece_wise_constant=True
             time_step_len = emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds
             csle_collector.client_manager.query_clients.start_clients(
                 stub=stub, mu=emulation_env_config.traffic_config.client_population_config.mu,
@@ -360,7 +368,13 @@ class TrafficController:
                 num_commands=emulation_env_config.traffic_config.client_population_config.num_commands,
                 sine_modulated=sine_modulated,
                 time_scaling_factor=emulation_env_config.traffic_config.client_population_config.time_scaling_factor,
-                period_scaling_factor=emulation_env_config.traffic_config.client_population_config.period_scaling_factor
+                period_scaling_factor=
+                emulation_env_config.traffic_config.client_population_config.period_scaling_factor,
+                spiking=spiking, piece_wise_constant=piece_wise_constant,
+                exponents=emulation_env_config.traffic_config.client_population_config.exponents,
+                factors=emulation_env_config.traffic_config.client_population_config.factors,
+                breakvalues=emulation_env_config.traffic_config.client_population_config.breakvalues,
+                breakpoints=emulation_env_config.traffic_config.client_population_config.breakpoints
             )
 
     @staticmethod
