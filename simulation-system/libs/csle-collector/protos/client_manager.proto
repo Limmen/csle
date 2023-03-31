@@ -22,6 +22,12 @@ message StartClientsMsg {
   bool sine_modulated = 6;
   float time_scaling_factor = 7;
   float period_scaling_factor = 8;
+  bool spiking = 9;
+  repeated float exponents = 10;
+  repeated float factors = 11;
+  repeated int32 breakpoints = 12;
+  repeated float breakvalues = 13;
+  bool piece_wise_constant = 14;
 }
 
 // Message that the client sends to extract the ClientsDTO

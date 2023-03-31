@@ -11,3 +11,5 @@ class ClientPopulationProcessType(IntEnum):
     """
     POISSON = 0
     SINE_MODULATED_POISSON = 1
+    SPIKING = 2
+    PIECE_WISE_CONSTANT = 3
