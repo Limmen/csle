@@ -360,6 +360,24 @@ class TrafficController:
                     ClientPopulationProcessType.PIECE_WISE_CONSTANT):
                 piece_wise_constant=True
             time_step_len = emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds
+            logger.info(
+                f"Starting the client population, "
+                f"mu: {emulation_env_config.traffic_config.client_population_config.mu},\n"
+                f"lamb: {emulation_env_config.traffic_config.client_population_config.lamb},\n"
+                f"time_step_len_seconds: {time_step_len},\n"
+                f"commands: {commands},\n"
+                f"num_commands: {emulation_env_config.traffic_config.client_population_config.num_commands},\n"
+                f"sine_modulated: {sine_modulated},\n"
+                f"time_scaling_factor:{emulation_env_config.traffic_config.client_population_config.time_scaling_factor}"
+                f",\n"
+                f"period_scaling_factor: "
+                f"{emulation_env_config.traffic_config.client_population_config.period_scaling_factor},\n"
+                f"spiking: {spiking}, piece_wise_constant: {piece_wise_constant}, "
+                f"exponents: {emulation_env_config.traffic_config.client_population_config.exponents}, "
+                f"factors: {emulation_env_config.traffic_config.client_population_config.factors}, "
+                f"breakvalues: {emulation_env_config.traffic_config.client_population_config.breakvalues}, "
+                f"breakpoints: {emulation_env_config.traffic_config.client_population_config.breakpoints}"
+            )
             csle_collector.client_manager.query_clients.start_clients(
                 stub=stub, mu=emulation_env_config.traffic_config.client_population_config.mu,
                 lamb=emulation_env_config.traffic_config.client_population_config.lamb,
