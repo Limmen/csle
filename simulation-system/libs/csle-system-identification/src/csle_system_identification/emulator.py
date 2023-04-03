@@ -148,12 +148,22 @@ class Emulator:
                 data_collection_job.traces = traces
 
             if restart_client_population:
+                ClusterController.stop_kafka_client_producer(
+                    ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
+                    port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
+                    emulation=emulation_env_config.name)
                 ClusterController.stop_client_population(
                     ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
                     port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
                     emulation=emulation_env_config.name)
                 time.sleep(5)
                 ClusterController.start_client_population(
+                    ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
+                    port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
+                    emulation=emulation_env_config.name
+                )
+                time.sleep(5)
+                ClusterController.start_kafka_client_producer(
                     ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
                     port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
                     emulation=emulation_env_config.name
@@ -188,6 +198,10 @@ class Emulator:
                 MetastoreFacade.update_emulation_statistic(emulation_statistics=emulation_statistics, id=statistics_id)
 
                 if restart_client_population:
+                    ClusterController.stop_kafka_client_producer(
+                        ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
+                        port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
+                        emulation=emulation_env_config.name)
                     ClusterController.stop_client_population(
                         ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
                         port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
@@ -197,6 +211,12 @@ class Emulator:
                         ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
                         port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                         ip_first_octet=emulation_env_config.execution_id,
+                        emulation=emulation_env_config.name
+                    )
+                    time.sleep(5)
+                    ClusterController.start_kafka_client_producer(
+                        ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
+                        port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
                         emulation=emulation_env_config.name
                     )
                     time.sleep(15)
