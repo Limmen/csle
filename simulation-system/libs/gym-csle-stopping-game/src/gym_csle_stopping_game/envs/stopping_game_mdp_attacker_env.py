@@ -1,4 +1,4 @@
-from typing import Tuple, List, Union
+from typing import Tuple, List, Union, Dict, Any
 import gymnasium as gym
 import numpy as np
 import torch
@@ -48,12 +48,12 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         super().__init__()
 
     def step(self, pi2: Union[List[List[float]], int, float, np.int64, np.float]) \
-            -> Tuple[np.ndarray, int, bool, dict]:
+            -> Tuple[np.ndarray, int, bool, bool, dict]:
         """
         Takes a step in the environment by executing the given action
 
         :param pi2: attacker stage policy
-        :return: (obs, reward, done, info)
+        :return: (obs, reward, terminated, truncated, info)
         """
         if type(pi2) is int or type(pi2) is float or type(pi2) is np.int64 or type(pi2) is np.float:
             a2 = pi2
@@ -91,19 +91,20 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = \
             -info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN]
 
-        return attacker_obs, r[1], d, info
+        return attacker_obs, r[1], d, d, info
 
-    def reset(self, soft: bool = False) -> Tuple[np.ndarray, np.ndarray]:
+    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
         :return: initial observation
         """
-        o = self.stopping_game_env.reset()
+        o, _ = self.stopping_game_env.reset()
         self.latest_defender_obs = o[0]
         self.latest_attacker_obs = o[1]
         attacker_obs = o[1]
-        return attacker_obs
+        info = {}
+        return attacker_obs, info
 
     def set_model(self, model) -> None:
         """

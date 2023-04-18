@@ -1,4 +1,4 @@
-from typing import Tuple, List
+from typing import Tuple, List, Dict, Any
 import gymnasium as gym
 import numpy as np
 from csle_common.dao.simulation_config.base_env import BaseEnv
@@ -48,12 +48,12 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, a1: int) -> Tuple[np.ndarray, int, bool, dict]:
+    def step(self, a1: int) -> Tuple[np.ndarray, int, bool, bool, dict]:
         """
         Takes a step in the environment by executing the given action
 
         :param a1: defender action
-        :return: (obs, reward, done, info)
+        :return: (obs, reward, terminated, truncated, info)
         """
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
@@ -64,7 +64,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
 
-        return defender_obs, r[0], d, info
+        return defender_obs, r[0], d, d, info
 
     def step_test(self, a1: int, sample_Z) -> Tuple[np.ndarray, int, bool, dict]:
         """
@@ -84,16 +84,17 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
 
         return defender_obs, r[0], d, info
 
-    def reset(self, soft: bool = False) -> np.ndarray:
+    def reset(self, seed:int = 0, soft: bool = False) -> Tuple[np.ndarray, Dict[str,Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
         :return: initial observation
         """
-        o = self.stopping_game_env.reset()
+        o, _ = self.stopping_game_env.reset()
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
-        return defender_obs
+        dict = {}
+        return defender_obs, dict
 
     def render(self, mode: str = 'human'):
         """

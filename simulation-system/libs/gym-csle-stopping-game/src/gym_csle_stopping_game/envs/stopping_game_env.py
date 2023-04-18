@@ -1,4 +1,4 @@
-from typing import Tuple, Dict, Union, List
+from typing import Tuple, Dict, Union, List, Any
 import numpy as np
 import time
 import math
@@ -59,12 +59,12 @@ class StoppingGameEnv(BaseEnv):
         super().__init__()
 
     def step(self, action_profile: Tuple[int, Tuple[np.ndarray, int]]) \
-            -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
+            -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, bool, dict]:
         """
         Takes a step in the environment by executing the given action
 
         :param action_profile: the actions to take (both players actions
-        :return: (obs, reward, done, info)
+        :return: (obs, reward, terminated, truncated, info)
         """
 
         # Setup initial values
@@ -124,7 +124,7 @@ class StoppingGameEnv(BaseEnv):
         # Populate info
         info = self._info(info)
 
-        return (defender_obs, attacker_obs), (r, -r), done, info
+        return (defender_obs, attacker_obs), (r, -r), done, done, info
 
     def step_test(self, action_profile: Tuple[int, Tuple[np.ndarray, int]], sample_Z) \
             -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
@@ -341,12 +341,13 @@ class StoppingGameEnv(BaseEnv):
             defender_baseline_stop_on_first_alert_return
         return info
 
-    def reset(self, soft: bool = False) -> Tuple[np.ndarray, np.ndarray]:
+    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[Tuple[np.ndarray, np.ndarray], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
         :return: initial observation
         """
+        super().reset(seed=seed)
         self.state.reset()
         if len(self.trace.attacker_rewards) > 0:
             self.traces.append(self.trace)
@@ -355,7 +356,8 @@ class StoppingGameEnv(BaseEnv):
         defender_obs = self.state.defender_observation()
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
-        return defender_obs, attacker_obs
+        info = {}
+        return (defender_obs, attacker_obs), info
 
     @staticmethod
     def emulation_evaluation(env: "StoppingGameEnv", n_episodes: int, intrusion_seq: List[EmulationAttackerAction],
