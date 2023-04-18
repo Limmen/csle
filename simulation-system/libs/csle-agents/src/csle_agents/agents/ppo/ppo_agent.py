@@ -1,5 +1,7 @@
 from typing import Union, List, Optional
 import time
+
+import gymnasium
 import gymnasium as gym
 import os
 import numpy as np
@@ -90,11 +92,13 @@ class PPOAgent(BaseAgent):
 
         # Setup gym environment
         config = self.simulation_env_config.simulation_env_input_config
-        orig_env = gym.make(self.simulation_env_config.gym_env_name, config=config)
+        orig_env = gymnasium.make(self.simulation_env_config.gym_env_name, config=config)
+        print(orig_env.observation_space)
         env = make_vec_env(env_id=self.simulation_env_config.gym_env_name,
                            n_envs=self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value,
                            env_kwargs={"config": config}, vec_env_cls=DummyVecEnv)
         env = VecMonitor(env)
+        print(env.observation_space)
 
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
@@ -338,7 +342,7 @@ class PPOTrainingCallback(BaseCallback):
                 model=self.model, simulation_name=self.simulation_name, save_path=save_path,
                 states=self.states, player_type=self.player_type, actions=self.actions,
                 experiment_config=self.experiment_config, avg_R=-1)
-            o = self.env.reset()
+            o, _ = self.env.reset()
             max_horizon = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
             avg_rewards = []
             avg_horizons = []
@@ -346,13 +350,13 @@ class PPOTrainingCallback(BaseCallback):
             avg_random_returns = []
             info = {}
             for i in range(self.eval_batch_size):
-                o = self.env.reset()
+                o, _ = self.env.reset()
                 done = False
                 t = 0
                 cumulative_reward = 0
                 while not done and t <= max_horizon:
                     a = policy.action(o=o)
-                    o, r, done, info = self.env.step(a)
+                    o, r, done, _, info = self.env.step(a)
                     cumulative_reward += r * math.pow(
                         self.experiment_config.hparams[agents_constants.COMMON.GAMMA].value, t)
                     t += 1

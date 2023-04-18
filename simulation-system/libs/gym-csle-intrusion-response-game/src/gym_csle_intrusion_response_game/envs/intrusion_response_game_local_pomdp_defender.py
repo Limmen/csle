@@ -1,4 +1,4 @@
-from typing import Tuple, List, Dict, Union
+from typing import Tuple, List, Dict, Union, Any
 import numpy as np
 import time
 import math
@@ -26,6 +26,8 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
 
         :param config: the environment configuration
         """
+        if config is None:
+            raise ValueError("Configuration cannot be None")
         self.config = config
 
         # Initialize environment state
@@ -85,7 +87,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             cumulative_reward = 0
             while not done and t <= max_horizon:
                 a1 = np.random.choice(self.config.local_intrusion_response_game_config.A1)
-                o, r, done, info = self.step(a1)
+                o, r, done, _, info = self.step(a1)
                 cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
@@ -111,18 +113,18 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
                 a1 = 0
                 if self.state.attacker_state() == env_constants.ATTACK_STATES.COMPROMISED:
                     a1 = initial_zone
-                o, r, done, info = self.step(a1)
+                o, r, done, _, info = self.step(a1)
                 cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
         return np.mean(np.array(returns))
 
-    def step(self, a1: int) -> Tuple[np.ndarray, float, bool, Dict[str, Union[float, int]]]:
+    def step(self, a1: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Union[float, int]]]:
         """
         Takes a step in the environment by executing the given action
 
         :param a1: defender action
-        :return: (obs, reward, done, info)
+        :return: (obs, reward, terminated, truncated, info)
         """
         done, info = False, {}
 
@@ -195,8 +197,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
 
         # Populate info
         info = self._info(info)
-
-        return defender_obs, r, done, info
+        return defender_obs, r, done, done, info
 
     def _info(self, info) -> Dict[str, Union[float, int]]:
         """
@@ -213,12 +214,13 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         info[env_constants.ENV_METRICS.AVERAGE_RANDOM_RETURN] = self.random_return
         return info
 
-    def reset(self, soft: bool = False) -> np.ndarray:
+    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
         :return: initial observation
         """
+        super().reset(seed=seed)
         self.state.reset()
         if len(self.trace.attacker_rewards) > 0:
             self.traces.append(self.trace)
@@ -227,7 +229,8 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         defender_obs = self.state.defender_observation()
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
-        return defender_obs
+        info = {}
+        return defender_obs, info
 
     def render(self, mode: str = 'human'):
         """
@@ -320,5 +323,5 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}")
             else:
                 a1 = int(raw_input)
-                o, r, done, _ = self.step(a1=a1)
+                o, r, done, _, _ = self.step(a1=a1)
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}, r:{round(r, 2)}, done: {done}")

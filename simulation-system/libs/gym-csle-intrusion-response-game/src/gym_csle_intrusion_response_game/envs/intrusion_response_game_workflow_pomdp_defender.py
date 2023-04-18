@@ -106,12 +106,12 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, a1: np.ndarray) -> Tuple[np.ndarray, float, bool, Dict[str, Union[float, int]]]:
+    def step(self, a1: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Union[float, int]]]:
         """
         Takes a step in the environment by executing the given action
 
         :param a1: defender action
-        :return: (obs, reward, done, info)
+        :return: (obs, reward, terminated, truncated, info)
         """
         done, info = False, {}
 
@@ -165,7 +165,7 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         # Populate info
         info = self._info(info)
 
-        return defender_obs, r, done, info
+        return defender_obs, r, done, done, info
 
     def _info(self, info) -> Dict[str, Union[float, int]]:
         """
@@ -182,12 +182,13 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         info[env_constants.ENV_METRICS.AVERAGE_RANDOM_RETURN] = self.random_return
         return info
 
-    def reset(self, soft: bool = False) -> np.ndarray:
+    def reset(self, seed: int = 0, soft: bool = False) -> np.ndarray:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
         :return: initial observation
         """
+        super().reset(seed=seed)
         self.t = 0
         defender_obs = []
         attacker_obs = []
@@ -202,7 +203,8 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
-        return defender_obs
+        info = {}
+        return defender_obs, info
 
     def render(self, mode: str = 'human'):
         """
