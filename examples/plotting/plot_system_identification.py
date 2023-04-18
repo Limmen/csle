@@ -2,12 +2,9 @@ from typing import List, Dict
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import norm
-from scipy.stats import geom
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.util.plotting_util import PlottingUtil
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from sklearn.mixture import GaussianMixture
-from csle_common.util.export_util import ExportUtil
 
 
 def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str], condition: str, metric: str) -> None:
@@ -15,15 +12,13 @@ def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts,amsmath}')
     plt.rcParams['font.family'] = ['serif']
     plt.rcParams['axes.titlepad'] = 0.02
-    # plt.rcParams['xtick.major.pad'] = 0.5
     plt.rcParams['ytick.major.pad'] = 0.05
     plt.rcParams['axes.labelpad'] = 0.8
     plt.rcParams['axes.linewidth'] = 0.8
     fontsize = 16.5
     labelsize = 15
-    # plt.rcParams.update({'font.size': 10})
 
-    ncols= 8
+    ncols = 8
     nrows = 8
     fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(16, 13))
     col = 0
@@ -59,24 +54,18 @@ def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str
         for dist in dists:
             d_arr = np.array(dist)
             combined_dist = combined_dist + d_arr
-        combined_distribution = list(combined_dist)
-        n, bins, patches = ax[row][col].hist(x, cumulative=False, density=True, bins=10, alpha=1, color="red",
-                                   edgecolor='black', linewidth=1, ls="dashdot", label="no intrusion")
+        ax[row][col].hist(x, cumulative=False, density=True, bins=10, alpha=1, color="red", edgecolor='black',
+                          linewidth=1, ls="dashdot", label="no intrusion")
         attack_counts_temp = attack_counts.copy()
-        for k,v in x.items():
+        for k, v in x.items():
             if k in attack_counts_temp:
                 attack_counts_temp[k] = attack_counts_temp[k] + v
             else:
                 attack_counts_temp[k] = v
-        n, bins, patches = ax[row][col].hist(attack_counts_temp,
-                                             cumulative=False, density=True, bins=20, alpha=0.4, color="blue",
-                                             edgecolor='black', linewidth=1, ls="dashed", label="intrusion")
-        # ax[row][col].plot(sample_space, combined_distribution, 'k--', label='Theoretical', linewidth=2.5)
-        ax[row][col].set_title(r"$Z_{\mathbf{O}_{" + str(i+1) + "}}$", fontsize=fontsize)
-        # ax[row][col].set_xlabel(r"IDPS alerts weighted by priority", fontsize=fontsize)
-        # ax[row][col].set_ylabel(r"$Z_i$", fontsize=fontsize)
+        ax[row][col].hist(attack_counts_temp, cumulative=False, density=True, bins=20, alpha=0.4, color="blue",
+                          edgecolor='black', linewidth=1, ls="dashed", label="intrusion")
+        ax[row][col].set_title(r"$Z_{\mathbf{O}_{" + str(i + 1) + "}}$", fontsize=fontsize)
         ax[row][col].set_yticks([])
-        # ax[row][col].set_xlim(1, max(list(x.keys())))
         ax[row][col].set_xlim(1, max_val)
         xlab = ax[row][col].xaxis.get_label()
         ylab = ax[row][col].yaxis.get_label()
@@ -90,27 +79,26 @@ def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str
             ax[row][col].set_yticks([])
         if col == 0:
             ax[row][col].set_ylabel(r"probability", fontsize=fontsize)
-        if row != nrows-1:
+        if row != nrows - 1:
             ax[row][col].set_xticks([])
         else:
             ax[row][col].set_xlabel(r"$\mathcal{O}$", fontsize=fontsize)
-        if col == ncols-1:
+        if col == ncols - 1:
             col = 0
             row = row + 1
         else:
             col = col + 1
-    fig.suptitle(r"Distributions of \# alerts weighted by priority $Z_{\mathbf{O}_i}(\mathbf{O}_i \mid \mathbf{S}^{(\mathrm{D})}_i, \mathbf{A}^{(\mathrm{A})}_{i})$ per node $i \in \mathcal{V}$", fontsize=18)
+    fig.suptitle(
+        r"Distributions of \# alerts weighted by priority $Z_{\mathbf{O}_i}(\mathbf{O}_i \mid "
+        r"\mathbf{S}^{(\mathrm{D})}_i, \mathbf{A}^{(\mathrm{A})}_{i})$ per node $i \in \mathcal{V}$",
+        fontsize=18)
     handles, labels = ax[0][0].get_legend_handles_labels()
-    # handles_2, labels_2 = ax[1][1].get_legend_handles_labels()
-    # handles = handles + handles_2
-    # labels = labels+labels_2
     fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.52, 0.0),
                ncol=8, fancybox=True, shadow=False, handletextpad=0.4, labelspacing=0.5, columnspacing=0.65,
                prop={'size': fontsize})
     fig.tight_layout()
     plt.subplots_adjust(wspace=0, hspace=0.2, bottom=0.077)
     plt.show()
-    # plt.subplots_adjust(wspace=0, hspace=0)
     fig.savefig("geo_only_2" + ".png", format="png", dpi=600)
     fig.savefig("geo_only_2" + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
 
@@ -126,7 +114,7 @@ if __name__ == '__main__':
                   "A:Sambacry Explolit_D:Continue_M:[]", "A:ShellShock Explolit_D:Continue_M:[]",
                   "A:TCP SYN (Stealth) Scan_D:Continue_M:[]",
                   "A:Telnet dictionary attack for username=pw_D:Continue_M:[]",
-    "A:CVE-2015-1427 exploit_D:Continue_M:[]"
+                  "A:CVE-2015-1427 exploit_D:Continue_M:[]"
                   ]
     print(attack_counts)
     statistic = MetastoreFacade.get_emulation_statistic(id=1)
@@ -146,11 +134,3 @@ if __name__ == '__main__':
         '15.13.27.63', '15.13.27.64'
     ]
     plot_hist(statistic, ips=ips, metric=metric, condition=condition, attack_counts=attack_counts)
-    # ExportUtil.export_emulation_statistics_to_disk_json(
-    #     output_dir="/home/kim/statistics_dataset_31_mar_defender_23_json",
-    #     zip_file_output="/home/kim/statistics_dataset_31_mar_defender_23_json.zip", added_by="Kim Hammar",
-    #     statistics_id=1)
-    # ExportUtil.export_emulation_statistics_to_disk_json(
-    #     output_dir="/home/kim/statistics_dataset_31_mar_attacker_23_json",
-    #     zip_file_output="/home/kim/statistics_dataset_31_mar_attacker_23_json.zip", added_by="Kim Hammar",
-    #     statistics_id=3)

@@ -1,6 +1,5 @@
 from typing import List
 import csle_common.constants.constants as constants
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actions \
     import EmulationAttackerStoppingActions
@@ -92,8 +91,6 @@ def run() -> None:
     :return: None
     """
     executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name="csle-level4-010")
-    # print(executions[0].ip_first_octet)
-    # print(executions[1].ip_first_octet)
     emulation_env_config = executions[0].emulation_env_config
     assert emulation_env_config is not None
     trace_len = 30

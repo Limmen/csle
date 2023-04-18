@@ -354,11 +354,11 @@ class TrafficController:
             spiking = False
             if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
                     ClientPopulationProcessType.SPIKING):
-                spiking=True
-            piece_wise_constant =False
+                spiking = True
+            piece_wise_constant = False
             if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
                     ClientPopulationProcessType.PIECE_WISE_CONSTANT):
-                piece_wise_constant=True
+                piece_wise_constant = True
             time_step_len = emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds
             logger.info(
                 f"Starting the client population, "
@@ -386,8 +386,8 @@ class TrafficController:
                 num_commands=emulation_env_config.traffic_config.client_population_config.num_commands,
                 sine_modulated=sine_modulated,
                 time_scaling_factor=emulation_env_config.traffic_config.client_population_config.time_scaling_factor,
-                period_scaling_factor=
-                emulation_env_config.traffic_config.client_population_config.period_scaling_factor,
+                period_scaling_factor=(
+                    emulation_env_config.traffic_config.client_population_config.period_scaling_factor),
                 spiking=spiking, piece_wise_constant=piece_wise_constant,
                 exponents=emulation_env_config.traffic_config.client_population_config.exponents,
                 factors=emulation_env_config.traffic_config.client_population_config.factors,

@@ -135,7 +135,6 @@ class EmulationStatistics:
                 else:
                     d[lbl][snort_alert_deltas[i]] = 1
 
-
         # OSSEC alerts
         ossec_alert_deltas, ossec_alert_labels = s.defender_obs_state.avg_ossec_ids_alert_counters.get_deltas(
             s_prime.defender_obs_state.avg_ossec_ids_alert_counters)
@@ -321,7 +320,6 @@ class EmulationStatistics:
                     self.initial_distributions_counts[lbl][m_values[i]] += 1
                 else:
                     self.initial_distributions_counts[lbl][m_values[i]] = 1
-
 
     def compute_descriptive_statistics_and_distributions(self) -> None:
         """

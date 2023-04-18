@@ -3902,7 +3902,7 @@ class ClusterController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying filebeats configurations --")
         for ip in physical_servers:
             Logger.__call__().get_logger().info(f"Applying filebeat configurations on containers "
-                                               f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
+                                                f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
             ClusterController.apply_filebeats_config(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
@@ -3912,7 +3912,7 @@ class ClusterController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying packetbeats configurations --")
         for ip in physical_servers:
             Logger.__call__().get_logger().info(f"Applying packetbeat configurations on containers "
-                                               f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
+                                                f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
             ClusterController.apply_packetbeats_config(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
@@ -3922,7 +3922,7 @@ class ClusterController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying metricbeats configurations --")
         for ip in physical_servers:
             Logger.__call__().get_logger().info(f"Applying metricbeat configurations on containers "
-                                               f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
+                                                f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
             ClusterController.apply_metricbeats_config(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
@@ -3932,7 +3932,7 @@ class ClusterController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Applying heartbeats configurations --")
         for ip in physical_servers:
             Logger.__call__().get_logger().info(f"Applying heartbeat configurations on containers"
-                                              f" in emulation: {execution.emulation_env_config.name} on server: {ip}")
+                                                f" in emulation: {execution.emulation_env_config.name} on server: {ip}")
             ClusterController.apply_heartbeats_config(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet)
@@ -3942,7 +3942,7 @@ class ClusterController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting filebeats --")
         for ip in physical_servers:
             Logger.__call__().get_logger().info(f"Starting filebeats on containers "
-                                              f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
+                                                f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
             ClusterController.start_filebeats(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet, initial_start=True)
@@ -3952,7 +3952,7 @@ class ClusterController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting packetbeats --")
         for ip in physical_servers:
             Logger.__call__().get_logger().info(f"Starting packetbeats on containers "
-                                               f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
+                                                f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
             ClusterController.start_packetbeats(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet, initial_start=True)
@@ -3962,7 +3962,7 @@ class ClusterController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting metricbeats --")
         for ip in physical_servers:
             Logger.__call__().get_logger().info(f"Starting metricbeats on containers "
-                                               f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
+                                                f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
             ClusterController.start_metricbeats(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet, initial_start=True)
@@ -3972,7 +3972,7 @@ class ClusterController:
         Logger.__call__().get_logger().info(f"-- Step {current_step}/{steps}: Starting heartbeats --")
         for ip in physical_servers:
             Logger.__call__().get_logger().info(f"Starting heartbeats on containers "
-                                               f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
+                                                f"in emulation: {execution.emulation_env_config.name} on server: {ip}")
             ClusterController.start_heartbeats(
                 ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name, ip_first_octet=execution.ip_first_octet, initial_start=True)
