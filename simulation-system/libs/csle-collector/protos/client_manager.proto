@@ -5,6 +5,7 @@ service ClientManager {
   rpc getClients(GetClientsMsg) returns (ClientsDTO) {}
   rpc stopClients(StopClientsMsg) returns (ClientsDTO) {}
   rpc startClients(StartClientsMsg) returns (ClientsDTO) {}
+  rpc startClientsNew(StartClientsNewMsg) returns (ClientsDTO) {}
   rpc startProducer(StartProducerMsg) returns (ClientsDTO) {}
   rpc stopProducer(StopProducerMsg) returns (ClientsDTO) {}
 }
