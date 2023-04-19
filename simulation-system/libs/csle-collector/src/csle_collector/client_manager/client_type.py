@@ -1,9 +1,9 @@
 from typing import List
-from eptmp_rate_function import EPTMPRateFunction
-from service import Service
+from csle_collector.client_manager.eptmp_rate_function import EPTMPRateFunction
+from csle_collector.client_manager.service import Service
 import logging
 
-from workflow_distribution import WorkflowDistribution
+from csle_collector.client_manager.workflow_distribution import WorkflowDistribution
 
 
 class ClientType:
