@@ -279,10 +279,15 @@ class VIAgent(BaseAgent):
         returns = []
         for i in range(eval_batch_size):
             done = False
-            s = self.env.reset()
+            s, _ = self.env.reset()
             R = 0
             while not done:
-                s, r, done, info = self.env.step(policy)
+                if self.simulation_env_config.gym_env_name == "csle-intrusion-response-game-local-pomdp-defender-v1":
+                    a = np.random.choice(np.arange(0, len(policy[int(s[0])])), p=policy[int(s[0])])
+                    s, r, done, _, info = self.env.step(a)
+                    done = True
+                else:
+                    s, r, done, _, info = self.env.step(policy)
                 R += r
             returns.append(R)
         avg_return = np.mean(returns)

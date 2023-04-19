@@ -2,7 +2,7 @@ import numpy as np
 from scipy.stats import betabinom
 from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 import gym_csle_intrusion_response_game.constants.constants as env_constants
-
+from csle_common.dao.training.policy import Policy
 
 class IntrusionResponseGameUtil:
     """
@@ -405,6 +405,29 @@ class IntrusionResponseGameUtil:
         return R
 
     @staticmethod
+    def local_stopping_mdp_reward_tensor(S: np.ndarray, A1: np.ndarray, A2: np.ndarray,
+                                         R: np.ndarray, S_D: np.ndarray) -> np.ndarray:
+        R_1 = []
+        S_D = np.append([-1], S_D)
+        for a1 in A1:
+            if a1 == 0:
+                continue
+            a1_rews = []
+            for a2 in A2:
+                a1_a2_rews = []
+                for s in S_D:
+                    r = 0
+                    for i, full_s in enumerate(S):
+                        if full_s[env_constants.STATES.D_STATE_INDEX] == s and \
+                                full_s[env_constants.STATES.A_STATE_INDEX] == env_constants.ATTACK_STATES.COMPROMISED:
+                            r = R[a1][a2][i]
+                    a1_a2_rews.append(r)
+                a1_rews.append(a1_a2_rews)
+            R_1.append(a1_rews)
+        R_1 = np.array(R_1)
+        return R_1
+
+    @staticmethod
     def local_transition_probability(s: np.ndarray, s_prime: np.ndarray, a1: int, a2: int, Z_D_P: np.ndarray,
                                      A_P: np.ndarray):
         """
@@ -551,6 +574,49 @@ class IntrusionResponseGameUtil:
             T.append(a1_probs)
         T = np.array(T)
         return T
+
+    @staticmethod
+    def local_stopping_mdp_transition_tensor(S: np.ndarray, A1: np.ndarray,
+                                             A2: np.ndarray, T: np.ndarray, S_D: np.ndarray) -> np.ndarray:
+        """
+        Gets the transition tensor for the local MDP of the stopping decomposition in the temporal domain
+
+        :param S: the full state space of the local problem
+        :param A1: the defender's action space in the local problem
+        :param A2: the attacker's action space in the local problem
+        :param T: the full transition tensor of the local problem
+        :param S_D: the defender's state spce
+        :return: the transition tensor for the local MDP of the stopping formulation
+        """
+        S_D = np.append([-1], S_D)
+        T_1 = []
+        for a1 in A1:
+            if a1 == 0:
+                continue
+            a1_probs = []
+            for a2 in A2:
+                a1_a2_probs = []
+                for s in S_D:
+                    a1_a2_s_probs = []
+                    for s_prime in S_D:
+                        prob = 0
+                        total_prob = 0
+                        for i, full_s in enumerate(S):
+                            for j, full_s_prime in enumerate(S):
+                                if full_s[env_constants.STATES.D_STATE_INDEX] == s:
+                                    total_prob += T[a1][a2][i][j]
+                                if full_s[env_constants.STATES.D_STATE_INDEX] == s  \
+                                        and full_s_prime[env_constants.STATES.D_STATE_INDEX] == s_prime:
+                                    prob += T[a1][a2][i][j]
+                        prob = prob/total_prob
+                        prob=min(1, prob)
+                        a1_a2_s_probs.append(prob)
+                    assert round(sum(a1_a2_s_probs), 3) == 1
+                    a1_a2_probs.append(a1_a2_s_probs)
+                a1_probs.append(a1_a2_probs)
+            T_1.append(a1_probs)
+        T_1 = np.array(T_1)
+        return T_1
 
     @staticmethod
     def local_observation_tensor_betabinom(S: np.ndarray, A1: np.ndarray, A2: np.ndarray, O: np.ndarray):
@@ -817,3 +883,84 @@ class IntrusionResponseGameUtil:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a2:{a2}, s_prime:{s_a_prime}, o:{o}, pi1:{pi1}")
         assert round(b_prime_s_prime, 2) <= 1
         return b_prime_s_prime
+
+    @staticmethod
+    def get_local_defender_pomdp_solver_file(S: np.ndarray, A1: np.ndarray, A2: np.ndarray,
+                                             O: np.ndarray, R: np.ndarray, T: np.ndarray, static_attacker_strategy: Policy,
+                                             s_1_idx: int, discount_factor: float = 0.99) -> str:
+        """
+        Gets the POMDP environment specification based on the format at http://www.pomdp.org/code/index.html,
+        for the defender's local problem against a static attacker
+
+        :param S: the state spaec
+        :param A1: the defender's local action space
+        :param A2: the attacker's local action space
+        :param O: the observation space
+        :param R: the reward tensor
+        :param T: the transition tensor
+        :param static_attacker_strategy: the static attacker opponent strategy
+        :param s_1_idx: the initial state index
+        :param discount_factor: the discount  factor
+        :return: the file content string
+        """
+        file_str = ""
+        file_str = file_str + f"discount: {discount_factor}\n\n"
+        file_str = file_str + "values: reward\n\n"
+        file_str = file_str + f"states: {len(S)}\n\n"
+        file_str = file_str + f"actions: {len(A1)}\n\n"
+        file_str = file_str + f"observations: {len(O)}\n\n"
+        initial_belief = [0]*len(S)
+        initial_belief[s_1_idx] = 1
+        initial_belief_str = " ".join(list(map(lambda x: str(x), initial_belief)))
+        file_str = file_str + f"start: {initial_belief_str}\n\n\n"
+        T = T[0]
+        num_transitions = 0
+        for s in range(len(S)):
+            for a1 in range(len(A1)):
+                probs = []
+                for s_prime in range(len(S)):
+                    num_transitions+=1
+                    prob = 0
+                    pi2 = np.array(static_attacker_strategy.stage_policy(None))[
+                        S[s][env_constants.STATES.A_STATE_INDEX]]
+                    for a2 in range(len(A2)):
+                        prob += pi2[a2]*T[a1][a2][s][s_prime]
+                    file_str = file_str + f"T: {a1} : {s} : {s_prime} {prob}\n"
+                    probs.append(prob)
+                assert round(sum(probs),3) == 1
+        file_str = file_str + "\n\n"
+        for s_prime in range(len(S)):
+            for a1 in range(len(A1)):
+                total_transition_prob = 0
+                a2_transition_probs = np.zeros(len(A2))
+                for s in range(len(S)):
+                    pi2 = np.array(static_attacker_strategy.stage_policy(None))[
+                        S[s][env_constants.STATES.A_STATE_INDEX]]
+                    for a2 in range(len(A2)):
+                        total_transition_prob += pi2[a2]*T[a1][a2][s][s_prime]
+                        a2_transition_probs[a2] += T[a1][a2][s][s_prime]*pi2[a2]
+                probs = []
+                for o in range(len(O)):
+                    prob = 0
+                    if total_transition_prob == 0:
+                        prob = (1/len(O))
+                    else:
+                        for a2 in range(len(A2)):
+                            a2_prob =  (a2_transition_probs[a2])/total_transition_prob
+                            prob += a2_prob*Z[a1][a2][s_prime][o]
+                    file_str = file_str + f"O : {a1} : {s_prime} : {o} {prob}\n"
+                    probs.append(prob)
+                assert round(sum(probs),3) == 1
+        file_str = file_str + "\n\n"
+
+        for s in range(len(S)):
+            for a1 in range(len(A1)):
+                for s_prime in range(len(S)):
+                    pi2 = np.array(static_attacker_strategy.stage_policy(None))[
+                        S[s][env_constants.STATES.A_STATE_INDEX]]
+                    for o in range(len(O)):
+                        r = 0
+                        for a2 in range(len(A2)):
+                            r += pi2[a2]*R[0][a1][a2][s]
+                        file_str = file_str + f"R: {a1} : {s} : {s_prime} : {o} {r}\n"
+        return file_str

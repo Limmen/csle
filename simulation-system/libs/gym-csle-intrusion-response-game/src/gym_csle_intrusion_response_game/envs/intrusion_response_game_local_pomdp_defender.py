@@ -326,66 +326,45 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
                 o, r, done, _, _ = self.step(a1=a1)
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}, r:{round(r, 2)}, done: {done}")
 
+    def pomdp_solver_file(self) -> str:
+        """
+        Gets the POMDP environment specification based on the format at http://www.pomdp.org/code/index.html,
+        for the defender's local problem against a static attacker
 
-    def pomdp_solver_file(self, discount_factor: float = 0.99):
-        file_str = ""
-        file_str = file_str + f"discount: {discount_factor}\n\n"
-        file_str = file_str + "values: reward\n\n"
-        file_str = file_str + f"states: {len(self.config.local_intrusion_response_game_config.S)}\n\n"
-        file_str = file_str + f"actions: {len(self.config.local_intrusion_response_game_config.A1)}\n\n"
-        file_str = file_str + f"observations: {len(self.config.local_intrusion_response_game_config.O)}\n\n"
-        initial_belief = [0]*len(self.config.local_intrusion_response_game_config.S)
-        initial_belief[self.config.local_intrusion_response_game_config.s_1_idx] = 1
-        initial_belief_str = " ".join(list(map(lambda x: str(x), initial_belief)))
-        file_str = file_str + f"start: {initial_belief_str}\n\n\n"
-        T = self.config.local_intrusion_response_game_config.T[0]
-        num_transitions = 0
-        for s in range(len(self.config.local_intrusion_response_game_config.S)):
-            for a1 in range(len(self.config.local_intrusion_response_game_config.A1)):
-                probs = []
-                for s_prime in range(len(self.config.local_intrusion_response_game_config.S)):
-                    num_transitions+=1
-                    prob = 0
-                    pi2 = np.array(self.static_attacker_strategy.stage_policy(None))[
-                        self.config.local_intrusion_response_game_config.S[s][env_constants.STATES.A_STATE_INDEX]]
-                    for a2 in range(len(self.config.local_intrusion_response_game_config.A2)):
-                        prob += pi2[a2]*T[a1][a2][s][s_prime]
-                    file_str = file_str + f"T: {a1} : {s} : {s_prime} {prob}\n"
-                    probs.append(prob)
-                assert round(sum(probs),3) == 1
-        file_str = file_str + "\n\n"
-        for s_prime in range(len(self.config.local_intrusion_response_game_config.S)):
-            for a1 in range(len(self.config.local_intrusion_response_game_config.A1)):
-                total_transition_prob = 0
-                a2_transition_probs = np.zeros(len(self.config.local_intrusion_response_game_config.A2))
-                for s in range(len(self.config.local_intrusion_response_game_config.S)):
-                    pi2 = np.array(self.static_attacker_strategy.stage_policy(None))[
-                        self.config.local_intrusion_response_game_config.S[s][env_constants.STATES.A_STATE_INDEX]]
-                    for a2 in range(len(self.config.local_intrusion_response_game_config.A2)):
-                        total_transition_prob += pi2[a2]*T[a1][a2][s][s_prime]
-                        a2_transition_probs[a2] += T[a1][a2][s][s_prime]*pi2[a2]
-                probs = []
-                for o in range(len(self.config.local_intrusion_response_game_config.O)):
-                    prob = 0
-                    if total_transition_prob == 0:
-                        prob = (1/len(self.config.local_intrusion_response_game_config.O))
-                    else:
-                        for a2 in range(len(self.config.local_intrusion_response_game_config.A2)):
-                            a2_prob =  (a2_transition_probs[a2])/total_transition_prob
-                            prob += a2_prob*self.config.local_intrusion_response_game_config.Z[a1][a2][s_prime][o]
-                    file_str = file_str + f"O : {a1} : {s_prime} : {o} {prob}\n"
-                    probs.append(prob)
-                assert round(sum(probs),3) == 1
-        file_str = file_str + "\n\n"
+        :return: the file content string
+        """
+        return IntrusionResponseGameUtil.get_local_defender_pomdp_solver_file(
+            S=self.config.local_intrusion_response_game_config.S,
+            A1=self.config.local_intrusion_response_game_config.A1,
+            A2=self.config.local_intrusion_response_game_config.A2,
+            O=self.config.local_intrusion_response_game_config.O,
+            T=self.config.local_intrusion_response_game_config.T,
+            R=self.config.local_intrusion_response_game_config.R,
+            static_attacker_strategy=self.config.attacker_strategy,
+            s_1_idx=self.config.local_intrusion_response_game_config.s_1_idx,
+            discount_factor=self.config.local_intrusion_response_game_config.gamma
+        )
 
-        for s in range(len(self.config.local_intrusion_response_game_config.S)):
-            for a1 in range(len(self.config.local_intrusion_response_game_config.A1)):
-                for s_prime in range(len(self.config.local_intrusion_response_game_config.S)):
-                    pi2 = np.array(self.static_attacker_strategy.stage_policy(None))[
-                        self.config.local_intrusion_response_game_config.S[s][env_constants.STATES.A_STATE_INDEX]]
-                    for o in range(len(self.config.local_intrusion_response_game_config.O)):
-                        r = 0
-                        for a2 in range(len(self.config.local_intrusion_response_game_config.A2)):
-                            r += pi2[a2]*self.config.local_intrusion_response_game_config.R[0][a1][a2][s]
-                        file_str = file_str + f"R: {a1} : {s} : {s_prime} : {o} {r}\n"
-        return file_str
+    def get_local_mdp_transition_tensor(self) -> np.ndarray:
+        """
+        :return: the local MDP transition tensor of the optimal stopping formulation
+        """
+        return IntrusionResponseGameUtil.local_stopping_mdp_transition_tensor(
+            S=self.config.local_intrusion_response_game_config.S,
+            A1=self.config.local_intrusion_response_game_config.A1,
+            A2=self.config.local_intrusion_response_game_config.A2,
+            T=self.config.local_intrusion_response_game_config.T[0],
+            S_D=self.config.local_intrusion_response_game_config.S_D
+        )
+
+    def get_local_mdp_reward_tensor(self) -> np.ndarray:
+        """
+        :return: the local MDP reward tensor of the optimal stopping formulation
+        """
+        return IntrusionResponseGameUtil.local_stopping_mdp_reward_tensor(
+            S=self.config.local_intrusion_response_game_config.S,
+            A1=self.config.local_intrusion_response_game_config.A1,
+            A2=self.config.local_intrusion_response_game_config.A2,
+            R=self.config.local_intrusion_response_game_config.R[0],
+            S_D=self.config.local_intrusion_response_game_config.S_D
+        )
