@@ -7,6 +7,7 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
+from csle_common.dao.training.policy_type import PolicyType
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
@@ -52,7 +53,10 @@ if __name__ == '__main__':
                 descr="the batch size of the gradient estimator"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
-                descr="the number of samples to include when computing the running avg")
+                descr="the number of samples to include when computing the running avg"),
+            constants.T_SPSA.POLICY_TYPE: HParam(
+                value=PolicyType.MULTI_THRESHOLD, name=constants.T_SPSA.POLICY_TYPE,
+                descr="policy type in T-SPSA")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

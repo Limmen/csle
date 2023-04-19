@@ -9,6 +9,7 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.simulation_config.state_type import StateType
+from csle_common.dao.training.policy_type import PolicyType
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 
 
@@ -45,6 +46,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         self.experiment_config = experiment_config
         self.avg_R = avg_R
         self.opponent_strategy = opponent_strategy
+        self.policy_type = PolicyType.MIXED_MULTI_THRESHOLD
 
     def probability(self, o: List[float], a: int) -> int:
         """
@@ -150,6 +152,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         else:
             d["experiment_config"] = None
         d["avg_R"] = self.avg_R
+        d["policy_type"] = self.policy_type
         return d
 
     @staticmethod
@@ -300,7 +303,7 @@ class MixedMultiThresholdStoppingPolicy(Policy):
         return f"Theta: {self.Theta}, id: {self.id}, simulation_name: {self.simulation_name}, " \
                f"player_type: {self.player_type}, " \
                f"L:{self.L}, states: {self.states}, agent_type: {self.agent_type}, actions: {self.actions}," \
-               f"experiment_config: {self.experiment_config}, avg_R: {self.avg_R}"
+               f"experiment_config: {self.experiment_config}, avg_R: {self.avg_R}, policy_type: {self.policy_type}"
 
     def to_json_str(self) -> str:
         """

@@ -10,6 +10,7 @@ from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from sklearn.mixture import GaussianMixture
 from csle_common.dao.training.mixed_multi_threshold_stopping_policy import MixedMultiThresholdStoppingPolicy
 from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
+from csle_common.dao.training.policy_type import PolicyType
 from scipy.stats import norm
 
 
@@ -159,7 +160,10 @@ if __name__ == '__main__':
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.COMMON.GAMMA: HParam(
                 value=0.99, name=agents_constants.COMMON.GAMMA,
-                descr="the discount factor gamma")
+                descr="the discount factor gamma"),
+            constants.T_SPSA.POLICY_TYPE: HParam(
+                value=PolicyType.MULTI_THRESHOLD, name=constants.T_SPSA.POLICY_TYPE,
+                descr="policy type in T-SPSA")
         },
         player_type=PlayerType.ATTACKER, player_idx=1
     )

@@ -5,6 +5,7 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.simulation_config.state import State
+from csle_common.dao.training.policy_type import PolicyType
 
 
 class AlphaVectorsPolicy(Policy):
@@ -37,6 +38,7 @@ class AlphaVectorsPolicy(Policy):
         self.transition_tensor = transition_tensor
         self.reward_tensor = reward_tensor
         self.states = states
+        self.policy_type = PolicyType.ALPHA_VECTORS
 
     def action(self, o: Union[List[Union[int, float]], int, float]) -> Union[int, float]:
         """
@@ -108,6 +110,7 @@ class AlphaVectorsPolicy(Policy):
         d["transition_tensor"] = self.transition_tensor
         d["states"] = list(map(lambda x: x.to_dict(), self.states))
         d["reward_tensor"] = self.reward_tensor
+        d["policy_type"] = self.policy_type
         return d
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
@@ -127,7 +130,7 @@ class AlphaVectorsPolicy(Policy):
                f"actions: {list(map(lambda x: str(x), self.actions))}, alpha_vectors: {self.alpha_vectors}, " \
                f"simulation_name: {self.simulation_name}, id: {self.id}, avg_R: {self.avg_R}," \
                f"transition_tensor: {self.transition_tensor}, states: {self.states}, " \
-               f"reward_tensor: {self.reward_tensor}"
+               f"reward_tensor: {self.reward_tensor}, policy_type: {self.policy_type}"
 
     def to_json_str(self) -> str:
         """

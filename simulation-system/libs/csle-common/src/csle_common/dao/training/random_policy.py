@@ -5,6 +5,7 @@ from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.simulation_config.action import Action
+from csle_common.dao.training.policy_type import PolicyType
 
 
 class RandomPolicy(Policy):
@@ -24,6 +25,7 @@ class RandomPolicy(Policy):
         super(RandomPolicy, self).__init__(agent_type=AgentType.RANDOM, player_type=player_type)
         self.actions = actions
         self.stage_policy_tensor = stage_policy_tensor
+        self.policy_type = PolicyType.RANDOM
 
     def action(self, o: Union[List[Union[int, float]], int, float]) -> Union[int, float]:
         """
@@ -75,6 +77,7 @@ class RandomPolicy(Policy):
         d["player_type"] = self.player_type
         d["actions"] = list(map(lambda x: x.to_dict(), self.actions))
         d["stage_policy_tensor"] = self.stage_policy_tensor
+        d["policy_type"] = self.policy_type
         return d
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
@@ -91,7 +94,8 @@ class RandomPolicy(Policy):
         :return: a string representation of the policy
         """
         return f"agent_type: {self.agent_type}, player_type: {self.player_type}, " \
-               f"actions: {list(map(lambda x: str(x), self.actions))}, stage_policy_tensor: {self.stage_policy_tensor}"
+               f"actions: {list(map(lambda x: str(x), self.actions))}, " \
+               f"stage_policy_tensor: {self.stage_policy_tensor}, policy_type: {self.policy_type}"
 
     def to_json_str(self) -> str:
         """

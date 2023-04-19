@@ -3,6 +3,7 @@ from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.simulation_config.action import Action
+from csle_common.dao.training.policy_type import PolicyType
 
 
 class TabularPolicy(Policy):
@@ -32,6 +33,7 @@ class TabularPolicy(Policy):
         self.simulation_name = simulation_name
         self.id = -1
         self.avg_R = avg_R
+        self.policy_type = PolicyType.TABULAR
 
     def action(self, o: Union[List[Union[int, float]], int, float]) -> Union[int, float]:
         """
@@ -83,6 +85,7 @@ class TabularPolicy(Policy):
         d["id"] = self.id
         d["avg_R"] = self.avg_R
         d["q_table"] = self.q_table
+        d["policy_type"] = self.policy_type
         return d
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
@@ -101,7 +104,7 @@ class TabularPolicy(Policy):
         return f"agent_type: {self.agent_type}, player_type: {self.player_type}, " \
                f"actions: {list(map(lambda x: str(x), self.actions))}, lookup_table: {self.lookup_table}, " \
                f"value_function: {self.value_function}, simulation_name: {self.simulation_name}, id: {self.id}, " \
-               f"avg_R: {self.avg_R}, q_table: {self.q_table}"
+               f"avg_R: {self.avg_R}, q_table: {self.q_table}, policy_type: {self.policy_type}"
 
     def to_json_str(self) -> str:
         """

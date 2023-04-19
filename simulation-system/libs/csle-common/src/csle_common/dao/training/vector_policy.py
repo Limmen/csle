@@ -3,7 +3,7 @@ import numpy as np
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy import Policy
-
+from csle_common.dao.training.policy_type import PolicyType
 
 class VectorPolicy(Policy):
     """
@@ -27,6 +27,7 @@ class VectorPolicy(Policy):
         self.simulation_name = simulation_name
         self.id = -1
         self.avg_R = avg_R
+        self.policy_type = PolicyType.VECTOR
 
     def action(self, o: Union[List[Union[int, float]], int, float]) -> Union[int, float]:
         """
@@ -75,6 +76,7 @@ class VectorPolicy(Policy):
         d["simulation_name"] = self.simulation_name
         d["id"] = self.id
         d["avg_R"] = self.avg_R
+        d["policy_type"] = self.policy_type
         return d
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[float]:
@@ -93,7 +95,7 @@ class VectorPolicy(Policy):
         return f"agent_type: {self.agent_type}, player_type: {self.player_type}, " \
                f"actions: {list(map(lambda x: str(x), self.actions))}, policy_vector: {self.policy_vector}, " \
                f"simulation_name: {self.simulation_name}, id: {self.id}, " \
-               f"avg_R: {self.avg_R}"
+               f"avg_R: {self.avg_R}, type: {self.policy_type}"
 
     def to_json_str(self) -> str:
         """

@@ -1770,6 +1770,7 @@ class T_SPSA:
     a = "a"
     c = "c"
     LAMBDA = "lambda"
+    POLICY_TYPE = "policy_type"
     A = "A"
     EPSILON = "epsilon"
     N = "N"

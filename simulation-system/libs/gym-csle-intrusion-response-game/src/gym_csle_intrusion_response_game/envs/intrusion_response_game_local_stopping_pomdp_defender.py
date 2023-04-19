@@ -18,12 +18,14 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
     (A Partially observed Dynkin game where the attacker strategy is fixed)
     """
 
-    def __init__(self, config: IntrusionResponseGameLocalPOMDPDefenderConfig, a1: int, zone: int) -> None:
+    def __init__(self, config: IntrusionResponseGameLocalPOMDPDefenderConfig) -> None:
         """
         Initializes the environment
 
         :param config: the environment configuration
         """
+        a1 = 3
+        zone = 3
         if config is None:
             raise ValueError("Configuration cannot be None")
         self.config = config
@@ -81,6 +83,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         self.upper_bound_return = 0
         self.random_return = 0
         self.t = 0
+        self.intrusion_length = 0
 
         # Reset
         self.reset()
@@ -103,14 +106,12 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
         a2 = IntrusionResponseGameUtil.sample_attacker_action(pi2=pi2, s=self.s)
-        a2=1
 
         # Compute the reward
         r = self.R[a1][a2][self.s+1]
 
         # Sample the next state
         S = np.append([-1], self.config.local_intrusion_response_game_config.S_A)
-        print(f"STATE:{self.s}")
         s_idx_prime = IntrusionResponseGameUtil.sample_next_state(
             a1=a1, a2=a2, T=self.T,S=S,
             s_idx=self.s+1)
@@ -119,8 +120,6 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         o = IntrusionResponseGameUtil.sample_next_observation(
             Z=self.Z, O=self.config.local_intrusion_response_game_config.O,
             s_prime_idx=self.s, a1=a1, a2=a2)
-
-        print(f"new state:{s_idx_prime-1}, prev state:{self.s}")
 
         # Move to the next state
         self.s = s_idx_prime-1
@@ -133,15 +132,16 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
             # S = np.append([-1], self.config.local_intrusion_response_game_config.S_A)
             S = self.config.local_intrusion_response_game_config.S_A
             # Update the beliefs
-            print(f"s:{self.s}, b1:{self.b}, o:{o}, a2:{a2}")
             self.b = IntrusionResponseGameUtil.next_stopping_belief(
                 o=o, a1=a1, b=self.b, pi2=pi2, S=S, Z=self.Z,
                 O = self.config.local_intrusion_response_game_config.O,
                 T=self.T,
                 A2=self.config.local_intrusion_response_game_config.A2, a2=a2, s=self.s)
 
-        # Update time-step
+        # Update metrics
         self.t += 1
+        if self.s == env_constants.ATTACK_STATES.COMPROMISED:
+            self.intrusion_length+=1
 
         # Populate info dict
         info[env_constants.ENV_METRICS.STATE] = self.s
@@ -149,9 +149,13 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
         info[env_constants.ENV_METRICS.OBSERVATION] = o
         info[env_constants.ENV_METRICS.TIME_STEP] = self.t
+        info[env_constants.ENV_METRICS.INTRUSION_LENGTH] = self.intrusion_length
+        info[env_constants.ENV_METRICS.WEIGHTED_INTRUSION_PREDICTION_DISTANCE] = 0
+        info[env_constants.ENV_METRICS.START_POINT_CORRECT] = 0
+        info[env_constants.ENV_METRICS.INTRUSION_START] = 0
+        info[env_constants.ENV_METRICS.INTRUSION_END] = 0
 
         # Get observations
-        # attacker_obs = self.state.attacker_observation()
         defender_obs = self.b
 
         # Log trace

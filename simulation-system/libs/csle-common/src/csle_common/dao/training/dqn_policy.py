@@ -9,6 +9,7 @@ from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.experiment_config import ExperimentConfig
+from csle_common.dao.training.policy_type import PolicyType
 from csle_common.logging.log import Logger
 
 
@@ -46,6 +47,7 @@ class DQNPolicy(Policy):
         self.actions = actions
         self.experiment_config = experiment_config
         self.avg_R = avg_R
+        self.policy_type = PolicyType.DQN
 
     def action(self, o: List[float]) -> Union[int, List[int], np.ndarray]:
         """
@@ -91,6 +93,7 @@ class DQNPolicy(Policy):
         d["experiment_config"] = self.experiment_config.to_dict()
         d["agent_type"] = self.agent_type
         d["avg_R"] = self.avg_R
+        d["policy_type"] = self.policy_type
         return d
 
     @staticmethod
@@ -154,7 +157,7 @@ class DQNPolicy(Policy):
         """
         return f"model: {self.model}, id: {self.id}, simulation_name: {self.simulation_name}, " \
                f"save path: {self.save_path}, states: {self.states}, experiment_config: {self.experiment_config}," \
-               f"avg_R: {self.avg_R}"
+               f"avg_R: {self.avg_R}, policy_type: {self.policy_type}"
 
     def to_json_str(self) -> str:
         """

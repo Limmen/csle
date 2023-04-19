@@ -12,6 +12,7 @@ from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.experiment_config import ExperimentConfig
+from csle_common.dao.training.policy_type import PolicyType
 from csle_common.logging.log import Logger
 
 
@@ -46,6 +47,7 @@ class FNNWithSoftmaxPolicy(Policy):
         self.avg_R = avg_R
         self.input_dim = input_dim
         self.output_dim = output_dim
+        self.policy_type = PolicyType.FNN_W_SOFTMAX
         if self.policy_network is None:
             try:
                 self.policy_network = FNNwithSoftmax(
@@ -151,6 +153,7 @@ class FNNWithSoftmaxPolicy(Policy):
         d["avg_R"] = self.avg_R
         d["input_dim"] = self.input_dim
         d["output_dim"] = self.output_dim
+        d["policy_type"] = self.policy_type
         return d
 
     @staticmethod
@@ -167,7 +170,8 @@ class FNNWithSoftmaxPolicy(Policy):
                                    player_type=d["player_type"],
                                    actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
                                    experiment_config=ExperimentConfig.from_dict(d["experiment_config"]),
-                                   avg_R=d["avg_R"], input_dim=d["input_dim"], output_dim=d["output_dim"])
+                                   avg_R=d["avg_R"], input_dim=d["input_dim"], output_dim=d["output_dim"],
+                                   policy_type=d["policy_type"])
         obj.id = d["id"]
         return obj
 
