@@ -25,7 +25,7 @@ class ClientThreadNew(threading.Thread):
         Runs the client thread.
         """
         for command in self.commands:
-            logging.debug("Executing command: " + str(command))
+            logging.info("Executing command: " + str(command))
             p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
             p.communicate() # Execute command and wait for the command to finish
             time.sleep(self.time_step_len_seconds)

@@ -47,7 +47,7 @@ class ArrivalThreadNew(threading.Thread):
 
             # Generate new client threads
             arrival_rate = self.rate_function(self.t)
-            logging.debug("t: " + str(self.t) + ", arrival_rate: " + str(arrival_rate))
+            logging.info("t: " + str(self.t) + ", arrival_rate: " + str(arrival_rate))
             if arrival_rate > 0:
                 num_new_clients = poisson.rvs(arrival_rate, size=1)[0]
                 for _ in range(num_new_clients):
