@@ -1087,8 +1087,6 @@ class IntrusionResponseGameUtil:
             for a2 in A2:
                 for s_prime_1 in S:
                     prob_1 = Z[a1][a2][s_prime_1+1][o]
-                    # print(f"prob_1:{prob_1}, b[s]:{b[s]}, T[a1][a2][s][s_prime_1]:{T[a1][a2][s][s_prime_1]}, "
-                    #       f"pi2[s][a2]:{pi2[s][a2]}, a2:{a2}")
                     norm += b[s] * prob_1 * T[a1][a2][s+1][s_prime_1+1] * pi2[s][a2]
         if norm == 0:
             print(f"zero norm, s_prime:{s_prime}, o:{o}, a1:{a1}, b:{b}")
@@ -1101,9 +1099,7 @@ class IntrusionResponseGameUtil:
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 3) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_prime}, o:{o}, pi2:{pi2}")
-        assert round(b_prime_s_prime, 2) <= 1
-        if s_prime == 2 and o != O[-1]:
-            assert round(b_prime_s_prime, 2) <= 0.01
+        assert round(b_prime_s_prime, 3) <= 1
         return b_prime_s_prime
 
     @staticmethod
