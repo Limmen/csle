@@ -3,10 +3,9 @@ import threading
 import time
 from typing import List
 from scipy.stats import poisson
-from client_thread_new import ClientThreadNew
-
-from client_type import ClientType
-from service import Service
+from csle_collector.client_manager.client_thread_new import ClientThreadNew
+from csle_collector.client_manager.client_type import ClientType
+from csle_collector.client_manager.service import Service
 
 
 class ArrivalThreadNew(threading.Thread):
