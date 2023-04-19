@@ -345,7 +345,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             discount_factor=self.config.local_intrusion_response_game_config.gamma
         )
 
-    def get_local_mdp_transition_tensor(self) -> np.ndarray:
+    def get_local_stopping_mdp_transition_tensor(self) -> np.ndarray:
         """
         :return: the local MDP transition tensor of the optimal stopping formulation
         """
@@ -357,7 +357,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             S_D=self.config.local_intrusion_response_game_config.S_D
         )
 
-    def get_local_mdp_reward_tensor(self) -> np.ndarray:
+    def get_local_stopping_mdp_reward_tensor(self) -> np.ndarray:
         """
         :return: the local MDP reward tensor of the optimal stopping formulation
         """
@@ -367,4 +367,45 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             A2=self.config.local_intrusion_response_game_config.A2,
             R=self.config.local_intrusion_response_game_config.R[0],
             S_D=self.config.local_intrusion_response_game_config.S_D
+        )
+
+    def get_local_stopping_pomdp_transition_tensor(self, a1: int) -> np.ndarray:
+        """
+        :param a1: the defender action
+        :return: the local POMDP transition tensor of the optimal stopping formulation
+        """
+        return IntrusionResponseGameUtil.local_stopping_pomdp_transition_tensor(
+            S=self.config.local_intrusion_response_game_config.S,
+            A2=self.config.local_intrusion_response_game_config.A2,
+            T=self.config.local_intrusion_response_game_config.T[0],
+            S_A=self.config.local_intrusion_response_game_config.S_A,
+            a1=a1
+        )
+
+    def get_local_stopping_pomdp_reward_tensor(self, a1: int, zone: int) -> np.ndarray:
+        """
+        :param a1: the defender action
+        :param zone: the zone
+        :return: the local MDP reward tensor of the optimal stopping formulation
+        """
+        return IntrusionResponseGameUtil.local_stopping_pomdp_reward_tensor(
+            S=self.config.local_intrusion_response_game_config.S,
+            A2=self.config.local_intrusion_response_game_config.A2,
+            R=self.config.local_intrusion_response_game_config.R[0],
+            S_A=self.config.local_intrusion_response_game_config.S_A,
+            a1=a1, zone = zone
+        )
+
+    def get_local_stopping_pomdp_obs_tensor(self, a1: int, zone: int) -> np.ndarray:
+        """
+        :param a1: the defender action
+        :param zone: the zone
+        :return: the local MDP reward tensor of the optimal stopping formulation
+        """
+        return IntrusionResponseGameUtil.local_stopping_pomdp_observation_tensor(
+            S=self.config.local_intrusion_response_game_config.S,
+            A2=self.config.local_intrusion_response_game_config.A2,
+            Z=self.config.local_intrusion_response_game_config.Z,
+            S_A=self.config.local_intrusion_response_game_config.S_A,
+            a1=a1, zone = zone, O=self.config.local_intrusion_response_game_config.O
         )

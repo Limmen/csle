@@ -428,6 +428,61 @@ class IntrusionResponseGameUtil:
         return R_1
 
     @staticmethod
+    def local_stopping_pomdp_reward_tensor(S: np.ndarray, A2: np.ndarray,
+                                           R: np.ndarray, S_A: np.ndarray,
+                                           a1: int, zone: int) -> np.ndarray:
+        R_1 = []
+        S_A = np.append([-1], S_A)
+        for stop in [0,1]:
+            a1_rews = []
+            for a2 in A2:
+                a1_a2_rews = []
+                for s in S_A:
+                    r = 0
+                    for i, full_s in enumerate(S):
+                        if full_s[env_constants.STATES.A_STATE_INDEX] == s \
+                                and full_s[env_constants.STATES.D_STATE_INDEX] == zone:
+                            if stop == 1:
+                                r = R[a1][a2][i]
+                            else:
+                                r = R[0][a2][i]
+                    a1_a2_rews.append(r)
+                a1_rews.append(a1_a2_rews)
+            R_1.append(a1_rews)
+        R_1 = np.array(R_1)
+        return R_1
+
+    @staticmethod
+    def local_stopping_pomdp_observation_tensor(S: np.ndarray, A2: np.ndarray, S_A: np.ndarray,
+                                                Z: np.ndarray, a1: int, zone: int,
+                                                O: np.ndarray) -> np.ndarray:
+        Z_1 = []
+        S_A = np.append([-1], S_A)
+        for stop in [0,1]:
+            a1_obs_probs = []
+            for a2 in A2:
+                a1_a2_obs_probs = []
+                for s in S_A:
+                    obs_prob = []
+                    for i, full_s_prime in enumerate(S):
+                        if full_s_prime[env_constants.STATES.A_STATE_INDEX] == s \
+                                and full_s_prime[env_constants.STATES.D_STATE_INDEX] == zone:
+                            if stop == 1:
+                                obs_prob = Z[a1][a2][i]
+                            else:
+                                obs_prob = Z[0][a2][i]
+                    if len(obs_prob) == 0:
+                        obs_prob = np.zeros(len(O)).tolist()
+                        obs_prob[0]=1
+                    else:
+                        obs_prob = obs_prob.tolist()
+                    a1_a2_obs_probs.append(obs_prob)
+                a1_obs_probs.append(a1_a2_obs_probs)
+            Z_1.append(a1_obs_probs)
+        Z_1 = np.array(Z_1)
+        return Z_1
+
+    @staticmethod
     def local_transition_probability(s: np.ndarray, s_prime: np.ndarray, a1: int, a2: int, Z_D_P: np.ndarray,
                                      A_P: np.ndarray):
         """
@@ -615,6 +670,51 @@ class IntrusionResponseGameUtil:
                     a1_a2_probs.append(a1_a2_s_probs)
                 a1_probs.append(a1_a2_probs)
             T_1.append(a1_probs)
+        T_1 = np.array(T_1)
+        return T_1
+
+    @staticmethod
+    def local_stopping_pomdp_transition_tensor(S: np.ndarray, A2: np.ndarray, T: np.ndarray, S_A: np.ndarray,
+                                               a1: int) -> np.ndarray:
+        """
+        Gets the transition tensor for the local POMDP of the stopping decomposition in the temporal domain
+
+        :param S: the full state space of the local problem
+        :param A1: the defender's action space in the local problem
+        :param A2: the attacker's action space in the local problem
+        :param T: the full transition tensor of the local problem
+        :param S_D: the defender's state spce
+        :return: the transition tensor for the local MDP of the stopping formulation
+        """
+        S_A = np.append([-1], S_A)
+        T_1 = []
+        for stop in [0,1]:
+            stop_probs = []
+            for a2 in A2:
+                a1_a2_probs = []
+                for s in S_A:
+                    a1_a2_s_probs = []
+                    for s_prime in S_A:
+                        if a1 == 1:
+                            if s_prime == -1:
+                                a1_a2_s_probs.append(1)
+                        else:
+                            prob = 0
+                            total_prob = 0
+                            for i, full_s in enumerate(S):
+                                for j, full_s_prime in enumerate(S):
+                                    if full_s[env_constants.STATES.A_STATE_INDEX] == s:
+                                        total_prob += T[a1][a2][i][j]
+                                    if full_s[env_constants.STATES.A_STATE_INDEX] == s \
+                                            and full_s_prime[env_constants.STATES.A_STATE_INDEX] == s_prime:
+                                        prob += T[stop][a2][i][j]
+                            prob = prob/total_prob
+                            # prob=min(1, prob)
+                            a1_a2_s_probs.append(prob)
+                    assert round(sum(a1_a2_s_probs), 3) == 1
+                    a1_a2_probs.append(a1_a2_s_probs)
+                stop_probs.append(a1_a2_probs)
+            T_1.append(stop_probs)
         T_1 = np.array(T_1)
         return T_1
 
@@ -964,3 +1064,90 @@ class IntrusionResponseGameUtil:
                             r += pi2[a2]*R[0][a1][a2][s]
                         file_str = file_str + f"R: {a1} : {s} : {s_prime} : {o} {r}\n"
         return file_str
+
+    @staticmethod
+    def stopping_bayes_filter(s_prime: int, o: int, a1: int, b: np.ndarray, pi2: np.ndarray,
+                              S: np.ndarray, Z: np.ndarray, T: np.ndarray, A2: np.ndarray,
+                              O: np.ndarray) -> float:
+        """
+        A Bayesian filter to compute the belief of player 1
+        of being in s_prime when observing o after taking action a in belief b given that the opponent follows
+        strategy pi2
+
+        :param s_prime: the state to compute the belief of
+        :param o: the observation
+        :param a1: the action of player 1
+        :param b: the current belief point
+        :param pi2: the policy of player 2
+        :param l: stops remaining
+        :return: b_prime(s_prime)
+        """
+        norm = 0
+        for s in S:
+            for a2 in A2:
+                for s_prime_1 in S:
+                    prob_1 = Z[a1][a2][s_prime_1+1][o]
+                    # print(f"prob_1:{prob_1}, b[s]:{b[s]}, T[a1][a2][s][s_prime_1]:{T[a1][a2][s][s_prime_1]}, "
+                    #       f"pi2[s][a2]:{pi2[s][a2]}, a2:{a2}")
+                    norm += b[s] * prob_1 * T[a1][a2][s+1][s_prime_1+1] * pi2[s][a2]
+        if norm == 0:
+            print(f"zero norm, s_prime:{s_prime}, o:{o}, a1:{a1}, b:{b}")
+            return 0
+        temp = 0
+
+        for s in S:
+            for a2 in A2:
+                temp += Z[a1][a2][s_prime+1][o] * T[a1][a2][s+1][s_prime+1] * b[s] * pi2[s][a2]
+        b_prime_s_prime = temp / norm
+        if round(b_prime_s_prime, 3) > 1:
+            print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_prime}, o:{o}, pi2:{pi2}")
+        assert round(b_prime_s_prime, 2) <= 1
+        if s_prime == 2 and o != O[-1]:
+            assert round(b_prime_s_prime, 2) <= 0.01
+        return b_prime_s_prime
+
+    @staticmethod
+    def stopping_p_o_given_b_a1_a2(o: int, b: np.ndarray, a1: int, a2: int, S: np.ndarray, Z: np.ndarray,
+                                   T: np.ndarray) -> float:
+        """
+        Computes P[o|a,b]
+
+        :param o: the observation
+        :param b: the belief point
+        :param a1: the action of player 1
+        :param a2: the action of player 2
+        :param config: the game config
+        :return: the probability of observing o when taking action a in belief point b
+        """
+        prob = 0
+        for s in S:
+            for s_prime in S:
+                prob += b[s] * T[a1][a2][s][s_prime] * Z[a1][a2][s_prime][o]
+        assert prob < 1
+        return prob
+
+    @staticmethod
+    def next_stopping_belief(o: int, a1: int, b: np.ndarray, pi2: np.ndarray, S: np.ndarray,
+                             Z: np.ndarray, O: np.ndarray, T: np.ndarray, A2: np.ndarray,
+                             a2: int = 0, s: int = 0) -> np.ndarray:
+        """
+        Computes the next belief using a Bayesian filter
+
+        :param o: the latest observation
+        :param a1: the latest action of player 1
+        :param b: the current belief
+        :param pi2: the policy of player 2
+        :param config: the game config
+        :param a2: the attacker action (for debugging, should be consistent with pi2)
+        :param s: the true state (for debugging)
+        :return: the new belief
+        """
+        b_prime = np.zeros(len(S))
+        for s_prime in S:
+            b_prime[s_prime] = IntrusionResponseGameUtil.stopping_bayes_filter(s_prime=s_prime, o=o, a1=a1, b=b,
+                                                                               pi2=pi2, S=S, Z=Z, T=T, A2=A2, O=O)
+        if round(sum(b_prime), 2) != 1:
+            print(f"error, b_prime:{b_prime}, o:{o}, a1:{a1}, b:{b}, pi2:{pi2}, "
+                  f"a2: {a2}, s:{s}")
+        assert round(sum(b_prime), 2) == 1
+        return b_prime

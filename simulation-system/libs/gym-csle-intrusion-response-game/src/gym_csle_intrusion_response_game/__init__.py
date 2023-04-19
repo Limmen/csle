@@ -27,3 +27,9 @@ register(
     entry_point='gym_csle_intrusion_response_game.envs.intrusion_response_game_workflow_pomdp_attacker:'
                 'IntrusionResponseGameWorkflowPOMDPAttackerEnv', kwargs={'config': None}
 )
+
+register(
+    id='csle-intrusion-response-game-local-stopping-pomdp-defender-v1',
+    entry_point='gym_csle_intrusion_response_game.envs.intrusion_response_game_local_stopping_pomdp_defender:'
+                'IntrusionResponseGameLocalStoppingPOMDPDefenderEnv', kwargs={'config': None}
+)

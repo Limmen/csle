@@ -18,7 +18,7 @@ if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
         "csle-intrusion-response-game-local-pomdp-defender-001")
     number_of_zones = 5
-    X_max = 4096
+    X_max = 5
     eta = 0.5
     reachable = True
     beta = 3
@@ -74,12 +74,16 @@ if __name__ == '__main__':
             A1=A1, A2=A2, d_b1=d_b1, a_b1=a_b1, gamma=gamma, beta=beta, C_D=C_D, A_P=A_P, Z_D_P=Z_D_P, Z_U=Z_U,
             eta=eta
         )
+    simulation_env_config.gym_env_name = "csle-intrusion-response-game-local-stopping-pomdp-defender-v1"
     simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
-    env = gym.make(simulation_env_config.gym_env_name, config=simulation_env_config.simulation_env_input_config)
-    T = env.get_local_stopping_pomdp_transition_tensor(a1=2)
-    R = env.get_local_stopping_pomdp_reward_tensor(a1=2, zone=2)
-    Z = env.get_local_stopping_pomdp_obs_tensor(a1=2, zone=2)
-    print(Z)
+    print(simulation_env_config.gym_env_name)
+    env = gym.make(simulation_env_config.gym_env_name, config=simulation_env_config.simulation_env_input_config,
+                   a1=2, zone=2)
+    env.manual_play()
+    # T = env.get_local_stopping_pomdp_transition_tensor(a1=2)
+    # R = env.get_local_stopping_pomdp_reward_tensor(a1=2, zone=2)
+    # Z = env.get_local_stopping_pomdp_obs_tensor(a1=2, zone=2)
+    # print(Z)
     # pomdp_solver_file_str = env.pomdp_solver_file()
     # with io.open(f"/home/kim/pomdp-solve-5.4/ir_game.POMDP", 'w', encoding='utf-8') as f:
     #     f.write(pomdp_solver_file_str)

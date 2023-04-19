@@ -80,6 +80,14 @@ class LocalIntrusionResponseGameConfig:
                               high=np.array([len(self.zones)] + [1] * len(self.S_A)),
                               dtype=np.float32, shape=(len(self.S_A) + 1,))
 
+    def defender_observation_space_stopping(self) -> gym.spaces.Box:
+        """
+        :return: the defender's observation space
+        """
+        return gym.spaces.Box(low=np.array(([0] * (len(self.S_A)))),
+                              high=np.array([1] * len(self.S_A)),
+                              dtype=np.float32, shape=(len(self.S_A),))
+
     def attacker_action_space(self) -> gym.spaces.Discrete:
         """
         :return: the attacker's action space
@@ -91,6 +99,13 @@ class LocalIntrusionResponseGameConfig:
         :return: the defender's action space
         """
         return gym.spaces.Discrete(len(self.A1))
+
+
+    def defender_action_space_stopping(self) -> gym.spaces.Discrete:
+        """
+        :return: the defender's action space in the stopping POMDP
+        """
+        return gym.spaces.Discrete(2)
 
     def to_dict(self) -> Dict[str, Any]:
         """
