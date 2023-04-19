@@ -200,11 +200,13 @@ class Emulator:
                 if restart_client_population:
                     ClusterController.stop_kafka_client_producer(
                         ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
-                        port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
+                        port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        ip_first_octet=emulation_env_config.execution_id,
                         emulation=emulation_env_config.name)
                     ClusterController.stop_client_population(
                         ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
-                        port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
+                        port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        ip_first_octet=emulation_env_config.execution_id,
                         emulation=emulation_env_config.name)
                     time.sleep(5)
                     ClusterController.start_client_population(
@@ -216,7 +218,8 @@ class Emulator:
                     time.sleep(5)
                     ClusterController.start_kafka_client_producer(
                         ip=emulation_env_config.traffic_config.client_population_config.physical_host_ip,
-                        port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, ip_first_octet=emulation_env_config.execution_id,
+                        port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        ip_first_octet=emulation_env_config.execution_id,
                         emulation=emulation_env_config.name
                     )
                     time.sleep(15)
@@ -255,7 +258,7 @@ class Emulator:
         defender_action.ips = s.defender_obs_state.get_action_ips(a=defender_action,
                                                                   emulation_env_config=emulation_env_config)
         logger.info(f"Executing attacker action:{attacker_action.name} on machine index: {attacker_action.index}, "
-                     f"ips:{attacker_action.ips}")
+                    f"ips:{attacker_action.ips}")
         logger.info(f"Machines: {list(map(lambda x: x.ips[0], s.attacker_obs_state.machines))}")
         s_prime = Attacker.attacker_transition(s=s, attacker_action=attacker_action)
         logger.debug(f"Attacker action complete, attacker state:{s_prime.attacker_obs_state}")

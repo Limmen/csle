@@ -4023,11 +4023,11 @@ def default_traffic_config(network_id: int, time_step_len_seconds: int) -> Traff
         client_process_type=ClientPopulationProcessType.PIECE_WISE_CONSTANT,
         lamb=20, mu=1, client_manager_port=collector_constants.MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT,
         num_commands=2, client_time_step_len_seconds=time_step_len_seconds,
-        time_scaling_factor=float(2/30), period_scaling_factor=20,
+        time_scaling_factor=float(2 / 30), period_scaling_factor=20,
         client_manager_log_dir=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR,
         client_manager_log_file=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE,
         client_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS,
-        exponents=[3, 7, 11, 16], factors=[10,40,30,20], breakpoints=[0,6,12], breakvalues=[10,30,50])
+        exponents=[3, 7, 11, 16], factors=[10, 40, 30, 20], breakpoints=[0, 6, 12], breakvalues=[10, 30, 50])
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
                                  client_population_config=client_population_config)
     return traffic_conf

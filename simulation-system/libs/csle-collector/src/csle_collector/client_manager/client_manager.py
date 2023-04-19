@@ -70,7 +70,7 @@ class ArrivalThread(threading.Thread):
                  num_commands: int = 2, sine_modulated: bool = False,
                  time_scaling_factor: float = 0.01, period_scaling_factor: float = 20,
                  exponents: List[float] = None, factors: List[float] = None, spiking: bool = False,
-                 piece_wise_constant: bool = False, breakpoints : List[float] = None, breakvalues: List[float] = None):
+                 piece_wise_constant: bool = False, breakpoints: List[float] = None, breakvalues: List[float] = None):
         """
         Initializes the arrival thread
 
@@ -101,7 +101,7 @@ class ArrivalThread(threading.Thread):
         self.time_scaling_factor = time_scaling_factor
         self.period_scaling_factor = period_scaling_factor
         self.exponents = exponents
-        self.factors= factors
+        self.factors = factors
         self.spiking = spiking
         self.piece_wise_constant = piece_wise_constant
         self.breakpoints = breakpoints
@@ -120,9 +120,9 @@ class ArrivalThread(threading.Thread):
         :return: the rate
         """
         rate = 0
-        assert  len(self.breakvalues) == len(self.breakpoints)
+        assert len(self.breakvalues) == len(self.breakpoints)
         for i in range(len(self.breakvalues)):
-            if t>=self.breakpoints[i]:
+            if t >= self.breakpoints[i]:
                 rate = self.breakvalues[i]
         return rate
 
@@ -136,7 +136,7 @@ class ArrivalThread(threading.Thread):
         rate = self.lamb
         assert len(self.exponents) == len(self.factors)
         for i in range(len(self.exponents)):
-            rate = self.factors[i]*math.exp(math.pow(-(t-self.exponents[i]), 2))
+            rate = self.factors[i] * math.exp(math.pow(-(t - self.exponents[i]), 2))
         return rate
 
     def sine_modulated_poisson_rate(self, t) -> float:

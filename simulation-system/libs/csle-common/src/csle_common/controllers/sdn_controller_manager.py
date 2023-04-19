@@ -10,7 +10,6 @@ import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
 from csle_common.util.emulation_util import EmulationUtil
-from csle_common.logging.log import Logger
 
 
 class SDNControllerManager:

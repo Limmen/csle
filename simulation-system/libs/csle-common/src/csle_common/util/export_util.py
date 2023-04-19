@@ -27,7 +27,7 @@ class ExportUtil:
         with zipfile.ZipFile(file_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
             for root, dirs, files in os.walk(dir_path):
                 for i, file in enumerate(files):
-                    Logger.__call__().get_logger().info(f"Processing file {i+1}/{len(files)}, file name: {file}")
+                    Logger.__call__().get_logger().info(f"Processing file {i + 1}/{len(files)}, file name: {file}")
                     zipf.write(os.path.join(root, file),
                                os.path.relpath(os.path.join(root, file),
                                                os.path.join(dir_path, '..')))
@@ -52,7 +52,7 @@ class ExportUtil:
     @staticmethod
     def export_emulation_traces_to_disk_json(num_traces_per_file: int, output_dir: str, zip_file_output: str,
                                              max_num_traces: int, added_by: str = "unknown", offset: int = 0,
-                                             file_start_id: int = 1, emulation_traces_ids = None) -> None:
+                                             file_start_id: int = 1, emulation_traces_ids=None) -> None:
         """
         Exports emulation traces from the metastore to disk
 
@@ -98,7 +98,7 @@ class ExportUtil:
 
             traces.append(tr.to_dict())
             if i > 0 and ((i % num_traces_per_file == 0) or i == (len(emulation_traces_ids) - 1)):
-                Logger.__call__().get_logger().info(f"Exporting traces {last_export+1}-{i} to file: {file_name}")
+                Logger.__call__().get_logger().info(f"Exporting traces {last_export + 1}-{i} to file: {file_name}")
                 traces_dict = {constants.METADATA_STORE.TRACES_PROPERTY: traces}
                 traces_str = json.dumps(traces_dict, indent=4, sort_keys=True)
                 with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{file_name}", 'w', encoding='utf-8') as f:
@@ -226,7 +226,7 @@ class ExportUtil:
 
             traces.append(tr_values)
             if i > 0 and ((i % num_traces_per_file == 0) or i == (len(emulation_traces_ids) - 1)):
-                Logger.__call__().get_logger().info(f"Exporting traces {last_export+1}-{i} to file: {file_name}")
+                Logger.__call__().get_logger().info(f"Exporting traces {last_export + 1}-{i} to file: {file_name}")
                 with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{file_name}", 'w', encoding='utf-8') as f:
                     writer = csv.writer(f)
                     writer.writerow(columns)

@@ -76,7 +76,7 @@ class LocalIntrusionResponseGameConfig:
         """
         :return: the defender's observation space
         """
-        return gym.spaces.Box(low=np.array([0] * (len(self.S_A) + 1)),
+        return gym.spaces.Box(low=np.array(([0] * (len(self.S_A) + 1))),
                               high=np.array([len(self.zones)] + [1] * len(self.S_A)),
                               dtype=np.float32, shape=(len(self.S_A) + 1,))
 

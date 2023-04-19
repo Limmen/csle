@@ -1,4 +1,4 @@
-from typing import Tuple, List, Dict, Union
+from typing import Tuple, List, Dict, Union, Any
 import numpy as np
 import time
 import math
@@ -26,6 +26,8 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
 
         :param config: the environment configuration
         """
+        if config is None:
+            raise ValueError("Configuration cannot be None")
         self.config = config
 
         # Initialize environment state
@@ -62,8 +64,8 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         # Get upper bound and random return estimate
         self.upper_bound_return = 0
         self.random_return = 0
-        self.upper_bound_return = self.get_upper_bound_return(samples=100)
-        self.random_return = self.get_random_baseline_return(samples=100)
+        # self.upper_bound_return = self.get_upper_bound_return(samples=100)
+        # self.random_return = self.get_random_baseline_return(samples=100)
 
         # Reset
         self.reset()
@@ -85,7 +87,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             cumulative_reward = 0
             while not done and t <= max_horizon:
                 a1 = np.random.choice(self.config.local_intrusion_response_game_config.A1)
-                o, r, done, info = self.step(a1)
+                o, r, done, _, info = self.step(a1)
                 cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
@@ -111,18 +113,18 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
                 a1 = 0
                 if self.state.attacker_state() == env_constants.ATTACK_STATES.COMPROMISED:
                     a1 = initial_zone
-                o, r, done, info = self.step(a1)
+                o, r, done, _, info = self.step(a1)
                 cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
         return np.mean(np.array(returns))
 
-    def step(self, a1: int) -> Tuple[np.ndarray, float, bool, Dict[str, Union[float, int]]]:
+    def step(self, a1: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Union[float, int]]]:
         """
         Takes a step in the environment by executing the given action
 
         :param a1: defender action
-        :return: (obs, reward, done, info)
+        :return: (obs, reward, terminated, truncated, info)
         """
         done, info = False, {}
 
@@ -195,8 +197,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
 
         # Populate info
         info = self._info(info)
-
-        return defender_obs, r, done, info
+        return defender_obs, r, done, done, info
 
     def _info(self, info) -> Dict[str, Union[float, int]]:
         """
@@ -213,12 +214,13 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         info[env_constants.ENV_METRICS.AVERAGE_RANDOM_RETURN] = self.random_return
         return info
 
-    def reset(self, soft: bool = False) -> np.ndarray:
+    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
         :return: initial observation
         """
+        super().reset(seed=seed)
         self.state.reset()
         if len(self.trace.attacker_rewards) > 0:
             self.traces.append(self.trace)
@@ -227,7 +229,8 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         defender_obs = self.state.defender_observation()
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
-        return defender_obs
+        info = {}
+        return defender_obs, info
 
     def render(self, mode: str = 'human'):
         """
@@ -320,5 +323,69 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}")
             else:
                 a1 = int(raw_input)
-                o, r, done, _ = self.step(a1=a1)
+                o, r, done, _, _ = self.step(a1=a1)
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}, r:{round(r, 2)}, done: {done}")
+
+
+    def pomdp_solver_file(self, discount_factor: float = 0.99):
+        file_str = ""
+        file_str = file_str + f"discount: {discount_factor}\n\n"
+        file_str = file_str + "values: reward\n\n"
+        file_str = file_str + f"states: {len(self.config.local_intrusion_response_game_config.S)}\n\n"
+        file_str = file_str + f"actions: {len(self.config.local_intrusion_response_game_config.A1)}\n\n"
+        file_str = file_str + f"observations: {len(self.config.local_intrusion_response_game_config.O)}\n\n"
+        initial_belief = [0]*len(self.config.local_intrusion_response_game_config.S)
+        initial_belief[self.config.local_intrusion_response_game_config.s_1_idx] = 1
+        initial_belief_str = " ".join(list(map(lambda x: str(x), initial_belief)))
+        file_str = file_str + f"start: {initial_belief_str}\n\n\n"
+        T = self.config.local_intrusion_response_game_config.T[0]
+        num_transitions = 0
+        for s in range(len(self.config.local_intrusion_response_game_config.S)):
+            for a1 in range(len(self.config.local_intrusion_response_game_config.A1)):
+                probs = []
+                for s_prime in range(len(self.config.local_intrusion_response_game_config.S)):
+                    num_transitions+=1
+                    prob = 0
+                    pi2 = np.array(self.static_attacker_strategy.stage_policy(None))[
+                        self.config.local_intrusion_response_game_config.S[s][env_constants.STATES.A_STATE_INDEX]]
+                    for a2 in range(len(self.config.local_intrusion_response_game_config.A2)):
+                        prob += pi2[a2]*T[a1][a2][s][s_prime]
+                    file_str = file_str + f"T: {a1} : {s} : {s_prime} {prob}\n"
+                    probs.append(prob)
+                assert round(sum(probs),3) == 1
+        file_str = file_str + "\n\n"
+        for s_prime in range(len(self.config.local_intrusion_response_game_config.S)):
+            for a1 in range(len(self.config.local_intrusion_response_game_config.A1)):
+                total_transition_prob = 0
+                a2_transition_probs = np.zeros(len(self.config.local_intrusion_response_game_config.A2))
+                for s in range(len(self.config.local_intrusion_response_game_config.S)):
+                    pi2 = np.array(self.static_attacker_strategy.stage_policy(None))[
+                        self.config.local_intrusion_response_game_config.S[s][env_constants.STATES.A_STATE_INDEX]]
+                    for a2 in range(len(self.config.local_intrusion_response_game_config.A2)):
+                        total_transition_prob += pi2[a2]*T[a1][a2][s][s_prime]
+                        a2_transition_probs[a2] += T[a1][a2][s][s_prime]*pi2[a2]
+                probs = []
+                for o in range(len(self.config.local_intrusion_response_game_config.O)):
+                    prob = 0
+                    if total_transition_prob == 0:
+                        prob = (1/len(self.config.local_intrusion_response_game_config.O))
+                    else:
+                        for a2 in range(len(self.config.local_intrusion_response_game_config.A2)):
+                            a2_prob =  (a2_transition_probs[a2])/total_transition_prob
+                            prob += a2_prob*self.config.local_intrusion_response_game_config.Z[a1][a2][s_prime][o]
+                    file_str = file_str + f"O : {a1} : {s_prime} : {o} {prob}\n"
+                    probs.append(prob)
+                assert round(sum(probs),3) == 1
+        file_str = file_str + "\n\n"
+
+        for s in range(len(self.config.local_intrusion_response_game_config.S)):
+            for a1 in range(len(self.config.local_intrusion_response_game_config.A1)):
+                for s_prime in range(len(self.config.local_intrusion_response_game_config.S)):
+                    pi2 = np.array(self.static_attacker_strategy.stage_policy(None))[
+                        self.config.local_intrusion_response_game_config.S[s][env_constants.STATES.A_STATE_INDEX]]
+                    for o in range(len(self.config.local_intrusion_response_game_config.O)):
+                        r = 0
+                        for a2 in range(len(self.config.local_intrusion_response_game_config.A2)):
+                            r += pi2[a2]*self.config.local_intrusion_response_game_config.R[0][a1][a2][s]
+                        file_str = file_str + f"R: {a1} : {s} : {s_prime} : {o} {r}\n"
+        return file_str

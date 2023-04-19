@@ -36,7 +36,7 @@ def stop_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cli
 def start_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub,
                   mu: float, lamb: float, time_step_len_seconds: int, commands: List[str], num_commands: int = 2,
                   sine_modulated: bool = False, time_scaling_factor: float = 0.01, period_scaling_factor: float = 20,
-                  spiking: bool = False, exponents : List[float]= None, factors: List[float] = None,
+                  spiking: bool = False, exponents: List[float] = None, factors: List[float] = None,
                   breakpoints: List[int] = None, breakvalues: List[float] = None, piece_wise_constant: bool = False,
                   timeout=constants.GRPC.TIMEOUT_SECONDS):
     """

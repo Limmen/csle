@@ -669,7 +669,6 @@ class KAFKA_CONFIG:
                                   SNORT_IDS_ALERTS_LABELS + OSSEC_IDS_ALERTS_LABELS)
 
 
-
 class KAFKA:
     """
     String constants for managing Kafka
