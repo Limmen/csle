@@ -43,6 +43,10 @@ class StoppingGameEnv(BaseEnv):
         self.attacker_action_space = self.config.attacker_action_space()
         self.defender_action_space = self.config.defender_action_space()
 
+        self.action_space = self.defender_action_space
+        self.observation_space = self.defender_observation_space
+
+
         # Setup Config
         self.viewer = None
         self.metadata = {
