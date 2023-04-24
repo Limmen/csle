@@ -88,19 +88,23 @@ class LinearThresholdStoppingPolicy(Policy):
         :return: the selected action (int) and its probability
         """
         coefficients = np.zeros(len(self.theta))
-        coefficients[-1]= math.pow(self.theta[-1],2)
-        coefficients[-2] = 1+math.pow(self.theta[-2],2)
+        theta = self.theta
+        # theta = [-5.16, 1.18]
+        # theta = [0.6, 1.1]
+        # theta = [-6, -5]
+        # theta = [-6.5, -5]
+        coefficients[-1]= math.pow(theta[-1],2)
+        coefficients[-2] = 1+math.pow(theta[-2],2)
         # coefficients.append(math.pow(self.theta[-1],2))
         # coefficients.append(1+math.pow(self.theta[-2],2))
-        for i in range(0, len(self.theta)-2):
-            coefficients[i] = coefficients[-2]*math.pow(math.sin(self.theta[i]), 2)
+        for i in range(0, len(theta)-2):
+            coefficients[i] = coefficients[-2]*math.pow(math.sin(theta[i]), 2)
         belief = o
         x = np.append(np.array([0,1]), np.array(coefficients))
         y = np.append(np.array(belief), np.array([-1]))
         d = np.dot(x, y)
-        # print(f"belief:{belief}, dot:{d}, x:{x}, y:{y}")
-        # print(f"coefficients:{coefficients}")
         if d > 0:
+            # print(f"stop!, b:{belief}")
             return 1, 1
         else:
             return 0, 1

@@ -39,16 +39,19 @@ def reduce_R(R, strategy):
 if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
         "csle-intrusion-response-game-local-pomdp-defender-001")
-    number_of_zones = 5
-    X_max = 4096
+    import time
+    start_time = time.time()
+    number_of_zones = 16
+    X_max = 200
     eta = 0.5
     reachable = True
-    beta = 3
+    beta = 2
     gamma = 0
-    initial_zone = 1
+    initial_zone = 3
     initial_state = [initial_zone, 0]
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
-    Z_D_P = np.array([0, 0.8, 0.15, 0.12, 0.08])
+    Z_D_P = np.array([0, 0.02, 0.01, 0.001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001,
+                      0, 0.02, 0.01, 0.001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001])
     S = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
     states_to_idx = {}
     for i, s in enumerate(S):
@@ -56,13 +59,15 @@ if __name__ == '__main__':
     S_A = IntrusionResponseGameUtil.local_attacker_state_space()
     S_D = IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)
     A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
-    C_D = np.array([0, 5, 1, 2, 2, 2])
+    C_D = np.array([0, 40, 55, 90, 60, 60, 60, 60, 60, 60, 60,
+                    0, 40, 55, 90, 60, 60, 60, 60, 60, 60, 60])
     A2 = IntrusionResponseGameUtil.local_attacker_actions()
     A_P = np.array([1, 1, 0.7, 0.5])
     O = IntrusionResponseGameUtil.local_observation_space(X_max=X_max)
     T = np.array([IntrusionResponseGameUtil.local_transition_tensor(S=S, A1=A1, A2=A2, Z_D=Z_D_P, A_P=A_P)])
     Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(S=S, A1=A1, A2=A2, O=O)
-    Z_U = np.array([0, 1, 3, 3.5, 4])
+    Z_U = np.array([0, 15, 20, 25, 30,30,30,30,30,30,
+                    0, 15, 20, 25, 30,30,30,30,30,30])
     R = np.array(
         [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable, beta=beta,
                                                        S=S, Z_U=Z_U, initial_zone=initial_zone)])
@@ -74,12 +79,12 @@ if __name__ == '__main__':
     attacker_stage_strategy = np.zeros((len(IntrusionResponseGameUtil.local_attacker_state_space()), len(A2)))
     for i, s_a in enumerate(IntrusionResponseGameUtil.local_attacker_state_space()):
         if s_a == env_constants.ATTACK_STATES.HEALTHY:
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.8
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.RECON] = 0.2
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.9
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.RECON] = 0.1
         elif s_a == env_constants.ATTACK_STATES.RECON:
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0.7
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.15
-            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.EXPLOIT] = 0.15
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 0
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.5
+            attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.EXPLOIT] = 0.5
         else:
             attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.WAIT] = 1
             attacker_stage_strategy[i][env_constants.ATTACKER_ACTIONS.BRUTE_FORCE] = 0.
@@ -96,6 +101,8 @@ if __name__ == '__main__':
             A1=A1, A2=A2, d_b1=d_b1, a_b1=a_b1, gamma=gamma, beta=beta, C_D=C_D, A_P=A_P, Z_D_P=Z_D_P, Z_U=Z_U,
             eta=eta
         )
+    # simulation_env_config.gym_env_name = "csle-intrusion-response-game-local-stopping-pomdp-defender-v1"
+    # simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
     simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
     env = gym.make(simulation_env_config.gym_env_name, config=simulation_env_config.simulation_env_input_config)
     T = IntrusionResponseGameUtil.local_stopping_mdp_transition_tensor(
@@ -161,6 +168,9 @@ if __name__ == '__main__':
     agent = VIAgent(simulation_env_config=simulation_env_config,
                     experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(execution_time)
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():
         MetastoreFacade.save_tabular_policy(tabular_policy=policy)

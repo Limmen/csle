@@ -75,6 +75,7 @@ class ENV_METRICS:
     INTRUSION_LENGTH = "intrusion_length"
     AVERAGE_UPPER_BOUND_RETURN = "average_upper_bound_return"
     AVERAGE_RANDOM_RETURN = "average_random_return"
+    AVERAGE_HEURISTIC_RETURN = "average_heuristic_return"
     INTRUSION_START = "intrusion_start"
     WEIGHTED_INTRUSION_PREDICTION_DISTANCE = "weighted_intrusion_prediction_distance"
     START_POINT_CORRECT = "start_point_correct"

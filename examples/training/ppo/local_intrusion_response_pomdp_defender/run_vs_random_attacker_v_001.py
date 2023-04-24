@@ -76,7 +76,7 @@ if __name__ == '__main__':
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
-                value=10, name=agents_constants.COMMON.RUNNING_AVERAGE,
+                value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.COMMON.L: HParam(value=3, name=agents_constants.COMMON.L,
                                               descr="the number of stop actions")
@@ -84,8 +84,8 @@ if __name__ == '__main__':
         player_type=PlayerType.DEFENDER, player_idx=0
     )
     experiment_config.name = f"workflow_ppo_nodes={1}"
-    number_of_zones = 5
-    X_max = 10
+    number_of_zones = 6
+    X_max = 100
     eta = 0.5
     reachable = True
     beta = 3
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     initial_zone = 3
     initial_state = [initial_zone, 0]
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
-    Z_D_P = np.array([0, 0.8, 0.15, 0.12, 0.08])
+    Z_D_P = np.array([0, 0.8, 0.5, 0.1, 0.05, 0.025])
     S = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
     states_to_idx = {}
     for i, s in enumerate(S):
@@ -101,13 +101,13 @@ if __name__ == '__main__':
     S_A = IntrusionResponseGameUtil.local_attacker_state_space()
     S_D = IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)
     A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
-    C_D = np.array([0, 5, 1, 2, 2, 2])
+    C_D = np.array([0, 35, 30, 25, 20, 20, 20, 15])
     A2 = IntrusionResponseGameUtil.local_attacker_actions()
-    A_P = np.array([1, 1, 0.7, 0.5])
+    A_P = np.array([1, 1, 0.75, 0.85])
     O = IntrusionResponseGameUtil.local_observation_space(X_max=X_max)
     T = np.array([IntrusionResponseGameUtil.local_transition_tensor(S=S, A1=A1, A2=A2, Z_D=Z_D_P, A_P=A_P)])
     Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(S=S, A1=A1, A2=A2, O=O)
-    Z_U = np.array([0, 1, 3, 3.5, 4])
+    Z_U = np.array([0, 0, 2.5, 5, 10, 15])
     R = np.array(
         [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable, beta=beta,
                                                        S=S, Z_U=Z_U, initial_zone=initial_zone)])

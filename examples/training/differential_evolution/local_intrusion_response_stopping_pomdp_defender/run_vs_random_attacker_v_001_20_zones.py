@@ -1,33 +1,34 @@
+import numpy as np
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
+from csle_agents.agents.differential_evolution.differential_evolution_agent import DifferentialEvolutionAgent
 import csle_agents.constants.constants as agents_constants
-import gym_csle_intrusion_response_game.constants.constants as env_constants
+from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
+from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
+import gym_csle_intrusion_response_game.constants.constants as env_constants
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.policy_type import PolicyType
-from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
-import numpy as np
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
-
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
         "csle-intrusion-response-game-local-pomdp-defender-001")
-    number_of_zones = 5
-    X_max = 5
+    number_of_zones = 20
+    X_max = 200
     eta = 0.5
     reachable = True
     beta = 2
     gamma = 0.99
-    initial_zone = 3
+    initial_zone = 10
     initial_state = [initial_zone, 0]
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
-    Z_D_P = np.array([0, 0.1, 0.05, 0.04, 0.02])
+    Z_D_P = np.array([0, 0.02, 0.01, 0.001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001,
+                      0, 0.02, 0.01, 0.001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001, 0.0001])
     S = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
     states_to_idx = {}
     for i, s in enumerate(S):
@@ -35,13 +36,15 @@ if __name__ == '__main__':
     S_A = IntrusionResponseGameUtil.local_attacker_state_space()
     S_D = IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)
     A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
-    C_D = np.array([0, 20, 35, 60, 40, 30])
+    C_D = np.array([0, 40, 55, 90, 60, 60, 60, 60, 60, 60, 60,
+                    0, 40, 55, 90, 60, 60, 60, 60, 60, 60, 60])
     A2 = IntrusionResponseGameUtil.local_attacker_actions()
     A_P = np.array([1, 1, 0.7, 0.5])
     O = IntrusionResponseGameUtil.local_observation_space(X_max=X_max)
     T = np.array([IntrusionResponseGameUtil.local_transition_tensor(S=S, A1=A1, A2=A2, Z_D=Z_D_P, A_P=A_P)])
     Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(S=S, A1=A1, A2=A2, O=O)
-    Z_U = np.array([0, 15, 20, 25, 30])
+    Z_U = np.array([0, 15, 20, 25, 30,30,30,30,30,30,
+                    0, 15, 20, 25, 30,30,30,30,30,30])
     R = np.array(
         [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable, beta=beta,
                                                        S=S, Z_U=Z_U, initial_zone=initial_zone)])
@@ -79,33 +82,32 @@ if __name__ == '__main__':
     simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
 
     experiment_config = ExperimentConfig(
-        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tspsa_test", title="T-SPSA test",
+        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}differential_evolution_test",
+        title="Differential evolution test",
         random_seeds=[399, 98912, 999, 555],
-        agent_type=AgentType.T_SPSA,
+        agent_type=AgentType.DIFFERENTIAL_EVOLUTION,
         log_every=1,
         hparams={
-            constants.T_SPSA.N: HParam(value=400, name=constants.T_SPSA.N,
-                                       descr="the number of training iterations"),
-            constants.T_SPSA.c: HParam(
-                value=10, name=constants.T_SPSA.c,
-                descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
-            constants.T_SPSA.a: HParam(
-                value=0.5, name=constants.T_SPSA.a,
-                descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
-            constants.T_SPSA.A: HParam(
-                value=100, name=constants.T_SPSA.A,
-                descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
-            constants.T_SPSA.LAMBDA: HParam(
-                value=0.602, name=constants.T_SPSA.LAMBDA,
-                descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
-            constants.T_SPSA.EPSILON: HParam(
-                value=0.101, name=constants.T_SPSA.EPSILON,
-                descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
-            constants.T_SPSA.L: HParam(value=2, name="L", descr="the number of stop actions"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=500, name=constants.T_SPSA.N,
+                                                              descr="the number of training iterations"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.L: HParam(value=2, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
-            constants.T_SPSA.THETA1: HParam(value=[0.6, 1.1], name=constants.T_SPSA.THETA1,
-                                            descr="initial thresholds"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.THETA1: HParam(value=[0.6, 1.1],
+                                                                   name=constants.T_SPSA.THETA1,
+                                                                   descr="initial thresholds"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.POPULATION_SIZE: HParam(
+                value=10, name=agents_constants.DIFFERENTIAL_EVOLUTION.POPULATION_SIZE,
+                descr="population size"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.MUTATE: HParam(
+                value=0.2, name=agents_constants.DIFFERENTIAL_EVOLUTION.MUTATE,
+                descr="mutate step"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.RECOMBINATION: HParam(
+                value=0.7, name=agents_constants.DIFFERENTIAL_EVOLUTION.RECOMBINATION,
+                descr="number of recombinations"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.BOUNDS: HParam(
+                value=[(-5, 5) for l in range(2)], name=agents_constants.DIFFERENTIAL_EVOLUTION.BOUNDS,
+                descr="parameter bounds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
@@ -114,21 +116,26 @@ if __name__ == '__main__':
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
-            constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
-                value=8, name=constants.T_SPSA.GRADIENT_BATCH_SIZE,
-                descr="the batch size of the gradient estimator"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
-            constants.T_SPSA.POLICY_TYPE: HParam(
-                value=PolicyType.MULTI_THRESHOLD, name=constants.T_SPSA.POLICY_TYPE,
+            agents_constants.COMMON.GAMMA: HParam(
+                value=0.99, name=agents_constants.COMMON.GAMMA,
+                descr="the discount factor"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE: HParam(
+                value=PolicyType.LINEAR_THRESHOLD, name=agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE,
                 descr="policy type in T-SPSA")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
-    agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config)
+    agent = DifferentialEvolutionAgent(
+        emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+        experiment_config=experiment_config)
     experiment_execution = agent.train()
-    MetastoreFacade.save_experiment_execution(experiment_execution)
-    for policy in experiment_execution.result.policies.values():
-        MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+    import gymnasium as gym
+    env = gym.make("csle-intrusion-response-game-local-stopping-pomdp-defender-v1",
+                   config=simulation_env_config.simulation_env_input_config)
+    env.manual_play()
+    # MetastoreFacade.save_experiment_execution(experiment_execution)
+    # for policy in experiment_execution.result.policies.values():
+    #     MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)

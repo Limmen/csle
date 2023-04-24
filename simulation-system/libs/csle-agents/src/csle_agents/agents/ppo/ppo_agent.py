@@ -56,6 +56,7 @@ class PPOAgent(BaseAgent):
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_TIME_HORIZON)
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_RANDOM_RETURN)
+        exp_result.plot_metrics.append(agents_constants.COMMON.AVERAGE_HEURISTIC_RETURN)
         exp_result.plot_metrics.append(agents_constants.COMMON.RUNTIME)
         descr = f"Training of policies with PPO using " \
                 f"simulation:{self.simulation_env_config.name}"
@@ -110,6 +111,7 @@ class PPOAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RANDOM_RETURN] = []
+            exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_HEURISTIC_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNTIME] = []
             ExperimentUtil.set_seed(seed)
 
@@ -348,6 +350,7 @@ class PPOTrainingCallback(BaseCallback):
             avg_horizons = []
             avg_upper_bounds = []
             avg_random_returns = []
+            avg_heuristic_returns = []
             info = {}
             for i in range(self.eval_batch_size):
                 o, _ = self.env.reset()
@@ -374,14 +377,19 @@ class PPOTrainingCallback(BaseCallback):
                     avg_random_returns.append(info[agents_constants.ENV_METRICS.AVERAGE_RANDOM_RETURN])
                 else:
                     avg_random_returns.append(-1)
+                if agents_constants.ENV_METRICS.AVERAGE_HEURISTIC_RETURN in info:
+                    avg_heuristic_returns.append(info[agents_constants.ENV_METRICS.AVERAGE_HEURISTIC_RETURN])
+                else:
+                    avg_heuristic_returns.append(-1)
 
                 avg_upper_bounds.append(info[agents_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN])
             avg_R = np.mean(avg_rewards)
             avg_T = np.mean(avg_horizons)
             avg_random_return = np.mean(avg_random_returns)
+            avg_heuristic_return = np.mean(avg_heuristic_returns)
             avg_upper_bound = np.mean(avg_upper_bounds)
             policy.avg_R = avg_R
-            time_elapsed_minutes = (time.time() - self.start) // 60
+            time_elapsed_minutes = round((time.time() - self.start) / 60, 3)
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RETURN].append(round(avg_R, 3))
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_TIME_HORIZON].append(round(avg_T, 3))
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_UPPER_BOUND_RETURN].append(
@@ -389,6 +397,8 @@ class PPOTrainingCallback(BaseCallback):
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.RUNTIME].append(time_elapsed_minutes)
             self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RANDOM_RETURN].append(
                 round(avg_random_return, 3))
+            self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_HEURISTIC_RETURN].append(
+                round(avg_heuristic_return, 3))
             running_avg_J = ExperimentUtil.running_average(
                 self.exp_result.all_metrics[self.seed][agents_constants.COMMON.AVERAGE_RETURN],
                 self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
@@ -405,7 +415,8 @@ class PPOTrainingCallback(BaseCallback):
                 f"{round(running_avg_J, 3)}, Avg T:{round(avg_T, 3)}, "
                 f"Running_avg_{self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value}_T: "
                 f"{round(running_avg_T, 3)}, Avg pi*: {round(avg_upper_bound, 3)}, "
-                f"Avg random R:{round(avg_random_return, 3)}, time elapsed (min): {time_elapsed_minutes}")
+                f"Avg random R:{round(avg_random_return, 3)}, Avg heuristic R:{round(avg_heuristic_return, 3)}, "
+                f"time elapsed (min): {time_elapsed_minutes}")
 
             self.env.reset()
 

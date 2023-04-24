@@ -62,8 +62,10 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         # Get upper bound and random return estimate
         self.upper_bound_return = 0
         self.random_return = 0
+        self.attack_return = 0
         self.upper_bound_return = self.get_upper_bound_return(samples=100)
         self.random_return = self.get_random_baseline_return(samples=100)
+        self.attack_return = self.get_attack_baseline_return(samples=100)
 
         # Reset
         self.reset()
@@ -71,7 +73,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
 
     def get_random_baseline_return(self, samples: int = 100) -> float:
         """
-        Utiltiy function for estimating the average return of a random defender strategy
+        Utiltiy function for estimating the average return of a random attacker strategy
 
         :param samples: the number of samples to use for estimation
         :return: the estimated return
@@ -79,13 +81,40 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         max_horizon = 1000
         returns = []
         for i in range(samples):
-            o = self.reset()
+            o, _ = self.reset()
             done = False
             t = 0
             cumulative_reward = 0
             while not done and t <= max_horizon:
                 a2 = np.random.choice(self.config.local_intrusion_response_game_config.A2)
-                o, r, done, info = self.step(a2)
+                o, r, done, _, info = self.step(a2)
+                cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
+                t += 1
+            returns.append(cumulative_reward)
+        return np.mean(np.array(returns))
+
+    def get_attack_baseline_return(self, samples: int = 100) -> float:
+        """
+        Utiltiy function for estimating the average return of the "always attacker" attacker strategy
+
+        :param samples: the number of samples to use for estimation
+        :return: the estimated return
+        """
+        max_horizon = 1000
+        returns = []
+        for i in range(samples):
+            o, _ = self.reset()
+            done = False
+            t = 0
+            cumulative_reward = 0
+            while not done and t <= max_horizon:
+                if o[0] == 0:
+                    a2 = 1
+                if o[0] == 1:
+                    a2 = np.random.choice([2,3])
+                if o[0] == 2:
+                    a2 = 0
+                o, r, done, _, info = self.step(a2)
                 cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
@@ -101,7 +130,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         max_horizon = 1000
         returns = []
         for i in range(samples):
-            o = self.reset()
+            o, _ = self.reset()
             done = False
             t = 0
             cumulative_reward = 0
@@ -111,7 +140,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
                     a2 = env_constants.ATTACKER_ACTIONS.RECON
                 elif self.state.attacker_state() == env_constants.ATTACK_STATES.RECON:
                     a2 = env_constants.ATTACKER_ACTIONS.EXPLOIT
-                o, r, done, info = self.step(a2)
+                o, r, done, _, info = self.step(a2)
                 cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
@@ -208,6 +237,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         info[env_constants.ENV_METRICS.TIME_HORIZON] = self.state.t
         info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = self.upper_bound_return
         info[env_constants.ENV_METRICS.AVERAGE_RANDOM_RETURN] = self.random_return
+        info[env_constants.ENV_METRICS.AVERAGE_HEURISTIC_RETURN] = self.attack_return
         return info
 
     def reset(self, seed: int = 0, soft: bool = False) -> np.ndarray:

@@ -25,7 +25,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         :param config: the environment configuration
         """
         a1 = 3
-        zone = 3
+        self.zone = 3
         if config is None:
             raise ValueError("Configuration cannot be None")
         self.config = config
@@ -35,7 +35,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
             A2=self.config.local_intrusion_response_game_config.A2,
             Z=self.config.local_intrusion_response_game_config.Z,
             S_A=self.config.local_intrusion_response_game_config.S_A,
-            a1=a1, zone = zone, O=self.config.local_intrusion_response_game_config.O
+            a1=a1, zone = self.zone, O=self.config.local_intrusion_response_game_config.O
         )
 
         self.R = IntrusionResponseGameUtil.local_stopping_pomdp_reward_tensor(
@@ -43,7 +43,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
             A2=self.config.local_intrusion_response_game_config.A2,
             R=self.config.local_intrusion_response_game_config.R[0],
             S_A=self.config.local_intrusion_response_game_config.S_A,
-            a1=a1, zone=zone)
+            a1=a1, zone=self.zone)
 
         self.T = IntrusionResponseGameUtil.local_stopping_pomdp_transition_tensor(
             S=self.config.local_intrusion_response_game_config.S,
@@ -75,6 +75,8 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         self.traces = []
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
         self.latest_attacker_obs = None
+        self.latest_obs = 0
+        self.latest_a2 = 0
 
         # Reset
         self.reset()
@@ -84,6 +86,8 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         self.random_return = 0
         self.t = 0
         self.intrusion_length = 0
+
+        self.upper_bound_return = self.get_upper_bound_return(samples=100)
 
         # Reset
         self.reset()
@@ -106,9 +110,18 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
         a2 = IntrusionResponseGameUtil.sample_attacker_action(pi2=pi2, s=self.s)
+        self.latest_a2=a2
 
         # Compute the reward
         r = self.R[a1][a2][self.s+1]
+        # print(r)
+        # print(self.R)
+        # if self.s == 2 and a1 == 1:
+        #     r+=40
+
+        # if a1 == 1:
+        #     # if self.b[0] > 0.9:
+        #     print(f" stop, b: {self.b}, s: {self.s}, r:{r}, rewards:{self.trace.defender_rewards}")
 
         # Sample the next state
         S = np.append([-1], self.config.local_intrusion_response_game_config.S_A)
@@ -119,13 +132,16 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         # Sample the next observation
         o = IntrusionResponseGameUtil.sample_next_observation(
             Z=self.Z, O=self.config.local_intrusion_response_game_config.O,
-            s_prime_idx=self.s, a1=a1, a2=a2)
+            s_prime_idx=s_idx_prime, a1=a1, a2=a2)
+        self.latest_obs = o
 
         # Move to the next state
         self.s = s_idx_prime-1
 
         # Check if game is done
         if self.s == -1:
+            done = True
+        if a1 == 1:
             done = True
 
         if not done:
@@ -190,6 +206,31 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         info[env_constants.ENV_METRICS.AVERAGE_RANDOM_RETURN] = self.random_return
         return info
 
+    def get_upper_bound_return(self, samples: int = 100) -> float:
+        """
+        Utiltiy method for getting an upper bound on the average return
+
+        :param samples: the number of sample returns to average
+        :return: the estimated upper bound
+        """
+        max_horizon = 1000
+        returns = []
+        initial_zone = self.zone
+        for i in range(samples):
+            o = self.reset()
+            done = False
+            t = 0
+            cumulative_reward = 0
+            while not done and t <= max_horizon:
+                a1 = 0
+                if self.s == 2:
+                    a1 = 1
+                o, r, done, _, info = self.step(a1)
+                cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
+                t += 1
+            returns.append(cumulative_reward)
+        return np.mean(np.array(returns))
+
     def reset(self, seed: int = 0, soft: bool = False) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
@@ -198,6 +239,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         """
         super().reset(seed=seed)
         self.s = 0
+        self.intrusion_length = 0
         self.b = self.config.local_intrusion_response_game_config.d_b1
         if len(self.trace.attacker_rewards) > 0:
             self.traces.append(self.trace)
@@ -301,4 +343,5 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
             else:
                 a1 = int(raw_input)
                 o, r, done, _, _ = self.step(a1=a1)
-                print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}, r:{round(r, 2)}, done: {done}")
+                print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}, r:{round(r, 2)}, done: {done}, "
+                      f"a1: {a1}, s:{self.s}, o:{self.latest_obs}, a2: {self.latest_a2}")

@@ -4,26 +4,26 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-from csle_agents.agents.bayes_opt.bayes_opt_agent import BayesOptAgent
+from csle_agents.agents.bayesian_optimization.bayes_opt_agent import BayesOptAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
-    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-010")
+    simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}bayes_opt_test", title="Bayesian Optimization test",
         random_seeds=[399, 98912, 999, 555],
         agent_type=AgentType.BAYESIAN_OPTIMIZATION,
         log_every=1,
         hparams={
-            agents_constants.BAYESIAN_OPTIMIZATION.N: HParam(value=50, name=constants.T_SPSA.N,
+            agents_constants.BAYESIAN_OPTIMIZATION.N: HParam(value=500, name=constants.T_SPSA.N,
                                                              descr="the number of training iterations"),
             agents_constants.BAYESIAN_OPTIMIZATION.L: HParam(value=1, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.BAYESIAN_OPTIMIZATION.THETA1: HParam(
-                value=[-3], name=agents_constants.BAYESIAN_OPTIMIZATION.THETA1,
+                value=[0], name=agents_constants.BAYESIAN_OPTIMIZATION.THETA1,
                 descr="initial thresholds"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),

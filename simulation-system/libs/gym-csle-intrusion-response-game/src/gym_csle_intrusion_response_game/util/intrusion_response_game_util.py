@@ -346,7 +346,10 @@ class IntrusionResponseGameUtil:
         if not reachable or s[env_constants.STATES.D_STATE_INDEX] == env_constants.ZONES.SHUTDOWN_ZONE:
             return D_C[a1]  # No intrusion cost if the node is not reachable
         compromised = int((s[env_constants.STATES.A_STATE_INDEX] == env_constants.ATTACK_STATES.COMPROMISED))
-        return Z_U[s[env_constants.STATES.D_STATE_INDEX] - 1] * compromised + D_C[a1]
+        if compromised:
+            return Z_U[s[env_constants.STATES.D_STATE_INDEX] - 1]
+        else:
+            return D_C[a1]
 
     @staticmethod
     def local_defender_utility_function(s: np.ndarray, a1: int, eta: float, reachable: bool, initial_zone: int,
@@ -442,6 +445,7 @@ class IntrusionResponseGameUtil:
                     for i, full_s in enumerate(S):
                         if full_s[env_constants.STATES.A_STATE_INDEX] == s \
                                 and full_s[env_constants.STATES.D_STATE_INDEX] == zone:
+                            # print(f"match, s_a: {s}, i:{i}, full_s:{full_s}")
                             if stop == 1:
                                 r = R[a1][a2][i]
                             else:
@@ -450,6 +454,14 @@ class IntrusionResponseGameUtil:
                 a1_rews.append(a1_a2_rews)
             R_1.append(a1_rews)
         R_1 = np.array(R_1)
+        # print(R[a1])
+        # print("")
+        # print(a1)
+        # print(R[a1][0])
+        # print(R[a1][0][1])
+        # print(R[a1][0][7])
+        # print(R.shape)
+        # print(R_1.shape)
         return R_1
 
     @staticmethod
