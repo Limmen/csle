@@ -13,6 +13,7 @@ from csle_common.dao.training.hparam import HParam
 import csle_agents.constants.constants as agents_constants
 import gymnasium as gym
 
+
 def reduce_T(T, strategy):
     attacker_state = 2
     reduced_T = np.zeros((T.shape[0], T.shape[2], T.shape[3]))
@@ -21,9 +22,10 @@ def reduce_T(T, strategy):
             for k in range(T.shape[3]):
                 prob = 0
                 for a2 in range(T.shape[1]):
-                    prob += strategy.probability(attacker_state, a2)*T[i][a2][j][k]
+                    prob += strategy.probability(attacker_state, a2) * T[i][a2][j][k]
                 reduced_T[i][j][k] = prob
     return reduced_T
+
 
 def reduce_R(R, strategy):
     attacker_state = 2
@@ -32,9 +34,10 @@ def reduce_R(R, strategy):
         for j in range(R.shape[2]):
             r = 0
             for a2 in range(R.shape[1]):
-                r+= strategy.probability(attacker_state, a2)*R[i][a2][j]
+                r += strategy.probability(attacker_state, a2) * R[i][a2][j]
             reduced_R[i][j] = r
     return reduced_R
+
 
 if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name(

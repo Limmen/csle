@@ -7,7 +7,6 @@ from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.differential_evolution.differential_evolution_agent import DifferentialEvolutionAgent
 import csle_agents.constants.constants as agents_constants
-from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
 import gym_csle_intrusion_response_game.constants.constants as env_constants
@@ -41,7 +40,7 @@ if __name__ == '__main__':
     O = IntrusionResponseGameUtil.local_observation_space(X_max=X_max)
     T = np.array([IntrusionResponseGameUtil.local_transition_tensor(S=S, A1=A1, A2=A2, Z_D=Z_D_P, A_P=A_P)])
     Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(S=S, A1=A1, A2=A2, O=O)
-    Z_U = np.array([0, 15, 20, 25, 30,30,30,30,30,30])
+    Z_U = np.array([0, 15, 20, 25, 30, 30, 30, 30, 30, 30])
     R = np.array(
         [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable, beta=beta,
                                                        S=S, Z_U=Z_U, initial_zone=initial_zone)])
@@ -130,6 +129,7 @@ if __name__ == '__main__':
         experiment_config=experiment_config)
     experiment_execution = agent.train()
     import gymnasium as gym
+
     env = gym.make("csle-intrusion-response-game-local-stopping-pomdp-defender-v1",
                    config=simulation_env_config.simulation_env_input_config)
     env.manual_play()
