@@ -6,6 +6,7 @@ import AlphaVecPolicies from "./AlphaVecPolicies/AlphaVecPolicies";
 import DQNPolicyComponent from "./DQNPolicies/DQNPolicies";
 import PPOPolicies from "./PPOPolicies/PPOPolicies";
 import MultiThresholdPolicyComponent from "./MultiThresholdPolicies/MultiThresholdPolicies";
+import LinearThresholdPolicyComponent from "./LinearThresholdPolicies/LinearThresholdPolicies";
 import VectorPolicies from "./VectorPolicies/VectorPolicies";
 import FnnWSoftmaxPolicies from "./FnnWSoftmaxPolicies/FnnWSoftmaxPolicies";
 import TabularPolicies from "./TabularPolicies/TabularPolicies";
@@ -42,7 +43,11 @@ const Policies = (props) => {
         {
             value: 6,
             label: "Tabular policies"
-        }
+        },
+        {
+            value: 7,
+            label: "Linear threshold policies"
+        },
     ]
     const [selectedPolicyType, setSelectedPolicyType] = useState(policyTypes[3]);
 
@@ -72,7 +77,9 @@ const Policies = (props) => {
         if(props.selectedPolicyType.value === 6) {
             return (<TabularPolicies sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
         }
-
+        if(props.selectedPolicyType.value === 7) {
+            return (<LinearThresholdPolicyComponent sessionData={props.sessionData} setSessionData={props.setSessionData}/>)
+        }
     }
 
     return (

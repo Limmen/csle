@@ -46,6 +46,9 @@ A REST API for the CSLE management platform.
 | `/multi-threshold-policies?token=<valid_token>`                                                       | List of multi-threshold policies                               | `GET`,`DELETE`                          |
 | `/multi-threshold-policies?ids=true&token=<valid_token>`                                              | List of multi-threshold policy ids only (fast to fetch)        | `GET`,`DELETE`                          |
 | `/multi-threshold-policies/<policy_id>?token=<valid_token>`                                           | Individual multi-threshold policy                              | `GET`,`DELETE`                          |
+| `/linear-threshold-policies?token=<valid_token>`                                                      | List of linear threshold policies                              | `GET`,`DELETE`                          |
+| `/linear-threshold-policies?ids=true&token=<valid_token>`                                             | List of linear threshold policy ids only (fast to fetch)       | `GET`,`DELETE`                          |
+| `/linear-threshold-policies/<policy_id>?token=<valid_token>`                                          | Individual linear threshold policy                             | `GET`,`DELETE`                          |
 | `/fnn-w-softmax-policies?token=<valid_token>`                                                         | List of fnn-w-softmax policies                                 | `GET`,`DELETE`                          |
 | `/fnn-w-softmax-policies?ids=true&token=<valid_token>`                                                | List of fnn-w-softmax policy ids only (fast to fetch)          | `GET`,`DELETE`                          |
 | `/fnn-w-softmax-policies/<policy_id>?token=<valid_token>`                                             | Individual fnn-w-softmax policy                                | `GET`,`DELETE`                          |

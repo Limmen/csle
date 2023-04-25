@@ -1,5 +1,5 @@
 import React, {useState, useCallback, createRef, useEffect} from 'react';
-import './MultiThresholdPolicies.css';
+import './LinearThresholdPolicies.css';
 import serverIp from "../../../Common/serverIp";
 import serverPort from "../../../Common/serverPort";
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -7,7 +7,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
 import Accordion from 'react-bootstrap/Accordion';
-import MultiThresholdPolicy from "./MultiThresholdPolicy/MultiThresholdPolicy";
+import LinearThresholdPolicy from "./LinearThresholdPolicy/LinearThresholdPolicy";
 import Modal from 'react-bootstrap/Modal'
 import ThresholdPolicyImg from './ThresholdPolicy.png'
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -26,20 +26,20 @@ import {
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
     IDS_QUERY_PARAM,
-    MULTI_THRESHOLD_POLICIES_RESOURCE,
+    LINEAR_THRESHOLD_POLICIES_RESOURCE,
 } from "../../../Common/constants";
 
 /**
- * Component representing a Multi threshold policy
+ * Component representing Linear threshold policies
  */
-const MultiThresholdPolicies = (props) => {
-    const [showMultiThresholdPoliciesInfoModal, setShowMultiThresholdPoliciesInfoModal] = useState(false);
-    const [multiThresholdPoliciesIds, setMultiThresholdPoliciesIds] = useState([]);
-    const [filteredMultiThresholdPoliciesIds, setFilteredMultiThresholdPoliciesIds] = useState([]);
-    const [selectedMultiThresholdPolicy, setSelectedMultiThresholdPolicy] = useState(null);
-    const [selectedMultiThresholdPolicyId, setSelectedMultiThresholdPolicyId] = useState(null);
-    const [loadingMultiThresholdPolicy, setLoadingMultiThresholdPolicy] = useState(true);
-    const [loadingMultiThresholdPolicies, setLoadingMultiThresholdPolicies] = useState(true);
+const LinearThresholdPolicies = (props) => {
+    const [showLinearThresholdPoliciesInfoModal, setShowLinearThresholdPoliciesInfoModal] = useState(false);
+    const [linearThresholdPoliciesIds, setLinearThresholdPoliciesIds] = useState([]);
+    const [filteredLinearThresholdPoliciesIds, setFilteredLinearThresholdPoliciesIds] = useState([]);
+    const [selectedLinearThresholdPolicy, setSelectedLinearThresholdPolicy] = useState(null);
+    const [selectedLinearThresholdPolicyId, setSelectedLinearThresholdPolicyId] = useState(null);
+    const [loadingLinearThresholdPolicy, setLoadingLinearThresholdPolicy] = useState(true);
+    const [loadingLinearThresholdPolicies, setLoadingLinearThresholdPolicies] = useState(true);
 
     const ip = serverIp
     const port = serverPort
@@ -48,9 +48,9 @@ const MultiThresholdPolicies = (props) => {
     const navigate = useNavigate();
     const wrapper = createRef();
 
-    const fetchMultiThresholdPolicy = useCallback((multi_threshold_policy_id) => {
+    const fetchLinearThresholdPolicy = useCallback((linear_threshold_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}/${multi_threshold_policy_id.value}` +
+            (`${HTTP_PREFIX}${ip}:${port}/${LINEAR_THRESHOLD_POLICIES_RESOURCE}/${linear_threshold_policy_id.value}` +
                 `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_GET,
@@ -72,15 +72,15 @@ const MultiThresholdPolicies = (props) => {
                 if(response === null) {
                     return
                 }
-                setSelectedMultiThresholdPolicy(response)
-                setLoadingMultiThresholdPolicy(false)
+                setSelectedLinearThresholdPolicy(response)
+                setLoadingLinearThresholdPolicy(false)
             })
             .catch(error => console.log("error:" + error))
     }, [alert, ip, port, navigate, props.sessionData.token, setSessionData]);
 
-    const fetchMultiThresholdPoliciesIds = useCallback(() => {
+    const fetchLinearThresholdPoliciesIds = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
+            `${HTTP_PREFIX}${ip}:${port}/${LINEAR_THRESHOLD_POLICIES_RESOURCE}?${IDS_QUERY_PARAM}=true`
             + `&${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_GET,
@@ -102,30 +102,30 @@ const MultiThresholdPolicies = (props) => {
                 if(response === null) {
                     return
                 }
-                const multiThresholdPoliciesIds = response.map((id_obj, index) => {
+                const linearThresholdPoliciesIds = response.map((id_obj, index) => {
                     return {
                         value: id_obj.id,
                         label: `ID: ${id_obj.id}, simulation: ${id_obj.simulation}`
                     }
                 })
-                setMultiThresholdPoliciesIds(multiThresholdPoliciesIds)
-                setFilteredMultiThresholdPoliciesIds(multiThresholdPoliciesIds)
-                setLoadingMultiThresholdPolicies(false)
-                if (multiThresholdPoliciesIds.length > 0) {
-                    setSelectedMultiThresholdPolicyId(multiThresholdPoliciesIds[0])
-                    fetchMultiThresholdPolicy(multiThresholdPoliciesIds[0])
-                    setLoadingMultiThresholdPolicy(true)
+                setLinearThresholdPoliciesIds(linearThresholdPoliciesIds)
+                setFilteredLinearThresholdPoliciesIds(linearThresholdPoliciesIds)
+                setLoadingLinearThresholdPolicies(false)
+                if (linearThresholdPoliciesIds.length > 0) {
+                    setSelectedLinearThresholdPolicyId(linearThresholdPoliciesIds[0])
+                    fetchLinearThresholdPolicy(linearThresholdPoliciesIds[0])
+                    setLoadingLinearThresholdPolicy(true)
                 } else {
-                    setLoadingMultiThresholdPolicy(false)
-                    setSelectedMultiThresholdPolicy(null)
+                    setLoadingLinearThresholdPolicy(false)
+                    setSelectedLinearThresholdPolicy(null)
                 }
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchMultiThresholdPolicy]);
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData, fetchLinearThresholdPolicy]);
 
-    const removeMultiThresholdPoliciesRequest = useCallback((multi_threshold_policy_id) => {
+    const removeLinearThresholdPoliciesRequest = useCallback((linear_threshold_policy_id) => {
         fetch(
-            (`${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}/${multi_threshold_policy_id}`
+            (`${HTTP_PREFIX}${ip}:${port}/${LINEAR_THRESHOLD_POLICIES_RESOURCE}/${linear_threshold_policy_id}`
                 + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
             {
                 method: HTTP_REST_DELETE,
@@ -147,14 +147,14 @@ const MultiThresholdPolicies = (props) => {
                 if(response === null) {
                     return
                 }
-                fetchMultiThresholdPoliciesIds()
+                fetchLinearThresholdPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchMultiThresholdPoliciesIds]);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchLinearThresholdPoliciesIds]);
 
-    const removeAllMultiThresholdPoliciesRequest = useCallback(() => {
+    const removeAllLinearThresholdPoliciesRequest = useCallback(() => {
         fetch(
-            `${HTTP_PREFIX}${ip}:${port}/${MULTI_THRESHOLD_POLICIES_RESOURCE}`
+            `${HTTP_PREFIX}${ip}:${port}/${LINEAR_THRESHOLD_POLICIES_RESOURCE}`
             + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`,
             {
                 method: HTTP_REST_DELETE,
@@ -176,29 +176,29 @@ const MultiThresholdPolicies = (props) => {
                 if(response === null) {
                     return
                 }
-                fetchMultiThresholdPoliciesIds()
+                fetchLinearThresholdPoliciesIds()
             })
             .catch(error => console.log("error:" + error))
-    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchMultiThresholdPoliciesIds]);
+    }, [alert, ip, port, navigate, props.sessionData.token, setSessionData, fetchLinearThresholdPoliciesIds]);
 
-    const removeMultiThresholdPolicy = (multiThresholdPolicy) => {
-        setLoadingMultiThresholdPolicies(true)
-        removeMultiThresholdPoliciesRequest(multiThresholdPolicy.id)
+    const removeLinearThresholdPolicy = (linearThresholdPolicy) => {
+        setLoadingLinearThresholdPolicies(true)
+        removeLinearThresholdPoliciesRequest(linearThresholdPolicy.id)
     }
 
-    const removeAllMultiThresholdPolicies = () => {
-        setLoadingMultiThresholdPolicies(true)
-        removeAllMultiThresholdPoliciesRequest()
+    const removeAllLinearThresholdPolicies = () => {
+        setLoadingLinearThresholdPolicies(true)
+        removeAllLinearThresholdPoliciesRequest()
     }
 
-    const removeAllMultiThresholdPoliciesConfirm = () => {
+    const removeAllLinearThresholdPoliciesConfirm = () => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete all multi-threshold policies? this action cannot be undone',
+            message: 'Are you sure you want to delete all linear-threshold policies? this action cannot be undone',
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeAllMultiThresholdPolicies()
+                    onClick: () => removeAllLinearThresholdPolicies()
                 },
                 {
                     label: 'No'
@@ -215,12 +215,12 @@ const MultiThresholdPolicies = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete all multi-threshold policies?
+                                    Are you sure you want to delete all linear-threshold policies?
                                     this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeAllMultiThresholdPolicies()
+                                                    removeAllLinearThresholdPolicies()
                                                     onClose()
                                                 }}
                                         >
@@ -240,15 +240,15 @@ const MultiThresholdPolicies = (props) => {
         })
     }
 
-    const removeMultiThresholdPolicyConfirm = (multiThresholdPolicy) => {
+    const removeLinearThresholdPolicyConfirm = (linearThresholdPolicy) => {
         confirmAlert({
             title: 'Confirm deletion',
-            message: 'Are you sure you want to delete the multi-threshold policy with ID: ' + multiThresholdPolicy.id +
+            message: 'Are you sure you want to delete the linear-threshold policy with ID: ' + linearThresholdPolicy.id +
                 "? this action cannot be undone",
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => removeMultiThresholdPolicy(multiThresholdPolicy)
+                    onClick: () => removeLinearThresholdPolicy(linearThresholdPolicy)
                 },
                 {
                     label: 'No'
@@ -265,13 +265,13 @@ const MultiThresholdPolicies = (props) => {
                             <div className="react-confirm-alert" onClick={onClose}>
                                 <div className="react-confirm-alert-body">
                                     <h1>Confirm deletion</h1>
-                                    Are you sure you want to delete the multi-threshold policy
-                                    with ID {multiThresholdPolicy.id}?
+                                    Are you sure you want to delete the linear-threshold policy
+                                    with ID {linearThresholdPolicy.id}?
                                     this action cannot be undone
                                     <div className="react-confirm-alert-button-group">
                                         <Button className="remove-confirm-button"
                                                 onClick={() => {
-                                                    removeMultiThresholdPolicy(multiThresholdPolicy)
+                                                    removeLinearThresholdPolicy(linearThresholdPolicy)
                                                     onClose()
                                                 }}
                                         >
@@ -291,24 +291,24 @@ const MultiThresholdPolicies = (props) => {
         })
     }
 
-    const refreshMultiThresholdPolicies = () => {
-        setLoadingMultiThresholdPolicies(true)
-        fetchMultiThresholdPoliciesIds()
+    const refreshLinearThresholdPolicies = () => {
+        setLoadingLinearThresholdPolicies(true)
+        fetchLinearThresholdPoliciesIds()
     }
 
-    const renderMultiThresholdPoliciesRefreshTooltip = (props) => (
+    const renderLinearThresholdPoliciesRefreshTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Reload multi-threshold policies from the backend
+            Reload linear-threshold policies from the backend
         </Tooltip>
     );
 
-    const renderRemoveAllMultiThresholdPoliciesTooltip = (props) => (
+    const renderRemoveAllLinearThresholdPoliciesTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            Remove all multi-threshold policies.
+            Remove all linear-threshold policies.
         </Tooltip>
     );
 
-    const MultiThresholdPoliciesInfoModal = (props) => {
+    const LinearThresholdPoliciesInfoModal = (props) => {
         return (
             <Modal
                 {...props}
@@ -318,7 +318,7 @@ const MultiThresholdPolicies = (props) => {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="contained-modal-title-vcenter" className="modalTitle">
-                        Multi-Threshold Policies
+                        Linear-Threshold Policies
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -338,21 +338,21 @@ const MultiThresholdPolicies = (props) => {
         );
     }
 
-    const updateSelectedMultiThresholdPolicyId = (selectedId) => {
-        setSelectedMultiThresholdPolicyId(selectedId)
-        fetchMultiThresholdPolicy(selectedId)
-        setLoadingMultiThresholdPolicy(true)
+    const updateSelectedLinearThresholdPolicyId = (selectedId) => {
+        setSelectedLinearThresholdPolicyId(selectedId)
+        fetchLinearThresholdPolicy(selectedId)
+        setLoadingLinearThresholdPolicy(true)
     }
 
-    const DeleteAllMultiThresholdPoliciesOrEmpty = (props) => {
+    const DeleteAllLinearThresholdPoliciesOrEmpty = (props) => {
         if (props.sessionData !== null && props.sessionData !== undefined && props.sessionData.admin) {
             return (
                 <OverlayTrigger
                     placement="top"
                     delay={{show: 0, hide: 0}}
-                    overlay={renderRemoveAllMultiThresholdPoliciesTooltip}
+                    overlay={renderRemoveAllLinearThresholdPoliciesTooltip}
                 >
-                    <Button variant="danger" onClick={removeAllMultiThresholdPoliciesConfirm} size="sm">
+                    <Button variant="danger" onClick={removeAllLinearThresholdPoliciesConfirm} size="sm">
                         <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
@@ -362,24 +362,24 @@ const MultiThresholdPolicies = (props) => {
         }
     }
 
-    const SelectMultiThresholdPolicyOrSpinner = (props) => {
-        if (!props.loadingMultiThresholdPolicies && props.multiThresholdPoliciesIds.length === 0) {
+    const SelectLinearThresholdPolicyOrSpinner = (props) => {
+        if (!props.loadingLinearThresholdPolicies && props.linearThresholdPoliciesIds.length === 0) {
             return (
                 <div>
-                    <span className="emptyText">No multi-threshold policies are available</span>
+                    <span className="emptyText">No linear-threshold policies are available</span>
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderMultiThresholdPoliciesRefreshTooltip}
+                        overlay={renderLinearThresholdPoliciesRefreshTooltip}
                     >
-                        <Button variant="button" onClick={refreshMultiThresholdPolicies}>
+                        <Button variant="button" onClick={refreshLinearThresholdPolicies}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
                 </div>
             )
         }
-        if (props.loadingMultiThresholdPolicies) {
+        if (props.loadingLinearThresholdPolicies) {
             return (
                 <div>
                     <span className="spinnerLabel"> Fetching policies... </span>
@@ -392,15 +392,15 @@ const MultiThresholdPolicies = (props) => {
                 <div className="inline-block">
                     <div className="conditionalDist inline-block">
                         <div className="conditionalDist inline-block conditionalLabel">
-                            Multi-threshold policy:
+                            Linear-threshold policy:
                         </div>
                         <div className="conditionalDist inline-block" style={{width: "300px"}}>
                             <Select
                                 style={{display: 'inline-block'}}
-                                value={props.selectedMultiThresholdPolicyId}
-                                defaultValue={props.selectedMultiThresholdPolicyId}
-                                options={props.multiThresholdPoliciesIds}
-                                onChange={updateSelectedMultiThresholdPolicyId}
+                                value={props.selectedLinearThresholdPolicyId}
+                                defaultValue={props.selectedLinearThresholdPolicyId}
+                                options={props.linearThresholdPoliciesIds}
+                                onChange={updateSelectedLinearThresholdPolicyId}
                                 placeholder="Select policy"
                             />
                         </div>
@@ -408,9 +408,9 @@ const MultiThresholdPolicies = (props) => {
                     <OverlayTrigger
                         placement="top"
                         delay={{show: 0, hide: 0}}
-                        overlay={renderMultiThresholdPoliciesRefreshTooltip}
+                        overlay={renderLinearThresholdPoliciesRefreshTooltip}
                     >
-                        <Button variant="button" onClick={refreshMultiThresholdPolicies}>
+                        <Button variant="button" onClick={refreshLinearThresholdPolicies}>
                             <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
@@ -420,22 +420,22 @@ const MultiThresholdPolicies = (props) => {
                         delay={{show: 0, hide: 0}}
                         overlay={renderInfoTooltip}
                     >
-                        <Button variant="button" onClick={() => setShowMultiThresholdPoliciesInfoModal(true)} className="infoButton2">
+                        <Button variant="button" onClick={() => setShowLinearThresholdPoliciesInfoModal(true)} className="infoButton2">
                             <i className="fa fa-info-circle" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
-                    <MultiThresholdPoliciesInfoModal show={showMultiThresholdPoliciesInfoModal} onHide={() => setShowMultiThresholdPoliciesInfoModal(false)}/>
+                    <LinearThresholdPoliciesInfoModal show={showLinearThresholdPoliciesInfoModal} onHide={() => setShowLinearThresholdPoliciesInfoModal(false)}/>
 
-                    <DeleteAllMultiThresholdPoliciesOrEmpty sessionData={props.sessionData}/>
+                    <DeleteAllLinearThresholdPoliciesOrEmpty sessionData={props.sessionData}/>
                 </div>
             )
         }
     }
 
-    const MultiThresholdPolicyAccordion = (props) => {
-        if (props.loadingMultiThresholdPolicy || props.selectedMultiThresholdPolicy === null ||
-            props.selectedMultiThresholdPolicy === undefined) {
-            if (props.loadingMultiThresholdPolicy) {
+    const LinearThresholdPolicyAccordion = (props) => {
+        if (props.loadingLinearThresholdPolicy || props.selectedLinearThresholdPolicy === null ||
+            props.selectedLinearThresholdPolicy === undefined) {
+            if (props.loadingLinearThresholdPolicy) {
                 return (
                     <h3>
                         <span className="spinnerLabel"> Fetching policy... </span>
@@ -452,13 +452,13 @@ const MultiThresholdPolicies = (props) => {
             return (
                 <div>
                     <h3 className="emulationConfigTitle">
-                        Configuration of the selected multi-threshold policy:
+                        Configuration of the selected linear-threshold policy:
                     </h3>
                     <Accordion defaultActiveKey="0">
-                        <MultiThresholdPolicy policy={selectedMultiThresholdPolicy} wrapper={wrapper}
-                                              key={selectedMultiThresholdPolicy.id}
-                                              removeMultiThresholdPolicy={removeMultiThresholdPolicyConfirm}
-                                              sessionData={props.sessionData}
+                        <LinearThresholdPolicy policy={selectedLinearThresholdPolicy} wrapper={wrapper}
+                                               key={selectedLinearThresholdPolicy.id}
+                                               removeLinearThresholdPolicy={removeLinearThresholdPolicyConfirm}
+                                               sessionData={props.sessionData}
                         />
                     </Accordion>
                 </div>
@@ -466,62 +466,62 @@ const MultiThresholdPolicies = (props) => {
         }
     }
 
-    const searchMultiThresholdPoliciesFilter = (multiThresholdPolicyId, searchVal) => {
-        return (searchVal === "" || multiThresholdPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
+    const searchLinearThresholdPoliciesFilter = (linearThresholdPolicyId, searchVal) => {
+        return (searchVal === "" || linearThresholdPolicyId.label.toLowerCase().indexOf(searchVal.toLowerCase()) !== -1)
     }
 
-    const searchMultiThresholdPolicyChange = (event) => {
+    const searchLinearThresholdPolicyChange = (event) => {
         var searchVal = event.target.value
-        const fPoliciesIds = multiThresholdPoliciesIds.filter(policyId => {
-            return searchMultiThresholdPoliciesFilter(policyId, searchVal)
+        const fPoliciesIds = linearThresholdPoliciesIds.filter(policyId => {
+            return searchLinearThresholdPoliciesFilter(policyId, searchVal)
         });
-        setFilteredMultiThresholdPoliciesIds(fPoliciesIds)
+        setFilteredLinearThresholdPoliciesIds(fPoliciesIds)
 
         var selectedPolicyRemoved = false
-        if (!loadingMultiThresholdPolicy && fPoliciesIds.length > 0) {
+        if (!loadingLinearThresholdPolicy && fPoliciesIds.length > 0) {
             for (let i = 0; i < fPoliciesIds.length; i++) {
-                if (selectedMultiThresholdPolicy !== null && selectedMultiThresholdPolicy !== undefined &&
-                    selectedMultiThresholdPolicy.id === fPoliciesIds[i].value) {
+                if (selectedLinearThresholdPolicy !== null && selectedLinearThresholdPolicy !== undefined &&
+                    selectedLinearThresholdPolicy.id === fPoliciesIds[i].value) {
                     selectedPolicyRemoved = true
                 }
             }
             if (!selectedPolicyRemoved) {
-                setSelectedMultiThresholdPolicyId(fPoliciesIds[0])
-                fetchMultiThresholdPolicy(fPoliciesIds[0])
-                setLoadingMultiThresholdPolicy(true)
+                setSelectedLinearThresholdPolicyId(fPoliciesIds[0])
+                fetchLinearThresholdPolicy(fPoliciesIds[0])
+                setLoadingLinearThresholdPolicy(true)
             }
         } else {
-            setSelectedMultiThresholdPolicy(null)
+            setSelectedLinearThresholdPolicy(null)
         }
     }
 
-    const searchMultiThresholdPoliciesHandler = useDebouncedCallback(
+    const searchLinearThresholdPoliciesHandler = useDebouncedCallback(
         (event) => {
-            searchMultiThresholdPolicyChange(event)
+            searchLinearThresholdPolicyChange(event)
         },
         350
     );
 
     const renderInfoTooltip = (props) => (
         <Tooltip id="button-tooltip" {...props} className="toolTipRefresh">
-            More information about learned Multi-threshold policies.
+            More information about learned Linear-threshold policies.
         </Tooltip>
     );
 
     useEffect(() => {
-        setLoadingMultiThresholdPolicies(true)
-        fetchMultiThresholdPoliciesIds()
-    }, [fetchMultiThresholdPoliciesIds]);
+        setLoadingLinearThresholdPolicies(true)
+        fetchLinearThresholdPoliciesIds()
+    }, [fetchLinearThresholdPoliciesIds]);
 
     return (
         <div>
             <div className="row ppoPolicies simulationTracesHeader">
                 <div className="col-sm-7">
                     <h4 className="text-center inline-block emulationsHeader">
-                        <SelectMultiThresholdPolicyOrSpinner
-                            loadingMultiThresholdPolicies={loadingMultiThresholdPolicies}
-                            multiThresholdPoliciesIds={filteredMultiThresholdPoliciesIds}
-                            selectedMultiThresholdPolicyId={selectedMultiThresholdPolicyId}
+                        <SelectLinearThresholdPolicyOrSpinner
+                            loadingLinearThresholdPolicies={loadingLinearThresholdPolicies}
+                            linearThresholdPoliciesIds={filteredLinearThresholdPoliciesIds}
+                            selectedLinearThresholdPolicyId={selectedLinearThresholdPolicyId}
                             sessionData={props.sessionData}
                         />
                     </h4>
@@ -538,7 +538,7 @@ const MultiThresholdPolicies = (props) => {
                                 placeholder="Search"
                                 aria-label="tSpsaPoliciesSearchLabel"
                                 aria-describedby="tSpsaPoliciesSearchField"
-                                onChange={searchMultiThresholdPoliciesHandler}
+                                onChange={searchLinearThresholdPoliciesHandler}
                             />
                         </InputGroup>
                     </Form>
@@ -546,14 +546,14 @@ const MultiThresholdPolicies = (props) => {
                 <div className="col-sm-2">
                 </div>
             </div>
-            <MultiThresholdPolicyAccordion loadingMultiThresholdPolicy={loadingMultiThresholdPolicy}
-                                           selectedMultiThresholdPolicy={selectedMultiThresholdPolicy}
+            <LinearThresholdPolicyAccordion loadingLinearThresholdPolicy={loadingLinearThresholdPolicy}
+                                           selectedLinearThresholdPolicy={selectedLinearThresholdPolicy}
                                            sessionData={props.sessionData}
             />
         </div>
     )
 }
 
-MultiThresholdPolicies.propTypes = {};
-MultiThresholdPolicies.defaultProps = {};
-export default MultiThresholdPolicies;
+LinearThresholdPolicies.propTypes = {};
+LinearThresholdPolicies.defaultProps = {};
+export default LinearThresholdPolicies;

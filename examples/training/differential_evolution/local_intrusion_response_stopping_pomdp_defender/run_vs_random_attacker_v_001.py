@@ -76,15 +76,15 @@ if __name__ == '__main__':
         )
     simulation_env_config.gym_env_name = "csle-intrusion-response-game-local-stopping-pomdp-defender-v1"
     simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
-
+    #random_seeds=[399, 98912, 999, 555],
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}differential_evolution_test",
         title="Differential evolution test",
-        random_seeds=[399, 98912, 999, 555],
+        random_seeds=[399],
         agent_type=AgentType.DIFFERENTIAL_EVOLUTION,
         log_every=1,
         hparams={
-            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=300, name=constants.T_SPSA.N,
+            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=50, name=constants.T_SPSA.N,
                                                               descr="the number of training iterations"),
             agents_constants.DIFFERENTIAL_EVOLUTION.L: HParam(value=2, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
@@ -128,6 +128,15 @@ if __name__ == '__main__':
         emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
         experiment_config=experiment_config)
     experiment_execution = agent.train()
-    # MetastoreFacade.save_experiment_execution(experiment_execution)
-    # for policy in experiment_execution.result.policies.values():
-    #     MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+    MetastoreFacade.save_experiment_execution(experiment_execution)
+    for policy in experiment_execution.result.policies.values():
+        if experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE].value == PolicyType.MULTI_THRESHOLD:
+            MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+        elif experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE].value \
+                == PolicyType.LINEAR_THRESHOLD:
+            MetastoreFacade.save_linear_threshold_stopping_policy(linear_threshold_stopping_policy=policy)
+        else:
+            raise ValueError("Policy type: "
+                             f"{experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE].value} "
+                             f"not recognized for differential evolution")
+

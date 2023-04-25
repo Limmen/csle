@@ -48,6 +48,7 @@ from csle_rest_api.resources.empirical_system_models.routes import empirical_sys
 from csle_rest_api.resources.gp_system_models.routes import gp_system_models_bp
 from csle_rest_api.resources.experiments.routes import experiments_bp
 from csle_rest_api.resources.multi_threshold_policies.routes import multi_threshold_policies_bp
+from csle_rest_api.resources.linear_threshold_policies.routes import linear_threshold_policies_bp
 from csle_rest_api.resources.ppo_policies.routes import ppo_policies_bp
 from csle_rest_api.resources.dqn_policies.routes import dqn_policies_bp
 from csle_rest_api.resources.fnn_w_softmax_policies.routes import fnn_w_softmax_policies_bp
@@ -208,6 +209,9 @@ def create_app(static_folder: str):
     app.register_blueprint(multi_threshold_policies_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}")
+    app.register_blueprint(linear_threshold_policies_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}")
     app.register_blueprint(ppo_policies_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}")

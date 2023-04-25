@@ -114,6 +114,7 @@ class MGMT_WEBAPP:
     GP_SYSTEM_MODELS_RESOURCE = "gp-system-models"
     EXPERIMENTS_RESOURCE = "experiments"
     MULTI_THRESHOLD_POLICIES_RESOURCE = "multi-threshold-policies"
+    LINEAR_THRESHOLD_POLICIES_RESOURCE = "linear-threshold-policies"
     PPO_POLICIES_RESOURCE = "ppo-policies"
     ALPHA_VEC_POLICIES_RESOURCE = "alpha-vec-policies"
     VECTOR_POLICIES_RESOURCE = "vector-policies"
