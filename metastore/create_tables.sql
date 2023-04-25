@@ -330,3 +330,13 @@ CREATE TABLE IF NOT EXISTS config (
 );
 GRANT ALL ON config TO csle;
 SELECT create_reference_table('config');
+
+-- Create table that stores the linear_threshold_stopping_policies --
+CREATE TABLE IF NOT EXISTS linear_threshold_stopping_policies (
+    id serial PRIMARY KEY,
+    policy json NOT NULL,
+    simulation_name TEXT references simulations(name)
+);
+GRANT ALL ON linear_threshold_stopping_policies TO csle;
+GRANT USAGE, SELECT ON SEQUENCE linear_threshold_stopping_policies_id_seq TO csle;
+SELECT create_reference_table('linear_threshold_stopping_policies');

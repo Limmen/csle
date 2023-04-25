@@ -12,6 +12,7 @@ from csle_common.logging.log import Logger
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.training.experiment_execution import ExperimentExecution
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
+from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobConfig
 from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
@@ -3626,3 +3627,119 @@ class MetastoreFacade:
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Config with "
                                                      f"id {config.id} deleted successfully")
+
+    @staticmethod
+    def list_linear_threshold_stopping_policies() -> List[LinearThresholdStoppingPolicy]:
+        """
+        :return: A list of Linear-threshold stopping policies in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_linear_threshold_stopping_policy_record_to_dto(x),
+                                   records))
+                return records
+
+    @staticmethod
+    def list_linear_threshold_stopping_policies_ids() -> List[Dict]:
+        """
+        :return: A list of Linear-threshold stopping policies ids in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,simulation_name FROM "
+                            f"{constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def _convert_linear_threshold_stopping_policy_record_to_dto(linear_threshold_stopping_policy_record) \
+            -> LinearThresholdStoppingPolicy:
+        """
+        Converts a Linear-threshold stopping policy record fetched from the metastore into a DTO
+
+        :param linear_threshold_stopping_policy_record: the record to convert
+        :return: the DTO representing the record
+        """
+        linear_threshold_stopping_policy_json = json.dumps(linear_threshold_stopping_policy_record[1], indent=4,
+                                                          sort_keys=True)
+        linear_threshold_stopping_policy: LinearThresholdStoppingPolicy = LinearThresholdStoppingPolicy.from_dict(
+            json.loads(linear_threshold_stopping_policy_json))
+        linear_threshold_stopping_policy.id = linear_threshold_stopping_policy_record[0]
+        return linear_threshold_stopping_policy
+
+    @staticmethod
+    def get_linear_threshold_stopping_policy(id: int) -> Union[None, LinearThresholdStoppingPolicy]:
+        """
+        Function for fetching a mult-threshold policy with a given id from the metastore
+
+        :param id: the id of the linear-threshold policy
+        :return: The mult-threshold policy or None if it could not be found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE} "
+                            f"WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_linear_threshold_stopping_policy_record_to_dto(
+                        linear_threshold_stopping_policy_record=record)
+                return record
+
+    @staticmethod
+    def remove_linear_threshold_stopping_policy(linear_threshold_stopping_policy: LinearThresholdStoppingPolicy) -> None:
+        """
+        Removes a linear-threshold stopping policy from the metastore
+
+        :param linear_threshold_stopping_policy: the policy to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing Linear-threshold stopping policy with "
+                                             f"id:{linear_threshold_stopping_policy.id} from the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE} "
+                            f"WHERE id = %s",
+                            (linear_threshold_stopping_policy.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"Linear-threshold stopping policy "
+                                                     f"with id {linear_threshold_stopping_policy.id} "
+                                                     f"deleted successfully")
+
+    @staticmethod
+    def save_linear_threshold_stopping_policy(linear_threshold_stopping_policy: LinearThresholdStoppingPolicy) \
+            -> Union[Any, int]:
+        """
+        Saves a linear-threshold stopping policy to the metastore
+
+        :param linear_threshold_stopping_policy: the policy to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug("Installing a linear-threshold stopping policy in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                policy_json_str = json.dumps(linear_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE} "
+                            f"(policy, simulation_name) "
+                            f"VALUES (%s, %s) RETURNING id", (policy_json_str,
+                                                              linear_threshold_stopping_policy.simulation_name))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug("Linear-threshold policy saved successfully")
+                return id_of_new_row

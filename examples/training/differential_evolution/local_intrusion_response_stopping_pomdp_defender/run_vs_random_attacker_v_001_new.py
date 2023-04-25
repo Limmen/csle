@@ -129,10 +129,6 @@ if __name__ == '__main__':
         emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
         experiment_config=experiment_config)
     experiment_execution = agent.train()
-    import gymnasium as gym
-    env = gym.make("csle-intrusion-response-game-local-stopping-pomdp-defender-v1",
-                   config=simulation_env_config.simulation_env_input_config)
-    # env.manual_play()
     # MetastoreFacade.save_experiment_execution(experiment_execution)
     # for policy in experiment_execution.result.policies.values():
     #     MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)

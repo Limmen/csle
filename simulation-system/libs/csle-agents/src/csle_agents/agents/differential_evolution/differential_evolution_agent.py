@@ -233,22 +233,7 @@ class DifferentialEvolutionAgent(BaseAgent):
                 theta = DifferentialEvolutionAgent.initial_theta(L=2 * L)
 
         # Initial eval
-        if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
-            policy = MultiThresholdStoppingPolicy(
-                theta=list(theta), simulation_name=self.simulation_env_config.name,
-                states=self.simulation_env_config.state_space_config.states,
-                player_type=self.experiment_config.player_type, L=L,
-                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
-        else:
-            policy = LinearThresholdStoppingPolicy(
-                theta=list(theta), simulation_name=self.simulation_env_config.name,
-                states=self.simulation_env_config.state_space_config.states,
-                player_type=self.experiment_config.player_type, L=L,
-                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
+        policy = self.get_policy(theta=list(theta), L=L)
         avg_metrics = self.eval_theta(
             policy=policy,
             max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -283,23 +268,7 @@ class DifferentialEvolutionAgent(BaseAgent):
             population.append(indv)
 
         gen_sol = population[0]
-        if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
-            candidate_policy = MultiThresholdStoppingPolicy(
-                theta=list(gen_sol), simulation_name=self.simulation_env_config.name,
-                states=self.simulation_env_config.state_space_config.states,
-                player_type=self.experiment_config.player_type, L=L,
-                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions,
-                experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
-        else:
-            candidate_policy = LinearThresholdStoppingPolicy(
-                theta=list(gen_sol), simulation_name=self.simulation_env_config.name,
-                states=self.simulation_env_config.state_space_config.states,
-                player_type=self.experiment_config.player_type, L=L,
-                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
+        candidate_policy = self.get_policy(theta=list(gen_sol), L=L)
         avg_metrics = self.eval_theta(
             policy=candidate_policy,
             max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -321,7 +290,7 @@ class DifferentialEvolutionAgent(BaseAgent):
                 x_1 = population[random_index[0]]
                 x_2 = population[random_index[1]]
                 x_3 = population[random_index[2]]
-                x_t = population[j]     # target individual
+                x_t = population[j]  # target individual
 
                 # subtract x3 from x2, and create a new vector (x_diff)
                 x_diff = [x_2_i - x_3_i for x_2_i, x_3_i in zip(x_2, x_3)]
@@ -342,46 +311,13 @@ class DifferentialEvolutionAgent(BaseAgent):
                 v_trial = np.array(v_trial)
 
                 # GREEDY SELECTION STEP
-                if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
-                    candidate_policy = MultiThresholdStoppingPolicy(
-                        theta=list(v_trial), simulation_name=self.simulation_env_config.name,
-                        states=self.simulation_env_config.state_space_config.states,
-                        player_type=self.experiment_config.player_type, L=L,
-                        actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                            self.experiment_config.player_idx].actions,
-                        experiment_config=self.experiment_config, avg_R=-1,
-                        agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
-                else:
-                    candidate_policy = LinearThresholdStoppingPolicy(
-                        theta=list(v_trial), simulation_name=self.simulation_env_config.name,
-                        states=self.simulation_env_config.state_space_config.states,
-                        player_type=self.experiment_config.player_type, L=L,
-                        actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                            self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                        agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
+                candidate_policy = self.get_policy(theta=list(v_trial), L=L)
                 avg_metrics = self.eval_theta(
                     policy=candidate_policy,
                     max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
                 score_trial = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
 
-                if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
-                    candidate_policy = MultiThresholdStoppingPolicy(
-                        theta=list(x_t), simulation_name=self.simulation_env_config.name,
-                        states=self.simulation_env_config.state_space_config.states,
-                        player_type=self.experiment_config.player_type, L=L,
-                        actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                            self.experiment_config.player_idx].actions,
-                        experiment_config=self.experiment_config, avg_R=-1,
-                        agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
-                else:
-                    candidate_policy = LinearThresholdStoppingPolicy(
-                        theta=list(x_t), simulation_name=self.simulation_env_config.name,
-                        states=self.simulation_env_config.state_space_config.states,
-                        player_type=self.experiment_config.player_type, L=L,
-                        actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                            self.experiment_config.player_idx].actions, experiment_config=self.experiment_config,
-                        avg_R=-1,
-                        agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
+                candidate_policy = self.get_policy(theta=list(x_t), L=L)
                 avg_metrics = self.eval_theta(
                     policy=candidate_policy,
                     max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -393,26 +329,9 @@ class DifferentialEvolutionAgent(BaseAgent):
                 else:
                     gen_scores.append(score_target)
 
-            gen_best = max(gen_scores)                                  # fitness of best individual
-            gen_sol = population[gen_scores.index(min(gen_scores))]     # solution of best individual
-            if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
-                policy = MultiThresholdStoppingPolicy(
-                    theta=gen_sol, simulation_name=self.simulation_env_config.name,
-                    states=self.simulation_env_config.state_space_config.states,
-                    player_type=self.experiment_config.player_type, L=L,
-                    actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                        self.experiment_config.player_idx].actions,
-                    experiment_config=self.experiment_config, avg_R=-1,
-                    agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
-            else:
-                policy = LinearThresholdStoppingPolicy(
-                    theta=gen_sol, simulation_name=self.simulation_env_config.name,
-                    states=self.simulation_env_config.state_space_config.states,
-                    player_type=self.experiment_config.player_type, L=L,
-                    actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                        self.experiment_config.player_idx].actions, experiment_config=self.experiment_config,
-                    avg_R=-1,
-                    agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
+            gen_best = max(gen_scores)  # fitness of best individual
+            gen_sol = population[gen_scores.index(min(gen_scores))]  # solution of best individual
+            policy = self.get_policy(theta=list(gen_sol), L=L)
             values.append(gen_best)
             J = gen_best
 
@@ -431,11 +350,13 @@ class DifferentialEvolutionAgent(BaseAgent):
             # Log thresholds
             exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.THETAS].append(
                 DifferentialEvolutionAgent.round_vec(theta))
-            if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
+            if self.experiment_config.hparams[
+                agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
                 exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.THRESHOLDS].append(
                     DifferentialEvolutionAgent.round_vec(policy.thresholds()))
 
-            if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
+            if self.experiment_config.hparams[
+                agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
                 # Log stop distribution
                 for k, v in policy.stop_distributions().items():
                     exp_result.all_metrics[seed][k].append(v)
@@ -478,7 +399,8 @@ class DifferentialEvolutionAgent(BaseAgent):
             if env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN in avg_metrics:
                 exp_result.all_metrics[seed][
                     env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
-                    round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN], 3))
+                    round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN],
+                          3))
 
             if i % self.experiment_config.log_every == 0 and i > 0:
                 # Update training job
@@ -510,31 +432,16 @@ class DifferentialEvolutionAgent(BaseAgent):
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
                     f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
                     f"theta:{policy.theta}, T: {T_avg}, runtime (m): {time_elapsed_minutes}, "
-                    f"progress: {round(progress*100,2)}%")
-
-        if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
-            policy = MultiThresholdStoppingPolicy(
-                theta=list(theta), simulation_name=self.simulation_env_config.name,
-                states=self.simulation_env_config.state_space_config.states,
-                player_type=self.experiment_config.player_type, L=L,
-                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions,
-                experiment_config=self.experiment_config, avg_R=J, agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
-        else:
-            policy = LinearThresholdStoppingPolicy(
-                theta=list(theta), simulation_name=self.simulation_env_config.name,
-                states=self.simulation_env_config.state_space_config.states,
-                player_type=self.experiment_config.player_type, L=L,
-                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
+                    f"progress: {round(progress * 100, 2)}%")
+        policy = self.get_policy(theta=list(theta), L=L)
         exp_result.policies[seed] = policy
         # Save policy
         if self.save_to_metastore:
             MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
         return exp_result
 
-    def eval_theta(self, policy: MultiThresholdStoppingPolicy, max_steps: int = 200) -> Dict[str, Union[float, int]]:
+    def eval_theta(self, policy: Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy],
+                   max_steps: int = 200) -> Dict[str, Union[float, int]]:
         """
         Evaluates a given threshold policy by running monte-carlo simulations
 
@@ -647,3 +554,31 @@ class DifferentialEvolutionAgent(BaseAgent):
                 vec_new.append(vec[i])
 
         return vec_new
+
+    def get_policy(self, theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
+                                                              LinearThresholdStoppingPolicy]:
+        """
+        Utility method for getting the policy from a parameter vector
+
+        :param theta: the parameter vector
+        :param L: the number of parameters
+        :return: the policy
+        """
+        if self.experiment_config.hparams[
+            agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
+            policy = MultiThresholdStoppingPolicy(
+                theta=list(theta), simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
+        else:
+            policy = LinearThresholdStoppingPolicy(
+                theta=list(theta), simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.DIFFERENTIAL_EVOLUTION)
+        return policy
