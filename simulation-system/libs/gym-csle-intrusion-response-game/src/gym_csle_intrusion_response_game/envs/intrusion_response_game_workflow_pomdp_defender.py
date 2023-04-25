@@ -47,11 +47,10 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
             T = np.array([IntrusionResponseGameUtil.local_transition_tensor(
                 S=S, A1=A1, A2=A2, Z_D=self.config.game_config.Z_D_P, A_P=self.config.game_config.A_P)])
             Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(S=S, A1=A1, A2=A2, O=O)
-            Z_U = np.array([0, 1, 3, 3.5, 4])
             R = np.array(
                 [IntrusionResponseGameUtil.local_reward_tensor(
                     eta=self.config.game_config.eta, C_D=self.config.game_config.C_D, A1=A1, A2=A2,
-                    reachable=reachable, beta=self.config.game_config.beta, S=S, Z_U=Z_U,
+                    reachable=reachable, beta=self.config.game_config.beta, S=S, Z_U=self.config.game_config.Z_U,
                     initial_zone=self.config.game_config.initial_zones[node])])
             d_b1 = IntrusionResponseGameUtil.local_initial_defender_belief(S_A=S_A)
             a_b1 = IntrusionResponseGameUtil.local_initial_attacker_belief(
@@ -125,7 +124,7 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         # Step the envs
         for i, local_env in enumerate(self.local_envs):
             local_a1 = a1[i]
-            local_o, local_r, local_done, _ = local_env.step(a1=local_a1)
+            local_o, local_r, local_done, _, _ = local_env.step(a1=local_a1)
             if local_done:
                 done = True
             r = r + local_r
@@ -193,7 +192,7 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         defender_obs = []
         attacker_obs = []
         for local_env in self.local_envs:
-            local_o = local_env.reset()
+            local_o, _ = local_env.reset()
             defender_obs = defender_obs + local_o.tolist()
             attacker_obs = attacker_obs + local_env.trace.attacker_observations[-1].tolist()
         defender_obs = np.array(defender_obs)
@@ -272,7 +271,7 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         :return: None
         """
         done = False
-        o = self.reset()
+        o, _ = self.reset()
         print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}")
         while True:
             raw_input = input("> ")
@@ -293,9 +292,9 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
                 print(self.trace)
             elif raw_input == "R":
                 print("Resetting the state")
-                o = self.reset()
+                o, _ = self.reset()
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}")
             else:
                 a1 = np.array(list(map(lambda x: int(x), raw_input.split(","))))
-                o, r, done, _ = self.step(a1=a1)
+                o, r, done, _, _ = self.step(a1=a1)
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}, r:{round(r, 2)}, done: {done}")

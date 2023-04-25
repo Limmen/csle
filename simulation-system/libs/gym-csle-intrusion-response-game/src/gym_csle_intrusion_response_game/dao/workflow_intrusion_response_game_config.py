@@ -65,20 +65,12 @@ class WorkflowIntrusionResponseGameConfig:
         :return: the attacker's action space
         """
         return gym.spaces.MultiDiscrete(nvec=np.array([4] * len(self.nodes)), dtype=np.int64)
-        # return gym.spaces.Box(low=np.array([0]*len(self.nodes)), high=np.array([3]*len(self.nodes)), dtype=np.int,
-        #                       shape=(len(self.nodes),))
-        # return gym.spaces.Discrete(4*len(self.nodes))
 
     def defender_action_space(self) -> gym.spaces.MultiDiscrete:
         """
         :return: the defender's action space
         """
-        # print(np.array(([0] + self.zones.tolist())*len(self.nodes)))
         return gym.spaces.MultiDiscrete(nvec=np.array([1 + len(self.zones)] * len(self.nodes)), dtype=np.int64)
-        # return gym.spaces.Box(low=np.array([0]*len(self.nodes)), high=np.array([len(self.zones)]*len(self.nodes)),
-        # dtype=np.int,
-        #                       shape=(len(self.nodes),))
-        # gym.spaces.Discrete((len(self.zones)+1)*len(self.nodes))
 
     def to_dict(self) -> Dict[str, Any]:
         """

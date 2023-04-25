@@ -142,7 +142,6 @@ class BayesOptAgent(BaseAgent):
 
         config = self.simulation_env_config.simulation_env_input_config
         if self.env is None:
-            print(f"MAKING GYM: {self.simulation_env_config.gym_env_name}")
             self.env = gym.make(self.simulation_env_config.gym_env_name, config=config)
         for seed in self.experiment_config.random_seeds:
             ExperimentUtil.set_seed(seed)
@@ -297,15 +296,19 @@ class BayesOptAgent(BaseAgent):
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN].append(J)
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN].append(running_avg_J)
 
-            # Log thresholds
+            # Log thetas
             exp_result.all_metrics[seed][agents_constants.BAYESIAN_OPTIMIZATION.THETAS].append(
                 BayesOptAgent.round_vec(theta))
-            exp_result.all_metrics[seed][agents_constants.BAYESIAN_OPTIMIZATION.THRESHOLDS].append(
-                BayesOptAgent.round_vec(policy.thresholds()))
 
-            # Log stop distribution
-            for k, v in policy.stop_distributions().items():
-                exp_result.all_metrics[seed][k].append(v)
+            if self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE] \
+                    == PolicyType.MULTI_THRESHOLD:
+                # Log thresholds
+                exp_result.all_metrics[seed][agents_constants.BAYESIAN_OPTIMIZATION.THRESHOLDS].append(
+                    BayesOptAgent.round_vec(policy.thresholds()))
+
+                # Log stop distribution
+                for k, v in policy.stop_distributions().items():
+                    exp_result.all_metrics[seed][k].append(v)
 
             # Log intrusion lengths
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH].append(
@@ -329,20 +332,23 @@ class BayesOptAgent(BaseAgent):
                     exp_result.all_metrics[seed][env_constants.ENV_METRICS.TIME_HORIZON],
                     self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
             for l in range(1, self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.L].value + 1):
-                exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
-                    round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
-                exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
-                    ExperimentUtil.running_average(
-                        exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"],
-                        self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
+                if env_constants.ENV_METRICS.STOP + f"_{l}" in avg_metrics:
+                    exp_result.plot_metrics.append(env_constants.ENV_METRICS.STOP + f"_{l}")
+                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"].append(
+                        round(avg_metrics[env_constants.ENV_METRICS.STOP + f"_{l}"], 3))
+                    exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_running_average_{l}"].append(
+                        ExperimentUtil.running_average(
+                            exp_result.all_metrics[seed][env_constants.ENV_METRICS.STOP + f"_{l}"],
+                            self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value))
 
             # Log baseline returns
             exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN].append(
                 round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN], 3))
-            exp_result.all_metrics[seed][
-                env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
-                round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN], 3))
+            if env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN in avg_metrics:
+                exp_result.all_metrics[seed][
+                    env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN].append(
+                    round(avg_metrics[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN],
+                          3))
 
             if i % self.experiment_config.log_every == 0 and i > 0:
                 # Update training job
@@ -372,8 +378,7 @@ class BayesOptAgent(BaseAgent):
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
                     f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
-                    f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
-                    f"stop distributions:{policy.stop_distributions()}")
+                    f"theta:{policy.theta}, progress: {round(progress*100,2)}%")
         policy = self.get_policy(theta=list(theta), L=L)
         exp_result.policies[seed] = policy
         # Save policy

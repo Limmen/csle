@@ -1,21 +1,20 @@
+import numpy as np
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-from csle_agents.agents.t_spsa.t_spsa_agent import TSPSAAgent
+from csle_agents.agents.bayesian_optimization.bayes_opt_agent import BayesOptAgent
 import csle_agents.constants.constants as agents_constants
-import gym_csle_intrusion_response_game.constants.constants as env_constants
+from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
+import gym_csle_intrusion_response_game.constants.constants as env_constants
 from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.policy_type import PolicyType
-from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
-import numpy as np
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
-
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
         "csle-intrusion-response-game-local-pomdp-defender-001")
     number_of_zones = 6
@@ -77,35 +76,20 @@ if __name__ == '__main__':
         )
     simulation_env_config.gym_env_name = "csle-intrusion-response-game-local-stopping-pomdp-defender-v1"
     simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
-
     experiment_config = ExperimentConfig(
-        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}tspsa_test", title="T-SPSA test",
+        output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}bayes_opt_ir_game", title="Bayesian Optimization IR game",
         random_seeds=[399, 98912, 999, 555],
-        agent_type=AgentType.T_SPSA,
+        agent_type=AgentType.BAYESIAN_OPTIMIZATION,
         log_every=1,
         hparams={
-            constants.T_SPSA.N: HParam(value=400, name=constants.T_SPSA.N,
-                                       descr="the number of training iterations"),
-            constants.T_SPSA.c: HParam(
-                value=10, name=constants.T_SPSA.c,
-                descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
-            constants.T_SPSA.a: HParam(
-                value=1, name=constants.T_SPSA.a,
-                descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
-            constants.T_SPSA.A: HParam(
-                value=100, name=constants.T_SPSA.A,
-                descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
-            constants.T_SPSA.LAMBDA: HParam(
-                value=0.602, name=constants.T_SPSA.LAMBDA,
-                descr="scalar coefficient for determining perturbation sizes in T-SPSA"),
-            constants.T_SPSA.EPSILON: HParam(
-                value=0.101, name=constants.T_SPSA.EPSILON,
-                descr="scalar coefficient for determining gradient step sizes in T-SPSA"),
-            constants.T_SPSA.L: HParam(value=2, name="L", descr="the number of stop actions"),
-            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+            agents_constants.BAYESIAN_OPTIMIZATION.N: HParam(value=500, name=constants.T_SPSA.N,
+                                                             descr="the number of training iterations"),
+            agents_constants.BAYESIAN_OPTIMIZATION.L: HParam(value=1, name="L", descr="the number of stop actions"),
+            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
-            constants.T_SPSA.THETA1: HParam(value=[0.6, 1.1], name=constants.T_SPSA.THETA1,
-                                            descr="initial thresholds"),
+            agents_constants.BAYESIAN_OPTIMIZATION.THETA1: HParam(
+                value=[0, 0], name=agents_constants.BAYESIAN_OPTIMIZATION.THETA1,
+                descr="initial coefficients"),
             agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                        descr="how frequently to save the model"),
             agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
@@ -114,21 +98,46 @@ if __name__ == '__main__':
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
                 value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
-            constants.T_SPSA.GRADIENT_BATCH_SIZE: HParam(
-                value=8, name=constants.T_SPSA.GRADIENT_BATCH_SIZE,
-                descr="the batch size of the gradient estimator"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                 descr="the number of samples to include when computing the running avg"),
-            constants.T_SPSA.POLICY_TYPE: HParam(
-                value=PolicyType.MULTI_THRESHOLD, name=constants.T_SPSA.POLICY_TYPE,
-                descr="policy type in T-SPSA")
+            agents_constants.COMMON.GAMMA: HParam(
+                value=1, name=agents_constants.COMMON.GAMMA,
+                descr="the discount factor"),
+            agents_constants.BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION: HParam(
+                value=agents_constants.BAYESIAN_OPTIMIZATION.UCB,
+                name=agents_constants.BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION,
+                descr="utility/acquisition function"),
+            agents_constants.BAYESIAN_OPTIMIZATION.UCB_KAPPA: HParam(
+                value=2.5,
+                name=agents_constants.BAYESIAN_OPTIMIZATION.UCB_KAPPA,
+                descr="kappa parameter for the ucb utility function"),
+            agents_constants.BAYESIAN_OPTIMIZATION.UCB_XI: HParam(
+                value=0,
+                name=agents_constants.BAYESIAN_OPTIMIZATION.UCB_XI,
+                descr="kappa parameter for the xi utility function"),
+            agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS: HParam(
+                value=[(-5, 5), (-5, 5)],
+                name=agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS,
+                descr="parameter bounds"),
+            agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE: HParam(
+                value=PolicyType.LINEAR_THRESHOLD, name=agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE,
+                descr="policy type for the execution")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
-    agent = TSPSAAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                       experiment_config=experiment_config)
+    agent = BayesOptAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+                          experiment_config=experiment_config)
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():
-        MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+        if experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE].value == PolicyType.MULTI_THRESHOLD:
+            MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+        elif experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE].value \
+                == PolicyType.LINEAR_THRESHOLD:
+            MetastoreFacade.save_linear_threshold_stopping_policy(linear_threshold_stopping_policy=policy)
+        else:
+            raise ValueError("Policy type: "
+                             f"{experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE].value} "
+                             f"not recognized for differential evolution")
+
