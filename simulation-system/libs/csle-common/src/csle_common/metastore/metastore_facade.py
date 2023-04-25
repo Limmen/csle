@@ -3669,7 +3669,7 @@ class MetastoreFacade:
         :return: the DTO representing the record
         """
         linear_threshold_stopping_policy_json = json.dumps(linear_threshold_stopping_policy_record[1], indent=4,
-                                                          sort_keys=True)
+                                                           sort_keys=True)
         linear_threshold_stopping_policy: LinearThresholdStoppingPolicy = LinearThresholdStoppingPolicy.from_dict(
             json.loads(linear_threshold_stopping_policy_json))
         linear_threshold_stopping_policy.id = linear_threshold_stopping_policy_record[0]
@@ -3697,7 +3697,8 @@ class MetastoreFacade:
                 return record
 
     @staticmethod
-    def remove_linear_threshold_stopping_policy(linear_threshold_stopping_policy: LinearThresholdStoppingPolicy) -> None:
+    def remove_linear_threshold_stopping_policy(
+            linear_threshold_stopping_policy: LinearThresholdStoppingPolicy) -> None:
         """
         Removes a linear-threshold stopping policy from the metastore
 

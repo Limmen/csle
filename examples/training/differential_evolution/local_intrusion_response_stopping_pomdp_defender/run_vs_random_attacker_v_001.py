@@ -7,7 +7,6 @@ from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.differential_evolution.differential_evolution_agent import DifferentialEvolutionAgent
 import csle_agents.constants.constants as agents_constants
-from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
 import gym_csle_intrusion_response_game.constants.constants as env_constants

@@ -100,7 +100,6 @@ class LocalIntrusionResponseGameConfig:
         """
         return gym.spaces.Discrete(len(self.A1))
 
-
     def defender_action_space_stopping(self) -> gym.spaces.Discrete:
         """
         :return: the defender's action space in the stopping POMDP

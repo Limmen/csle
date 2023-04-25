@@ -89,12 +89,12 @@ class LinearThresholdStoppingPolicy(Policy):
         """
         coefficients = np.zeros(len(self.theta))
         theta = self.theta
-        coefficients[-1]= math.pow(theta[-1],2)
-        coefficients[-2] = 1+math.pow(theta[-2],2)
-        for i in range(0, len(theta)-2):
-            coefficients[i] = coefficients[-2]*math.pow(math.sin(theta[i]), 2)
+        coefficients[-1] = math.pow(theta[-1], 2)
+        coefficients[-2] = 1 + math.pow(theta[-2], 2)
+        for i in range(0, len(theta) - 2):
+            coefficients[i] = coefficients[-2] * math.pow(math.sin(theta[i]), 2)
         belief = o
-        x = np.append(np.array([0,1]), np.array(coefficients))
+        x = np.append(np.array([0, 1]), np.array(coefficients))
         y = np.append(np.array(belief), np.array([-1]))
         d = np.dot(x, y)
         if d > 0:

@@ -393,7 +393,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             A2=self.config.local_intrusion_response_game_config.A2,
             R=self.config.local_intrusion_response_game_config.R[0],
             S_A=self.config.local_intrusion_response_game_config.S_A,
-            a1=a1, zone = zone
+            a1=a1, zone=zone
         )
 
     def get_local_stopping_pomdp_obs_tensor(self, a1: int, zone: int) -> np.ndarray:
@@ -407,5 +407,5 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             A2=self.config.local_intrusion_response_game_config.A2,
             Z=self.config.local_intrusion_response_game_config.Z,
             S_A=self.config.local_intrusion_response_game_config.S_A,
-            a1=a1, zone = zone, O=self.config.local_intrusion_response_game_config.O
+            a1=a1, zone=zone, O=self.config.local_intrusion_response_game_config.O
         )

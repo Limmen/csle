@@ -4,6 +4,7 @@ from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config i
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 from csle_common.dao.training.policy import Policy
 
+
 class IntrusionResponseGameUtil:
     """
     Class with utility functions for the intrusion response game environment
@@ -436,7 +437,7 @@ class IntrusionResponseGameUtil:
                                            a1: int, zone: int) -> np.ndarray:
         R_1 = []
         S_A = np.append([-1], S_A)
-        for stop in [0,1]:
+        for stop in [0, 1]:
             a1_rews = []
             for a2 in A2:
                 a1_a2_rews = []
@@ -454,14 +455,6 @@ class IntrusionResponseGameUtil:
                 a1_rews.append(a1_a2_rews)
             R_1.append(a1_rews)
         R_1 = np.array(R_1)
-        # print(R[a1])
-        # print("")
-        # print(a1)
-        # print(R[a1][0])
-        # print(R[a1][0][1])
-        # print(R[a1][0][7])
-        # print(R.shape)
-        # print(R_1.shape)
         return R_1
 
     @staticmethod
@@ -470,7 +463,7 @@ class IntrusionResponseGameUtil:
                                                 O: np.ndarray) -> np.ndarray:
         Z_1 = []
         S_A = np.append([-1], S_A)
-        for stop in [0,1]:
+        for stop in [0, 1]:
             a1_obs_probs = []
             for a2 in A2:
                 a1_a2_obs_probs = []
@@ -485,7 +478,7 @@ class IntrusionResponseGameUtil:
                                 obs_prob = Z[0][a2][i]
                     if len(obs_prob) == 0:
                         obs_prob = np.zeros(len(O)).tolist()
-                        obs_prob[0]=1
+                        obs_prob[0] = 1
                     else:
                         obs_prob = obs_prob.tolist()
                     a1_a2_obs_probs.append(obs_prob)
@@ -672,11 +665,11 @@ class IntrusionResponseGameUtil:
                             for j, full_s_prime in enumerate(S):
                                 if full_s[env_constants.STATES.D_STATE_INDEX] == s:
                                     total_prob += T[a1][a2][i][j]
-                                if full_s[env_constants.STATES.D_STATE_INDEX] == s  \
+                                if full_s[env_constants.STATES.D_STATE_INDEX] == s \
                                         and full_s_prime[env_constants.STATES.D_STATE_INDEX] == s_prime:
                                     prob += T[a1][a2][i][j]
-                        prob = prob/total_prob
-                        prob=min(1, prob)
+                        prob = prob / total_prob
+                        prob = min(1, prob)
                         a1_a2_s_probs.append(prob)
                     assert round(sum(a1_a2_s_probs), 3) == 1
                     a1_a2_probs.append(a1_a2_s_probs)
@@ -700,7 +693,7 @@ class IntrusionResponseGameUtil:
         """
         S_A = np.append([-1], S_A)
         T_1 = []
-        for stop in [0,1]:
+        for stop in [0, 1]:
             stop_probs = []
             for a2 in A2:
                 a1_a2_probs = []
@@ -720,7 +713,7 @@ class IntrusionResponseGameUtil:
                                     if full_s[env_constants.STATES.A_STATE_INDEX] == s \
                                             and full_s_prime[env_constants.STATES.A_STATE_INDEX] == s_prime:
                                         prob += T[stop][a2][i][j]
-                            prob = prob/total_prob
+                            prob = prob / total_prob
                             # prob=min(1, prob)
                             a1_a2_s_probs.append(prob)
                     assert round(sum(a1_a2_s_probs), 3) == 1
@@ -998,7 +991,8 @@ class IntrusionResponseGameUtil:
 
     @staticmethod
     def get_local_defender_pomdp_solver_file(S: np.ndarray, A1: np.ndarray, A2: np.ndarray,
-                                             O: np.ndarray, R: np.ndarray, T: np.ndarray, static_attacker_strategy: Policy,
+                                             O: np.ndarray, R: np.ndarray, T: np.ndarray,
+                                             static_attacker_strategy: Policy,
                                              s_1_idx: int, discount_factor: float = 0.99) -> str:
         """
         Gets the POMDP environment specification based on the format at http://www.pomdp.org/code/index.html,
@@ -1021,7 +1015,7 @@ class IntrusionResponseGameUtil:
         file_str = file_str + f"states: {len(S)}\n\n"
         file_str = file_str + f"actions: {len(A1)}\n\n"
         file_str = file_str + f"observations: {len(O)}\n\n"
-        initial_belief = [0]*len(S)
+        initial_belief = [0] * len(S)
         initial_belief[s_1_idx] = 1
         initial_belief_str = " ".join(list(map(lambda x: str(x), initial_belief)))
         file_str = file_str + f"start: {initial_belief_str}\n\n\n"
@@ -1031,15 +1025,15 @@ class IntrusionResponseGameUtil:
             for a1 in range(len(A1)):
                 probs = []
                 for s_prime in range(len(S)):
-                    num_transitions+=1
+                    num_transitions += 1
                     prob = 0
                     pi2 = np.array(static_attacker_strategy.stage_policy(None))[
                         S[s][env_constants.STATES.A_STATE_INDEX]]
                     for a2 in range(len(A2)):
-                        prob += pi2[a2]*T[a1][a2][s][s_prime]
+                        prob += pi2[a2] * T[a1][a2][s][s_prime]
                     file_str = file_str + f"T: {a1} : {s} : {s_prime} {prob}\n"
                     probs.append(prob)
-                assert round(sum(probs),3) == 1
+                assert round(sum(probs), 3) == 1
         file_str = file_str + "\n\n"
         for s_prime in range(len(S)):
             for a1 in range(len(A1)):
@@ -1049,20 +1043,20 @@ class IntrusionResponseGameUtil:
                     pi2 = np.array(static_attacker_strategy.stage_policy(None))[
                         S[s][env_constants.STATES.A_STATE_INDEX]]
                     for a2 in range(len(A2)):
-                        total_transition_prob += pi2[a2]*T[a1][a2][s][s_prime]
-                        a2_transition_probs[a2] += T[a1][a2][s][s_prime]*pi2[a2]
+                        total_transition_prob += pi2[a2] * T[a1][a2][s][s_prime]
+                        a2_transition_probs[a2] += T[a1][a2][s][s_prime] * pi2[a2]
                 probs = []
                 for o in range(len(O)):
                     prob = 0
                     if total_transition_prob == 0:
-                        prob = (1/len(O))
+                        prob = (1 / len(O))
                     else:
                         for a2 in range(len(A2)):
-                            a2_prob =  (a2_transition_probs[a2])/total_transition_prob
-                            prob += a2_prob*Z[a1][a2][s_prime][o]
+                            a2_prob = (a2_transition_probs[a2]) / total_transition_prob
+                            prob += a2_prob * Z[a1][a2][s_prime][o]
                     file_str = file_str + f"O : {a1} : {s_prime} : {o} {prob}\n"
                     probs.append(prob)
-                assert round(sum(probs),3) == 1
+                assert round(sum(probs), 3) == 1
         file_str = file_str + "\n\n"
 
         for s in range(len(S)):
@@ -1073,7 +1067,7 @@ class IntrusionResponseGameUtil:
                     for o in range(len(O)):
                         r = 0
                         for a2 in range(len(A2)):
-                            r += pi2[a2]*R[0][a1][a2][s]
+                            r += pi2[a2] * R[0][a1][a2][s]
                         file_str = file_str + f"R: {a1} : {s} : {s_prime} : {o} {r}\n"
         return file_str
 
@@ -1098,8 +1092,8 @@ class IntrusionResponseGameUtil:
         for s in S:
             for a2 in A2:
                 for s_prime_1 in S:
-                    prob_1 = Z[a1][a2][s_prime_1+1][o]
-                    norm += b[s] * prob_1 * T[a1][a2][s+1][s_prime_1+1] * pi2[s][a2]
+                    prob_1 = Z[a1][a2][s_prime_1 + 1][o]
+                    norm += b[s] * prob_1 * T[a1][a2][s + 1][s_prime_1 + 1] * pi2[s][a2]
         if norm == 0:
             print(f"zero norm, s_prime:{s_prime}, o:{o}, a1:{a1}, b:{b}")
             return 0
@@ -1107,7 +1101,7 @@ class IntrusionResponseGameUtil:
 
         for s in S:
             for a2 in A2:
-                temp += Z[a1][a2][s_prime+1][o] * T[a1][a2][s+1][s_prime+1] * b[s] * pi2[s][a2]
+                temp += Z[a1][a2][s_prime + 1][o] * T[a1][a2][s + 1][s_prime + 1] * b[s] * pi2[s][a2]
         b_prime_s_prime = temp / norm
         if round(b_prime_s_prime, 3) > 1:
             print(f"b_prime_s_prime >= 1: {b_prime_s_prime}, a1:{a1}, s_prime:{s_prime}, o:{o}, pi2:{pi2}")

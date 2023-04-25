@@ -350,13 +350,13 @@ class DifferentialEvolutionAgent(BaseAgent):
             # Log thresholds
             exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.THETAS].append(
                 DifferentialEvolutionAgent.round_vec(theta))
-            if self.experiment_config.hparams[
-                agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
+            if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] \
+                    == PolicyType.MULTI_THRESHOLD:
                 exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.THRESHOLDS].append(
                     DifferentialEvolutionAgent.round_vec(policy.thresholds()))
 
-            if self.experiment_config.hparams[
-                agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
+            if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] \
+                    == PolicyType.MULTI_THRESHOLD:
                 # Log stop distribution
                 for k, v in policy.stop_distributions().items():
                     exp_result.all_metrics[seed][k].append(v)
@@ -564,8 +564,8 @@ class DifferentialEvolutionAgent(BaseAgent):
         :param L: the number of parameters
         :return: the policy
         """
-        if self.experiment_config.hparams[
-            agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] == PolicyType.MULTI_THRESHOLD:
+        if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] \
+                == PolicyType.MULTI_THRESHOLD:
             policy = MultiThresholdStoppingPolicy(
                 theta=list(theta), simulation_name=self.simulation_env_config.name,
                 states=self.simulation_env_config.state_space_config.states,

@@ -5,6 +5,7 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.policy_type import PolicyType
 
+
 class VectorPolicy(Policy):
     """
     Object representing a tabular policy

@@ -111,7 +111,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
                 if o[0] == 0:
                     a2 = 1
                 if o[0] == 1:
-                    a2 = np.random.choice([2,3])
+                    a2 = np.random.choice([2, 3])
                 if o[0] == 2:
                     a2 = 0
                 o, r, done, _, info = self.step(a2)

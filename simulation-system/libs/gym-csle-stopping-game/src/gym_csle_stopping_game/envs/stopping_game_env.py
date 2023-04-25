@@ -46,7 +46,6 @@ class StoppingGameEnv(BaseEnv):
         self.action_space = self.defender_action_space
         self.observation_space = self.defender_observation_space
 
-
         # Setup Config
         self.viewer = None
         self.metadata = {
@@ -324,21 +323,23 @@ class StoppingGameEnv(BaseEnv):
         for i in range(len(self.trace.states)):
             if defender_baseline_stop_on_first_alert_stops_remaining > 0:
                 if self.trace.infrastructure_metrics[i] > 0:
-                    defender_baseline_stop_on_first_alert_return += self.config.R[
-                        int(defender_baseline_stop_on_first_alert_stops_remaining) - 1][1][
-                        self.trace.attacker_actions[i]][self.trace.states[i]] * math.pow(self.config.gamma, i)
+                    defender_baseline_stop_on_first_alert_return += \
+                        self.config.R[int(defender_baseline_stop_on_first_alert_stops_remaining) - 1][1][
+                            self.trace.attacker_actions[i]][self.trace.states[i]] * math.pow(self.config.gamma, i)
                     defender_baseline_stop_on_first_alert_stops_remaining -= 1
                 else:
-                    defender_baseline_stop_on_first_alert_return += self.config.R[
-                        int(defender_baseline_stop_on_first_alert_stops_remaining) - 1][0][
-                        self.trace.attacker_actions[i]][self.trace.states[i]] * math.pow(self.config.gamma, i)
+                    defender_baseline_stop_on_first_alert_return += \
+                        self.config.R[int(defender_baseline_stop_on_first_alert_stops_remaining) - 1][0][
+                            self.trace.attacker_actions[i]][self.trace.states[i]] * math.pow(self.config.gamma, i)
             if upper_bound_stops_remaining > 0:
                 if self.trace.states[i] == 0:
-                    upper_bound_return += self.config.R[int(upper_bound_stops_remaining) - 1][0][
-                        self.trace.attacker_actions[i]][self.trace.states[i]] * math.pow(self.config.gamma, i)
+                    r = self.config.R[int(upper_bound_stops_remaining) - 1][0][self.trace.attacker_actions[i]][
+                        self.trace.states[i]]
+                    upper_bound_return += r * math.pow(self.config.gamma, i)
                 else:
-                    upper_bound_return += self.config.R[int(upper_bound_stops_remaining) - 1][1][
-                        self.trace.attacker_actions[i]][self.trace.states[i]] * math.pow(self.config.gamma, i)
+                    r = self.config.R[int(upper_bound_stops_remaining) - 1][1][self.trace.attacker_actions[i]][
+                        self.trace.states[i]]
+                    upper_bound_return += r * math.pow(self.config.gamma, i)
                     upper_bound_stops_remaining -= 1
         info[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN] = upper_bound_return
         info[env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN] = \

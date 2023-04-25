@@ -35,7 +35,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
             A2=self.config.local_intrusion_response_game_config.A2,
             Z=self.config.local_intrusion_response_game_config.Z,
             S_A=self.config.local_intrusion_response_game_config.S_A,
-            a1=a1, zone = self.zone, O=self.config.local_intrusion_response_game_config.O
+            a1=a1, zone=self.zone, O=self.config.local_intrusion_response_game_config.O
         )
 
         self.R = IntrusionResponseGameUtil.local_stopping_pomdp_reward_tensor(
@@ -110,10 +110,10 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
         a2 = IntrusionResponseGameUtil.sample_attacker_action(pi2=pi2, s=self.s)
-        self.latest_a2=a2
+        self.latest_a2 = a2
 
         # Compute the reward
-        r = self.R[a1][a2][self.s+1]
+        r = self.R[a1][a2][self.s + 1]
         # print(r)
         # print(self.R)
         # if self.s == 2 and a1 == 1:
@@ -126,8 +126,8 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         # Sample the next state
         S = np.append([-1], self.config.local_intrusion_response_game_config.S_A)
         s_idx_prime = IntrusionResponseGameUtil.sample_next_state(
-            a1=a1, a2=a2, T=self.T,S=S,
-            s_idx=self.s+1)
+            a1=a1, a2=a2, T=self.T, S=S,
+            s_idx=self.s + 1)
 
         # Sample the next observation
         o = IntrusionResponseGameUtil.sample_next_observation(
@@ -136,7 +136,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         self.latest_obs = o
 
         # Move to the next state
-        self.s = s_idx_prime-1
+        self.s = s_idx_prime - 1
 
         # Check if game is done
         if self.s == -1:
@@ -150,14 +150,14 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
             # Update the beliefs
             self.b = IntrusionResponseGameUtil.next_stopping_belief(
                 o=o, a1=a1, b=self.b, pi2=pi2, S=S, Z=self.Z,
-                O = self.config.local_intrusion_response_game_config.O,
+                O=self.config.local_intrusion_response_game_config.O,
                 T=self.T,
                 A2=self.config.local_intrusion_response_game_config.A2, a2=a2, s=self.s)
 
         # Update metrics
         self.t += 1
         if self.s == env_constants.ATTACK_STATES.COMPROMISED:
-            self.intrusion_length+=1
+            self.intrusion_length += 1
 
         # Populate info dict
         info[env_constants.ENV_METRICS.STATE] = self.s
@@ -215,9 +215,8 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         """
         max_horizon = 1000
         returns = []
-        initial_zone = self.zone
         for i in range(samples):
-            o = self.reset()
+            _, _ = self.reset()
             done = False
             t = 0
             cumulative_reward = 0
