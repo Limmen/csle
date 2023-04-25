@@ -81,3 +81,6 @@ DROP TABLE IF EXISTS statistics_datasets CASCADE;
 DROP SEQUENCE IF EXISTS statistics_datasets_id_seq CASCADE;
 
 DROP TABLE IF EXISTS config CASCADE;
+
+DROP TABLE IF EXISTS linear_threshold_stopping_policies CASCADE;
+DROP SEQUENCE IF EXISTS linear_threshold_stopping_policies_id_seq CASCADE;

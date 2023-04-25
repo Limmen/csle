@@ -17,9 +17,11 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
+from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.util.general_util import GeneralUtil
+from csle_common.dao.training.policy_type import PolicyType
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 
@@ -232,13 +234,7 @@ class BayesOptAgent(BaseAgent):
                 theta = BayesOptAgent.initial_theta(L=2 * L)
 
         # Initial eval
-        policy = MultiThresholdStoppingPolicy(
-            theta=list(theta), simulation_name=self.simulation_env_config.name,
-            states=self.simulation_env_config.state_space_config.states,
-            player_type=self.experiment_config.player_type, L=L,
-            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+        policy = self.get_policy(theta=list(theta), L=L)
         avg_metrics = self.eval_theta(
             policy=policy,
             max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -278,14 +274,7 @@ class BayesOptAgent(BaseAgent):
         for i in range(N):
             theta_candidate = optimizer.suggest(utility)
             theta = BayesOptAgent.get_theta_vector_from_param_dict(param_dict=theta_candidate)
-            candidate_policy = MultiThresholdStoppingPolicy(
-                theta=list(theta), simulation_name=self.simulation_env_config.name,
-                states=self.simulation_env_config.state_space_config.states,
-                player_type=self.experiment_config.player_type, L=L,
-                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions,
-                experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+            candidate_policy = self.get_policy(theta=list(theta), L=L)
             avg_metrics = self.eval_theta(
                 policy=candidate_policy,
                 max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -299,16 +288,8 @@ class BayesOptAgent(BaseAgent):
                 continue
 
             # Log average return
-            policy = MultiThresholdStoppingPolicy(
-                theta=list(BayesOptAgent.get_theta_vector_from_param_dict(
-                    optimizer.max[agents_constants.BAYESIAN_OPTIMIZATION.PARAMS])),
-                simulation_name=self.simulation_env_config.name,
-                states=self.simulation_env_config.state_space_config.states,
-                player_type=self.experiment_config.player_type, L=L,
-                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions,
-                experiment_config=self.experiment_config, avg_R=J,
-                agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+            policy = self.get_policy(theta=list(BayesOptAgent.get_theta_vector_from_param_dict(
+                optimizer.max[agents_constants.BAYESIAN_OPTIMIZATION.PARAMS])), L=L)
             policy.avg_R = J
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
@@ -393,21 +374,15 @@ class BayesOptAgent(BaseAgent):
                     f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
                     f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
                     f"stop distributions:{policy.stop_distributions()}")
-
-        policy = MultiThresholdStoppingPolicy(
-            theta=list(theta), simulation_name=self.simulation_env_config.name,
-            states=self.simulation_env_config.state_space_config.states,
-            player_type=self.experiment_config.player_type, L=L,
-            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=J,
-            agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+        policy = self.get_policy(theta=list(theta), L=L)
         exp_result.policies[seed] = policy
         # Save policy
         if self.save_to_metastore:
             MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
         return exp_result
 
-    def eval_theta(self, policy: MultiThresholdStoppingPolicy, max_steps: int = 200) -> Dict[str, Union[float, int]]:
+    def eval_theta(self, policy: Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy],
+                   max_steps: int = 200) -> Dict[str, Union[float, int]]:
         """
         Evaluates a given threshold policy by running monte-carlo simulations
 
@@ -504,3 +479,31 @@ class BayesOptAgent(BaseAgent):
         :return: the theta vector
         """
         return list(param_dict.values())
+
+    def get_policy(self, theta: List[float], L: int) \
+            -> Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy]:
+        """
+        Utility method for getting the policy of a given parameter vector
+
+        :param theta: the parameter vector
+        :param L: the number of parameters
+        :return: the policy
+        """
+        if self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE] \
+                == PolicyType.MULTI_THRESHOLD:
+            policy = MultiThresholdStoppingPolicy(
+                theta=list(theta), simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+        else:
+            policy = LinearThresholdStoppingPolicy(
+                theta=list(theta), simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.BAYESIAN_OPTIMIZATION)
+        return policy

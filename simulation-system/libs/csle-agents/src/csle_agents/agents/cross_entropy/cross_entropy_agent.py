@@ -17,8 +17,10 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
+from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
+from csle_common.dao.training.policy_type import PolicyType
 from csle_common.util.general_util import GeneralUtil
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
@@ -225,13 +227,7 @@ class CrossEntropyAgent(BaseAgent):
                 theta = CrossEntropyAgent.initial_theta(L=2 * L)
 
         # Initial eval
-        policy = MultiThresholdStoppingPolicy(
-            theta=list(theta), simulation_name=self.simulation_env_config.name,
-            states=self.simulation_env_config.state_space_config.states,
-            player_type=self.experiment_config.player_type, L=L,
-            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.CROSS_ENTROPY)
+        policy = self.get_policy(theta=list(theta), L=L)
         avg_metrics = self.eval_theta(
             policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
         J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
@@ -251,13 +247,7 @@ class CrossEntropyAgent(BaseAgent):
         lamb = self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.LAMB].value
 
         # Initial eval
-        policy = MultiThresholdStoppingPolicy(
-            theta=list(theta), simulation_name=self.simulation_env_config.name,
-            states=self.simulation_env_config.state_space_config.states,
-            player_type=self.experiment_config.player_type, L=L,
-            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.CROSS_ENTROPY)
+        policy = self.get_policy(theta=list(theta), L=L)
         avg_metrics = self.eval_theta(
             policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
         J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
@@ -278,13 +268,7 @@ class CrossEntropyAgent(BaseAgent):
                         theta_sample[i] = 0.99
                     if theta_sample[i] < 0:
                         theta_sample[i] = 0.01
-                policy = MultiThresholdStoppingPolicy(
-                    theta=list(theta_sample), simulation_name=self.simulation_env_config.name,
-                    states=self.simulation_env_config.state_space_config.states,
-                    player_type=self.experiment_config.player_type, L=L,
-                    actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                        self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                    agent_type=AgentType.CROSS_ENTROPY)
+                policy = self.get_policy(theta=list(theta_sample), L=L)
                 avg_metrics = self.eval_theta(
                     policy=policy,
                     max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -386,20 +370,15 @@ class CrossEntropyAgent(BaseAgent):
                     f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
                     f"stop distributions:{policy.stop_distributions()}")
 
-        policy = MultiThresholdStoppingPolicy(
-            theta=list(theta), simulation_name=self.simulation_env_config.name,
-            states=self.simulation_env_config.state_space_config.states,
-            player_type=self.experiment_config.player_type, L=L,
-            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=J,
-            agent_type=AgentType.CROSS_ENTROPY)
+        policy = self.get_policy(theta=list(theta), L=L)
         exp_result.policies[seed] = policy
         # Save policy
         if self.save_to_metastore:
             MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
         return exp_result
 
-    def eval_theta(self, policy: MultiThresholdStoppingPolicy, max_steps: int = 200) -> Dict[str, Union[float, int]]:
+    def eval_theta(self, policy: Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy],
+                   max_steps: int = 200) -> Dict[str, Union[float, int]]:
         """
         Evaluates a given threshold policy by running monte-carlo simulations
 
@@ -486,3 +465,31 @@ class CrossEntropyAgent(BaseAgent):
         :return: the rounded vector
         """
         return list(map(lambda x: round(x, 3), vec))
+
+    def get_policy(self, theta: List[float], L: int) -> Union[LinearThresholdStoppingPolicy,
+                                                              MultiThresholdStoppingPolicy]:
+        """
+        Utility method for getting the policy of a given parameter vector
+
+        :param theta: the parameter vector
+        :param L: the number of parameters
+        :return: the policy
+        """
+        if self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.POLICY_TYPE] \
+                == PolicyType.MULTI_THRESHOLD:
+            policy = MultiThresholdStoppingPolicy(
+                theta=theta, simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.CROSS_ENTROPY)
+        else:
+            policy = LinearThresholdStoppingPolicy(
+                theta=theta, simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.CROSS_ENTROPY)
+        return policy

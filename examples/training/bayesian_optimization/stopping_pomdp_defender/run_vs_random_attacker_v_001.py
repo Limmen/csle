@@ -7,6 +7,7 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.bayesian_optimization.bayes_opt_agent import BayesOptAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
+from csle_common.dao.training.policy_type import PolicyType
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
@@ -54,7 +55,10 @@ if __name__ == '__main__':
             agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS: HParam(
                 value=[(-3, 3)],
                 name=agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS,
-                descr="parameter bounds")
+                descr="parameter bounds"),
+            agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE: HParam(
+                value=PolicyType.MULTI_THRESHOLD, name=agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE,
+                descr="policy type for the execution")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

@@ -7,6 +7,7 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.random_search.random_search_agent import RandomSearchAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
+from csle_common.dao.training.policy_type import PolicyType
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-002")
@@ -40,7 +41,10 @@ if __name__ == '__main__':
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.COMMON.GAMMA: HParam(
                 value=0.99, name=agents_constants.COMMON.GAMMA,
-                descr="the discount factor")
+                descr="the discount factor"),
+            agents_constants.RANDOM_SEARCH.POLICY_TYPE: HParam(
+                value=PolicyType.LINEAR_THRESHOLD, name=agents_constants.RANDOM_SEARCH.POLICY_TYPE,
+                descr="policy type for the execution")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

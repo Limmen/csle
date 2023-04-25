@@ -173,6 +173,7 @@ class RANDOM_SEARCH:
     STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
     STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
     DELTA = "delta"
+    POLICY_TYPE = "policy_type"
 
 
 class BAYESIAN_OPTIMIZATION:
@@ -193,6 +194,7 @@ class BAYESIAN_OPTIMIZATION:
     UCB = "ucb"
     TARGET = "target"
     PARAMS = "params"
+    POLICY_TYPE = "policy_type"
 
 
 class DIFFERENTIAL_EVOLUTION:
@@ -226,6 +228,7 @@ class CROSS_ENTROPY:
     THRESHOLDS = "thresholds"
     STOP_DISTRIBUTION_ATTACKER = "stop_distribution_attacker"
     STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
+    POLICY_TYPE = "policy_type"
 
 
 class KIEFER_WOLFOWITZ:
@@ -242,6 +245,7 @@ class KIEFER_WOLFOWITZ:
     STOP_DISTRIBUTION_DEFENDER = "stop_distribution_defender"
     INITIAL_ALPHA = "initial_alpha"
     DELTA = "delta"
+    POLICY_TYPE = "policy_type"
 
 
 class Q_LEARNING:

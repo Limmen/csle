@@ -120,7 +120,7 @@ if __name__ == '__main__':
                 descr="the discount factor"),
             agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE: HParam(
                 value=PolicyType.LINEAR_THRESHOLD, name=agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE,
-                descr="policy type in T-SPSA")
+                descr="policy type for the execution")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )

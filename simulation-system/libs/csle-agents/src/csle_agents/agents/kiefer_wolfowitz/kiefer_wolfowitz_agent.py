@@ -15,8 +15,10 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_common.util.experiment_util import ExperimentUtil
 from csle_common.logging.log import Logger
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
+from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
+from csle_common.dao.training.policy_type import PolicyType
 from csle_common.util.general_util import GeneralUtil
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
@@ -224,13 +226,7 @@ class KieferWolfowitzAgent(BaseAgent):
                 theta = KieferWolfowitzAgent.initial_theta(L=2 * L)
 
         # Initial eval
-        policy = MultiThresholdStoppingPolicy(
-            theta=theta, simulation_name=self.simulation_env_config.name,
-            states=self.simulation_env_config.state_space_config.states,
-            player_type=self.experiment_config.player_type, L=L,
-            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-            agent_type=AgentType.KIEFER_WOLFOWITZ)
+        policy = self.get_policy(theta=theta, L=L)
         avg_metrics = self.eval_theta(
             policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
         J = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
@@ -269,13 +265,7 @@ class KieferWolfowitzAgent(BaseAgent):
                         theta[l] = max(theta[l], theta[l + 1])
 
             # Evaluate new theta
-            policy = MultiThresholdStoppingPolicy(
-                theta=theta, simulation_name=self.simulation_env_config.name,
-                states=self.simulation_env_config.state_space_config.states,
-                player_type=self.experiment_config.player_type, L=L,
-                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.KIEFER_WOLFOWITZ)
+            policy = self.get_policy(theta=theta, L=L)
             avg_metrics = self.eval_theta(
                 policy=policy, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
 
@@ -366,20 +356,15 @@ class KieferWolfowitzAgent(BaseAgent):
                     f"sigmoid(theta):{policy.thresholds()}, progress: {round(progress*100,2)}%, "
                     f"stop distributions:{policy.stop_distributions()}")
 
-        policy = MultiThresholdStoppingPolicy(
-            theta=theta, simulation_name=self.simulation_env_config.name,
-            states=self.simulation_env_config.state_space_config.states,
-            player_type=self.experiment_config.player_type, L=L,
-            actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=J,
-            agent_type=AgentType.KIEFER_WOLFOWITZ)
+        policy = self.get_policy(theta=theta, L=L)
         exp_result.policies[seed] = policy
         # Save policy
         if self.save_to_metastore:
             MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
         return exp_result
 
-    def eval_theta(self, policy: MultiThresholdStoppingPolicy, max_steps: int = 200) -> Dict[str, Union[float, int]]:
+    def eval_theta(self, policy: Union[MultiThresholdStoppingPolicy, LinearThresholdStoppingPolicy],
+                   max_steps: int = 200) -> Dict[str, Union[float, int]]:
         """
         Evaluates a given threshold policy by running monte-carlo simulations
 
@@ -491,24 +476,15 @@ class KieferWolfowitzAgent(BaseAgent):
             perturbed_theta_1[l - 1] = theta_l + delta
             perturbed_theta_2[l - 1] = theta_l - delta
             # Calculate g_k(theta_k)
-            avg_metrics = self.eval_theta(MultiThresholdStoppingPolicy(
-                theta=perturbed_theta_1, simulation_name=self.simulation_env_config.name,
-                player_type=self.experiment_config.player_type,
-                states=self.simulation_env_config.state_space_config.states, L=L,
-                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.KIEFER_WOLFOWITZ),
+            policy_1 = self.get_policy(theta=perturbed_theta_1, L=L)
+            avg_metrics = self.eval_theta(
+                policy_1,
                 max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
             )
             J_a = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            avg_metrics = self.eval_theta(MultiThresholdStoppingPolicy(
-                theta=perturbed_theta_2, simulation_name=self.simulation_env_config.name,
-                player_type=self.experiment_config.player_type,
-                states=self.simulation_env_config.state_space_config.states, L=L,
-                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
-                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
-                agent_type=AgentType.KIEFER_WOLFOWITZ),
-                max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
+            policy_2 = self.get_policy(theta=perturbed_theta_2, L=L)
+            avg_metrics = self.eval_theta(
+                policy_2, max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
             J_b = round(avg_metrics[env_constants.ENV_METRICS.RETURN], 3)
             numerator = J_a - J_b
             denumerator = 2 * delta
@@ -526,3 +502,31 @@ class KieferWolfowitzAgent(BaseAgent):
         :return: the rounded vector
         """
         return list(map(lambda x: round(x, 3), vec))
+
+    def get_policy(self, theta: List[float], L: int) -> Union[MultiThresholdStoppingPolicy,
+                                                              LinearThresholdStoppingPolicy]:
+        """
+        Utility method for getting the policy of a given parameter vector
+
+        :param theta: the parameter vector
+        :param L: the number of parameters
+        :return: the policy
+        """
+        if self.experiment_config.hparams[agents_constants.KIEFER_WOLFOWITZ.POLICY_TYPE] \
+                == PolicyType.MULTI_THRESHOLD:
+            policy = MultiThresholdStoppingPolicy(
+                theta=theta, simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.KIEFER_WOLFOWITZ)
+        else:
+            policy = LinearThresholdStoppingPolicy(
+                theta=theta, simulation_name=self.simulation_env_config.name,
+                states=self.simulation_env_config.state_space_config.states,
+                player_type=self.experiment_config.player_type, L=L,
+                actions=self.simulation_env_config.joint_action_space_config.action_spaces[
+                    self.experiment_config.player_idx].actions, experiment_config=self.experiment_config, avg_R=-1,
+                agent_type=AgentType.KIEFER_WOLFOWITZ)
+        return policy
