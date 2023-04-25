@@ -7,6 +7,7 @@ from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.differential_evolution.differential_evolution_agent import DifferentialEvolutionAgent
 import csle_agents.constants.constants as agents_constants
+from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
 import gym_csle_intrusion_response_game.constants.constants as env_constants
@@ -17,16 +18,16 @@ if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
         "csle-intrusion-response-game-local-pomdp-defender-001")
-    number_of_zones = 5
-    X_max = 200
+    number_of_zones = 6
+    X_max = 100
     eta = 0.5
     reachable = True
-    beta = 2
+    beta = 3
     gamma = 0.99
     initial_zone = 3
     initial_state = [initial_zone, 0]
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
-    Z_D_P = np.array([0, 0.02, 0.01, 0.001, 0.0001])
+    Z_D_P = np.array([0, 0.8, 0.5, 0.1, 0.05, 0.025])
     S = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
     states_to_idx = {}
     for i, s in enumerate(S):
@@ -34,13 +35,13 @@ if __name__ == '__main__':
     S_A = IntrusionResponseGameUtil.local_attacker_state_space()
     S_D = IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)
     A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
-    C_D = np.array([0, 40, 55, 90, 60, 60])
+    C_D = np.array([0, 35, 30, 25, 20, 20, 20, 15])
     A2 = IntrusionResponseGameUtil.local_attacker_actions()
-    A_P = np.array([1, 1, 0.7, 0.5])
+    A_P = np.array([1, 1, 0.75, 0.85])
     O = IntrusionResponseGameUtil.local_observation_space(X_max=X_max)
     T = np.array([IntrusionResponseGameUtil.local_transition_tensor(S=S, A1=A1, A2=A2, Z_D=Z_D_P, A_P=A_P)])
     Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(S=S, A1=A1, A2=A2, O=O)
-    Z_U = np.array([0, 15, 20, 25, 30])
+    Z_U = np.array([0, 0, 2.5, 5, 10, 15])
     R = np.array(
         [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable, beta=beta,
                                                        S=S, Z_U=Z_U, initial_zone=initial_zone)])
@@ -84,7 +85,7 @@ if __name__ == '__main__':
         agent_type=AgentType.DIFFERENTIAL_EVOLUTION,
         log_every=1,
         hparams={
-            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=500, name=constants.T_SPSA.N,
+            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=300, name=constants.T_SPSA.N,
                                                               descr="the number of training iterations"),
             agents_constants.DIFFERENTIAL_EVOLUTION.L: HParam(value=2, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
@@ -128,11 +129,6 @@ if __name__ == '__main__':
         emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
         experiment_config=experiment_config)
     experiment_execution = agent.train()
-    import gymnasium as gym
-
-    env = gym.make("csle-intrusion-response-game-local-stopping-pomdp-defender-v1",
-                   config=simulation_env_config.simulation_env_input_config)
-    env.manual_play()
     # MetastoreFacade.save_experiment_execution(experiment_execution)
     # for policy in experiment_execution.result.policies.values():
     #     MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)

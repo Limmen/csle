@@ -1,13 +1,8 @@
-import io
 import numpy as np
-import csle_common.constants.constants as constants
-from csle_common.dao.training.experiment_config import ExperimentConfig
+import io
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
-from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-from csle_agents.agents.ppo.ppo_agent import PPOAgent
-import csle_agents.constants.constants as agents_constants
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
 from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
@@ -79,7 +74,6 @@ if __name__ == '__main__':
     T = env.get_local_stopping_pomdp_transition_tensor(a1=2)
     R = env.get_local_stopping_pomdp_reward_tensor(a1=2, zone=2)
     Z = env.get_local_stopping_pomdp_obs_tensor(a1=2, zone=2)
-    print(Z)
-    # pomdp_solver_file_str = env.pomdp_solver_file()
-    # with io.open(f"/home/kim/pomdp-solve-5.4/ir_game.POMDP", 'w', encoding='utf-8') as f:
-    #     f.write(pomdp_solver_file_str)
+    pomdp_solver_file_str = env.pomdp_solver_file()
+    with io.open("/home/kim/pomdp-solve-5.4/ir_game.POMDP", 'w', encoding='utf-8') as f:
+        f.write(pomdp_solver_file_str)

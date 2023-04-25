@@ -1,4 +1,5 @@
 import numpy as np
+import io
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
@@ -71,11 +72,9 @@ if __name__ == '__main__':
     simulation_env_config.gym_env_name = "csle-intrusion-response-game-local-stopping-pomdp-defender-v1"
     simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
     env = gym.make(simulation_env_config.gym_env_name, config=simulation_env_config.simulation_env_input_config)
-    env.manual_play()
-    # T = env.get_local_stopping_pomdp_transition_tensor(a1=2)
-    # R = env.get_local_stopping_pomdp_reward_tensor(a1=2, zone=2)
-    # Z = env.get_local_stopping_pomdp_obs_tensor(a1=2, zone=2)
-    # print(Z)
-    # pomdp_solver_file_str = env.pomdp_solver_file()
-    # with io.open(f"/home/kim/pomdp-solve-5.4/ir_game.POMDP", 'w', encoding='utf-8') as f:
-    #     f.write(pomdp_solver_file_str)
+    T = env.get_local_stopping_pomdp_transition_tensor(a1=2)
+    R = env.get_local_stopping_pomdp_reward_tensor(a1=2, zone=2)
+    Z = env.get_local_stopping_pomdp_obs_tensor(a1=2, zone=2)
+    pomdp_solver_file_str = env.pomdp_solver_file()
+    with io.open("/home/kim/pomdp-solve-5.4/ir_game.POMDP", 'w', encoding='utf-8') as f:
+        f.write(pomdp_solver_file_str)
