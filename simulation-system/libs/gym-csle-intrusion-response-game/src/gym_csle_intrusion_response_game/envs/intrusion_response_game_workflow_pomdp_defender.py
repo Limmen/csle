@@ -33,7 +33,7 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         self.config = config
         self.local_envs = []
         for node in config.game_config.nodes:
-            reachable = True
+            reachable = self.reachable(node)
             S = IntrusionResponseGameUtil.local_state_space(number_of_zones=len(self.config.game_config.zones))
             states_to_idx = {}
             for i, s in enumerate(S):
@@ -123,8 +123,13 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
 
         # Step the envs
         for i, local_env in enumerate(self.local_envs):
+            reachable = self.reachable(i)
             local_a1 = a1[i]
             local_o, local_r, local_done, _, _ = local_env.step(a1=local_a1)
+            if not reachable:
+                local_done = False
+                local_r = local_env.config.local_intrusion_response_game_config.C_D[local_a1]
+                local_o = np.array([local_o[0],1,0,0])
             if local_done:
                 done = True
             r = r + local_r
@@ -165,6 +170,27 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         info = self._info(info)
 
         return defender_obs, r, done, done, info
+
+    def reachable(self, node: int) -> bool:
+        """
+        Checks if a node is reachable from the gw
+
+        :param node: the node to check
+        :return: True if reachable otherwise False
+        """
+        num_nodes = len(self.config.game_config.nodes)
+        A = self.config.game_config.adjacency_matrix.copy()
+        for i, local_env in enumerate(self.local_envs):
+            if local_env.state.defender_state() in [env_constants.DEFENDER_STATES.SHUTDOWN,
+                                                    env_constants.DEFENDER_STATES.REDIRECT]:
+                A[i] = [0] * num_nodes
+        gw_reachable_nodes = self.config.game_config.gw_reachable
+        A = np.array(A)
+        A_n = np.linalg.matrix_power(A, num_nodes)
+        for gw_reachable in gw_reachable_nodes:
+            if A_n[gw_reachable][node] != 0:
+                return True
+        return False
 
     def _info(self, info) -> Dict[str, Union[float, int]]:
         """

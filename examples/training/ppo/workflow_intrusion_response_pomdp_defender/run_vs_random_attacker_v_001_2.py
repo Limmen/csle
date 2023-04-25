@@ -17,7 +17,7 @@ if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
         "csle-intrusion-response-game-workflow-pomdp-defender-001")
-    num_nodes = 8
+    num_nodes = 7
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
         title="PPO test", random_seeds=[399, 98912, 999], agent_type=AgentType.PPO,
@@ -137,7 +137,8 @@ if __name__ == '__main__':
         [0, 0, 1, 0, 1, 1, 0],
         [0, 0, 0, 1, 0, 0, 1],
         [0, 0, 0, 0, 1, 0, 1],
-        [0, 0, 0, 0, 0, 1, 1]
+        [0, 0, 0, 0, 0, 1, 1],
+        [0, 0, 0, 0, 0, 0, 0]
     ]
     adjacency_matrix = np.array(adjacency_matrix)
     nodes = np.array(list(range(num_nodes)))

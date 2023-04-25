@@ -64,8 +64,8 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         # Get upper bound and random return estimate
         self.upper_bound_return = 0
         self.random_return = 0
-        self.upper_bound_return = self.get_upper_bound_return(samples=100)
-        self.random_return = self.get_random_baseline_return(samples=100)
+        self.upper_bound_return = self.get_upper_bound_return(samples=5)
+        self.random_return = self.get_random_baseline_return(samples=5)
 
         # Reset
         self.reset()
@@ -105,7 +105,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         initial_zone = self.config.local_intrusion_response_game_config.S[
             self.config.local_intrusion_response_game_config.s_1_idx][env_constants.STATES.D_STATE_INDEX]
         for i in range(samples):
-            o = self.reset()
+            o, _ = self.reset()
             done = False
             t = 0
             cumulative_reward = 0

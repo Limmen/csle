@@ -234,6 +234,7 @@ class DifferentialEvolutionAgent(BaseAgent):
 
         # Initial eval
         policy = self.get_policy(theta=list(theta), L=L)
+        best_policy = policy
         avg_metrics = self.eval_theta(
             policy=policy,
             max_steps=self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value)
@@ -331,12 +332,12 @@ class DifferentialEvolutionAgent(BaseAgent):
 
             gen_best = max(gen_scores)  # fitness of best individual
             gen_sol = population[gen_scores.index(min(gen_scores))]  # solution of best individual
-            policy = self.get_policy(theta=list(gen_sol), L=L)
+            best_policy = self.get_policy(theta=list(gen_sol), L=L)
             values.append(gen_best)
             J = gen_best
 
             # Log average return
-            policy.avg_R = J
+            best_policy.avg_R = J
             running_avg_J = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN],
                 self.experiment_config.hparams[agents_constants.COMMON.RUNNING_AVERAGE].value)
@@ -353,12 +354,12 @@ class DifferentialEvolutionAgent(BaseAgent):
             if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] \
                     == PolicyType.MULTI_THRESHOLD:
                 exp_result.all_metrics[seed][agents_constants.DIFFERENTIAL_EVOLUTION.THRESHOLDS].append(
-                    DifferentialEvolutionAgent.round_vec(policy.thresholds()))
+                    DifferentialEvolutionAgent.round_vec(best_policy.thresholds()))
 
             if self.experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE] \
                     == PolicyType.MULTI_THRESHOLD:
                 # Log stop distribution
-                for k, v in policy.stop_distributions().items():
+                for k, v in best_policy.stop_distributions().items():
                     exp_result.all_metrics[seed][k].append(v)
 
             # Log intrusion lengths
@@ -431,10 +432,9 @@ class DifferentialEvolutionAgent(BaseAgent):
                     f"{running_avg_J}, "
                     f"opt_J:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN][-1]}, "
                     f"int_len:{exp_result.all_metrics[seed][env_constants.ENV_METRICS.INTRUSION_LENGTH][-1]}, "
-                    f"theta:{policy.theta}, T: {T_avg}, runtime (m): {time_elapsed_minutes}, "
+                    f"theta:{best_policy.theta}, T: {T_avg}, runtime (m): {time_elapsed_minutes}, "
                     f"progress: {round(progress * 100, 2)}%")
-        policy = self.get_policy(theta=list(theta), L=L)
-        exp_result.policies[seed] = policy
+        exp_result.policies[seed] = best_policy
         # Save policy
         if self.save_to_metastore:
             MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)

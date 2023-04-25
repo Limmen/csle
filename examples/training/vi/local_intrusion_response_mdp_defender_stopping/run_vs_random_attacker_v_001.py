@@ -108,7 +108,6 @@ if __name__ == '__main__':
         S_D=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D,
         T=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.T[0]
     )
-    # T = env.get_local_mdp_transition_tensor()
     T = reduce_T(T=T, strategy=attacker_strategy)
     R = IntrusionResponseGameUtil.local_stopping_mdp_reward_tensor(
         S=simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S,

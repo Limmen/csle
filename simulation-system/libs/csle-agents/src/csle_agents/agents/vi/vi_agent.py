@@ -177,11 +177,14 @@ class VIAgent(BaseAgent):
         exp_result.all_metrics[seed][agents_constants.VI.DELTA] = deltas
         exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = avg_returns
         exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = running_avg_returns
+        lookup_table = list(policy)
+        for i in range(len(lookup_table)):
+            lookup_table[i]= list(lookup_table[i])
         tabular_policy = TabularPolicy(player_type=self.experiment_config.player_type,
                                        actions=self.simulation_env_config.joint_action_space_config.action_spaces[
                                            self.experiment_config.player_idx].actions,
                                        agent_type=self.experiment_config.agent_type, value_function=list(V),
-                                       lookup_table=list(policy), simulation_name=self.simulation_env_config.name,
+                                       lookup_table=lookup_table, simulation_name=self.simulation_env_config.name,
                                        avg_R=avg_returns[-1])
         exp_result.policies[seed] = tabular_policy
         return exp_result
