@@ -55,4 +55,13 @@ if __name__ == '__main__':
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():
-        MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+        if experiment_config.hparams[agents_constants.RANDOM_SEARCH.POLICY_TYPE].value == \
+                PolicyType.MULTI_THRESHOLD:
+            MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+        elif experiment_config.hparams[agents_constants.RANDOM_SEARCH.POLICY_TYPE].value \
+                == PolicyType.LINEAR_THRESHOLD:
+            MetastoreFacade.save_linear_threshold_stopping_policy(linear_threshold_stopping_policy=policy)
+        else:
+            raise ValueError("Policy type: "
+                             f"{experiment_config.hparams[agents_constants.RANDOM_SEARCH.POLICY_TYPE].value} "
+                             f"not recognized for random search")

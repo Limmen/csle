@@ -7,6 +7,7 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.differential_evolution.differential_evolution_agent import DifferentialEvolutionAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
+from csle_common.dao.training.policy_type import PolicyType
 
 if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
@@ -51,7 +52,10 @@ if __name__ == '__main__':
                 descr="the number of samples to include when computing the running avg"),
             agents_constants.COMMON.GAMMA: HParam(
                 value=0.99, name=agents_constants.COMMON.GAMMA,
-                descr="the discount factor")
+                descr="the discount factor"),
+            agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE: HParam(
+                value=PolicyType.LINEAR_THRESHOLD, name=agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE,
+                descr="policy type for the execution")
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
@@ -63,4 +67,13 @@ if __name__ == '__main__':
     experiment_execution = agent.train()
     MetastoreFacade.save_experiment_execution(experiment_execution)
     for policy in experiment_execution.result.policies.values():
-        MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+        if experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE].value == \
+                PolicyType.MULTI_THRESHOLD:
+            MetastoreFacade.save_multi_threshold_stopping_policy(multi_threshold_stopping_policy=policy)
+        elif experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE].value \
+                == PolicyType.LINEAR_THRESHOLD:
+            MetastoreFacade.save_linear_threshold_stopping_policy(linear_threshold_stopping_policy=policy)
+        else:
+            raise ValueError("Policy type: "
+                             f"{experiment_config.hparams[agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE].value} "
+                             f"not recognized for differential evolution")
