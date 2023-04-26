@@ -40,6 +40,18 @@ def is_node_reachable(node: int, gw_reachable: List, adjacency_matrix: List, num
             return True
     return False
 
+
+def get_descendants(node, adjacency_matrix: List, num_nodes: int) -> List[int]:
+    reachable = []
+    A = adjacency_matrix.copy()
+    A = np.array(A)
+    A_n = np.linalg.matrix_power(A, num_nodes)
+    for i in range(num_nodes):
+        if i != node and A_n[node][i] != 0:
+            reachable.append(i)
+    return reachable
+
+
 def reduce_T(T, strategy):
     attacker_state = 2
     reduced_T = np.zeros((T.shape[0], T.shape[2], T.shape[3]))
@@ -71,7 +83,7 @@ if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
         "csle-intrusion-response-game-workflow-pomdp-defender-001")
     num_nodes = 7
-    number_of_zones = 5
+    number_of_zones = 6
     X_max = 100
     eta = 0.5
     reachable = True
@@ -151,7 +163,7 @@ if __name__ == '__main__':
         agent_type=AgentType.DIFFERENTIAL_EVOLUTION,
         log_every=1,
         hparams={
-            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=100, name=constants.T_SPSA.N,
+            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=2, name=constants.T_SPSA.N,
                                                               descr="the number of training iterations"),
             agents_constants.DIFFERENTIAL_EVOLUTION.L: HParam(value=2, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
@@ -254,18 +266,14 @@ if __name__ == '__main__':
     stopping_env = "csle-intrusion-response-game-local-stopping-pomdp-defender-v1"
 
     # Training
-    stopping_policies = np.zeros(len(env.local_envs)).tolist()
-    defense_policies = np.zeros(len(env.local_envs)).tolist()
-
-    def optimize_stopping_policy(node, agent, return_dict):
+    def optimize_stopping_policy(node, agent, zone, action, return_dict):
         experiment_execution = agent.train()
         stopping_policy = list(experiment_execution.result.policies.values())[0]
-        return_dict[f"{node}_stopping_policy"] = stopping_policy
+        return_dict[f"{node}_{zone}_{action}_stopping_policy"] = stopping_policy
 
     def optimize_defense_policy(node, agent, return_dict):
         experiment_execution = agent.train()
         defense_policy = list(experiment_execution.result.policies.values())[0]
-        defense_policies[node] = defense_policy
         return_dict[f"{node}_defense_policy"] = defense_policy
 
     processes = []
@@ -275,38 +283,68 @@ if __name__ == '__main__':
         cfg = local_simulation_env_config.copy()
         cfg.simulation_env_input_config = local_env.config
         cfg.gym_env_name = stopping_env
-
-        # Stopping
-        agent = DifferentialEvolutionAgent(
-            emulation_env_config=emulation_env_config, simulation_env_config=cfg,
-            experiment_config=experiment_config)
-        p = Process(target=optimize_stopping_policy, args=(i,agent, return_dict))
-        p.start()
-        processes.append(p)
+        for zone in zones:
+            for zone2 in zones:
+                cfg.simulation_env_input_config.stopping_zone = zone
+                cfg.simulation_env_input_config.stopping_action = zone2
+                # Stopping
+                agent = DifferentialEvolutionAgent(
+                    emulation_env_config=emulation_env_config, simulation_env_config=cfg,
+                    experiment_config=experiment_config, save_to_metastore=False)
+                p = Process(target=optimize_stopping_policy, args=(i,agent, zone, zone2, return_dict))
+                p.start()
+                processes.append(p)
 
         # Defense
+        T = IntrusionResponseGameUtil.local_stopping_mdp_transition_tensor(
+            S=local_env.config.local_intrusion_response_game_config.S,
+            A1=local_env.config.local_intrusion_response_game_config.A1,
+            A2=local_env.config.local_intrusion_response_game_config.A2,
+            S_D=local_env.config.local_intrusion_response_game_config.S_D,
+            T=local_env.config.local_intrusion_response_game_config.T[0]
+        )
+        T = reduce_T(T=T, strategy=attacker_strategy)
+        descendants = get_descendants(node=i, adjacency_matrix=adjacency_matrix, num_nodes=num_nodes)
+        topology_cost = beta*len(descendants)
+        R = np.array(
+            [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable,
+                                                           beta=beta,
+                                                           S=S, Z_U=Z_U, initial_zone=initial_zones[i],
+                                                           topology_cost=topology_cost)])
         R = IntrusionResponseGameUtil.local_stopping_mdp_reward_tensor(
             S=local_env.config.local_intrusion_response_game_config.S,
             A1=local_env.config.local_intrusion_response_game_config.A1,
             A2=local_env.config.local_intrusion_response_game_config.A2,
-            R=local_env.config.local_intrusion_response_game_config.R[0],
+            R=R[0],
             S_D=local_env.config.local_intrusion_response_game_config.S_D
         )
         R = reduce_R(R=R, strategy=attacker_strategy)
         vi_experiment_config.hparams[agents_constants.VI.REWARD_TENSOR].value == list(R.tolist())
+        vi_experiment_config.hparams[agents_constants.VI.TRANSITION_TENSOR].value == list(T.tolist())
         vi_agent = VIAgent(simulation_env_config=local_simulation_env_config,
-                           experiment_config=vi_experiment_config, save_to_metastore=True)
+                           experiment_config=vi_experiment_config, save_to_metastore=False)
         p = Process(target=optimize_defense_policy, args=(i,vi_agent, return_dict))
         p.start()
         processes.append(p)
 
     for process in processes:
         process.join()
+
+    stopping_policies = []
+    defense_policies = []
     for i in range(len(env.local_envs)):
-        stopping_policy = return_dict[f"{i}_stopping_policy"]
         defense_policy = return_dict[f"{i}_defense_policy"]
-        stopping_policies[i] = stopping_policy
-        defense_policies[i] = defense_policy
+        defense_policies.append(defense_policy)
+        policies_1 = []
+        for zone in zones:
+            policies = []
+            for zone2 in zones:
+                stopping_policy = return_dict[f"{i}_{zone}_{zone2}_stopping_policy"]
+                policies.append(stopping_policy)
+            policies_1.append(policies)
+        stopping_policies.append(policies_1)
+    print(stopping_policies)
+    print(np.array(stopping_policies).shape)
 
     # Evaluation
     num_evals = 50
@@ -319,21 +357,26 @@ if __name__ == '__main__':
         done = False
         R = 0
         t = 0
+        max_steps = 200
         while not done:
             r = 0
             a = []
             states = []
+            beliefs = []
+            reachability = []
             for i, local_env in enumerate(env.local_envs):
                 reachable = is_node_reachable(node=i, gw_reachable=gw_reachable, adjacency_matrix=adjacency_matrix,
                                               local_envs=env.local_envs, num_nodes=num_nodes)
+                reachability.append(reachable)
                 obs = observations[i]
                 zone = int(obs[0])
                 b = obs[1:]
                 a1 = 0
                 if reachable:
-                    a1 = stopping_policies[i].action(b)
+                    defensive_action = defense_policies[i].action(zone)+1
+                    a1 = stopping_policies[int(i)][int(zone)-1][int(defensive_action)-1].action(b)
                     if a1 == 1:
-                        a1 = defense_policies[i].action(zone)
+                        a1 = defensive_action
                 local_o, local_r, local_done, _, _ = local_env.step(a1=a1)
                 if not reachable:
                     local_r = local_env.config.local_intrusion_response_game_config.C_D[a1]
@@ -344,14 +387,17 @@ if __name__ == '__main__':
                 observations[i] = local_o
                 a.append(a1)
                 states.append(local_env.state.state_vector())
+                beliefs.append(local_o[1:])
                 # print(f"node {i}, reachable: {reachable}, zone: {zone}, b:{b}, a1:{a1}, done: {done}")
             R += r
             t+=1
-            print(f"Step, t:{t} r:{r}, a:{a}, s:{states}")
+            print(f"Step, t:{t} r:{r}, a:{a}, s:{states}, b:{beliefs}, reachability:{reachability}")
+            if t >= max_steps:
+                done = True
         print(f"RETURN:{R}")
         returns.append(R)
     avg_return = np.mean(returns)
-    print(f"Avg return: {avg_return}")
+    print(f"Avg return: {avg_return}, upper bound: {env.upper_bound_return}, random baseline: {env.random_return}")
 
 
     # MetastoreFacade.save_experiment_execution(experiment_execution)

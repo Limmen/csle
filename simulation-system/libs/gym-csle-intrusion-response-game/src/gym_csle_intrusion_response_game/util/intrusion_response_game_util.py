@@ -32,6 +32,18 @@ class IntrusionResponseGameUtil:
         return s[env_constants.STATES.D_STATE_INDEX] == zone
 
     @staticmethod
+    def is_local_state_shutdown_or_redirect(s: np.ndarray) -> bool:
+        """
+        Utility function for checking if a local node is in shutdown or redirect state
+
+        :param s: the local state to check
+        :param zone: the zone to check
+        :return: True if the node is in shutdown or redirect state, otherwise fasle
+        """
+        return s[env_constants.STATES.D_STATE_INDEX] == env_constants.DEFENDER_STATES.SHUTDOWN \
+               and s[env_constants.STATES.D_STATE_INDEX] == env_constants.DEFENDER_STATES.REDIRECT
+
+    @staticmethod
     def is_local_state_compromised(s: np.ndarray) -> bool:
         """
         Utility function for checking if a local state has been compromised
@@ -253,7 +265,7 @@ class IntrusionResponseGameUtil:
                 not s[env_constants.STATES.D_STATE_INDEX] in [env_constants.ZONES.SHUTDOWN_ZONE,
                                                               env_constants.ZONES.REDIRECTION_ZONE]:
             impact = 1
-        return beta * impact * int(IntrusionResponseGameUtil.is_local_state_in_zone(s=s, zone=initial_zone))
+        return beta * impact * int(not IntrusionResponseGameUtil.is_local_state_shutdown_or_redirect(s=s))
 
     @staticmethod
     def constant_defender_action_costs(A1: np.ndarray, constant_cost: float) -> np.ndarray:
@@ -354,7 +366,7 @@ class IntrusionResponseGameUtil:
 
     @staticmethod
     def local_defender_utility_function(s: np.ndarray, a1: int, eta: float, reachable: bool, initial_zone: int,
-                                        beta: float, C_D: np.ndarray, Z_U: np.ndarray):
+                                        beta: float, C_D: np.ndarray, Z_U: np.ndarray, topology_cost: float = 0):
         """
         The local utility function of the defender
 
@@ -366,6 +378,7 @@ class IntrusionResponseGameUtil:
         :param beta: a scaling parameter indicating the importance of the workflow of the local game
         :param C_D: the vector with the costs of the local defender actions
         :param Z_U: the utilities of the zones in the network
+        :param topology_cost: extra topology cost
         :return: the utility of the defender
         """
         if IntrusionResponseGameUtil.is_local_state_terminal(s):
@@ -374,11 +387,14 @@ class IntrusionResponseGameUtil:
                                                                             initial_zone=initial_zone)
         intrusion_cost = IntrusionResponseGameUtil.local_intrusion_cost(a1=a1, D_C=C_D, reachable=reachable, s=s,
                                                                         Z_U=Z_U)
-        return eta * workflow_utility - (1 - eta) * intrusion_cost
+        if s[env_constants.STATES.D_STATE_INDEX] not in [0,1]:
+            topology_cost = 0
+        return eta * workflow_utility - (1 - eta) * intrusion_cost - topology_cost
 
     @staticmethod
     def local_reward_tensor(eta: float, C_D: np.ndarray, reachable: bool, Z_U: np.ndarray, initial_zone: int,
-                            beta: float, S: np.ndarray, A1: np.ndarray, A2: np.ndarray) -> np.ndarray:
+                            beta: float, S: np.ndarray, A1: np.ndarray, A2: np.ndarray,
+                            topology_cost: float = 0) -> np.ndarray:
         """
         Gets the defender's utility tensor of the local version of the game
 
@@ -390,7 +406,8 @@ class IntrusionResponseGameUtil:
         :param beta: a scaling parameter for the workflow utility
         :param S: the local state space of the game
         :param A1: the local action space of the defender
-        :param A2: teh local action space of the attacker
+        :param A2: the local action space of the attacker
+        :param topology_cost: extra topology costs
         :return: a (A1)(A2)(S) tensor giving the rewards of the state transitions in the local game
         """
         R = []
@@ -401,7 +418,7 @@ class IntrusionResponseGameUtil:
                 for s in S:
                     a1_a2_rews.append(IntrusionResponseGameUtil.local_defender_utility_function(
                         s=s, a1=a1, eta=eta, reachable=reachable, initial_zone=initial_zone,
-                        beta=beta, C_D=C_D, Z_U=Z_U
+                        beta=beta, C_D=C_D, Z_U=Z_U, topology_cost=topology_cost
                     ))
                 a1_rews.append(a1_a2_rews)
             R.append(a1_rews)
@@ -526,9 +543,8 @@ class IntrusionResponseGameUtil:
         else:
             # Defender did not take defensive action
 
-            # If the node is shutdown or traffic redirect, the state remains the same
-            if s[env_constants.STATES.D_STATE_INDEX] in [env_constants.ZONES.SHUTDOWN_ZONE,
-                                                         env_constants.ZONES.REDIRECTION_ZONE]:
+            # If the node is shutdown, the state remains the same
+            if s[env_constants.STATES.D_STATE_INDEX] in [env_constants.ZONES.SHUTDOWN_ZONE]:
                 if IntrusionResponseGameUtil.are_local_states_equal(s=s, s_prime=s_prime):
                     return 1 * P_not_detected
                 else:
@@ -703,6 +719,8 @@ class IntrusionResponseGameUtil:
                         if a1 == 1:
                             if s_prime == -1:
                                 a1_a2_s_probs.append(1)
+                            else:
+                                a1_a2_s_probs.append(0)
                         else:
                             prob = 0
                             total_prob = 0

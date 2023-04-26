@@ -57,6 +57,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         self.traces = []
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
         self.latest_attacker_obs = None
+        self.latest_attacker_action = None
 
         # Reset
         self.reset()
@@ -136,6 +137,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         # Get attacker action from static strategy
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
         a2 = IntrusionResponseGameUtil.sample_attacker_action(pi2=pi2, s=self.state.attacker_state())
+        self.latest_attacker_action = a2
 
         # Save current defender state (needed later for updating the belief)
         s_d = self.state.defender_state()

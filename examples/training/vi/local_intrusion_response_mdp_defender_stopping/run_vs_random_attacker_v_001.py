@@ -42,16 +42,16 @@ def reduce_R(R, strategy):
 if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
         "csle-intrusion-response-game-local-pomdp-defender-001")
-    number_of_zones = 5
-    X_max = 4096
+    number_of_zones = 6
+    X_max = 100
     eta = 0.5
     reachable = True
     beta = 3
-    gamma = 0
-    initial_zone = 1
+    gamma = 0.99
+    initial_zone = 3
     initial_state = [initial_zone, 0]
     zones = IntrusionResponseGameUtil.zones(num_zones=number_of_zones)
-    Z_D_P = np.array([0, 0.8, 0.15, 0.12, 0.08])
+    Z_D_P = np.array([0, 0.8, 0.5, 0.1, 0.05, 0.025])
     S = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
     states_to_idx = {}
     for i, s in enumerate(S):
@@ -59,13 +59,13 @@ if __name__ == '__main__':
     S_A = IntrusionResponseGameUtil.local_attacker_state_space()
     S_D = IntrusionResponseGameUtil.local_defender_state_space(number_of_zones=number_of_zones)
     A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
-    C_D = np.array([0, 5, 1, 2, 2, 2])
+    C_D = np.array([0, 35, 30, 25, 20, 20, 20, 15])
     A2 = IntrusionResponseGameUtil.local_attacker_actions()
-    A_P = np.array([1, 1, 0.7, 0.5])
+    A_P = np.array([1, 1, 0.75, 0.85])
     O = IntrusionResponseGameUtil.local_observation_space(X_max=X_max)
     T = np.array([IntrusionResponseGameUtil.local_transition_tensor(S=S, A1=A1, A2=A2, Z_D=Z_D_P, A_P=A_P)])
     Z = IntrusionResponseGameUtil.local_observation_tensor_betabinom(S=S, A1=A1, A2=A2, O=O)
-    Z_U = np.array([0, 1, 3, 3.5, 4])
+    Z_U = np.array([0, 0, 2.5, 5, 10, 15])
     R = np.array(
         [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable, beta=beta,
                                                        S=S, Z_U=Z_U, initial_zone=initial_zone)])
@@ -142,7 +142,7 @@ if __name__ == '__main__':
                 value=gamma, name=agents_constants.COMMON.GAMMA,
                 descr="the discount factor"),
             agents_constants.VI.THETA: HParam(
-                value=0.0001, name=agents_constants.VI.THETA,
+                value=0.001, name=agents_constants.VI.THETA,
                 descr="the stopping theshold for value iteration"),
             agents_constants.VI.TRANSITION_TENSOR: HParam(
                 value=list(T.tolist()), name=agents_constants.VI.TRANSITION_TENSOR,
@@ -159,10 +159,15 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.DEFENDER, player_idx=1
     )
+    print("T")
+    print(list(T.tolist()))
 
+    print("R")
+    print(list(R.tolist()))
     agent = VIAgent(simulation_env_config=simulation_env_config,
                     experiment_config=experiment_config, save_to_metastore=True)
     experiment_execution = agent.train()
-    MetastoreFacade.save_experiment_execution(experiment_execution)
-    for policy in experiment_execution.result.policies.values():
-        MetastoreFacade.save_tabular_policy(tabular_policy=policy)
+    print(list(experiment_execution.result.policies.values())[0].lookup_table)
+    # MetastoreFacade.save_experiment_execution(experiment_execution)
+    # for policy in experiment_execution.result.policies.values():
+    #     MetastoreFacade.save_tabular_policy(tabular_policy=policy)

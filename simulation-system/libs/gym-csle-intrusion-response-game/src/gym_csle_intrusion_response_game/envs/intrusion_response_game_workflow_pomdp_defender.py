@@ -92,11 +92,8 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         self.reset()
 
         # Get upper bound and random return estimate
-        self.upper_bound_return = 0
-        self.random_return = 0
-        for env in self.local_envs:
-            self.upper_bound_return += env.upper_bound_return
-            self.random_return += env.random_return
+        self.upper_bound_return = self.get_upper_bound_return(samples=100)
+        self.random_return = self.get_random_baseline_return(samples=100)
 
         # State metrics
         self.t = 0
@@ -127,7 +124,6 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
             local_a1 = a1[i]
             local_o, local_r, local_done, _, _ = local_env.step(a1=local_a1)
             if not reachable:
-                local_done = False
                 local_r = local_env.config.local_intrusion_response_game_config.C_D[local_a1]
                 local_o = np.array([local_o[0],1,0,0])
             if local_done:
@@ -170,6 +166,68 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         info = self._info(info)
 
         return defender_obs, r, done, done, info
+
+    def get_upper_bound_return(self, samples: int = 100) -> float:
+        """
+        Utiltiy method for getting an upper bound on the average return
+
+        :param samples: the number of sample returns to average
+        :return: the estimated upper bound
+        """
+        max_horizon = 1000
+        returns = []
+        for i in range(samples):
+            o, _ = self.reset()
+            done = False
+            t = 0
+            cumulative_reward = 0
+            while not done and t <= max_horizon:
+                r = 0
+                for i, local_env in enumerate(self.local_envs):
+                    reachable = self.reachable(i)
+                    local_a1 = 0
+                    if reachable and local_env.state.attacker_state() == env_constants.ATTACK_STATES.COMPROMISED:
+                        local_a1 = 3
+                    local_o, local_r, local_done, _, _ = local_env.step(a1=local_a1)
+                    if not reachable:
+                        local_r = 0
+                    if local_done:
+                        done = True
+                    r = r + local_r
+                cumulative_reward += r * math.pow(self.config.game_config.gamma, t)
+                t += 1
+            returns.append(cumulative_reward)
+        return np.mean(np.array(returns))
+
+    def get_random_baseline_return(self, samples: int = 100) -> float:
+        """
+        Utiltiy method for getting the average return of a random strategy
+
+        :param samples: the number of sample returns to average
+        :return: the estimated upper bound
+        """
+        max_horizon = 1000
+        returns = []
+        for i in range(samples):
+            o, _ = self.reset()
+            done = False
+            t = 0
+            cumulative_reward = 0
+            while not done and t <= max_horizon:
+                r = 0
+                for i, local_env in enumerate(self.local_envs):
+                    reachable = self.reachable(i)
+                    local_a1 = np.random.choice(local_env.config.local_intrusion_response_game_config.A1)
+                    local_o, local_r, local_done, _, _ = local_env.step(a1=local_a1)
+                    if not reachable:
+                        local_r = 0
+                    if local_done:
+                        done = True
+                    r = r + local_r
+                cumulative_reward += r * math.pow(self.config.game_config.gamma, t)
+                t += 1
+            returns.append(cumulative_reward)
+        return np.mean(np.array(returns))
 
     def reachable(self, node: int) -> bool:
         """

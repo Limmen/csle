@@ -8,8 +8,8 @@ class ZONES:
     """
     Constants related to the zones of the network
     """
-    REDIRECTION_ZONE = 2
-    SHUTDOWN_ZONE = 1
+    REDIRECTION_ZONE = 1
+    SHUTDOWN_ZONE = 0
 
 
 class STATES:
@@ -33,8 +33,8 @@ class DEFENDER_STATES:
     """
     Constants related to the defense state semantics
     """
-    SHUTDOWN = 0
-    REDIRECT = 1
+    SHUTDOWN = 1
+    REDIRECT = 2
 
 class ATTACKER_ACTIONS:
     """

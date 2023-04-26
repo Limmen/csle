@@ -27,6 +27,8 @@ class IntrusionResponseGameLocalPOMDPDefenderConfig(SimulationEnvInputConfig):
         self.env_name = env_name
         self.local_intrusion_response_game_config = local_intrusion_response_game_config
         self.attacker_strategy = attacker_strategy
+        self.stopping_action = 3
+        self.stopping_zone = 3
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "IntrusionResponseGameLocalPOMDPDefenderConfig":

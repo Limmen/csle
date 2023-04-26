@@ -24,8 +24,8 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
 
         :param config: the environment configuration
         """
-        a1 = 3
-        self.zone = 3
+        a1 = config.stopping_action
+        self.zone = config.stopping_zone
         if config is None:
             raise ValueError("Configuration cannot be None")
         self.config = config
@@ -86,7 +86,6 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         self.random_return = 0
         self.t = 0
         self.intrusion_length = 0
-
         self.upper_bound_return = self.get_upper_bound_return(samples=100)
 
         # Reset
@@ -114,14 +113,6 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
 
         # Compute the reward
         r = self.R[a1][a2][self.s + 1]
-        # print(r)
-        # print(self.R)
-        # if self.s == 2 and a1 == 1:
-        #     r+=40
-
-        # if a1 == 1:
-        #     # if self.b[0] > 0.9:
-        #     print(f" stop, b: {self.b}, s: {self.s}, r:{r}, rewards:{self.trace.defender_rewards}")
 
         # Sample the next state
         S = np.append([-1], self.config.local_intrusion_response_game_config.S_A)
