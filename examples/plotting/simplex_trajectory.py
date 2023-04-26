@@ -10,6 +10,7 @@ coefficients = [-5.7, -4.5]
 coefficients = [-5.7, -4.7]
 coefficients = [-4.13, -2.71]
 coefficients = [2.1, -2]
+coefficients = [-3.24, -4.41]
 # coefficients = [14, -7]
 coefficients[0] = 1 + math.pow(coefficients[0], 2)
 coefficients[1] = math.pow(coefficients[1], 2)

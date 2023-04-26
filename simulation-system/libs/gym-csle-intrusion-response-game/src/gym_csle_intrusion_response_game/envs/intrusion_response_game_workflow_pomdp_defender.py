@@ -174,7 +174,7 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         :param samples: the number of sample returns to average
         :return: the estimated upper bound
         """
-        max_horizon = 1000
+        max_horizon = 200
         returns = []
         for i in range(samples):
             o, _ = self.reset()
@@ -206,7 +206,7 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
         :param samples: the number of sample returns to average
         :return: the estimated upper bound
         """
-        max_horizon = 1000
+        max_horizon = 200
         returns = []
         for i in range(samples):
             o, _ = self.reset()
@@ -244,10 +244,11 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
                 A[i] = [0] * num_nodes
         gw_reachable_nodes = self.config.game_config.gw_reachable
         A = np.array(A)
-        A_n = np.linalg.matrix_power(A, num_nodes)
-        for gw_reachable in gw_reachable_nodes:
-            if A_n[gw_reachable][node] != 0:
-                return True
+        for i in range(1, num_nodes+1):
+            A_n = np.linalg.matrix_power(A, i)
+            for gw_reachable in gw_reachable_nodes:
+                if A_n[gw_reachable][node] != 0:
+                    return True
         return False
 
     def _info(self, info) -> Dict[str, Union[float, int]]:

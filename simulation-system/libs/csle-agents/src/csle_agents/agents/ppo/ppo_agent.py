@@ -38,14 +38,29 @@ class PPOAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig,
-                 training_job: Optional[TrainingJobConfig] = None):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore :bool = True):
+        """
+        Intializes the agent
+
+        :param simulation_env_config: the simulation environment configuration
+        :param emulation_env_config: the emulation environment configuration
+        :param experiment_config: the experiment configuration
+        :param training_job: the training job
+        :param save_to_metastore: boolean flag indicating whether the results should be saved to the metastore or not
+        """
         super(PPOAgent, self).__init__(simulation_env_config=simulation_env_config,
                                        emulation_env_config=emulation_env_config,
                                        experiment_config=experiment_config)
         assert experiment_config.agent_type == AgentType.PPO
         self.training_job = training_job
+        self.save_to_metastore = save_to_metastore
 
     def train(self) -> ExperimentExecution:
+        """
+        Runs the training process
+
+        :return: the results
+        """
         pid = os.getpid()
 
         # Setup experiment metrics
@@ -70,13 +85,16 @@ class PPOAgent(BaseAgent):
                 num_cached_traces=agents_constants.COMMON.NUM_CACHED_SIMULATION_TRACES,
                 log_file_path=Logger.__call__().get_log_file_path(), descr=descr,
                 physical_host_ip=GeneralUtil.get_host_ip())
-            training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
+            training_job_id=-1
+            if self.save_to_metastore:
+                training_job_id = MetastoreFacade.save_training_job(training_job=self.training_job)
             self.training_job.id = training_job_id
         else:
             self.training_job.pid = pid
             self.training_job.progress_percentage = 0
             self.training_job.experiment_result = exp_result
-            MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
+            if self.save_to_metastore:
+                MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
 
         # Setup experiment execution
         ts = time.time()
@@ -88,7 +106,9 @@ class PPOAgent(BaseAgent):
             result=exp_result, config=self.experiment_config, timestamp=ts,
             emulation_name=emulation_name, simulation_name=simulation_name, descr=descr,
             log_file_path=self.training_job.log_file_path)
-        exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
+        exp_execution_id = -1
+        if self.save_to_metastore:
+            exp_execution_id = MetastoreFacade.save_experiment_execution(self.exp_execution)
         self.exp_execution.id = exp_execution_id
 
         # Setup gym environment
@@ -132,7 +152,7 @@ class PPOAgent(BaseAgent):
                 env=orig_env, experiment_config=self.experiment_config,
                 L=self.experiment_config.hparams[agents_constants.COMMON.L].value,
                 gym_env_name=self.simulation_env_config.gym_env_name,
-                start=self.start
+                start=self.start, save_to_metastore=self.save_to_metastore
             )
 
             # Create PPO Agent
@@ -177,11 +197,13 @@ class PPOAgent(BaseAgent):
             exp_result.policies[seed] = policy
 
             # Save policy metadata
-            MetastoreFacade.save_ppo_policy(ppo_policy=policy)
-            os.chmod(save_path, 0o777)
+            if self.save_to_metastore:
+                MetastoreFacade.save_ppo_policy(ppo_policy=policy)
+                os.chmod(save_path, 0o777)
 
             # Save latest trace
-            MetastoreFacade.save_simulation_trace(orig_env.get_traces()[-1])
+            if self.save_to_metastore:
+                MetastoreFacade.save_simulation_trace(orig_env.get_traces()[-1])
             orig_env.reset_traces()
 
         # Calculate average and std metrics
@@ -208,7 +230,7 @@ class PPOAgent(BaseAgent):
             exp_result.std_metrics[metric] = std_metrics
 
         traces = orig_env.get_traces()
-        if len(traces) > 0:
+        if len(traces) > 0 and self.save_to_metastore:
             MetastoreFacade.save_simulation_trace(traces[-1])
         return self.exp_execution
 
@@ -239,7 +261,7 @@ class PPOTrainingCallback(BaseCallback):
                  states: List[State], actions: List[Action], player_type: PlayerType,
                  env: gym.Env, experiment_config: ExperimentConfig, verbose=0,
                  eval_every: int = 100, eval_batch_size: int = 10, save_every: int = 10, save_dir: str = "",
-                 L: int = 3, gym_env_name: str = ""):
+                 L: int = 3, gym_env_name: str = "", save_to_metastore: bool = False):
         """
         Initializes the callback
 
@@ -263,6 +285,7 @@ class PPOTrainingCallback(BaseCallback):
         :param L: num stops if a stopping environment
         :param gym_env_name: name of gym env
         :param start_time: the start time-stamp
+        :param save_to_metastore: boolean flag indicating whether the results should be saved to the metastore
         """
         super(PPOTrainingCallback, self).__init__(verbose)
         self.states = states
@@ -285,6 +308,7 @@ class PPOTrainingCallback(BaseCallback):
         self.L = L
         self.gym_env_name = gym_env_name
         self.start = start
+        self.save_to_metastore = save_to_metastore
 
     def _on_training_start(self) -> None:
         """
@@ -430,13 +454,15 @@ class PPOTrainingCallback(BaseCallback):
                 self.training_job.simulation_traces.append(self.env.get_traces()[-1])
             if len(self.training_job.simulation_traces) > self.training_job.num_cached_traces:
                 self.training_job.simulation_traces = self.training_job.simulation_traces[1:]
-            MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
+            if self.save_to_metastore:
+                MetastoreFacade.update_training_job(training_job=self.training_job, id=self.training_job.id)
 
             # Update execution
             ts = time.time()
             self.exp_execution.timestamp = ts
             self.exp_execution.result = self.exp_result
-            MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
-                                                        id=self.exp_execution.id)
+            if self.save_to_metastore:
+                MetastoreFacade.update_experiment_execution(experiment_execution=self.exp_execution,
+                                                            id=self.exp_execution.id)
 
         self.iter += 1

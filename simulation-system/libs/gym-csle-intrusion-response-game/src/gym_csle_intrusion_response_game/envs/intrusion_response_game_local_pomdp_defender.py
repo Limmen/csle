@@ -65,8 +65,8 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         # Get upper bound and random return estimate
         self.upper_bound_return = 0
         self.random_return = 0
-        self.upper_bound_return = self.get_upper_bound_return(samples=5)
-        self.random_return = self.get_random_baseline_return(samples=5)
+        # self.upper_bound_return = self.get_upper_bound_return(samples=5)
+        # self.random_return = self.get_random_baseline_return(samples=5)
 
         # Reset
         self.reset()

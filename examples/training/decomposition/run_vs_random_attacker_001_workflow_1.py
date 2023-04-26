@@ -34,10 +34,11 @@ def is_node_reachable(node: int, gw_reachable: List, adjacency_matrix: List, num
             A[i] = [0] * num_nodes
     gw_reachable_nodes = gw_reachable
     A = np.array(A)
-    A_n = np.linalg.matrix_power(A, num_nodes)
-    for gw_reachable in gw_reachable_nodes:
-        if A_n[gw_reachable][node] != 0:
-            return True
+    for i in range(1, num_nodes+1):
+        A_n = np.linalg.matrix_power(A, i)
+        for gw_reachable in gw_reachable_nodes:
+            if A_n[gw_reachable][node] != 0:
+                return True
     return False
 
 
@@ -45,10 +46,12 @@ def get_descendants(node, adjacency_matrix: List, num_nodes: int) -> List[int]:
     reachable = []
     A = adjacency_matrix.copy()
     A = np.array(A)
-    A_n = np.linalg.matrix_power(A, num_nodes)
-    for i in range(num_nodes):
-        if i != node and A_n[node][i] != 0:
-            reachable.append(i)
+    for i in range(1, num_nodes+1):
+        A_n = np.linalg.matrix_power(A, i)
+        for i in range(num_nodes):
+            if i != node and A_n[node][i] != 0:
+                if i not in reachable:
+                    reachable.append(i)
     return reachable
 
 
@@ -82,7 +85,7 @@ if __name__ == '__main__':
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
         "csle-intrusion-response-game-workflow-pomdp-defender-001")
-    num_nodes = 7
+    num_nodes = 15
     number_of_zones = 6
     X_max = 100
     eta = 0.5
@@ -125,23 +128,34 @@ if __name__ == '__main__':
         value_function=None, q_table=None,
         lookup_table=list(attacker_stage_strategy.tolist()),
         agent_type=AgentType.RANDOM, avg_R=-1)
-    gw_reachable = np.array([0, 1, 2])
+    gw_reachable = np.array([0])
     adjacency_matrix = [
-        [1, 0, 0, 1, 1, 0, 0],
-        [0, 1, 0, 1, 0, 1, 0],
-        [0, 0, 1, 0, 1, 1, 0],
-        [0, 0, 0, 1, 0, 0, 1],
-        [0, 0, 0, 0, 1, 0, 1],
-        [0, 0, 0, 0, 0, 1, 1],
-        [0, 0, 0, 0, 0, 0, 0]
+        [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
     adjacency_matrix = np.array(adjacency_matrix)
+    A_n = np.linalg.matrix_power(adjacency_matrix, 2)
     nodes = np.array(list(range(num_nodes)))
     initial_zones = []
     possible_inital_zones = zones[2:]
     attacker_strategies = []
+    initial_zones = [
+        4,4,4,5,5,5,5,5,5,5,5,5,5,5,5
+    ]
     for node in nodes:
-        initial_zones.append(np.random.choice(possible_inital_zones))
         attacker_strategies.append(attacker_strategy)
     initial_zones = np.array(initial_zones)
     simulation_env_config.simulation_env_input_config.game_config = WorkflowIntrusionResponseGameConfig(
@@ -163,7 +177,7 @@ if __name__ == '__main__':
         agent_type=AgentType.DIFFERENTIAL_EVOLUTION,
         log_every=1,
         hparams={
-            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=2, name=constants.T_SPSA.N,
+            agents_constants.DIFFERENTIAL_EVOLUTION.N: HParam(value=50, name=constants.T_SPSA.N,
                                                               descr="the number of training iterations"),
             agents_constants.DIFFERENTIAL_EVOLUTION.L: HParam(value=2, name="L", descr="the number of stop actions"),
             agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
@@ -246,7 +260,7 @@ if __name__ == '__main__':
                 value=gamma, name=agents_constants.COMMON.GAMMA,
                 descr="the discount factor"),
             agents_constants.VI.THETA: HParam(
-                value=0.0001, name=agents_constants.VI.THETA,
+                value=0.001, name=agents_constants.VI.THETA,
                 descr="the stopping theshold for value iteration"),
             agents_constants.VI.TRANSITION_TENSOR: HParam(
                 value=list(T.tolist()), name=agents_constants.VI.TRANSITION_TENSOR,
@@ -314,7 +328,8 @@ if __name__ == '__main__':
         )
         T = reduce_T(T=T, strategy=attacker_strategy)
         descendants = get_descendants(node=i, adjacency_matrix=adjacency_matrix, num_nodes=num_nodes)
-        topology_cost = beta*len(descendants)
+        # topology_cost = beta*len(descendants)
+        topology_cost=0
         R = np.array(
             [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable,
                                                            beta=beta,
