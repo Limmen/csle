@@ -1,6 +1,6 @@
 # OS
-# debian:9.2
-FROM vulnerables/web-dvwa as img
+# debian:10.2
+FROM kimham/csle_web_dvwa_base:0.1.0 as img
 USER root
 
 # Install dependencies
@@ -11,7 +11,7 @@ RUN echo "postfix postfix/mailname string csle" | debconf-set-selections &&\
                        ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
                        dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
                        wget openssl libssl-dev irssi irssi-scripts screen postgresql-client-common \
-                       postgresql-client-common snmp mongodb-clients postgresql-client smbclient fail2ban rsyslog \
+                       postgresql-client-common snmp postgresql-client smbclient fail2ban rsyslog \
                        netcat traceroute sysstat iproute2 iperf3
 
 # Setup DVWA
@@ -81,11 +81,6 @@ ADD docker_files/common/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
 RUN wget --no-check-certificate https://files.teamspeak-services.com/releases/server/3.12.1/teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
     tar xvfj teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
     touch ./teamspeak3-server_linux_amd64/.ts3server_license_accepted
-
-# setup SNMP
-RUN mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.backup
-ADD docker_files/common/snmpd.conf /etc/snmp/snmpd.conf
-RUN service snmpd restart
 
 # setup IRC
 RUN mv /etc/inspircd/inspircd.conf /etc/inspircd/inspircd.conf.bak
