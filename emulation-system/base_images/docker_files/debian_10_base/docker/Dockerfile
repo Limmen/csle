@@ -1,27 +1,19 @@
 # OS
-# Debian GNU/Linux 8 (jessie)
-FROM debian:jessie
+# Debian 10.2
+FROM debian:10.2
 USER root
 
-# Setup jessie packet repos
-RUN echo 'deb http://archive.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list &&\
-    sed -i '/jessie-updates/d' /etc/apt/sources.list &&\
-    echo "deb [check-valid-until=no] http://archive.debian.org/debian/ jessie-backports main" >> /etc/apt/sources.list &&\
-    apt-get -o Acquire::Check-Valid-Until=false update
-
 # Install dependencies
-RUN echo "postfix postfix/mailname string csle" | debconf-set-selections && \
-    echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections && \
-    apt-get install -y --force-yes lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl  \
-    htop ssh openssh-server \
-    ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
-    dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables \
-    wget openjdk-7-jre-headless && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes wget apache2 php5 build-essential gcc make \
-    php5-sqlite sqlite3 git golang sendmail-bin libpam0g-dev irssi irssi-scripts screen postgresql-client-common \
-    snmp mongodb-clients postgresql-client smbclient fail2ban rsyslog netcat traceroute sysstat iproute2 iperf3
-
-RUN apt-get install -y --force-yes openssl libssl-dev -t jessie-backports
+RUN apt-get update
+RUN echo "postfix postfix/mailname string csle" | debconf-set-selections &&\
+        echo "postfix postfix/main_mailer_type string 'Internet Site'" | debconf-set-selections &&\
+        apt-get install -y lsb-release apt-utils sudo openssl net-tools iputils-ping emacs curl htop ssh openssh-server \
+                       ftp snmpd snmp mailutils inspircd postgresql ntp vsftpd bind9 bind9utils bind9-doc bind9-host \
+                       dnsutils git swi-prolog sshpass iptables unzip nmap git telnet xinetd telnetd lftp zip arptables\
+                       wget openssl libssl-dev irssi irssi-scripts screen postgresql-client-common \
+                       postgresql-client-common snmp postgresql-client smbclient fail2ban rsyslog \
+                       netcat traceroute sysstat iproute2 iperf3 apache2 php sqlite3 golang  \
+                       sendmail-bin libpam0g-dev irssi irssi-scripts screen
 
 # Add users script
 ADD docker_files/common/make_root_users.sh /make_root_users.sh
@@ -31,7 +23,7 @@ RUN chmod 777 /make_root_users.sh
 # setup root users
 RUN /make_root_users.sh
 
-ADD docker_files/debian_jessie_base/docker/main.sh /main.sh
+ADD docker_files/debian_10_base/docker/main.sh /main.sh
 RUN chmod 777 /main.sh
 
 # Setup FTP
@@ -81,11 +73,6 @@ ADD docker_files/common/tomcat-users.xml /usr/local/tomcat/conf/tomcat-users.xml
 RUN wget --no-check-certificate https://files.teamspeak-services.com/releases/server/3.12.1/teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
     tar xvfj teamspeak3-server_linux_amd64-3.12.1.tar.bz2 &&\
     touch ./teamspeak3-server_linux_amd64/.ts3server_license_accepted
-
-# setup SNMP
-RUN mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.backup
-ADD docker_files/common/snmpd.conf /etc/snmp/snmpd.conf
-RUN service snmpd restart
 
 # setup IRC
 RUN mv /etc/inspircd/inspircd.conf /etc/inspircd/inspircd.conf.bak

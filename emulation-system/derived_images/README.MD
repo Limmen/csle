@@ -9,27 +9,27 @@ generate containers for emulating various network infrastructures.
 
 - `cve_2010_0426_1` ([cve_2010_0426_1](./cve_2010_0426_1)): an image with the CVE-2010-0426 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2010_0426_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2010_0426_1/)
-     - OS: Debian:Jessie. 
+     - OS: Debian:10.2. 
      - Inherits from `cve_2010_0426_base`.
      - Services: teamspeak3, tomcat, ssh
 - `cve_2015_1427_1` ([cve_2015_1427_1](./cve_2015_1427_1)): an image with the CVE-2015-1427 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_1427_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2015_1427_1/)
-     - OS: Debian:Jessie. 
+     - OS: Debian:10.2. 
      - Inherits from `cve_2015_1427_base`.
      - Services: SNMP, elasticsearch, apache webserver, ssh
 - `cve_2015_3306_1` ([cve_2015_3306_1](./cve_2015_3306_1)): an image with the CVE-2015-3306 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_3306_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2015_3306_1/)
-     - OS: Debian:Jessie. 
+     - OS: Debian:10.2. 
      - Inherits from `cve_2015_3306_base`.
      - Services: ssh, SNMP, proftpd, apache2
 - `cve_2015_5602_1` ([cve_2015_5602_1](./cve_2015_5602_1)): an image with the CVE-2015-5602 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_5602_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2015_5602_1/)
-     - OS: Debian:Jessie. 
+     - OS: Debian:10.2. 
      - Inherits from `cve_2015_5602_base`.
      - Services: ssh
 - `cve_2016_10033_1` ([cve_2016_10033_1](./cve_2016_10033_1)): an image with the CVE-2016-10033 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2016_10033_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2016_10033_1/)
-     - OS: Debian:Jessie. 
+     - OS: Debian:10.2. 
      - Inherits from `cve_2010_0426_1`.
      - Services: ssh, apache2, SMTPD
 - `hacker_kali_1` ([hacker_kali_1](./hacker_kali_1)): a Kali image, used to generate containers with tools for penetration testing.
@@ -39,12 +39,12 @@ generate containers for emulating various network infrastructures.
      - Services: ssh
 - `samba_1` ([samba_1](./samba_1)): an image with the SambaCry CVE-2017-7494 vulnerabilitiy.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_samba_1?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_samba_1/)
-     - OS: Debian:Jessie. 
+     - OS: Debian:10.2. 
      - Inherits from `samba_base`.
      - Services: ssh, NTP, samba
 - `samba_2` ([samba_2](./samba_2)): an image with the SambaCry CVE-2017-7494 vulnerabilitiy and a telnet server.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_samba_2?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_samba_2/)
-     - OS: Debian:Jessie. 
+     - OS: Debian:10.2. 
      - Inherits from `samba_base`.
      - Services: ssh, NTP, samba, telnet     
 - `shellshock_1` ([shellshock_1](./shellshock_1)): an image with the ShellShock CVE-2014-6271 vulnerabilitiy.
@@ -175,7 +175,7 @@ make push # Push all images
 make samba_1 # Build samba_1
 make shellshock_1 # Build shellshock_1
 make sql_injection_1 # Build sql_injection_1
-make debian_jessie_base # Build debian_jessie_1
+make debian_10_1 # Build debian_10_1
 make cve_2015_3306_1 # Build cve_2015_3306_1
 make cve_2015_1427_1 # Build cve_2015_1427_1
 make cve_2016_10033_1 # Build cve_2016_10033_1
@@ -207,7 +207,7 @@ make spark_1 # Build spark_1
 make rm_samba_1 # Remove samba_1
 make rm_shellshock_1 # Remove shellshock_1
 make rm_sql_injection_1 # Remove sql_injection_1
-make rm_debian_jessie_base # Remove debian_jessie_1
+make rm_debian_10_1 # Remove debian_10_1
 make rm_cve_2015_3306_1 # Remove cve_2015_3306_1
 make rm_cve_2015_1427_1 # Remove cve_2015_1427_1
 make rm_cve_2016_10033_1 # Remove cve_2016_10033_1
@@ -239,7 +239,7 @@ make rm_spark_1 # Remove spark_1
 make push_samba_1 # Push samba_1 to DockerHub
 make push_shellshock_1 # Push shellshock_1 to DockerHub
 make push_sql_injection_1 # Push sql_injection_1 to DockerHub
-make push_debian_jessie_base # Push debian_jessie_1 to DockerHub
+make push_debian_10_1 # Push debian_10_1 to DockerHub
 make push_cve_2015_3306_1 # Push cve_2015_3306_1 to DockerHub
 make push_cve_2015_1427_1 # Push cve_2015_1427_1 to DockerHub
 make push_cve_2016_10033_1 # Push cve_2016_10033_1 to DockerHub
@@ -270,7 +270,7 @@ make push_spark_1 # Push spark_1 to DockerHub
 make pull_samba_1 # pull samba_1 from DockerHub
 make pull_shellshock_1 # pull shellshock_1 from DockerHub
 make pull_sql_injection_1 # pull sql_injection_1 from DockerHub
-make pull_debian_jessie_base # pull debian_jessie_1 from DockerHub
+make pull_debian_10_1 # pull debian_10_1 from DockerHub
 make pull_cve_2015_3306_1 # pull cve_2015_3306_1 from DockerHub
 make pull_cve_2015_1427_1 # pull cve_2015_1427_1 from DockerHub
 make pull_cve_2016_10033_1 # pull cve_2016_10033_1 from DockerHub

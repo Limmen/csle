@@ -88,14 +88,14 @@ Figure 6: Topology of the emulation configuration `csle-level9-010`
 | N2                        | Ubuntu20:SSH,HTTP Erl-Pengine,DNS:SSH-pw             |
 | N4                        | Ubuntu20:HTTP Flask,Telnet,SSH:Telnet-pw             |
 | N10                       | Ubuntu20:FTP,MongoDB,SMTP,Tomcat,TS3,SSH:FTP-pw      |
-| N12                       | Jessie:TS3,Tomcat,SSH:CVE-2010-0426,SSH-pw           |
+| N12                       | Deb10.2:TS3,Tomcat,SSH:CVE-2010-0426,SSH-pw          |
 | N17                       | Wheezy:Apache2,SNMP,SSH:CVE-2014-6271                |
-| N18                       | Deb9.2:IRC,Apache2,SSH:SQL Injection                 |
-| N22                       | Jessie:PROFTPD,SSH,Apache2,SNMP:CVE-2015-3306        |
-| N23                       | Jessie:Apache2,SMTP,SSH:CVE-2016-10033               |
-| N24                       | Jessie:SSH:CVE-2015-5602,SSH-pw                      |
-| N25                       | Jessie: Elasticsearch,Apache2,SSH,SNMP:CVE-2015-1427 |
-| N27                       | Jessie:Samba,NTP,SSH:CVE-2017-7494                   |
+| N18                       | Deb10.2:IRC,Apache2,SSH:SQL Injection                |
+| N22                       | Deb10.2:PROFTPD,SSH,Apache2,SNMP:CVE-2015-3306       |
+| N23                       | Deb10.2:Apache2,SMTP,SSH:CVE-2016-10033              |
+| N24                       | Deb10.2:SSH:CVE-2015-5602,SSH-pw                      |
+| N25                       | Deb10.2: Elasticsearch,Apache2,SSH,SNMP:CVE-2015-1427 |
+| N27                       | Deb10.2:Samba,NTP,SSH:CVE-2017-7494                   |
 | N3,N11,N5-N9              | Ubuntu20:SSH,SNMP,PostgreSQL,NTP:-                   |
 | N13-16,N19-21,N26,N28-31  | Ubuntu20:NTP, IRC, SNMP, SSH, PostgreSQL:-           |
 
@@ -147,16 +147,16 @@ Detailed configuration of each image is available <a href="https://hub.docker.co
 
 | *Name*               | *Description*                                   | *OS*          |
 |----------------------|-------------------------------------------------|---------------|
-| `cve_2010_0426_1`    | An image with the CVE-2010-0426 vulnerability.  | Debian:jessie |
-| `cve_2015_1427_1`    | An image with the CVE-2015-1427 vulnerability.  | Debian:jessie |
-| `cve_2015_3306_1`    | An image with the CVE-2015-3306 vulnerability.  | Debian:jessie |
-| `cve_2015_5602_1`    | An image with the CVE-2015-5602 vulnerability.  | Debian:jessie |
-| `cve_2016_10033_1`   | An image with the CVE-2016-10033 vulnerability. | Debian:jessie |
+| `cve_2010_0426_1`    | An image with the CVE-2010-0426 vulnerability.  | Debian:10.2   |
+| `cve_2015_1427_1`    | An image with the CVE-2015-1427 vulnerability.  | Debian:10.2   |
+| `cve_2015_3306_1`    | An image with the CVE-2015-3306 vulnerability.  | Debian:10.2   |
+| `cve_2015_5602_1`    | An image with the CVE-2015-5602 vulnerability.  | Debian:10.2   |
+| `cve_2016_10033_1`   | An image with the CVE-2016-10033 vulnerability. | Debian:10.2   |
 | `hacker_kali_1`      | An image with tools for penetration testing.    | Kali          |
-| `samba_1`            | An image with the CVE-2017-7494 vulnerability.  | Debian:Jessie |
-| `samba_2`            | An image with the CVE-2017-7494 vulnerability.  | Debian:Jessie |
+| `samba_1`            | An image with the CVE-2017-7494 vulnerability.  | Debian:10.2   |
+| `samba_2`            | An image with the CVE-2017-7494 vulnerability.  | Debian:10.2   |
 | `shellshock_1`       | An image with the CVE-2014-6271 vulnerability.  | Debian:Wheezy |
-| `sql_injection_1`    | An image with SQL-injection vulnerability.      | Debian:9.2    |
+| `sql_injection_1`    | An image with SQL-injection vulnerability.      | Debian:10.2   |
 | `ftp_1`              | An image with an FTP server.                    | Ubuntu:14     |
 | `ftp_2`              | An image with an FTP server.                    | Ubuntu:14     |
 | `ssh_1`              | An image with a SSH server.                     | Ubuntu:20     |

@@ -8,33 +8,33 @@ more specific Docker images.
 
 - `cve_2010_0426_base` ([cve_2010_0426_base](./docker_files/cve_2010_0426_base)): a base image for csle emulations with the CVE-2010-0426 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2010_0426_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2010_0426_base/)
-     - OS: Debian:Jessie. 
-     - Inherits from `debian_jessie_base`.
+     - OS: Debian:10.2. 
+     - Inherits from `debian_10_base`.
 - `cve_2015_1427_base` ([cve_2015_1427_base](./docker_files/cve_2015_1427_base)): a base image for csle emulations with the CVE-2015-1427 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_1427_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2015_1427_base/)
-     - OS: Debian:Jessie. 
-     - Inherits from `debian_jessie_base`.
+     - OS: Debian:10.2. 
+     - Inherits from `debian_10_base`.
 - `cve_2015_3306_base` ([cve_2015_3306_base](./docker_files/cve_2015_3306_base)): a base image for csle emulations with the CVE-2015-3306 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_3306_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_csle_cve_2010_0426_1/
-     - OS: Debian:Jessie. 
-     - Inherits from `debian_jessie_base`.
+     - OS: Debian:10.2. 
+     - Inherits from `debian_10_base`.
 - `cve_2015_5602_base` ([cve_2015_5602_base](./docker_files/cve_2015_5602_base)): a base image for csle emulations with the CVE-2015-5602 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2015_5602_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2015_5602_base/)
-     - OS: Debian:Jessie. 
-     - Inherits from `debian_jessie_base`.
+     - OS: Debian:10.2. 
+     - Inherits from `debian_10_base`.
 - `cve_2016_10033_base` ([cve_2016_10033_base](./docker_files/cve_2016_10033_base)): a base image for csle emulations with the CVE-2016-10033 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_cve_2016_10033_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_cve_2016_10033_base/)
-     - OS: Debian:Jessie. 
-     - Inherits from `debian_jessie_base`.
-- `debian_jessie_base` ([debian_jessie_base](./docker_files/debian_jessie_base)): a base debian image for csle emulations.
-     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_debian_jessie_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_debian_jessie_base/)
-     - OS: Debian:Jessie.
+     - OS: Debian:10.2. 
+     - Inherits from `debian_10_base`.
+- `debian_10_base` ([debian_10_base](./docker_files/debian_10_base)): a base debian image for csle emulations.
+     - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_debian_10_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_debian_10_base/)
+     - OS: Debian:10.2.
 - `kali_base` ([kali_base](./docker_files/kali_base)): a base Kali image for csle emulations, used to generate containers with tools for penetration testing.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_kali_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_kali_base/)
      - OS: Kali (Latest).
 - `samba_base` ([samba_base](./docker_files/samba_base)): a base image for csle emulations with the SambaCry CVE-2017-7494 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_samba_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_samba_base/)
-     - OS: Debian:Jessie.
+     - OS: Debian:10.2.
 - `shellshock_base` ([shellshock_base](./docker_files/shellshock_base)): a base image for csle emulations with the ShellShock CVE-2014-6271 vulnerability.
      - [![Docker Pulls](https://badgen.net/docker/pulls/kimham/csle_shellshock_base?icon=docker&label=pulls)](https://hub.docker.com/r/kimham/csle_shellshock_base/)
      - OS: Ubuntu:14.
@@ -98,7 +98,7 @@ make samba_base # Build samba_base
 make shellshock_base # Build shellshock_base
 make shellshock_debian_wheezy_base # Build shellshock_base
 make sql_injection_base # Build sql_injection_base
-make debian_jessie_base # Build debian_jessie_base
+make debian_10_base # Build debian_10_base
 make cve_2015_3306_base # Build cve_2015_3306_base
 make cve_2015_1427_base # Build cve_2015_1427_base
 make cve_2016_10033_base # Build cve_2016_10033_base
@@ -121,7 +121,7 @@ make rm_samba_base # Remove samba_base
 make rm_shellshock_base # Remove shellshock_base
 make rm_shellshock_debian_wheezy_base # Remove shellshock_base
 make rm_sql_injection_base # Remove sql_injection_base
-make rm_debian_jessie_base # Remove debian_jessie_base
+make rm_debian_10_base # Remove debian_10_base
 make rm_cve_2015_3306_base # Remove cve_2015_3306_base
 make rm_cve_2015_1427_base # Remove cve_2015_1427_base
 make rm_cve_2016_10033_base # Remove cve_2016_10033_base
@@ -144,7 +144,7 @@ make push_samba_base # Push samba_base to DockerHub
 make push_shellshock_base # Push shellshock_base to DockerHub
 make push_shellshock_debian_wheezy_base # Push shellshock_base to DockerHub
 make push_sql_injection_base # Push sql_injection_base to DockerHub
-make push_debian_jessie_base # Push debian_jessie_base to DockerHub
+make push_debian_10_base # Push debian_10_base to DockerHub
 make push_cve_2015_3306_base # Push cve_2015_3306_base to DockerHub
 make push_cve_2015_1427_base # Push cve_2015_1427_base to DockerHub
 make push_cve_2016_10033_base # Push cve_2016_10033_base to DockerHub
@@ -167,7 +167,7 @@ make pull_samba_base # pull samba_base from DockerHub
 make pull_shellshock_base # pull shellshock_base from DockerHub
 make pull_shellshock_debian_wheezy_base # pull shellshock_base from DockerHub
 make pull_sql_injection_base # pull sql_injection_base from DockerHub
-make pull_debian_jessie_base # pull debian_jessie_base from DockerHub
+make pull_debian_10_base # pull debian_10_base from DockerHub
 make pull_cve_2015_3306_base # pull cve_2015_3306_base from DockerHub
 make pull_cve_2015_1427_base # pull cve_2015_1427_base from DockerHub
 make pull_cve_2016_10033_base # pull cve_2016_10033_base from DockerHub
