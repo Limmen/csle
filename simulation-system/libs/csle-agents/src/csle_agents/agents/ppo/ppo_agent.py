@@ -119,7 +119,6 @@ class PPOAgent(BaseAgent):
                            n_envs=self.experiment_config.hparams[agents_constants.COMMON.NUM_PARALLEL_ENVS].value,
                            env_kwargs={"config": config}, vec_env_cls=DummyVecEnv)
         env = VecMonitor(env)
-        print(env.observation_space)
 
         # Training runs, one per seed
         for seed in self.experiment_config.random_seeds:
