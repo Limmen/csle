@@ -46,7 +46,7 @@ ssh_base:
 	docker build . --no-cache -f ./docker_files/ssh_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_ssh_base:$(VERSION)
 
 samba_base:
-	docker build . --no-cache -f ./docker_files/samba_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
+	docker build . -f ./docker_files/samba_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
 
 shellshock_base:
 	docker build . --no-cache -f ./docker_files/shellshock_base/docker/Dockerfile -t $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
