@@ -125,7 +125,7 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
             local_o, local_r, local_done, _, _ = local_env.step(a1=local_a1)
             if not reachable:
                 local_r = local_env.config.local_intrusion_response_game_config.C_D[local_a1]
-                local_o = np.array([local_o[0],1,0,0])
+                local_o = np.array([local_o[0], 1, 0, 0])
             if local_done:
                 done = True
             r = r + local_r
@@ -244,7 +244,7 @@ class IntrusionResponseGameWorkflowPOMDPDefenderEnv(BaseEnv):
                 A[i] = [0] * num_nodes
         gw_reachable_nodes = self.config.game_config.gw_reachable
         A = np.array(A)
-        for i in range(1, num_nodes+1):
+        for i in range(1, num_nodes + 1):
             A_n = np.linalg.matrix_power(A, i)
             for gw_reachable in gw_reachable_nodes:
                 if A_n[gw_reachable][node] != 0:

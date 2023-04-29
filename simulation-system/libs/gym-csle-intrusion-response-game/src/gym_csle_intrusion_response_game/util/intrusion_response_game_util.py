@@ -40,8 +40,8 @@ class IntrusionResponseGameUtil:
         :param zone: the zone to check
         :return: True if the node is in shutdown or redirect state, otherwise fasle
         """
-        return s[env_constants.STATES.D_STATE_INDEX] == env_constants.DEFENDER_STATES.SHUTDOWN \
-               and s[env_constants.STATES.D_STATE_INDEX] == env_constants.DEFENDER_STATES.REDIRECT
+        return (s[env_constants.STATES.D_STATE_INDEX] == env_constants.DEFENDER_STATES.SHUTDOWN
+                and s[env_constants.STATES.D_STATE_INDEX] == env_constants.DEFENDER_STATES.REDIRECT)
 
     @staticmethod
     def is_local_state_compromised(s: np.ndarray) -> bool:
@@ -387,7 +387,7 @@ class IntrusionResponseGameUtil:
                                                                             initial_zone=initial_zone)
         intrusion_cost = IntrusionResponseGameUtil.local_intrusion_cost(a1=a1, D_C=C_D, reachable=reachable, s=s,
                                                                         Z_U=Z_U)
-        if s[env_constants.STATES.D_STATE_INDEX] not in [0,1]:
+        if s[env_constants.STATES.D_STATE_INDEX] not in [0, 1]:
             topology_cost = 0
         return eta * workflow_utility - (1 - eta) * intrusion_cost - topology_cost
 

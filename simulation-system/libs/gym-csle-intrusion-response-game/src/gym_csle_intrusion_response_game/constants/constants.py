@@ -29,12 +29,14 @@ class ATTACK_STATES:
     RECON = 1
     COMPROMISED = 2
 
+
 class DEFENDER_STATES:
     """
     Constants related to the defense state semantics
     """
     SHUTDOWN = 1
     REDIRECT = 2
+
 
 class ATTACKER_ACTIONS:
     """

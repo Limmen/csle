@@ -17,7 +17,7 @@ class LinearThresholdStoppingPolicy(Policy):
 
     def __init__(self, theta, simulation_name: str, L: int, states: List[State], player_type: PlayerType,
                  actions: List[Action], experiment_config: Optional[ExperimentConfig], avg_R: float,
-                 agent_type: AgentType, opponent_strategy: Optional["LinearThresholdStoppingPolicy"] = None):
+                 agent_type: AgentType, opponent_strategy: Optional["LinearThresholdStoppingPolicy"] = None) -> None:
         """
         Initializes the policy
 

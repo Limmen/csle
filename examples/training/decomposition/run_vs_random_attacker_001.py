@@ -76,6 +76,7 @@ def reduce_R(R, strategy):
             reduced_R[i][j] = r
     return reduced_R
 
+
 if __name__ == '__main__':
 
     # Workflow Env Config
@@ -289,7 +290,7 @@ if __name__ == '__main__':
         agent = DifferentialEvolutionAgent(
             emulation_env_config=emulation_env_config, simulation_env_config=cfg,
             experiment_config=experiment_config, save_to_metastore=False)
-        p = Process(target=optimize_stopping_policy, args=(i,agent, 3, 3, return_dict))
+        p = Process(target=optimize_stopping_policy, args=(i, agent, 3, 3, return_dict))
         p.start()
         processes.append(p)
         # for zone in zones:
@@ -314,7 +315,7 @@ if __name__ == '__main__':
         )
         T = reduce_T(T=T, strategy=attacker_strategy)
         descendants = get_descendants(node=i, adjacency_matrix=adjacency_matrix, num_nodes=num_nodes)
-        topology_cost = beta*len(descendants)
+        topology_cost = beta * len(descendants)
         R = np.array(
             [IntrusionResponseGameUtil.local_reward_tensor(eta=eta, C_D=C_D, A1=A1, A2=A2, reachable=reachable,
                                                            beta=beta,
@@ -332,7 +333,7 @@ if __name__ == '__main__':
         vi_experiment_config.hparams[agents_constants.VI.TRANSITION_TENSOR].value == list(T.tolist())
         vi_agent = VIAgent(simulation_env_config=local_simulation_env_config,
                            experiment_config=vi_experiment_config, save_to_metastore=False)
-        p = Process(target=optimize_defense_policy, args=(i,vi_agent, return_dict))
+        p = Process(target=optimize_defense_policy, args=(i, vi_agent, return_dict))
         p.start()
         processes.append(p)
 
@@ -382,24 +383,24 @@ if __name__ == '__main__':
                 b = obs[1:]
                 a1 = 0
                 if reachable:
-                    defensive_action = defense_policies[i].action(zone)+1
-                    a1 = stopping_policies[int(i)][int(zone)-1][int(defensive_action)-1].action(b)
+                    defensive_action = defense_policies[i].action(zone) + 1
+                    a1 = stopping_policies[int(i)][int(zone) - 1][int(defensive_action) - 1].action(b)
                     if a1 == 1:
                         a1 = defensive_action
                 local_o, local_r, local_done, _, _ = local_env.step(a1=a1)
                 if not reachable:
                     local_r = local_env.config.local_intrusion_response_game_config.C_D[a1]
-                    local_o = np.array([local_o[0],1,0,0])
+                    local_o = np.array([local_o[0], 1, 0, 0])
                 if local_done:
                     done = True
-                r+= local_r
+                r += local_r
                 observations[i] = local_o
                 a.append(a1)
                 states.append(local_env.state.state_vector())
                 beliefs.append(local_o[1:])
                 # print(f"node {i}, reachable: {reachable}, zone: {zone}, b:{b}, a1:{a1}, done: {done}")
             R += r
-            t+=1
+            t += 1
             print(f"Step, t:{t} r:{r}, a:{a}, s:{states}, b:{beliefs}, reachability:{reachability}")
             if t >= max_steps:
                 done = True
@@ -408,8 +409,6 @@ if __name__ == '__main__':
     avg_return = np.mean(returns)
     print(f"Avg return: {avg_return}, upper bound: {env.upper_bound_return}, random baseline: {env.random_return}")
 
-
     # MetastoreFacade.save_experiment_execution(experiment_execution)
     # for policy in experiment_execution.result.policies.values():
     #     MetastoreFacade.save_ppo_policy(ppo_policy=policy)
-

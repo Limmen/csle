@@ -7,7 +7,6 @@ import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 import csle_rest_api.util.rest_api_util as rest_api_util
 
-
 # Creates a blueprint "sub application" of the main REST app
 linear_threshold_policies_bp = Blueprint(
     api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE, __name__,
@@ -15,7 +14,7 @@ linear_threshold_policies_bp = Blueprint(
 
 
 @linear_threshold_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                 api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def linear_threshold_policies():
     """
     The /linear-threshold-policies resource.
@@ -67,7 +66,7 @@ def linear_threshold_policies_ids():
 
 
 @linear_threshold_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                            api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+                                                             api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def linear_threshold_policy(policy_id: int):
     """
     The /linear-threshold-policies/id resource.
