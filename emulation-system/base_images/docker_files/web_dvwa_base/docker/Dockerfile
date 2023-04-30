@@ -19,6 +19,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 COPY docker_files/web_dvwa_base/docker/php.ini /etc/php5/apache2/php.ini
+COPY docker_files/web_dvwa_base/docker/php.ini /etc/php/7.3apache2/php.ini
 COPY docker_files/web_dvwa_base/docker/dvwa /var/www/html
 
 COPY docker_files/web_dvwa_base/docker/config.inc.php /var/www/html/config/
