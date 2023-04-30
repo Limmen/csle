@@ -58,11 +58,12 @@ Documentation, installation instructions, and usage examples are available [here
 
 | Release                                                       | Build Status | Last date of support |
 |---------------------------------------------------------------|--------------|----------------------|
-| [v.0.1.0](https://github.com/Limmen/csle/releases/tag/v0.1.0) | -            | 2023-06-06           |
+| [v.0.2.0](https://github.com/Limmen/csle/releases/tag/v0.2.0) | -            | 2024-06-06           |
+| [v.0.1.0](https://github.com/Limmen/csle/releases/tag/v0.1.0) | -            | 2023-12-06           |
 
 Maintenance releases have a stable API and dependency tree,
 and receive bug fixes and critical improvements but not new features. We
-currently support each release for a window of 6 months.
+currently support each release for a window of 12 months.
 
 ## Supported Platforms
 

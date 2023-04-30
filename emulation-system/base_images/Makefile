@@ -383,6 +383,7 @@ push:
 	-docker push $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_shellshock_debian_wheezy_base:$(VERSION)
+	-docker push $(DOCKERHUB_USER)/csle_web_dvwa_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_debian_10_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
@@ -398,7 +399,6 @@ push:
 	-docker push $(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
 	-docker push $(DOCKERHUB_USER)/csle_spark_base:$(VERSION)
-	-docker push $(DOCKERHUB_USER)/csle_web_dvwa_base:$(VERSION)
 
 
 # Pull all base images
@@ -411,6 +411,7 @@ pull:
 	-docker pull $(DOCKERHUB_USER)/csle_samba_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_shellshock_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_shellshock_debian_wheezy_base:$(VERSION)
+	-docker pull $(DOCKERHUB_USER)/csle_web_dvwa_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_sql_injection_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_debian_10_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_cve_2015_3306_base:$(VERSION)
@@ -426,4 +427,3 @@ pull:
 	-docker pull $(DOCKERHUB_USER)/csle_ryu_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_elk_base:$(VERSION)
 	-docker pull $(DOCKERHUB_USER)/csle_spark_base:$(VERSION)
-	-docker pull $(DOCKERHUB_USER)/csle_web_dvwa_base:$(VERSION)
