@@ -1,6 +1,6 @@
 # OS
 # debian:10.2
-FROM kimham/csle_web_dvwa_base:0.1.0 as img
+FROM kimham/csle_web_dvwa_base:0.2.0 as img
 USER root
 
 # Install dependencies

@@ -1,5 +1,5 @@
 DOCKERHUB_USER=kimham
-VERSION=0.1.0
+VERSION=0.2.0
 
 .PHONY: all build rm_image kali_base ubuntu_20_base ubuntu_22_base ubuntu_14_base ssh_base samba_base \
 	shellshock_base shellshock_debian_wheezy_base sql_injection_base \
