@@ -175,6 +175,24 @@
 <section id="module-csle_collector.ryu_manager.ryu_manager">
 <span id="csle-collector-ryu-manager-ryu-manager-module"></span><h2>csle_collector.ryu_manager.ryu_manager module<a class="headerlink" href="#module-csle_collector.ryu_manager.ryu_manager" title="Permalink to this heading"></a></h2>
 <dl class="py class">
+<dt class="sig sig-object py" id="csle_collector.ryu_manager.ryu_manager.FailureDetector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.ryu_manager.ryu_manager.</span></span><span class="sig-name descname"><span class="pre">FailureDetector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ryu_web_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ryu_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kafka_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step_len</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_collector/ryu_manager/ryu_manager.html#FailureDetector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ryu_manager.ryu_manager.FailureDetector" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
+<p>Thread representing a client</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_collector.ryu_manager.ryu_manager.FailureDetector.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_collector/ryu_manager/ryu_manager.html#FailureDetector.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ryu_manager.ryu_manager.FailureDetector.run" title="Permalink to this definition"></a></dt>
+<dd><p>The failure detector loop</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="csle_collector.ryu_manager.ryu_manager.RyuManagerServicer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_collector.ryu_manager.ryu_manager.</span></span><span class="sig-name descname"><span class="pre">RyuManagerServicer</span></span><a class="reference internal" href="_modules/csle_collector/ryu_manager/ryu_manager.html#RyuManagerServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_collector.ryu_manager.ryu_manager.RyuManagerServicer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerServicer" title="csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerServicer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RyuManagerServicer</span></code></a></p>

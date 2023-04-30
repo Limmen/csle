@@ -85,6 +85,8 @@
 <span class="kn">import</span> <span class="nn">csle_collector.constants.constants</span> <span class="k">as</span> <span class="nn">collector_constants</span>
 <span class="kn">import</span> <span class="nn">csle_common.constants.constants</span> <span class="k">as</span> <span class="nn">constants</span>
 <span class="kn">from</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_alert_counters</span> <span class="kn">import</span> <span class="n">SnortIdsAlertCounters</span>
+<span class="kn">from</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_rule_counters</span> <span class="kn">import</span> <span class="n">SnortIdsRuleCounters</span>
+<span class="kn">from</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_ip_alert_counters</span> <span class="kn">import</span> <span class="n">SnortIdsIPAlertCounters</span>
 <span class="kn">from</span> <span class="nn">csle_collector.ossec_ids_manager.ossec_ids_alert_counters</span> <span class="kn">import</span> <span class="n">OSSECIdsAlertCounters</span>
 <span class="kn">from</span> <span class="nn">csle_collector.client_manager.client_population_metrics</span> <span class="kn">import</span> <span class="n">ClientPopulationMetrics</span>
 <span class="kn">from</span> <span class="nn">csle_collector.docker_stats_manager.docker_stats</span> <span class="kn">import</span> <span class="n">DockerStats</span>
@@ -93,7 +95,6 @@
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action</span> <span class="kn">import</span> <span class="n">EmulationDefenderAction</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_config.emulation_metrics_time_series</span> <span class="kn">import</span> <span class="n">EmulationMetricsTimeSeries</span>
-<span class="kn">from</span> <span class="nn">csle_common.logging.log</span> <span class="kn">import</span> <span class="n">Logger</span>
 
 
 <div class="viewcode-block" id="ReadEmulationStatisticsUtil"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil">[docs]</a><span class="k">class</span> <span class="nc">ReadEmulationStatisticsUtil</span><span class="p">:</span>
@@ -116,6 +117,12 @@
         <span class="n">defender_actions</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">attacker_actions</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">snort_ids_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">snort_ids_ip_metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">snort_ids_rule_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">snort_alert_metrics_per_ids</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">snort_rule_metrics_per_ids</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">total_snort_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">total_snort_rule_metrics</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">total_host_metrics</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">ossec_host_ids_metrics</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">total_ossec_metrics</span> <span class="o">=</span> <span class="p">[]</span>
@@ -134,21 +141,32 @@
         <span class="n">num_ossec_containers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">OSSEC_IDS_IMAGES</span><span class="p">,</span>
                                                <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">)))</span>
 
+        <span class="n">num_snort_containers</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">SNORT_IDS_IMAGES</span><span class="p">,</span>
+                                               <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">)))</span>
+
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
             <span class="n">docker_host_stats</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">host_metrics</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">ossec_host_ids_metrics</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">snort_ids_ip_metrics</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">SNORT_IDS_IMAGES</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">snort_alert_metrics_per_ids</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">snort_rule_metrics_per_ids</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">host_metrics</span><span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">docker_host_stats</span><span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">ossec_host_ids_metrics</span><span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">snort_ids_ip_metrics</span><span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">host_metrics</span><span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">docker_host_stats</span><span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">ossec_host_ids_metrics</span><span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">snort_ids_ip_metrics</span><span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">if</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">host_metrics</span><span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">docker_host_stats</span><span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">ossec_host_ids_metrics</span><span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">snort_ids_ip_metrics</span><span class="p">[</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">topic_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">ATTACKER_ACTIONS_TOPIC_NAME</span><span class="p">,</span>
                        <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">DOCKER_HOST_STATS_TOPIC_NAME</span><span class="p">,</span>
@@ -162,9 +180,10 @@
                        <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_PORT_STATS_TOPIC_NAME</span><span class="p">,</span>
                        <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME</span><span class="p">,</span>
                        <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME</span><span class="p">,</span>
-                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME</span>
-                       <span class="p">]</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading time-series data for the last </span><span class="si">{</span><span class="n">time_window_minutes</span><span class="si">}</span><span class="s2"> from topics: </span><span class="si">{</span><span class="n">topic_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_IP_LOG_TOPIC_NAME</span><span class="p">,</span>
+                       <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_RULE_LOG_TOPIC_NAME</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading time-series data for the last </span><span class="si">{</span><span class="n">time_window_minutes</span><span class="si">}</span><span class="s2"> minutes from topics: </span><span class="si">{</span><span class="n">topic_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">start_consume_ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">kafka_conf</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA</span><span class="o">.</span><span class="n">BOOTSTRAP_SERVERS_PROPERTY</span><span class="p">:</span>
@@ -191,6 +210,8 @@
         <span class="n">num_msg</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">host_metrics_counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">ossec_host_metrics_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_metrics_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">snort_rule_metrics_counter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="n">consumer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">msg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -225,7 +246,17 @@
                         <span class="n">c</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_container_from_ip</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
                         <span class="n">docker_host_stats</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>
                     <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_LOG_TOPIC_NAME</span><span class="p">:</span>
-                        <span class="n">snort_ids_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SnortIdsAlertCounters</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()))</span>
+                        <span class="n">metrics</span> <span class="o">=</span> <span class="n">SnortIdsAlertCounters</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                        <span class="n">c</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_container_from_ip</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
+                        <span class="n">snort_alert_metrics_per_ids</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+                        <span class="n">snort_metrics_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">total_snort_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_RULE_LOG_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">metrics</span> <span class="o">=</span> <span class="n">SnortIdsRuleCounters</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                        <span class="n">c</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_container_from_ip</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">ip</span><span class="p">)</span>
+                        <span class="n">snort_rule_metrics_per_ids</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+                        <span class="n">snort_rule_metrics_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">total_snort_rule_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
                     <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">CLIENT_POPULATION_TOPIC_NAME</span><span class="p">:</span>
                         <span class="n">client_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClientPopulationMetrics</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()))</span>
                     <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">OPENFLOW_FLOW_STATS_TOPIC_NAME</span><span class="p">:</span>
@@ -263,6 +294,11 @@
                             <span class="n">agg_openflow_flow_metrics_per_switch</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">agg_flow_statistics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
                         <span class="n">agg_openflow_flow_metrics_per_switch</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">agg_flow_statistics_record</span><span class="o">.</span><span class="n">datapath_id</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                             <span class="n">agg_flow_statistics_record</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">topic</span> <span class="o">==</span> <span class="n">collector_constants</span><span class="o">.</span><span class="n">KAFKA_CONFIG</span><span class="o">.</span><span class="n">SNORT_IDS_IP_LOG_TOPIC_NAME</span><span class="p">:</span>
+                        <span class="n">metrics</span> <span class="o">=</span> <span class="n">SnortIdsIPAlertCounters</span><span class="o">.</span><span class="n">from_kafka_record</span><span class="p">(</span><span class="n">record</span><span class="o">=</span><span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+                        <span class="n">c</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_container_from_ip</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">alert_ip</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">snort_ids_ip_metrics</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">get_full_name</span><span class="p">()]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">host_metrics_counter</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">):</span>
                         <span class="n">agg_host_metrics_dto</span> <span class="o">=</span> <span class="n">ReadEmulationStatisticsUtil</span><span class="o">.</span><span class="n">average_host_metrics</span><span class="p">(</span>
                             <span class="n">host_metrics</span><span class="o">=</span><span class="n">total_host_metrics</span><span class="p">)</span>
@@ -275,12 +311,25 @@
                         <span class="n">aggregated_ossec_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agg_ossec_metrics_dto</span><span class="p">)</span>
                         <span class="n">ossec_host_metrics_counter</span> <span class="o">=</span> <span class="mi">0</span>
                         <span class="n">total_ossec_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">if</span> <span class="n">snort_metrics_counter</span> <span class="o">&gt;=</span> <span class="n">num_snort_containers</span><span class="p">:</span>
+                        <span class="n">agg_snort_metrics_dto</span> <span class="o">=</span> <span class="n">ReadEmulationStatisticsUtil</span><span class="o">.</span><span class="n">average_snort_metrics</span><span class="p">(</span>
+                            <span class="n">snort_metrics</span><span class="o">=</span><span class="n">total_snort_metrics</span><span class="p">)</span>
+                        <span class="n">snort_ids_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agg_snort_metrics_dto</span><span class="p">)</span>
+                        <span class="n">snort_metrics_counter</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">total_snort_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">if</span> <span class="n">snort_rule_metrics_counter</span> <span class="o">&gt;=</span> <span class="n">num_snort_containers</span><span class="p">:</span>
+                        <span class="n">agg_snort_rule_metrics_dto</span> <span class="o">=</span> <span class="n">ReadEmulationStatisticsUtil</span><span class="o">.</span><span class="n">average_snort_rule_metrics</span><span class="p">(</span>
+                            <span class="n">snort_metrics</span><span class="o">=</span><span class="n">total_snort_rule_metrics</span><span class="p">)</span>
+                        <span class="n">snort_ids_rule_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agg_snort_rule_metrics_dto</span><span class="p">)</span>
+                        <span class="n">snort_rule_metrics_counter</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">total_snort_rule_metrics</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">consumer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">dto</span> <span class="o">=</span> <span class="n">EmulationMetricsTimeSeries</span><span class="p">(</span>
             <span class="n">client_metrics</span><span class="o">=</span><span class="n">client_metrics</span><span class="p">,</span> <span class="n">aggregated_docker_stats</span><span class="o">=</span><span class="n">agg_docker_stats</span><span class="p">,</span> <span class="n">host_metrics</span><span class="o">=</span><span class="n">host_metrics</span><span class="p">,</span>
-            <span class="n">docker_host_stats</span><span class="o">=</span><span class="n">docker_host_stats</span><span class="p">,</span> <span class="n">snort_ids_metrics</span><span class="o">=</span><span class="n">snort_ids_metrics</span><span class="p">,</span> <span class="n">attacker_actions</span><span class="o">=</span><span class="n">attacker_actions</span><span class="p">,</span>
+            <span class="n">docker_host_stats</span><span class="o">=</span><span class="n">docker_host_stats</span><span class="p">,</span> <span class="n">agg_snort_ids_metrics</span><span class="o">=</span><span class="n">snort_ids_metrics</span><span class="p">,</span>
+            <span class="n">attacker_actions</span><span class="o">=</span><span class="n">attacker_actions</span><span class="p">,</span>
             <span class="n">defender_actions</span><span class="o">=</span><span class="n">defender_actions</span><span class="p">,</span> <span class="n">aggregated_host_metrics</span><span class="o">=</span><span class="n">aggregated_host_metrics</span><span class="p">,</span>
             <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">aggregated_ossec_host_alert_counters</span><span class="o">=</span><span class="n">aggregated_ossec_metrics</span><span class="p">,</span>
             <span class="n">ossec_host_alert_counters</span><span class="o">=</span><span class="n">ossec_host_ids_metrics</span><span class="p">,</span>
@@ -291,7 +340,10 @@
             <span class="n">openflow_flow_avg_metrics_per_switch</span><span class="o">=</span><span class="n">openflow_flow_avg_metrics_per_switch</span><span class="p">,</span>
             <span class="n">openflow_port_avg_metrics_per_switch</span><span class="o">=</span><span class="n">openflow_port_avg_metrics_per_switch</span><span class="p">,</span>
             <span class="n">agg_openflow_flow_stats</span><span class="o">=</span><span class="n">agg_openflow_flow_stats</span><span class="p">,</span>
-            <span class="n">agg_openflow_flow_metrics_per_switch</span><span class="o">=</span><span class="n">agg_openflow_flow_metrics_per_switch</span>
+            <span class="n">agg_openflow_flow_metrics_per_switch</span><span class="o">=</span><span class="n">agg_openflow_flow_metrics_per_switch</span><span class="p">,</span>
+            <span class="n">agg_snort_ids_rule_metrics</span><span class="o">=</span><span class="n">snort_ids_rule_metrics</span><span class="p">,</span> <span class="n">snort_ids_ip_metrics</span><span class="o">=</span><span class="n">snort_ids_ip_metrics</span><span class="p">,</span>
+            <span class="n">snort_rule_metrics_per_ids</span><span class="o">=</span><span class="n">snort_rule_metrics_per_ids</span><span class="p">,</span>
+            <span class="n">snort_alert_metrics_per_ids</span><span class="o">=</span><span class="n">snort_alert_metrics_per_ids</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">dto</span></div>
 
@@ -336,7 +388,33 @@
         <span class="n">aggregated_ossec_ids_alert_counters</span> <span class="o">=</span> <span class="n">OSSECIdsAlertCounters</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">alert_counters</span> <span class="ow">in</span> <span class="n">ossec_metrics</span><span class="p">:</span>
             <span class="n">aggregated_ossec_ids_alert_counters</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alert_counters</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">aggregated_ossec_ids_alert_counters</span></div></div>
+        <span class="k">return</span> <span class="n">aggregated_ossec_ids_alert_counters</span></div>
+
+<div class="viewcode-block" id="ReadEmulationStatisticsUtil.average_snort_metrics"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.average_snort_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">average_snort_metrics</span><span class="p">(</span><span class="n">snort_metrics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsAlertCounters</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SnortIdsAlertCounters</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the average metrics from a list of Snort metrics</span>
+
+<span class="sd">        :param snort_metrics: the list of Snort metrics</span>
+<span class="sd">        :return: the computed averages</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aggregated_snort_ids_alert_counters</span> <span class="o">=</span> <span class="n">SnortIdsAlertCounters</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">alert_counters</span> <span class="ow">in</span> <span class="n">snort_metrics</span><span class="p">:</span>
+            <span class="n">aggregated_snort_ids_alert_counters</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alert_counters</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">aggregated_snort_ids_alert_counters</span></div>
+
+<div class="viewcode-block" id="ReadEmulationStatisticsUtil.average_snort_rule_metrics"><a class="viewcode-back" href="../../../csle_common.util.html#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.average_snort_rule_metrics">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">average_snort_rule_metrics</span><span class="p">(</span><span class="n">snort_metrics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsRuleCounters</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SnortIdsRuleCounters</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the average metrics from a list of Snort rule metrics</span>
+
+<span class="sd">        :param snort_metrics: the list of Snort rule metrics</span>
+<span class="sd">        :return: the computed averages</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aggregated_snort_ids_rule_counters</span> <span class="o">=</span> <span class="n">SnortIdsRuleCounters</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">alert_counters</span> <span class="ow">in</span> <span class="n">snort_metrics</span><span class="p">:</span>
+            <span class="n">aggregated_snort_ids_rule_counters</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alert_counters</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">aggregated_snort_ids_rule_counters</span></div></div>
 </pre></div>
 
            </div>

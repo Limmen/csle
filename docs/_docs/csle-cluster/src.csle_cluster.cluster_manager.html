@@ -292,6 +292,24 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_pid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_controller.html#ClusterController.check_pid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid" title="Permalink to this definition"></a></dt>
+<dd><p>Checks the status of a PID of a specific server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip</strong> – the ip of the physical node</p></li>
+<li><p><strong>port</strong> – the port of the cluster manager</p></li>
+<li><p><strong>pid</strong> – the PID to check</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The operation outcome</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_controller.ClusterController.clean_all_executions">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clean_all_executions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_controller.html#ClusterController.clean_all_executions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_controller.ClusterController.clean_all_executions" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to clean all executions on a given node</p>
@@ -2807,6 +2825,45 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_controller.ClusterController.start_spark_server">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_spark_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_controller.html#ClusterController.start_spark_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_controller.ClusterController.start_spark_server" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the Spark server on a specific container in a specific execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip</strong> – the ip of the physical node</p></li>
+<li><p><strong>port</strong> – the port of the cluster manager</p></li>
+<li><p><strong>emulation</strong> – the emulation of the execution</p></li>
+<li><p><strong>ip_first_octet</strong> – the ID of the execution</p></li>
+<li><p><strong>container_ip</strong> – the ip of the container</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The operation outcome</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_controller.ClusterController.start_spark_servers">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_spark_servers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_controller.html#ClusterController.start_spark_servers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_controller.ClusterController.start_spark_servers" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to start the Spark servers of a given execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip</strong> – the ip of the node where to start the Snort IDSes</p></li>
+<li><p><strong>port</strong> – the port of the cluster manager</p></li>
+<li><p><strong>emulation</strong> – the emulation of the execution</p></li>
+<li><p><strong>ip_first_octet</strong> – the ID of the execution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The operation outcome</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_controller.ClusterController.start_traffic_generator">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_traffic_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_controller.html#ClusterController.start_traffic_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_controller.ClusterController.start_traffic_generator" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to start a specific traffic generator</p>
@@ -3688,6 +3745,24 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_pid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_controller.html#ClusterController.stop_pid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid" title="Permalink to this definition"></a></dt>
+<dd><p>Stops a PID of a specific server</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip</strong> – the ip of the physical node</p></li>
+<li><p><strong>port</strong> – the port of the cluster manager</p></li>
+<li><p><strong>pid</strong> – the PID to check</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The operation outcome</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_postgresql">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_postgresql</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ServiceStatusDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_controller.html#ClusterController.stop_postgresql"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_postgresql" title="Permalink to this definition"></a></dt>
 <dd><p>Stops PostgreSQL on a cluster node</p>
@@ -3902,6 +3977,45 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ip</strong> – the ip of the physical node</p></li>
+<li><p><strong>port</strong> – the port of the cluster manager</p></li>
+<li><p><strong>emulation</strong> – the emulation of the execution</p></li>
+<li><p><strong>ip_first_octet</strong> – the ID of the execution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The operation outcome</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_spark_server">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_spark_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_controller.html#ClusterController.stop_spark_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_spark_server" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the Spark server on a specific container in a specific execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip</strong> – the ip of the physical node</p></li>
+<li><p><strong>port</strong> – the port of the cluster manager</p></li>
+<li><p><strong>emulation</strong> – the emulation of the execution</p></li>
+<li><p><strong>ip_first_octet</strong> – the ID of the execution</p></li>
+<li><p><strong>container_ip</strong> – the ip of the container</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The operation outcome</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_spark_servers">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_spark_servers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_controller.html#ClusterController.stop_spark_servers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_spark_servers" title="Permalink to this definition"></a></dt>
+<dd><p>Sends a request to stop the Spark servers of a given execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip</strong> – the ip of the node where to start the Snort IDSes</p></li>
 <li><p><strong>port</strong> – the port of the cluster manager</p></li>
 <li><p><strong>emulation</strong> – the emulation of the execution</p></li>
 <li><p><strong>ip_first_octet</strong> – the ID of the execution</p></li>
@@ -4176,6 +4290,23 @@
 <span class="sig-name descname"><span class="pre">attachContainersInExecutionToNetworks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartContainersInExecutionMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager.html#ClusterManagerServicer.attachContainersInExecutionToNetworks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.attachContainersInExecutionToNetworks" title="Permalink to this definition"></a></dt>
 <dd><p>Attaches the containers of a given emulation execution that are configured to be deployed on this host to
 their corresponding virtual overlay networks</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an OperationOutcomeDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.checkPid">
+<span class="sig-name descname"><span class="pre">checkPid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CheckPidMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager.html#ClusterManagerServicer.checkPid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.checkPid" title="Permalink to this definition"></a></dt>
+<dd><p>Checks the status of a PID</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -6468,6 +6599,40 @@ their corresponding virtual overlay networks</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.startSparkServer">
+<span class="sig-name descname"><span class="pre">startSparkServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartSparkServerMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager.html#ClusterManagerServicer.startSparkServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.startSparkServer" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the Spark server on a specific container in a specific execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an OperationOutcomeDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.startSparkServers">
+<span class="sig-name descname"><span class="pre">startSparkServers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartSparkServersMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager.html#ClusterManagerServicer.startSparkServers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.startSparkServers" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the Spark servers in a specific execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an OperationOutcomeDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.startTrafficGenerator">
 <span class="sig-name descname"><span class="pre">startTrafficGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StartTrafficGeneratorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager.html#ClusterManagerServicer.startTrafficGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.startTrafficGenerator" title="Permalink to this definition"></a></dt>
 <dd><p>Starts a specific traffic generator</p>
@@ -7267,6 +7432,23 @@ their corresponding virtual overlay networks</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.stopPid">
+<span class="sig-name descname"><span class="pre">stopPid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopPidMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager.html#ClusterManagerServicer.stopPid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.stopPid" title="Permalink to this definition"></a></dt>
+<dd><p>Stops a PID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an OperationOutcomeDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.stopPostgreSQL">
 <span class="sig-name descname"><span class="pre">stopPostgreSQL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopPostgreSQLMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ServiceStatusDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager.html#ClusterManagerServicer.stopPostgreSQL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.stopPostgreSQL" title="Permalink to this definition"></a></dt>
 <dd><p>Stops Postgresql</p>
@@ -7471,6 +7653,40 @@ their corresponding virtual overlay networks</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.stopSparkServer">
+<span class="sig-name descname"><span class="pre">stopSparkServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopSparkServerMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager.html#ClusterManagerServicer.stopSparkServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.stopSparkServer" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the Spark server on a specific container in a specific execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an OperationOutcomeDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.stopSparkServers">
+<span class="sig-name descname"><span class="pre">stopSparkServers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopSparkServersMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager.html#ClusterManagerServicer.stopSparkServers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.stopSparkServers" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the Spark servers in a specific execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – the gRPC request</p></li>
+<li><p><strong>context</strong> – the gRPC context</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an OperationOutcomeDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.stopTrafficGenerator">
 <span class="sig-name descname"><span class="pre">stopTrafficGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">StopTrafficGeneratorMsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ServicerContext</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager.html#ClusterManagerServicer.stopTrafficGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager.ClusterManagerServicer.stopTrafficGenerator" title="Permalink to this definition"></a></dt>
 <dd><p>Stops a specific traffic generator</p>
@@ -7625,6 +7841,11 @@ their corresponding virtual overlay networks</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.attachContainersInExecutionToNetworks">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">attachContainersInExecutionToNetworks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManager.attachContainersInExecutionToNetworks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.attachContainersInExecutionToNetworks" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.checkPid">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">checkPid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManager.checkPid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.checkPid" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -8298,6 +8519,16 @@ their corresponding virtual overlay networks</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.startSparkServer">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">startSparkServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManager.startSparkServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.startSparkServer" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.startSparkServers">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">startSparkServers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManager.startSparkServers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.startSparkServers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.startTrafficGenerator">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">startTrafficGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManager.startTrafficGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.startTrafficGenerator" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -8533,6 +8764,11 @@ their corresponding virtual overlay networks</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopPid">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stopPid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManager.stopPid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopPid" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopPostgreSQL">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stopPostgreSQL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManager.stopPostgreSQL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopPostgreSQL" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -8590,6 +8826,16 @@ their corresponding virtual overlay networks</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopSnortIdsesMonitorThreads">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stopSnortIdsesMonitorThreads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManager.stopSnortIdsesMonitorThreads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopSnortIdsesMonitorThreads" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopSparkServer">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stopSparkServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManager.stopSparkServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopSparkServer" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopSparkServers">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stopSparkServers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">call_credentials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insecure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_for_ready</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManager.stopSparkServers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopSparkServers" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -8682,6 +8928,12 @@ their corresponding virtual overlay networks</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.attachContainersInExecutionToNetworks">
 <span class="sig-name descname"><span class="pre">attachContainersInExecutionToNetworks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManagerServicer.attachContainersInExecutionToNetworks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.attachContainersInExecutionToNetworks" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.checkPid">
+<span class="sig-name descname"><span class="pre">checkPid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManagerServicer.checkPid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.checkPid" title="Permalink to this definition"></a></dt>
 <dd><p>Missing associated documentation comment in .proto file.</p>
 </dd></dl>
 
@@ -9490,6 +9742,18 @@ their corresponding virtual overlay networks</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.startSparkServer">
+<span class="sig-name descname"><span class="pre">startSparkServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManagerServicer.startSparkServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.startSparkServer" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.startSparkServers">
+<span class="sig-name descname"><span class="pre">startSparkServers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManagerServicer.startSparkServers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.startSparkServers" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.startTrafficGenerator">
 <span class="sig-name descname"><span class="pre">startTrafficGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManagerServicer.startTrafficGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.startTrafficGenerator" title="Permalink to this definition"></a></dt>
 <dd><p>Missing associated documentation comment in .proto file.</p>
@@ -9772,6 +10036,12 @@ their corresponding virtual overlay networks</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopPid">
+<span class="sig-name descname"><span class="pre">stopPid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManagerServicer.stopPid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopPid" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopPostgreSQL">
 <span class="sig-name descname"><span class="pre">stopPostgreSQL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManagerServicer.stopPostgreSQL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopPostgreSQL" title="Permalink to this definition"></a></dt>
 <dd><p>Missing associated documentation comment in .proto file.</p>
@@ -9840,6 +10110,18 @@ their corresponding virtual overlay networks</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopSnortIdsesMonitorThreads">
 <span class="sig-name descname"><span class="pre">stopSnortIdsesMonitorThreads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManagerServicer.stopSnortIdsesMonitorThreads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopSnortIdsesMonitorThreads" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopSparkServer">
+<span class="sig-name descname"><span class="pre">stopSparkServer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManagerServicer.stopSparkServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopSparkServer" title="Permalink to this definition"></a></dt>
+<dd><p>Missing associated documentation comment in .proto file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopSparkServers">
+<span class="sig-name descname"><span class="pre">stopSparkServers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_pb2_grpc.html#ClusterManagerServicer.stopSparkServers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopSparkServers" title="Permalink to this definition"></a></dt>
 <dd><p>Missing associated documentation comment in .proto file.</p>
 </dd></dl>
 
@@ -10996,6 +11278,34 @@ their corresponding virtual overlay networks</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_alert_counters_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_snort_ids_alert_counters_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_alert_counters_d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsAlertCounters</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsAlertCountersDict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.convert_snort_ids_alert_counters_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_alert_counters_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict to list of SnortIdsAlertCountersDict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_alert_counters_d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted objected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_alert_counters_dict_reverse">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_snort_ids_alert_counters_dict_reverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_alerts_counters_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsAlertCountersDict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsAlertCounters</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.convert_snort_ids_alert_counters_dict_reverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_alert_counters_dict_reverse" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a list of SnortIdsIpAlertCountersDict to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_alerts_counters_dict</strong> – the list to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_alert_counters_dto">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_snort_ids_alert_counters_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsAlertCounters</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsAlertCountersDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.convert_snort_ids_alert_counters_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_alert_counters_dto" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a SnortIdsAlertCounters object to a SnortIdsAlertCountersDTO</p>
@@ -11024,6 +11334,62 @@ their corresponding virtual overlay networks</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_snort_ids_ip_alert_counters_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_ip_alert_counters_d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsIPAlertCounters</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsIpAlertCountersDict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict to list of SnortIdsIpAlertCountersDict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_ip_alert_counters_d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted objected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict_reverse">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_snort_ids_ip_alert_counters_dict_reverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_ip_alerts_counters_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsIpAlertCountersDict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsIPAlertCounters</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict_reverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict_reverse" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a list of SnortIdsIpAlertCountersDict to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_ip_alerts_counters_dict</strong> – the list to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_snort_ids_ip_alert_counters_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_ip_alert_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsIPAlertCounters</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsIpAlertCountersDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a SnortIdsIPAlertCounters object to a SnortIdsIpAlertCountersDTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_ip_alert_counters</strong> – the object to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted objected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto_reverse">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_snort_ids_ip_alert_counters_dto_reverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_ip_alert_counters_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsIpAlertCountersDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsIPAlertCounters</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto_reverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto_reverse" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a SnortIdsIpAlertCountersDTO to a SnortIdsIPAlertCounters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_ip_alert_counters_dto</strong> – the DTO to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_monitor_dto_to_snort_ids_status_dto">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_snort_ids_monitor_dto_to_snort_ids_status_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsMonitorDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsStatusDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.convert_snort_ids_monitor_dto_to_snort_ids_status_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_monitor_dto_to_snort_ids_status_dto" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a SnortIdsMonitorDTO to a SnortIdsStatusDTO</p>
@@ -11044,6 +11410,62 @@ their corresponding virtual overlay networks</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>snort_dto</strong> – the DTO to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_rule_counters_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_snort_ids_rule_counters_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_rule_counters_d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsRuleCounters</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsRuleCountersDict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.convert_snort_ids_rule_counters_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_rule_counters_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a dict to list of SnortIdsRuleCountersDict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_rule_counters_d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted objected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_rule_counters_dict_reverse">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_snort_ids_rule_counters_dict_reverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_rule_counters_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsRuleCountersDict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsRuleCounters</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.convert_snort_ids_rule_counters_dict_reverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_rule_counters_dict_reverse" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a list of SnortIdsRuleCountersDict to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_rule_counters_dict</strong> – the list to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_rule_counters_dto">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_snort_ids_rule_counters_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_rule_counters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsRuleCounters</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsRuleCountersDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.convert_snort_ids_rule_counters_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_rule_counters_dto" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a SnortIdsRuleCounters object to a SnortIdsRuleCountersDTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_rule_counters</strong> – the object to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted objected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_rule_counters_dto_reverse">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_snort_ids_rule_counters_dto_reverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_rule_counters_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsRuleCountersDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsRuleCounters</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.convert_snort_ids_rule_counters_dto_reverse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_rule_counters_dto_reverse" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a SnortIdsRuleCountersDTO to a SnortIdsRuleCounters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_rule_counters_dto</strong> – the DTO to convert</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the converted DTO</p>
@@ -11822,8 +12244,58 @@ the corresponding configuration</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_alert_counters_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_empty_snort_ids_alert_counters_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsAlertCountersDict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.get_empty_snort_ids_alert_counters_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_alert_counters_dict" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an empty SnortIdsAlertCountersDict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_alert_counters_dto">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_empty_snort_ids_alert_counters_dto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsAlertCountersDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.get_empty_snort_ids_alert_counters_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_alert_counters_dto" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an empty SnortIdsAlertCountersDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_empty_snort_ids_ip_alert_counters_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsIpAlertCountersDict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dict" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an empty SnortIdsIpAlertCountersDict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dto">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_empty_snort_ids_ip_alert_counters_dto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsIpAlertCountersDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dto" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an empty SnortIdsAlertCountersDTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_rule_counters_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_empty_snort_ids_rule_counters_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsRuleCountersDict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.get_empty_snort_ids_rule_counters_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_rule_counters_dict" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an empty SnortIdsRuleCountersDict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_rule_counters_dto">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_empty_snort_ids_rule_counters_dto</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsRuleCountersDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.get_empty_snort_ids_rule_counters_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_rule_counters_dto" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>an empty SnortIdsAlertCountersDTO</p>
@@ -12282,8 +12754,50 @@ path</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_alert_counters_dict_to_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_alert_counters_dict_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_alert_counters_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsAlertCountersDict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.snort_ids_alert_counters_dict_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_alert_counters_dict_to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a DTO to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_alert_counters_dict</strong> – the DTO to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_alert_counters_dto_to_dict">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_alert_counters_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_alert_counters_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsAlertCountersDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.snort_ids_alert_counters_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_alert_counters_dto_to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a SnortIdsAlertCountersDTO to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_alert_counters_dto</strong> – the dto to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a dict representation of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_ip_alert_counters_dict_to_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_ip_alert_counters_dict_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_ip_alert_counters_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsIpAlertCountersDict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.snort_ids_ip_alert_counters_dict_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_ip_alert_counters_dict_to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a DTO to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_ip_alert_counters_dict</strong> – the DTO to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_ip_alert_counters_dto_to_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_ip_alert_counters_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_alert_counters_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsIpAlertCountersDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.snort_ids_ip_alert_counters_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_ip_alert_counters_dto_to_dict" title="Permalink to this definition"></a></dt>
 <dd><p>Converts a SnortIdsAlertCountersDTO to a dict</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -12302,6 +12816,34 @@ path</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>snort_ids_monitor_thread_statuses_dto</strong> – the dto to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a dict representation of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_rule_counters_dict_to_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_rule_counters_dict_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_rule_counters_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsAlertCountersDict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.snort_ids_rule_counters_dict_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_rule_counters_dict_to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a DTO to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_rule_counters_dict</strong> – the DTO to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_rule_counters_dto_to_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">snort_ids_rule_counters_dto_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_ids_rule_counters_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SnortIdsRuleCountersDTO</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/cluster_manager_util.html#ClusterManagerUtil.snort_ids_rule_counters_dto_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_rule_counters_dto_to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converts a SnortIdsRuleCountersDTO to a dict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_ids_rule_counters_dto</strong> – the dto to convert</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>a dict representation of the DTO</p>
@@ -12610,6 +13152,24 @@ path</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>an OperationOutcomeDTO with the outcome of the operation</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.query_cluster_manager.check_pid">
+<span class="sig-prename descclassname"><span class="pre">src.csle_cluster.cluster_manager.query_cluster_manager.</span></span><span class="sig-name descname"><span class="pre">check_pid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub" title="csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub"><span class="pre">ClusterManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/query_cluster_manager.html#check_pid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.query_cluster_manager.check_pid" title="Permalink to this definition"></a></dt>
+<dd><p>Checks the status of a PID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+<li><p><strong>pid</strong> – the pid to check</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the operation outcome</p>
 </dd>
 </dl>
 </dd></dl>
@@ -13135,7 +13695,7 @@ path</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.query_cluster_manager.get_execution_time_series_data">
-<span class="sig-prename descclassname"><span class="pre">src.csle_cluster.cluster_manager.query_cluster_manager.</span></span><span class="sig-name descname"><span class="pre">get_execution_time_series_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub" title="csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub"><span class="pre">ClusterManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minutes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationMetricsTimeSeriesDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/query_cluster_manager.html#get_execution_time_series_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.query_cluster_manager.get_execution_time_series_data" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">src.csle_cluster.cluster_manager.query_cluster_manager.</span></span><span class="sig-name descname"><span class="pre">get_execution_time_series_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub" title="csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub"><span class="pre">ClusterManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minutes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EmulationMetricsTimeSeriesDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/query_cluster_manager.html#get_execution_time_series_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.query_cluster_manager.get_execution_time_series_data" title="Permalink to this definition"></a></dt>
 <dd><p>Fetches the logs of the cluster manager on a given physical node</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -15097,6 +15657,45 @@ path</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.query_cluster_manager.start_spark_server">
+<span class="sig-prename descclassname"><span class="pre">src.csle_cluster.cluster_manager.query_cluster_manager.</span></span><span class="sig-name descname"><span class="pre">start_spark_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub" title="csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub"><span class="pre">ClusterManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/query_cluster_manager.html#start_spark_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.query_cluster_manager.start_spark_server" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the Spark server on a specific container in a specific execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+<li><p><strong>container_ip</strong> – the ip of the container</p></li>
+<li><p><strong>emulation</strong> – the name of the emulation</p></li>
+<li><p><strong>ip_first_octet</strong> – the first octet of the subnet of the execution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the operation outcome</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.query_cluster_manager.start_spark_servers">
+<span class="sig-prename descclassname"><span class="pre">src.csle_cluster.cluster_manager.query_cluster_manager.</span></span><span class="sig-name descname"><span class="pre">start_spark_servers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub" title="csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub"><span class="pre">ClusterManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/query_cluster_manager.html#start_spark_servers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.query_cluster_manager.start_spark_servers" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the Spark servers of a given execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+<li><p><strong>emulation</strong> – the name of the emulation</p></li>
+<li><p><strong>ip_first_octet</strong> – the first octet of the subnet of the execution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an OperationOutcomeDTO with the outcome of the operation</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.query_cluster_manager.start_traffic_generator">
 <span class="sig-prename descclassname"><span class="pre">src.csle_cluster.cluster_manager.query_cluster_manager.</span></span><span class="sig-name descname"><span class="pre">start_traffic_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub" title="csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub"><span class="pre">ClusterManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/query_cluster_manager.html#start_traffic_generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.query_cluster_manager.start_traffic_generator" title="Permalink to this definition"></a></dt>
 <dd><p>Starts a specific traffic generator</p>
@@ -15979,6 +16578,24 @@ path</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.query_cluster_manager.stop_pid">
+<span class="sig-prename descclassname"><span class="pre">src.csle_cluster.cluster_manager.query_cluster_manager.</span></span><span class="sig-name descname"><span class="pre">stop_pid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub" title="csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub"><span class="pre">ClusterManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/query_cluster_manager.html#stop_pid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.query_cluster_manager.stop_pid" title="Permalink to this definition"></a></dt>
+<dd><p>Stops a PID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+<li><p><strong>pid</strong> – the pid to check</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the operation outcome</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.query_cluster_manager.stop_postgresql">
 <span class="sig-prename descclassname"><span class="pre">src.csle_cluster.cluster_manager.query_cluster_manager.</span></span><span class="sig-name descname"><span class="pre">stop_postgresql</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub" title="csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub"><span class="pre">ClusterManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ServiceStatusDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/query_cluster_manager.html#stop_postgresql"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.query_cluster_manager.stop_postgresql" title="Permalink to this definition"></a></dt>
 <dd><p>Requests the cluster manager to stop the PostgreSQL service</p>
@@ -16201,6 +16818,45 @@ path</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the operation outcome</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.query_cluster_manager.stop_spark_server">
+<span class="sig-prename descclassname"><span class="pre">src.csle_cluster.cluster_manager.query_cluster_manager.</span></span><span class="sig-name descname"><span class="pre">stop_spark_server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub" title="csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub"><span class="pre">ClusterManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/query_cluster_manager.html#stop_spark_server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.query_cluster_manager.stop_spark_server" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the Spark server on a specific container in a specific execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+<li><p><strong>container_ip</strong> – the ip of the container</p></li>
+<li><p><strong>emulation</strong> – the name of the emulation</p></li>
+<li><p><strong>ip_first_octet</strong> – the first octet of the subnet of the execution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the operation outcome</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.csle_cluster.cluster_manager.query_cluster_manager.stop_spark_servers">
+<span class="sig-prename descclassname"><span class="pre">src.csle_cluster.cluster_manager.query_cluster_manager.</span></span><span class="sig-name descname"><span class="pre">stop_spark_servers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub" title="csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub"><span class="pre">ClusterManagerStub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">OperationOutcomeDTO</span></span></span><a class="reference internal" href="_modules/src/csle_cluster/cluster_manager/query_cluster_manager.html#stop_spark_servers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.csle_cluster.cluster_manager.query_cluster_manager.stop_spark_servers" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the Spark servers of a given execution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stub</strong> – the stub to send the remote gRPC to the server</p></li>
+<li><p><strong>timeout</strong> – the GRPC timeout (seconds)</p></li>
+<li><p><strong>emulation</strong> – the name of the emulation</p></li>
+<li><p><strong>ip_first_octet</strong> – the first octet of the subnet of the execution</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>an OperationOutcomeDTO with the outcome of the operation</p>
 </dd>
 </dl>
 </dd></dl>

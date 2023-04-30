@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
         <script src="../../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../../../index.html" class="icon icon-home">
-            csle-common
+            <a href="../../../../../index.html" class="icon icon-home"> csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,7 +60,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_common.dao.emulation_action.defender.emulation_defender_action_config</li>
       <li class="wy-breadcrumbs-aside">
@@ -74,7 +73,7 @@
              
   <h1>Source code for csle_common.dao.emulation_action.defender.emulation_defender_action_config</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-<span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action</span> <span class="kn">import</span> <span class="n">EmulationDefenderAction</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action_id</span> <span class="kn">import</span> <span class="n">EmulationDefenderActionId</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions</span> \
@@ -82,14 +81,14 @@
 
 
 <div class="viewcode-block" id="EmulationDefenderActionConfig"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig">[docs]</a><span class="k">class</span> <span class="nc">EmulationDefenderActionConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Configuration of the action space for the defender</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_indices</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderAction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">stopping_action_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">multiple_stop_actions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderAction</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">multiple_stop_actions_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EmulationDefenderActionId</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Class constructor</span>
 
 <span class="sd">        :param num_indices: max num machine indexes allowed</span>
@@ -117,7 +116,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">num_node_specific_actions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_ids</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EmulationDefenderActionConfig.print_actions"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.print_actions">[docs]</a>    <span class="k">def</span> <span class="nf">print_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility function for printing the list of actions</span>
 
 <span class="sd">        :return: None</span>
@@ -132,7 +131,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">action</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;[&quot;</span> <span class="o">+</span> <span class="n">tag</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EmulationDefenderActionConfig.get_continue_action_idx"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.get_continue_action_idx">[docs]</a>    <span class="k">def</span> <span class="nf">get_continue_action_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: the index of the continue action</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">)):</span>
@@ -142,7 +141,7 @@
 
 <div class="viewcode-block" id="EmulationDefenderActionConfig.all_actions_config"><a class="viewcode-back" href="../../../../../csle_common.dao.emulation_action.defender.html#csle_common.dao.emulation_action.defender.emulation_defender_action_config.EmulationDefenderActionConfig.all_actions_config">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">all_actions_config</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">subnet_masks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;EmulationDefenderActionConfig&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates an action configuration for the defender with all actions</span>
 
 <span class="sd">        :param num_nodes: the number of nodes in the environment</span>

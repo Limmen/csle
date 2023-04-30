@@ -68,6 +68,14 @@ csle\_common.dao.training.hparam module
    :undoc-members:
    :show-inheritance:
 
+csle\_common.dao.training.linear\_threshold\_stopping\_policy module
+--------------------------------------------------------------------
+
+.. automodule:: csle_common.dao.training.linear_threshold_stopping_policy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 csle\_common.dao.training.mixed\_multi\_threshold\_stopping\_policy module
 --------------------------------------------------------------------------
 
@@ -96,6 +104,14 @@ csle\_common.dao.training.policy module
 ---------------------------------------
 
 .. automodule:: csle_common.dao.training.policy
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+csle\_common.dao.training.policy\_type module
+---------------------------------------------
+
+.. automodule:: csle_common.dao.training.policy_type
    :members:
    :undoc-members:
    :show-inheritance:

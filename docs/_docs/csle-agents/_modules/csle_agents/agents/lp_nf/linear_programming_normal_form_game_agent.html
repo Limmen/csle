@@ -71,7 +71,7 @@
 <span></span><span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">import</span> <span class="nn">gymnasium</span> <span class="k">as</span> <span class="nn">gym</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pulp</span>
@@ -87,6 +87,7 @@
 <span class="kn">from</span> <span class="nn">csle_common.dao.training.vector_policy</span> <span class="kn">import</span> <span class="n">VectorPolicy</span>
 <span class="kn">from</span> <span class="nn">csle_common.metastore.metastore_facade</span> <span class="kn">import</span> <span class="n">MetastoreFacade</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.jobs.training_job_config</span> <span class="kn">import</span> <span class="n">TrainingJobConfig</span>
+<span class="kn">from</span> <span class="nn">csle_common.util.general_util</span> <span class="kn">import</span> <span class="n">GeneralUtil</span>
 <span class="kn">from</span> <span class="nn">csle_agents.agents.base.base_agent</span> <span class="kn">import</span> <span class="n">BaseAgent</span>
 <span class="kn">import</span> <span class="nn">csle_agents.constants.constants</span> <span class="k">as</span> <span class="nn">agents_constants</span>
 
@@ -161,7 +162,8 @@
                 <span class="n">progress_percentage</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">,</span> <span class="n">experiment_result</span><span class="o">=</span><span class="n">exp_result</span><span class="p">,</span>
                 <span class="n">emulation_env_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">simulation_traces</span><span class="o">=</span><span class="p">[],</span>
                 <span class="n">num_cached_traces</span><span class="o">=</span><span class="n">agents_constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">NUM_CACHED_SIMULATION_TRACES</span><span class="p">,</span>
-                <span class="n">log_file_path</span><span class="o">=</span><span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_log_file_path</span><span class="p">(),</span> <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">)</span>
+                <span class="n">log_file_path</span><span class="o">=</span><span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_log_file_path</span><span class="p">(),</span> <span class="n">descr</span><span class="o">=</span><span class="n">descr</span><span class="p">,</span>
+                <span class="n">physical_host_ip</span><span class="o">=</span><span class="n">GeneralUtil</span><span class="o">.</span><span class="n">get_host_ip</span><span class="p">())</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_to_metastore</span><span class="p">:</span>
                 <span class="n">training_job_id</span> <span class="o">=</span> <span class="n">MetastoreFacade</span><span class="o">.</span><span class="n">save_training_job</span><span class="p">(</span><span class="n">training_job</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">training_job</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">training_job_id</span>

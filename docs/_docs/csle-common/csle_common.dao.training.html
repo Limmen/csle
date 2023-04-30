@@ -67,10 +67,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.training.experiment_result">csle_common.dao.training.experiment_result module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.training.fnn_with_softmax_policy">csle_common.dao.training.fnn_with_softmax_policy module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.training.hparam">csle_common.dao.training.hparam module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.training.linear_threshold_stopping_policy">csle_common.dao.training.linear_threshold_stopping_policy module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.training.mixed_multi_threshold_stopping_policy">csle_common.dao.training.mixed_multi_threshold_stopping_policy module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.training.multi_threshold_stopping_policy">csle_common.dao.training.multi_threshold_stopping_policy module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.training.player_type">csle_common.dao.training.player_type module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.training.policy">csle_common.dao.training.policy module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.training.policy_type">csle_common.dao.training.policy_type module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.training.ppo_policy">csle_common.dao.training.ppo_policy module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.training.random_policy">csle_common.dao.training.random_policy module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-csle_common.dao.training.tabular_policy">csle_common.dao.training.tabular_policy module</a></li>
@@ -938,6 +940,134 @@
 </dd></dl>
 
 </section>
+<section id="module-csle_common.dao.training.linear_threshold_stopping_policy">
+<span id="csle-common-dao-training-linear-threshold-stopping-policy-module"></span><h2>csle_common.dao.training.linear_threshold_stopping_policy module<a class="headerlink" href="#module-csle_common.dao.training.linear_threshold_stopping_policy" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.training.linear_threshold_stopping_policy.</span></span><span class="sig-name descname"><span class="pre">LinearThresholdStoppingPolicy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulation_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.state.State" title="csle_common.dao.simulation_config.state.State"><span class="pre">State</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">player_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_common.dao.training.player_type.PlayerType" title="csle_common.dao.training.player_type.PlayerType"><span class="pre">PlayerType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="csle_common.dao.simulation_config.html#csle_common.dao.simulation_config.action.Action" title="csle_common.dao.simulation_config.action.Action"><span class="pre">Action</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experiment_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.training.experiment_config.ExperimentConfig" title="csle_common.dao.training.experiment_config.ExperimentConfig"><span class="pre">ExperimentConfig</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#csle_common.dao.training.agent_type.AgentType" title="csle_common.dao.training.agent_type.AgentType"><span class="pre">AgentType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">opponent_strategy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy" title="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy"><span class="pre">LinearThresholdStoppingPolicy</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/training/linear_threshold_stopping_policy.html#LinearThresholdStoppingPolicy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#csle_common.dao.training.policy.Policy" title="csle_common.dao.training.policy.Policy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Policy</span></code></a></p>
+<p>A linear threshold stopping policy</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.action">
+<span class="sig-name descname"><span class="pre">action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_common/dao/training/linear_threshold_stopping_policy.html#LinearThresholdStoppingPolicy.action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.action" title="Permalink to this definition"></a></dt>
+<dd><p>Multi-threshold stopping policy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>o</strong> – the current observation</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the selected action</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy" title="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy"><span class="pre">LinearThresholdStoppingPolicy</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/training/linear_threshold_stopping_policy.html#LinearThresholdStoppingPolicy.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.copy" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a copy of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy" title="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy"><span class="pre">LinearThresholdStoppingPolicy</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/training/linear_threshold_stopping_policy.html#LinearThresholdStoppingPolicy.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.from_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Converst a dict representation of the object to an instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> – the dict to convert</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.from_json_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy" title="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy"><span class="pre">LinearThresholdStoppingPolicy</span></a></span></span><a class="reference internal" href="_modules/csle_common/dao/training/linear_threshold_stopping_policy.html#LinearThresholdStoppingPolicy.from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.from_json_file" title="Permalink to this definition"></a></dt>
+<dd><p>Reads a json file and converts it to a DTO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the converted DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.probability">
+<span class="sig-name descname"><span class="pre">probability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_common/dao/training/linear_threshold_stopping_policy.html#LinearThresholdStoppingPolicy.probability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.probability" title="Permalink to this definition"></a></dt>
+<dd><p>Probability of a given action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>o</strong> – the current observation</p></li>
+<li><p><strong>a</strong> – a given action</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the probability of a</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.stage_policy">
+<span class="sig-name descname"><span class="pre">stage_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/training/linear_threshold_stopping_policy.html#LinearThresholdStoppingPolicy.stage_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.stage_policy" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the stage policy, i.e a <a href="#id13"><span class="problematic" id="id14">|S|x|A|</span></a> policy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>o</strong> – the latest observation</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the <a href="#id15"><span class="problematic" id="id16">|S|x|A|</span></a> stage policy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/training/linear_threshold_stopping_policy.html#LinearThresholdStoppingPolicy.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.to_dict" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a dict representation of the policy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.to_json_file">
+<span class="sig-name descname"><span class="pre">to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/dao/training/linear_threshold_stopping_policy.html#LinearThresholdStoppingPolicy.to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.to_json_file" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the DTO to a json file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_file_path</strong> – the json file path to save  the DTO to</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.to_json_str">
+<span class="sig-name descname"><span class="pre">to_json_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/dao/training/linear_threshold_stopping_policy.html#LinearThresholdStoppingPolicy.to_json_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.linear_threshold_stopping_policy.LinearThresholdStoppingPolicy.to_json_str" title="Permalink to this definition"></a></dt>
+<dd><p>Converts the DTO into a json string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the json string representation of the DTO</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-csle_common.dao.training.mixed_multi_threshold_stopping_policy">
 <span id="csle-common-dao-training-mixed-multi-threshold-stopping-policy-module"></span><h2>csle_common.dao.training.mixed_multi_threshold_stopping_policy module<a class="headerlink" href="#module-csle_common.dao.training.mixed_multi_threshold_stopping_policy" title="Permalink to this heading"></a></h2>
 <dl class="py class">
@@ -1216,13 +1346,13 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.stage_policy">
 <span class="sig-name descname"><span class="pre">stage_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/training/multi_threshold_stopping_policy.html#MultiThresholdStoppingPolicy.stage_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.multi_threshold_stopping_policy.MultiThresholdStoppingPolicy.stage_policy" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the stage policy, i.e a <a href="#id13"><span class="problematic" id="id14">|S|x|A|</span></a> policy</p>
+<dd><p>Gets the stage policy, i.e a <a href="#id17"><span class="problematic" id="id18">|S|x|A|</span></a> policy</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>o</strong> – the latest observation</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the <a href="#id15"><span class="problematic" id="id16">|S|x|A|</span></a> stage policy</p>
+<dd class="field-even"><p>the <a href="#id19"><span class="problematic" id="id20">|S|x|A|</span></a> stage policy</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1366,6 +1496,66 @@
 </dd></dl>
 
 </section>
+<section id="module-csle_common.dao.training.policy_type">
+<span id="csle-common-dao-training-policy-type-module"></span><h2>csle_common.dao.training.policy_type module<a class="headerlink" href="#module-csle_common.dao.training.policy_type" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="csle_common.dao.training.policy_type.PolicyType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">csle_common.dao.training.policy_type.</span></span><span class="sig-name descname"><span class="pre">PolicyType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/dao/training/policy_type.html#PolicyType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.policy_type.PolicyType" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>Enum representing the different policy types in CSLE</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.dao.training.policy_type.PolicyType.ALPHA_VECTORS">
+<span class="sig-name descname"><span class="pre">ALPHA_VECTORS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#csle_common.dao.training.policy_type.PolicyType.ALPHA_VECTORS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.dao.training.policy_type.PolicyType.DQN">
+<span class="sig-name descname"><span class="pre">DQN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#csle_common.dao.training.policy_type.PolicyType.DQN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.dao.training.policy_type.PolicyType.FNN_W_SOFTMAX">
+<span class="sig-name descname"><span class="pre">FNN_W_SOFTMAX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#csle_common.dao.training.policy_type.PolicyType.FNN_W_SOFTMAX" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.dao.training.policy_type.PolicyType.LINEAR_THRESHOLD">
+<span class="sig-name descname"><span class="pre">LINEAR_THRESHOLD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#csle_common.dao.training.policy_type.PolicyType.LINEAR_THRESHOLD" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.dao.training.policy_type.PolicyType.MIXED_MULTI_THRESHOLD">
+<span class="sig-name descname"><span class="pre">MIXED_MULTI_THRESHOLD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#csle_common.dao.training.policy_type.PolicyType.MIXED_MULTI_THRESHOLD" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.dao.training.policy_type.PolicyType.MULTI_THRESHOLD">
+<span class="sig-name descname"><span class="pre">MULTI_THRESHOLD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#csle_common.dao.training.policy_type.PolicyType.MULTI_THRESHOLD" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.dao.training.policy_type.PolicyType.PPO">
+<span class="sig-name descname"><span class="pre">PPO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#csle_common.dao.training.policy_type.PolicyType.PPO" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.dao.training.policy_type.PolicyType.RANDOM">
+<span class="sig-name descname"><span class="pre">RANDOM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#csle_common.dao.training.policy_type.PolicyType.RANDOM" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.dao.training.policy_type.PolicyType.TABULAR">
+<span class="sig-name descname"><span class="pre">TABULAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#csle_common.dao.training.policy_type.PolicyType.TABULAR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="csle_common.dao.training.policy_type.PolicyType.VECTOR">
+<span class="sig-name descname"><span class="pre">VECTOR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#csle_common.dao.training.policy_type.PolicyType.VECTOR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-csle_common.dao.training.ppo_policy">
 <span id="csle-common-dao-training-ppo-policy-module"></span><h2>csle_common.dao.training.ppo_policy module<a class="headerlink" href="#module-csle_common.dao.training.ppo_policy" title="Permalink to this heading"></a></h2>
 <dl class="py class">
@@ -1442,13 +1632,13 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.training.ppo_policy.PPOPolicy.stage_policy">
 <span class="sig-name descname"><span class="pre">stage_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/training/ppo_policy.html#PPOPolicy.stage_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.ppo_policy.PPOPolicy.stage_policy" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the stage policy, i.e a <a href="#id17"><span class="problematic" id="id18">|S|x|A|</span></a> policy</p>
+<dd><p>Gets the stage policy, i.e a <a href="#id21"><span class="problematic" id="id22">|S|x|A|</span></a> policy</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>o</strong> – the latest observation</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the <a href="#id19"><span class="problematic" id="id20">|S|x|A|</span></a> stage policy</p>
+<dd class="field-even"><p>the <a href="#id23"><span class="problematic" id="id24">|S|x|A|</span></a> stage policy</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1570,13 +1760,13 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.training.random_policy.RandomPolicy.stage_policy">
 <span class="sig-name descname"><span class="pre">stage_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/training/random_policy.html#RandomPolicy.stage_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.random_policy.RandomPolicy.stage_policy" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the stage policy, i.e a <a href="#id21"><span class="problematic" id="id22">|S|x|A|</span></a> policy</p>
+<dd><p>Gets the stage policy, i.e a <a href="#id25"><span class="problematic" id="id26">|S|x|A|</span></a> policy</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>o</strong> – the latest observation</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the <a href="#id23"><span class="problematic" id="id24">|S|x|A|</span></a> stage policy</p>
+<dd class="field-even"><p>the <a href="#id27"><span class="problematic" id="id28">|S|x|A|</span></a> stage policy</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1698,13 +1888,13 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.training.tabular_policy.TabularPolicy.stage_policy">
 <span class="sig-name descname"><span class="pre">stage_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/training/tabular_policy.html#TabularPolicy.stage_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.tabular_policy.TabularPolicy.stage_policy" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the stage policy, i.e a <a href="#id25"><span class="problematic" id="id26">|S|x|A|</span></a> policy</p>
+<dd><p>Gets the stage policy, i.e a <a href="#id29"><span class="problematic" id="id30">|S|x|A|</span></a> policy</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>o</strong> – the latest observation</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the <a href="#id27"><span class="problematic" id="id28">|S|x|A|</span></a> stage policy</p>
+<dd class="field-even"><p>the <a href="#id31"><span class="problematic" id="id32">|S|x|A|</span></a> stage policy</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1826,13 +2016,13 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.dao.training.vector_policy.VectorPolicy.stage_policy">
 <span class="sig-name descname"><span class="pre">stage_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/dao/training/vector_policy.html#VectorPolicy.stage_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.dao.training.vector_policy.VectorPolicy.stage_policy" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the stage policy, i.e a <a href="#id29"><span class="problematic" id="id30">|S|x|A|</span></a> policy</p>
+<dd><p>Gets the stage policy, i.e a <a href="#id33"><span class="problematic" id="id34">|S|x|A|</span></a> policy</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>o</strong> – the latest observation</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the <a href="#id31"><span class="problematic" id="id32">|S|x|A|</span></a> stage policy</p>
+<dd class="field-even"><p>the <a href="#id35"><span class="problematic" id="id36">|S|x|A|</span></a> stage policy</p>
 </dd>
 </dl>
 </dd></dl>

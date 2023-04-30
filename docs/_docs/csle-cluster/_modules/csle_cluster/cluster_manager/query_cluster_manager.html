@@ -4184,7 +4184,7 @@
 <div class="viewcode-block" id="get_execution_time_series_data"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.query_cluster_manager.get_execution_time_series_data">[docs]</a><span class="k">def</span> <span class="nf">get_execution_time_series_data</span><span class="p">(</span>
         <span class="n">stub</span><span class="p">:</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClusterManagerStub</span><span class="p">,</span>
         <span class="n">emulation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> \
+        <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">OPERATION_TIMEOUT_SECONDS</span><span class="p">)</span> \
         <span class="o">-&gt;</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">EmulationMetricsTimeSeriesDTO</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fetches the logs of the cluster manager on a given physical node</span>
@@ -4201,6 +4201,126 @@
     <span class="p">)</span>
     <span class="n">logs_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">getExecutionTimeSeriesData</span><span class="p">(</span><span class="n">get_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">logs_dto</span></div>
+
+
+<div class="viewcode-block" id="start_spark_servers"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.query_cluster_manager.start_spark_servers">[docs]</a><span class="k">def</span> <span class="nf">start_spark_servers</span><span class="p">(</span>
+        <span class="n">stub</span><span class="p">:</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClusterManagerStub</span><span class="p">,</span>
+        <span class="n">emulation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">OPERATION_TIMEOUT_SECONDS</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Starts the Spark servers of a given execution</span>
+
+<span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
+<span class="sd">    :param timeout: the GRPC timeout (seconds)</span>
+<span class="sd">    :param emulation: the name of the emulation</span>
+<span class="sd">    :param ip_first_octet: the first octet of the subnet of the execution</span>
+<span class="sd">    :return: an OperationOutcomeDTO with the outcome of the operation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operation_msg</span> <span class="o">=</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">StartSparkServersMsg</span><span class="p">(</span>
+        <span class="n">emulation</span><span class="o">=</span><span class="n">emulation</span><span class="p">,</span> <span class="n">ipFirstOctet</span><span class="o">=</span><span class="n">ip_first_octet</span>
+    <span class="p">)</span>
+    <span class="n">operation_outcome_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startSparkServers</span><span class="p">(</span><span class="n">operation_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">operation_outcome_dto</span></div>
+
+
+<div class="viewcode-block" id="stop_spark_servers"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.query_cluster_manager.stop_spark_servers">[docs]</a><span class="k">def</span> <span class="nf">stop_spark_servers</span><span class="p">(</span>
+        <span class="n">stub</span><span class="p">:</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClusterManagerStub</span><span class="p">,</span>
+        <span class="n">emulation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">OPERATION_TIMEOUT_SECONDS</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stops the Spark servers of a given execution</span>
+
+<span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
+<span class="sd">    :param timeout: the GRPC timeout (seconds)</span>
+<span class="sd">    :param emulation: the name of the emulation</span>
+<span class="sd">    :param ip_first_octet: the first octet of the subnet of the execution</span>
+<span class="sd">    :return: an OperationOutcomeDTO with the outcome of the operation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operation_msg</span> <span class="o">=</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">StopSparkServersMsg</span><span class="p">(</span>
+        <span class="n">emulation</span><span class="o">=</span><span class="n">emulation</span><span class="p">,</span> <span class="n">ipFirstOctet</span><span class="o">=</span><span class="n">ip_first_octet</span>
+    <span class="p">)</span>
+    <span class="n">operation_outcome_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopSparkServers</span><span class="p">(</span><span class="n">operation_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">operation_outcome_dto</span></div>
+
+
+<div class="viewcode-block" id="start_spark_server"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.query_cluster_manager.start_spark_server">[docs]</a><span class="k">def</span> <span class="nf">start_spark_server</span><span class="p">(</span>
+        <span class="n">stub</span><span class="p">:</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClusterManagerStub</span><span class="p">,</span>
+        <span class="n">emulation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">container_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">OPERATION_TIMEOUT_SECONDS</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Starts the Spark server on a specific container in a specific execution</span>
+
+<span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
+<span class="sd">    :param timeout: the GRPC timeout (seconds)</span>
+<span class="sd">    :param container_ip: the ip of the container</span>
+<span class="sd">    :param emulation: the name of the emulation</span>
+<span class="sd">    :param ip_first_octet: the first octet of the subnet of the execution</span>
+<span class="sd">    :return: the operation outcome</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operation_msg</span> <span class="o">=</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">StartSparkServerMsg</span><span class="p">(</span>
+        <span class="n">ipFirstOctet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">,</span> <span class="n">emulation</span><span class="o">=</span><span class="n">emulation</span><span class="p">,</span> <span class="n">containerIp</span><span class="o">=</span><span class="n">container_ip</span>
+    <span class="p">)</span>
+    <span class="n">operation_outcome</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startSparkServer</span><span class="p">(</span><span class="n">operation_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">operation_outcome</span></div>
+
+
+<div class="viewcode-block" id="stop_spark_server"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.query_cluster_manager.stop_spark_server">[docs]</a><span class="k">def</span> <span class="nf">stop_spark_server</span><span class="p">(</span>
+        <span class="n">stub</span><span class="p">:</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClusterManagerStub</span><span class="p">,</span>
+        <span class="n">emulation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">container_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">OPERATION_TIMEOUT_SECONDS</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stops the Spark server on a specific container in a specific execution</span>
+
+<span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
+<span class="sd">    :param timeout: the GRPC timeout (seconds)</span>
+<span class="sd">    :param container_ip: the ip of the container</span>
+<span class="sd">    :param emulation: the name of the emulation</span>
+<span class="sd">    :param ip_first_octet: the first octet of the subnet of the execution</span>
+<span class="sd">    :return: the operation outcome</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operation_msg</span> <span class="o">=</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">StopSparkServerMsg</span><span class="p">(</span>
+        <span class="n">ipFirstOctet</span><span class="o">=</span><span class="n">ip_first_octet</span><span class="p">,</span> <span class="n">emulation</span><span class="o">=</span><span class="n">emulation</span><span class="p">,</span> <span class="n">containerIp</span><span class="o">=</span><span class="n">container_ip</span>
+    <span class="p">)</span>
+    <span class="n">operation_outcome</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopSparkServer</span><span class="p">(</span><span class="n">operation_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">operation_outcome</span></div>
+
+
+<div class="viewcode-block" id="check_pid"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.query_cluster_manager.check_pid">[docs]</a><span class="k">def</span> <span class="nf">check_pid</span><span class="p">(</span>
+        <span class="n">stub</span><span class="p">:</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClusterManagerStub</span><span class="p">,</span>
+        <span class="n">pid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">OPERATION_TIMEOUT_SECONDS</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks the status of a PID</span>
+
+<span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
+<span class="sd">    :param timeout: the GRPC timeout (seconds)</span>
+<span class="sd">    :param pid: the pid to check</span>
+<span class="sd">    :return: the operation outcome</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operation_msg</span> <span class="o">=</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">CheckPidMsg</span><span class="p">(</span><span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">)</span>
+    <span class="n">operation_outcome</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">checkPid</span><span class="p">(</span><span class="n">operation_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">operation_outcome</span></div>
+
+
+<div class="viewcode-block" id="stop_pid"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.query_cluster_manager.stop_pid">[docs]</a><span class="k">def</span> <span class="nf">stop_pid</span><span class="p">(</span>
+        <span class="n">stub</span><span class="p">:</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClusterManagerStub</span><span class="p">,</span>
+        <span class="n">pid</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">OPERATION_TIMEOUT_SECONDS</span><span class="p">)</span> \
+        <span class="o">-&gt;</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stops a PID</span>
+
+<span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
+<span class="sd">    :param timeout: the GRPC timeout (seconds)</span>
+<span class="sd">    :param pid: the pid to check</span>
+<span class="sd">    :return: the operation outcome</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">operation_msg</span> <span class="o">=</span> <span class="n">csle_cluster</span><span class="o">.</span><span class="n">cluster_manager</span><span class="o">.</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">StopPidMsg</span><span class="p">(</span><span class="n">pid</span><span class="o">=</span><span class="n">pid</span><span class="p">)</span>
+    <span class="n">operation_outcome</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopPid</span><span class="p">(</span><span class="n">operation_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">operation_outcome</span></div>
 </pre></div>
 
            </div>

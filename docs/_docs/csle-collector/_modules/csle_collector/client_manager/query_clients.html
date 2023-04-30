@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            csle-collector
+            <a href="../../../index.html" class="icon icon-home"> csle-collector
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -62,7 +61,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_collector.client_manager.query_clients</li>
       <li class="wy-breadcrumbs-aside">
@@ -83,7 +82,7 @@
 <div class="viewcode-block" id="get_clients"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.query_clients.get_clients">[docs]</a><span class="k">def</span> <span class="nf">get_clients</span><span class="p">(</span><span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClientManagerStub</span><span class="p">,</span>
                 <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">)</span> \
         <span class="o">-&gt;</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">ClientsDTO</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Queries the server for the client state</span>
 
 <span class="sd">    :param stub: the stub to send the remote gRPC to the server</span>
@@ -91,13 +90,13 @@
 <span class="sd">    :return: a clientsDTO describing the state of the clients</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">get_clients_dto_msg</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">GetClientsMsg</span><span class="p">()</span>
-    <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">getClients</span><span class="p">(</span><span class="n">get_clients_dto_msg</span><span class="p">)</span>
+    <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">getClients</span><span class="p">(</span><span class="n">get_clients_dto_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">clients_dto</span></div>
 
 
 <div class="viewcode-block" id="stop_clients"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.query_clients.stop_clients">[docs]</a><span class="k">def</span> <span class="nf">stop_clients</span><span class="p">(</span><span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClientManagerStub</span><span class="p">,</span>
                  <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Stops the client arrival process</span>
 
 <span class="sd">    :param stub: the stub to the gRPC server</span>
@@ -105,15 +104,17 @@
 <span class="sd">    :return: a clientsDTO describing the state of the clients</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">stop_clients_msg</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">StopClientsMsg</span><span class="p">()</span>
-    <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopClients</span><span class="p">(</span><span class="n">stop_clients_msg</span><span class="p">)</span>
+    <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">stopClients</span><span class="p">(</span><span class="n">stop_clients_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">clients_dto</span></div>
 
 
 <div class="viewcode-block" id="start_clients"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.query_clients.start_clients">[docs]</a><span class="k">def</span> <span class="nf">start_clients</span><span class="p">(</span><span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClientManagerStub</span><span class="p">,</span>
                   <span class="n">mu</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lamb</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">commands</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">num_commands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
                   <span class="n">sine_modulated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">time_scaling_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">period_scaling_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+                  <span class="n">spiking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">exponents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">factors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">breakpoints</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">breakvalues</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">piece_wise_constant</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                   <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Starts the client arrival process</span>
 
 <span class="sd">    :param stub: the stub to the gRPC server</span>
@@ -125,20 +126,26 @@
 <span class="sd">    :param time_scaling_factor: the time scaling factor for the sine modulated arrival process</span>
 <span class="sd">    :param period_scaling_factor: the period scaling factor for the sine modulated arrival process</span>
 <span class="sd">    :param timeout: the GRPC timeout (seconds)</span>
+<span class="sd">    :param spiking: boolean flag indicating whether the arrival process is spiking or not</span>
+<span class="sd">    :param exponents: list of exponents for spiking arrival process</span>
+<span class="sd">    :param factors: list of factors for spiking arrival process</span>
+<span class="sd">    :param piece_wise_constant: boolean flag indicating whether the arrival process is piece-wise constant or not</span>
+<span class="sd">    :param breakpoints: list of breakpoints for piece-wise constant arrival process</span>
+<span class="sd">    :param breakvalues: list of breakvalues for piece-wise constant arrival process</span>
 <span class="sd">    :return: a clientsDTO describing the state of the clients</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">start_clients_msg</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2</span><span class="o">.</span><span class="n">StartClientsMsg</span><span class="p">(</span>
         <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">lamb</span><span class="o">=</span><span class="n">lamb</span><span class="p">,</span> <span class="n">time_step_len_seconds</span><span class="o">=</span><span class="n">time_step_len_seconds</span><span class="p">,</span> <span class="n">commands</span><span class="o">=</span><span class="n">commands</span><span class="p">,</span>
         <span class="n">num_commands</span><span class="o">=</span><span class="n">num_commands</span><span class="p">,</span> <span class="n">sine_modulated</span><span class="o">=</span><span class="n">sine_modulated</span><span class="p">,</span> <span class="n">period_scaling_factor</span><span class="o">=</span><span class="n">period_scaling_factor</span><span class="p">,</span>
-        <span class="n">time_scaling_factor</span><span class="o">=</span><span class="n">time_scaling_factor</span>
-    <span class="p">)</span>
-    <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startClients</span><span class="p">(</span><span class="n">start_clients_msg</span><span class="p">)</span>
+        <span class="n">time_scaling_factor</span><span class="o">=</span><span class="n">time_scaling_factor</span><span class="p">,</span> <span class="n">spiking</span><span class="o">=</span><span class="n">spiking</span><span class="p">,</span> <span class="n">exponents</span><span class="o">=</span><span class="n">exponents</span><span class="p">,</span> <span class="n">factors</span><span class="o">=</span><span class="n">factors</span><span class="p">,</span>
+        <span class="n">breakpoints</span><span class="o">=</span><span class="n">breakpoints</span><span class="p">,</span> <span class="n">breakvalues</span><span class="o">=</span><span class="n">breakvalues</span><span class="p">,</span> <span class="n">piece_wise_constant</span><span class="o">=</span><span class="n">piece_wise_constant</span><span class="p">)</span>
+    <span class="n">clients_dto</span> <span class="o">=</span> <span class="n">stub</span><span class="o">.</span><span class="n">startClients</span><span class="p">(</span><span class="n">start_clients_msg</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">clients_dto</span></div>
 
 
 <div class="viewcode-block" id="stop_producer"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.query_clients.stop_producer">[docs]</a><span class="k">def</span> <span class="nf">stop_producer</span><span class="p">(</span><span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClientManagerStub</span><span class="p">,</span>
                   <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Stops the producer process</span>
 
 <span class="sd">    :param stub: the stub to the gRPC server</span>
@@ -152,7 +159,7 @@
 
 <div class="viewcode-block" id="start_producer"><a class="viewcode-back" href="../../../csle_collector.client_manager.html#csle_collector.client_manager.query_clients.start_producer">[docs]</a><span class="k">def</span> <span class="nf">start_producer</span><span class="p">(</span><span class="n">stub</span><span class="p">:</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">client_manager</span><span class="o">.</span><span class="n">client_manager_pb2_grpc</span><span class="o">.</span><span class="n">ClientManagerStub</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                    <span class="n">time_step_len_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">GRPC</span><span class="o">.</span><span class="n">TIMEOUT_SECONDS</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Stops the producer process</span>
 
 <span class="sd">    :param stub: the stub to the gRPC server</span>

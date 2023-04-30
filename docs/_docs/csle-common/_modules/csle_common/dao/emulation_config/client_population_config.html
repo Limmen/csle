@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../../index.html" class="icon icon-home">
-            csle-common
+            <a href="../../../../index.html" class="icon icon-home"> csle-common
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,7 +60,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_common.dao.emulation_config.client_population_config</li>
       <li class="wy-breadcrumbs-aside">
@@ -80,7 +79,7 @@
 
 
 <div class="viewcode-block" id="ClientPopulationConfig"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.client_population_config.ClientPopulationConfig">[docs]</a><span class="k">class</span> <span class="nc">ClientPopulationConfig</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A DTO object representing the configuration of the client population of an emulation</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -89,8 +88,9 @@
                  <span class="n">client_manager_log_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">client_manager_max_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                  <span class="n">num_commands</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
                  <span class="n">client_time_step_len_seconds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">time_scaling_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
-                 <span class="n">period_scaling_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">docker_gw_bridge_ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">period_scaling_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">docker_gw_bridge_ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                 <span class="n">exponents</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">factors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">breakpoints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">breakvalues</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a ClientPopulationConfig DTO Object</span>
 
 <span class="sd">        :param ip: the ip of the client container</span>
@@ -106,6 +106,10 @@
 <span class="sd">        :param client_manager_max_workers: the maximum number of GRPC workers for the client manager</span>
 <span class="sd">        :param docker_gw_bridge_ip: IP to reach the container from the host network</span>
 <span class="sd">        :param physical_host_ip: IP of the physical host where the container is running</span>
+<span class="sd">        :param exponents: exponents for spike-moduldated arrival process</span>
+<span class="sd">        :param factors: factors for spike-moduldated arrival process</span>
+<span class="sd">        :param breakpoints: breakpoints for piece-wise constant arrival process</span>
+<span class="sd">        :param breakvalues: breakvalues for piece-wise constant arrival process</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">networks</span> <span class="o">=</span> <span class="n">networks</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
@@ -122,10 +126,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">client_manager_max_workers</span> <span class="o">=</span> <span class="n">client_manager_max_workers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span> <span class="o">=</span> <span class="n">docker_gw_bridge_ip</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">=</span> <span class="n">physical_host_ip</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exponents</span> <span class="o">=</span> <span class="n">exponents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factors</span> <span class="o">=</span> <span class="n">factors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">breakpoints</span> <span class="o">=</span> <span class="n">breakpoints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">breakvalues</span> <span class="o">=</span> <span class="n">breakvalues</span>
 
 <div class="viewcode-block" id="ClientPopulationConfig.from_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.client_population_config.ClientPopulationConfig.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ClientPopulationConfig&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts a dict representation to an instance</span>
 
 <span class="sd">        :param d: the dict to convert</span>
@@ -140,12 +148,14 @@
             <span class="n">period_scaling_factor</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;period_scaling_factor&quot;</span><span class="p">],</span> <span class="n">time_scaling_factor</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;time_scaling_factor&quot;</span><span class="p">],</span>
             <span class="n">client_manager_log_dir</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;client_manager_log_dir&quot;</span><span class="p">],</span> <span class="n">client_manager_log_file</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;client_manager_log_file&quot;</span><span class="p">],</span>
             <span class="n">client_manager_max_workers</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;client_manager_max_workers&quot;</span><span class="p">],</span>
-            <span class="n">docker_gw_bridge_ip</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_gw_bridge_ip&quot;</span><span class="p">],</span> <span class="n">physical_host_ip</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;physical_host_ip&quot;</span><span class="p">]</span>
+            <span class="n">docker_gw_bridge_ip</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_gw_bridge_ip&quot;</span><span class="p">],</span> <span class="n">physical_host_ip</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;physical_host_ip&quot;</span><span class="p">],</span>
+            <span class="n">exponents</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;exponents&quot;</span><span class="p">],</span> <span class="n">factors</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;factors&quot;</span><span class="p">],</span> <span class="n">breakpoints</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;breakpoints&quot;</span><span class="p">],</span>
+            <span class="n">breakvalues</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;breakvalues&quot;</span><span class="p">]</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">obj</span></div>
 
 <div class="viewcode-block" id="ClientPopulationConfig.no_clients"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.client_population_config.ClientPopulationConfig.no_clients">[docs]</a>    <span class="k">def</span> <span class="nf">no_clients</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ClientPopulationConfig&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: A version of the config with no clients</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ClientPopulationConfig</span><span class="p">(</span>
@@ -156,11 +166,12 @@
             <span class="n">num_commands</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">client_time_step_len_seconds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client_time_step_len_seconds</span><span class="p">,</span>
             <span class="n">period_scaling_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">period_scaling_factor</span><span class="p">,</span> <span class="n">time_scaling_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_scaling_factor</span><span class="p">,</span>
             <span class="n">client_manager_log_file</span><span class="o">=</span><span class="s2">&quot;client_manager.log&quot;</span><span class="p">,</span> <span class="n">client_manager_log_dir</span><span class="o">=</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">client_manager_max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-            <span class="n">docker_gw_bridge_ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span>
+            <span class="n">docker_gw_bridge_ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span> <span class="n">physical_host_ip</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span><span class="p">,</span>
+            <span class="n">breakpoints</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">breakpoints</span><span class="p">,</span> <span class="n">breakvalues</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">breakvalues</span><span class="p">,</span> <span class="n">exponents</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">exponents</span><span class="p">,</span> <span class="n">factors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">factors</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClientPopulationConfig.to_dict"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.client_population_config.ClientPopulationConfig.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a dict representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
@@ -179,14 +190,18 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;client_manager_max_workers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client_manager_max_workers</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;docker_gw_bridge_ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;physical_host_ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;exponents&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exponents</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;factors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factors</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;breakpoints&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">breakpoints</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;breakvalues&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">breakvalues</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a string representation of the object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;ip:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ip</span><span class="si">}</span><span class="s2">, client_population_process_type: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client_process_type</span><span class="si">}</span><span class="s2">, lamb:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lamb</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;mu:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="si">}</span><span class="s2">, self.networks:</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">networks</span><span class="p">))</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;mu:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="si">}</span><span class="s2">, self.networks:</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">networks</span><span class="p">))</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;client_manager_port: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client_manager_port</span><span class="si">}</span><span class="s2">, num_commands:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_commands</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;client_time_step_len_seconds: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client_time_step_len_seconds</span><span class="si">}</span><span class="s2">,&quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;time_scaling_factor: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time_scaling_factor</span><span class="si">}</span><span class="s2">, &quot;</span> \
@@ -194,10 +209,12 @@
                <span class="sa">f</span><span class="s2">&quot;client_manager_log_file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client_manager_log_file</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;client_manager_log_dir: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client_manager_log_dir</span><span class="si">}</span><span class="s2">, &quot;</span> \
                <span class="sa">f</span><span class="s2">&quot;client_manager_max_workers: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client_manager_max_workers</span><span class="si">}</span><span class="s2">, &quot;</span> \
-               <span class="sa">f</span><span class="s2">&quot;docker_gw_bridge_ip:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">, physical_host_ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span><span class="si">}</span><span class="s2">&quot;</span>
+               <span class="sa">f</span><span class="s2">&quot;docker_gw_bridge_ip:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">, physical_host_ip: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_host_ip</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;exponents: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">exponents</span><span class="si">}</span><span class="s2">, factors: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">factors</span><span class="si">}</span><span class="s2">, breakpoints: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">breakpoints</span><span class="si">}</span><span class="s2">, &quot;</span> \
+               <span class="sa">f</span><span class="s2">&quot;breakvalues: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">breakvalues</span><span class="si">}</span><span class="s2">&quot;</span>
 
 <div class="viewcode-block" id="ClientPopulationConfig.to_json_str"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.client_population_config.ClientPopulationConfig.to_json_str">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the DTO into a json string</span>
 
 <span class="sd">        :return: the json string representation of the DTO</span>
@@ -207,7 +224,7 @@
         <span class="k">return</span> <span class="n">json_str</span></div>
 
 <div class="viewcode-block" id="ClientPopulationConfig.to_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.client_population_config.ClientPopulationConfig.to_json_file">[docs]</a>    <span class="k">def</span> <span class="nf">to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the DTO to a json file</span>
 
 <span class="sd">        :param json_file_path: the json file path to save  the DTO to</span>
@@ -220,7 +237,7 @@
 
 <div class="viewcode-block" id="ClientPopulationConfig.from_json_file"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.client_population_config.ClientPopulationConfig.from_json_file">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_json_file</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ClientPopulationConfig&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads a json file and converts it to a DTO</span>
 
 <span class="sd">        :param json_file_path: the json file path</span>
@@ -233,13 +250,13 @@
         <span class="k">return</span> <span class="n">ClientPopulationConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="ClientPopulationConfig.copy"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.client_population_config.ClientPopulationConfig.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ClientPopulationConfig&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: a copy of the DTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ClientPopulationConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="ClientPopulationConfig.create_execution_config"><a class="viewcode-back" href="../../../../csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.client_population_config.ClientPopulationConfig.create_execution_config">[docs]</a>    <span class="k">def</span> <span class="nf">create_execution_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_first_octet</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ClientPopulationConfig&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a new config for an execution</span>
 
 <span class="sd">        :param ip_first_octet: the first octet of the IP of the new execution</span>

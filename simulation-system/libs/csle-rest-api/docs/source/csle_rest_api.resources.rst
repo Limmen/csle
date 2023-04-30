@@ -28,6 +28,7 @@ Subpackages
    csle_rest_api.resources.gp_system_models
    csle_rest_api.resources.grafana
    csle_rest_api.resources.images
+   csle_rest_api.resources.linear_threshold_policies
    csle_rest_api.resources.login
    csle_rest_api.resources.logs
    csle_rest_api.resources.multi_threshold_policies

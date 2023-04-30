@@ -169,6 +169,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.start_metricbeats"><code class="docutils literal notranslate"><span class="pre">HostController.start_metricbeats()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.start_packetbeat"><code class="docutils literal notranslate"><span class="pre">HostController.start_packetbeat()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.start_packetbeats"><code class="docutils literal notranslate"><span class="pre">HostController.start_packetbeats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.start_spark"><code class="docutils literal notranslate"><span class="pre">HostController.start_spark()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.start_sparks"><code class="docutils literal notranslate"><span class="pre">HostController.start_sparks()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.stop_filebeat"><code class="docutils literal notranslate"><span class="pre">HostController.stop_filebeat()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.stop_filebeats"><code class="docutils literal notranslate"><span class="pre">HostController.stop_filebeats()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.stop_heartbeat"><code class="docutils literal notranslate"><span class="pre">HostController.stop_heartbeat()</span></code></a></li>
@@ -181,6 +183,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.stop_metricbeats"><code class="docutils literal notranslate"><span class="pre">HostController.stop_metricbeats()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.stop_packetbeat"><code class="docutils literal notranslate"><span class="pre">HostController.stop_packetbeat()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.stop_packetbeats"><code class="docutils literal notranslate"><span class="pre">HostController.stop_packetbeats()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.stop_spark"><code class="docutils literal notranslate"><span class="pre">HostController.stop_spark()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.controllers.host_controller.HostController.stop_sparks"><code class="docutils literal notranslate"><span class="pre">HostController.stop_sparks()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -486,13 +490,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.container_controller.ContainerController.create_network">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnetmask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'bridge'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing_network_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.create_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.create_network" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subnetmask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">driver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'bridge'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing_network_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.create_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.create_network" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a network</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> – the name of the network to create</p></li>
 <li><p><strong>subnetmask</strong> – the subnetmask of the network to create</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 <li><p><strong>driver</strong> – the driver of the network to create</p></li>
 <li><p><strong>existing_network_names</strong> – list of network names, if not None, check if network exists befeore creating</p></li>
 </ul>
@@ -505,11 +510,15 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.container_controller.ContainerController.create_network_from_dto">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_network_from_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.container_network.ContainerNetwork" title="csle_common.dao.emulation_config.container_network.ContainerNetwork"><span class="pre">ContainerNetwork</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing_network_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.create_network_from_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.create_network_from_dto" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_network_from_dto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">network_dto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.container_network.ContainerNetwork" title="csle_common.dao.emulation_config.container_network.ContainerNetwork"><span class="pre">ContainerNetwork</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existing_network_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.create_network_from_dto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.create_network_from_dto" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a network from a given DTO representing the network</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>existing_network_names</strong> – list of network names, if not None, check if network exists befeore creating</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>network_dto</strong> – details of the network to create</p></li>
+<li><p><strong>existing_network_names</strong> – list of network names, if not None, check if network exists befeore creating</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
@@ -519,11 +528,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.container_controller.ContainerController.create_networks">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_networks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">containers_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.containers_config.ContainersConfig" title="csle_common.dao.emulation_config.containers_config.ContainersConfig"><span class="pre">ContainersConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.create_networks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.create_networks" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_networks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">containers_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.containers_config.ContainersConfig" title="csle_common.dao.emulation_config.containers_config.ContainersConfig"><span class="pre">ContainersConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.create_networks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.create_networks" title="Permalink to this definition"></a></dt>
 <dd><p>Creates docker networks for a given containers configuration</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>containers_config</strong> – the containers configuration</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
+<li><p><strong>containers_config</strong> – the containers configuration</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
@@ -728,11 +740,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.container_controller.ContainerController.remove_network">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.remove_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.remove_network" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.remove_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.remove_network" title="Permalink to this definition"></a></dt>
 <dd><p>Removes a network</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> – the name of the network to remove</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – the name of the network to remove</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
@@ -742,11 +757,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.container_controller.ContainerController.remove_networks">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_networks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.remove_networks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.remove_networks" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_networks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.remove_networks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.remove_networks" title="Permalink to this definition"></a></dt>
 <dd><p>Removes a network</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> – the name of the network to remove</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – the name of the network to remove</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if at least one of the networks were successfully removed</p>
@@ -767,11 +785,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.container_controller.ContainerController.rm_all_networks">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rm_all_networks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.rm_all_networks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.rm_all_networks" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rm_all_networks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.rm_all_networks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.rm_all_networks" title="Permalink to this definition"></a></dt>
 <dd><p>A utility function for removing all csle networks</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -817,11 +838,17 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.container_controller.ContainerController.rm_network">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rm_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.rm_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.rm_network" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rm_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.rm_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.rm_network" title="Permalink to this definition"></a></dt>
 <dd><p>A utility function for removing a network with a specific name</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if it was removed or False otherwise</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – the name of the network to remove</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it was removed or False otherwise</p>
 </dd>
 </dl>
 </dd></dl>
@@ -910,11 +937,12 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.container_controller.ContainerController.stop_docker_stats_thread">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_docker_stats_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">execution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_execution.EmulationExecution" title="csle_common.dao.emulation_config.emulation_execution.EmulationExecution"><span class="pre">EmulationExecution</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.stop_docker_stats_thread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.stop_docker_stats_thread" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_docker_stats_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">execution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_execution.EmulationExecution" title="csle_common.dao.emulation_config.emulation_execution.EmulationExecution"><span class="pre">EmulationExecution</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/container_controller.html#ContainerController.stop_docker_stats_thread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.container_controller.ContainerController.stop_docker_stats_thread" title="Permalink to this definition"></a></dt>
 <dd><p>Sends a request to the docker stats manager on the docker host for stopping a docker stats monitor thread</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 <li><p><strong>execution</strong> – the execution of the emulation for which the monitor should be stopped</p></li>
 <li><p><strong>physical_server_ip</strong> – the ip of the physical server</p></li>
 </ul>
@@ -1210,13 +1238,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.emulation_env_controller.EmulationEnvController.clean_all_emulation_executions">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clean_all_emulation_executions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/emulation_env_controller.html#EmulationEnvController.clean_all_emulation_executions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.emulation_env_controller.EmulationEnvController.clean_all_emulation_executions" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clean_all_emulation_executions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/emulation_env_controller.html#EmulationEnvController.clean_all_emulation_executions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.emulation_env_controller.EmulationEnvController.clean_all_emulation_executions" title="Permalink to this definition"></a></dt>
 <dd><p>Cleans an emulation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>emulation_env_config</strong> – the config of the emulation to clean</p></li>
 <li><p><strong>physical_server_ip</strong> – the ip of the physical server to clean the emulation executions</p></li>
+<li><p><strong>leader</strong> – boolean flag indicating whether this node is the leader in the Swarm cluster or not</p></li>
 <li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
@@ -1228,13 +1257,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.emulation_env_controller.EmulationEnvController.clean_all_executions">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clean_all_executions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/emulation_env_controller.html#EmulationEnvController.clean_all_executions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.emulation_env_controller.EmulationEnvController.clean_all_executions" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clean_all_executions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/emulation_env_controller.html#EmulationEnvController.clean_all_executions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.emulation_env_controller.EmulationEnvController.clean_all_executions" title="Permalink to this definition"></a></dt>
 <dd><p>Cleans all executions of a given emulation on a given physical server</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>emulation_env_config</strong> – the config of the emulation to clean</p></li>
 <li><p><strong>physical_server_ip</strong> – the ip of the physical server to clean the executions</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
+<li><p><strong>leader</strong> – boolean flag indicating whether this node is the leader or not</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1245,7 +1275,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.emulation_env_controller.EmulationEnvController.clean_emulation_execution">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clean_emulation_execution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/emulation_env_controller.html#EmulationEnvController.clean_emulation_execution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.emulation_env_controller.EmulationEnvController.clean_emulation_execution" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clean_emulation_execution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/emulation_env_controller.html#EmulationEnvController.clean_emulation_execution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.emulation_env_controller.EmulationEnvController.clean_emulation_execution" title="Permalink to this definition"></a></dt>
 <dd><p>Cleans an emulation execution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1253,6 +1283,7 @@
 <li><p><strong>execution_id</strong> – the id of the execution to clean</p></li>
 <li><p><strong>emulation_env_config</strong> – the config of the emulation to clean</p></li>
 <li><p><strong>physical_server_ip</strong> – the ip of the physical server to clean the execution</p></li>
+<li><p><strong>leader</strong> – boolean flag indicating whether this node is the leader or not</p></li>
 <li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
@@ -1303,13 +1334,15 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.emulation_env_controller.EmulationEnvController.delete_networks_of_emulation_env_config">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_networks_of_emulation_env_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/emulation_env_controller.html#EmulationEnvController.delete_networks_of_emulation_env_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.emulation_env_controller.EmulationEnvController.delete_networks_of_emulation_env_config" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_networks_of_emulation_env_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/emulation_env_controller.html#EmulationEnvController.delete_networks_of_emulation_env_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.emulation_env_controller.EmulationEnvController.delete_networks_of_emulation_env_config" title="Permalink to this definition"></a></dt>
 <dd><p>Deletes the docker networks</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
 <li><p><strong>physical_server_ip</strong> – the ip of the physical server to remove the networks</p></li>
+<li><p><strong>leader</strong> – boolean flag indicating whether this node is the leader in the Swarm cluster</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1849,13 +1882,14 @@ to get the status of the Host monitor thread</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.host_controller.HostController.get_host_monitor_threads_statuses">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_host_monitor_threads_statuses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">HostStatusDTO</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/controllers/host_controller.html#HostController.get_host_monitor_threads_statuses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.host_controller.HostController.get_host_monitor_threads_statuses" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_host_monitor_threads_statuses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">HostStatusDTO</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/controllers/host_controller.html#HostController.get_host_monitor_threads_statuses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.host_controller.HostController.get_host_monitor_threads_statuses" title="Permalink to this definition"></a></dt>
 <dd><p>A method that sends a request to the HostManager on every container to get the status of the Host monitor thread</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>emulation_env_config</strong> – the emulation config</p></li>
 <li><p><strong>physical_server_ip</strong> – the ip of the physical server</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1946,13 +1980,14 @@ to start the Host manager and heartbeat</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.host_controller.HostController.start_host_manager">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_host_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/host_controller.html#HostController.start_host_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.host_controller.HostController.start_host_manager" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_host_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/host_controller.html#HostController.start_host_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.host_controller.HostController.start_host_manager" title="Permalink to this definition"></a></dt>
 <dd><p>Utility method for starting the host manager on a specific container</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
 <li><p><strong>ip</strong> – the ip of the container</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1963,11 +1998,14 @@ to start the Host manager and heartbeat</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.host_controller.HostController.start_host_managers">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_host_managers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/host_controller.html#HostController.start_host_managers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.host_controller.HostController.start_host_managers" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_host_managers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/host_controller.html#HostController.start_host_managers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.host_controller.HostController.start_host_managers" title="Permalink to this definition"></a></dt>
 <dd><p>Utility method for checking if the host manager is running and starting it if it is not running</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>emulation_env_config</strong> – the emulation env config</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
@@ -2084,6 +2122,43 @@ to start the Host manager and packetbeat</p>
 <li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
 <li><p><strong>physical_server_ip</strong> – the ip of the physical server</p></li>
 <li><p><strong>initial_start</strong> – boolean indicating whether this method is called on emulation initialziation or not</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.controllers.host_controller.HostController.start_spark">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_spark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/host_controller.html#HostController.start_spark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.host_controller.HostController.start_spark" title="Permalink to this definition"></a></dt>
+<dd><p>A method that sends a request to the HostManager on a specific IP
+to start the Host manager and spark</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
+<li><p><strong>ips</strong> – IPs of the container</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.controllers.host_controller.HostController.start_sparks">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_sparks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/host_controller.html#HostController.start_sparks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.host_controller.HostController.start_sparks" title="Permalink to this definition"></a></dt>
+<dd><p>Utility function for starting Spark on compute nodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>emulation_config</strong> – the emulation env configuration</p></li>
+<li><p><strong>physical_server_ip</strong> – the ip of the phsyical server</p></li>
 <li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
@@ -2303,6 +2378,43 @@ to start the Host manager and to stop packetbeat</p>
 <li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
 <li><p><strong>logger</strong> – the logger to use for logging</p></li>
 <li><p><strong>physical_server_ip</strong> – the of of the physical host</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.controllers.host_controller.HostController.stop_spark">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_spark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/host_controller.html#HostController.stop_spark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.host_controller.HostController.stop_spark" title="Permalink to this definition"></a></dt>
+<dd><p>A method that sends a request to the HostManager on a specific IP
+to stop spark</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
+<li><p><strong>ips</strong> – IPs of the container</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.controllers.host_controller.HostController.stop_sparks">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_sparks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/host_controller.html#HostController.stop_sparks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.host_controller.HostController.stop_sparks" title="Permalink to this definition"></a></dt>
+<dd><p>Utility function for stopping Spark on compute nodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>emulation_config</strong> – the emulation env configuration</p></li>
+<li><p><strong>physical_server_ip</strong> – the ip of the phsyical server</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2872,31 +2984,40 @@ to start the Host manager and to stop packetbeat</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.start_cadvisor">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_cadvisor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_cadvisor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_cadvisor" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if cadvisor was started, otherwise False</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_cadvisor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_cadvisor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_cadvisor" title="Permalink to this definition"></a></dt>
+<dd><p>Starts cAdvisor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if cadvisor was started, otherwise False</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.start_docker_engine">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_docker_engine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_docker_engine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_docker_engine" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if nginx was started, otherwise False</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_docker_engine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger:</span> <span class="pre">~logging.Logger)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_docker_engine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_docker_engine" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the Docker engine</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if nginx was started, otherwise False</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.start_docker_stats_manager">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_docker_stats_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'docker_stats_manager.log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/var/log/csle'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50046</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_docker_stats_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_docker_stats_manager" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_docker_stats_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'docker_stats_manager.log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/var/log/csle'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50046</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_docker_stats_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_docker_stats_manager" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the docker stats manager on the docker host if it is not already started</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 <li><p><strong>port</strong> – the port that the docker stats manager will listen to</p></li>
 <li><p><strong>log_file</strong> – log file of the docker stats manager</p></li>
 <li><p><strong>log_dir</strong> – log dir of the docker stats manager</p></li>
@@ -2911,73 +3032,98 @@ to start the Host manager and to stop packetbeat</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.start_flask">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_flask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_flask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_flask" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_flask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_flask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_flask" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the Flask REST API Server</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if it was started, False otherwise</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it was started, False otherwise</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.start_grafana">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_grafana</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_grafana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_grafana" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if grafana was started, otherwise False</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_grafana</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_grafana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_grafana" title="Permalink to this definition"></a></dt>
+<dd><p>Starts Grafana</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if grafana was started, otherwise False</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.start_nginx">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_nginx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_nginx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_nginx" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if nginx was started, otherwise False</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_nginx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger:</span> <span class="pre">~logging.Logger)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_nginx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_nginx" title="Permalink to this definition"></a></dt>
+<dd><p>Starts Nginx</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if nginx was started, otherwise False</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.start_node_exporter">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_node_exporter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_node_exporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_node_exporter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_node_exporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_node_exporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_node_exporter" title="Permalink to this definition"></a></dt>
 <dd><p>Starts the node exporter</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if it was started, False otherwise</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it was started, False otherwise</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.start_pgadmin">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_pgadmin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_pgadmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_pgadmin" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if pgadmin was started, otherwise False</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_pgadmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_pgadmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_pgadmin" title="Permalink to this definition"></a></dt>
+<dd><p>Starts pgAdmin</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if pgadmin was started, otherwise False</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.start_postgresql">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_postgresql</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_postgresql"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_postgresql" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if postgresql was started, otherwise False</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_postgresql</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger:</span> <span class="pre">~logging.Logger)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_postgresql"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_postgresql" title="Permalink to this definition"></a></dt>
+<dd><p>Starts PostgreSQL</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if postgresql was started, otherwise False</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.start_prometheus">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_prometheus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_prometheus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_prometheus" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_prometheus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.start_prometheus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.start_prometheus" title="Permalink to this definition"></a></dt>
 <dd><p>Starts Prometheus</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if it was started, False otherwise</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it was started, False otherwise</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3005,32 +3151,42 @@ to start the Host manager and to stop packetbeat</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.stop_docker_engine">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_docker_engine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_docker_engine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_docker_engine" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if postgresql was stopped, otherwise False</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_docker_engine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger:</span> <span class="pre">~logging.Logger)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_docker_engine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_docker_engine" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the Docker engine</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if postgresql was stopped, otherwise False</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.stop_docker_stats_manager">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_docker_stats_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_docker_stats_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_docker_stats_manager" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_docker_stats_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_docker_stats_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_docker_stats_manager" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the statsmanager</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if it was stopped, False otherwise</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it was stopped, False otherwise</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.stop_flask">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_flask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_flask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_flask" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_flask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_flask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_flask" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the flask REST API</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if it was stopped, False otherwise</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it was stopped, False otherwise</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3038,7 +3194,8 @@ to start the Host manager and to stop packetbeat</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.stop_grafana">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_grafana</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_grafana"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_grafana" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops Grafana</p>
+<dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>True if grafana was stopped, otherwise False</p>
 </dd>
@@ -3047,21 +3204,28 @@ to start the Host manager and to stop packetbeat</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.stop_nginx">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_nginx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_nginx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_nginx" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if postgresql was stopped, otherwise False</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_nginx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger:</span> <span class="pre">~logging.Logger)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_nginx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_nginx" title="Permalink to this definition"></a></dt>
+<dd><p>Stops Nginx</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if postgresql was stopped, otherwise False</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.stop_node_exporter">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_node_exporter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_node_exporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_node_exporter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_node_exporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_node_exporter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_node_exporter" title="Permalink to this definition"></a></dt>
 <dd><p>Stops the node exporter</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if it was stopped, False otherwise</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it was stopped, False otherwise</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3092,21 +3256,28 @@ to start the Host manager and to stop packetbeat</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.stop_postgresql">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_postgresql</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_postgresql"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_postgresql" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if postgresql was stopped, otherwise False</p>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_postgresql</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger:</span> <span class="pre">~logging.Logger)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_postgresql"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_postgresql" title="Permalink to this definition"></a></dt>
+<dd><p>Stops PostgreSQL</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if postgresql was stopped, otherwise False</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.management_system_controller.ManagementSystemController.stop_prometheus">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_prometheus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_prometheus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_prometheus" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_prometheus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger:</span> <span class="pre">&lt;RootLogger</span> <span class="pre">root</span> <span class="pre">(WARNING)&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/management_system_controller.html#ManagementSystemController.stop_prometheus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.management_system_controller.ManagementSystemController.stop_prometheus" title="Permalink to this definition"></a></dt>
 <dd><p>Stops Prometheus</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>True if it was stopped, False otherwise</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>logger</strong> – the logger to use for logging</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if it was stopped, False otherwise</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3647,11 +3818,14 @@ an IDS to stop the monitor threads</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.sdn_controller_manager.SDNControllerManager.stop_ryu_manager">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_ryu_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/sdn_controller_manager.html#SDNControllerManager.stop_ryu_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.sdn_controller_manager.SDNControllerManager.stop_ryu_manager" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_ryu_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/sdn_controller_manager.html#SDNControllerManager.stop_ryu_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.sdn_controller_manager.SDNControllerManager.stop_ryu_manager" title="Permalink to this definition"></a></dt>
 <dd><p>Utility method for stopping the Ryu manager</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>emulation_env_config</strong> – the emulation env config</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
@@ -3771,7 +3945,7 @@ an IDS to stop the monitor threads</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_idses_monitor_threads_statuses">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_snort_idses_monitor_threads_statuses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_if_stopped</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsMonitorDTO</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.get_snort_idses_monitor_threads_statuses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_idses_monitor_threads_statuses" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_snort_idses_monitor_threads_statuses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_if_stopped</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsMonitorDTO</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.get_snort_idses_monitor_threads_statuses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.get_snort_idses_monitor_threads_statuses" title="Permalink to this definition"></a></dt>
 <dd><p>A method that sends a request to the SnortIDSManager on every container to get the status of the
 IDS monitor thread</p>
 <dl class="field-list simple">
@@ -3780,6 +3954,7 @@ IDS monitor thread</p>
 <li><p><strong>emulation_env_config</strong> – the emulation config</p></li>
 <li><p><strong>start_if_stopped</strong> – whether to start the IDS monitor if it is stopped</p></li>
 <li><p><strong>physical_server_ip</strong> – the physical server IP</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -3827,13 +4002,14 @@ to get the status of the IDS monitor thread</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_ids">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_snort_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.start_snort_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_ids" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_snort_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.start_snort_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_ids" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for starting the Snort IDS on a specific IP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>emulation_config</strong> – the emulation env configuration</p></li>
+<li><p><strong>emulation_env_config</strong> – the emulation env configuration</p></li>
 <li><p><strong>ip</strong> – the ip of the container</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -3849,7 +4025,7 @@ to get the status of the IDS monitor thread</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>emulation_config</strong> – the emulation env configuration</p></li>
+<li><p><strong>emulation_env_config</strong> – the emulation env configuration</p></li>
 <li><p><strong>physical_server_ip</strong> – the ip of the phsyical server</p></li>
 <li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
@@ -3862,7 +4038,7 @@ to get the status of the IDS monitor thread</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_idses_monitor_thread">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_snort_idses_monitor_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.start_snort_idses_monitor_thread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_idses_monitor_thread" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_snort_idses_monitor_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.start_snort_idses_monitor_thread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_idses_monitor_thread" title="Permalink to this definition"></a></dt>
 <dd><p>A method that sends a request to the SnortIDSManager on a specific container that runs
 an IDS to start the IDS manager and the monitor thread</p>
 <dl class="field-list simple">
@@ -3870,6 +4046,7 @@ an IDS to start the IDS manager and the monitor thread</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
 <li><p><strong>ip</strong> – the ip of the container</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -3899,13 +4076,14 @@ an IDS to start the IDS manager and the monitor thread</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_snort_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.start_snort_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_snort_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.start_snort_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_manager" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for starting the snort IDS manager on a specific IP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
 <li><p><strong>ip</strong> – IP of the container</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -3916,13 +4094,14 @@ an IDS to start the IDS manager and the monitor thread</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_managers">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_snort_managers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.start_snort_managers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_managers" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start_snort_managers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.start_snort_managers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.start_snort_managers" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for starting snort IDS managers</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
 <li><p><strong>physical_server_ip</strong> – the physical server ip</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -3933,13 +4112,14 @@ an IDS to start the IDS manager and the monitor thread</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_ids">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_snort_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.stop_snort_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_ids" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_snort_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.stop_snort_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_ids" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for stopping the Snort IDS on a specific IP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>emulation_config</strong> – the emulation env configuration</p></li>
+<li><p><strong>emulation_env_config</strong> – the emulation env configuration</p></li>
 <li><p><strong>ip</strong> – the ip of the container</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -3950,13 +4130,14 @@ an IDS to start the IDS manager and the monitor thread</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_snort_idses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.stop_snort_idses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_snort_idses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.stop_snort_idses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for stopping the Snort IDSes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>emulation_config</strong> – the emulation env configuration</p></li>
+<li><p><strong>emulation_env_config</strong> – the emulation env configuration</p></li>
 <li><p><strong>physical_server_ip</strong> – the ip of the physical server</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -3967,7 +4148,7 @@ an IDS to start the IDS manager and the monitor thread</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses_monitor_thread">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_snort_idses_monitor_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.stop_snort_idses_monitor_thread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses_monitor_thread" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_snort_idses_monitor_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.stop_snort_idses_monitor_thread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses_monitor_thread" title="Permalink to this definition"></a></dt>
 <dd><p>A method that sends a request to the SnortIDSManager on a specific container that runs
 an IDS to stop the monitor threads</p>
 <dl class="field-list simple">
@@ -3975,6 +4156,7 @@ an IDS to stop the monitor threads</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
 <li><p><strong>ip</strong> – the IP of the container</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -3985,7 +4167,7 @@ an IDS to stop the monitor threads</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses_monitor_threads">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_snort_idses_monitor_threads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.stop_snort_idses_monitor_threads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses_monitor_threads" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_snort_idses_monitor_threads</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.stop_snort_idses_monitor_threads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_idses_monitor_threads" title="Permalink to this definition"></a></dt>
 <dd><p>A method that sends a request to the SnortIDSManager on every container that runs
 an IDS to stop the monitor threads</p>
 <dl class="field-list simple">
@@ -3993,6 +4175,7 @@ an IDS to stop the monitor threads</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
 <li><p><strong>physical_server_ip</strong> – the physical server ip</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -4003,13 +4186,14 @@ an IDS to stop the monitor threads</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_manager">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_snort_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.stop_snort_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_manager" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_snort_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.stop_snort_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_manager" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for stopping the snort IDS manager on a specific IP</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
 <li><p><strong>ip</strong> – the IP of the container</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -4020,13 +4204,14 @@ an IDS to stop the monitor threads</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_managers">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_snort_managers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.stop_snort_managers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_managers" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stop_snort_managers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emulation_env_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="csle_common.dao.emulation_config.html#csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig" title="csle_common.dao.emulation_config.emulation_env_config.EmulationEnvConfig"><span class="pre">EmulationEnvConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_server_ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/controllers/snort_ids_controller.html#SnortIDSController.stop_snort_managers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.controllers.snort_ids_controller.SnortIDSController.stop_snort_managers" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for stopping snort IDS managers</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>emulation_env_config</strong> – the emulation env config</p></li>
 <li><p><strong>physical_server_ip</strong> – the physical server ip</p></li>
+<li><p><strong>logger</strong> – the logger to use for logging</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

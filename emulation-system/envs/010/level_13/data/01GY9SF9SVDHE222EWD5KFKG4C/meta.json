@@ -1,0 +1,17 @@
+{
+	"ulid": "01GY9SF9SVDHE222EWD5KFKG4C",
+	"minTime": 1681797600000,
+	"maxTime": 1681804800000,
+	"stats": {
+		"numSamples": 6322280,
+		"numSeries": 10041,
+		"numChunks": 52699
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01GY9SF9SVDHE222EWD5KFKG4C"
+		]
+	},
+	"version": 1
+}

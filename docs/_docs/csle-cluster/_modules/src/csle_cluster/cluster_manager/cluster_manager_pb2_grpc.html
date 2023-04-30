@@ -1122,6 +1122,36 @@
                 <span class="s1">&#39;/ClusterManager/getExecutionTimeSeriesData&#39;</span><span class="p">,</span>
                 <span class="n">request_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">GetExecutionTimeSeriesDataMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
                 <span class="n">response_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">EmulationMetricsTimeSeriesDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startSparkServers</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/ClusterManager/startSparkServers&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StartSparkServersMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopSparkServers</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/ClusterManager/stopSparkServers&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StopSparkServersMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startSparkServer</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/ClusterManager/startSparkServer&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StartSparkServerMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopSparkServer</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/ClusterManager/stopSparkServer&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StopSparkServerMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checkPid</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/ClusterManager/checkPid&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">CheckPidMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopPid</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span>
+                <span class="s1">&#39;/ClusterManager/stopPid&#39;</span><span class="p">,</span>
+                <span class="n">request_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StopPidMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+                <span class="n">response_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
                 <span class="p">)</span></div>
 
 
@@ -2375,6 +2405,42 @@
         <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
         <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManagerServicer.startSparkServers"><a class="viewcode-back" href="../../../../src.csle_cluster.cluster_manager.html#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.startSparkServers">[docs]</a>    <span class="k">def</span> <span class="nf">startSparkServers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManagerServicer.stopSparkServers"><a class="viewcode-back" href="../../../../src.csle_cluster.cluster_manager.html#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopSparkServers">[docs]</a>    <span class="k">def</span> <span class="nf">stopSparkServers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManagerServicer.startSparkServer"><a class="viewcode-back" href="../../../../src.csle_cluster.cluster_manager.html#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.startSparkServer">[docs]</a>    <span class="k">def</span> <span class="nf">startSparkServer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManagerServicer.stopSparkServer"><a class="viewcode-back" href="../../../../src.csle_cluster.cluster_manager.html#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopSparkServer">[docs]</a>    <span class="k">def</span> <span class="nf">stopSparkServer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManagerServicer.checkPid"><a class="viewcode-back" href="../../../../src.csle_cluster.cluster_manager.html#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.checkPid">[docs]</a>    <span class="k">def</span> <span class="nf">checkPid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManagerServicer.stopPid"><a class="viewcode-back" href="../../../../src.csle_cluster.cluster_manager.html#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer.stopPid">[docs]</a>    <span class="k">def</span> <span class="nf">stopPid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Missing associated documentation comment in .proto file.&quot;&quot;&quot;</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_code</span><span class="p">(</span><span class="n">grpc</span><span class="o">.</span><span class="n">StatusCode</span><span class="o">.</span><span class="n">UNIMPLEMENTED</span><span class="p">)</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">set_details</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Method not implemented!&#39;</span><span class="p">)</span></div></div>
 
 
@@ -3419,6 +3485,36 @@
                     <span class="n">servicer</span><span class="o">.</span><span class="n">getExecutionTimeSeriesData</span><span class="p">,</span>
                     <span class="n">request_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">GetExecutionTimeSeriesDataMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
                     <span class="n">response_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">EmulationMetricsTimeSeriesDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;startSparkServers&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">startSparkServers</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StartSparkServersMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;stopSparkServers&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">stopSparkServers</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StopSparkServersMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;startSparkServer&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">startSparkServer</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StartSparkServerMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;stopSparkServer&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">stopSparkServer</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StopSparkServerMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;checkPid&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">checkPid</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">CheckPidMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;stopPid&#39;</span><span class="p">:</span> <span class="n">grpc</span><span class="o">.</span><span class="n">unary_unary_rpc_method_handler</span><span class="p">(</span>
+                    <span class="n">servicer</span><span class="o">.</span><span class="n">stopPid</span><span class="p">,</span>
+                    <span class="n">request_deserializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StopPidMsg</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+                    <span class="n">response_serializer</span><span class="o">=</span><span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
             <span class="p">),</span>
     <span class="p">}</span>
     <span class="n">generic_handler</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">method_handlers_generic_handler</span><span class="p">(</span>
@@ -6964,6 +7060,108 @@
         <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/ClusterManager/getExecutionTimeSeriesData&#39;</span><span class="p">,</span>
             <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">GetExecutionTimeSeriesDataMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
             <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">EmulationMetricsTimeSeriesDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManager.startSparkServers"><a class="viewcode-back" href="../../../../src.csle_cluster.cluster_manager.html#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.startSparkServers">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">startSparkServers</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/ClusterManager/startSparkServers&#39;</span><span class="p">,</span>
+            <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StartSparkServersMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManager.stopSparkServers"><a class="viewcode-back" href="../../../../src.csle_cluster.cluster_manager.html#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopSparkServers">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">stopSparkServers</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/ClusterManager/stopSparkServers&#39;</span><span class="p">,</span>
+            <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StopSparkServersMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManager.startSparkServer"><a class="viewcode-back" href="../../../../src.csle_cluster.cluster_manager.html#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.startSparkServer">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">startSparkServer</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/ClusterManager/startSparkServer&#39;</span><span class="p">,</span>
+            <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StartSparkServerMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManager.stopSparkServer"><a class="viewcode-back" href="../../../../src.csle_cluster.cluster_manager.html#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopSparkServer">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">stopSparkServer</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/ClusterManager/stopSparkServer&#39;</span><span class="p">,</span>
+            <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StopSparkServerMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManager.checkPid"><a class="viewcode-back" href="../../../../src.csle_cluster.cluster_manager.html#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.checkPid">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">checkPid</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/ClusterManager/checkPid&#39;</span><span class="p">,</span>
+            <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">CheckPidMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
+            <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManager.stopPid"><a class="viewcode-back" href="../../../../src.csle_cluster.cluster_manager.html#src.csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManager.stopPid">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">stopPid</span><span class="p">(</span><span class="n">request</span><span class="p">,</span>
+            <span class="n">target</span><span class="p">,</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">channel_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">call_credentials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">insecure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">compression</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">wait_for_ready</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">grpc</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">unary_unary</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="s1">&#39;/ClusterManager/stopPid&#39;</span><span class="p">,</span>
+            <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">StopPidMsg</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">,</span>
+            <span class="n">cluster__manager__pb2</span><span class="o">.</span><span class="n">OperationOutcomeDTO</span><span class="o">.</span><span class="n">FromString</span><span class="p">,</span>
             <span class="n">options</span><span class="p">,</span> <span class="n">channel_credentials</span><span class="p">,</span>
             <span class="n">insecure</span><span class="p">,</span> <span class="n">call_credentials</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">wait_for_ready</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span></div></div>
 </pre></div>

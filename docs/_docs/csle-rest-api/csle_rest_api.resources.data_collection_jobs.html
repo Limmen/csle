@@ -70,6 +70,7 @@
 <li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.gp_system_models.html">csle_rest_api.resources.gp_system_models package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.grafana.html">csle_rest_api.resources.grafana package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.images.html">csle_rest_api.resources.images package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.linear_threshold_policies.html">csle_rest_api.resources.linear_threshold_policies package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.login.html">csle_rest_api.resources.login package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.logs.html">csle_rest_api.resources.logs package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="csle_rest_api.resources.multi_threshold_policies.html">csle_rest_api.resources.multi_threshold_policies package</a></li>
@@ -135,6 +136,20 @@
 <span id="csle-rest-api-resources-data-collection-jobs-routes-module"></span><h2>csle_rest_api.resources.data_collection_jobs.routes module<a class="headerlink" href="#module-csle_rest_api.resources.data_collection_jobs.routes" title="Permalink to this heading"></a></h2>
 <p>Routes and sub-resources for the /data-collection-jobs resource</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="csle_rest_api.resources.data_collection_jobs.routes.data_collection_job">
+<span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.data_collection_jobs.routes.</span></span><span class="sig-name descname"><span class="pre">data_collection_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_rest_api/resources/data_collection_jobs/routes.html#data_collection_job"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.data_collection_jobs.routes.data_collection_job" title="Permalink to this definition"></a></dt>
+<dd><p>The /data-collection-jobs/id resource.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>job_id</strong> – the id of the policy</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The given policy or deletes the policy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="csle_rest_api.resources.data_collection_jobs.routes.data_collection_jobs">
 <span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.data_collection_jobs.routes.</span></span><span class="sig-name descname"><span class="pre">data_collection_jobs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_rest_api/resources/data_collection_jobs/routes.html#data_collection_jobs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.data_collection_jobs.routes.data_collection_jobs" title="Permalink to this definition"></a></dt>
 <dd><p>The /data-collection-jobs resource.</p>
@@ -151,20 +166,6 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>An HTTP response with all data-collection jobs ids</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="csle_rest_api.resources.data_collection_jobs.routes.data_collection_policy">
-<span class="sig-prename descclassname"><span class="pre">csle_rest_api.resources.data_collection_jobs.routes.</span></span><span class="sig-name descname"><span class="pre">data_collection_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/csle_rest_api/resources/data_collection_jobs/routes.html#data_collection_policy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_rest_api.resources.data_collection_jobs.routes.data_collection_policy" title="Permalink to this definition"></a></dt>
-<dd><p>The /data-collection-jobs/id resource.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>job_id</strong> – the id of the policy</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The given policy or deletes the policy</p>
 </dd>
 </dl>
 </dd></dl>

@@ -78,8 +78,9 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Constants related to the zones of the network</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">REDIRECTION_ZONE</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">SHUTDOWN_ZONE</span> <span class="o">=</span> <span class="mi">1</span></div>
+    <span class="n">REDIRECTION_ZONE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">SHUTDOWN_ZONE</span> <span class="o">=</span> <span class="mi">0</span></div>
+
 
 <div class="viewcode-block" id="STATES"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.constants.html#gym_csle_intrusion_response_game.constants.constants.STATES">[docs]</a><span class="k">class</span> <span class="nc">STATES</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -97,6 +98,14 @@
     <span class="n">HEALTHY</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">RECON</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">COMPROMISED</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+
+<div class="viewcode-block" id="DEFENDER_STATES"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.constants.html#gym_csle_intrusion_response_game.constants.constants.DEFENDER_STATES">[docs]</a><span class="k">class</span> <span class="nc">DEFENDER_STATES</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constants related to the defense state semantics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SHUTDOWN</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">REDIRECT</span> <span class="o">=</span> <span class="mi">2</span></div>
 
 
 <div class="viewcode-block" id="ATTACKER_ACTIONS"><a class="viewcode-back" href="../../../gym_csle_intrusion_response_game.constants.html#gym_csle_intrusion_response_game.constants.constants.ATTACKER_ACTIONS">[docs]</a><span class="k">class</span> <span class="nc">ATTACKER_ACTIONS</span><span class="p">:</span>
@@ -141,8 +150,14 @@
     <span class="n">ATTACKER_ACTION</span> <span class="o">=</span> <span class="s2">&quot;a2&quot;</span>
     <span class="n">OBSERVATION</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span>
     <span class="n">TIME_STEP</span> <span class="o">=</span> <span class="s2">&quot;t&quot;</span>
+    <span class="n">INTRUSION_LENGTH</span> <span class="o">=</span> <span class="s2">&quot;intrusion_length&quot;</span>
     <span class="n">AVERAGE_UPPER_BOUND_RETURN</span> <span class="o">=</span> <span class="s2">&quot;average_upper_bound_return&quot;</span>
-    <span class="n">AVERAGE_RANDOM_RETURN</span> <span class="o">=</span> <span class="s2">&quot;average_random_return&quot;</span></div>
+    <span class="n">AVERAGE_RANDOM_RETURN</span> <span class="o">=</span> <span class="s2">&quot;average_random_return&quot;</span>
+    <span class="n">AVERAGE_HEURISTIC_RETURN</span> <span class="o">=</span> <span class="s2">&quot;average_heuristic_return&quot;</span>
+    <span class="n">INTRUSION_START</span> <span class="o">=</span> <span class="s2">&quot;intrusion_start&quot;</span>
+    <span class="n">WEIGHTED_INTRUSION_PREDICTION_DISTANCE</span> <span class="o">=</span> <span class="s2">&quot;weighted_intrusion_prediction_distance&quot;</span>
+    <span class="n">START_POINT_CORRECT</span> <span class="o">=</span> <span class="s2">&quot;start_point_correct&quot;</span>
+    <span class="n">INTRUSION_END</span> <span class="o">=</span> <span class="s2">&quot;intrusion_end&quot;</span></div>
 </pre></div>
 
            </div>

@@ -432,7 +432,8 @@
         <span class="n">emulation_name</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">name</span>
         <span class="n">elk_manager_info_dto</span> <span class="o">=</span> <span class="n">ELKManagersInfo</span><span class="p">(</span>
             <span class="n">elk_managers_running</span><span class="o">=</span><span class="n">elk_managers_running</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="n">elk_managers_ips</span><span class="p">,</span> <span class="n">execution_id</span><span class="o">=</span><span class="n">execution_id</span><span class="p">,</span>
-            <span class="n">emulation_name</span><span class="o">=</span><span class="n">emulation_name</span><span class="p">,</span> <span class="n">elk_managers_statuses</span><span class="o">=</span><span class="n">elk_managers_statuses</span><span class="p">,</span> <span class="n">ports</span><span class="o">=</span><span class="n">elk_managers_ports</span><span class="p">)</span>
+            <span class="n">emulation_name</span><span class="o">=</span><span class="n">emulation_name</span><span class="p">,</span> <span class="n">elk_managers_statuses</span><span class="o">=</span><span class="n">elk_managers_statuses</span><span class="p">,</span> <span class="n">ports</span><span class="o">=</span><span class="n">elk_managers_ports</span><span class="p">,</span>
+            <span class="n">physical_server_ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">physical_host_ip</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">elk_manager_info_dto</span></div></div>
 </pre></div>
 

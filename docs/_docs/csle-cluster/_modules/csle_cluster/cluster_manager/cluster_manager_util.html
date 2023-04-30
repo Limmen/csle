@@ -92,6 +92,8 @@
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.attacker.emulation_attacker_action</span> <span class="kn">import</span> <span class="n">EmulationAttackerAction</span>
 <span class="kn">from</span> <span class="nn">csle_common.dao.emulation_action.defender.emulation_defender_action</span> <span class="kn">import</span> <span class="n">EmulationDefenderAction</span>
 <span class="kn">from</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_alert_counters</span> <span class="kn">import</span> <span class="n">SnortIdsAlertCounters</span>
+<span class="kn">from</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_rule_counters</span> <span class="kn">import</span> <span class="n">SnortIdsRuleCounters</span>
+<span class="kn">from</span> <span class="nn">csle_collector.snort_ids_manager.snort_ids_ip_alert_counters</span> <span class="kn">import</span> <span class="n">SnortIdsIPAlertCounters</span>
 <span class="kn">from</span> <span class="nn">csle_collector.ossec_ids_manager.ossec_ids_alert_counters</span> <span class="kn">import</span> <span class="n">OSSECIdsAlertCounters</span>
 <span class="kn">from</span> <span class="nn">csle_collector.client_manager.client_population_metrics</span> <span class="kn">import</span> <span class="n">ClientPopulationMetrics</span>
 <span class="kn">from</span> <span class="nn">csle_collector.docker_stats_manager.docker_stats</span> <span class="kn">import</span> <span class="n">DockerStats</span>
@@ -1065,7 +1067,7 @@
             <span class="n">elkManagersRunning</span><span class="o">=</span><span class="n">elk_managers_dto</span><span class="o">.</span><span class="n">elk_managers_running</span><span class="p">,</span>
             <span class="n">elkManagersStatuses</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span>
                 <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_elk_dto</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">elk_managers_dto</span><span class="o">.</span><span class="n">elk_managers_statuses</span><span class="p">)),</span>
-            <span class="n">localKibanaPort</span><span class="o">=</span><span class="n">elk_managers_dto</span><span class="o">.</span><span class="n">local_kibana_port</span>
+            <span class="n">localKibanaPort</span><span class="o">=</span><span class="n">elk_managers_dto</span><span class="o">.</span><span class="n">local_kibana_port</span><span class="p">,</span> <span class="n">physicalServerIp</span><span class="o">=</span><span class="n">elk_managers_dto</span><span class="o">.</span><span class="n">physical_server_ip</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.convert_elk_info_dto_reverse"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_elk_info_dto_reverse">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -1086,7 +1088,8 @@
             <span class="n">elk_managers_running</span><span class="o">=</span><span class="n">elk_managers_dto</span><span class="o">.</span><span class="n">elkManagersRunning</span><span class="p">,</span>
             <span class="n">elk_managers_statuses</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span>
                 <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_elk_dto_reverse</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">elk_managers_dto</span><span class="o">.</span><span class="n">elkManagersStatuses</span><span class="p">)),</span>
-            <span class="n">local_kibana_port</span><span class="o">=</span><span class="n">elk_managers_dto</span><span class="o">.</span><span class="n">localKibanaPort</span>
+            <span class="n">local_kibana_port</span><span class="o">=</span><span class="n">elk_managers_dto</span><span class="o">.</span><span class="n">localKibanaPort</span><span class="p">,</span>
+            <span class="n">physical_server_ip</span><span class="o">=</span><span class="n">elk_managers_dto</span><span class="o">.</span><span class="n">physicalServerIp</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.convert_ryu_info_dto"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_ryu_info_dto">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -1107,7 +1110,9 @@
             <span class="n">ryuManagersRunning</span><span class="o">=</span><span class="n">ryu_managers_info_dto</span><span class="o">.</span><span class="n">ryu_managers_running</span><span class="p">,</span>
             <span class="n">ryuManagersStatuses</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span>
                 <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_ryu_dto_to_ryu_status_dto</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
-                    <span class="n">ryu_managers_info_dto</span><span class="o">.</span><span class="n">ryu_managers_statuses</span><span class="p">))</span>
+                    <span class="n">ryu_managers_info_dto</span><span class="o">.</span><span class="n">ryu_managers_statuses</span><span class="p">)),</span>
+            <span class="n">physicalServerIp</span><span class="o">=</span><span class="n">ryu_managers_info_dto</span><span class="o">.</span><span class="n">physical_server_ip</span><span class="p">,</span>
+            <span class="n">localControllerWebPort</span><span class="o">=</span><span class="n">ryu_managers_info_dto</span><span class="o">.</span><span class="n">local_controller_web_port</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.convert_ryu_info_dto_reverse"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_ryu_info_dto_reverse">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -1128,7 +1133,9 @@
             <span class="n">ryu_managers_running</span><span class="o">=</span><span class="n">ryu_managers_info_dto</span><span class="o">.</span><span class="n">ryuManagersRunning</span><span class="p">,</span>
             <span class="n">ryu_managers_statuses</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span>
                 <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_ryu_dto_to_ryu_status_dto_reverse</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
-                    <span class="n">ryu_managers_info_dto</span><span class="o">.</span><span class="n">ryuManagersStatuses</span><span class="p">))</span>
+                    <span class="n">ryu_managers_info_dto</span><span class="o">.</span><span class="n">ryuManagersStatuses</span><span class="p">)),</span>
+            <span class="n">physical_server_ip</span><span class="o">=</span><span class="n">ryu_managers_info_dto</span><span class="o">.</span><span class="n">physicalServerIp</span><span class="p">,</span>
+            <span class="n">local_controller_web_port</span><span class="o">=</span><span class="n">ryu_managers_info_dto</span><span class="o">.</span><span class="n">localControllerWebPort</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.convert_host_info_dto"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_host_info_dto">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -1504,7 +1511,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">ElkManagersInfoDTO</span><span class="p">(</span>
             <span class="n">ips</span><span class="o">=</span><span class="p">[],</span> <span class="n">ports</span><span class="o">=</span><span class="p">[],</span> <span class="n">emulationName</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">executionId</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">elkManagersRunning</span><span class="o">=</span><span class="p">[],</span> <span class="n">elkManagersStatuses</span><span class="o">=</span><span class="p">[],</span>
-            <span class="n">localKibanaPort</span><span class="o">=-</span><span class="mi">1</span>
+            <span class="n">localKibanaPort</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">physicalServerIp</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.get_empty_ryu_managers_info_dto"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_ryu_managers_info_dto">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -1513,7 +1520,8 @@
 <span class="sd">        :return: an empty RyuManagersInfoDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">RyuManagersInfoDTO</span><span class="p">(</span>
-            <span class="n">ips</span><span class="o">=</span><span class="p">[],</span> <span class="n">ports</span><span class="o">=</span><span class="p">[],</span> <span class="n">emulationName</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">executionId</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ryuManagersRunning</span><span class="o">=</span><span class="p">[],</span> <span class="n">ryuManagersStatuses</span><span class="o">=</span><span class="p">[]</span>
+            <span class="n">ips</span><span class="o">=</span><span class="p">[],</span> <span class="n">ports</span><span class="o">=</span><span class="p">[],</span> <span class="n">emulationName</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">executionId</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ryuManagersRunning</span><span class="o">=</span><span class="p">[],</span> <span class="n">ryuManagersStatuses</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">physicalServerIp</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">localControllerWebPort</span><span class="o">=-</span><span class="mi">1</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.get_empty_host_managers_info_dto"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_host_managers_info_dto">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -1676,7 +1684,7 @@
                     <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">]</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">response</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">HTTP</span><span class="o">.</span><span class="n">HTTP_PROTOCOL_PREFIX</span><span class="si">}{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">LOCALHOST</span><span class="si">}</span><span class="s1">:&#39;</span>
-                                   <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">local_kibana_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                                   <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">local_kibana_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">HTTP</span><span class="o">.</span><span class="n">DEFAULT_TIMEOUT</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span><span class="p">:</span>
                         <span class="n">tunnel_thread_dict</span><span class="p">[</span><span class="n">cluster_constants</span><span class="o">.</span><span class="n">KIBANA_TUNNELS</span><span class="o">.</span><span class="n">THREAD_PROPERTY</span><span class="p">]</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
                         <span class="k">del</span> <span class="n">cluster_constants</span><span class="o">.</span><span class="n">KIBANA_TUNNELS</span><span class="o">.</span><span class="n">KIBANA_TUNNELS_DICT</span><span class="p">[</span>
@@ -1739,8 +1747,8 @@
                             <span class="n">tunnels_dict</span><span class="o">=</span><span class="n">cluster_constants</span><span class="o">.</span><span class="n">RYU_TUNNELS</span><span class="o">.</span><span class="n">RYU_TUNNELS_DICT</span><span class="p">,</span>
                             <span class="n">local_port</span><span class="o">=</span><span class="n">local_ryu_port</span><span class="p">,</span>
                             <span class="n">remote_port</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">controller_web_api_port</span><span class="p">,</span>
-                            <span class="n">remote_ip</span><span class="o">=</span>
-                            <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
+                            <span class="n">remote_ip</span><span class="o">=</span><span class="p">(</span>
+                                <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">),</span>
                             <span class="n">emulation</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_name</span><span class="p">,</span> <span class="n">execution_id</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">ip_first_octet</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                         <span class="n">local_ryu_port</span> <span class="o">=</span> <span class="n">local_ryu_port</span> <span class="o">+</span> <span class="mi">100</span>
@@ -1748,15 +1756,15 @@
                             <span class="n">tunnels_dict</span><span class="o">=</span><span class="n">cluster_constants</span><span class="o">.</span><span class="n">RYU_TUNNELS</span><span class="o">.</span><span class="n">RYU_TUNNELS_DICT</span><span class="p">,</span>
                             <span class="n">local_port</span><span class="o">=</span><span class="n">local_ryu_port</span><span class="p">,</span>
                             <span class="n">remote_port</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">controller_web_api_port</span><span class="p">,</span>
-                            <span class="n">remote_ip</span><span class="o">=</span>
-                            <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
+                            <span class="n">remote_ip</span><span class="o">=</span><span class="p">(</span>
+                                <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">),</span>
                             <span class="n">emulation</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_name</span><span class="p">,</span> <span class="n">execution_id</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">ip_first_octet</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">tunnel_thread_dict</span> <span class="o">=</span> <span class="n">cluster_constants</span><span class="o">.</span><span class="n">RYU_TUNNELS</span><span class="o">.</span><span class="n">RYU_TUNNELS_DICT</span><span class="p">[</span>
                         <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">]</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">response</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">constants</span><span class="o">.</span><span class="n">HTTP</span><span class="o">.</span><span class="n">HTTP_PROTOCOL_PREFIX</span><span class="si">}{</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMON</span><span class="o">.</span><span class="n">LOCALHOST</span><span class="si">}</span><span class="s1">:&#39;</span>
-                                       <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">local_ryu_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                                       <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">local_ryu_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">constants</span><span class="o">.</span><span class="n">HTTP</span><span class="o">.</span><span class="n">DEFAULT_TIMEOUT</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="n">constants</span><span class="o">.</span><span class="n">HTTPS</span><span class="o">.</span><span class="n">OK_STATUS_CODE</span><span class="p">:</span>
                             <span class="n">tunnel_thread_dict</span><span class="p">[</span><span class="n">cluster_constants</span><span class="o">.</span><span class="n">RYU_TUNNELS</span><span class="o">.</span><span class="n">THREAD_PROPERTY</span><span class="p">]</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
                             <span class="k">del</span> <span class="n">cluster_constants</span><span class="o">.</span><span class="n">RYU_TUNNELS</span><span class="o">.</span><span class="n">RYU_TUNNELS_DICT</span><span class="p">[</span>
@@ -1764,10 +1772,10 @@
                             <span class="n">EmulationEnvController</span><span class="o">.</span><span class="n">create_ssh_tunnel</span><span class="p">(</span>
                                 <span class="n">tunnels_dict</span><span class="o">=</span><span class="n">cluster_constants</span><span class="o">.</span><span class="n">RYU_TUNNELS</span><span class="o">.</span><span class="n">RYU_TUNNELS_DICT</span><span class="p">,</span>
                                 <span class="n">local_port</span><span class="o">=</span><span class="n">local_ryu_port</span><span class="p">,</span>
-                                <span class="n">remote_port</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span>
-                                    <span class="o">.</span><span class="n">controller_web_api_port</span><span class="p">,</span>
-                                <span class="n">remote_ip</span><span class="o">=</span>
-                                <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
+                                <span class="n">remote_port</span><span class="o">=</span><span class="p">(</span>
+                                    <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">controller_web_api_port</span><span class="p">),</span>
+                                <span class="n">remote_ip</span><span class="o">=</span><span class="p">(</span>
+                                    <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">),</span>
                                 <span class="n">emulation</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_name</span><span class="p">,</span> <span class="n">execution_id</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">ip_first_octet</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                         <span class="n">tunnel_thread_dict</span><span class="p">[</span><span class="n">cluster_constants</span><span class="o">.</span><span class="n">RYU_TUNNELS</span><span class="o">.</span><span class="n">THREAD_PROPERTY</span><span class="p">]</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
@@ -1780,8 +1788,8 @@
                             <span class="n">tunnels_dict</span><span class="o">=</span><span class="n">cluster_constants</span><span class="o">.</span><span class="n">RYU_TUNNELS</span><span class="o">.</span><span class="n">RYU_TUNNELS_DICT</span><span class="p">,</span>
                             <span class="n">local_port</span><span class="o">=</span><span class="n">local_ryu_port</span><span class="p">,</span>
                             <span class="n">remote_port</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">controller_web_api_port</span><span class="p">,</span>
-                            <span class="n">remote_ip</span><span class="o">=</span>
-                            <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
+                            <span class="n">remote_ip</span><span class="o">=</span><span class="p">(</span>
+                                <span class="n">execution</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">),</span>
                             <span class="n">emulation</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">emulation_name</span><span class="p">,</span> <span class="n">execution_id</span><span class="o">=</span><span class="n">execution</span><span class="o">.</span><span class="n">ip_first_octet</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">local_ryu_port</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -1927,23 +1935,23 @@
         <span class="n">stopped_containers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">running_container_names</span><span class="p">,</span> <span class="n">stopped_containers</span><span class="p">))</span>
         <span class="n">merged_snort_ids_managers_info</span> <span class="o">=</span> <span class="n">snort_ids_managers_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">snort_ids_manager_info</span> <span class="ow">in</span> <span class="n">snort_ids_managers_info</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span> <span class="o">+</span> \
-                                                 <span class="nb">list</span><span class="p">(</span><span class="n">snort_ids_manager_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
-            <span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span> <span class="o">+</span> \
-                                                   <span class="nb">list</span><span class="p">(</span><span class="n">snort_ids_manager_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span>
+            <span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span> <span class="o">+</span>
+                                                  <span class="nb">list</span><span class="p">(</span><span class="n">snort_ids_manager_info</span><span class="o">.</span><span class="n">ips</span><span class="p">))</span>
+            <span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span> <span class="o">+</span>
+                                                    <span class="nb">list</span><span class="p">(</span><span class="n">snort_ids_manager_info</span><span class="o">.</span><span class="n">ports</span><span class="p">))</span>
             <span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">snort_ids_managers_running</span> <span class="o">=</span> \
                 <span class="nb">list</span><span class="p">(</span><span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">snort_ids_managers_running</span><span class="p">)</span> <span class="o">+</span> \
                 <span class="nb">list</span><span class="p">(</span><span class="n">snort_ids_manager_info</span><span class="o">.</span><span class="n">snort_ids_managers_running</span><span class="p">)</span>
             <span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">snort_ids_managers_statuses</span> <span class="o">=</span> \
-                <span class="nb">list</span><span class="p">(</span><span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">snort_ids_managers_statuses</span><span class="p">)</span> <span class="o">+</span> \
-                <span class="nb">list</span><span class="p">(</span><span class="n">snort_ids_manager_info</span><span class="o">.</span><span class="n">snort_ids_managers_statuses</span><span class="p">)</span>
+                <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">merged_snort_ids_managers_info</span><span class="o">.</span><span class="n">snort_ids_managers_statuses</span><span class="p">)</span> <span class="o">+</span>
+                 <span class="nb">list</span><span class="p">(</span><span class="n">snort_ids_manager_info</span><span class="o">.</span><span class="n">snort_ids_managers_statuses</span><span class="p">))</span>
 
         <span class="n">merged_ossec_ids_managers_info</span> <span class="o">=</span> <span class="n">ossec_ids_managers_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">ossec_ids_manager_info</span> <span class="ow">in</span> <span class="n">ossec_ids_managers_info</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="n">merged_ossec_ids_managers_info</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_ossec_ids_managers_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span> <span class="o">+</span> \
-                                                 <span class="nb">list</span><span class="p">(</span><span class="n">ossec_ids_manager_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
-            <span class="n">merged_ossec_ids_managers_info</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_ossec_ids_managers_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span> <span class="o">+</span> \
-                                                   <span class="nb">list</span><span class="p">(</span><span class="n">ossec_ids_manager_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span>
+            <span class="n">merged_ossec_ids_managers_info</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">merged_ossec_ids_managers_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span> <span class="o">+</span>
+                                                  <span class="nb">list</span><span class="p">(</span><span class="n">ossec_ids_manager_info</span><span class="o">.</span><span class="n">ips</span><span class="p">))</span>
+            <span class="n">merged_ossec_ids_managers_info</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">merged_ossec_ids_managers_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span> <span class="o">+</span>
+                                                    <span class="nb">list</span><span class="p">(</span><span class="n">ossec_ids_manager_info</span><span class="o">.</span><span class="n">ports</span><span class="p">))</span>
             <span class="n">merged_ossec_ids_managers_info</span><span class="o">.</span><span class="n">ossec_ids_managers_running</span> <span class="o">=</span> \
                 <span class="nb">list</span><span class="p">(</span><span class="n">merged_ossec_ids_managers_info</span><span class="o">.</span><span class="n">ossec_ids_managers_running</span><span class="p">)</span> <span class="o">+</span> \
                 <span class="nb">list</span><span class="p">(</span><span class="n">ossec_ids_manager_info</span><span class="o">.</span><span class="n">ossec_ids_managers_running</span><span class="p">)</span>
@@ -1953,8 +1961,7 @@
 
         <span class="n">merged_kafka_managers_info</span> <span class="o">=</span> <span class="n">kafka_managers_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">kafka_manager_info</span> <span class="ow">in</span> <span class="n">kafka_managers_info</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="n">merged_kafka_managers_info</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_kafka_managers_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span> <span class="o">+</span> \
-                                             <span class="nb">list</span><span class="p">(</span><span class="n">kafka_manager_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
+            <span class="n">merged_kafka_managers_info</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_kafka_managers_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">kafka_manager_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
             <span class="n">merged_kafka_managers_info</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_kafka_managers_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">kafka_manager_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span>
             <span class="n">merged_kafka_managers_info</span><span class="o">.</span><span class="n">kafka_managers_running</span> <span class="o">=</span> \
                 <span class="nb">list</span><span class="p">(</span><span class="n">merged_kafka_managers_info</span><span class="o">.</span><span class="n">kafka_managers_running</span><span class="p">)</span> <span class="o">+</span> \
@@ -1967,18 +1974,17 @@
         <span class="k">for</span> <span class="n">host_manager_info</span> <span class="ow">in</span> <span class="n">host_managers_info</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
             <span class="n">merged_host_managers_info</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_host_managers_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">host_manager_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
             <span class="n">merged_host_managers_info</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_host_managers_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">host_manager_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span>
-            <span class="n">merged_host_managers_info</span><span class="o">.</span><span class="n">host_managers_running</span> <span class="o">=</span> \
-                <span class="nb">list</span><span class="p">(</span><span class="n">merged_host_managers_info</span><span class="o">.</span><span class="n">host_managers_running</span><span class="p">)</span> <span class="o">+</span> \
-                <span class="nb">list</span><span class="p">(</span><span class="n">host_manager_info</span><span class="o">.</span><span class="n">host_managers_running</span><span class="p">)</span>
+            <span class="n">merged_host_managers_info</span><span class="o">.</span><span class="n">host_managers_running</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">merged_host_managers_info</span><span class="o">.</span><span class="n">host_managers_running</span><span class="p">)</span> <span class="o">+</span>
+                                                               <span class="nb">list</span><span class="p">(</span><span class="n">host_manager_info</span><span class="o">.</span><span class="n">host_managers_running</span><span class="p">))</span>
             <span class="n">merged_host_managers_info</span><span class="o">.</span><span class="n">host_managers_statuses</span> <span class="o">=</span> \
-                <span class="nb">list</span><span class="p">(</span><span class="n">merged_host_managers_info</span><span class="o">.</span><span class="n">host_managers_statuses</span><span class="p">)</span> <span class="o">+</span> \
-                <span class="nb">list</span><span class="p">(</span><span class="n">host_manager_info</span><span class="o">.</span><span class="n">host_managers_statuses</span><span class="p">)</span>
+                <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">merged_host_managers_info</span><span class="o">.</span><span class="n">host_managers_statuses</span><span class="p">)</span> <span class="o">+</span>
+                 <span class="nb">list</span><span class="p">(</span><span class="n">host_manager_info</span><span class="o">.</span><span class="n">host_managers_statuses</span><span class="p">))</span>
 
         <span class="n">merged_client_managers_info</span> <span class="o">=</span> <span class="n">client_managers_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">client_manager_info</span> <span class="ow">in</span> <span class="n">client_managers_info</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
             <span class="n">merged_client_managers_info</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_client_managers_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">client_manager_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
-            <span class="n">merged_client_managers_info</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_client_managers_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span> <span class="o">+</span> \
-                                                <span class="nb">list</span><span class="p">(</span><span class="n">client_manager_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span>
+            <span class="n">merged_client_managers_info</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">merged_client_managers_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span> <span class="o">+</span>
+                                                 <span class="nb">list</span><span class="p">(</span><span class="n">client_manager_info</span><span class="o">.</span><span class="n">ports</span><span class="p">))</span>
             <span class="n">merged_client_managers_info</span><span class="o">.</span><span class="n">client_managers_running</span> <span class="o">=</span> \
                 <span class="nb">list</span><span class="p">(</span><span class="n">merged_client_managers_info</span><span class="o">.</span><span class="n">client_managers_running</span><span class="p">)</span> <span class="o">+</span> \
                 <span class="nb">list</span><span class="p">(</span><span class="n">client_manager_info</span><span class="o">.</span><span class="n">client_managers_running</span><span class="p">)</span>
@@ -1988,10 +1994,10 @@
 
         <span class="n">merged_docker_stats_managers_info</span> <span class="o">=</span> <span class="n">docker_stats_managers_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">docker_stats_manager_info</span> <span class="ow">in</span> <span class="n">docker_stats_managers_info</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-            <span class="n">merged_docker_stats_managers_info</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_docker_stats_managers_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span> <span class="o">+</span> \
-                                                    <span class="nb">list</span><span class="p">(</span><span class="n">docker_stats_manager_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
-            <span class="n">merged_docker_stats_managers_info</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_docker_stats_managers_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span> <span class="o">+</span> \
-                                                      <span class="nb">list</span><span class="p">(</span><span class="n">docker_stats_manager_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span>
+            <span class="n">merged_docker_stats_managers_info</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">merged_docker_stats_managers_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span> <span class="o">+</span>
+                                                     <span class="nb">list</span><span class="p">(</span><span class="n">docker_stats_manager_info</span><span class="o">.</span><span class="n">ips</span><span class="p">))</span>
+            <span class="n">merged_docker_stats_managers_info</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">merged_docker_stats_managers_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span> <span class="o">+</span>
+                                                       <span class="nb">list</span><span class="p">(</span><span class="n">docker_stats_manager_info</span><span class="o">.</span><span class="n">ports</span><span class="p">))</span>
             <span class="n">merged_docker_stats_managers_info</span><span class="o">.</span><span class="n">docker_stats_managers_running</span> <span class="o">=</span> \
                 <span class="nb">list</span><span class="p">(</span><span class="n">merged_docker_stats_managers_info</span><span class="o">.</span><span class="n">docker_stats_managers_running</span><span class="p">)</span> <span class="o">+</span> \
                 <span class="nb">list</span><span class="p">(</span><span class="n">docker_stats_manager_info</span><span class="o">.</span><span class="n">docker_stats_managers_running</span><span class="p">)</span>
@@ -2002,8 +2008,8 @@
         <span class="n">merged_traffic_managers_info</span> <span class="o">=</span> <span class="n">traffic_managers_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">traffic_manager_info</span> <span class="ow">in</span> <span class="n">traffic_managers_info</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
             <span class="n">merged_traffic_managers_info</span><span class="o">.</span><span class="n">ips</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_traffic_managers_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">traffic_manager_info</span><span class="o">.</span><span class="n">ips</span><span class="p">)</span>
-            <span class="n">merged_traffic_managers_info</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged_traffic_managers_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span> \
-                                                 <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">traffic_manager_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span>
+            <span class="n">merged_traffic_managers_info</span><span class="o">.</span><span class="n">ports</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">merged_traffic_managers_info</span><span class="o">.</span><span class="n">ports</span><span class="p">)</span>
+                                                  <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">traffic_manager_info</span><span class="o">.</span><span class="n">ports</span><span class="p">))</span>
             <span class="n">merged_traffic_managers_info</span><span class="o">.</span><span class="n">traffic_managers_running</span> <span class="o">=</span> \
                 <span class="nb">list</span><span class="p">(</span><span class="n">merged_traffic_managers_info</span><span class="o">.</span><span class="n">traffic_managers_running</span><span class="p">)</span> <span class="o">+</span> \
                 <span class="nb">list</span><span class="p">(</span><span class="n">traffic_manager_info</span><span class="o">.</span><span class="n">traffic_managers_running</span><span class="p">)</span>
@@ -2140,8 +2146,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">ClientPopulationMetricsDTO</span><span class="p">(</span>
                 <span class="n">ip</span><span class="o">=</span><span class="n">client_population_metrics</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">ts</span><span class="o">=</span><span class="n">client_population_metrics</span><span class="o">.</span><span class="n">ts</span><span class="p">,</span>
-                <span class="n">num_clients</span><span class="o">=</span><span class="n">client_population_metrics</span><span class="o">.</span><span class="n">num_clients</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">client_population_metrics</span><span class="o">.</span><span class="n">rate</span>
-            <span class="p">)</span></div>
+                <span class="n">num_clients</span><span class="o">=</span><span class="n">client_population_metrics</span><span class="o">.</span><span class="n">num_clients</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">client_population_metrics</span><span class="o">.</span><span class="n">rate</span><span class="p">,</span>
+                <span class="n">service_time</span><span class="o">=</span><span class="n">client_population_metrics</span><span class="o">.</span><span class="n">service_time</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.convert_client_population_metrics_dto_reverse"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_client_population_metrics_dto_reverse">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">convert_client_population_metrics_dto_reverse</span><span class="p">(</span>
@@ -2158,7 +2164,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ClientPopulationMetrics</span><span class="p">(</span>
                 <span class="n">ip</span><span class="o">=</span><span class="n">client_population_metrics_dto</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">ts</span><span class="o">=</span><span class="n">client_population_metrics_dto</span><span class="o">.</span><span class="n">ts</span><span class="p">,</span>
-                <span class="n">num_clients</span><span class="o">=</span><span class="n">client_population_metrics_dto</span><span class="o">.</span><span class="n">num_clients</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">client_population_metrics_dto</span><span class="o">.</span><span class="n">rate</span>
+                <span class="n">num_clients</span><span class="o">=</span><span class="n">client_population_metrics_dto</span><span class="o">.</span><span class="n">num_clients</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="n">client_population_metrics_dto</span><span class="o">.</span><span class="n">rate</span><span class="p">,</span>
+                <span class="n">service_time</span><span class="o">=</span><span class="n">client_population_metrics_dto</span><span class="o">.</span><span class="n">service_time</span>
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.get_empty_client_population_metrics_dto"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_client_population_metrics_dto">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -2166,7 +2173,7 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :return: an empty ClientPopulationMetricsDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">ClientPopulationMetricsDTO</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="o">=-</span><span class="mf">1.</span><span class="p">,</span> <span class="n">num_clients</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">ClientPopulationMetricsDTO</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="o">=-</span><span class="mf">1.</span><span class="p">,</span> <span class="n">num_clients</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">service_time</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.client_population_metrics_dto_to_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.client_population_metrics_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">client_population_metrics_dto_to_dict</span><span class="p">(</span>
@@ -2182,6 +2189,7 @@
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client_population_metrics_dto</span><span class="o">.</span><span class="n">ts</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;num_clients&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client_population_metrics_dto</span><span class="o">.</span><span class="n">num_clients</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;rate&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client_population_metrics_dto</span><span class="o">.</span><span class="n">rate</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;service_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client_population_metrics_dto</span><span class="o">.</span><span class="n">service_time</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.convert_docker_stats_dto"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_docker_stats_dto">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -2298,8 +2306,8 @@
 <span class="sd">        :return: an empty HostMetricsDataDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDataDTO</span><span class="p">(</span><span class="n">num_logged_in_users</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_failed_login_attempts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                                                  <span class="n">num_open_connections</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_login_events</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_processes</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                                                  <span class="n">num_users</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></div>
+                                                      <span class="n">num_open_connections</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_login_events</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_processes</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                      <span class="n">num_users</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.host_metrics_dto_to_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.host_metrics_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">host_metrics_dto_to_dict</span><span class="p">(</span><span class="n">host_metrics_dto</span><span class="p">:</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">HostMetricsDataDTO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
@@ -2485,10 +2493,10 @@
             <span class="k">return</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_alert_counters_dto</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsAlertCountersDTO</span><span class="p">(</span>
-                <span class="n">priority_alerts</span><span class="o">=</span><span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">priority_alerts</span><span class="p">,</span>
-                <span class="n">class_alerts</span><span class="o">=</span><span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">class_alerts</span><span class="p">,</span>
-                <span class="n">severe_alerts</span><span class="o">=</span><span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">severe_alerts</span><span class="p">,</span>
-                <span class="n">warning_alerts</span><span class="o">=</span><span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">warning_alerts</span><span class="p">,</span>
+                <span class="n">priority_alerts</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">priority_alerts</span><span class="p">)),</span>
+                <span class="n">class_alerts</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">class_alerts</span><span class="p">)),</span>
+                <span class="n">severe_alerts</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">severe_alerts</span><span class="p">),</span>
+                <span class="n">warning_alerts</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">warning_alerts</span><span class="p">),</span>
                 <span class="n">alerts_weighted_by_priority</span><span class="o">=</span><span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span><span class="p">,</span>
                 <span class="n">ip</span><span class="o">=</span><span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">ts</span><span class="o">=</span><span class="n">snort_ids_alert_counters</span><span class="o">.</span><span class="n">ts</span>
             <span class="p">)</span></div>
@@ -2536,6 +2544,145 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">ip</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">ts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;class_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">class_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;priority_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">priority_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;total_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">total_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;warning_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">warning_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;severe_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">severe_alerts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;alerts_weighted_by_priority&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.convert_snort_ids_rule_counters_dto"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_rule_counters_dto">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_snort_ids_rule_counters_dto</span><span class="p">(</span><span class="n">snort_ids_rule_counters</span><span class="p">:</span> <span class="n">SnortIdsRuleCounters</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsRuleCountersDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a SnortIdsRuleCounters object to a SnortIdsRuleCountersDTO</span>
+
+<span class="sd">        :param snort_ids_rule_counters: the object to convert</span>
+<span class="sd">        :return: the converted objected</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">snort_ids_rule_counters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_rule_counters_dto</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rule_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">snort_ids_rule_counters</span><span class="o">.</span><span class="n">rule_alerts</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">rule_counters</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">snort_ids_rule_counters</span><span class="o">.</span><span class="n">rule_alerts</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsRuleCountersDTO</span><span class="p">(</span>
+                <span class="n">rule_ids</span><span class="o">=</span><span class="n">rule_ids</span><span class="p">,</span> <span class="n">rule_alert_counts</span><span class="o">=</span><span class="n">rule_counters</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">snort_ids_rule_counters</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span>
+                <span class="n">ts</span><span class="o">=</span><span class="n">snort_ids_rule_counters</span><span class="o">.</span><span class="n">ts</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.convert_snort_ids_rule_counters_dto_reverse"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_rule_counters_dto_reverse">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_snort_ids_rule_counters_dto_reverse</span><span class="p">(</span>
+            <span class="n">snort_ids_rule_counters_dto</span><span class="p">:</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsRuleCountersDTO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SnortIdsRuleCounters</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a SnortIdsRuleCountersDTO to a SnortIdsRuleCounters</span>
+
+<span class="sd">        :param snort_ids_rule_counters_dto: the DTO to convert</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">snort_ids_rule_counters_dto</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_rule_counters_dto_reverse</span><span class="p">(</span>
+                <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_rule_counters_dto</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dto</span> <span class="o">=</span> <span class="n">SnortIdsRuleCounters</span><span class="p">()</span>
+            <span class="n">rule_alerts</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">snort_ids_rule_counters_dto</span><span class="o">.</span><span class="n">rule_ids</span><span class="p">)):</span>
+                <span class="n">rule_alerts</span><span class="p">[</span><span class="n">snort_ids_rule_counters_dto</span><span class="o">.</span><span class="n">rule_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">snort_ids_rule_counters_dto</span><span class="o">.</span><span class="n">rule_alert_counts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">dto</span><span class="o">.</span><span class="n">rule_alerts</span> <span class="o">=</span> <span class="n">rule_alerts</span>
+            <span class="n">dto</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">snort_ids_rule_counters_dto</span><span class="o">.</span><span class="n">ip</span>
+            <span class="n">dto</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="n">snort_ids_rule_counters_dto</span><span class="o">.</span><span class="n">ts</span>
+            <span class="k">return</span> <span class="n">dto</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.get_empty_snort_ids_rule_counters_dto"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_rule_counters_dto">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_empty_snort_ids_rule_counters_dto</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsRuleCountersDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: an empty SnortIdsAlertCountersDTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsRuleCountersDTO</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">rule_ids</span><span class="o">=</span><span class="p">[],</span> <span class="n">rule_alert_counts</span><span class="o">=</span><span class="p">[])</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.snort_ids_rule_counters_dto_to_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_rule_counters_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">snort_ids_rule_counters_dto_to_dict</span><span class="p">(</span>
+            <span class="n">snort_ids_rule_counters_dto</span><span class="p">:</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsRuleCountersDTO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a SnortIdsRuleCountersDTO to a dict</span>
+
+<span class="sd">        :param snort_ids_rule_counters_dto: the dto to convert</span>
+<span class="sd">        :return: a dict representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_rule_counters_dto</span><span class="o">.</span><span class="n">ip</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_rule_counters_dto</span><span class="o">.</span><span class="n">ts</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;rule_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">snort_ids_rule_counters_dto</span><span class="o">.</span><span class="n">rule_ids</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;rule_alert_counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">snort_ids_rule_counters_dto</span><span class="o">.</span><span class="n">rule_alert_counts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_snort_ids_ip_alert_counters_dto</span><span class="p">(</span><span class="n">snort_ids_ip_alert_counters</span><span class="p">:</span> <span class="n">SnortIdsIPAlertCounters</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsIpAlertCountersDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a SnortIdsIPAlertCounters object to a SnortIdsIpAlertCountersDTO</span>
+
+<span class="sd">        :param snort_ids_ip_alert_counters: the object to convert</span>
+<span class="sd">        :return: the converted objected</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">snort_ids_ip_alert_counters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_ip_alert_counters_dto</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsIpAlertCountersDTO</span><span class="p">(</span>
+                <span class="n">priority_alerts</span><span class="o">=</span><span class="n">snort_ids_ip_alert_counters</span><span class="o">.</span><span class="n">priority_alerts</span><span class="p">,</span>
+                <span class="n">class_alerts</span><span class="o">=</span><span class="n">snort_ids_ip_alert_counters</span><span class="o">.</span><span class="n">class_alerts</span><span class="p">,</span>
+                <span class="n">severe_alerts</span><span class="o">=</span><span class="n">snort_ids_ip_alert_counters</span><span class="o">.</span><span class="n">severe_alerts</span><span class="p">,</span>
+                <span class="n">warning_alerts</span><span class="o">=</span><span class="n">snort_ids_ip_alert_counters</span><span class="o">.</span><span class="n">warning_alerts</span><span class="p">,</span>
+                <span class="n">alerts_weighted_by_priority</span><span class="o">=</span><span class="n">snort_ids_ip_alert_counters</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span><span class="p">,</span>
+                <span class="n">ip</span><span class="o">=</span><span class="n">snort_ids_ip_alert_counters</span><span class="o">.</span><span class="n">ip</span><span class="p">,</span> <span class="n">ts</span><span class="o">=</span><span class="n">snort_ids_ip_alert_counters</span><span class="o">.</span><span class="n">ts</span><span class="p">,</span>
+                <span class="n">alert_ip</span><span class="o">=</span><span class="n">snort_ids_ip_alert_counters</span><span class="o">.</span><span class="n">alert_ip</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto_reverse"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto_reverse">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_snort_ids_ip_alert_counters_dto_reverse</span><span class="p">(</span>
+            <span class="n">snort_ids_ip_alert_counters_dto</span><span class="p">:</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsIpAlertCountersDTO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SnortIdsIPAlertCounters</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a SnortIdsIpAlertCountersDTO to a SnortIdsIPAlertCounters</span>
+
+<span class="sd">        :param snort_ids_ip_alert_counters_dto: the DTO to convert</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">snort_ids_ip_alert_counters_dto</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_ip_alert_counters_dto_reverse</span><span class="p">(</span>
+                <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_ip_alert_counters_dto</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dto</span> <span class="o">=</span> <span class="n">SnortIdsIPAlertCounters</span><span class="p">()</span>
+            <span class="n">dto</span><span class="o">.</span><span class="n">priority_alerts</span> <span class="o">=</span> <span class="n">snort_ids_ip_alert_counters_dto</span><span class="o">.</span><span class="n">priority_alerts</span>
+            <span class="n">dto</span><span class="o">.</span><span class="n">class_alerts</span> <span class="o">=</span> <span class="n">snort_ids_ip_alert_counters_dto</span><span class="o">.</span><span class="n">class_alerts</span>
+            <span class="n">dto</span><span class="o">.</span><span class="n">severe_alerts</span> <span class="o">=</span> <span class="n">snort_ids_ip_alert_counters_dto</span><span class="o">.</span><span class="n">severe_alerts</span>
+            <span class="n">dto</span><span class="o">.</span><span class="n">warning_alerts</span> <span class="o">=</span> <span class="n">snort_ids_ip_alert_counters_dto</span><span class="o">.</span><span class="n">warning_alerts</span>
+            <span class="n">dto</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span> <span class="o">=</span> <span class="n">snort_ids_ip_alert_counters_dto</span><span class="o">.</span><span class="n">alerts_weighted_by_priority</span>
+            <span class="n">dto</span><span class="o">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">snort_ids_ip_alert_counters_dto</span><span class="o">.</span><span class="n">ip</span>
+            <span class="n">dto</span><span class="o">.</span><span class="n">ts</span> <span class="o">=</span> <span class="n">snort_ids_ip_alert_counters_dto</span><span class="o">.</span><span class="n">ts</span>
+            <span class="n">dto</span><span class="o">.</span><span class="n">alert_ip</span> <span class="o">=</span> <span class="n">snort_ids_ip_alert_counters_dto</span><span class="o">.</span><span class="n">alert_ip</span>
+            <span class="k">return</span> <span class="n">dto</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dto"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dto">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_empty_snort_ids_ip_alert_counters_dto</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsIpAlertCountersDTO</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: an empty SnortIdsAlertCountersDTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsIpAlertCountersDTO</span><span class="p">(</span>
+            <span class="n">priority_alerts</span><span class="o">=</span><span class="p">[],</span> <span class="n">class_alerts</span><span class="o">=</span><span class="p">[],</span> <span class="n">severe_alerts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">warning_alerts</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alerts_weighted_by_priority</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">ip</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ts</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">alert_ip</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.snort_ids_ip_alert_counters_dto_to_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_ip_alert_counters_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">snort_ids_ip_alert_counters_dto_to_dict</span><span class="p">(</span>
+            <span class="n">snort_ids_alert_counters_dto</span><span class="p">:</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsIpAlertCountersDTO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a SnortIdsAlertCountersDTO to a dict</span>
+
+<span class="sd">        :param snort_ids_alert_counters_dto: the dto to convert</span>
+<span class="sd">        :return: a dict representation of the DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">ip</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;alert_ip&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">alert_ip</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">ts</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;class_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">class_alerts</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;priority_alerts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dto</span><span class="o">.</span><span class="n">priority_alerts</span>
@@ -2668,7 +2815,7 @@
 <span class="sd">        :return: an empty FlowStatisticDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">FlowStatisticDTO</span><span class="p">(</span>
-            <span class="n">timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_port</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_port</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dst_mac_address</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">num_packets</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">in_port</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">out_port</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">dst_mac_address</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">num_packets</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">num_bytes</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">duration_nanoseconds</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">duration_seconds</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">hard_timeout</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">idle_timeout</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">priority</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">cookie</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
 
@@ -2760,7 +2907,7 @@
 <span class="sd">        :return: an empty PortStatisticDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">PortStatisticDTO</span><span class="p">(</span>
-            <span class="n">timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">port</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_received_packets</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_received_bytes</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_received_packets</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_received_bytes</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">num_received_errors</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_transmitted_packets</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_transmitted_bytes</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_transmitted_errors</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">num_received_dropped</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_transmitted_dropped</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_received_frame_errors</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">num_received_overrun_errors</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_received_crc_errors</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_collisions</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">duration_nanoseconds</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
@@ -2837,7 +2984,7 @@
 <span class="sd">        :return: an empty AggFlowStatisticDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">AggFlowStatisticDTO</span><span class="p">(</span>
-            <span class="n">timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_num_packets</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_num_bytes</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_num_flows</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+            <span class="n">timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">total_num_packets</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_num_bytes</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_num_flows</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.agg_flow_statistic_dto_to_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.agg_flow_statistic_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">agg_flow_statistic_dto_to_dict</span><span class="p">(</span><span class="n">agg_flow_statistic_dto</span><span class="p">:</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">AggFlowStatisticDTO</span><span class="p">)</span> \
@@ -2909,7 +3056,7 @@
 <span class="sd">        :return: an empty AvgFlowStatisticDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">AvgFlowStatisticDTO</span><span class="p">(</span>
-            <span class="n">timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_num_packets</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_num_bytes</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">total_num_packets</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_num_bytes</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">avg_duration_nanoseconds</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">avg_duration_seconds</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">avg_hard_timeout</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">avg_idle_timeout</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">avg_priority</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">avg_cookie</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
 
@@ -2999,7 +3146,7 @@
 <span class="sd">        :return: an empty AvgPortStatisticDTO</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">AvgPortStatisticDTO</span><span class="p">(</span>
-            <span class="n">timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">total_num_received_packets</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_num_received_bytes</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">timestamp</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">datapath_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">total_num_received_packets</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_num_received_bytes</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">total_num_received_errors</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_num_transmitted_packets</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_num_transmitted_bytes</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">total_num_transmitted_errors</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_num_received_dropped</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_num_transmitted_dropped</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">total_num_received_frame_errors</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_num_received_overrun_errors</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -3091,6 +3238,195 @@
         <span class="n">dtos</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">dto</span> <span class="ow">in</span> <span class="n">docker_stats_dict</span><span class="o">.</span><span class="n">dtos</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">dtos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">docker_stats_dto_to_dict</span><span class="p">(</span><span class="n">dto</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;dtos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtos</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_snort_ids_ip_alert_counters_dict</span><span class="p">(</span>
+            <span class="n">snort_ids_ip_alert_counters_d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsIPAlertCounters</span><span class="p">]])</span> \
+            <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsIpAlertCountersDict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict to list of SnortIdsIpAlertCountersDict</span>
+
+<span class="sd">        :param snort_ids_ip_alert_counters_d: the dict to convert</span>
+<span class="sd">        :return: the converted objected</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">snort_ids_ip_alert_counters_d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_ip_alert_counters_dict</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">snort_ids_ip_alerts_dict_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">snort_ids_ip_alert_counters_d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">snort_ids_ip_alerts_dict_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsIpAlertCountersDict</span><span class="p">(</span>
+                    <span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">dtos</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_ip_alert_counters_dto</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">v</span><span class="p">))))</span>
+            <span class="k">return</span> <span class="n">snort_ids_ip_alerts_dict_list</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict_reverse"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict_reverse">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_snort_ids_ip_alert_counters_dict_reverse</span><span class="p">(</span>
+            <span class="n">snort_ids_ip_alerts_counters_dict</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsIpAlertCountersDict</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsIPAlertCounters</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a list of SnortIdsIpAlertCountersDict to a dict</span>
+
+<span class="sd">        :param snort_ids_ip_alerts_counters_dict: the list to convert</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">snort_ids_ip_alerts_counters_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_ip_alert_counters_dict_reverse</span><span class="p">(</span>
+                <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_ip_alert_counters_dict</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">snort_ids_ip_alerts_counters_dict</span><span class="p">:</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">ds</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_ip_alert_counters_dto_reverse</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                                     <span class="n">ds</span><span class="o">.</span><span class="n">dtos</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_empty_snort_ids_ip_alert_counters_dict</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsIpAlertCountersDict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: an empty SnortIdsIpAlertCountersDict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.snort_ids_ip_alert_counters_dict_to_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_ip_alert_counters_dict_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">snort_ids_ip_alert_counters_dict_to_dict</span><span class="p">(</span>
+            <span class="n">snort_ids_ip_alert_counters_dict</span><span class="p">:</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsIpAlertCountersDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a DTO to a dict</span>
+
+<span class="sd">        :param snort_ids_ip_alert_counters_dict: the DTO to convert</span>
+<span class="sd">        :return: the dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_ip_alert_counters_dict</span><span class="o">.</span><span class="n">key</span>
+        <span class="n">dtos</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dto</span> <span class="ow">in</span> <span class="n">snort_ids_ip_alert_counters_dict</span><span class="o">.</span><span class="n">dtos</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">dtos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">snort_ids_ip_alert_counters_dto_to_dict</span><span class="p">(</span><span class="n">dto</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;dtos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtos</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.convert_snort_ids_alert_counters_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_alert_counters_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_snort_ids_alert_counters_dict</span><span class="p">(</span>
+            <span class="n">snort_ids_alert_counters_d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsAlertCounters</span><span class="p">]])</span> \
+            <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsAlertCountersDict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict to list of SnortIdsAlertCountersDict</span>
+
+<span class="sd">        :param snort_ids_alert_counters_d: the dict to convert</span>
+<span class="sd">        :return: the converted objected</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">snort_ids_alert_counters_d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_alert_counters_dict</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">snort_ids_alerts_dict_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">snort_ids_alert_counters_d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">snort_ids_alerts_dict_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsAlertCountersDict</span><span class="p">(</span>
+                    <span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">dtos</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_alert_counters_dto</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">v</span><span class="p">))))</span>
+            <span class="k">return</span> <span class="n">snort_ids_alerts_dict_list</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.convert_snort_ids_alert_counters_dict_reverse"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_alert_counters_dict_reverse">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_snort_ids_alert_counters_dict_reverse</span><span class="p">(</span>
+            <span class="n">snort_ids_alerts_counters_dict</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsAlertCountersDict</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsAlertCounters</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a list of SnortIdsIpAlertCountersDict to a dict</span>
+
+<span class="sd">        :param snort_ids_alerts_counters_dict: the list to convert</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">snort_ids_alerts_counters_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_alert_counters_dict_reverse</span><span class="p">(</span>
+                <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_alert_counters_dict</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">snort_ids_alerts_counters_dict</span><span class="p">:</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">ds</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_alert_counters_dto_reverse</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                                     <span class="n">ds</span><span class="o">.</span><span class="n">dtos</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.get_empty_snort_ids_alert_counters_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_alert_counters_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_empty_snort_ids_alert_counters_dict</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsAlertCountersDict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: an empty SnortIdsAlertCountersDict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.snort_ids_alert_counters_dict_to_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_alert_counters_dict_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">snort_ids_alert_counters_dict_to_dict</span><span class="p">(</span>
+            <span class="n">snort_ids_alert_counters_dict</span><span class="p">:</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsAlertCountersDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a DTO to a dict</span>
+
+<span class="sd">        :param snort_ids_alert_counters_dict: the DTO to convert</span>
+<span class="sd">        :return: the dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_alert_counters_dict</span><span class="o">.</span><span class="n">key</span>
+        <span class="n">dtos</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dto</span> <span class="ow">in</span> <span class="n">snort_ids_alert_counters_dict</span><span class="o">.</span><span class="n">dtos</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">dtos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">snort_ids_alert_counters_dto_to_dict</span><span class="p">(</span><span class="n">dto</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;dtos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtos</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.convert_snort_ids_rule_counters_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_rule_counters_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_snort_ids_rule_counters_dict</span><span class="p">(</span>
+            <span class="n">snort_ids_rule_counters_d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsRuleCounters</span><span class="p">]])</span> \
+            <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsRuleCountersDict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a dict to list of SnortIdsRuleCountersDict</span>
+
+<span class="sd">        :param snort_ids_rule_counters_d: the dict to convert</span>
+<span class="sd">        :return: the converted objected</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">snort_ids_rule_counters_d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_rule_counters_dict</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">snort_ids_rule_dict_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">snort_ids_rule_counters_d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">snort_ids_rule_dict_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsRuleCountersDict</span><span class="p">(</span>
+                    <span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">dtos</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_rule_counters_dto</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">v</span><span class="p">))))</span>
+            <span class="k">return</span> <span class="n">snort_ids_rule_dict_list</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.convert_snort_ids_rule_counters_dict_reverse"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_snort_ids_rule_counters_dict_reverse">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_snort_ids_rule_counters_dict_reverse</span><span class="p">(</span>
+            <span class="n">snort_ids_rule_counters_dict</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsRuleCountersDict</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">SnortIdsRuleCounters</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a list of SnortIdsRuleCountersDict to a dict</span>
+
+<span class="sd">        :param snort_ids_rule_counters_dict: the list to convert</span>
+<span class="sd">        :return: the converted DTO</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">snort_ids_rule_counters_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_rule_counters_dict_reverse</span><span class="p">(</span>
+                <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_rule_counters_dict</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">snort_ids_rule_counters_dict</span><span class="p">:</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">ds</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_rule_counters_dto_reverse</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                                     <span class="n">ds</span><span class="o">.</span><span class="n">dtos</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.get_empty_snort_ids_rule_counters_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_snort_ids_rule_counters_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_empty_snort_ids_rule_counters_dict</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsRuleCountersDict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: an empty SnortIdsRuleCountersDict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="ClusterManagerUtil.snort_ids_rule_counters_dict_to_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.snort_ids_rule_counters_dict_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">snort_ids_rule_counters_dict_to_dict</span><span class="p">(</span>
+            <span class="n">snort_ids_rule_counters_dict</span><span class="p">:</span> <span class="n">cluster_manager_pb2</span><span class="o">.</span><span class="n">SnortIdsAlertCountersDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts a DTO to a dict</span>
+
+<span class="sd">        :param snort_ids_rule_counters_dict: the DTO to convert</span>
+<span class="sd">        :return: the dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;key&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snort_ids_rule_counters_dict</span><span class="o">.</span><span class="n">key</span>
+        <span class="n">dtos</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dto</span> <span class="ow">in</span> <span class="n">snort_ids_rule_counters_dict</span><span class="o">.</span><span class="n">dtos</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">dtos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">snort_ids_rule_counters_dto_to_dict</span><span class="p">(</span><span class="n">dto</span><span class="p">))</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;dtos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtos</span>
         <span class="k">return</span> <span class="n">d</span></div>
 
@@ -3492,7 +3828,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">avg_port_statistics_dict</span><span class="p">:</span>
-                <span class="n">d</span><span class="p">[</span><span class="n">ds</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_avg_port_statistic_dto_reverse</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">ds</span><span class="o">.</span><span class="n">dto</span><span class="p">))</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">ds</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_avg_port_statistic_dto_reverse</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">ds</span><span class="o">.</span><span class="n">dtos</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">d</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.get_empty_avg_port_statistic_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.get_empty_avg_port_statistic_dict">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -3532,7 +3868,7 @@
             <span class="n">aggregated_host_metrics</span><span class="o">=</span><span class="p">[</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_host_metrics_dto</span><span class="p">()],</span>
             <span class="n">defender_actions</span><span class="o">=</span><span class="p">[</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_emulation_defender_action_dto</span><span class="p">()],</span>
             <span class="n">attacker_actions</span><span class="o">=</span><span class="p">[</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_emulation_attacker_action_dto</span><span class="p">()],</span>
-            <span class="n">snort_ids_metrics</span><span class="o">=</span><span class="p">[</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_alert_counters_dto</span><span class="p">()],</span>
+            <span class="n">agg_snort_ids_metrics</span><span class="o">=</span><span class="p">[</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_alert_counters_dto</span><span class="p">()],</span>
             <span class="n">emulation_id</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">ossec_host_alert_counters</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_ossec_ids_alert_counters_dict</span><span class="p">(),</span>
             <span class="n">aggregated_ossec_host_alert_counters</span><span class="o">=</span><span class="p">[</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_ossec_ids_alert_counters_dto</span><span class="p">()],</span>
@@ -3545,7 +3881,11 @@
             <span class="n">openflow_flow_avg_metrics_per_switch</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_flow_statistic_dict</span><span class="p">(),</span>
             <span class="n">openflow_port_avg_metrics_per_switch</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_avg_port_statistic_dict</span><span class="p">(),</span>
             <span class="n">agg_openflow_flow_metrics_per_switch</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_avg_flow_statistic_dict</span><span class="p">(),</span>
-            <span class="n">agg_openflow_flow_stats</span><span class="o">=</span><span class="p">[</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_agg_flow_statistic_dto</span><span class="p">()]</span>
+            <span class="n">agg_openflow_flow_stats</span><span class="o">=</span><span class="p">[</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_agg_flow_statistic_dto</span><span class="p">()],</span>
+            <span class="n">agg_snort_ids_rule_metrics</span><span class="o">=</span><span class="p">[</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_rule_counters_dto</span><span class="p">()],</span>
+            <span class="n">snort_ids_ip_metrics</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_ip_alert_counters_dict</span><span class="p">(),</span>
+            <span class="n">snort_alert_metrics_per_ids</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_alert_counters_dict</span><span class="p">(),</span>
+            <span class="n">snort_rule_metrics_per_ids</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">get_empty_snort_ids_rule_counters_dict</span><span class="p">()</span>
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.convert_emulation_metrics_time_series_dto"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_emulation_metrics_time_series_dto">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -3573,8 +3913,8 @@
                                           <span class="n">time_series_dto</span><span class="o">.</span><span class="n">defender_actions</span><span class="p">)),</span>
                 <span class="n">attacker_actions</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_emulation_attacker_action_dto</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
                                           <span class="n">time_series_dto</span><span class="o">.</span><span class="n">attacker_actions</span><span class="p">)),</span>
-                <span class="n">snort_ids_metrics</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_alert_counters_dto</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
-                                           <span class="n">time_series_dto</span><span class="o">.</span><span class="n">snort_ids_metrics</span><span class="p">)),</span>
+                <span class="n">agg_snort_ids_metrics</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_alert_counters_dto</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                                               <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_snort_ids_metrics</span><span class="p">)),</span>
                 <span class="n">emulation_id</span><span class="o">=</span><span class="n">time_series_dto</span><span class="o">.</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                 <span class="n">ossec_host_alert_counters</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_ossec_ids_alert_counters_dict</span><span class="p">(</span>
                     <span class="n">time_series_dto</span><span class="o">.</span><span class="n">ossec_host_alert_counters</span><span class="p">),</span>
@@ -3600,7 +3940,15 @@
                 <span class="n">agg_openflow_flow_metrics_per_switch</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_agg_flow_statistic_dict</span><span class="p">(</span>
                     <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_openflow_flow_metrics_per_switch</span><span class="p">),</span>
                 <span class="n">agg_openflow_flow_stats</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_agg_flow_statistic_dto</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
-                                                 <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_openflow_flow_stats</span><span class="p">))</span>
+                                                 <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_openflow_flow_stats</span><span class="p">)),</span>
+                <span class="n">agg_snort_ids_rule_metrics</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_rule_counters_dto</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                                                    <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_snort_ids_rule_metrics</span><span class="p">)),</span>
+                <span class="n">snort_ids_ip_metrics</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_ip_alert_counters_dict</span><span class="p">(</span>
+                    <span class="n">time_series_dto</span><span class="o">.</span><span class="n">snort_ids_ip_metrics</span><span class="p">),</span>
+                <span class="n">snort_rule_metrics_per_ids</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_rule_counters_dict</span><span class="p">(</span>
+                    <span class="n">time_series_dto</span><span class="o">.</span><span class="n">snort_rule_metrics_per_ids</span><span class="p">),</span>
+                <span class="n">snort_alert_metrics_per_ids</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_alert_counters_dict</span><span class="p">(</span>
+                    <span class="n">time_series_dto</span><span class="o">.</span><span class="n">snort_alert_metrics_per_ids</span><span class="p">)</span>
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.convert_emulation_metrics_time_series_dto_reverse"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.convert_emulation_metrics_time_series_dto_reverse">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -3631,8 +3979,9 @@
                                           <span class="n">time_series_dto</span><span class="o">.</span><span class="n">defender_actions</span><span class="p">)),</span>
                 <span class="n">attacker_actions</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_emulation_attacker_action_dto_reverse</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
                                           <span class="n">time_series_dto</span><span class="o">.</span><span class="n">attacker_actions</span><span class="p">)),</span>
-                <span class="n">snort_ids_metrics</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_alert_counters_dto_reverse</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
-                                           <span class="n">time_series_dto</span><span class="o">.</span><span class="n">snort_ids_metrics</span><span class="p">)),</span>
+                <span class="n">agg_snort_ids_metrics</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span>
+                    <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_alert_counters_dto_reverse</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                        <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_snort_ids_metrics</span><span class="p">)),</span>
                 <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_config</span><span class="p">,</span>
                 <span class="n">ossec_host_alert_counters</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_ossec_ids_alert_counters_dict_reverse</span><span class="p">(</span>
                     <span class="n">time_series_dto</span><span class="o">.</span><span class="n">ossec_host_alert_counters</span><span class="p">),</span>
@@ -3658,7 +4007,16 @@
                 <span class="n">agg_openflow_flow_metrics_per_switch</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_agg_flow_statistic_dict_reverse</span><span class="p">(</span>
                     <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_openflow_flow_metrics_per_switch</span><span class="p">),</span>
                 <span class="n">agg_openflow_flow_stats</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_agg_flow_statistic_dto_reverse</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
-                                                 <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_openflow_flow_stats</span><span class="p">))</span>
+                                                 <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_openflow_flow_stats</span><span class="p">)),</span>
+                <span class="n">agg_snort_ids_rule_metrics</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span>
+                    <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_rule_counters_dto_reverse</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                        <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_snort_ids_rule_metrics</span><span class="p">)),</span>
+                <span class="n">snort_ids_ip_metrics</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_ip_alert_counters_dict_reverse</span><span class="p">(</span>
+                    <span class="n">time_series_dto</span><span class="o">.</span><span class="n">snort_ids_ip_metrics</span><span class="p">),</span>
+                <span class="n">snort_rule_metrics_per_ids</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_rule_counters_dict_reverse</span><span class="p">(</span>
+                    <span class="n">time_series_dto</span><span class="o">.</span><span class="n">snort_rule_metrics_per_ids</span><span class="p">),</span>
+                <span class="n">snort_alert_metrics_per_ids</span><span class="o">=</span><span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">convert_snort_ids_alert_counters_dict_reverse</span><span class="p">(</span>
+                    <span class="n">time_series_dto</span><span class="o">.</span><span class="n">snort_alert_metrics_per_ids</span><span class="p">)</span>
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ClusterManagerUtil.emulation_metrics_time_series_dto_to_dict"><a class="viewcode-back" href="../../../csle_cluster.cluster_manager.html#csle_cluster.cluster_manager.cluster_manager_util.ClusterManagerUtil.emulation_metrics_time_series_dto_to_dict">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -3685,8 +4043,8 @@
                                          <span class="n">time_series_dto</span><span class="o">.</span><span class="n">defender_actions</span><span class="p">))</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;attacker_actions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">emulation_attacker_action_dto_to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
                                          <span class="n">time_series_dto</span><span class="o">.</span><span class="n">attacker_actions</span><span class="p">))</span>
-        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;snort_ids_metrics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">snort_ids_alert_counters_dto_to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
-                                          <span class="n">time_series_dto</span><span class="o">.</span><span class="n">snort_ids_metrics</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;agg_snort_ids_metrics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">snort_ids_alert_counters_dto_to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                                              <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_snort_ids_metrics</span><span class="p">))</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;emulation_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_series_dto</span><span class="o">.</span><span class="n">emulation_id</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;ossec_host_alert_counters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">ossec_ids_alert_counters_dict_to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
                                                   <span class="n">time_series_dto</span><span class="o">.</span><span class="n">ossec_host_alert_counters</span><span class="p">))</span>
@@ -3716,6 +4074,15 @@
                 <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_openflow_flow_metrics_per_switch</span><span class="p">))</span>
         <span class="n">d</span><span class="p">[</span><span class="s2">&quot;agg_openflow_flow_stats&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">agg_flow_statistic_dto_to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
                                                 <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_openflow_flow_stats</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;agg_snort_ids_rule_metrics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">snort_ids_rule_counters_dto_to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                                                   <span class="n">time_series_dto</span><span class="o">.</span><span class="n">agg_snort_ids_rule_metrics</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;snort_ids_ip_metrics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">snort_ids_ip_alert_counters_dict_to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                                             <span class="n">time_series_dto</span><span class="o">.</span><span class="n">snort_ids_ip_metrics</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;snort_rule_metrics_per_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">snort_ids_rule_counters_dict_to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                                                   <span class="n">time_series_dto</span><span class="o">.</span><span class="n">snort_rule_metrics_per_ids</span><span class="p">))</span>
+        <span class="n">d</span><span class="p">[</span><span class="s2">&quot;snort_alert_metrics_per_ids&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">ClusterManagerUtil</span><span class="o">.</span><span class="n">snort_ids_alert_counters_dict_to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                <span class="n">time_series_dto</span><span class="o">.</span><span class="n">snort_alert_metrics_per_ids</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">d</span></div></div>
 </pre></div>
 

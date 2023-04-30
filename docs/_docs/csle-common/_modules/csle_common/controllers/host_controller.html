@@ -94,40 +94,45 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="HostController.start_host_managers"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.host_controller.HostController.start_host_managers">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">start_host_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">start_host_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for checking if the host manager is running and starting it if it is not running</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Start host managers on emulation containers</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
             <span class="c1"># Connect</span>
-            <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
+            <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
+                                              <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Start host manager on kafka container</span>
         <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
-                                          <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
+                                          <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
+                                          <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Start host manager on ELK container</span>
         <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
-                                          <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
+                                          <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">elk_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
+                                          <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Start host manager on SDN controller container</span>
             <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span>
                 <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
-                <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span></div>
+                <span class="n">ip</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HostController.start_host_manager"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.host_controller.HostController.start_host_manager">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method for starting the host manager on a specific container</span>
 
 <span class="sd">        :param emulation_env_config: the emulation env config</span>
 <span class="sd">        :param ip: the ip of the container</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Connect</span>
@@ -140,7 +145,8 @@
                                                 <span class="n">conn</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">get_connection</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SEARCH_HOST_MANAGER</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="p">):</span>
-            <span class="n">Logger</span><span class="o">.</span><span class="fm">__call__</span><span class="p">()</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting host manager on node </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Host manager is not running on: </span><span class="si">{</span><span class="n">ip</span><span class="si">}</span><span class="s2">, starting it. Output of </span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2"> was: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">o</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;err output was: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="c1"># Stop old background job if running</span>
             <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SUDO</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">SPACE_DELIM</span> <span class="o">+</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">PKILL</span> <span class="o">+</span>
@@ -286,8 +292,8 @@
 
         <span class="k">if</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
                 <span class="ow">and</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">==</span> <span class="n">physical_server_ip</span><span class="p">:</span>
-            <span class="c1"># Start packetbeat on the SDN controller container</span>
-            <span class="n">HostController</span><span class="o">.</span><span class="n">start_packetbeat</span><span class="p">(</span>
+            <span class="c1"># Start filebeat on the SDN controller container</span>
+            <span class="n">HostController</span><span class="o">.</span><span class="n">start_filebeat</span><span class="p">(</span>
                 <span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
                 <span class="n">ips</span><span class="o">=</span><span class="p">([</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">]</span> <span class="o">+</span>
                      <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">sdn_controller_config</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">()),</span>
@@ -736,7 +742,7 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="n">host_monitor_dto</span> <span class="o">=</span> <span class="n">HostController</span><span class="o">.</span><span class="n">get_host_monitor_thread_status_by_port_and_ip</span><span class="p">(</span>
             <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">host_manager_config</span><span class="o">.</span><span class="n">host_manager_port</span><span class="p">)</span>
@@ -764,16 +770,15 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">initial_start</span><span class="p">:</span>
             <span class="n">node_beats_config</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">beats_config</span><span class="o">.</span><span class="n">get_node_beats_config_by_ips</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">node_beats_config</span><span class="o">.</span><span class="n">start_filebeat_automatically</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node_beats_config</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">node_beats_config</span><span class="o">.</span><span class="n">start_filebeat_automatically</span><span class="p">:</span>
                 <span class="k">return</span>
         <span class="n">host_monitor_dto</span> <span class="o">=</span> <span class="n">HostController</span><span class="o">.</span><span class="n">get_host_monitor_thread_status_by_port_and_ip</span><span class="p">(</span>
             <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">port</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">host_manager_config</span><span class="o">.</span><span class="n">host_manager_port</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">host_monitor_dto</span><span class="o">.</span><span class="n">filebeat_running</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Filebeat is not running on </span><span class="si">{</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, starting it.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filebeat is not running on </span><span class="si">{</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, starting it.&quot;</span><span class="p">)</span>
             <span class="c1"># Open a gRPC session</span>
             <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">host_manager_config</span><span class="o">.</span><span class="n">host_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
@@ -793,10 +798,10 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">initial_start</span><span class="p">:</span>
             <span class="n">node_beats_config</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">beats_config</span><span class="o">.</span><span class="n">get_node_beats_config_by_ips</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">node_beats_config</span><span class="o">.</span><span class="n">start_packetbeat_automatically</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node_beats_config</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">node_beats_config</span><span class="o">.</span><span class="n">start_packetbeat_automatically</span><span class="p">:</span>
                 <span class="k">return</span>
         <span class="n">host_monitor_dto</span> <span class="o">=</span> <span class="n">HostController</span><span class="o">.</span><span class="n">get_host_monitor_thread_status_by_port_and_ip</span><span class="p">(</span>
             <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">port</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">host_manager_config</span><span class="o">.</span><span class="n">host_manager_port</span><span class="p">)</span>
@@ -822,10 +827,10 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">initial_start</span><span class="p">:</span>
             <span class="n">node_beats_config</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">beats_config</span><span class="o">.</span><span class="n">get_node_beats_config_by_ips</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">node_beats_config</span><span class="o">.</span><span class="n">start_metricbeat_automatically</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node_beats_config</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">node_beats_config</span><span class="o">.</span><span class="n">start_metricbeat_automatically</span><span class="p">:</span>
                 <span class="k">return</span>
         <span class="n">host_monitor_dto</span> <span class="o">=</span> <span class="n">HostController</span><span class="o">.</span><span class="n">get_host_monitor_thread_status_by_port_and_ip</span><span class="p">(</span>
             <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">port</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">host_manager_config</span><span class="o">.</span><span class="n">host_manager_port</span><span class="p">)</span>
@@ -852,10 +857,10 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">initial_start</span><span class="p">:</span>
             <span class="n">node_beats_config</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">beats_config</span><span class="o">.</span><span class="n">get_node_beats_config_by_ips</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="n">ips</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">node_beats_config</span><span class="o">.</span><span class="n">start_heartbeat_automatically</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node_beats_config</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">node_beats_config</span><span class="o">.</span><span class="n">start_heartbeat_automatically</span><span class="p">:</span>
                 <span class="k">return</span>
         <span class="n">host_monitor_dto</span> <span class="o">=</span> <span class="n">HostController</span><span class="o">.</span><span class="n">get_host_monitor_thread_status_by_port_and_ip</span><span class="p">(</span>
             <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">port</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">host_manager_config</span><span class="o">.</span><span class="n">host_manager_port</span><span class="p">)</span>
@@ -867,6 +872,80 @@
                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">host_manager_config</span><span class="o">.</span><span class="n">host_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
                 <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
                 <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">query_host_manager</span><span class="o">.</span><span class="n">start_heartbeat</span><span class="p">(</span><span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostController.start_sparks"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.host_controller.HostController.start_sparks">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">start_sparks</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for starting Spark on compute nodes</span>
+
+<span class="sd">        :param emulation_config: the emulation env configuration</span>
+<span class="sd">        :param physical_server_ip: the ip of the phsyical server</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_server_ip</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">SPARK_IMAGES</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting Spark on IP: </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">HostController</span><span class="o">.</span><span class="n">start_spark</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ips</span><span class="o">=</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">],</span>
+                                               <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostController.stop_sparks"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.host_controller.HostController.stop_sparks">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">stop_sparks</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function for stopping Spark on compute nodes</span>
+
+<span class="sd">        :param emulation_config: the emulation env configuration</span>
+<span class="sd">        :param physical_server_ip: the ip of the phsyical server</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">physical_host_ip</span> <span class="o">!=</span> <span class="n">physical_server_ip</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">CONTAINER_IMAGES</span><span class="o">.</span><span class="n">SPARK_IMAGES</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ids_image</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stopping Spark on IP: </span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">HostController</span><span class="o">.</span><span class="n">stop_spark</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span>
+                                              <span class="n">ips</span><span class="o">=</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostController.start_spark"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.host_controller.HostController.start_spark">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">start_spark</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A method that sends a request to the HostManager on a specific IP</span>
+<span class="sd">        to start the Host manager and spark</span>
+
+<span class="sd">        :param emulation_env_config: the emulation env config</span>
+<span class="sd">        :param ips: IPs of the container</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="c1"># Open a gRPC session</span>
+        <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">host_manager_config</span><span class="o">.</span><span class="n">host_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+            <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+            <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">query_host_manager</span><span class="o">.</span><span class="n">start_spark</span><span class="p">(</span><span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HostController.stop_spark"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.host_controller.HostController.stop_spark">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">stop_spark</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">ips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A method that sends a request to the HostManager on a specific IP</span>
+<span class="sd">        to stop spark</span>
+
+<span class="sd">        :param emulation_env_config: the emulation env config</span>
+<span class="sd">        :param ips: IPs of the container</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+        <span class="c1"># Open a gRPC session</span>
+        <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ips</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">:</span><span class="si">{</span><span class="n">emulation_env_config</span><span class="o">.</span><span class="n">host_manager_config</span><span class="o">.</span><span class="n">host_manager_port</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">channel</span><span class="p">:</span>
+            <span class="n">stub</span> <span class="o">=</span> <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2_grpc</span><span class="o">.</span><span class="n">HostManagerStub</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+            <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">query_host_manager</span><span class="o">.</span><span class="n">stop_spark</span><span class="p">(</span><span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HostController.config_filebeat"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.host_controller.HostController.config_filebeat">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">config_filebeat</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">container</span><span class="p">:</span> <span class="n">NodeContainerConfig</span><span class="p">,</span>
@@ -880,8 +959,11 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
+                                          <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">node_beats_config</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">beats_config</span><span class="o">.</span><span class="n">get_node_beats_config_by_ips</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">node_beats_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
         <span class="n">kafka_topics</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">topic</span><span class="p">:</span> <span class="n">topic</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">kafka_config</span><span class="o">.</span><span class="n">topics</span><span class="p">))</span>
 
         <span class="c1"># Open a gRPC session</span>
@@ -916,7 +998,8 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
+                                          <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
@@ -944,8 +1027,11 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
+                                          <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">node_beats_config</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">beats_config</span><span class="o">.</span><span class="n">get_node_beats_config_by_ips</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">node_beats_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
 
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
@@ -977,8 +1063,11 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">)</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">container</span><span class="o">.</span><span class="n">docker_gw_bridge_ip</span><span class="p">,</span>
+                                          <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
         <span class="n">node_beats_config</span> <span class="o">=</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">beats_config</span><span class="o">.</span><span class="n">get_node_beats_config_by_ips</span><span class="p">(</span><span class="n">ips</span><span class="o">=</span><span class="n">container</span><span class="o">.</span><span class="n">get_ips</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">node_beats_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
 
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
@@ -1040,7 +1129,7 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
@@ -1060,7 +1149,7 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
@@ -1080,7 +1169,7 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
@@ -1100,7 +1189,7 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
@@ -1120,7 +1209,7 @@
 <span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_manager</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Open a gRPC session</span>
         <span class="k">with</span> <span class="n">grpc</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
@@ -1131,17 +1220,19 @@
             <span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">query_host_manager</span><span class="o">.</span><span class="n">stop_heartbeat</span><span class="p">(</span><span class="n">stub</span><span class="o">=</span><span class="n">stub</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HostController.get_host_monitor_threads_statuses"><a class="viewcode-back" href="../../../csle_common.controllers.html#csle_common.controllers.host_controller.HostController.get_host_monitor_threads_statuses">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_host_monitor_threads_statuses</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> \
+    <span class="k">def</span> <span class="nf">get_host_monitor_threads_statuses</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="p">:</span> <span class="n">EmulationEnvConfig</span><span class="p">,</span> <span class="n">physical_server_ip</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                          <span class="n">logger</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> \
             <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">csle_collector</span><span class="o">.</span><span class="n">host_manager</span><span class="o">.</span><span class="n">host_manager_pb2</span><span class="o">.</span><span class="n">HostStatusDTO</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A method that sends a request to the HostManager on every container to get the status of the Host monitor thread</span>
 
 <span class="sd">        :param emulation_env_config: the emulation config</span>
 <span class="sd">        :param physical_server_ip: the ip of the physical server</span>
+<span class="sd">        :param logger: the logger to use for logging</span>
 <span class="sd">        :return: List of monitor thread statuses</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">statuses</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">)</span>
+        <span class="n">HostController</span><span class="o">.</span><span class="n">start_host_managers</span><span class="p">(</span><span class="n">emulation_env_config</span><span class="o">=</span><span class="n">emulation_env_config</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="c1"># Get statuses of emulation containers</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">emulation_env_config</span><span class="o">.</span><span class="n">containers_config</span><span class="o">.</span><span class="n">containers</span><span class="p">:</span>

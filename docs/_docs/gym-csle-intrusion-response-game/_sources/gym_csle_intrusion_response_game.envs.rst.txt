@@ -20,6 +20,14 @@ gym\_csle\_intrusion\_response\_game.envs.intrusion\_response\_game\_local\_pomd
    :undoc-members:
    :show-inheritance:
 
+gym\_csle\_intrusion\_response\_game.envs.intrusion\_response\_game\_local\_stopping\_pomdp\_defender module
+------------------------------------------------------------------------------------------------------------
+
+.. automodule:: gym_csle_intrusion_response_game.envs.intrusion_response_game_local_stopping_pomdp_defender
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 gym\_csle\_intrusion\_response\_game.envs.intrusion\_response\_game\_workflow\_pomdp\_attacker module
 -----------------------------------------------------------------------------------------------------
 

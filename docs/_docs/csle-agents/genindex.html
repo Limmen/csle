@@ -131,10 +131,10 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.ENV_METRICS.ATTACKER_ACTION">ATTACKER_ACTION (csle_agents.constants.constants.ENV_METRICS attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.agents.t_fp.html#csle_agents.agents.t_fp.t_fp_agent.TFPAgent.attacker_best_response">attacker_best_response() (csle_agents.agents.t_fp.t_fp_agent.TFPAgent method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.T_FP.ATTACKER_THRESHOLDS">ATTACKER_THRESHOLDS (csle_agents.constants.constants.T_FP attribute)</a>
 </li>
       <li><a href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.auxillary_game">auxillary_game() (csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent method)</a>
@@ -151,6 +151,12 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.AVERAGE_DEFENDER_RETURN">AVERAGE_DEFENDER_RETURN (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.AVERAGE_HEURISTIC_RETURN">AVERAGE_HEURISTIC_RETURN (csle_agents.constants.constants.COMMON attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.ENV_METRICS.AVERAGE_HEURISTIC_RETURN">(csle_agents.constants.constants.ENV_METRICS attribute)</a>
+</li>
+      </ul></li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.AVERAGE_RANDOM_RETURN">AVERAGE_RANDOM_RETURN (csle_agents.constants.constants.COMMON attribute)</a>
 
       <ul>
@@ -195,9 +201,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION">BAYESIAN_OPTIMIZATION (class in csle_agents.constants.constants)</a>
 </li>
-      <li><a href="csle_agents.agents.bayes_opt.html#csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent.bayesian_optimization">bayesian_optimization() (csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent method)</a>
+      <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.bayesian_optimization">bayesian_optimization() (csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent method)</a>
 </li>
-      <li><a href="csle_agents.agents.bayes_opt.html#csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent">BayesOptAgent (class in csle_agents.agents.bayes_opt.bayes_opt_agent)</a>
+      <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent">BayesOptAgent (class in csle_agents.agents.bayesian_optimization.bayes_opt_agent)</a>
 </li>
       <li><a href="csle_agents.agents.fp.html#csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent.best_response">best_response() (csle_agents.agents.fp.fictitious_play_agent.FictitiousPlayAgent method)</a>
 </li>
@@ -237,7 +243,7 @@
 </li>
       <li><a href="csle_agents.agents.sondik_vi.html#csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent.compute_all_conditional_plans_conditioned_on_a_t">compute_all_conditional_plans_conditioned_on_a_t() (csle_agents.agents.sondik_vi.sondik_vi_agent.SondikVIAgent method)</a>
 </li>
-      <li><a href="csle_agents.agents.bayes_opt.html#csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent.compute_avg_metrics">compute_avg_metrics() (csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent static method)</a>
+      <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.compute_avg_metrics">compute_avg_metrics() (csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent static method)</a>
 
       <ul>
         <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.compute_avg_metrics">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent static method)</a>
@@ -329,10 +335,17 @@
 </li>
       </ul></li>
       <li>
-    csle_agents.agents.bayes_opt.bayes_opt_agent
+    csle_agents.agents.bayesian_optimization
 
       <ul>
-        <li><a href="csle_agents.agents.bayes_opt.html#module-csle_agents.agents.bayes_opt.bayes_opt_agent">module</a>
+        <li><a href="csle_agents.agents.bayesian_optimization.html#module-csle_agents.agents.bayesian_optimization">module</a>
+</li>
+      </ul></li>
+      <li>
+    csle_agents.agents.bayesian_optimization.bayes_opt_agent
+
+      <ul>
+        <li><a href="csle_agents.agents.bayesian_optimization.html#module-csle_agents.agents.bayesian_optimization.bayes_opt_agent">module</a>
 </li>
       </ul></li>
       <li>
@@ -769,7 +782,7 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.EVAL_PREFIX">EVAL_PREFIX (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
-      <li><a href="csle_agents.agents.bayes_opt.html#csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent.eval_theta">eval_theta() (csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent method)</a>
+      <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.eval_theta">eval_theta() (csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent method)</a>
 
       <ul>
         <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.eval_theta">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent method)</a>
@@ -881,11 +894,25 @@
         <li><a href="csle_agents.common.html#csle_agents.common.fnn_w_linear.FNNwithLinear.get_hidden_activation">(csle_agents.common.fnn_w_linear.FNNwithLinear method)</a>
 </li>
       </ul></li>
+      <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.get_policy">get_policy() (csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent method)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.get_policy">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent method)</a>
+</li>
+        <li><a href="csle_agents.agents.differential_evolution.html#csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent.get_policy">(csle_agents.agents.differential_evolution.differential_evolution_agent.DifferentialEvolutionAgent method)</a>
+</li>
+        <li><a href="csle_agents.agents.kiefer_wolfowitz.html#csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent.get_policy">(csle_agents.agents.kiefer_wolfowitz.kiefer_wolfowitz_agent.KieferWolfowitzAgent method)</a>
+</li>
+        <li><a href="csle_agents.agents.random_search.html#csle_agents.agents.random_search.random_search_agent.RandomSearchAgent.get_policy">(csle_agents.agents.random_search.random_search_agent.RandomSearchAgent method)</a>
+</li>
+        <li><a href="csle_agents.agents.t_spsa.html#csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent.get_policy">(csle_agents.agents.t_spsa.t_spsa_agent.TSPSAAgent method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.get_spsa_experiment_config">get_spsa_experiment_config() (csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent method)</a>
 </li>
-      <li><a href="csle_agents.agents.bayes_opt.html#csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent.get_theta_vector_from_param_dict">get_theta_vector_from_param_dict() (csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent static method)</a>
+      <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.get_theta_vector_from_param_dict">get_theta_vector_from_param_dict() (csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent static method)</a>
 </li>
       <li><a href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent.get_Z_from_system_model">get_Z_from_system_model() (csle_agents.agents.dynasec.dynasec_agent.DynaSecAgent static method)</a>
 </li>
@@ -906,7 +933,7 @@
       <li><a href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent.hparam_names">hparam_names() (csle_agents.agents.base.base_agent.BaseAgent method)</a>
 
       <ul>
-        <li><a href="csle_agents.agents.bayes_opt.html#csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent.hparam_names">(csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent method)</a>
+        <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.hparam_names">(csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.hparam_names">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent method)</a>
 </li>
@@ -999,7 +1026,7 @@
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.SARSA.INITIAL_STATE_VALUES">(csle_agents.constants.constants.SARSA attribute)</a>
 </li>
       </ul></li>
-      <li><a href="csle_agents.agents.bayes_opt.html#csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent.initial_theta">initial_theta() (csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent static method)</a>
+      <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.initial_theta">initial_theta() (csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent static method)</a>
 
       <ul>
         <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.initial_theta">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent static method)</a>
@@ -1097,10 +1124,10 @@
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DQN.LEARNING_STARTS">LEARNING_STARTS (csle_agents.constants.constants.DQN attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent.linear_programming_normal_form">linear_programming_normal_form() (csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.agents.lp_nf.html#csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent.LinearProgrammingNormalFormGameAgent">LinearProgrammingNormalFormGameAgent (class in csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent)</a>
 </li>
       <li><a href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.local_lower_bound_update">local_lower_bound_update() (csle_agents.agents.hsvi.hsvi_agent.HSVIAgent method)</a>
@@ -1119,6 +1146,12 @@
 
       <ul>
         <li><a href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.local_upper_bound_update">(csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent method)</a>
+</li>
+      </ul></li>
+      <li><a href="csle_agents.agents.dqn.html#csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback.logger">logger (csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.ppo.html#csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback.logger">(csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback attribute)</a>
 </li>
       </ul></li>
       <li><a href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.lower_bound_backup">lower_bound_backup() (csle_agents.agents.hsvi.hsvi_agent.HSVIAgent method)</a>
@@ -1165,6 +1198,12 @@
         <li><a href="csle_agents.constants.html#csle_agents.constants.constants.PPO.MLP_POLICY">(csle_agents.constants.constants.PPO attribute)</a>
 </li>
       </ul></li>
+      <li><a href="csle_agents.agents.dqn.html#csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback.model">model (csle_agents.agents.dqn.dqn_agent.DQNTrainingCallback attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.agents.ppo.html#csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback.model">(csle_agents.agents.ppo.ppo_agent.PPOTrainingCallback attribute)</a>
+</li>
+      </ul></li>
       <li>
     module
 
@@ -1179,7 +1218,9 @@
 </li>
         <li><a href="csle_agents.agents.bayes_opt.html#module-csle_agents.agents.bayes_opt">csle_agents.agents.bayes_opt</a>
 </li>
-        <li><a href="csle_agents.agents.bayes_opt.html#module-csle_agents.agents.bayes_opt.bayes_opt_agent">csle_agents.agents.bayes_opt.bayes_opt_agent</a>
+        <li><a href="csle_agents.agents.bayesian_optimization.html#module-csle_agents.agents.bayesian_optimization">csle_agents.agents.bayesian_optimization</a>
+</li>
+        <li><a href="csle_agents.agents.bayesian_optimization.html#module-csle_agents.agents.bayesian_optimization.bayes_opt_agent">csle_agents.agents.bayesian_optimization.bayes_opt_agent</a>
 </li>
         <li><a href="csle_agents.agents.cross_entropy.html#module-csle_agents.agents.cross_entropy">csle_agents.agents.cross_entropy</a>
 </li>
@@ -1434,14 +1475,26 @@
 </li>
       <li><a href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.policy_evaluation">policy_evaluation() (csle_agents.agents.pi.pi_agent.PIAgent method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.policy_improvement">policy_improvement() (csle_agents.agents.pi.pi_agent.PIAgent method)</a>
 </li>
       <li><a href="csle_agents.agents.pi.html#csle_agents.agents.pi.pi_agent.PIAgent.policy_iteration">policy_iteration() (csle_agents.agents.pi.pi_agent.PIAgent method)</a>
 </li>
       <li><a href="csle_agents.constants.html#csle_agents.constants.constants.COMMON.POLICY_LOSSES">POLICY_LOSSES (csle_agents.constants.constants.COMMON attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="csle_agents.constants.html#csle_agents.constants.constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE">POLICY_TYPE (csle_agents.constants.constants.BAYESIAN_OPTIMIZATION attribute)</a>
+
+      <ul>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.CROSS_ENTROPY.POLICY_TYPE">(csle_agents.constants.constants.CROSS_ENTROPY attribute)</a>
+</li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE">(csle_agents.constants.constants.DIFFERENTIAL_EVOLUTION attribute)</a>
+</li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.KIEFER_WOLFOWITZ.POLICY_TYPE">(csle_agents.constants.constants.KIEFER_WOLFOWITZ attribute)</a>
+</li>
+        <li><a href="csle_agents.constants.html#csle_agents.constants.constants.RANDOM_SEARCH.POLICY_TYPE">(csle_agents.constants.constants.RANDOM_SEARCH attribute)</a>
+</li>
+      </ul></li>
       <li><a href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyEvaluationThread">PolicyEvaluationThread (class in csle_agents.agents.dynasec.dynasec_agent)</a>
 </li>
       <li><a href="csle_agents.agents.dynasec.html#csle_agents.agents.dynasec.dynasec_agent.PolicyOptimizationProcess">PolicyOptimizationProcess (class in csle_agents.agents.dynasec.dynasec_agent)</a>
@@ -1542,7 +1595,7 @@
       </ul></li>
       <li><a href="csle_agents.agents.hsvi_os_posg.html#csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent.rho">rho() (csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent.HSVIOSPOSGAgent method)</a>
 </li>
-      <li><a href="csle_agents.agents.bayes_opt.html#csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent.round_vec">round_vec() (csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent static method)</a>
+      <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.round_vec">round_vec() (csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent static method)</a>
 
       <ul>
         <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.round_vec">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent static method)</a>
@@ -1799,7 +1852,7 @@
       <li><a href="csle_agents.agents.base.html#csle_agents.agents.base.base_agent.BaseAgent.train">train() (csle_agents.agents.base.base_agent.BaseAgent method)</a>
 
       <ul>
-        <li><a href="csle_agents.agents.bayes_opt.html#csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent.train">(csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent method)</a>
+        <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.train">(csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent method)</a>
 </li>
         <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.train">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent method)</a>
 </li>
@@ -1898,7 +1951,7 @@
 </li>
       <li><a href="csle_agents.agents.hsvi.html#csle_agents.agents.hsvi.hsvi_agent.HSVIAgent.update_corner_points">update_corner_points() (csle_agents.agents.hsvi.hsvi_agent.HSVIAgent method)</a>
 </li>
-      <li><a href="csle_agents.agents.bayes_opt.html#csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent.update_metrics">update_metrics() (csle_agents.agents.bayes_opt.bayes_opt_agent.BayesOptAgent static method)</a>
+      <li><a href="csle_agents.agents.bayesian_optimization.html#csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent.update_metrics">update_metrics() (csle_agents.agents.bayesian_optimization.bayes_opt_agent.BayesOptAgent static method)</a>
 
       <ul>
         <li><a href="csle_agents.agents.cross_entropy.html#csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent.update_metrics">(csle_agents.agents.cross_entropy.cross_entropy_agent.CrossEntropyAgent static method)</a>

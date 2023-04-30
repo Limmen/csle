@@ -12,6 +12,30 @@ csle\_common.consumer\_threads.aggregated\_host\_metrics\_thread module
    :undoc-members:
    :show-inheritance:
 
+csle\_common.consumer\_threads.aggregated\_ossec\_ids\_log\_consumer\_thread module
+-----------------------------------------------------------------------------------
+
+.. automodule:: csle_common.consumer_threads.aggregated_ossec_ids_log_consumer_thread
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+csle\_common.consumer\_threads.aggregated\_snort\_ids\_log\_consumer\_thread module
+-----------------------------------------------------------------------------------
+
+.. automodule:: csle_common.consumer_threads.aggregated_snort_ids_log_consumer_thread
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+csle\_common.consumer\_threads.aggregated\_snort\_ids\_rule\_log\_consumer\_thread module
+-----------------------------------------------------------------------------------------
+
+.. automodule:: csle_common.consumer_threads.aggregated_snort_ids_rule_log_consumer_thread
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 csle\_common.consumer\_threads.attacker\_actions\_consumer\_thread module
 -------------------------------------------------------------------------
 

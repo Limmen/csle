@@ -11,6 +11,9 @@
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -23,15 +26,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="../../../index.html" class="icon icon-home">
-            csle-ryu
+            <a href="../../../index.html" class="icon icon-home"> csle-ryu
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,7 +56,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">csle_ryu.constants.constants</li>
       <li class="wy-breadcrumbs-aside">
@@ -74,7 +73,7 @@
 
 
 <div class="viewcode-block" id="RYU"><a class="viewcode-back" href="../../../csle_ryu.constants.html#csle_ryu.constants.constants.RYU">[docs]</a><span class="k">class</span> <span class="nc">RYU</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    String constants related to RYU</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">CONTROLLERS_PREFIX</span> <span class="o">=</span> <span class="s2">&quot;csle_ryu.controllers.&quot;</span>
@@ -118,7 +117,9 @@
     <span class="n">DEFAULT_PORT</span> <span class="o">=</span> <span class="mi">6633</span>
     <span class="n">DEFAULT_TRANSPORT_PROTOCOL</span> <span class="o">=</span> <span class="s2">&quot;tcp&quot;</span>
     <span class="n">SUBNETMASK_SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;/29&quot;</span>
+    <span class="n">FULL_SUBNETMASK_SUFFIX</span> <span class="o">=</span> <span class="s2">&quot;.0/24&quot;</span>
     <span class="n">BITMASK</span> <span class="o">=</span> <span class="s2">&quot;255.255.255.248&quot;</span>
+    <span class="n">FULL_BITMASK</span> <span class="o">=</span> <span class="s2">&quot;255.255.255.0&quot;</span>
     <span class="n">STPLIB</span> <span class="o">=</span> <span class="s2">&quot;stplib&quot;</span>
     <span class="n">BYTE_COUNT</span> <span class="o">=</span> <span class="s2">&quot;byte_count&quot;</span>
     <span class="n">PACKET_COUNT</span> <span class="o">=</span> <span class="s2">&quot;packet_count&quot;</span>
@@ -126,11 +127,12 @@
     <span class="n">IN_PORT</span> <span class="o">=</span> <span class="s2">&quot;in_port&quot;</span>
     <span class="n">ETH_DST</span> <span class="o">=</span> <span class="s2">&quot;eth_dst&quot;</span>
     <span class="n">PRODUCER_RUNNING</span> <span class="o">=</span> <span class="s2">&quot;producer_running&quot;</span>
-    <span class="n">KAFKA_CONF</span> <span class="o">=</span> <span class="s2">&quot;kafka_conf&quot;</span></div>
+    <span class="n">KAFKA_CONF</span> <span class="o">=</span> <span class="s2">&quot;kafka_conf&quot;</span>
+    <span class="n">TIMEOUT</span> <span class="o">=</span> <span class="mi">5</span></div>
 
 
 <div class="viewcode-block" id="CONTROLLERS"><a class="viewcode-back" href="../../../csle_ryu.constants.html#csle_ryu.constants.constants.CONTROLLERS">[docs]</a><span class="k">class</span> <span class="nc">CONTROLLERS</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    RYU Controllers in CSLE</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">LEARNING_SWITCH_CONTROLLER</span> <span class="o">=</span> <span class="s2">&quot;learning_switch_controller&quot;</span>

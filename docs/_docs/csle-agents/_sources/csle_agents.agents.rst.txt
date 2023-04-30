@@ -8,7 +8,7 @@ Subpackages
    :maxdepth: 4
 
    csle_agents.agents.base
-   csle_agents.agents.bayes_opt
+   csle_agents.agents.bayesian_optimization
    csle_agents.agents.cross_entropy
    csle_agents.agents.differential_evolution
    csle_agents.agents.dqn

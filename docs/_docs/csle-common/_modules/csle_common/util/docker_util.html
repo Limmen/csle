@@ -257,7 +257,8 @@
             <span class="n">ip</span> <span class="o">=</span> <span class="n">container</span><span class="p">[</span><span class="n">constants</span><span class="o">.</span><span class="n">DOCKER</span><span class="o">.</span><span class="n">IPV4_KEY</span><span class="p">]</span>
             <span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">ip</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The container with id:</span><span class="si">{</span><span class="n">container_id</span><span class="si">}</span><span class="s2"> does not have an IP in the docker gw bridge network&quot;</span><span class="p">)</span></div></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The container with id:</span><span class="si">{</span><span class="n">container_id</span><span class="si">}</span><span class="s2"> does not have an IP in the docker gw bridge network. &quot;</span>
+                         <span class="sa">f</span><span class="s2">&quot;Containers: </span><span class="si">{</span><span class="n">containers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

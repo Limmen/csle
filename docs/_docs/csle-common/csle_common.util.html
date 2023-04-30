@@ -187,7 +187,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-csle_common.util.general_util">csle_common.util.general_util module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#csle_common.util.general_util.GeneralUtil"><code class="docutils literal notranslate"><span class="pre">GeneralUtil</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.general_util.GeneralUtil.get_host_ip"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.get_host_ip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.util.general_util.GeneralUtil.get_latest_table_id"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.get_latest_table_id()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.general_util.GeneralUtil.replace_first_octet_of_ip"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.replace_first_octet_of_ip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.util.general_util.GeneralUtil.replace_first_octet_of_ip_tuple"><code class="docutils literal notranslate"><span class="pre">GeneralUtil.replace_first_octet_of_ip_tuple()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -229,6 +231,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil"><code class="docutils literal notranslate"><span class="pre">ReadEmulationStatisticsUtil</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.average_host_metrics"><code class="docutils literal notranslate"><span class="pre">ReadEmulationStatisticsUtil.average_host_metrics()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.average_ossec_metrics"><code class="docutils literal notranslate"><span class="pre">ReadEmulationStatisticsUtil.average_ossec_metrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.average_snort_metrics"><code class="docutils literal notranslate"><span class="pre">ReadEmulationStatisticsUtil.average_snort_metrics()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.average_snort_rule_metrics"><code class="docutils literal notranslate"><span class="pre">ReadEmulationStatisticsUtil.average_snort_rule_metrics()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.read_all"><code class="docutils literal notranslate"><span class="pre">ReadEmulationStatisticsUtil.read_all()</span></code></a></li>
 </ul>
 </li>
@@ -1726,7 +1730,7 @@ of the last N elements of a vector x</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="csle_common.util.export_util.ExportUtil.export_emulation_traces_to_disk_json">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">export_emulation_traces_to_disk_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_traces_per_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zip_file_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num_traces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">added_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'unknown'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_start_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/util/export_util.html#ExportUtil.export_emulation_traces_to_disk_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.util.export_util.ExportUtil.export_emulation_traces_to_disk_json" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">export_emulation_traces_to_disk_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_traces_per_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zip_file_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num_traces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">added_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'unknown'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_start_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emulation_traces_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/csle_common/util/export_util.html#ExportUtil.export_emulation_traces_to_disk_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.util.export_util.ExportUtil.export_emulation_traces_to_disk_json" title="Permalink to this definition"></a></dt>
 <dd><p>Exports emulation traces from the metastore to disk</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1738,6 +1742,7 @@ of the last N elements of a vector x</p>
 <li><p><strong>added_by</strong> – the person who added the dataset</p></li>
 <li><p><strong>offset</strong> – the trace id offset</p></li>
 <li><p><strong>file_start_id</strong> – the id of the first file to write</p></li>
+<li><p><strong>emulation_traces_ids</strong> – the ids of the traces to export</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -1835,8 +1840,42 @@ num_attributes_per_time_step, added_by, columns</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="csle_common.util.general_util.GeneralUtil.get_latest_table_id">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_latest_table_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cur</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/csle_common/util/general_util.html#GeneralUtil.get_latest_table_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.util.general_util.GeneralUtil.get_latest_table_id" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the next ID for a table with a serial column primary key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cur</strong> – the postgres connection cursor</p></li>
+<li><p><strong>table_name</strong> – the table name</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the next id</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="csle_common.util.general_util.GeneralUtil.replace_first_octet_of_ip">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">replace_first_octet_of_ip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/csle_common/util/general_util.html#GeneralUtil.replace_first_octet_of_ip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.util.general_util.GeneralUtil.replace_first_octet_of_ip" title="Permalink to this definition"></a></dt>
+<dd><p>Utility function for changing the first octet in an IP address</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip</strong> – the IP to modify</p></li>
+<li><p><strong>ip_first_octet</strong> – the first octet to insert</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the new IP</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.util.general_util.GeneralUtil.replace_first_octet_of_ip_tuple">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">replace_first_octet_of_ip_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tuple_of_ips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_first_octet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/csle_common/util/general_util.html#GeneralUtil.replace_first_octet_of_ip_tuple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.util.general_util.GeneralUtil.replace_first_octet_of_ip_tuple" title="Permalink to this definition"></a></dt>
 <dd><p>Utility function for changing the first octet in an IP address</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2060,6 +2099,34 @@ num_attributes_per_time_step, added_by, columns</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>ossec_metrics</strong> – the list of OSSEC metrics</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the computed averages</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.average_snort_metrics">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">average_snort_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsAlertCounters</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsAlertCounters</span></span></span><a class="reference internal" href="_modules/csle_common/util/read_emulation_statistics_util.html#ReadEmulationStatisticsUtil.average_snort_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.average_snort_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the average metrics from a list of Snort metrics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_metrics</strong> – the list of Snort metrics</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the computed averages</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.average_snort_rule_metrics">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">average_snort_rule_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">snort_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SnortIdsRuleCounters</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SnortIdsRuleCounters</span></span></span><a class="reference internal" href="_modules/csle_common/util/read_emulation_statistics_util.html#ReadEmulationStatisticsUtil.average_snort_rule_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#csle_common.util.read_emulation_statistics_util.ReadEmulationStatisticsUtil.average_snort_rule_metrics" title="Permalink to this definition"></a></dt>
+<dd><p>Computes the average metrics from a list of Snort rule metrics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snort_metrics</strong> – the list of Snort rule metrics</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>the computed averages</p>
