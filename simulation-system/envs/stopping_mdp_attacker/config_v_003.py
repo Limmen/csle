@@ -31,7 +31,7 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 
 
-def default_config(name: str, version: str = "0.1.0", min_alerts_weighted_by_priority: int = 0,
+def default_config(name: str, version: str = "0.2.0", min_alerts_weighted_by_priority: int = 0,
                    max_alerts_weighted_by_priority: int = 100) -> SimulationEnvConfig:
     """
     The default configuration of the simulation environment
