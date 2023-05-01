@@ -450,7 +450,7 @@ const ContainerTerminal = (props) => {
                         overlay={renderRefreshTerminalTooltip}
                     >
                         <Button variant="button" onClick={refreshTerminal}>
-                            <i className="fa fa-refresh refreshButton" aria-hidden="true"/>
+                            <i className="fa fa-times refreshButton" aria-hidden="true"/>
                         </Button>
                     </OverlayTrigger>
                 </p>

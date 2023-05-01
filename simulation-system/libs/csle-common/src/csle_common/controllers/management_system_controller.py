@@ -2,6 +2,7 @@ import logging
 from typing import Any
 import subprocess
 import docker
+import psutil
 import os
 import csle_common.constants.constants as constants
 import sys
@@ -563,31 +564,29 @@ class ManagementSystemController:
         return True
 
     @staticmethod
-    def is_pid_running(pid: int) -> bool:
+    def is_pid_running(pid: int, logger: logging.Logger) -> bool:
         """
         Checks if the given pid is running on the host
 
         :param pid: the pid to check
+        :param logger: the logger to use for logging
         :return: True if it is running, false otherwise
         """
-        cmd = (constants.COMMANDS.PS_AUX + constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.PIPE_DELIM +
-               constants.COMMANDS.SPACE_DELIM + constants.COMMANDS.GREP + constants.COMMANDS.SPACE_DELIM + str(pid))
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        output = str(output)
-        return str(pid) in output
+        logger.info(f"Checking if PID: {pid} is running")
+        return psutil.pid_exists(pid)
 
     @staticmethod
-    def stop_pid(pid) -> bool:
+    def stop_pid(pid, logger: logging.Logger) -> bool:
         """
         Stops a process with a given pid
 
         :param pid: the pid to stop
         :return: True if the pid was stopped, false if it was not running
         """
-        if not ManagementSystemController.is_pid_running(pid):
+        if not ManagementSystemController.is_pid_running(pid, logger=logger):
             return False
         cmd = constants.COMMANDS.KILL_PROCESS.format(pid)
+        logger.info(f"Stopping PID:{pid} with command: {cmd}")
         p = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, shell=True)
         p.communicate()
         return True

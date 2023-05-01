@@ -91,7 +91,7 @@ const Downloads = (props) => {
                 fetchTracesDatasets()
             })
             .catch(error => console.log("error:" + error))
-    }, [ip, port, navigate, fetchTracesDatasets, props.sessionData.token, setSessionData, alert]);
+    }, [ip, port, navigate, fetchTracesDatasets, setSessionData, alert]);
 
     const removeTracesDatasetRequest = useCallback((tracesDataset) => {
         fetch(
@@ -120,7 +120,7 @@ const Downloads = (props) => {
                 fetchTracesDatasets()
             })
             .catch(error => console.log("error:" + error))
-    }, [ip, port, navigate, fetchTracesDatasets, props.sessionData.token, setSessionData, alert]);
+    }, [ip, port, navigate, fetchTracesDatasets, setSessionData, alert]);
 
 
     const refreshTracesDatasets = () => {
@@ -593,7 +593,7 @@ const Downloads = (props) => {
                 fetchStatisticsDatasets()
             })
             .catch(error => console.log("error:" + error))
-    }, [ip, port, navigate, alert, props.sessionData.token, setSessionData, fetchStatisticsDatasets]);
+    }, [ip, port, navigate, alert, setSessionData, fetchStatisticsDatasets]);
 
     const removeStatisticsDatasetRequest = useCallback((statisticsDataset) => {
         fetch(
@@ -622,7 +622,7 @@ const Downloads = (props) => {
                 fetchStatisticsDatasets()
             })
             .catch(error => console.log("error:" + error))
-    }, [ip, port, navigate, alert, props.sessionData.token, setSessionData, fetchStatisticsDatasets]);
+    }, [ip, port, navigate, alert, setSessionData, fetchStatisticsDatasets]);
 
 
     const refreshStatisticsDatasets = () => {

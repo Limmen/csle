@@ -4566,7 +4566,8 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: an OperationOutcomeDTO
         """
         logging.info(f"Checking the status of PID: {request.pid}")
-        running = ManagementSystemController.is_pid_running(pid=request.pid)
+        running = ManagementSystemController.is_pid_running(pid=request.pid, logger=logging.getLogger())
+        logging.info(f"Is PID {request.pid} running? {running}")
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=running)
 
     def stopPid(
@@ -4580,7 +4581,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: an OperationOutcomeDTO
         """
         logging.info(f"Stopping PID: {request.pid}")
-        ManagementSystemController.stop_pid(pid=request.pid)
+        ManagementSystemController.stop_pid(pid=request.pid, logger=logging.getLogger())
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
 
