@@ -135,6 +135,9 @@ class PPOAgent(BaseAgent):
             ExperimentUtil.set_seed(seed)
 
             # Callback for logging training metrics
+            L = 1
+            if agents_constants.COMMON.L in self.experiment_config.hparams:
+                L = self.experiment_config.hparams[agents_constants.COMMON.L].value
             cb = PPOTrainingCallback(
                 eval_every=self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value,
                 eval_batch_size=self.experiment_config.hparams[agents_constants.COMMON.EVAL_BATCH_SIZE].value,
@@ -149,7 +152,7 @@ class PPOAgent(BaseAgent):
                 save_every=self.experiment_config.hparams[agents_constants.COMMON.SAVE_EVERY].value,
                 save_dir=self.experiment_config.output_dir, exp_execution=self.exp_execution,
                 env=orig_env, experiment_config=self.experiment_config,
-                L=self.experiment_config.hparams[agents_constants.COMMON.L].value,
+                L=L,
                 gym_env_name=self.simulation_env_config.gym_env_name,
                 start=self.start, save_to_metastore=self.save_to_metastore
             )

@@ -15,3 +15,4 @@ class PolicyType(IntEnum):
     VECTOR = 7
     MULTI_THRESHOLD = 8
     LINEAR_THRESHOLD = 9
+    MIXED_PPO_POLICY = 10

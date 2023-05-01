@@ -377,3 +377,16 @@ class ENV_METRICS:
     AVERAGE_UPPER_BOUND_RETURN = "average_upper_bound_return"
     AVERAGE_RANDOM_RETURN = "average_random_return"
     AVERAGE_HEURISTIC_RETURN = "average_heuristic_return"
+
+
+class LOCAL_DFSP:
+    """
+    String constants related to the local DFSP algorithm
+    """
+    BEST_RESPONSE_EVALUATION_ITERATIONS = "best_response_evaluation_iterations"
+    EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS = "equilibrium_strategies_evaluation_iterations"
+    AVERAGE_BEST_RESPONSE_DEFENDER_RETURN = "average_best_response_defender_return"
+    RUNNING_AVERAGE_BEST_RESPONSE_DEFENDER_RETURN = "running_average_best_response_defender_return"
+    AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "average_best_response_attacker_return"
+    RUNNING_AVERAGE_BEST_RESPONSE_ATTACKER_RETURN = "running_average_best_response_attacker_return"
+    N_2 = "N_2"

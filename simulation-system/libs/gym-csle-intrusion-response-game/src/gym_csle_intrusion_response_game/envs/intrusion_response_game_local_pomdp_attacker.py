@@ -43,6 +43,10 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
 
         # Setup static attacker strategy
         self.static_defender_strategy = self.config.defender_strategy
+        try:
+            print(f"CREATING ENV, states: {self.static_defender_strategy.states}")
+        except Exception:
+            pass
 
         # Setup Config
         self.viewer = None
@@ -206,6 +210,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         # Get observations
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
+        self.latest_defender_obs=defender_obs
 
         # Log trace
         self.trace.defender_rewards.append(r)
@@ -240,7 +245,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         info[env_constants.ENV_METRICS.AVERAGE_HEURISTIC_RETURN] = self.attack_return
         return info
 
-    def reset(self, seed: int = 0, soft: bool = False) -> np.ndarray:
+    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[np.ndarray, Dict]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -253,6 +258,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
+        self.latest_defender_obs=defender_obs
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
         info = {}

@@ -183,6 +183,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         # Get observations
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
+        self.latest_attacker_obs = attacker_obs
 
         # Log trace
         self.trace.defender_rewards.append(r)
@@ -229,6 +230,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
+        self.latest_attacker_obs = attacker_obs
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
         info = {}

@@ -60,19 +60,17 @@ class PPOPolicy(Policy):
         a, _ = self.model.predict(np.array(o), deterministic=False)
         return a
 
-    def probability(self, o: List[float], a) -> Union[int, List[int], np.ndarray]:
+    def probability(self, o: List[float], a: int) -> float:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
-        :return: the selected action
+        :param o: the action
+        :return: the probability of the action
         """
-        actions, values, log_prob = self.model.policy.forward(obs=torch.tensor(o).to(self.model.device))
-        action = actions[0]
-        if action == a:
-            return math.exp(log_prob)
-        else:
-            return 0
+        prob = math.exp(self.model.policy.get_distribution(obs=torch.tensor([o]).to(self.model.device)).log_prob(
+            actions=torch.tensor(a)).item())
+        return prob
 
     def to_dict(self) -> Dict[str, Union[float, int, str]]:
         """
@@ -119,22 +117,16 @@ class PPOPolicy(Policy):
         :param o: the latest observation
         :return: the |S|x|A| stage policy
         """
-        b1 = o[1]
-        l = int(o[0])
-        if not self.player_type == PlayerType.ATTACKER:
-            stage_policy = []
-            for _ in self.states:
-                stage_policy.append(self._get_attacker_dist(obs=o))
-            return stage_policy
-        else:
-            stage_policy = []
-            for s in self.states:
-                if s.state_type != StateType.TERMINAL:
-                    o = [l, b1, s.id]
-                    stage_policy.append(self._get_attacker_dist(obs=o))
-                else:
-                    stage_policy.append([0.5, 0.5])
-            return stage_policy
+        stage_strategy = np.zeros((len(self.states), len(self.actions)))
+        for i, s_a in enumerate(self.states):
+            o[0] = s_a
+            for j, a in enumerate(self.actions):
+                stage_strategy[i][j] = self.probability(o=o, a=j)
+            print(self.model.policy.action_space)
+            print(self.actions)
+            print(sum(stage_strategy[i]))
+            assert round(sum(stage_strategy[i]), 3) == 1
+        return stage_strategy.tolist()
 
     def _get_attacker_dist(self, obs) -> List[float]:
         """
