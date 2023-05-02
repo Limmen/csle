@@ -26,6 +26,7 @@ class ArrivalThreadNew(threading.Thread):
         self.time_step_len_seconds = time_step_len_seconds
         self.client_types = client_types
         self.services = services
+        logging.info("ArrivalThreadNew initialized, time_step_len_seconds: " + str(time_step_len_seconds) + ", client_types: " + str(client_types) + ", services: " + str(services))
 
     def run(self) -> None:
         """
