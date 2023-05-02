@@ -56,6 +56,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         # Initialize environment state
         self.s = 0
         self.b = self.config.local_intrusion_response_game_config.d_b1
+        self.a_b = self.config.local_intrusion_response_game_config.a_b1
 
         # Setup spaces
         self.observation_space = self.config.local_intrusion_response_game_config.defender_observation_space_stopping()
@@ -63,6 +64,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
 
         # Setup static attacker strategy
         self.static_attacker_strategy = self.config.attacker_strategy
+        self.static_defender_strategy = self.config.defender_strategy
 
         # Setup Config
         self.viewer = None
@@ -86,7 +88,8 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         self.random_return = 0
         self.t = 0
         self.intrusion_length = 0
-        self.upper_bound_return = self.get_upper_bound_return(samples=100)
+        self.upper_bound_return = 0
+        # self.upper_bound_return = self.get_upper_bound_return(samples=100)
 
         # Reset
         self.reset()
@@ -116,6 +119,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
 
         # Sample the next state
         S = np.append([-1], self.config.local_intrusion_response_game_config.S_A)
+        s_a = self.s
         s_idx_prime = IntrusionResponseGameUtil.sample_next_state(
             a1=a1, a2=a2, T=self.T, S=S,
             s_idx=self.s + 1)
@@ -144,6 +148,11 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
                 O=self.config.local_intrusion_response_game_config.O,
                 T=self.T,
                 A2=self.config.local_intrusion_response_game_config.A2, a2=a2, s=self.s)
+            pi1 = np.array(self.static_defender_strategy.stage_policy(self.latest_defender_obs))
+            self.a_b = IntrusionResponseGameUtil.next_local_attacker_belief(
+                o=o, a1=a1, a_b=self.a_b, pi1=pi1, config=self.config.local_intrusion_response_game_config,
+                a2=a2, s_d=self.zone, s_a_prime=self.s,
+                s_a=s_a)
 
         # Update metrics
         self.t += 1
@@ -164,6 +173,8 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
 
         # Get observations
         defender_obs = self.b
+        self.latest_attacker_obs = [self.s] + list(self.a_b)
+        self.latest_defender_obs = [self.zone] + list(self.b)
 
         # Log trace
         self.trace.defender_rewards.append(r)
@@ -236,6 +247,8 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
         attacker_obs = self.b
         defender_obs = self.b
+        self.latest_attacker_obs = [self.s] + list(self.a_b)
+        self.latest_defender_obs = [self.zone] + list(self.b)
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
         info = {}

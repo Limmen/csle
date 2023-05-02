@@ -2,12 +2,12 @@ from typing import List, Dict, Union
 import numpy as np
 import torch
 import math
+import iteround
 from stable_baselines3 import PPO
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.simulation_config.state import State
-from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.policy_type import PolicyType
@@ -122,9 +122,7 @@ class PPOPolicy(Policy):
             o[0] = s_a
             for j, a in enumerate(self.actions):
                 stage_strategy[i][j] = self.probability(o=o, a=j)
-            print(self.model.policy.action_space)
-            print(self.actions)
-            print(sum(stage_strategy[i]))
+            stage_strategy[i] = iteround.saferound(stage_strategy[i], 2)
             assert round(sum(stage_strategy[i]), 3) == 1
         return stage_strategy.tolist()
 

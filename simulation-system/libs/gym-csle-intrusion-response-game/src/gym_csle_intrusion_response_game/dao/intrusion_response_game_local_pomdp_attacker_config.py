@@ -5,6 +5,10 @@ from csle_common.dao.training.random_policy import RandomPolicy
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_common.dao.training.tabular_policy import TabularPolicy
+from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
+from csle_common.dao.training.linear_tabular_policy import LinearTabularPolicy
+from csle_common.dao.training.mixed_ppo_policy import MixedPPOPolicy
+from csle_common.dao.training.mixed_linear_tabular import MixedLinearTabularPolicy
 from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 
 
@@ -15,7 +19,7 @@ class IntrusionResponseGameLocalPOMDPAttackerConfig(SimulationEnvInputConfig):
     """
 
     def __init__(self, env_name: str, local_intrusion_response_game_config: LocalIntrusionResponseGameConfig,
-                 defender_strategy: Policy):
+                 defender_strategy: Policy, attacker_strategy: Policy = None):
         """
         Initializes the DTO
 
@@ -27,6 +31,7 @@ class IntrusionResponseGameLocalPOMDPAttackerConfig(SimulationEnvInputConfig):
         self.env_name = env_name
         self.local_intrusion_response_game_config = local_intrusion_response_game_config
         self.defender_strategy = defender_strategy
+        self.attacker_strategy = attacker_strategy
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "IntrusionResponseGameLocalPOMDPAttackerConfig":
@@ -37,11 +42,18 @@ class IntrusionResponseGameLocalPOMDPAttackerConfig(SimulationEnvInputConfig):
         :return: the created instance
         """
         defender_strategy = None
+        attacker_strategy = None
         parse_functions = [MultiThresholdStoppingPolicy.from_dict, RandomPolicy.from_dict, PPOPolicy.from_dict,
-                           TabularPolicy.from_dict]
+                           TabularPolicy.from_dict, LinearThresholdStoppingPolicy.from_dict,
+                           LinearTabularPolicy.from_dict, MixedPPOPolicy.from_dict, MixedLinearTabularPolicy.from_dict]
         for parse_fun in parse_functions:
             try:
                 defender_strategy = parse_fun(d["defender_strategy"])
+                break
+            except Exception:
+                pass
+            try:
+                attacker_strategy = parse_fun(d["attacker_strategy"])
                 break
             except Exception:
                 pass
@@ -51,7 +63,7 @@ class IntrusionResponseGameLocalPOMDPAttackerConfig(SimulationEnvInputConfig):
         obj = IntrusionResponseGameLocalPOMDPAttackerConfig(
             local_intrusion_response_game_config=LocalIntrusionResponseGameConfig.from_dict(
                 d["local_intrusion_response_game_config"]),
-            defender_strategy=defender_strategy, env_name=d["env_name"])
+            defender_strategy=defender_strategy, env_name=d["env_name"], attacker_strategy=attacker_strategy)
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -62,6 +74,7 @@ class IntrusionResponseGameLocalPOMDPAttackerConfig(SimulationEnvInputConfig):
         d["local_intrusion_response_game_config"] = self.local_intrusion_response_game_config.to_dict()
         d["defender_strategy"] = self.defender_strategy.to_dict()
         d["env_name"] = self.env_name
+        d["attacker_strategy"] = self.attacker_strategy
         return d
 
     def __str__(self) -> str:
@@ -70,4 +83,4 @@ class IntrusionResponseGameLocalPOMDPAttackerConfig(SimulationEnvInputConfig):
         """
         return f"local_intrusion_response_game_config: {self.local_intrusion_response_game_config}, " \
                f"defender_strategy: {self.defender_strategy}," \
-               f"env_name: {self.env_name}"
+               f"env_name: {self.env_name} attacker_Strategy: {self.attacker_strategy}"

@@ -5,6 +5,10 @@ from csle_common.dao.training.random_policy import RandomPolicy
 from csle_common.dao.training.multi_threshold_stopping_policy import MultiThresholdStoppingPolicy
 from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_common.dao.training.tabular_policy import TabularPolicy
+from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
+from csle_common.dao.training.linear_tabular_policy import LinearTabularPolicy
+from csle_common.dao.training.mixed_linear_tabular import MixedLinearTabularPolicy
+from csle_common.dao.training.mixed_ppo_policy import MixedPPOPolicy
 from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config import LocalIntrusionResponseGameConfig
 
 
@@ -15,7 +19,7 @@ class IntrusionResponseGameLocalPOMDPDefenderConfig(SimulationEnvInputConfig):
     """
 
     def __init__(self, env_name: str, local_intrusion_response_game_config: LocalIntrusionResponseGameConfig,
-                 attacker_strategy: Policy):
+                 attacker_strategy: Policy, defender_strategy: Policy = None):
         """
         Initializes the DTO
 
@@ -27,6 +31,7 @@ class IntrusionResponseGameLocalPOMDPDefenderConfig(SimulationEnvInputConfig):
         self.env_name = env_name
         self.local_intrusion_response_game_config = local_intrusion_response_game_config
         self.attacker_strategy = attacker_strategy
+        self.defender_strategy = defender_strategy
         self.stopping_action = 3
         self.stopping_zone = 3
 
@@ -40,7 +45,8 @@ class IntrusionResponseGameLocalPOMDPDefenderConfig(SimulationEnvInputConfig):
         """
         attacker_strategy = None
         parse_functions = [MultiThresholdStoppingPolicy.from_dict, RandomPolicy.from_dict, PPOPolicy.from_dict,
-                           TabularPolicy.from_dict]
+                           TabularPolicy.from_dict, MixedLinearTabularPolicy.from_dict, MixedPPOPolicy.from_dict,
+                           LinearTabularPolicy.from_dict, LinearThresholdStoppingPolicy.from_dict]
         for parse_fun in parse_functions:
             try:
                 attacker_strategy = parse_fun(d["attacker_strategy"])

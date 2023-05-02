@@ -16,57 +16,24 @@ from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.training.mixed_ppo_policy import MixedPPOPolicy
-from csle_common.dao.training.mixed_linear_tabular import MixedLinearTabularPolicy
 from csle_common.dao.training.ppo_policy import PPOPolicy
-from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
-from csle_common.dao.training.tabular_policy import TabularPolicy
-from csle_common.dao.training.linear_tabular_policy import LinearTabularPolicy
 from csle_agents.agents.ppo.ppo_agent import PPOAgent
-from csle_agents.agents.differential_evolution.differential_evolution_agent import DifferentialEvolutionAgent
 from csle_common.dao.training.policy import Policy
 import csle_common.constants.constants as constants
 from csle_common.util.general_util import GeneralUtil
 from csle_agents.agents.base.base_agent import BaseAgent
 import csle_agents.constants.constants as agents_constants
 import gym_csle_stopping_game.constants.constants as env_constants
-from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
-from csle_agents.agents.vi.vi_agent import VIAgent
-
-def reduce_T(T, strategy):
-    attacker_state = 2
-    reduced_T = np.zeros((T.shape[0], T.shape[2], T.shape[3]))
-    for i in range(T.shape[0]):
-        for j in range(T.shape[2]):
-            for k in range(T.shape[3]):
-                prob = 0
-                for a2 in range(T.shape[1]):
-                    prob += strategy[attacker_state][a2] * T[i][a2][j][k]
-                reduced_T[i][j][k] = prob
-    return reduced_T
 
 
-def reduce_R(R, strategy):
-    attacker_state = 2
-    reduced_R = np.zeros((R.shape[0], R.shape[2]))
-    for i in range(R.shape[0]):
-        for j in range(R.shape[2]):
-            r = 0
-            for a2 in range(R.shape[1]):
-                r += strategy[attacker_state][a2] * R[i][a2][j]
-            reduced_R[i][j] = r
-    return reduced_R
-
-
-
-class DFSPLocalAgent(BaseAgent):
+class DFSPLocalPPOAgent(BaseAgent):
     """
     RL Agent implementing the local DFSP algorithm
     """
 
     def __init__(self, defender_simulation_env_config: SimulationEnvConfig,
                  attacker_simulation_env_config: SimulationEnvConfig,
-                 emulation_env_config: Union[None, EmulationEnvConfig], ppo_experiment_config: ExperimentConfig,
-                 de_experiment_config: ExperimentConfig, vi_experiment_config: ExperimentConfig,
+                 emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig,
                  training_job: Optional[TrainingJobConfig] = None):
         """
         Initializes the local DFSP agent
@@ -79,11 +46,10 @@ class DFSPLocalAgent(BaseAgent):
         """
         super().__init__(simulation_env_config=defender_simulation_env_config,
                          emulation_env_config=emulation_env_config,
-                         experiment_config=ppo_experiment_config)
+                         experiment_config=experiment_config)
         self.root_output_dir = str(self.experiment_config.output_dir)
-        self.ppo_experiment_config = ppo_experiment_config
-        self.de_experiment_config = de_experiment_config
-        self.vi_experiment_config = vi_experiment_config
+        self.defender_experiment_config = self.get_defender_experiment_config()
+        self.attacker_experiment_config = self.get_attacker_experiment_config()
         self.attacker_simulation_env_config = attacker_simulation_env_config
         self.defender_simulation_env_config = defender_simulation_env_config
         self.training_job = training_job
@@ -199,13 +165,13 @@ class DFSPLocalAgent(BaseAgent):
                    training_job: TrainingJobConfig, random_seeds: List[int]):
 
         # Initialize policies
-        defender_strategy = MixedLinearTabularPolicy(
+        defender_strategy = MixedPPOPolicy(
             simulation_name=self.defender_simulation_env_config.name,
             states=self.defender_simulation_env_config.state_space_config.states,
             player_type=PlayerType.DEFENDER,
             actions=self.defender_simulation_env_config.joint_action_space_config.action_spaces[
-                self.de_experiment_config.player_idx].actions,
-            experiment_config=self.de_experiment_config, avg_R=-1)
+                self.defender_experiment_config.player_idx].actions,
+            experiment_config=self.defender_experiment_config, avg_R=-1)
         defender_strategy.states = \
             self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D
         defender_strategy.actions = \
@@ -215,8 +181,8 @@ class DFSPLocalAgent(BaseAgent):
             states=self.attacker_simulation_env_config.state_space_config.states,
             player_type=PlayerType.ATTACKER,
             actions=self.attacker_simulation_env_config.joint_action_space_config.action_spaces[
-                self.ppo_experiment_config.player_idx].actions,
-            experiment_config=self.ppo_experiment_config, avg_R=-1)
+                self.attacker_experiment_config.player_idx].actions,
+            experiment_config=self.attacker_experiment_config, avg_R=-1)
         attacker_strategy.states = \
             self.attacker_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_A
         attacker_strategy.actions = \
@@ -243,8 +209,8 @@ class DFSPLocalAgent(BaseAgent):
 
             # Update empirical strategies
             attacker_strategy.ppo_policies.append(attacker_br)
-            defender_strategy.linear_tabular_policies.append(defender_br)
-
+            defender_strategy.ppo_policies.append(defender_br)
+            #
             # Evaluate best response strategies against empirical strategies
             attacker_metrics = self.evaluate_attacker_policy(
                 defender_strategy=defender_strategy, attacker_strategy=attacker_br)
@@ -305,7 +271,7 @@ class DFSPLocalAgent(BaseAgent):
                 round(strategy_profile_metrics[env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN], 3))
 
             # Compute and log exploitability
-            exp = DFSPLocalAgent.exploitability(attacker_val=val_attacker_exp, defender_val=val_defender_exp)
+            exp = DFSPLocalPPOAgent.exploitability(attacker_val=val_attacker_exp, defender_val=val_defender_exp)
             exp_result.all_metrics[seed][agents_constants.COMMON.EXPLOITABILITY].append(exp)
             running_avg_exp = ExperimentUtil.running_average(
                 exp_result.all_metrics[seed][agents_constants.COMMON.EXPLOITABILITY],
@@ -330,7 +296,7 @@ class DFSPLocalAgent(BaseAgent):
                 training_job.progress_percentage = progress
                 MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
 
-    def evaluate_defender_policy(self, defender_strategy: LinearTabularPolicy,
+    def evaluate_defender_policy(self, defender_strategy: PPOPolicy,
                                  attacker_strategy: MixedPPOPolicy) -> Dict[str, Union[float, int]]:
         """
         Monte-Carlo evaluation of the game value of a given defender policy against the average attacker strategy
@@ -344,9 +310,9 @@ class DFSPLocalAgent(BaseAgent):
         attacker_strategy.actions = \
             self.attacker_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A2
         defender_strategy.states = \
-            self.attacker_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D
+            self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D
         defender_strategy.actions = \
-            self.attacker_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A1
+            self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A1
         self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
         self.defender_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         env = gym.make(self.defender_simulation_env_config.gym_env_name,
@@ -369,6 +335,10 @@ class DFSPLocalAgent(BaseAgent):
             self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D
         defender_strategy.actions = \
             self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A1
+        attacker_strategy.states = \
+            self.attacker_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_A
+        attacker_strategy.actions = \
+            self.attacker_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A2
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         self.attacker_simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
         env = gym.make(self.attacker_simulation_env_config.gym_env_name,
@@ -391,6 +361,10 @@ class DFSPLocalAgent(BaseAgent):
             self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D
         defender_strategy.actions = \
             self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A1
+        attacker_strategy.states = \
+            self.attacker_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_A
+        attacker_strategy.actions = \
+            self.attacker_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A2
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         self.attacker_simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
         env = gym.make(self.attacker_simulation_env_config.gym_env_name,
@@ -410,60 +384,17 @@ class DFSPLocalAgent(BaseAgent):
         :param attacker_strategy: the attacker strategy
         :return: the learned best response strategy and the average return
         """
-        self.de_experiment_config.random_seeds = [seed]
-        self.vi_experiment_config.random_seeds = [seed]
-        self.de_experiment_config.output_dir = str(self.root_output_dir)
-        self.vi_experiment_config.output_dir = str(self.root_output_dir)
-        self.de_experiment_config.agent_type = AgentType.DIFFERENTIAL_EVOLUTION
-        self.defender_simulation_env_config.gym_env_name = "csle-intrusion-response-game-local-stopping-pomdp-defender-v1"
-        agent = DifferentialEvolutionAgent(
-            emulation_env_config=self.emulation_env_config,
-            simulation_env_config=self.defender_simulation_env_config,
-            experiment_config=self.de_experiment_config, save_to_metastore=False)
+        self.defender_experiment_config.random_seeds = [seed]
+        self.defender_experiment_config.output_dir = str(self.root_output_dir)
+        self.defender_experiment_config.agent_type = AgentType.PPO
+        agent = PPOAgent(emulation_env_config=self.emulation_env_config,
+                         simulation_env_config=self.defender_simulation_env_config,
+                         experiment_config=self.defender_experiment_config, save_to_metastore=False)
         Logger.__call__().get_logger().info(f"[Local DFSP] Starting training of the defender's best response "
                                             f"against defender strategy: {defender_strategy}")
         experiment_execution = agent.train()
-        stopping_policy: LinearThresholdStoppingPolicy = experiment_execution.result.policies[seed]
-        self.defender_simulation_env_config.gym_env_name = "csle-intrusion-response-game-local-pomdp-defender-v1"
-        T = IntrusionResponseGameUtil.local_stopping_mdp_transition_tensor(
-            S=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S,
-            A1=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A1,
-            A2=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A2,
-            S_D=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D,
-            T=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.T[0]
-        )
-        T = reduce_T(T=T, strategy=self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy.stage_policy(
-            o=[self.defender_simulation_env_config.simulation_env_input_config.stopping_zone] +
-              list(self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.a_b1)))
-        R = IntrusionResponseGameUtil.local_stopping_mdp_reward_tensor(
-            S=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S,
-            A1=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A1,
-            A2=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A2,
-            R=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.R[0],
-            S_D=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D
-        )
-        R = reduce_R(R=R, strategy=self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy.stage_policy(
-            o=[self.defender_simulation_env_config.simulation_env_input_config.stopping_zone] +
-              list(self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.a_b1)))
-        self.vi_experiment_config.hparams[agents_constants.VI.REWARD_TENSOR].value == list(R.tolist())
-        self.vi_experiment_config.hparams[agents_constants.VI.TRANSITION_TENSOR].value == list(T.tolist())
-        vi_agent = VIAgent(simulation_env_config=self.defender_simulation_env_config,
-                           experiment_config=self.vi_experiment_config, save_to_metastore=False)
-        experiment_execution = vi_agent.train()
-        action_policy: TabularPolicy = experiment_execution.result.policies[seed]
-        policy = LinearTabularPolicy(
-            stopping_policy=stopping_policy, action_policy=action_policy,
-            simulation_name=self.defender_simulation_env_config.name,
-            states=self.simulation_env_config.state_space_config.states,
-            actions = self.simulation_env_config.joint_action_space_config.action_spaces,
-            experiment_config=None, avg_R=-1, agent_type=AgentType.DFSP_LOCAL,
-            player_type=PlayerType.DEFENDER
-        )
-        defender_metrics = self.evaluate_defender_policy(
-            defender_strategy=policy,
-            attacker_strategy=self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy
-        )
-        val = round(defender_metrics[env_constants.ENV_METRICS.RETURN], 3)
+        policy: PPOPolicy = experiment_execution.result.policies[seed]
+        val = experiment_execution.result.avg_metrics[agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1]
         return policy, val
 
     def _eval_env(self, env: gym.Env, policy: Policy, num_iterations: int) -> Dict[str, Union[float, int]]:
@@ -536,12 +467,12 @@ class DFSPLocalAgent(BaseAgent):
         :param attacker_strategy: the attacker strategy
         :return: the learned best response strategy and the average return
         """
-        self.ppo_experiment_config.random_seeds = [seed]
-        self.ppo_experiment_config.output_dir = str(self.root_output_dir)
-        self.ppo_experiment_config.agent_type = AgentType.PPO
+        self.attacker_experiment_config.random_seeds = [seed]
+        self.attacker_experiment_config.output_dir = str(self.root_output_dir)
+        self.attacker_experiment_config.agent_type = AgentType.PPO
         agent = PPOAgent(emulation_env_config=self.emulation_env_config,
                          simulation_env_config=self.attacker_simulation_env_config,
-                         experiment_config=self.ppo_experiment_config, save_to_metastore=False)
+                         experiment_config=self.attacker_experiment_config, save_to_metastore=False)
         Logger.__call__().get_logger().info(f"[Local DFSP] Starting training of the attacker's best response "
                                             f"against defender strategy: {defender_strategy}")
         experiment_execution = agent.train()
@@ -583,6 +514,100 @@ class DFSPLocalAgent(BaseAgent):
         :return: the exploitability
         """
         return round(math.fabs(attacker_val + defender_val), 2)
+
+    def get_defender_experiment_config(self) -> ExperimentConfig:
+        """
+        :return: the experiment configuration for learning a best response of the defender
+        """
+        hparams = {
+            constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: self.experiment_config.hparams[
+                constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER],
+            constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: self.experiment_config.hparams[
+                constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS],
+            agents_constants.PPO.STEPS_BETWEEN_UPDATES: self.experiment_config.hparams[
+                agents_constants.PPO.STEPS_BETWEEN_UPDATES],
+            agents_constants.COMMON.BATCH_SIZE: self.experiment_config.hparams[agents_constants.COMMON.BATCH_SIZE],
+            agents_constants.COMMON.LEARNING_RATE: self.experiment_config.hparams[
+                agents_constants.COMMON.LEARNING_RATE],
+            constants.NEURAL_NETWORKS.DEVICE: self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE],
+            agents_constants.COMMON.NUM_PARALLEL_ENVS: self.experiment_config.hparams[
+                agents_constants.COMMON.NUM_PARALLEL_ENVS],
+            agents_constants.COMMON.GAMMA: self.experiment_config.hparams[agents_constants.COMMON.GAMMA],
+            agents_constants.PPO.GAE_LAMBDA: self.experiment_config.hparams[agents_constants.PPO.GAE_LAMBDA],
+            agents_constants.PPO.CLIP_RANGE: self.experiment_config.hparams[agents_constants.PPO.CLIP_RANGE],
+            agents_constants.PPO.CLIP_RANGE_VF: self.experiment_config.hparams[agents_constants.PPO.CLIP_RANGE_VF],
+            agents_constants.PPO.ENT_COEF: self.experiment_config.hparams[agents_constants.PPO.ENT_COEF],
+            agents_constants.PPO.VF_COEF: self.experiment_config.hparams[agents_constants.PPO.VF_COEF],
+            agents_constants.PPO.MAX_GRAD_NORM: self.experiment_config.hparams[agents_constants.PPO.MAX_GRAD_NORM],
+            agents_constants.PPO.TARGET_KL: self.experiment_config.hparams[agents_constants.PPO.TARGET_KL],
+            agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: self.experiment_config.hparams[
+                agents_constants.COMMON.NUM_TRAINING_TIMESTEPS],
+            agents_constants.COMMON.EVAL_EVERY: self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY],
+            agents_constants.COMMON.EVAL_BATCH_SIZE: self.experiment_config.hparams[
+                agents_constants.COMMON.EVAL_BATCH_SIZE],
+            agents_constants.COMMON.SAVE_EVERY: self.experiment_config.hparams[agents_constants.COMMON.SAVE_EVERY],
+            agents_constants.COMMON.CONFIDENCE_INTERVAL: self.experiment_config.hparams[
+                agents_constants.COMMON.CONFIDENCE_INTERVAL],
+            agents_constants.COMMON.MAX_ENV_STEPS: self.experiment_config.hparams[
+                agents_constants.COMMON.MAX_ENV_STEPS],
+            agents_constants.COMMON.RUNNING_AVERAGE: self.experiment_config.hparams[
+                agents_constants.COMMON.RUNNING_AVERAGE]
+        }
+        return ExperimentConfig(
+            output_dir=str(self.root_output_dir),
+            title="Learning a best response of the defender as part of local DFSP",
+            random_seeds=[], agent_type=AgentType.PPO,
+            log_every=self.experiment_config.br_log_every,
+            hparams=hparams,
+            player_type=PlayerType.DEFENDER, player_idx=0
+        )
+
+    def get_attacker_experiment_config(self) -> ExperimentConfig:
+        """
+        :return: the experiment configuration for learning a best response of the attacker
+        """
+        hparams = {
+            constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: self.experiment_config.hparams[
+                constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER],
+            constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: self.experiment_config.hparams[
+                constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS],
+            agents_constants.PPO.STEPS_BETWEEN_UPDATES: self.experiment_config.hparams[
+                agents_constants.PPO.STEPS_BETWEEN_UPDATES],
+            agents_constants.COMMON.BATCH_SIZE: self.experiment_config.hparams[agents_constants.COMMON.BATCH_SIZE],
+            agents_constants.COMMON.LEARNING_RATE: self.experiment_config.hparams[
+                agents_constants.COMMON.LEARNING_RATE],
+            constants.NEURAL_NETWORKS.DEVICE: self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE],
+            agents_constants.COMMON.NUM_PARALLEL_ENVS: self.experiment_config.hparams[
+                agents_constants.COMMON.NUM_PARALLEL_ENVS],
+            agents_constants.COMMON.GAMMA: self.experiment_config.hparams[agents_constants.COMMON.GAMMA],
+            agents_constants.PPO.GAE_LAMBDA: self.experiment_config.hparams[agents_constants.PPO.GAE_LAMBDA],
+            agents_constants.PPO.CLIP_RANGE: self.experiment_config.hparams[agents_constants.PPO.CLIP_RANGE],
+            agents_constants.PPO.CLIP_RANGE_VF: self.experiment_config.hparams[agents_constants.PPO.CLIP_RANGE_VF],
+            agents_constants.PPO.ENT_COEF: self.experiment_config.hparams[agents_constants.PPO.ENT_COEF],
+            agents_constants.PPO.VF_COEF: self.experiment_config.hparams[agents_constants.PPO.VF_COEF],
+            agents_constants.PPO.MAX_GRAD_NORM: self.experiment_config.hparams[agents_constants.PPO.MAX_GRAD_NORM],
+            agents_constants.PPO.TARGET_KL: self.experiment_config.hparams[agents_constants.PPO.TARGET_KL],
+            agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: self.experiment_config.hparams[
+                agents_constants.COMMON.NUM_TRAINING_TIMESTEPS],
+            agents_constants.COMMON.EVAL_EVERY: self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY],
+            agents_constants.COMMON.EVAL_BATCH_SIZE: self.experiment_config.hparams[
+                agents_constants.COMMON.EVAL_BATCH_SIZE],
+            agents_constants.COMMON.SAVE_EVERY: self.experiment_config.hparams[agents_constants.COMMON.SAVE_EVERY],
+            agents_constants.COMMON.CONFIDENCE_INTERVAL: self.experiment_config.hparams[
+                agents_constants.COMMON.CONFIDENCE_INTERVAL],
+            agents_constants.COMMON.MAX_ENV_STEPS: self.experiment_config.hparams[
+                agents_constants.COMMON.MAX_ENV_STEPS],
+            agents_constants.COMMON.RUNNING_AVERAGE: self.experiment_config.hparams[
+                agents_constants.COMMON.RUNNING_AVERAGE]
+        }
+        return ExperimentConfig(
+            output_dir=str(self.root_output_dir),
+            title="Learning a best response of the attacker as part of local DFSP",
+            random_seeds=[], agent_type=AgentType.T_SPSA,
+            log_every=self.experiment_config.br_log_every,
+            hparams=hparams,
+            player_type=PlayerType.ATTACKER, player_idx=1
+        )
 
     @staticmethod
     def round_vec(vec) -> List[float]:

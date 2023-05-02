@@ -1,7 +1,9 @@
-from typing import List, Dict, Tuple, Union, Optional
-import math
+from typing import List, Dict, Union, Optional
+import iteround
 import numpy as np
 from csle_common.dao.training.policy import Policy
+from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
+from csle_common.dao.training.tabular_policy import TabularPolicy
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.training.player_type import PlayerType
@@ -10,18 +12,19 @@ from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.policy_type import PolicyType
 
 
-class LinearThresholdStoppingPolicy(Policy):
+class LinearTabularPolicy(Policy):
     """
-    A linear threshold stopping policy
+    A linear tabular policy that uses a linear threshold line to decide when to take action and a tabular policy to
+    decide which action to take
     """
 
-    def __init__(self, theta, simulation_name: str, L: int, states: List[State], player_type: PlayerType,
+    def __init__(self, stopping_policy: LinearThresholdStoppingPolicy, action_policy: TabularPolicy,
+                 simulation_name: str, states: List[State], player_type: PlayerType,
                  actions: List[Action], experiment_config: Optional[ExperimentConfig], avg_R: float,
-                 agent_type: AgentType, opponent_strategy: Optional["LinearThresholdStoppingPolicy"] = None) -> None:
+                 agent_type: AgentType) -> None:
         """
         Initializes the policy
 
-        :param theta: the threshold vector
         :param simulation_name: the simulation name
         :param attacker: whether it is an attacker or not
         :param L: the number of stop actions
@@ -32,17 +35,16 @@ class LinearThresholdStoppingPolicy(Policy):
         :param agent_type: the agent type
         :param opponent_strategy: optionally an opponent strategy
         """
-        super(LinearThresholdStoppingPolicy, self).__init__(agent_type=agent_type, player_type=player_type)
-        self.theta = theta
+        super(LinearTabularPolicy, self).__init__(agent_type=agent_type, player_type=player_type)
+        self.stopping_policy = stopping_policy
+        self.action_policy = action_policy
         self.id = -1
         self.simulation_name = simulation_name
-        self.L = L
         self.states = states
         self.actions = actions
         self.experiment_config = experiment_config
         self.avg_R = avg_R
-        self.opponent_strategy = opponent_strategy
-        self.policy_type = PolicyType.LINEAR_THRESHOLD
+        self.policy_type = PolicyType.LINEAR_TABULAR
 
     def action(self, o: List[float]) -> int:
         """
@@ -51,11 +53,11 @@ class LinearThresholdStoppingPolicy(Policy):
         :param o: the current observation
         :return: the selected action
         """
-        if self.player_type == PlayerType.DEFENDER:
-            a, _ = self._defender_action(o=o)
-            return a
+        stop = self.stopping_policy.action(o=o[1:])
+        if stop == 1:
+            return self.action_policy.action(o=int(o[0]))
         else:
-            raise NotImplementedError("Attacker not implemented yet")
+            return 0
 
     def probability(self, o: List[float], a: int) -> int:
         """
@@ -65,11 +67,8 @@ class LinearThresholdStoppingPolicy(Policy):
         :param a: a given action
         :return: the probability of a
         """
-        if self.player_type == PlayerType.DEFENDER:
-            _, prob = self._defender_action(o=o)
-            return prob
-        else:
-            raise NotImplementedError("Attacker not implemented yet")
+        taken_action = self.action(o=o)
+        return taken_action == a
 
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
         """
@@ -78,43 +77,28 @@ class LinearThresholdStoppingPolicy(Policy):
         :param o: the latest observation
         :return: the |S|x|A| stage policy
         """
-        raise NotImplementedError("Not implemented")
-
-    def _defender_action(self, o) -> Tuple[int, float]:
-        """
-        Linear threshold stopping policy of the defender
-
-        :param o: the input observation
-        :return: the selected action (int) and its probability
-        """
-        coefficients = np.zeros(len(self.theta))
-        theta = self.theta
-        coefficients[-1] = math.pow(theta[-1], 2)
-        coefficients[-2] = 1 + math.pow(theta[-2], 2)
-        for i in range(0, len(theta) - 2):
-            coefficients[i] = coefficients[-2] * math.pow(math.sin(theta[i]), 2)
-        belief = o
-        x = np.append(np.array([0, 1]), np.array(coefficients))
-        y = np.append(np.array(belief), np.array([-1]))
-        d = np.dot(x, y)
-        if d > 0:
-            return 1, 1
-        else:
-            return 0, 1
+        stage_strategy = np.zeros((len(self.states), len(self.actions)))
+        for i, s_a in enumerate(self.states):
+            o[0] = s_a
+            for j, a in enumerate(self.actions):
+                stage_strategy[i][j] = self.probability(o=o, a=j)
+            stage_strategy[i] = iteround.saferound(stage_strategy[i], 2)
+            assert round(sum(stage_strategy[i]), 3) == 1
+        return stage_strategy.tolist()
 
     def to_dict(self) -> Dict[str, List[float]]:
         """
         :return: a dict representation of the policy
         """
         d = {}
-        d["theta"] = self.theta
+        d["stopping_policy"] = self.stopping_policy.to_dict()
+        d["action_policy"] = self.action_policy.to_dict()
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
         d["states"] = list(map(lambda x: x.to_dict(), self.states))
         d["actions"] = list(map(lambda x: x.to_dict(), self.actions))
         d["player_type"] = self.player_type
         d["agent_type"] = self.agent_type
-        d["L"] = self.L
         if self.experiment_config is not None:
             d["experiment_config"] = self.experiment_config.to_dict()
         else:
@@ -124,15 +108,17 @@ class LinearThresholdStoppingPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "LinearThresholdStoppingPolicy":
+    def from_dict(d: Dict) -> "LinearTabularPolicy":
         """
         Converst a dict representation of the object to an instance
 
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = LinearThresholdStoppingPolicy(
-            theta=d["theta"], simulation_name=d["simulation_name"], L=d["L"],
+        obj = LinearTabularPolicy(
+            stopping_policy=LinearThresholdStoppingPolicy.from_dict(d["stopping_policy"]),
+            action_policy=TabularPolicy.from_dict(d["action_policy"]),
+            simulation_name=d["simulation_name"],
             states=list(map(lambda x: State.from_dict(x), d["states"])), player_type=d["player_type"],
             actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
             experiment_config=ExperimentConfig.from_dict(d["experiment_config"]), avg_R=d["avg_R"],
@@ -144,9 +130,10 @@ class LinearThresholdStoppingPolicy(Policy):
         """
         :return: a string representation of the object
         """
-        return f"theta: {self.theta}, id: {self.id}, simulation_name: {self.simulation_name}, " \
+        return f"stopping_policy: {self.stopping_policy}, action_policy: {self.action_policy}, " \
+               f"id: {self.id}, simulation_name: {self.simulation_name}, " \
                f"player_type: {self.player_type}, " \
-               f"L:{self.L}, states: {self.states}, agent_type: {self.agent_type}, actions: {self.actions}," \
+               f"states: {self.states}, agent_type: {self.agent_type}, actions: {self.actions}," \
                f"experiment_config: {self.experiment_config}, avg_R: {self.avg_R}, policy_type: {self.policy_type}"
 
     def to_json_str(self) -> str:
@@ -172,7 +159,7 @@ class LinearThresholdStoppingPolicy(Policy):
             f.write(json_str)
 
     @staticmethod
-    def from_json_file(json_file_path: str) -> "LinearThresholdStoppingPolicy":
+    def from_json_file(json_file_path: str) -> "LinearTabularPolicy":
         """
         Reads a json file and converts it to a DTO
 
@@ -183,9 +170,9 @@ class LinearThresholdStoppingPolicy(Policy):
         import json
         with io.open(json_file_path, 'r') as f:
             json_str = f.read()
-        return LinearThresholdStoppingPolicy.from_dict(json.loads(json_str))
+        return LinearTabularPolicy.from_dict(json.loads(json_str))
 
-    def copy(self) -> "LinearThresholdStoppingPolicy":
+    def copy(self) -> "LinearTabularPolicy":
         """
         :return: a copy of the DTO
         """

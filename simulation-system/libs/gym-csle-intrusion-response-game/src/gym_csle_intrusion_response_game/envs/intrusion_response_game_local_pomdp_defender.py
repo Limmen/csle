@@ -45,6 +45,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
 
         # Setup static attacker strategy
         self.static_attacker_strategy = self.config.attacker_strategy
+        self.static_defender_strategy = self.config.defender_strategy
 
         # Setup Config
         self.viewer = None
@@ -57,6 +58,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         self.traces = []
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
         self.latest_attacker_obs = None
+        self.latest_defender_obs = None
         self.latest_attacker_action = None
 
         # Reset
@@ -169,6 +171,11 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
                 o=o, a1=a1, d_b=self.state.d_b, pi2=pi2, config=self.config.local_intrusion_response_game_config,
                 a2=a2, s_a=self.state.attacker_state(),
                 s_d_prime=self.state.defender_state(), s_d=s_d)
+            pi1 = np.array(self.static_defender_strategy.stage_policy(self.latest_defender_obs))
+            self.state.a_b = IntrusionResponseGameUtil.next_local_attacker_belief(
+                o=o, a1=a1, a_b=self.state.a_b, pi1=pi1, config=self.config.local_intrusion_response_game_config,
+                a2=a2, s_d=self.state.defender_state(), s_a_prime=self.state.attacker_state(),
+                s_a=self.state.attacker_state())
 
         # Update time-step
         self.state.t += 1
@@ -184,6 +191,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
         self.latest_attacker_obs = attacker_obs
+        self.latest_defender_obs = defender_obs
 
         # Log trace
         self.trace.defender_rewards.append(r)
@@ -231,6 +239,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         attacker_obs = self.state.attacker_observation()
         defender_obs = self.state.defender_observation()
         self.latest_attacker_obs = attacker_obs
+        self.latest_defender_obs = defender_obs
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
         info = {}
