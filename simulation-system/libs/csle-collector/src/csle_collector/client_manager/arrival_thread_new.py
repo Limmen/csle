@@ -10,13 +10,12 @@ from csle_collector.client_manager.service import Service
 
 class ArrivalThreadNew(threading.Thread):
     """
-    Thread that generates client threads accoriding to a time-varying Poisson process with a custom arrival rate function.
+    Thread that generates client threads accoriding to time-varying Poisson processes with custom arrival rate functions.
     """
-    def __init__(self, time_step_len_seconds: float, client_type: ClientType, services: List[Service]) -> None:
+    def __init__(self, time_step_len_seconds: float, client_types: List[ClientType], services: List[Service]) -> None:
         """
         Initializes a new arrival thread.
 
-        :param rate_function: A function that returns the arrival rate at a given time.
         :param time_step_len_seconds: The time step length in seconds.
         :param commands: A list of commands to be executed by the client.
         """
@@ -24,9 +23,8 @@ class ArrivalThreadNew(threading.Thread):
         self.t = 0
         self.client_threads = []
         self.stopped = False
-        self.rate_function = client_type.arrival_process.rate_f
         self.time_step_len_seconds = time_step_len_seconds
-        self.client_type = client_type
+        self.client_types = client_types
         self.services = services
 
     def run(self) -> None:
@@ -45,15 +43,16 @@ class ArrivalThreadNew(threading.Thread):
                     new_client_threads.append(client_thread)
             self.client_threads = new_client_threads
 
-            # Generate new client threads
-            arrival_rate = self.rate_function(self.t)
-            logging.info("t: " + str(self.t) + ", arrival_rate: " + str(arrival_rate))
-            if arrival_rate > 0:
-                num_new_clients = poisson.rvs(arrival_rate, size=1)[0]
-                for _ in range(num_new_clients):
-                    new_client_thread = ClientThreadNew(self.client_type.generate_commands(self.services), self.time_step_len_seconds)
-                    new_client_thread.start()
-                    self.client_threads.append(new_client_thread)
+            for client_type in self.client_types:
+                # Generate new client threads
+                arrival_rate = client_type.rate_function(self.t)
+                logging.info("t: " + str(self.t) + ", arrival_rate: " + str(arrival_rate))
+                if arrival_rate > 0:
+                    num_new_clients = poisson.rvs(arrival_rate, size=1)[0]
+                    for _ in range(num_new_clients):
+                        new_client_thread = ClientThreadNew(client_type.generate_commands(self.services), self.time_step_len_seconds)
+                        new_client_thread.start()
+                        self.client_threads.append(new_client_thread)
                     
             time.sleep(self.time_step_len_seconds)
 
