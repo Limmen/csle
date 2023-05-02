@@ -20,6 +20,10 @@ class ArrivalThreadNew(threading.Thread):
         :param commands: A list of commands to be executed by the client.
         """
         threading.Thread.__init__(self)
+        self.rate = 0
+        self.mu = 0
+        self.total_threads_finished = 0
+        self.total_service_time = 0
         self.t = 0
         self.client_threads = []
         self.stopped = False
@@ -42,11 +46,16 @@ class ArrivalThreadNew(threading.Thread):
             for client_thread in self.client_threads:
                 if client_thread.is_alive():
                     new_client_threads.append(client_thread)
+                else:
+                    self.total_threads_finished += 1
+                    self.total_service_time += client_thread.service_time
+                    self.mu = self.total_service_time / self.total_threads_finished
             self.client_threads = new_client_threads
 
             for client_type in self.client_types:
                 # Generate new client threads
-                arrival_rate = client_type.rate_function(self.t)
+                arrival_rate = client_type.arrival_process.rate_f(self.t)
+                self.rate = arrival_rate
                 logging.info("t: " + str(self.t) + ", arrival_rate: " + str(arrival_rate))
                 if arrival_rate > 0:
                     num_new_clients = poisson.rvs(arrival_rate, size=1)[0]

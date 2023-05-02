@@ -17,6 +17,7 @@ class ClientThreadNew(threading.Thread):
         :param time_step_len_seconds: The time step length in seconds.
         """
         threading.Thread.__init__(self)
+        self.service_time = 0
         self.commands = commands
         self.time_step_len_seconds = time_step_len_seconds
         logging.info("ClientThreadNew initialized, commands: " + str(commands) + ", time_step_len_seconds: " + str(time_step_len_seconds))
@@ -29,4 +30,5 @@ class ClientThreadNew(threading.Thread):
             logging.info("Executing command: " + str(command))
             p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
             p.communicate() # Execute command and wait for the command to finish
+            self.service_time += self.time_step_len_seconds
             time.sleep(self.time_step_len_seconds)
