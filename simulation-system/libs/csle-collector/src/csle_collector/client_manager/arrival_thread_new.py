@@ -43,6 +43,7 @@ class ArrivalThreadNew(threading.Thread):
             for client_thread in self.client_threads:
                 if client_thread.is_alive():
                     new_client_threads.append(client_thread)
+            self.client_threads = new_client_threads
 
             # Generate new client threads
             arrival_rate = self.rate_function(self.t)
