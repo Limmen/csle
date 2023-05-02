@@ -30,5 +30,6 @@ class ClientThreadNew(threading.Thread):
             logging.info("Executing command: " + str(command))
             p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
             p.communicate() # Execute command and wait for the command to finish
+            p.wait()
             self.service_time += self.time_step_len_seconds
             time.sleep(self.time_step_len_seconds)
