@@ -19,7 +19,7 @@ class ClientThreadNew(threading.Thread):
         threading.Thread.__init__(self)
         self.commands = commands
         self.time_step_len_seconds = time_step_len_seconds
-        logging.info("ClientThreadNew initialized, commands: " + str(commands) + ", time_step_len_seconds: " + str(time_step_len_seconds)
+        logging.info("ClientThreadNew initialized, commands: " + str(commands) + ", time_step_len_seconds: " + str(time_step_len_seconds))
 
     def run(self) -> None:
         """
