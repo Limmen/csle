@@ -59,6 +59,7 @@ class ArrivalThreadNew(threading.Thread):
                 logging.info("t: " + str(self.t) + ", arrival_rate: " + str(arrival_rate))
                 if arrival_rate > 0:
                     num_new_clients = poisson.rvs(arrival_rate, size=1)[0]
+                    logging.info("t: " + str(self.t) + ", num_new_clients: " + str(num_new_clients))
                     for _ in range(num_new_clients):
                         new_client_thread = ClientThreadNew(client_type.generate_commands(self.services), self.time_step_len_seconds)
                         new_client_thread.start()
