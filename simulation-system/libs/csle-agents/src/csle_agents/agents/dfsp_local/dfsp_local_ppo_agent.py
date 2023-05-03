@@ -213,11 +213,13 @@ class DFSPLocalPPOAgent(BaseAgent):
 
             # Evaluate best response strategies against empirical strategies
             attacker_metrics = self.evaluate_attacker_policy(
-                defender_strategy=defender_strategy, attacker_strategy=attacker_br)
+                defender_strategy=self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy,
+                attacker_strategy=attacker_br)
             # defender_metrics = self.evaluate_defender_policy(
             #     attacker_strategy=attacker_strategy, defender_strategy=defender_br)
             defender_metrics = self.evaluate_attacker_policy(
-                attacker_strategy=attacker_strategy, defender_strategy=defender_br)
+                attacker_strategy=self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy,
+                defender_strategy=defender_br)
 
             # Evaluate empirical against empirical
             strategy_profile_metrics = self.evaluate_strategy_profile(
@@ -229,9 +231,11 @@ class DFSPLocalPPOAgent(BaseAgent):
             self.defender_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
             self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
 
-            # Compute eqploitability
+            # Compute exploitability
             attacker_val = round(attacker_metrics[env_constants.ENV_METRICS.RETURN], 3)
             defender_val = -round(defender_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            attacker_val = max(attacker_val, -defender_val)
+            defender_val = max(defender_val, -attacker_val)
             val = -round(strategy_profile_metrics[env_constants.ENV_METRICS.RETURN], 3)
             val_attacker_exp = attacker_val
             val_defender_exp = defender_val

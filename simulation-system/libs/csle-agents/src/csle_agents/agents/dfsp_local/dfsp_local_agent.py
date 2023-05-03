@@ -247,9 +247,11 @@ class DFSPLocalAgent(BaseAgent):
 
             # Evaluate best response strategies against empirical strategies
             attacker_metrics = self.evaluate_attacker_policy(
-                defender_strategy=defender_strategy, attacker_strategy=attacker_br)
+                defender_strategy=self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy,
+                attacker_strategy=attacker_br)
             defender_metrics = self.evaluate_defender_policy(
-                attacker_strategy=attacker_strategy, defender_strategy=defender_br)
+                attacker_strategy=self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy,
+                defender_strategy=defender_br)
 
             # Evaluate empirical against empirical
             strategy_profile_metrics = self.evaluate_strategy_profile(
