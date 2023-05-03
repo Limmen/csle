@@ -223,10 +223,16 @@ class DFSPLocalPPOAgent(BaseAgent):
             strategy_profile_metrics = self.evaluate_strategy_profile(
                 defender_strategy=defender_strategy, attacker_strategy=attacker_strategy)
 
+            # Update envs for the next BR iteration
+            self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
+            self.attacker_simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
+            self.defender_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
+            self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
+
             # Compute eqploitability
             attacker_val = round(attacker_metrics[env_constants.ENV_METRICS.RETURN], 3)
             defender_val = -round(defender_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            val = round(strategy_profile_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            val = -round(strategy_profile_metrics[env_constants.ENV_METRICS.RETURN], 3)
             val_attacker_exp = attacker_val
             val_defender_exp = defender_val
 
@@ -393,7 +399,7 @@ class DFSPLocalPPOAgent(BaseAgent):
                          simulation_env_config=self.defender_simulation_env_config,
                          experiment_config=self.defender_experiment_config, save_to_metastore=False)
         Logger.__call__().get_logger().info(f"[Local DFSP] Starting training of the defender's best response "
-                                            f"against defender strategy: {defender_strategy}")
+                                            f"against attacker strategy: {attacker_strategy}")
         experiment_execution = agent.train()
         policy: PPOPolicy = experiment_execution.result.policies[seed]
         val = experiment_execution.result.avg_metrics[agents_constants.COMMON.RUNNING_AVERAGE_RETURN][-1]
