@@ -369,6 +369,10 @@ class DFSPLocalAgent(BaseAgent):
             self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D
         defender_strategy.actions = \
             self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A1
+        attacker_strategy.states = \
+            self.attacker_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_A
+        attacker_strategy.actions = \
+            self.attacker_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A2
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         self.attacker_simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
         env = gym.make(self.attacker_simulation_env_config.gym_env_name,
@@ -391,6 +395,10 @@ class DFSPLocalAgent(BaseAgent):
             self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D
         defender_strategy.actions = \
             self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A1
+        attacker_strategy.states = \
+            self.attacker_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_A
+        attacker_strategy.actions = \
+            self.attacker_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A2
         self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
         self.attacker_simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
         env = gym.make(self.attacker_simulation_env_config.gym_env_name,

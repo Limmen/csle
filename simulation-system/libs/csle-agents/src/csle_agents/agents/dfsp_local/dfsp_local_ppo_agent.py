@@ -210,11 +210,13 @@ class DFSPLocalPPOAgent(BaseAgent):
             # Update empirical strategies
             attacker_strategy.ppo_policies.append(attacker_br)
             defender_strategy.ppo_policies.append(defender_br)
-            #
+
             # Evaluate best response strategies against empirical strategies
             attacker_metrics = self.evaluate_attacker_policy(
                 defender_strategy=defender_strategy, attacker_strategy=attacker_br)
-            defender_metrics = self.evaluate_defender_policy(
+            # defender_metrics = self.evaluate_defender_policy(
+            #     attacker_strategy=attacker_strategy, defender_strategy=defender_br)
+            defender_metrics = self.evaluate_attacker_policy(
                 attacker_strategy=attacker_strategy, defender_strategy=defender_br)
 
             # Evaluate empirical against empirical
@@ -223,7 +225,7 @@ class DFSPLocalPPOAgent(BaseAgent):
 
             # Compute eqploitability
             attacker_val = round(attacker_metrics[env_constants.ENV_METRICS.RETURN], 3)
-            defender_val = round(defender_metrics[env_constants.ENV_METRICS.RETURN], 3)
+            defender_val = -round(defender_metrics[env_constants.ENV_METRICS.RETURN], 3)
             val = round(strategy_profile_metrics[env_constants.ENV_METRICS.RETURN], 3)
             val_attacker_exp = attacker_val
             val_defender_exp = defender_val
@@ -296,8 +298,8 @@ class DFSPLocalPPOAgent(BaseAgent):
                 training_job.progress_percentage = progress
                 MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
 
-    def evaluate_defender_policy(self, defender_strategy: PPOPolicy,
-                                 attacker_strategy: MixedPPOPolicy) -> Dict[str, Union[float, int]]:
+    def evaluate_defender_policy(self, defender_strategy: Policy,
+                                 attacker_strategy: Policy) -> Dict[str, Union[float, int]]:
         """
         Monte-Carlo evaluation of the game value of a given defender policy against the average attacker strategy
 
@@ -348,8 +350,8 @@ class DFSPLocalPPOAgent(BaseAgent):
             num_iterations=self.experiment_config.hparams[
                 agents_constants.LOCAL_DFSP.EQUILIBRIUM_STRATEGIES_EVALUATION_ITERATIONS].value)
 
-    def evaluate_attacker_policy(self, defender_strategy: MixedPPOPolicy,
-                                 attacker_strategy: PPOPolicy) -> Dict[str, Union[float, int]]:
+    def evaluate_attacker_policy(self, defender_strategy: Policy,
+                                 attacker_strategy: Policy) -> Dict[str, Union[float, int]]:
         """
         Monte-Carlo evaluation of the game value of a given attacker strategy against the average defender strategy
 
