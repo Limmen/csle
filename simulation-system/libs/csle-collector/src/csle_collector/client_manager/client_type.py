@@ -25,7 +25,8 @@ class ClientType:
         """
         workflow = self.workflow_distribution.sample()
         commands = []
-        while workflow.current_state != len(services):
+        while workflow.current_state != len(services)-1:
+            logging.info("workflow.current_state: " + str(workflow.current_state) + "length services: " + str(len(services)))
             commands += services[workflow.current_state].commands
             workflow.step_forward()
 
