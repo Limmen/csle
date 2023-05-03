@@ -57,6 +57,7 @@ class ArrivalThreadNew(threading.Thread):
                 self.rate = arrival_rate
                 logging.info("t: " + str(self.t) + ", arrival_rate: " + str(arrival_rate)) # this is where the error occurs
                 if arrival_rate > 0:
+                    logging.info("entered if statement")
                     num_new_clients = poisson.rvs(arrival_rate, size=1)[0]
                     logging.info("t: " + str(self.t) + ", num_new_clients: " + str(num_new_clients))
                     for _ in range(num_new_clients):
