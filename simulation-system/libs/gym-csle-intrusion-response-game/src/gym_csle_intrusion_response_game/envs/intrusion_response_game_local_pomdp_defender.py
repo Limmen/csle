@@ -166,16 +166,19 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             done = True
 
         if not done:
-            # Update the beliefs
-            self.state.d_b = IntrusionResponseGameUtil.next_local_defender_belief(
-                o=o, a1=a1, d_b=self.state.d_b, pi2=pi2, config=self.config.local_intrusion_response_game_config,
-                a2=a2, s_a=self.state.attacker_state(),
-                s_d_prime=self.state.defender_state(), s_d=s_d)
-            pi1 = np.array(self.static_defender_strategy.stage_policy(self.latest_defender_obs))
-            self.state.a_b = IntrusionResponseGameUtil.next_local_attacker_belief(
-                o=o, a1=a1, a_b=self.state.a_b, pi1=pi1, config=self.config.local_intrusion_response_game_config,
-                a2=a2, s_d=self.state.defender_state(), s_a_prime=self.state.attacker_state(),
-                s_a=self.state.attacker_state())
+            try:
+                # Update the beliefs
+                self.state.d_b = IntrusionResponseGameUtil.next_local_defender_belief(
+                    o=o, a1=a1, d_b=self.state.d_b, pi2=pi2, config=self.config.local_intrusion_response_game_config,
+                    a2=a2, s_a=self.state.attacker_state(),
+                    s_d_prime=self.state.defender_state(), s_d=s_d)
+                pi1 = np.array(self.static_defender_strategy.stage_policy(self.latest_defender_obs))
+                self.state.a_b = IntrusionResponseGameUtil.next_local_attacker_belief(
+                    o=o, a1=a1, a_b=self.state.a_b, pi1=pi1, config=self.config.local_intrusion_response_game_config,
+                    a2=a2, s_d=self.state.defender_state(), s_a_prime=self.state.attacker_state(),
+                    s_a=self.state.attacker_state())
+            except Exception:
+                pass
 
         # Update time-step
         self.state.t += 1
