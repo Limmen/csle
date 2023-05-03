@@ -1250,11 +1250,13 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
+                id = GeneralUtil.get_latest_table_id(cur=cur,
+                                                     table_name=constants.METADATA_STORE.TRAINING_JOBS_TABLE)
                 training_job_str = json.dumps(training_job.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRAINING_JOBS_TABLE} "
-                            f"(config, simulation_name, emulation_name, pid) "
-                            f"VALUES (%s, %s, %s, %s) RETURNING id",
-                            (training_job_str, training_job.simulation_env_name,
+                            f"(id, config, simulation_name, emulation_name, pid) "
+                            f"VALUES (%s, %s, %s, %s, %s) RETURNING id",
+                            (id, training_job_str, training_job.simulation_env_name,
                              training_job.emulation_env_name, training_job.pid))
                 id_of_new_row = cur.fetchone()[0]
                 conn.commit()
