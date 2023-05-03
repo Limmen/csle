@@ -7,7 +7,6 @@ from csle_collector.client_manager.client_thread_new import ClientThreadNew
 from csle_collector.client_manager.client_type import ClientType
 from csle_collector.client_manager.service import Service
 
-
 class ArrivalThreadNew(threading.Thread):
     """
     Thread that generates client threads accoriding to time-varying Poisson processes with custom arrival rate functions.
@@ -56,7 +55,7 @@ class ArrivalThreadNew(threading.Thread):
                 # Generate new client threads
                 arrival_rate = client_type.arrival_process.rate_f(self.t)
                 self.rate = arrival_rate
-                logging.info("t: " + str(self.t) + ", arrival_rate: " + str(arrival_rate))
+                logging.info("t: " + str(self.t) + ", arrival_rate: " + str(arrival_rate)) # this is where the error occurs
                 if arrival_rate > 0:
                     num_new_clients = poisson.rvs(arrival_rate, size=1)[0]
                     logging.info("t: " + str(self.t) + ", num_new_clients: " + str(num_new_clients))
