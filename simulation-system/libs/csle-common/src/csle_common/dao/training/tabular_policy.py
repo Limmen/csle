@@ -1,4 +1,5 @@
 from typing import Union, List, Dict, Any, Optional
+import numpy as np
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy import Policy
@@ -42,7 +43,7 @@ class TabularPolicy(Policy):
         :param o: the input observation
         :return: the next action and its probability
         """
-        return self.lookup_table[int(o)].index(1)
+        return np.random.choice(np.arange(0, len(self.lookup_table[int(o)])), p=self.lookup_table[int(o)])
 
     def probability(self, o: Union[List[Union[int, float]], int, float], a: int) -> float:
         """
