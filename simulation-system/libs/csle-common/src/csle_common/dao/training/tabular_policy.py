@@ -42,7 +42,7 @@ class TabularPolicy(Policy):
         :param o: the input observation
         :return: the next action and its probability
         """
-        return self.lookup_table[o].index(1)
+        return self.lookup_table[int(o)].index(1)
 
     def probability(self, o: Union[List[Union[int, float]], int, float], a: int) -> float:
         """

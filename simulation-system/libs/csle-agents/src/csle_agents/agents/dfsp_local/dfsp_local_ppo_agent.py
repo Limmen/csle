@@ -19,6 +19,7 @@ from csle_common.dao.training.mixed_ppo_policy import MixedPPOPolicy
 from csle_common.dao.training.ppo_policy import PPOPolicy
 from csle_agents.agents.ppo.ppo_agent import PPOAgent
 from csle_common.dao.training.policy import Policy
+from csle_common.dao.training.tabular_policy import TabularPolicy
 import csle_common.constants.constants as constants
 from csle_common.util.general_util import GeneralUtil
 from csle_agents.agents.base.base_agent import BaseAgent
@@ -424,6 +425,8 @@ class DFSPLocalPPOAgent(BaseAgent):
             J = 0
             t = 1
             while not done and t <= self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value:
+                if isinstance(policy, TabularPolicy):
+                    o = int(o[0])
                 a = policy.action(o=o)
                 o, r, done, _, info = env.step(a)
                 J += r
