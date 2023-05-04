@@ -268,6 +268,7 @@ class DFSPLocalAgent(BaseAgent):
             defender_val = -round(defender_metrics[env_constants.ENV_METRICS.RETURN], 3)
             attacker_val = max(attacker_val, -defender_val)
             defender_val = max(defender_val, -attacker_val)
+            val = -round(strategy_profile_metrics[env_constants.ENV_METRICS.RETURN], 3)
             val_attacker_exp = attacker_val
             val_defender_exp = defender_val
 
