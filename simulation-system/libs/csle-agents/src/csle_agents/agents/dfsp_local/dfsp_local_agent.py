@@ -249,7 +249,7 @@ class DFSPLocalAgent(BaseAgent):
             attacker_metrics = self.evaluate_attacker_policy(
                 defender_strategy=self.attacker_simulation_env_config.simulation_env_input_config.defender_strategy,
                 attacker_strategy=attacker_br)
-            defender_metrics = self.evaluate_defender_policy(
+            defender_metrics = self.evaluate_attacker_policy(
                 attacker_strategy=self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy,
                 defender_strategy=defender_br)
 
