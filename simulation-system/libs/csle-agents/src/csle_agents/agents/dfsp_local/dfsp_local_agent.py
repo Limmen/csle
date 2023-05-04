@@ -498,6 +498,8 @@ class DFSPLocalAgent(BaseAgent):
             J = 0
             t = 1
             while not done and t <= self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value:
+                if isinstance(policy, TabularPolicy):
+                    o = int(o[0])
                 a = policy.action(o=o)
                 o, r, done, _, info = env.step(a)
                 J += r
