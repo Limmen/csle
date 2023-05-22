@@ -263,7 +263,7 @@ class DFSPLocalAgent(BaseAgent):
             self.defender_simulation_env_config.simulation_env_input_config.defender_strategy = defender_strategy
             self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy = attacker_strategy
 
-            # Compute eqploitability
+            # Compute exploitability
             attacker_val = round(attacker_metrics[env_constants.ENV_METRICS.RETURN], 3)
             defender_val = -round(defender_metrics[env_constants.ENV_METRICS.RETURN], 3)
             attacker_val = max(attacker_val, -defender_val)
