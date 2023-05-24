@@ -62,8 +62,12 @@ class ClientPopulationMetrics:
         rate = 0
         if rate in d:
             rate = d["rate"]
+        if "service_time" in d:
+            service_time - d["service_time"]
+        else:
+            service_time = -1
         obj = ClientPopulationMetrics(
-            ts=d["ts"], ip=d["ip"], num_clients=d["num_clients"], rate=rate, service_time=d["service_time"])
+            ts=d["ts"], ip=d["ip"], num_clients=d["num_clients"], rate=rate, service_time=service_time)
         return obj
 
     def to_dict(self) -> Dict[str, Any]:

@@ -14,7 +14,7 @@ if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}cross_entropy_test", title="Cross-entropy test",
-        random_seeds=[399, 98912, 999, 555],
+        random_seeds=[399, 98912, 999],
         agent_type=AgentType.CROSS_ENTROPY,
         log_every=1,
         hparams={
@@ -26,7 +26,7 @@ if __name__ == '__main__':
                                                      descr="the number of samples in each iteration of CE"),
             agents_constants.CROSS_ENTROPY.LAMB: HParam(value=0.25, name=agents_constants.CROSS_ENTROPY.K,
                                                         descr="the number of samples to keep in each iteration of CE"),
-            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+            agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                             descr="number of iterations to evaluate theta"),
             agents_constants.CROSS_ENTROPY.THETA1: HParam(value=[-3, -3, -3],
                                                           name=agents_constants.CROSS_ENTROPY.THETA1,
@@ -37,7 +37,7 @@ if __name__ == '__main__':
                 value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                 descr="confidence interval"),
             agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                value=100, name=agents_constants.COMMON.MAX_ENV_STEPS,
                 descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
             agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                 value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
@@ -46,7 +46,7 @@ if __name__ == '__main__':
                 value=0.99, name=agents_constants.COMMON.GAMMA,
                 descr="the discount factor"),
             agents_constants.CROSS_ENTROPY.POLICY_TYPE: HParam(
-                value=PolicyType.LINEAR_THRESHOLD, name=agents_constants.CROSS_ENTROPY.POLICY_TYPE,
+                value=PolicyType.MULTI_THRESHOLD, name=agents_constants.CROSS_ENTROPY.POLICY_TYPE,
                 descr="policy type for the execution")
         },
         player_type=PlayerType.DEFENDER, player_idx=0

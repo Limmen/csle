@@ -13,7 +13,7 @@ from gym_csle_intrusion_response_game.dao.local_intrusion_response_game_config i
 from csle_common.dao.training.tabular_policy import TabularPolicy
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-010")
+    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-020")
     simulation_env_config = MetastoreFacade.get_simulation_by_name(
         "csle-intrusion-response-game-local-pomdp-defender-001")
     experiment_config = ExperimentConfig(
@@ -61,7 +61,7 @@ if __name__ == '__main__':
                                                    name=agents_constants.PPO.TARGET_KL,
                                                    descr="the target kl"),
             agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
-                value=int(600000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
+                value=int(80000), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                 descr="number of timesteps to train"),
             agents_constants.COMMON.EVAL_EVERY: HParam(value=1, name=agents_constants.COMMON.EVAL_EVERY,
                                                        descr="training iterations between evaluations"),

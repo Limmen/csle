@@ -105,13 +105,19 @@ class EmulationDefenderMachineObservationState:
             kafka_config = KafkaConfig.from_dict(d["kafka_config"])
         else:
             kafka_config = None
+        if "snort_ids_ip_alert_counters" in d and d["snort_ids_ip_alert_counters"] is not None:
+            ip_alert_counters = SnortIdsIPAlertCounters.from_dict(d["snort_ids_ip_alert_counters"])
+        else:
+            ip_alert_counters = SnortIdsIPAlertCounters()
+        if "ossec_ids_alert_counters" in d and d["ossec_ids_alert_counters"] is not None:
+            ossec_alert_counters = OSSECIdsAlertCounters.from_dict(d["ossec_ids_alert_counters"])
+        else:
+            ossec_alert_counters = OSSECIdsAlertCounters()
         obj = EmulationDefenderMachineObservationState(
             ips=d["ips"], kafka_config=kafka_config,
             host_metrics=HostMetrics.from_dict(d["host_metrics"]),
             docker_stats=DockerStats.from_dict(d["docker_stats"]),
-            snort_ids_ip_alert_counters=SnortIdsIPAlertCounters.from_dict(d["snort_ids_ip_alert_counters"]),
-            ossec_ids_alert_counters=OSSECIdsAlertCounters.from_dict(d["ossec_ids_alert_counters"])
-        )
+            snort_ids_ip_alert_counters=ip_alert_counters, ossec_ids_alert_counters=ossec_alert_counters)
         obj.os = d["os"]
         obj.ports = list(map(lambda x: EmulationPortObservationState.from_dict(x), d["ports"]))
         obj.ssh_connections = list(map(lambda x: EmulationConnectionObservationState.from_dict(x),

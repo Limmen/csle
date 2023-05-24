@@ -54,7 +54,7 @@ if __name__ == '__main__':
                 value=0.99, name=agents_constants.COMMON.GAMMA,
                 descr="the discount factor"),
             agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE: HParam(
-                value=PolicyType.LINEAR_THRESHOLD, name=agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE,
+                value=PolicyType.MULTI_THRESHOLD, name=agents_constants.DIFFERENTIAL_EVOLUTION.POLICY_TYPE,
                 descr="policy type for the execution")
         },
         player_type=PlayerType.DEFENDER, player_idx=0

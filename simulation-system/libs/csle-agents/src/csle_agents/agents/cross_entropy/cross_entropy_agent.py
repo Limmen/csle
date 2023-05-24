@@ -475,8 +475,8 @@ class CrossEntropyAgent(BaseAgent):
         :param L: the number of parameters
         :return: the policy
         """
-        if self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.POLICY_TYPE] \
-                == PolicyType.MULTI_THRESHOLD:
+        if self.experiment_config.hparams[agents_constants.CROSS_ENTROPY.POLICY_TYPE].value \
+                == PolicyType.MULTI_THRESHOLD.value:
             policy = MultiThresholdStoppingPolicy(
                 theta=theta, simulation_name=self.simulation_env_config.name,
                 states=self.simulation_env_config.state_space_config.states,
