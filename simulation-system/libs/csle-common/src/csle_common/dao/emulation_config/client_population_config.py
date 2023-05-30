@@ -1,6 +1,12 @@
 from typing import List, Dict, Any
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
+from csle_collector.client_manager.dao.eptmp_arrival_config import EPTMPArrivalConfig
+from csle_collector.client_manager.dao.spiking_arrival_config import SpikingArrivalConfig
+from csle_collector.client_manager.dao.sine_arrival_config import SineArrivalConfig
+from csle_collector.client_manager.dao.piece_wise_constant_arrival_config import PieceWiseConstantArrivalConfig
+from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
+from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.util.general_util import GeneralUtil
 
@@ -49,6 +55,18 @@ class ClientPopulationConfig:
         :param d: the dict to convert
         :return: the created instance
         """
+        if d["arrival_config"]["client_arrival_type"] == ClientArrivalType.CONSTANT.value:
+            arrival_config = ConstantArrivalConfig.from_dict(d["arrival_config"])
+        elif d["arrival_config"]["client_arrival_type"] == ClientArrivalType.EPTMP.value:
+            arrival_config = EPTMPArrivalConfig.from_dict(d["arrival_config"])
+        elif d["arrival_config"]["client_arrival_type"] == ClientArrivalType.SPIKING.value:
+            arrival_config = SpikingArrivalConfig.from_dict(d["arrival_config"])
+        elif d["arrival_config"]["client_arrival_type"] == ClientArrivalType.SINE_MODULATED.value:
+            arrival_config = SineArrivalConfig.from_dict(d["arrival_config"])
+        elif d["arrival_config"]["client_arrival_type"] == ClientArrivalType.PIECE_WISE_CONSTANT.value:
+            arrival_config = PieceWiseConstantArrivalConfig.from_dict(d["arrival_config"])
+        else:
+            raise ValueError("Arrival config not recognized")
         obj = ClientPopulationConfig(
             ip=d["ip"],
             networks=list(map(lambda x: ContainerNetwork.from_dict(x), d["networks"])),
@@ -57,7 +75,7 @@ class ClientPopulationConfig:
             client_manager_log_dir=d["client_manager_log_dir"], client_manager_log_file=d["client_manager_log_file"],
             client_manager_max_workers=d["client_manager_max_workers"],
             docker_gw_bridge_ip=d["docker_gw_bridge_ip"], physical_host_ip=d["physical_host_ip"],
-            arrival_config=ArrivalConfig.from_dict(d["arrival_config"]))
+            arrival_config=arrival_config)
         return obj
 
     def no_clients(self) -> "ClientPopulationConfig":

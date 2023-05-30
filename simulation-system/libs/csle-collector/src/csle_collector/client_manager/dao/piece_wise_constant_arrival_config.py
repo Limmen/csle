@@ -9,13 +9,15 @@ class PieceWiseConstantArrivalConfig(ArrivalConfig):
     poisson arrival process with exponential service times
     """
 
-    def __init__(self, breakvalues: List[float], breakpoints: List[int]):
+    def __init__(self, breakvalues: List[float], breakpoints: List[int], mu: float):
         """
         Initializes the object
 
+        :param mu: expected service time
         :param breakvalues: the constant rates at the different breakpoints
         :param breakpoints: the time steps where the rate changes
         """
+        self.mu = mu
         self.breakvalues = breakvalues
         self.breakpoints = breakpoints
         super(PieceWiseConstantArrivalConfig, self).__init__(client_arrival_type=ClientArrivalType.PIECE_WISE_CONSTANT)
@@ -24,15 +26,18 @@ class PieceWiseConstantArrivalConfig(ArrivalConfig):
         """
         :return: a string representation of the object
         """
-        return f"breakvalues: {self.breakvalues}, breakpoints: {self.breakpoints}"
+        return f"breakvalues: {self.breakvalues}, breakpoints: {self.breakpoints}, " \
+               f"client_arrival_type: {self.client_arrival_type}, mu: {self.mu}"
 
     def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
         """
         d = {}
+        d["mu"] = self.mu
         d["breakvalues"] = self.breakvalues
         d["breakpoints"] = self.breakpoints
+        d["client_arrival_type"] = self.client_arrival_type
         return d
 
     @staticmethod
@@ -43,5 +48,5 @@ class PieceWiseConstantArrivalConfig(ArrivalConfig):
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = PieceWiseConstantArrivalConfig(breakvalues=d["breakvalues"], breakpoints=d["breakpoints"])
+        obj = PieceWiseConstantArrivalConfig(breakvalues=d["breakvalues"], breakpoints=d["breakpoints"], mu = d["mu"])
         return obj

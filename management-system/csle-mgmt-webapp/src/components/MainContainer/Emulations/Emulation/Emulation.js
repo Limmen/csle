@@ -81,10 +81,19 @@ const Emulation = (props) => {
 
     const getArrivalProcessStr = (process) => {
         if (process === 0) {
-            return "Poisson"
+            return "Constant"
         }
         if (process === 1) {
-            return "Sinus modulated Poisson"
+            return "Sine modulated"
+        }
+        if (process === 2) {
+            return "Spiking"
+        }
+        if (process === 3) {
+            return "Piece-wise constant"
+        }
+        if (process === 4) {
+            return "EPTMP"
         }
         return "unknown"
     }
@@ -287,6 +296,163 @@ const Emulation = (props) => {
                         <i className="fa fa-trash startStopIcon" aria-hidden="true"/>
                     </Button>
                 </OverlayTrigger>
+            )
+        }
+    };
+
+    const ClientPopulationConfigTable = (props) => {
+        if(props.client_population_config.arrival_config.client_arrival_type === 0) {
+            return (
+                <Table striped bordered hover>
+                    <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>External IP</th>
+                        <th>Physical server</th>
+                        <th>Arrival process</th>
+                        <th>λ</th>
+                        <th>μ</th>
+                        <th>t</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr key={props.client_population_config.ip}>
+                        <td>{props.client_population_config.ip}</td>
+                        <td>{props.client_population_config.docker_gw_bridge_ip}</td>
+                        <td>{props.client_population_config.physical_host_ip}</td>
+                        <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
+                        <td>{props.client_population_config.arrival_config.lamb}</td>
+                        <td>{props.client_population_config.arrival_config.mu}</td>
+                        <td>{props.client_population_config.client_time_step_len_seconds}s</td>
+                    </tr>
+                    </tbody>
+                </Table>
+            )
+        }
+        if(props.client_population_config.arrival_config.client_arrival_type === 1) {
+            return (
+                <Table striped bordered hover>
+                    <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>External IP</th>
+                        <th>Physical server</th>
+                        <th>Arrival process</th>
+                        <th>λ</th>
+                        <th>μ</th>
+                        <th>time-scaling factor</th>
+                        <th>period-scaling factor</th>
+                        <th>t</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr key={props.client_population_config.ip}>
+                        <td>{props.client_population_config.ip}</td>
+                        <td>{props.client_population_config.docker_gw_bridge_ip}</td>
+                        <td>{props.client_population_config.physical_host_ip}</td>
+                        <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
+                        <td>{props.client_population_config.arrival_config.lamb}</td>
+                        <td>{props.client_population_config.arrival_config.mu}</td>
+                        <td>{props.client_population_config.arrival_config.time_scaling_factor}</td>
+                        <td>{props.client_population_config.arrival_config.period_scaling_factor}</td>
+                        <td>{props.client_population_config.client_time_step_len_seconds}s</td>
+                    </tr>
+                    </tbody>
+                </Table>
+            )
+        }
+        if(props.client_population_config.arrival_config.client_arrival_type === 2) {
+            return (
+                <Table striped bordered hover>
+                    <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>External IP</th>
+                        <th>Physical server</th>
+                        <th>Arrival process</th>
+                        <th>exponents</th>
+                        <th>factors</th>
+                        <th>μ</th>
+                        <th>t</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr key={props.client_population_config.ip}>
+                        <td>{props.client_population_config.ip}</td>
+                        <td>{props.client_population_config.docker_gw_bridge_ip}</td>
+                        <td>{props.client_population_config.physical_host_ip}</td>
+                        <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
+                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.exponents)}</td>
+                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.factors)}</td>
+                        <td>{props.client_population_config.arrival_config.mu}</td>
+                        <td>{props.client_population_config.client_time_step_len_seconds}s</td>
+                    </tr>
+                    </tbody>
+                </Table>
+            )
+        }
+        if(props.client_population_config.arrival_config.client_arrival_type === 3) {
+            return (
+                <Table striped bordered hover>
+                    <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>External IP</th>
+                        <th>Physical server</th>
+                        <th>Arrival process</th>
+                        <th>breakvalues</th>
+                        <th>breakpoints</th>
+                        <th>μ</th>
+                        <th>t</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr key={props.client_population_config.ip}>
+                        <td>{props.client_population_config.ip}</td>
+                        <td>{props.client_population_config.docker_gw_bridge_ip}</td>
+                        <td>{props.client_population_config.physical_host_ip}</td>
+                        <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
+                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.breakvalues)}</td>
+                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.breakpoints)}</td>
+                        <td>{props.client_population_config.arrival_config.mu}</td>
+                        <td>{props.client_population_config.client_time_step_len_seconds}s</td>
+                    </tr>
+                    </tbody>
+                </Table>
+            )
+        }
+        if(props.client_population_config.arrival_config.client_arrival_type === 4) {
+            return (
+                <Table striped bordered hover>
+                    <thead>
+                    <tr>
+                        <th>IP</th>
+                        <th>External IP</th>
+                        <th>Physical server</th>
+                        <th>Arrival process</th>
+                        <th>thetas</th>
+                        <th>omegas</th>
+                        <th>phis</th>
+                        <th>gammas</th>
+                        <th>μ</th>
+                        <th>t</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr key={props.client_population_config.ip}>
+                        <td>{props.client_population_config.ip}</td>
+                        <td>{props.client_population_config.docker_gw_bridge_ip}</td>
+                        <td>{props.client_population_config.physical_host_ip}</td>
+                        <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
+                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.thetas)}</td>
+                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.omegas)}</td>
+                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.phis)}</td>
+                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.gammas)}</td>
+                        <td>{props.client_population_config.arrival_config.mu}</td>
+                        <td>{props.client_population_config.client_time_step_len_seconds}s</td>
+                    </tr>
+                    </tbody>
+                </Table>
             )
         }
     };
@@ -808,34 +974,8 @@ const Emulation = (props) => {
                         <Collapse in={clientPopulationOpen}>
                             <div id="clientPopulationBody" className="cardBodyHidden">
                                 <div className="table-responsive">
-                                    <Table striped bordered hover>
-                                        <thead>
-                                        <tr>
-                                            <th>IP</th>
-                                            <th>External IP</th>
-                                            <th>Physical server</th>
-                                            <th>Arrival process</th>
-                                            <th>λ</th>
-                                            <th>μ</th>
-                                            <th>time-scaling</th>
-                                            <th>period-scaling</th>
-                                            <th>t</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr key={emulation.traffic_config.client_population_config.ip}>
-                                            <td>{emulation.traffic_config.client_population_config.ip}</td>
-                                            <td>{emulation.traffic_config.client_population_config.docker_gw_bridge_ip}</td>
-                                            <td>{emulation.traffic_config.client_population_config.physical_host_ip}</td>
-                                            <td>{getArrivalProcessStr(emulation.traffic_config.client_population_config.client_process_type)}</td>
-                                            <td>{emulation.traffic_config.client_population_config.lamb}</td>
-                                            <td>{emulation.traffic_config.client_population_config.mu}</td>
-                                            <td>{emulation.traffic_config.client_population_config.time_scaling_factor}</td>
-                                            <td>{emulation.traffic_config.client_population_config.period_scaling_factor}</td>
-                                            <td>{emulation.traffic_config.client_population_config.client_time_step_len_seconds}s</td>
-                                        </tr>
-                                        </tbody>
-                                    </Table>
+                                    <ClientPopulationConfigTable
+                                        client_population_config={emulation.traffic_config.client_population_config}/>
                                 </div>
                             </div>
                         </Collapse>

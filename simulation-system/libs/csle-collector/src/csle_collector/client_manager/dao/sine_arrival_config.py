@@ -28,7 +28,7 @@ class SineArrivalConfig(ArrivalConfig):
         :return: a string representation of the object
         """
         return f"lamb: {self.lamb}, mu: {self.mu}, time_scaling_factor: {self.time_scaling_factor}, " \
-               f"period_scaling_factor: {self.period_scaling_factor}"
+               f"period_scaling_factor: {self.period_scaling_factor}, client_arrival_type: {self.client_arrival_type}"
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -39,6 +39,7 @@ class SineArrivalConfig(ArrivalConfig):
         d["mu"] = self.mu
         d["time_scaling_factor"] = self.time_scaling_factor
         d["period_scaling_factor"] = self.period_scaling_factor
+        d["client_arrival_type"] = self.client_arrival_type
         return d
 
     @staticmethod
