@@ -6,9 +6,9 @@ from concurrent import futures
 from csle_collector.client_manager.dao.client_type import ClientType
 from csle_collector.client_manager.threads.arrival_thread import ArrivalThread
 from csle_collector.client_manager.threads.producer_thread import ProducerThread
-from csle_collector.client_manager.workflows.workflow_distribution import WorkflowDistribution
-from csle_collector.client_manager.workflows.workflow import Workflow
-from csle_collector.client_manager.services.service import Service
+from csle_collector.client_manager.dao.workflow_distribution import WorkflowDistribution
+from csle_collector.client_manager.dao.workflow import Workflow
+from csle_collector.client_manager.dao.service import Service
 from csle_collector.client_manager.threads.arrival_thread_new import ArrivalThreadNew
 from csle_collector.client_manager.dao.eptmp_rate_function import EPTMPRateFunction
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
@@ -145,7 +145,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         """
         logging.info(f"Starting clients, time_step_len_seconds: {request.time_step_len_seconds}, "
              f"client_types: {request.client_types},"
-             f"services: {request.services}")
+             f"services: {request.workflow_services}")
         
         producer_time_step_len_seconds = 0
 
@@ -175,7 +175,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         ]
 
         services = [
-            Service(service.commands) for service in request.services
+            Service(service.commands) for service in request.workflow_services
         ]
         
         arrival_thread = ArrivalThreadNew(time_step_len_seconds=request.time_step_len_seconds,

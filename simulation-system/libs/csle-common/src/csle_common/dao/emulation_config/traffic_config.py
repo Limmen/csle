@@ -1,4 +1,5 @@
 from typing import List, Dict, Any, Union
+from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
 from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
 from csle_common.dao.emulation_config.client_population_config import ClientPopulationConfig
 
@@ -8,15 +9,17 @@ class TrafficConfig:
     A DTO object representing the traffic configuration of an emulation environment
     """
     def __init__(self, node_traffic_configs: List[NodeTrafficConfig],
-                 client_population_config: ClientPopulationConfig):
+                 client_population_config: ClientPopulationConfig, workflows_config: WorkflowsConfig):
         """
         Initializes the DTO
 
         :param node_traffic_configs: the list of node traffic configurations
         :param client_population_config: the configuration of the client population
+        :param workflows_config: the workflows configurations
         """
         self.node_traffic_configs = node_traffic_configs
         self.client_population_config = client_population_config
+        self.workflows_config = workflows_config
 
     def get_node_traffic_config_by_ip(self, ip: str) -> Union[NodeTrafficConfig, None]:
         """
@@ -40,7 +43,8 @@ class TrafficConfig:
         """
         obj = TrafficConfig(
             node_traffic_configs=list(map(lambda x: NodeTrafficConfig.from_dict(x), d["node_traffic_configs"])),
-            client_population_config=ClientPopulationConfig.from_dict(d["client_population_config"])
+            client_population_config=ClientPopulationConfig.from_dict(d["client_population_config"]),
+            workflows_config=WorkflowsConfig.from_dict(d["workflows_config"])
         )
         return obj
 
@@ -51,6 +55,7 @@ class TrafficConfig:
         d = {}
         d["node_traffic_configs"] = list(map(lambda x: x.to_dict(), self.node_traffic_configs))
         d["client_population_config"] = self.client_population_config.to_dict()
+        d["workflows_config"] = self.workflows_config.to_dict()
         return d
 
     def __str__(self) -> str:
@@ -58,7 +63,8 @@ class TrafficConfig:
         :return: a string representation of the object
         """
         return f"node_traffic_configs:{','.join(list(map(lambda x: str(x), self.node_traffic_configs)))}, " \
-               f"client_population_config: {self.client_population_config}"
+               f"client_population_config: {self.client_population_config}, " \
+               f"workflows_config: {self.workflows_config}"
 
     def to_json_str(self) -> str:
         """

@@ -1,11 +1,14 @@
 from typing import Dict, List, Union
 import argparse
 import os
+from functools import reduce
 import multiprocessing
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
 from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
-from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
+from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
+from csle_collector.client_manager.dao.workflow_service import WorkflowService
+from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMarkovChain
 from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
 from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
@@ -4028,8 +4031,25 @@ def default_traffic_config(network_id: int, time_step_len_seconds: int) -> Traff
         client_manager_log_file=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE,
         client_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS,
         arrival_config=ConstantArrivalConfig(lamb=20, mu=4))
+    command_lists = list(map(lambda x: x.commands, traffic_generators))
+    all_commands = reduce(lambda acc, cmds: acc + cmds, command_lists)
+    workflows_config = WorkflowsConfig(
+        workflow_services=[
+            WorkflowService(id=0, commands=all_commands)
+        ],
+        workflow_markov_chains=[
+            WorkflowMarkovChain(
+                transition_matrix=[
+                    [1]
+                ],
+                initial_state=0,
+                id=0
+            )
+        ]
+    )
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
-                                 client_population_config=client_population_config)
+                                 client_population_config=client_population_config,
+                                 workflows_config=workflows_config)
     return traffic_conf
 
 

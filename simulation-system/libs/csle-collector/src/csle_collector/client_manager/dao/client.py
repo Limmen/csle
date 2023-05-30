@@ -1,14 +1,13 @@
 from typing import List
 from csle_collector.client_manager.dao.eptmp_rate_function import EPTMPRateFunction
-from csle_collector.client_manager.services.service import Service
-from csle_collector.client_manager.workflows.workflow_distribution import WorkflowDistribution
+from csle_collector.client_manager.dao.service import Service
 
 
-class ClientType:
+class Client:
     """
     A client type with an arrival process and a workflow distribution.
     """
-    def __init__(self, arrival_process: EPTMPRateFunction, workflow_distribution: WorkflowDistribution) -> None:
+    def __init__(self, arrival_process: EPTMPRateFunction, workflow_distribution: List[float]) -> None:
         """
         Initializes the object
 
@@ -16,6 +15,7 @@ class ClientType:
         :param workflow_distribution: the workflow distribution of the client
         """
         self.arrival_process = arrival_process
+        assert sum(workflow_distribution) == 1
         self.workflow_distribution = workflow_distribution
     
     def generate_commands(self, services: List[Service]) -> List[str]:
