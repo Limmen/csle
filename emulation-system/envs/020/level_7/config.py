@@ -25,7 +25,7 @@ from csle_common.dao.emulation_config.vulnerabilities_config import Vulnerabilit
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.controllers.emulation_env_controller import EmulationEnvController
 from csle_common.dao.emulation_config.client_population_config import ClientPopulationConfig
-from csle_collector.client_manager.client_arrival_type import ClientArrivalType
+from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
 from csle_common.util.experiment_util import ExperimentUtil

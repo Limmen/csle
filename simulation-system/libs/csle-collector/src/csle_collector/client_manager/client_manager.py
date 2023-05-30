@@ -3,15 +3,15 @@ import time
 import logging
 import grpc
 from concurrent import futures
-from csle_collector.client_manager.client_type import ClientType
+from csle_collector.client_manager.dao.client_type import ClientType
 from csle_collector.client_manager.threads.arrival_thread import ArrivalThread
 from csle_collector.client_manager.threads.producer_thread import ProducerThread
 from csle_collector.client_manager.workflows.workflow_distribution import WorkflowDistribution
 from csle_collector.client_manager.workflows.workflow import Workflow
 from csle_collector.client_manager.services.service import Service
 from csle_collector.client_manager.threads.arrival_thread_new import ArrivalThreadNew
-from csle_collector.client_manager.eptmp_rate_function import EPTMPRateFunction
-from csle_collector.client_manager.client_arrival_type import ClientArrivalType
+from csle_collector.client_manager.dao.eptmp_rate_function import EPTMPRateFunction
+from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 import csle_collector.client_manager.client_manager_pb2_grpc
 import csle_collector.client_manager.client_manager_pb2
 import csle_collector.constants.constants as constants

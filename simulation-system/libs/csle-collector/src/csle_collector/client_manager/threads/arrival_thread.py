@@ -7,7 +7,7 @@ import random
 from scipy.stats import poisson
 from scipy.stats import expon
 from csle_collector.client_manager.threads.client_thread import ClientThread
-from csle_collector.client_manager.client_arrival_type import ClientArrivalType
+from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 
 
 class ArrivalThread(threading.Thread):

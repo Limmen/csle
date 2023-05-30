@@ -17,7 +17,7 @@ from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConf
 from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.util.emulation_util import EmulationUtil
-from csle_collector.client_manager.client_arrival_type import ClientArrivalType
+from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 
 
 class TrafficController:

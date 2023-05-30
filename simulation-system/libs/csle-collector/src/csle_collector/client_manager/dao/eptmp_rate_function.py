@@ -4,10 +4,12 @@ from math import pow
 from math import sin
 
 
-class EPTMPRateFunction():
+class EPTMPRateFunction:
     """
     EPTMP or Exponential-Polynomial-Trigonometric rate function having Multiple Periodicities.
-    This class is used for creating a rate function that can exhibit both global trends as well as periodic components with individual frequencies and amplitudes.
+    This class is used for creating a rate function that can exhibit both global trends as well as
+    periodic components with individual frequencies and amplitudes.
+    (Kuhl and Wilson, 1995)
     """
 
     def __init__(self, thetas: List[float], gammas: List[float], phis: List[float], omegas: List[float]):

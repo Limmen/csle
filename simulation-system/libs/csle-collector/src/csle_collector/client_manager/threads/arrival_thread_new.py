@@ -4,7 +4,7 @@ import time
 from typing import List
 from scipy.stats import poisson
 from csle_collector.client_manager.threads.client_thread import ClientThread
-from csle_collector.client_manager.client_type import ClientType
+from csle_collector.client_manager.dao.client_type import ClientType
 from csle_collector.client_manager.services.service import Service
 
 

@@ -1,5 +1,5 @@
 from typing import List, Dict, Any
-from csle_collector.client_manager.client_arrival_type import ClientArrivalType
+from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.util.general_util import GeneralUtil
 
