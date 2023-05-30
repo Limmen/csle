@@ -4,7 +4,7 @@ import os
 import multiprocessing
 import csle_common.constants.constants as constants
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
-from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
+from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
 import csle_collector.constants.constants as collector_constants
 from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
@@ -1222,14 +1222,12 @@ def default_traffic_config(network_id: int, time_step_len_seconds: int) -> Traff
             bitmask=constants.CSLE.CSLE_EDGE_BITMASK
         )],
         ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
-        client_process_type=ClientArrivalType.CONSTANT,
-        lamb=0.025, mu=1, client_manager_port=collector_constants.MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT,
+        client_manager_port=collector_constants.MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT,
         num_commands=2, client_time_step_len_seconds=time_step_len_seconds,
-        time_scaling_factor=0.01, period_scaling_factor=20,
         client_manager_log_dir=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR,
         client_manager_log_file=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE,
         client_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS,
-        exponents=None, factors=None, breakpoints=None, breakvalues=None
+        arrival_config=ConstantArrivalConfig(lamb=20, mu=4)
     )
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
                                  client_population_config=client_population_config)
