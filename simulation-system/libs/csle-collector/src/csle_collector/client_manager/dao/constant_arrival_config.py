@@ -1,5 +1,6 @@
 from typing import Dict, Any
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
+from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 
 
 class ConstantArrivalConfig(ArrivalConfig):
@@ -16,7 +17,7 @@ class ConstantArrivalConfig(ArrivalConfig):
         """
         self.lamb = lamb
         self.mu = mu
-        super(ConstantArrivalConfig, self).__init__()
+        super(ConstantArrivalConfig, self).__init__(client_arrival_type=ClientArrivalType.CONSTANT)
 
     def __str__(self) -> str:
         """

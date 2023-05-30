@@ -349,7 +349,7 @@ class TrafficController:
             # Start the client population
             sine_modulated = False
             if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
-                    ClientArrivalType.SINE_MODULATED_POISSON):
+                    ClientArrivalType.SINE_MODULATED):
                 sine_modulated = True
             spiking = False
             if (emulation_env_config.traffic_config.client_population_config.client_process_type ==

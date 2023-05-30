@@ -3,6 +3,8 @@ import argparse
 import os
 import multiprocessing
 import csle_common.constants.constants as constants
+from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
+from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 import csle_collector.constants.constants as collector_constants
 from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
@@ -25,7 +27,6 @@ from csle_common.dao.emulation_config.vulnerabilities_config import Vulnerabilit
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.controllers.emulation_env_controller import EmulationEnvController
 from csle_common.dao.emulation_config.client_population_config import ClientPopulationConfig
-from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 from csle_common.dao.emulation_config.kafka_config import KafkaConfig
 from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
 from csle_common.util.experiment_util import ExperimentUtil
@@ -1221,7 +1222,7 @@ def default_traffic_config(network_id: int, time_step_len_seconds: int) -> Traff
             bitmask=constants.CSLE.CSLE_EDGE_BITMASK
         )],
         ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
-        client_process_type=ClientArrivalType.POISSON,
+        client_process_type=ClientArrivalType.CONSTANT,
         lamb=0.025, mu=1, client_manager_port=collector_constants.MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT,
         num_commands=2, client_time_step_len_seconds=time_step_len_seconds,
         time_scaling_factor=0.01, period_scaling_factor=20,

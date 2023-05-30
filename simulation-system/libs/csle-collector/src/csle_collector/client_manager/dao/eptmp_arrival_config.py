@@ -1,5 +1,6 @@
 from typing import Dict, Any, List
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
+from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 
 
 class EPTMPArrivalConfig(ArrivalConfig):
@@ -21,7 +22,7 @@ class EPTMPArrivalConfig(ArrivalConfig):
         self.gammas = gammas
         self.phis = phis
         self.omegas = omegas
-        super(EPTMPArrivalConfig, self).__init__()
+        super(EPTMPArrivalConfig, self).__init__(client_arrival_type=ClientArrivalType.EPTMP)
 
     def __str__(self) -> str:
         """

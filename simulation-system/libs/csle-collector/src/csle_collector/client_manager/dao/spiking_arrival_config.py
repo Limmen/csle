@@ -1,5 +1,6 @@
 from typing import Dict, Any, List
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
+from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 
 
 class SpikingArrivalConfig(ArrivalConfig):
@@ -16,6 +17,7 @@ class SpikingArrivalConfig(ArrivalConfig):
         """
         self.exponents = exponents
         self.factors = factors
+        super(SpikingArrivalConfig, self).__init__(client_arrival_type=ClientArrivalType.SPIKING)
 
     def __str__(self) -> str:
         """

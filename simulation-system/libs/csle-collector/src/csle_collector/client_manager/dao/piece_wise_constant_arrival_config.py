@@ -1,5 +1,6 @@
 from typing import Dict, Any, List
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
+from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 
 
 class PieceWiseConstantArrivalConfig(ArrivalConfig):
@@ -17,7 +18,7 @@ class PieceWiseConstantArrivalConfig(ArrivalConfig):
         """
         self.breakvalues = breakvalues
         self.breakpoints = breakpoints
-        super(PieceWiseConstantArrivalConfig, self).__init__()
+        super(PieceWiseConstantArrivalConfig, self).__init__(client_arrival_type=ClientArrivalType.PIECE_WISE_CONSTANT)
 
     def __str__(self) -> str:
         """

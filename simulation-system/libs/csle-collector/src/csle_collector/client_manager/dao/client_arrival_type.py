@@ -9,8 +9,8 @@ class ClientArrivalType(IntEnum):
     """
     Enum representing the different process types for generating client process in an emulation
     """
-    POISSON = 0
-    SINE_MODULATED_POISSON = 1
+    CONSTANT = 0
+    SINE_MODULATED = 1
     SPIKING = 2
     PIECE_WISE_CONSTANT = 3
     EPTMP = 4

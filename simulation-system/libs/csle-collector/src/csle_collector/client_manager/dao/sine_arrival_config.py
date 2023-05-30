@@ -1,5 +1,6 @@
 from typing import Dict, Any
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
+from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 
 
 class SineArrivalConfig(ArrivalConfig):
@@ -20,7 +21,7 @@ class SineArrivalConfig(ArrivalConfig):
         self.mu = mu
         self.time_scaling_factor = time_scaling_factor
         self.period_scaling_factor = period_scaling_factor
-        super(SineArrivalConfig, self).__init__()
+        super(SineArrivalConfig, self).__init__(client_arrival_type=ClientArrivalType.SINE_MODULATED)
 
     def __str__(self) -> str:
         """

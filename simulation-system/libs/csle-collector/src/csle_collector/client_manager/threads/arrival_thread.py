@@ -16,7 +16,7 @@ class ArrivalThread(threading.Thread):
     """
 
     def __init__(self, commands: List[str], time_step_len_seconds: float = 1, lamb: float = 10, mu: float = 0.1,
-                 num_commands: int = 2, client_arrival_type: ClientArrivalType = ClientArrivalType.POISSON,
+                 num_commands: int = 2, client_arrival_type: ClientArrivalType = ClientArrivalType.CONSTANT,
                  time_scaling_factor: float = 0.01, period_scaling_factor: float = 20,
                  exponents: List[float] = None, factors: List[float] = None,
                  breakpoints: List[float] = None, breakvalues: List[float] = None):
@@ -107,10 +107,10 @@ class ArrivalThread(threading.Thread):
             self.client_threads = new_client_threads
             self.t += 1
             num_new_clients = 0
-            if self.client_arrival_type == ClientArrivalType.SINE_MODULATED_POISSON.value:
+            if self.client_arrival_type == ClientArrivalType.SINE_MODULATED.value:
                 self.rate = self.sine_modulated_poisson_rate(t=self.t)
                 num_new_clients = poisson.rvs(self.rate, size=1)[0]
-            elif self.client_arrival_type == ClientArrivalType.POISSON.value:
+            elif self.client_arrival_type == ClientArrivalType.CONSTANT.value:
                 num_new_clients = poisson.rvs(self.lamb, size=1)[0]
             elif self.client_arrival_type == ClientArrivalType.PIECE_WISE_CONSTANT.value:
                 self.rate = self.piece_wise_constant_rate(t=self.t)
