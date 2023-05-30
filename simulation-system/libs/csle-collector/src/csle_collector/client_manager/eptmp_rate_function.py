@@ -3,6 +3,7 @@ from math import exp
 from math import pow
 from math import sin
 
+
 class EPTMPRateFunction():
     """
     EPTMP or Exponential-Polynomial-Trigonometric rate function having Multiple Periodicities.

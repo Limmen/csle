@@ -1,9 +1,9 @@
 from typing import List
 from csle_collector.client_manager.eptmp_rate_function import EPTMPRateFunction
-from csle_collector.client_manager.service import Service
+from csle_collector.client_manager.services.service import Service
 import logging
 
-from csle_collector.client_manager.workflow_distribution import WorkflowDistribution
+from csle_collector.client_manager.workflows.workflow_distribution import WorkflowDistribution
 
 
 class ClientType:
@@ -19,8 +19,9 @@ class ClientType:
         Generates a sequence of commands for a client of this type.
         The sequence of commands is generated according to the workflow distribution of this client type.
 
-        :param services: A list of services that the client can use. This is the state space of the workflows in the workflow distribution.
-                         It is assumed that the number of services is the same as the dimension of the workflows in the workflow distribution.
+        :param services: A list of services that the client can use. This is the state space of the workflows in the
+                         workflow distribution. It is assumed that the number of services is the same as the dimension
+                         of the workflows in the workflow distribution.
                          The last service in the list is the exit service.
         """
         workflow = self.workflow_distribution.sample()

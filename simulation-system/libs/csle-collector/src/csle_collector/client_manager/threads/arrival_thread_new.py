@@ -3,15 +3,16 @@ import threading
 import time
 from typing import List
 from scipy.stats import poisson
-from csle_collector.client_manager.client_thread_new import ClientThreadNew
+from csle_collector.client_manager.threads.client_thread import ClientThread
 from csle_collector.client_manager.client_type import ClientType
-from csle_collector.client_manager.service import Service
+from csle_collector.client_manager.services.service import Service
 
 
 class ArrivalThreadNew(threading.Thread):
     """
     Thread that generates client threads according to time-varying Poisson processes with custom arrival rate functions.
     """
+
     def __init__(self, time_step_len_seconds: float, client_types: List[ClientType], services: List[Service]) -> None:
         """
         Initializes a new arrival thread.
@@ -60,9 +61,8 @@ class ArrivalThreadNew(threading.Thread):
                 if arrival_rate > 0:
                     num_new_clients = poisson.rvs(arrival_rate, size=1)[0]
                     for _ in range(num_new_clients):
-                        new_client_thread = ClientThreadNew(
-                            client_type.generate_commands(self.services), self.time_step_len_seconds)
+                        new_client_thread = ClientThread(
+                            client_type.generate_commands(self.services), self.time_step_len_seconds, service_time=-1)
                         new_client_thread.start()
                         self.client_threads.append(new_client_thread)
             time.sleep(self.time_step_len_seconds)
-

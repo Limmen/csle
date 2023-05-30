@@ -1,7 +1,7 @@
 from random import choices
 from typing import List, Tuple
 
-from csle_collector.client_manager.workflow import Workflow
+from csle_collector.client_manager.workflows.workflow import Workflow
 
 
 class WorkflowDistribution:
