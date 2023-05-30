@@ -5,6 +5,7 @@ service ClientManager {
   rpc getClients(GetClientsMsg) returns (ClientsDTO) {}
   rpc stopClients(StopClientsMsg) returns (ClientsDTO) {}
   rpc startClients(StartClientsMsg) returns (ClientsDTO) {}
+  rpc startClientsNew(StartClientsNewMsg) returns (ClientsDTO) {}
   rpc startProducer(StartProducerMsg) returns (ClientsDTO) {}
   rpc stopProducer(StopProducerMsg) returns (ClientsDTO) {}
 }
@@ -28,6 +29,54 @@ message StartClientsMsg {
   repeated int32 breakpoints = 12;
   repeated float breakvalues = 13;
   bool piece_wise_constant = 14;
+}
+
+// Message to start clients with the new generator
+message StartClientsNewMsg {
+  int32 time_step_len_seconds = 1;
+  repeated ClientTypeMsg client_types = 2;
+  repeated ServiceMsg services = 3;
+}
+
+// Service message
+message ServiceMsg {
+  repeated string commands = 1;
+}
+
+// Client type message
+message ClientTypeMsg {
+  EPTMPRateFunctionMsg eptmp_rate_function = 1;
+  WorkflowDistributionMsg workflow_distribution = 2;
+}
+
+// EPTMP Rate Function message
+message EPTMPRateFunctionMsg {
+  repeated float thetas = 1;
+  repeated float gammas = 2;
+  repeated float phis = 3;
+  repeated float omegas = 4;
+}
+
+// Workflow distribution Message
+message WorkflowDistributionMsg {
+  repeated WorkflowTupleMsg outcomes = 1;
+}
+
+// Workflow tuple message
+message WorkflowTupleMsg {
+  float probability = 1;
+  WorkflowMsg workflow = 2;
+}
+
+// Workflow message
+message WorkflowMsg {
+  int32 initial_state = 1;
+  repeated MarkovRowMsg rows = 2;
+}
+
+// Markov chain row message
+message MarkovRowMsg {
+  repeated float probabilities = 1;
 }
 
 // Message that the client sends to extract the ClientsDTO

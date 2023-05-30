@@ -10,6 +10,13 @@ from scipy.stats import expon
 from concurrent import futures
 import socket
 import netifaces
+from csle_collector.client_manager.client_type import ClientType
+from csle_collector.client_manager.workflow_distribution import WorkflowDistribution
+from csle_collector.client_manager.workflow import Workflow
+from csle_collector.client_manager.service import Service
+from csle_collector.client_manager.arrival_thread_new import ArrivalThreadNew
+from csle_collector.client_manager.client_thread_new import ClientThreadNew
+from csle_collector.client_manager.eptmp_rate_function import EPTMPRateFunction
 from confluent_kafka import Producer
 import grpc
 import csle_collector.client_manager.client_manager_pb2_grpc
@@ -345,6 +352,65 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
             producer_active=producer_active, clients_time_step_len_seconds=clients_time_step_len_seconds,
             producer_time_step_len_seconds=producer_time_step_len_seconds)
         return clients_dto
+    
+    def startClientsNew(self, request: csle_collector.client_manager.client_manager_pb2.StartClientsMsg,
+                     context: grpc.ServicerContext) -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
+        """
+        Starts/Restarts the Poisson process that generates clients using the new generator
+
+        :param request: the gRPC request
+        :param context: the gRPC context
+        :return: a clients DTO with the state of the clients
+        """
+        logging.info(f"Starting clients, time_step_len_seconds: {request.time_step_len_seconds}, "
+             f"client_types: {request.client_types},"
+             f"services: {request.services}")
+        
+        producer_time_step_len_seconds = 0
+
+        if self.arrival_thread is not None:
+            self.arrival_thread.stopped = True
+            time.sleep(1)
+        self.arrival_thread = None
+
+        if request.time_step_len_seconds <= 0:
+            request.time_step_len_seconds = 1
+        
+        # Unpack messages from gRPC request into the correct objects
+        client_types = [
+            ClientType(
+                EPTMPRateFunction(client_type.eptmp_rate_function.thetas, client_type.eptmp_rate_function.gammas, client_type.eptmp_rate_function.phis, client_type.eptmp_rate_function.omegas),
+                WorkflowDistribution([
+                    (workflowTuple.probability, Workflow(
+                        [row.probabilities for row in workflowTuple.workflow.rows],
+                        workflowTuple.workflow.initial_state))
+                    for workflowTuple in client_type.workflow_distribution.outcomes
+                ])
+            ) 
+            for client_type in request.client_types
+        ]
+
+        services = [
+            Service(service.commands) for service in request.services
+        ]
+        
+        arrival_thread = ArrivalThreadNew(time_step_len_seconds=request.time_step_len_seconds, client_types=client_types, services=services)
+        arrival_thread.start()
+        self.arrival_thread = arrival_thread
+        clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
+
+        producer_active = False
+        if self.producer_thread is not None:
+            producer_active = True
+            producer_time_step_len_seconds = self.producer_thread.time_step_len_seconds
+
+        clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
+            num_clients=len(self.arrival_thread.client_threads), client_process_active=True,
+            producer_active=producer_active, clients_time_step_len_seconds=clients_time_step_len_seconds,
+            producer_time_step_len_seconds=producer_time_step_len_seconds)
+        return clients_dto
+        
+
 
     def startProducer(self, request: csle_collector.client_manager.client_manager_pb2.StartProducerMsg,
                       context: grpc.ServicerContext) -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
@@ -355,7 +421,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :param context: the gRPC context
         :return: a clients DTO with the state of the clients
         """
-        logging.info(f"Starting producer, time-step:{request.time_step_len_seconds}")
+        logging.info(f"Starting producer, time-step:{request.time_step_len_seconds}, arrival_thread: {self.arrival_thread}")
 
         clients_time_step_len_seconds = 0
         time.sleep(5)

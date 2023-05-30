@@ -30,6 +30,11 @@ class ClientManagerStub(object):
                 request_serializer=client__manager__pb2.StartClientsMsg.SerializeToString,
                 response_deserializer=client__manager__pb2.ClientsDTO.FromString,
                 )
+        self.startClientsNew = channel.unary_unary(
+                '/ClientManager/startClientsNew',
+                request_serializer=client__manager__pb2.StartClientsNewMsg.SerializeToString,
+                response_deserializer=client__manager__pb2.ClientsDTO.FromString,
+                )
         self.startProducer = channel.unary_unary(
                 '/ClientManager/startProducer',
                 request_serializer=client__manager__pb2.StartProducerMsg.SerializeToString,
@@ -64,6 +69,12 @@ class ClientManagerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def startClientsNew(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def startProducer(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -92,6 +103,11 @@ def add_ClientManagerServicer_to_server(servicer, server):
             'startClients': grpc.unary_unary_rpc_method_handler(
                     servicer.startClients,
                     request_deserializer=client__manager__pb2.StartClientsMsg.FromString,
+                    response_serializer=client__manager__pb2.ClientsDTO.SerializeToString,
+            ),
+            'startClientsNew': grpc.unary_unary_rpc_method_handler(
+                    servicer.startClientsNew,
+                    request_deserializer=client__manager__pb2.StartClientsNewMsg.FromString,
                     response_serializer=client__manager__pb2.ClientsDTO.SerializeToString,
             ),
             'startProducer': grpc.unary_unary_rpc_method_handler(
@@ -162,6 +178,23 @@ class ClientManager(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ClientManager/startClients',
             client__manager__pb2.StartClientsMsg.SerializeToString,
+            client__manager__pb2.ClientsDTO.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def startClientsNew(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/ClientManager/startClientsNew',
+            client__manager__pb2.StartClientsNewMsg.SerializeToString,
             client__manager__pb2.ClientsDTO.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
