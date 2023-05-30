@@ -132,8 +132,8 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
         :return: a TrafficDTO with the state of the traffic generator
         """
         logging.info(f"Starting the traffic generator, \n sleep_time: {request.sleepTime}, "
-                     f"commands:{request.commands}")
-        commands = request.commands
+                     f"commands:{request.ips_and_commands}")
+        commands = request.ips_and_commands
         sleep_time = request.sleepTime
         self._create_traffic_script(commands=commands, sleep_time=sleep_time)
         cmd = constants.TRAFFIC_GENERATOR.START_TRAFFIC_GENERATOR_CMD

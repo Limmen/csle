@@ -1043,15 +1043,19 @@ const Emulation = (props) => {
                                         <thead>
                                         <tr>
                                             <th>Service ID</th>
+                                            <th>IP</th>
                                             <th>Commands</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         {emulation.traffic_config.workflows_config.workflow_services.map((workflow_service, index) =>
-                                            <tr key={workflow_service.id + "-" + index}>
-                                                <td>{workflow_service.id}</td>
-                                                <td>{workflow_service.commands}</td>
-                                            </tr>)}
+                                            workflow_service.ips_and_commands.map((ip_cmd, index2) =>
+                                                <tr key={ip_cmd[0] + "-" + ip_cmd[1] + "-" + index + "-" + index2}>
+                                                    <td>{workflow_service.id}</td>
+                                                    <td>{ip_cmd[0]}</td>
+                                                    <td>{convertListToCommaSeparatedString(ip_cmd[1])}</td>
+                                                </tr>
+                                            ))}
                                         </tbody>
                                     </Table>
                                 </div>

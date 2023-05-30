@@ -1,7 +1,6 @@
 from typing import Dict, List, Union
 import argparse
 import os
-from functools import reduce
 import multiprocessing
 import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
@@ -4030,16 +4029,17 @@ def default_traffic_config(network_id: int, time_step_len_seconds: int) -> Traff
         client_manager_log_file=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE,
         client_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS,
         arrival_config=ConstantArrivalConfig(lamb=20, mu=4))
-    command_lists = list(map(lambda x: x.commands, traffic_generators))
-    all_commands = reduce(lambda acc, cmds: acc + cmds, command_lists)
+    all_ips_and_commands = []
+    for i in range(len(traffic_generators)):
+        all_ips_and_commands.append((traffic_generators[i].ip, traffic_generators[i].commands))
     workflows_config = WorkflowsConfig(
         workflow_services=[
-            WorkflowService(id=0, commands=all_commands)
+            WorkflowService(id=0, ips_and_commands=all_ips_and_commands)
         ],
         workflow_markov_chains=[
             WorkflowMarkovChain(
                 transition_matrix=[
-                    [1]
+                    [0.8, 0.2]
                 ],
                 initial_state=0,
                 id=0

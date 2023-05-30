@@ -1,6 +1,5 @@
 from typing import List, Dict, Any
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
-from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
 from csle_collector.client_manager.dao.eptmp_arrival_config import EPTMPArrivalConfig
 from csle_collector.client_manager.dao.spiking_arrival_config import SpikingArrivalConfig
 from csle_collector.client_manager.dao.sine_arrival_config import SineArrivalConfig

@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 
 
 class WorkflowService:
@@ -7,14 +7,14 @@ class WorkflowService:
     The service might be distributed across several network nodes.
     The service is defined by the series of commands that a client executes to make use of the service.
     """
-    def __init__(self, commands: List[str], id: int) -> None:
+    def __init__(self, ips_and_commands: List[Tuple[str,str]], id: int) -> None:
         """
         Initializes the object
 
         :param id: the id of the service
-        :param commands: the list of commands
+        :param ips_and_commands: the list of commands
         """
-        self.commands = commands
+        self.ips_and_commands = ips_and_commands
         self.id = id
 
     @staticmethod
@@ -25,7 +25,7 @@ class WorkflowService:
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = WorkflowService(commands = d["commands"], id = d["id"])
+        obj = WorkflowService(ips_and_commands= d["ips_and_commands"], id = d["id"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -33,7 +33,7 @@ class WorkflowService:
         :return: a dict representation of the object
         """
         d = {}
-        d["commands"] = self.commands
+        d["ips_and_commands"] = self.ips_and_commands
         d["id"] = self.id
         return d
 
@@ -78,3 +78,28 @@ class WorkflowService:
         :return: a copy of the DTO
         """
         return WorkflowService.from_dict(self.to_dict())
+
+    @staticmethod
+    def replace_first_octet_of_ip(ip: str, ip_first_octet: int) -> str:
+        """
+        Utility function for changing the first octet in an IP address
+
+        :param ip: the IP to modify
+        :param ip_first_octet: the first octet to insert
+        :return: the new IP
+        """
+        index_of_first_octet_end = ip.find(".")
+        return str(ip_first_octet) + ip[index_of_first_octet_end:]
+
+    def create_execution_config(self, ip_first_octet: int) -> "WorkflowService":
+        """
+        Creates a new config for an execution
+
+        :param ip_first_octet: the first octet of the IP of the new execution
+        :return: the new config
+        """
+        config = self.copy()
+        for i in range(len(self.ips_and_commands)):
+            self.ips_and_commands[i][0] = WorkflowService.replace_first_octet_of_ip(ip=self.ips_and_commands[i][0],
+                                                                                    ip_first_octet=ip_first_octet)
+        return config

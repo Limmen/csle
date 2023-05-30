@@ -82,3 +82,15 @@ class WorkflowsConfig:
         :return: a copy of the DTO
         """
         return WorkflowsConfig.from_dict(self.to_dict())
+
+    def create_execution_config(self, ip_first_octet: int) -> "WorkflowsConfig":
+        """
+        Creates a new config for an execution
+
+        :param ip_first_octet: the first octet of the IP of the new execution
+        :return: the new config
+        """
+        config = self.copy()
+        config.workflow_services = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
+                                   config.workflow_services))
+        return config

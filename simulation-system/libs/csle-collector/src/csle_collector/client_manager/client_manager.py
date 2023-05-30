@@ -100,7 +100,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :param context: the gRPC context
         :return: a clients DTO with the state of the clients
         """
-        logging.info(f"Starting clients, commands:{request.commands}, lamb: {request.lamb}, mu: {request.mu}, "
+        logging.info(f"Starting clients, commands:{request.ips_and_commands}, lamb: {request.lamb}, mu: {request.mu}, "
                      f"client_arrival_type: {request.client_arrival_type}, "
                      f"time_scaling_factor: {request.time_scaling_factor}, "
                      f"period_scaling_factor: {request.period_scaling_factor},"
@@ -114,7 +114,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         if request.time_step_len_seconds <= 0:
             request.time_step_len_seconds = 1
         client_arrival_type = ClientArrivalType(request.client_arrival_type)
-        arrival_thread = ArrivalThread(commands=request.commands, time_step_len_seconds=request.time_step_len_seconds,
+        arrival_thread = ArrivalThread(commands=request.ips_and_commands, time_step_len_seconds=request.time_step_len_seconds,
                                        lamb=request.lamb, mu=request.mu, sine_modulated=request.sine_modulated,
                                        time_scaling_factor=request.time_scaling_factor,
                                        period_scaling_factor=request.period_scaling_factor,
@@ -175,7 +175,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         ]
 
         services = [
-            Service(service.commands) for service in request.workflow_services
+            Service(service.ips_and_commands) for service in request.workflow_services
         ]
         
         arrival_thread = ArrivalThreadNew(time_step_len_seconds=request.time_step_len_seconds,

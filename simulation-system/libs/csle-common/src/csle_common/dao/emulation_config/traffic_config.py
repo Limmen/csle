@@ -120,4 +120,5 @@ class TrafficConfig:
             ip_first_octet=ip_first_octet)
         config.node_traffic_configs = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
                                                config.node_traffic_configs))
+        config.workflows_config = config.workflows_config.create_execution_config(ip_first_octet=ip_first_octet)
         return config
