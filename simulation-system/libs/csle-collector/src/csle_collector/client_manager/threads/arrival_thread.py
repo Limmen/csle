@@ -7,6 +7,7 @@ import random
 from scipy.stats import poisson
 from scipy.stats import expon
 from csle_collector.client_manager.threads.client_thread import ClientThread
+from csle_collector.client_manager.client_arrival_type import ClientArrivalType
 
 
 class ArrivalThread(threading.Thread):
@@ -15,10 +16,10 @@ class ArrivalThread(threading.Thread):
     """
 
     def __init__(self, commands: List[str], time_step_len_seconds: float = 1, lamb: float = 10, mu: float = 0.1,
-                 num_commands: int = 2, sine_modulated: bool = False,
+                 num_commands: int = 2, client_arrival_type: ClientArrivalType = ClientArrivalType.POISSON,
                  time_scaling_factor: float = 0.01, period_scaling_factor: float = 20,
-                 exponents: List[float] = None, factors: List[float] = None, spiking: bool = False,
-                 piece_wise_constant: bool = False, breakpoints: List[float] = None, breakvalues: List[float] = None):
+                 exponents: List[float] = None, factors: List[float] = None,
+                 breakpoints: List[float] = None, breakvalues: List[float] = None):
         """
         Initializes the arrival thread
 
@@ -27,13 +28,11 @@ class ArrivalThread(threading.Thread):
         :param lamb: the lambda parameter of the Poisson process for arrivals
         :param mu: the mu parameter of the service times of the clients
         :param num_commands: the number of commands per client
-        :param sine_modulated: boolean flag whether the rate of the arrival process is sine-modulated or not
         :param time_scaling_factor: parameter for sine-modulated rate
         :param period_scaling_factor: parameter for sine-modulated rate
         :param exponents: parameters for spiking rate
         :param factors: parameters for spiking rate
-        :param spiking: boolean flag indicating whether spiking rate should be used
-        :param piece_wise_constant: boolean flag indicating whether spiking piece-wise constant rate should be used.
+        :param client_arrival_type: the type of arrival process
         """
         threading.Thread.__init__(self)
         self.time_step_len_seconds = time_step_len_seconds
@@ -44,21 +43,19 @@ class ArrivalThread(threading.Thread):
         self.stopped = False
         self.commands = commands
         self.num_commands = num_commands
-        self.sine_modulated = sine_modulated
+        self.client_arrival_type = client_arrival_type
         self.rate = self.lamb
         self.time_scaling_factor = time_scaling_factor
         self.period_scaling_factor = period_scaling_factor
         self.exponents = exponents
         self.factors = factors
-        self.spiking = spiking
-        self.piece_wise_constant = piece_wise_constant
         self.breakpoints = breakpoints
         self.breakvalues = breakvalues
         logging.info(f"Starting arrival thread, lambda:{lamb}, mu:{mu}, num_commands:{num_commands}, "
-                     f"commands:{commands}, sine_modulated: {sine_modulated}, "
+                     f"commands:{commands}, client_arrival_type: {client_arrival_type}, "
                      f"time_scaling_factor: {time_scaling_factor}, period_scaling_factor: {period_scaling_factor},"
-                     f"spiking: {spiking}, exponents: {exponents}, factors: {factors}, breakpoints: {breakpoints}, "
-                     f"breakvalues: {breakvalues}, piece_wise_constant: {piece_wise_constant}")
+                     f"exponents: {exponents}, factors: {factors}, breakpoints: {breakpoints}, "
+                     f"breakvalues: {breakvalues}")
 
     def piece_wise_constant_rate(self, t) -> float:
         """
@@ -109,13 +106,20 @@ class ArrivalThread(threading.Thread):
                     new_client_threads.append(ct)
             self.client_threads = new_client_threads
             self.t += 1
-            if self.sine_modulated:
-                rate = self.sine_modulated_poisson_rate(self.t)
-                self.rate = rate
-                new_clients = poisson.rvs(rate, size=1)[0]
+            num_new_clients = 0
+            if self.client_arrival_type == ClientArrivalType.SINE_MODULATED_POISSON.value:
+                self.rate = self.sine_modulated_poisson_rate(t=self.t)
+                num_new_clients = poisson.rvs(self.rate, size=1)[0]
+            elif self.client_arrival_type == ClientArrivalType.POISSON.value:
+                num_new_clients = poisson.rvs(self.lamb, size=1)[0]
+            elif self.client_arrival_type == ClientArrivalType.PIECE_WISE_CONSTANT.value:
+                self.rate = self.piece_wise_constant_rate(t=self.t)
+                num_new_clients = poisson.rvs(self.rate, size=1)[0]
+            elif self.client_arrival_type == ClientArrivalType.EPTMP.value:
+                pass
             else:
-                new_clients = poisson.rvs(self.lamb, size=1)[0]
-            for nc in range(new_clients):
+                raise ValueError(f"Client arrival type: {self.client_arrival_type} not recognized")
+            for nc in range(num_new_clients):
                 commands = random.sample(self.commands, self.num_commands)
                 service_time = expon.rvs(scale=(self.mu * self.time_step_len_seconds), loc=0, size=1)[0]
                 thread = ClientThread(service_time=service_time, commands=commands,

@@ -1,5 +1,5 @@
 from typing import List, Dict, Any
-from csle_common.dao.emulation_config.client_population_process_type import ClientPopulationProcessType
+from csle_collector.client_manager.client_arrival_type import ClientArrivalType
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.util.general_util import GeneralUtil
 
@@ -9,7 +9,7 @@ class ClientPopulationConfig:
     A DTO object representing the configuration of the client population of an emulation
     """
 
-    def __init__(self, ip: str, networks: List[ContainerNetwork], client_process_type: ClientPopulationProcessType,
+    def __init__(self, ip: str, networks: List[ContainerNetwork], client_process_type: ClientArrivalType,
                  lamb: float, mu: float, client_manager_port: int, client_manager_log_file: str,
                  client_manager_log_dir: str, client_manager_max_workers: int,
                  num_commands: int = 5,

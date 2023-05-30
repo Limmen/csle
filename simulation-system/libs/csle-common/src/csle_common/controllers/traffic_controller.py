@@ -17,7 +17,7 @@ from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConf
 from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.util.emulation_util import EmulationUtil
-from csle_common.dao.emulation_config.client_population_process_type import ClientPopulationProcessType
+from csle_collector.client_manager.client_arrival_type import ClientArrivalType
 
 
 class TrafficController:
@@ -349,15 +349,15 @@ class TrafficController:
             # Start the client population
             sine_modulated = False
             if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
-                    ClientPopulationProcessType.SINE_MODULATED_POISSON):
+                    ClientArrivalType.SINE_MODULATED_POISSON):
                 sine_modulated = True
             spiking = False
             if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
-                    ClientPopulationProcessType.SPIKING):
+                    ClientArrivalType.SPIKING):
                 spiking = True
             piece_wise_constant = False
             if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
-                    ClientPopulationProcessType.PIECE_WISE_CONSTANT):
+                    ClientArrivalType.PIECE_WISE_CONSTANT):
                 piece_wise_constant = True
             time_step_len = emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds
             logger.info(

@@ -11,6 +11,7 @@ from csle_collector.client_manager.workflows.workflow import Workflow
 from csle_collector.client_manager.services.service import Service
 from csle_collector.client_manager.threads.arrival_thread_new import ArrivalThreadNew
 from csle_collector.client_manager.eptmp_rate_function import EPTMPRateFunction
+from csle_collector.client_manager.client_arrival_type import ClientArrivalType
 import csle_collector.client_manager.client_manager_pb2_grpc
 import csle_collector.client_manager.client_manager_pb2
 import csle_collector.constants.constants as constants
@@ -100,22 +101,19 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :return: a clients DTO with the state of the clients
         """
         logging.info(f"Starting clients, commands:{request.commands}, lamb: {request.lamb}, mu: {request.mu}, "
-                     f"sine_modulated: {request.sine_modulated}, "
+                     f"client_arrival_type: {request.client_arrival_type}, "
                      f"time_scaling_factor: {request.time_scaling_factor}, "
-                     f"period_scaling_factor: {request.period_scaling_factor}, spiking: {request.spiking}, "
-                     f"piece_wise_constant: {request.piece_wise_constant}, exponents: {request.exponents}, "
+                     f"period_scaling_factor: {request.period_scaling_factor},"
+                     f"exponents: {request.exponents}, "
                      f"factors: {request.factors}, breakvalues: {request.breakvalues}, "
                      f"breakpoints: {request.breakpoints}")
-
         producer_time_step_len_seconds = 0
-
         if self.arrival_thread is not None:
             self.arrival_thread.stopped = True
             time.sleep(1)
-
         if request.time_step_len_seconds <= 0:
             request.time_step_len_seconds = 1
-
+        client_arrival_type = ClientArrivalType(request.client_arrival_type)
         arrival_thread = ArrivalThread(commands=request.commands, time_step_len_seconds=request.time_step_len_seconds,
                                        lamb=request.lamb, mu=request.mu, sine_modulated=request.sine_modulated,
                                        time_scaling_factor=request.time_scaling_factor,
@@ -126,12 +124,10 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         arrival_thread.start()
         self.arrival_thread = arrival_thread
         clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
-
         producer_active = False
         if self.producer_thread is not None:
             producer_active = True
             producer_time_step_len_seconds = self.producer_thread.time_step_len_seconds
-
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients=len(self.arrival_thread.client_threads), client_process_active=True,
             producer_active=producer_active, clients_time_step_len_seconds=clients_time_step_len_seconds,
