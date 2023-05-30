@@ -36,6 +36,8 @@ const Emulation = (props) => {
     const [networkInterfacesOpen, setNetworkInterfacesOpen] = useState(false);
     const [clientPopulationOpen, setClientPopulationOpen] = useState(false);
     const [trafficOpen, setTrafficOpen] = useState(false);
+    const [workflowServicesOpen, setWorkflowServicesOpen] = useState(false);
+    const [workflowMarkovChainsOpen, setWorkflowMarkovChainsOpen] = useState(false);
     const [kafkaOpen, setKafkaOpen] = useState(false);
     const [elkOpen, setElkOpen] = useState(false);
     const [hostManagerConfigOpen, setHostManagerConfigOpen] = useState(false);
@@ -1013,6 +1015,82 @@ const Emulation = (props) => {
                                                     <td>{cmd}</td>
                                                 </tr>
                                             ))}
+                                        </tbody>
+                                    </Table>
+                                </div>
+                            </div>
+                        </Collapse>
+                    </Card>
+
+                    <Card className="subCard">
+                        <Card.Header>
+                            <Button
+                                onClick={() => setWorkflowServicesOpen(!workflowServicesOpen)}
+                                aria-controls="workflowServicesBody"
+                                aria-expanded={workflowServicesOpen}
+                                variant="link"
+                            >
+                                <h5 className="semiTitle">
+                                    Workflow services
+                                    <i className="fa fa-chrome headerIcon" aria-hidden="true"></i>
+                                </h5>
+                            </Button>
+                        </Card.Header>
+                        <Collapse in={workflowServicesOpen}>
+                            <div id="workflowServicesBody" className="cardBodyHidden">
+                                <div className="table-responsive">
+                                    <Table striped bordered hover>
+                                        <thead>
+                                        <tr>
+                                            <th>Service ID</th>
+                                            <th>Commands</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {emulation.traffic_config.workflows_config.workflow_services.map((workflow_service, index) =>
+                                            <tr key={workflow_service.id + "-" + index}>
+                                                <td>{workflow_service.id}</td>
+                                                <td>{workflow_service.commands}</td>
+                                            </tr>)}
+                                        </tbody>
+                                    </Table>
+                                </div>
+                            </div>
+                        </Collapse>
+                    </Card>
+
+                    <Card className="subCard">
+                        <Card.Header>
+                            <Button
+                                onClick={() => setWorkflowMarkovChainsOpen(!workflowMarkovChainsOpen)}
+                                aria-controls="workflowMarkovChainsBody"
+                                aria-expanded={workflowMarkovChainsOpen}
+                                variant="link"
+                            >
+                                <h5 className="semiTitle">
+                                    Workflow Markov Chains
+                                    <i className="fa fa-chrome headerIcon" aria-hidden="true"></i>
+                                </h5>
+                            </Button>
+                        </Card.Header>
+                        <Collapse in={workflowMarkovChainsOpen}>
+                            <div id="workflowMarkovChainsBody" className="cardBodyHidden">
+                                <div className="table-responsive">
+                                    <Table striped bordered hover>
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Initial state</th>
+                                            <th>Transition matrix</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {emulation.traffic_config.workflows_config.workflow_markov_chains.map((workflow_mc, index) =>
+                                            <tr key={workflow_mc.id + "-" + index}>
+                                                <td>{workflow_mc.id}</td>
+                                                <td>{workflow_mc.initial_state}</td>
+                                                <td>{JSON.stringify(workflow_mc.transition_matrix)}</td>
+                                            </tr>)}
                                         </tbody>
                                     </Table>
                                 </div>
