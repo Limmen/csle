@@ -379,7 +379,10 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         # Unpack messages from gRPC request into the correct objects
         client_types = [
             ClientType(
-                EPTMPRateFunction(client_type.eptmp_rate_function.thetas, client_type.eptmp_rate_function.gammas, client_type.eptmp_rate_function.phis, client_type.eptmp_rate_function.omegas),
+                EPTMPRateFunction(client_type.eptmp_rate_function.thetas,
+                                  client_type.eptmp_rate_function.gammas,
+                                  client_type.eptmp_rate_function.phis,
+                                  client_type.eptmp_rate_function.omegas),
                 WorkflowDistribution([
                     (workflowTuple.probability, Workflow(
                         [row.probabilities for row in workflowTuple.workflow.rows],
@@ -394,7 +397,8 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
             Service(service.commands) for service in request.services
         ]
         
-        arrival_thread = ArrivalThreadNew(time_step_len_seconds=request.time_step_len_seconds, client_types=client_types, services=services)
+        arrival_thread = ArrivalThreadNew(time_step_len_seconds=request.time_step_len_seconds,
+                                          client_types=client_types, services=services)
         arrival_thread.start()
         self.arrival_thread = arrival_thread
         clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
@@ -421,15 +425,13 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :param context: the gRPC context
         :return: a clients DTO with the state of the clients
         """
-        logging.info(f"Starting producer, time-step:{request.time_step_len_seconds}, arrival_thread: {self.arrival_thread}")
-
+        logging.info(f"Starting producer, time-step:{request.time_step_len_seconds}, "
+                     f"arrival_thread: {self.arrival_thread}")
         clients_time_step_len_seconds = 0
         time.sleep(5)
-
         if self.producer_thread is not None:
             self.producer_thread.stopped = True
             time.sleep(1)
-
         if request.time_step_len_seconds <= 0:
             request.time_step_len_seconds = 1
         producer_thread = ProducerThread(arrival_thread=self.arrival_thread,
@@ -437,14 +439,12 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
                                          ip=request.ip, port=request.port)
         producer_thread.start()
         self.producer_thread = producer_thread
-
         client_process_active = False
         num_clients = 0
         if self.arrival_thread is not None:
             num_clients = len(self.arrival_thread.client_threads)
             client_process_active = True
             clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
-
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients=num_clients, client_process_active=client_process_active, producer_active=True,
             clients_time_step_len_seconds=clients_time_step_len_seconds,
@@ -461,21 +461,17 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :return: a clients DTO with the state of the clients
         """
         logging.info("Stopping producer")
-
         clients_time_step_len_seconds = 0
-
         if self.producer_thread is not None:
             self.producer_thread.stopped = True
             time.sleep(1)
         self.producer_thread = None
-
         client_process_active = False
         num_clients = 0
         if self.arrival_thread is not None:
             num_clients = len(self.arrival_thread.client_threads)
             client_process_active = True
             clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
-
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients=num_clients, client_process_active=client_process_active, producer_active=False,
             clients_time_step_len_seconds=clients_time_step_len_seconds, producer_time_step_len_seconds=0)
