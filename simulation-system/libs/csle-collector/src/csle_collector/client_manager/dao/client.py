@@ -1,4 +1,7 @@
+import random
 from typing import List, Dict, Any
+import numpy as np
+from scipy.stats import expon
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 from csle_collector.client_manager.dao.eptmp_arrival_config import EPTMPArrivalConfig
 from csle_collector.client_manager.dao.spiking_arrival_config import SpikingArrivalConfig
@@ -6,6 +9,7 @@ from csle_collector.client_manager.dao.sine_arrival_config import SineArrivalCon
 from csle_collector.client_manager.dao.piece_wise_constant_arrival_config import PieceWiseConstantArrivalConfig
 from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
+from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
 import csle_collector.client_manager.client_manager_pb2
 
 
@@ -138,16 +142,13 @@ class Client:
             eptmp_arrival_config=eptmp_arrival_config)
 
     @staticmethod
-    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.WorkflowsConfigDTO) \
-            -> "Client":
+    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.ClientDTO) -> "Client":
         """
         Instantiates the object from a GRPC DTO
 
         :param obj: the object to instantiate from
         :return: the instantiated object
         """
-        mcs = list(map(lambda x: x.from_grpc_object(), obj.workflow_markov_chains))
-        services = list(map(lambda x: x.from_grpc_object(), obj.workflow_services))
         arrival_config = None
         try:
             arrival_config = ConstantArrivalConfig.from_grpc_object(obj.constant_arrival_config)
@@ -175,6 +176,35 @@ class Client:
                 pass
         return Client(id=obj.id, workflow_distribution=obj.workflow_distribution, mu=obj.mu,
                       exponential_service_time=obj.exponential_service_time, arrival_config=arrival_config)
+
+    def generate_commands(self, workflows_config: WorkflowsConfig) -> List[str]:
+        """
+        Generate the commands for the client
+
+        :param workflows_config: the workflows configuration
+        :return: sampled list of commands for the client
+        """
+        commands = []
+        w = np.random.choice(np.arange(0, len(workflows_config.workflow_services)), p=self.workflow_distribution)
+        mc = workflows_config.get_workflow_mc(id=w)
+        if mc is None:
+            raise ValueError(f"Workflow not recognized: {w}")
+        s = mc.initial_state
+        service_time = 0
+        if self.exponential_service_time:
+            service_time = expon.rvs(scale=(self.mu), loc=0, size=1)[0]
+        done = False
+        while not done:
+            service = workflows_config.get_workflow_service(id=s)
+            service_cmds = service.get_commands()
+            commands.append(random.choice(service_cmds))
+            s = mc.step_forward()
+            if not self.exponential_service_time:
+                done = s != len(workflows_config.workflow_services)-1
+            else:
+                done = len(commands) > service_time
+        mc.reset()
+        return commands
         
         
     

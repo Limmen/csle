@@ -3,11 +3,16 @@ import threading
 import time
 import logging
 import math
-import random
 from scipy.stats import poisson
-from scipy.stats import expon
 from csle_collector.client_manager.threads.client_thread import ClientThread
+from csle_collector.client_manager.dao.client import Client
+from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
+from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
+from csle_collector.client_manager.dao.sine_arrival_config import SineArrivalConfig
+from csle_collector.client_manager.dao.piece_wise_constant_arrival_config import PieceWiseConstantArrivalConfig
+from csle_collector.client_manager.dao.spiking_arrival_config import SpikingArrivalConfig
+from csle_collector.client_manager.dao.eptmp_arrival_config import EPTMPArrivalConfig
 
 
 class ArrivalThread(threading.Thread):
@@ -15,83 +20,99 @@ class ArrivalThread(threading.Thread):
     Thread that generates client arrivals (starts client threads according to a Poisson process)
     """
 
-    def __init__(self, commands: List[str], time_step_len_seconds: float = 1, lamb: float = 10, mu: float = 0.1,
-                 num_commands: int = 2, client_arrival_type: ClientArrivalType = ClientArrivalType.CONSTANT,
-                 time_scaling_factor: float = 0.01, period_scaling_factor: float = 20,
-                 exponents: List[float] = None, factors: List[float] = None,
-                 breakpoints: List[float] = None, breakvalues: List[float] = None):
+    def __init__(self, time_step_len_seconds: float, clients: List[Client], workflows_config: WorkflowsConfig):
         """
         Initializes the arrival thread
 
-        :param commands: the list of commands that clients can use
         :param time_step_len_seconds: the number of seconds that one time-unit of the Poisson process corresponds to
-        :param lamb: the lambda parameter of the Poisson process for arrivals
-        :param mu: the mu parameter of the service times of the clients
-        :param num_commands: the number of commands per client
-        :param time_scaling_factor: parameter for sine-modulated rate
-        :param period_scaling_factor: parameter for sine-modulated rate
-        :param exponents: parameters for spiking rate
-        :param factors: parameters for spiking rate
-        :param client_arrival_type: the type of arrival process
+        :param clients: the list of client profiles
+        :param workflows_config: the workflow configurations
         """
         threading.Thread.__init__(self)
         self.time_step_len_seconds = time_step_len_seconds
         self.client_threads = []
         self.t = 0
-        self.lamb = lamb
-        self.mu = mu
+        self.clients = clients
+        self.workflows_config = workflows_config
         self.stopped = False
-        self.commands = commands
-        self.num_commands = num_commands
-        self.client_arrival_type = client_arrival_type
-        self.rate = self.lamb
-        self.time_scaling_factor = time_scaling_factor
-        self.period_scaling_factor = period_scaling_factor
-        self.exponents = exponents
-        self.factors = factors
-        self.breakpoints = breakpoints
-        self.breakvalues = breakvalues
-        logging.info(f"Starting arrival thread, lambda:{lamb}, mu:{mu}, num_commands:{num_commands}, "
-                     f"commands:{commands}, client_arrival_type: {client_arrival_type}, "
-                     f"time_scaling_factor: {time_scaling_factor}, period_scaling_factor: {period_scaling_factor},"
-                     f"exponents: {exponents}, factors: {factors}, breakpoints: {breakpoints}, "
-                     f"breakvalues: {breakvalues}")
+        self.rate = 0
+        logging.info(f"Starting arrival thread, num client types:{len(self.clients)}, "
+                     f"num workflows: {len(self.workflows_config.workflow_markov_chains)}")
 
-    def piece_wise_constant_rate(self, t) -> float:
+    @staticmethod
+    def piece_wise_constant_rate(t, arrival_config: PieceWiseConstantArrivalConfig) -> float:
         """
         Function that returns the rate of a piece-wise constant Poisson process
 
         :param t: the time-step
+        :param arrival_config: the arrival process configuration
         :return: the rate
         """
         rate = 0
-        assert len(self.breakvalues) == len(self.breakpoints)
-        for i in range(len(self.breakvalues)):
-            if t >= self.breakpoints[i]:
-                rate = self.breakvalues[i]
+        assert len(arrival_config.breakvalues) == len(arrival_config.breakpoints)
+        for i in range(len(arrival_config.breakvalues)):
+            if t >= arrival_config.breakpoints[i]:
+                rate = arrival_config.breakvalues[i]
         return rate
 
-    def spiking_poisson_arrival_rate(self, t) -> float:
+    @staticmethod
+    def spiking_poisson_arrival_rate(t, arrival_config: SpikingArrivalConfig) -> float:
         """
         Function that returns the rate of a spiking Poisson process
 
         :param t: the time-step
+        :param arrival_config: the arrival process configuration
         :return: the rate
         """
-        rate = self.lamb
-        assert len(self.exponents) == len(self.factors)
-        for i in range(len(self.exponents)):
-            rate = self.factors[i] * math.exp(math.pow(-(t - self.exponents[i]), 2))
+        assert len(arrival_config.exponents) == len(arrival_config.factors)
+        rate = 0
+        for i in range(len(arrival_config.exponents)):
+            rate = arrival_config.factors[i] * math.exp(math.pow(-(t - arrival_config.exponents[i]), 2))
         return rate
 
-    def sine_modulated_poisson_rate(self, t) -> float:
+    @staticmethod
+    def sine_modulated_poisson_rate(t, arrival_config: SineArrivalConfig) -> float:
         """
         Function that returns the rate of a sine-modulated Poisson process
 
         :param t: the time-step
+        :param arrival_config: the arrival process configuration
         :return: the rate
         """
-        return self.lamb + self.period_scaling_factor * math.sin(self.time_scaling_factor * math.pi * t)
+        return arrival_config.lamb + arrival_config.period_scaling_factor * math.sin(
+            arrival_config.time_scaling_factor * math.pi * t)
+
+    @staticmethod
+    def constant_poisson_rate(arrival_config: ConstantArrivalConfig) -> float:
+        """
+        Function that returns the rate of a stationary Poisson process
+
+        :param arrival_config: the arrival process configuration
+        :return: the rate
+        """
+        return arrival_config.lamb
+
+    @staticmethod
+    def eptmp_rate(t, arrival_config: EPTMPArrivalConfig) -> float:
+        """
+        Function that returns the rate of a EPTMP Poisson process.
+
+        EPTMP or Exponential-Polynomial-Trigonometric rate function having Multiple Periodicities.
+        This class is used for creating a rate function that can exhibit both global trends as well as
+        periodic components with individual frequencies and amplitudes.
+        (Kuhl and Wilson, 1995)
+
+        :param t: the time-step
+        :param arrival_config: the arrival process configuration
+        :return: the rate
+        """
+        theta_sum = 0
+        for i, theta in enumerate(arrival_config.thetas):
+            theta_sum += theta * pow(t, i)
+        second_sum = 0
+        for i, (gamma, phi, omega) in enumerate(zip(arrival_config.gammas, arrival_config.phis, arrival_config.omegas)):
+            second_sum += gamma * math.sin(omega * t + phi)
+        return math.exp(theta_sum + second_sum)
 
     def run(self) -> None:
         """
@@ -106,24 +127,24 @@ class ArrivalThread(threading.Thread):
                     new_client_threads.append(ct)
             self.client_threads = new_client_threads
             self.t += 1
-            num_new_clients = 0
-            if self.client_arrival_type == ClientArrivalType.SINE_MODULATED.value:
-                self.rate = self.sine_modulated_poisson_rate(t=self.t)
-                num_new_clients = poisson.rvs(self.rate, size=1)[0]
-            elif self.client_arrival_type == ClientArrivalType.CONSTANT.value:
-                num_new_clients = poisson.rvs(self.lamb, size=1)[0]
-            elif self.client_arrival_type == ClientArrivalType.PIECE_WISE_CONSTANT.value:
-                self.rate = self.piece_wise_constant_rate(t=self.t)
-                num_new_clients = poisson.rvs(self.rate, size=1)[0]
-            elif self.client_arrival_type == ClientArrivalType.EPTMP.value:
-                pass
-            else:
-                raise ValueError(f"Client arrival type: {self.client_arrival_type} not recognized")
-            for nc in range(num_new_clients):
-                commands = random.sample(self.commands, self.num_commands)
-                service_time = expon.rvs(scale=(self.mu * self.time_step_len_seconds), loc=0, size=1)[0]
-                thread = ClientThread(service_time=service_time, commands=commands,
-                                      time_step_len_seconds=self.time_step_len_seconds)
-                thread.start()
-                self.client_threads.append(thread)
+            for c in self.clients:
+                if c.arrival_config.client_arrival_type == ClientArrivalType.SINE_MODULATED.value:
+                    self.rate = self.sine_modulated_poisson_rate(t=self.t, arrival_config=c.arrival_config)
+                    num_new_clients = poisson.rvs(self.rate, size=1)[0]
+                elif c.arrival_config.client_arrival_type == ClientArrivalType.CONSTANT.value:
+                    self.rate = self.constant_poisson_rate(arrival_config=c.arrival_config)
+                    num_new_clients = poisson.rvs(self.rate, size=1)[0]
+                elif c.arrival_config.client_arrival_type == ClientArrivalType.PIECE_WISE_CONSTANT.value:
+                    self.rate = self.piece_wise_constant_rate(t=self.t, arrival_config=c.arrival_config)
+                    num_new_clients = poisson.rvs(self.rate, size=1)[0]
+                elif c.arrival_config.client_arrival_type == ClientArrivalType.EPTMP.value:
+                    self.rate = self.eptmp_rate(t=self.t, arrival_config=c.arrival_config)
+                    num_new_clients = poisson.rvs(self.rate, size=1)[0]
+                else:
+                    raise ValueError(f"Client arrival type: {self.client_arrival_type} not recognized")
+                for nc in range(num_new_clients):
+                    commands = c.generate_commands(workflows_config=self.workflows_config)
+                    thread = ClientThread(commands=commands, time_step_len_seconds=self.time_step_len_seconds)
+                    thread.start()
+                    self.client_threads.append(thread)
             time.sleep(self.time_step_len_seconds)

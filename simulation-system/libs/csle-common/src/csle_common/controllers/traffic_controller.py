@@ -301,32 +301,8 @@ class TrafficController:
         """
         if emulation_env_config.traffic_config.client_population_config.physical_host_ip != physical_server_ip:
             return
-        logger.info(
-            f"Starting client population on container: "
-            f"{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
-        commands = []
-        reachable_containers = []
-
-        # Collect commands and reachable containers
-        for container in emulation_env_config.containers_config.containers:
-            match = False
-            for ip, net in container.ips_and_networks:
-                for net2 in emulation_env_config.traffic_config.client_population_config.networks:
-                    if net.name == net2.name:
-                        match = True
-                        break
-            if match:
-                for ip2 in container.get_ips():
-                    reachable_containers.append(ip2)
-
-        for node_traffic_cfg in emulation_env_config.traffic_config.node_traffic_configs:
-            if node_traffic_cfg.ip in reachable_containers:
-                for cmd in node_traffic_cfg.commands:
-                    commands.append(cmd.format(node_traffic_cfg.ip))
-
-        for net in emulation_env_config.traffic_config.client_population_config.networks:
-            for cmd in constants.TRAFFIC_COMMANDS.DEFAULT_COMMANDS[constants.TRAFFIC_COMMANDS.CLIENT_1_SUBNET]:
-                commands.append(cmd.format(net.subnet_mask))
+        logger.info(f"Starting client population on container: "
+                    f"{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}")
 
         TrafficController.start_client_manager(emulation_env_config=emulation_env_config, logger=logger)
 
@@ -347,53 +323,20 @@ class TrafficController:
                 time.sleep(2)
 
             # Start the client population
-            sine_modulated = False
-            if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
-                    ClientArrivalType.SINE_MODULATED):
-                sine_modulated = True
-            spiking = False
-            if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
-                    ClientArrivalType.SPIKING):
-                spiking = True
-            piece_wise_constant = False
-            if (emulation_env_config.traffic_config.client_population_config.client_process_type ==
-                    ClientArrivalType.PIECE_WISE_CONSTANT):
-                piece_wise_constant = True
             time_step_len = emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds
+            num_workflows = len(
+                emulation_env_config.traffic_config.client_population_config.workflows_config.workflow_markov_chains)
+            num_services = len(
+                emulation_env_config.traffic_config.client_population_config.workflows_config.workflow_services)
             logger.info(
-                f"Starting the client population, "
-                f"mu: {emulation_env_config.traffic_config.client_population_config.mu},\n"
-                f"lamb: {emulation_env_config.traffic_config.client_population_config.lamb},\n"
+                f"Starting the client population, "                
                 f"time_step_len_seconds: {time_step_len},\n"
-                f"commands: {commands},\n"
-                f"num_commands: {emulation_env_config.traffic_config.client_population_config.num_commands},\n"
-                f"sine_modulated: {sine_modulated},\n"
-                f"time_scaling_factor:"
-                f"{emulation_env_config.traffic_config.client_population_config.time_scaling_factor},\n"
-                f"period_scaling_factor: "
-                f"{emulation_env_config.traffic_config.client_population_config.period_scaling_factor},\n"
-                f"spiking: {spiking},\n piece_wise_constant: {piece_wise_constant},\n "
-                f"exponents: {emulation_env_config.traffic_config.client_population_config.exponents},\n "
-                f"factors: {emulation_env_config.traffic_config.client_population_config.factors},\n "
-                f"breakvalues: {emulation_env_config.traffic_config.client_population_config.breakvalues}, \n"
-                f"breakpoints: {emulation_env_config.traffic_config.client_population_config.breakpoints}"
-            )
+                f"num client profiles: {len(emulation_env_config.traffic_config.client_population_config.clients)}, \n"
+                f"num workflows: {num_workflows}, num_services: {num_services}")
             csle_collector.client_manager.query_clients.start_clients(
-                stub=stub, mu=emulation_env_config.traffic_config.client_population_config.mu,
-                lamb=emulation_env_config.traffic_config.client_population_config.lamb,
-                time_step_len_seconds=time_step_len,
-                commands=commands,
-                num_commands=emulation_env_config.traffic_config.client_population_config.num_commands,
-                sine_modulated=sine_modulated,
-                time_scaling_factor=emulation_env_config.traffic_config.client_population_config.time_scaling_factor,
-                period_scaling_factor=(
-                    emulation_env_config.traffic_config.client_population_config.period_scaling_factor),
-                spiking=spiking, piece_wise_constant=piece_wise_constant,
-                exponents=emulation_env_config.traffic_config.client_population_config.exponents,
-                factors=emulation_env_config.traffic_config.client_population_config.factors,
-                breakvalues=emulation_env_config.traffic_config.client_population_config.breakvalues,
-                breakpoints=emulation_env_config.traffic_config.client_population_config.breakpoints
-            )
+                stub=stub, time_step_len_seconds=time_step_len,
+                workflows_config=emulation_env_config.traffic_config.client_population_config.workflows_config,
+                clients=emulation_env_config.traffic_config.client_population_config.clients)
 
     @staticmethod
     def get_num_active_clients(emulation_env_config: EmulationEnvConfig, logger: logging.Logger) \

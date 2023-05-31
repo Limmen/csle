@@ -5,6 +5,7 @@ import logging
 import time
 from confluent_kafka import Producer
 import csle_collector.constants.constants as constants
+from csle_collector.client_manager.threads.arrival_thread import ArrivalThread
 
 
 class ProducerThread(threading.Thread):
@@ -12,7 +13,7 @@ class ProducerThread(threading.Thread):
     Thread that pushes statistics to Kafka
     """
 
-    def __init__(self, arrival_thread, time_step_len_seconds: int, ip: str, port: int):
+    def __init__(self, arrival_thread: ArrivalThread, time_step_len_seconds: int, ip: str, port: int):
         """
         Initializes the thread
 
@@ -51,7 +52,7 @@ class ProducerThread(threading.Thread):
                 ts = time.time()
                 num_clients = len(self.arrival_thread.client_threads)
                 rate = self.arrival_thread.rate
-                mu = self.arrival_thread.mu
+                mu = 4
                 self.producer.produce(constants.KAFKA_CONFIG.CLIENT_POPULATION_TOPIC_NAME,
                                       f"{ts},{self.ip},{num_clients},{rate},{mu}")
                 self.producer.poll(0)

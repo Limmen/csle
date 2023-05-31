@@ -127,3 +127,13 @@ class WorkflowService:
         for i in range(obj.ips):
             ips_and_commands.append((obj.ips[i], obj.commands[i]))
         return WorkflowService(id=obj.id, ips_and_commands=ips_and_commands)
+
+    def get_commands(self) -> List[str]:
+        """
+        :return: the list of commands for the service
+        """
+        commands = []
+        for i in range(len(self.ips_and_commands)):
+            for j in range(len(self.ips_and_commands[i][1])):
+                commands.append(self.ips_and_commands[i][1][j].format(self.ips_and_commands[i][0]))
+        return commands

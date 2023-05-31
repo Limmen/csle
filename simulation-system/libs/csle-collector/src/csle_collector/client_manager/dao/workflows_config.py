@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union
 from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMarkovChain
 from csle_collector.client_manager.dao.workflow_service import WorkflowService
 import csle_collector.client_manager.client_manager_pb2
@@ -18,6 +18,30 @@ class WorkflowsConfig:
         """
         self.workflow_markov_chains = workflow_markov_chains
         self.workflow_services = workflow_services
+
+    def get_workflow_service(self, id: int) -> Union[WorkflowService, None]:
+        """
+        Gets the workflow service with a specific id
+
+        :param id: the id of the service
+        :return: the service or None
+        """
+        for service in self.workflow_services:
+            if service.id == id:
+                return service
+        return None
+
+    def get_workflow_mc(self, id: int) -> Union[WorkflowMarkovChain, None]:
+        """
+        Gets the workflow Markov chain with a specific id
+
+        :param id: the id of the MC
+        :return: the MC or None
+        """
+        for mc in self.workflow_markov_chains:
+            if mc.id == id:
+                return mc
+        return None
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "WorkflowsConfig":

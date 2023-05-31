@@ -15,9 +15,8 @@ message StopClientsMsg {}
 // Message that the client sends to start the clients processes
 message StartClientsMsg {
   int32 time_step_len_seconds = 1;
-  int32 client_arrival_type = 2;
-  WorkflowsConfigDTO workflows_config = 3;
-  repeated ClientDTO clients = 4;
+  WorkflowsConfigDTO workflows_config = 2;
+  repeated ClientDTO clients = 3;
 }
 
 // ClientDTO
