@@ -4029,7 +4029,7 @@ def default_traffic_config(network_id: int, time_step_len_seconds: int) -> Traff
         client_manager_log_dir=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR,
         client_manager_log_file=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE,
         client_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS,
-        arrival_config=ConstantArrivalConfig(lamb=20, mu=4))
+        arrival_config=ConstantArrivalConfig(lamb=20), mu=4, exponential_service_time=True)
     all_ips_and_commands = []
     for i in range(len(traffic_generators)):
         all_ips_and_commands.append((traffic_generators[i].ip, traffic_generators[i].commands))

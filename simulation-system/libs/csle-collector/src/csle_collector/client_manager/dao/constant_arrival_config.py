@@ -8,22 +8,20 @@ class ConstantArrivalConfig(ArrivalConfig):
     DTO representing the configuration of a stationary poisson arrival process with exponential service times
     """
 
-    def __init__(self, lamb: float, mu: float):
+    def __init__(self, lamb: float):
         """
         Initializes the object
 
         :param lamb: the static arrival rate
-        :param mu: the mean service time
         """
         self.lamb = lamb
-        self.mu = mu
         super(ConstantArrivalConfig, self).__init__(client_arrival_type=ClientArrivalType.CONSTANT)
 
     def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
-        return f"lamb: {self.lamb}, mu: {self.mu}, client_arrival_type: {self.client_arrival_type}"
+        return f"lamb: {self.lamb}, client_arrival_type: {self.client_arrival_type}"
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -31,7 +29,6 @@ class ConstantArrivalConfig(ArrivalConfig):
         """
         d = {}
         d["lamb"] = self.lamb
-        d["mu"] = self.mu
         d["client_arrival_type"] = self.client_arrival_type
         return d
 
@@ -43,5 +40,5 @@ class ConstantArrivalConfig(ArrivalConfig):
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = ConstantArrivalConfig(lamb=d["lamb"], mu=d["mu"])
+        obj = ConstantArrivalConfig(lamb=d["lamb"])
         return obj

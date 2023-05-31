@@ -314,6 +314,7 @@ const Emulation = (props) => {
                         <th>Arrival process</th>
                         <th>λ</th>
                         <th>μ</th>
+                        <th>Exponential service time</th>
                         <th>t</th>
                     </tr>
                     </thead>
@@ -324,7 +325,8 @@ const Emulation = (props) => {
                         <td>{props.client_population_config.physical_host_ip}</td>
                         <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
                         <td>{props.client_population_config.arrival_config.lamb}</td>
-                        <td>{props.client_population_config.arrival_config.mu}</td>
+                        <td>{props.client_population_config.mu}</td>
+                        <td>{getBoolStr(props.client_population_config.exponential_service_time)}</td>
                         <td>{props.client_population_config.client_time_step_len_seconds}s</td>
                     </tr>
                     </tbody>
@@ -342,6 +344,7 @@ const Emulation = (props) => {
                         <th>Arrival process</th>
                         <th>λ</th>
                         <th>μ</th>
+                        <th>Exponential service time</th>
                         <th>time-scaling factor</th>
                         <th>period-scaling factor</th>
                         <th>t</th>
@@ -354,7 +357,8 @@ const Emulation = (props) => {
                         <td>{props.client_population_config.physical_host_ip}</td>
                         <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
                         <td>{props.client_population_config.arrival_config.lamb}</td>
-                        <td>{props.client_population_config.arrival_config.mu}</td>
+                        <td>{props.client_population_config.mu}</td>
+                        <td>{getBoolStr(props.client_population_config.exponential_service_time)}</td>
                         <td>{props.client_population_config.arrival_config.time_scaling_factor}</td>
                         <td>{props.client_population_config.arrival_config.period_scaling_factor}</td>
                         <td>{props.client_population_config.client_time_step_len_seconds}s</td>
@@ -375,6 +379,7 @@ const Emulation = (props) => {
                         <th>exponents</th>
                         <th>factors</th>
                         <th>μ</th>
+                        <th>Exponential service time</th>
                         <th>t</th>
                     </tr>
                     </thead>
@@ -386,7 +391,8 @@ const Emulation = (props) => {
                         <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
                         <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.exponents)}</td>
                         <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.factors)}</td>
-                        <td>{props.client_population_config.arrival_config.mu}</td>
+                        <td>{props.client_population_config.mu}</td>
+                        <td>{getBoolStr(props.client_population_config.exponential_service_time)}</td>
                         <td>{props.client_population_config.client_time_step_len_seconds}s</td>
                     </tr>
                     </tbody>
@@ -405,6 +411,7 @@ const Emulation = (props) => {
                         <th>breakvalues</th>
                         <th>breakpoints</th>
                         <th>μ</th>
+                        <th>Exponential service time</th>
                         <th>t</th>
                     </tr>
                     </thead>
@@ -416,7 +423,8 @@ const Emulation = (props) => {
                         <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
                         <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.breakvalues)}</td>
                         <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.breakpoints)}</td>
-                        <td>{props.client_population_config.arrival_config.mu}</td>
+                        <td>{props.client_population_config.mu}</td>
+                        <td>{getBoolStr(props.client_population_config.exponential_service_time)}</td>
                         <td>{props.client_population_config.client_time_step_len_seconds}s</td>
                     </tr>
                     </tbody>
@@ -437,6 +445,7 @@ const Emulation = (props) => {
                         <th>phis</th>
                         <th>gammas</th>
                         <th>μ</th>
+                        <th>Exponential service time</th>
                         <th>t</th>
                     </tr>
                     </thead>
@@ -450,7 +459,8 @@ const Emulation = (props) => {
                         <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.omegas)}</td>
                         <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.phis)}</td>
                         <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.gammas)}</td>
-                        <td>{props.client_population_config.arrival_config.mu}</td>
+                        <td>{props.client_population_config.mu}</td>
+                        <td>{getBoolStr(props.client_population_config.exponential_service_time)}</td>
                         <td>{props.client_population_config.client_time_step_len_seconds}s</td>
                     </tr>
                     </tbody>

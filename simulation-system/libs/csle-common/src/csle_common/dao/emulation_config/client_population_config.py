@@ -18,8 +18,8 @@ class ClientPopulationConfig:
     def __init__(self, ip: str, networks: List[ContainerNetwork],
                  client_manager_port: int, client_manager_log_file: str,
                  client_manager_log_dir: str, client_manager_max_workers: int,
-                 arrival_config: ArrivalConfig,  num_commands: int = 5,
-                 client_time_step_len_seconds: int = 1,
+                 arrival_config: ArrivalConfig, num_commands: int = 5,
+                 client_time_step_len_seconds: int = 1, mu: float = 4, exponential_service_time: bool = False,
                  docker_gw_bridge_ip: str = "", physical_host_ip: str = ""):
         """
         Creates a ClientPopulationConfig DTO Object
@@ -33,6 +33,8 @@ class ClientPopulationConfig:
         :param docker_gw_bridge_ip: IP to reach the container from the host network
         :param physical_host_ip: IP of the physical host where the container is running
         :param arrival_config: configuration of the arrival process
+        :param exponential_service_time: boolean flag whether to use exponential service time (otherwise use MC)
+        :param mu: mean for the exponential service time
         """
         self.networks = networks
         self.ip = ip
@@ -45,6 +47,8 @@ class ClientPopulationConfig:
         self.docker_gw_bridge_ip = docker_gw_bridge_ip
         self.physical_host_ip = physical_host_ip
         self.arrival_config = arrival_config
+        self.mu = mu
+        self.exponential_service_time = exponential_service_time
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ClientPopulationConfig":
@@ -74,7 +78,7 @@ class ClientPopulationConfig:
             client_manager_log_dir=d["client_manager_log_dir"], client_manager_log_file=d["client_manager_log_file"],
             client_manager_max_workers=d["client_manager_max_workers"],
             docker_gw_bridge_ip=d["docker_gw_bridge_ip"], physical_host_ip=d["physical_host_ip"],
-            arrival_config=arrival_config)
+            arrival_config=arrival_config, mu=d["mu"], exponential_service_time=d["exponential_service_time"])
         return obj
 
     def no_clients(self) -> "ClientPopulationConfig":
@@ -88,7 +92,7 @@ class ClientPopulationConfig:
             num_commands=0, client_time_step_len_seconds=self.client_time_step_len_seconds,
             client_manager_log_file="client_manager.log", client_manager_log_dir="/", client_manager_max_workers=10,
             docker_gw_bridge_ip=self.docker_gw_bridge_ip, physical_host_ip=self.physical_host_ip,
-            arrival_config=ConstantArrivalConfig(lamb=0, mu=0)
+            arrival_config=ConstantArrivalConfig(lamb=0), mu=0, exponential_service_time=True
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -107,6 +111,8 @@ class ClientPopulationConfig:
         d["docker_gw_bridge_ip"] = self.docker_gw_bridge_ip
         d["physical_host_ip"] = self.physical_host_ip
         d["arrival_config"] = self.arrival_config.to_dict()
+        d["mu"] = self.mu
+        d["exponential_service_time"] = self.exponential_service_time
         return d
 
     def __str__(self) -> str:
@@ -121,7 +127,8 @@ class ClientPopulationConfig:
                f"client_manager_log_dir: {self.client_manager_log_dir}, " \
                f"client_manager_max_workers: {self.client_manager_max_workers}, " \
                f"docker_gw_bridge_ip:{self.docker_gw_bridge_ip}, physical_host_ip: {self.physical_host_ip}," \
-               f"arrival_config: {self.arrival_config}"
+               f"arrival_config: {self.arrival_config}, mu: {self.mu}, " \
+               f"exponential_service_time: {self.exponential_service_time}"
 
     def to_json_str(self) -> str:
         """

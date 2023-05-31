@@ -102,34 +102,29 @@ message ClientsDTO {
 // ConstantArrivalConfig
 message ConstantArrivalConfigDTO {
   float lamb = 1;
-  float mu = 2;
 }
 
 // SineArrivalConfig
 message SineArrivalConfigDTO {
   float lamb = 1;
-  float mu = 2;
   float time_scaling_factor = 3;
   float period_scaling_factor = 4;
 }
 
 // SpikingArrivalConfig
 message SpikingArrivalConfigDTO {
-  float mu = 1;
   repeated float exponents = 2;
   repeated float factors = 3;
 }
 
 // PieceWiseConstantArrivalConfig
 message PieceWiseConstantArrivalConfigDTO {
-  float mu = 1;
   repeated float breakvalues = 2;
   repeated int32 breakpoints = 3;
 }
 
 // EPTMPArrivalConfig
 message EPTMPArrivalConfigDTO {
-  float mu = 1;
   repeated float thetas = 2;
   repeated float gammas = 3;
   repeated float phis = 4;
