@@ -109,10 +109,14 @@ class WorkflowService:
         """
         :return: a GRPC serializable version of the object
         """
+        ips = []
+        commands = []
+        for i in range(len(self.ips_and_commands)):
+            ips.append(self.ips_and_commands[i][0])
+            commands.append(csle_collector.client_manager.client_manager_pb2.NodeCommandsDTO(
+                commands=self.ips_and_commands[i][1]))
         return csle_collector.client_manager.client_manager_pb2.WorkflowServiceDTO(
-            id=self.id, ips = list(map(lambda x: x[0], self.ips_and_commands)),
-            commands = list(map(lambda x: x[1], self.ips_and_commands))
-        )
+            id=self.id, ips = ips, commands = commands)
 
     @staticmethod
     def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.WorkflowServiceDTO) \
@@ -125,7 +129,7 @@ class WorkflowService:
         """
         ips_and_commands = []
         for i in range(obj.ips):
-            ips_and_commands.append((obj.ips[i], obj.commands[i]))
+            ips_and_commands.append((obj.ips[i], obj.commands[i].commands))
         return WorkflowService(id=obj.id, ips_and_commands=ips_and_commands)
 
     def get_commands(self) -> List[str]:

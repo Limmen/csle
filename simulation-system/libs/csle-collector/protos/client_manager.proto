@@ -66,7 +66,12 @@ message WorkflowMarkovChainDTO {
 message WorkflowServiceDTO {
   int32 id = 1;
   repeated string ips = 2;
-  repeated string commands = 3;
+  repeated NodeCommandsDTO commands = 3;
+}
+
+// NodeCommandsDTO
+message NodeCommandsDTO {
+  repeated string commands = 1;
 }
 
 // WorkflowServiceDTO
