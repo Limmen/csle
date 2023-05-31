@@ -56,15 +56,26 @@ def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str
             combined_dist = combined_dist + d_arr
         ax[row][col].hist(x, cumulative=False, density=True, bins=10, alpha=1, color="red", edgecolor='black',
                           linewidth=1, ls="dashdot", label="no intrusion")
+        mean = np.mean(np.array(list(x.keys())))
         attack_counts_temp = attack_counts.copy()
         for k, v in x.items():
             if k in attack_counts_temp:
                 attack_counts_temp[k] = attack_counts_temp[k] + v
             else:
                 attack_counts_temp[k] = v
-        ax[row][col].hist(attack_counts_temp, cumulative=False, density=True, bins=20, alpha=0.4, color="blue",
+        attack_counts_temp_2 = attack_counts_temp.copy()
+        for k,v in attack_counts_temp.items():
+            k2 = k + mean
+            if k2 in attack_counts_temp_2:
+                attack_counts_temp_2[k2] =  attack_counts_temp_2[k2] + v
+            else:
+                attack_counts_temp_2[k2] = v
+            if k2 > max_val:
+                max_val = k2
+
+        ax[row][col].hist(attack_counts_temp_2, cumulative=False, density=True, bins=20, alpha=0.4, color="blue",
                           edgecolor='black', linewidth=1, ls="dashed", label="intrusion")
-        ax[row][col].set_title(r"$Z_{\mathbf{O}_{" + str(i + 1) + "}}$", fontsize=fontsize)
+        ax[row][col].set_title(r"$\widehat{Z}_{\mathbf{O}_{" + str(i + 1) + "}}$", fontsize=fontsize)
         ax[row][col].set_yticks([])
         ax[row][col].set_xlim(1, max_val)
         xlab = ax[row][col].xaxis.get_label()
@@ -89,7 +100,7 @@ def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str
         else:
             col = col + 1
     fig.suptitle(
-        r"Distributions of \# alerts weighted by priority $Z_{\mathbf{O}_i}(\mathbf{O}_i \mid "
+        r"Estimated distributions of \# alerts weighted by priority $\widehat{Z}_{\mathbf{O}_i}(\mathbf{O}_i \mid "
         r"\mathbf{S}^{(\mathrm{D})}_i, \mathbf{A}^{(\mathrm{A})}_{i})$ per node $i \in \mathcal{V}$",
         fontsize=18)
     handles, labels = ax[0][0].get_legend_handles_labels()
@@ -99,15 +110,14 @@ def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str
     fig.tight_layout()
     plt.subplots_adjust(wspace=0, hspace=0.2, bottom=0.077)
     plt.show()
-    fig.savefig("geo_only_2" + ".png", format="png", dpi=600)
-    fig.savefig("geo_only_2" + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
+    fig.savefig("obs_dists" + ".png", format="png", dpi=600)
+    fig.savefig("obs_dists" + ".pdf", format='pdf', dpi=600, bbox_inches='tight', transparent=True)
 
 
 if __name__ == '__main__':
-    attack_statistic = MetastoreFacade.get_emulation_statistic(id=2)
-    print(attack_statistic.conditionals_counts["intrusion"].keys())
+    attack_statistic = MetastoreFacade.get_emulation_statistic(id=3)
     # attack_counts = attack_statistic.conditionals_counts["intrusion"]["alerts_weighted_by_priority"]
-    attack_counts = attack_statistic.conditionals_counts["intrusion"]["alerts_weighted_by_priority_16.4.2.3"]
+    attack_counts = attack_statistic.conditionals_counts["intrusion"]["alerts_weighted_by_priority_15.9.2.10"]
     conditions = ["A:Continue_D:Continue_M:[]", "A:DVWA SQL Injection Exploit_D:Continue_M:[]",
                   "A:FTP dictionary attack for username=pw_D:Continue_M:[]", "A:Network service login_D:Continue_M:[]",
                   "A:Ping Scan_D:Continue_M:[]", "A:SSH dictionary attack for username=pw_D:Continue_M:[]",
@@ -116,8 +126,7 @@ if __name__ == '__main__':
                   "A:Telnet dictionary attack for username=pw_D:Continue_M:[]",
                   "A:CVE-2015-1427 exploit_D:Continue_M:[]"
                   ]
-    print(attack_counts)
-    statistic = MetastoreFacade.get_emulation_statistic(id=1)
+    statistic = MetastoreFacade.get_emulation_statistic(id=2)
     metric = "alerts_weighted_by_priority_{}"
     condition = "A:Continue_D:Continue_M:[]"
     ips = [
