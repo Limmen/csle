@@ -16,6 +16,8 @@ class WorkflowMarkovChain:
         :param id: the id of the workflow
         """
         self.transition_matrix = transition_matrix
+        for i in range(len(transition_matrix)):
+            assert sum(self.transition_matrix[i]) == 1
         self.initial_state = initial_state
         self.current_state = initial_state
         self.t = 0

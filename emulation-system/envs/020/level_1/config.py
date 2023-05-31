@@ -7,6 +7,7 @@ from csle_collector.client_manager.dao.constant_arrival_config import ConstantAr
 from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
 from csle_collector.client_manager.dao.workflow_service import WorkflowService
 from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMarkovChain
+from csle_collector.client_manager.dao.client import Client
 import csle_collector.constants.constants as collector_constants
 from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
@@ -1215,22 +1216,6 @@ def default_traffic_config(network_id: int, time_step_len_seconds: int) -> Traff
                           traffic_manager_log_dir=collector_constants.LOG_FILES.TRAFFIC_MANAGER_LOG_DIR,
                           traffic_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS)
     ]
-    client_population_config = ClientPopulationConfig(
-        networks=[ContainerNetwork(
-            name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
-            subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
-                        f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
-            subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
-            bitmask=constants.CSLE.CSLE_EDGE_BITMASK
-        )],
-        ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
-        client_manager_port=collector_constants.MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT,
-        num_commands=2, client_time_step_len_seconds=time_step_len_seconds,
-        client_manager_log_dir=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR,
-        client_manager_log_file=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE,
-        client_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS,
-        arrival_config=ConstantArrivalConfig(lamb=20), mu=4, exponential_service_time=True
-    )
     all_ips_and_commands = []
     for i in range(len(traffic_generators)):
         all_ips_and_commands.append((traffic_generators[i].ip, traffic_generators[i].commands))
@@ -1241,16 +1226,35 @@ def default_traffic_config(network_id: int, time_step_len_seconds: int) -> Traff
         workflow_markov_chains=[
             WorkflowMarkovChain(
                 transition_matrix=[
-                    [0.8, 0.2]
+                    [0.8, 0.2],
+                    [0, 1]
                 ],
                 initial_state=0,
                 id=0
             )
         ]
     )
+    client_population_config = ClientPopulationConfig(
+        networks=[ContainerNetwork(
+            name=f"{constants.CSLE.CSLE_NETWORK_PREFIX}{network_id}_2",
+            subnet_mask=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}"
+                        f"{network_id}.2{constants.CSLE.CSLE_EDGE_SUBNETMASK_SUFFIX}",
+            subnet_prefix=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}",
+            bitmask=constants.CSLE.CSLE_EDGE_BITMASK
+        )],
+        ip=f"{constants.CSLE.CSLE_SUBNETMASK_PREFIX}{network_id}.1.254",
+        client_manager_port=collector_constants.MANAGER_PORTS.CLIENT_MANAGER_DEFAULT_PORT,
+        client_time_step_len_seconds=time_step_len_seconds,
+        client_manager_log_dir=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR,
+        client_manager_log_file=collector_constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE,
+        client_manager_max_workers=collector_constants.GRPC_WORKERS.DEFAULT_MAX_NUM_WORKERS,
+        clients = [
+            Client(id=0, workflow_distribution=[1],
+                   arrival_config=ConstantArrivalConfig(lamb=20), mu=4, exponential_service_time=True)
+        ],
+        workflows_config=workflows_config)
     traffic_conf = TrafficConfig(node_traffic_configs=traffic_generators,
-                                 client_population_config=client_population_config,
-                                 workflows_config=workflows_config)
+                                 client_population_config=client_population_config)
     return traffic_conf
 
 

@@ -5,7 +5,6 @@ service ClientManager {
   rpc getClients(GetClientsMsg) returns (ClientsDTO) {}
   rpc stopClients(StopClientsMsg) returns (ClientsDTO) {}
   rpc startClients(StartClientsMsg) returns (ClientsDTO) {}
-  rpc startClientsNew(StartClientsNewMsg) returns (ClientsDTO) {}
   rpc startProducer(StartProducerMsg) returns (ClientsDTO) {}
   rpc stopProducer(StopProducerMsg) returns (ClientsDTO) {}
 }
@@ -15,66 +14,17 @@ message StopClientsMsg {}
 
 // Message that the client sends to start the clients processes
 message StartClientsMsg {
-  float mu = 1;
-  float lamb = 2;
-  int32 time_step_len_seconds = 3;
-  repeated string commands = 4;
-  int32 num_commands = 5;
-  int32 client_arrival_type = 6;
-  float time_scaling_factor = 7;
-  float period_scaling_factor = 8;
-  repeated float exponents = 9;
-  repeated float factors = 10;
-  repeated int32 breakpoints = 11;
-  repeated float breakvalues = 12;
-}
-
-// Message to start clients with the new generator
-message StartClientsNewMsg {
   int32 time_step_len_seconds = 1;
-  repeated ClientTypeMsg client_types = 2;
-  repeated ServiceMsg services = 3;
-}
-
-// Service message
-message ServiceMsg {
-  repeated string commands = 1;
-}
-
-// Client type message
-message ClientTypeMsg {
-  EPTMPRateFunctionMsg eptmp_rate_function = 1;
-  WorkflowDistributionMsg workflow_distribution = 2;
-}
-
-// EPTMP Rate Function message
-message EPTMPRateFunctionMsg {
-  repeated float thetas = 1;
-  repeated float gammas = 2;
-  repeated float phis = 3;
-  repeated float omegas = 4;
-}
-
-// Workflow distribution Message
-message WorkflowDistributionMsg {
-  repeated WorkflowTupleMsg outcomes = 1;
-}
-
-// Workflow tuple message
-message WorkflowTupleMsg {
-  float probability = 1;
-  WorkflowMsg workflow = 2;
-}
-
-// Workflow message
-message WorkflowMsg {
-  int32 initial_state = 1;
-  repeated MarkovRowMsg rows = 2;
-}
-
-// Markov chain row message
-message MarkovRowMsg {
-  repeated float probabilities = 1;
+  int32 client_arrival_type = 2;
+  ConstantArrivalConfigDTO constant_arrival_config = 3;
+  SineArrivalConfigDTO sine_arrival_config = 4;
+  SpikingArrivalConfigDTO spiking_arrival_config = 5;
+  PieceWiseConstantArrivalConfigDTO piece_wise_constant_arrival_config = 6;
+  EPTMPArrivalConfigDTO eptmp_arrival_config = 7;
+  int32 num_commands = 8;
+  WorkflowsConfigDTO workflows_Config = 9;
+  float mu = 10;
+  bool exponential_service_time = 11;
 }
 
 // Message that the client sends to extract the ClientsDTO
@@ -90,7 +40,37 @@ message StartProducerMsg {
 // Message that the client sends to start the producer thread
 message StopProducerMsg {}
 
-// Message that the server returns when requested by the  client
+// ProbabilityDistributionDTO
+message ProbabilityDistributionDTO {
+  repeated float probabilities = 1;
+}
+
+// TransitionMatrixDTO
+message TransitionMatrixDTO {
+  repeated ProbabilityDistributionDTO rows = 2;
+}
+
+// WorkflowMarkovChainDTO
+message WorkflowMarkovChainDTO {
+  TransitionMatrixDTO transition_matrix = 1;
+  int32 initial_state = 2;
+  int32 id = 3;
+}
+
+// WorkflowServiceDTO
+message WorkflowServiceDTO {
+  int32 id = 1;
+  repeated string ips = 2;
+  repeated string commands = 3;
+}
+
+// WorkflowServiceDTO
+message WorkflowsConfigDTO {
+  repeated WorkflowMarkovChainDTO workflow_markov_chains = 1;
+  repeated WorkflowServiceDTO workflow_services = 2;
+}
+
+// Message that the server returns when requested by the client
 message ClientsDTO {
   int32 num_clients = 1;
   bool client_process_active = 2;
@@ -99,31 +79,31 @@ message ClientsDTO {
   int32 producer_time_step_len_seconds = 5;
 }
 
-// ConstantArrivalConfig
+// ConstantArrivalConfigDTO
 message ConstantArrivalConfigDTO {
   float lamb = 1;
 }
 
-// SineArrivalConfig
+// SineArrivalConfigDTO
 message SineArrivalConfigDTO {
   float lamb = 1;
   float time_scaling_factor = 3;
   float period_scaling_factor = 4;
 }
 
-// SpikingArrivalConfig
+// SpikingArrivalConfigDTO
 message SpikingArrivalConfigDTO {
   repeated float exponents = 2;
   repeated float factors = 3;
 }
 
-// PieceWiseConstantArrivalConfig
+// PieceWiseConstantArrivalConfigDTO
 message PieceWiseConstantArrivalConfigDTO {
   repeated float breakvalues = 2;
   repeated int32 breakpoints = 3;
 }
 
-// EPTMPArrivalConfig
+// EPTMPArrivalConfigDTO
 message EPTMPArrivalConfigDTO {
   repeated float thetas = 2;
   repeated float gammas = 3;

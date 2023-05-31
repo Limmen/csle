@@ -35,6 +35,7 @@ const Emulation = (props) => {
     const [resourcesOpen, setResourcesOpen] = useState(false);
     const [networkInterfacesOpen, setNetworkInterfacesOpen] = useState(false);
     const [clientPopulationOpen, setClientPopulationOpen] = useState(false);
+    const [clientsOpen, setClientsOpen] = useState(false);
     const [trafficOpen, setTrafficOpen] = useState(false);
     const [workflowServicesOpen, setWorkflowServicesOpen] = useState(false);
     const [workflowMarkovChainsOpen, setWorkflowMarkovChainsOpen] = useState(false);
@@ -79,25 +80,6 @@ const Emulation = (props) => {
             network_names.push(networks[i].name)
         }
         return network_names.join(", ")
-    }
-
-    const getArrivalProcessStr = (process) => {
-        if (process === 0) {
-            return "Constant"
-        }
-        if (process === 1) {
-            return "Sine modulated"
-        }
-        if (process === 2) {
-            return "Spiking"
-        }
-        if (process === 3) {
-            return "Piece-wise constant"
-        }
-        if (process === 4) {
-            return "EPTMP"
-        }
-        return "unknown"
     }
 
     const getRootStr = (root) => {
@@ -302,170 +284,36 @@ const Emulation = (props) => {
         }
     };
 
-    const ClientPopulationConfigTable = (props) => {
-        if(props.client_population_config.arrival_config.client_arrival_type === 0) {
-            return (
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>IP</th>
-                        <th>External IP</th>
-                        <th>Physical server</th>
-                        <th>Arrival process</th>
-                        <th>λ</th>
-                        <th>μ</th>
-                        <th>Exponential service time</th>
-                        <th>t</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr key={props.client_population_config.ip}>
-                        <td>{props.client_population_config.ip}</td>
-                        <td>{props.client_population_config.docker_gw_bridge_ip}</td>
-                        <td>{props.client_population_config.physical_host_ip}</td>
-                        <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
-                        <td>{props.client_population_config.arrival_config.lamb}</td>
-                        <td>{props.client_population_config.mu}</td>
-                        <td>{getBoolStr(props.client_population_config.exponential_service_time)}</td>
-                        <td>{props.client_population_config.client_time_step_len_seconds}s</td>
-                    </tr>
-                    </tbody>
-                </Table>
-            )
+    const ArrivalConfigStr = (props) => {
+        if(props.client.arrival_config.client_arrival_type === 0) {
+            var config_str = `Constant arrival process; λ= ${props.client.arrival_config.lamb}`
+            return config_str
         }
         if(props.client_population_config.arrival_config.client_arrival_type === 1) {
-            return (
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>IP</th>
-                        <th>External IP</th>
-                        <th>Physical server</th>
-                        <th>Arrival process</th>
-                        <th>λ</th>
-                        <th>μ</th>
-                        <th>Exponential service time</th>
-                        <th>time-scaling factor</th>
-                        <th>period-scaling factor</th>
-                        <th>t</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr key={props.client_population_config.ip}>
-                        <td>{props.client_population_config.ip}</td>
-                        <td>{props.client_population_config.docker_gw_bridge_ip}</td>
-                        <td>{props.client_population_config.physical_host_ip}</td>
-                        <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
-                        <td>{props.client_population_config.arrival_config.lamb}</td>
-                        <td>{props.client_population_config.mu}</td>
-                        <td>{getBoolStr(props.client_population_config.exponential_service_time)}</td>
-                        <td>{props.client_population_config.arrival_config.time_scaling_factor}</td>
-                        <td>{props.client_population_config.arrival_config.period_scaling_factor}</td>
-                        <td>{props.client_population_config.client_time_step_len_seconds}s</td>
-                    </tr>
-                    </tbody>
-                </Table>
-            )
+            var config_str = `Sine modulated arrival process; λ= ${props.client.arrival_config.lamb}, `
+            config_str = config_str + `time scaling factor=${props.client.arrival_config.time_scaling_factor}, `
+            config_str = config_str + `time scaling factor=${props.client.arrival_config.period_scaling_factor}`
+            return config_str
         }
         if(props.client_population_config.arrival_config.client_arrival_type === 2) {
-            return (
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>IP</th>
-                        <th>External IP</th>
-                        <th>Physical server</th>
-                        <th>Arrival process</th>
-                        <th>exponents</th>
-                        <th>factors</th>
-                        <th>μ</th>
-                        <th>Exponential service time</th>
-                        <th>t</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr key={props.client_population_config.ip}>
-                        <td>{props.client_population_config.ip}</td>
-                        <td>{props.client_population_config.docker_gw_bridge_ip}</td>
-                        <td>{props.client_population_config.physical_host_ip}</td>
-                        <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
-                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.exponents)}</td>
-                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.factors)}</td>
-                        <td>{props.client_population_config.mu}</td>
-                        <td>{getBoolStr(props.client_population_config.exponential_service_time)}</td>
-                        <td>{props.client_population_config.client_time_step_len_seconds}s</td>
-                    </tr>
-                    </tbody>
-                </Table>
-            )
+            var config_str = `Spiking arrival process; `
+            config_str = config_str + `exponents=${convertListToCommaSeparatedString(props.client.arrival_config.exponents)}, `
+            config_str = config_str + `factors=${convertListToCommaSeparatedString(props.client.arrival_config.factors)}`
+            return config_str
         }
         if(props.client_population_config.arrival_config.client_arrival_type === 3) {
-            return (
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>IP</th>
-                        <th>External IP</th>
-                        <th>Physical server</th>
-                        <th>Arrival process</th>
-                        <th>breakvalues</th>
-                        <th>breakpoints</th>
-                        <th>μ</th>
-                        <th>Exponential service time</th>
-                        <th>t</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr key={props.client_population_config.ip}>
-                        <td>{props.client_population_config.ip}</td>
-                        <td>{props.client_population_config.docker_gw_bridge_ip}</td>
-                        <td>{props.client_population_config.physical_host_ip}</td>
-                        <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
-                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.breakvalues)}</td>
-                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.breakpoints)}</td>
-                        <td>{props.client_population_config.mu}</td>
-                        <td>{getBoolStr(props.client_population_config.exponential_service_time)}</td>
-                        <td>{props.client_population_config.client_time_step_len_seconds}s</td>
-                    </tr>
-                    </tbody>
-                </Table>
-            )
+            var config_str = `Piece-wise constant process; `
+            config_str = config_str + `breakvalues=${convertListToCommaSeparatedString(props.client.arrival_config.breakvalues)}, `
+            config_str = config_str + `breakpoints=${convertListToCommaSeparatedString(props.client.arrival_config.breakpoints)}`
+            return config_str
         }
         if(props.client_population_config.arrival_config.client_arrival_type === 4) {
-            return (
-                <Table striped bordered hover>
-                    <thead>
-                    <tr>
-                        <th>IP</th>
-                        <th>External IP</th>
-                        <th>Physical server</th>
-                        <th>Arrival process</th>
-                        <th>thetas</th>
-                        <th>omegas</th>
-                        <th>phis</th>
-                        <th>gammas</th>
-                        <th>μ</th>
-                        <th>Exponential service time</th>
-                        <th>t</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr key={props.client_population_config.ip}>
-                        <td>{props.client_population_config.ip}</td>
-                        <td>{props.client_population_config.docker_gw_bridge_ip}</td>
-                        <td>{props.client_population_config.physical_host_ip}</td>
-                        <td>{getArrivalProcessStr(props.client_population_config.arrival_config.client_arrival_type)}</td>
-                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.thetas)}</td>
-                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.omegas)}</td>
-                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.phis)}</td>
-                        <td>{convertListToCommaSeparatedString(props.client_population_config.arrival_config.gammas)}</td>
-                        <td>{props.client_population_config.mu}</td>
-                        <td>{getBoolStr(props.client_population_config.exponential_service_time)}</td>
-                        <td>{props.client_population_config.client_time_step_len_seconds}s</td>
-                    </tr>
-                    </tbody>
-                </Table>
-            )
+            var config_str = `EPTMP process; `
+            config_str = config_str + `phis=${convertListToCommaSeparatedString(props.client.arrival_config.phis)}, `
+            config_str = config_str + `thetas=${convertListToCommaSeparatedString(props.client.arrival_config.thetas)}, `
+            config_str = config_str + `omegas=${convertListToCommaSeparatedString(props.client.arrival_config.omegas)}, `
+            config_str = config_str + `gammas=${convertListToCommaSeparatedString(props.client.arrival_config.gammas)}`
+            return config_str
         }
     };
 
@@ -986,8 +834,66 @@ const Emulation = (props) => {
                         <Collapse in={clientPopulationOpen}>
                             <div id="clientPopulationBody" className="cardBodyHidden">
                                 <div className="table-responsive">
-                                    <ClientPopulationConfigTable
-                                        client_population_config={emulation.traffic_config.client_population_config}/>
+                                    <Table striped bordered hover>
+                                        <thead>
+                                        <tr>
+                                            <th>IP</th>
+                                            <th>External IP</th>
+                                            <th>Physical server</th>
+                                            <th>t</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr key={emulation.traffic_config.client_population_config.ip}>
+                                            <td>{emulation.traffic_config.client_population_config.ip}</td>
+                                            <td>{emulation.traffic_config.client_population_config.docker_gw_bridge_ip}</td>
+                                            <td>{emulation.traffic_config.client_population_config.physical_host_ip}</td>
+                                            <td>{emulation.traffic_config.client_population_config.client_time_step_len_seconds}s</td>
+                                        </tr>
+                                        </tbody>
+                                    </Table>
+                                </div>
+                            </div>
+                        </Collapse>
+                    </Card>
+
+                    <Card className="subCard">
+                        <Card.Header>
+                            <Button
+                                onClick={() => setClientsOpen(!clientsOpen)}
+                                aria-controls="clientsBody"
+                                aria-expanded={clientsOpen}
+                                variant="link"
+                            >
+                                <h5 className="semiTitle">
+                                    Client types <i className="fa fa-users headerIcon" aria-hidden="true"></i>
+                                </h5>
+                            </Button>
+                        </Card.Header>
+                        <Collapse in={clientsOpen}>
+                            <div id="clientsBody" className="cardBodyHidden">
+                                <div className="table-responsive">
+                                    <Table striped bordered hover>
+                                        <thead>
+                                        <tr>
+                                            <th>Client ID</th>
+                                            <th>Arrival process</th>
+                                            <th>Workflow distribution</th>
+                                            <th>μ</th>
+                                            <th>Exponential service time</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {emulation.traffic_config.client_population_config.clients.map((client, index) =>
+                                            <tr key={client.id + "-" + index}>
+                                                <td>{client.id}</td>
+                                                <td><ArrivalConfigStr client={client}/></td>
+                                                <td>{JSON.stringify(client.workflow_distribution)}</td>
+                                                <td>{client.mu}</td>
+                                                <td>{getBoolStr(client.exponential_service_time)}</td>
+                                            </tr>)}
+                                        </tbody>
+                                    </Table>
                                 </div>
                             </div>
                         </Collapse>
@@ -1058,7 +964,7 @@ const Emulation = (props) => {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {emulation.traffic_config.workflows_config.workflow_services.map((workflow_service, index) =>
+                                        {emulation.traffic_config.client_population_config.workflows_config.workflow_services.map((workflow_service, index) =>
                                             workflow_service.ips_and_commands.map((ip_cmd, index2) =>
                                                 <tr key={ip_cmd[0] + "-" + ip_cmd[1] + "-" + index + "-" + index2}>
                                                     <td>{workflow_service.id}</td>
@@ -1099,7 +1005,7 @@ const Emulation = (props) => {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {emulation.traffic_config.workflows_config.workflow_markov_chains.map((workflow_mc, index) =>
+                                        {emulation.traffic_config.client_population_config.workflows_config.workflow_markov_chains.map((workflow_mc, index) =>
                                             <tr key={workflow_mc.id + "-" + index}>
                                                 <td>{workflow_mc.id}</td>
                                                 <td>{workflow_mc.initial_state}</td>
