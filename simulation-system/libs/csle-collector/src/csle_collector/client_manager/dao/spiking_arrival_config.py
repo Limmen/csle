@@ -1,6 +1,7 @@
 from typing import Dict, Any, List
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
+import csle_collector.client_manager.client_manager_pb2
 
 
 class SpikingArrivalConfig(ArrivalConfig):
@@ -45,3 +46,22 @@ class SpikingArrivalConfig(ArrivalConfig):
         """
         obj = SpikingArrivalConfig(exponents=d["exponents"], factors=d["factors"])
         return obj
+
+    def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.SpikingArrivalConfigDTO:
+        """
+        :return: a GRPC serializable version of the object
+        """
+        return csle_collector.client_manager.client_manager_pb2.SpikingArrivalConfigDTO(
+            exponents=self.exponents, factors=self.factors
+        )
+
+    @staticmethod
+    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.SpikingArrivalConfigDTO) \
+            -> "SpikingArrivalConfig":
+        """
+        Instantiates the object from a GRPC DTO
+
+        :param obj: the object to instantiate from
+        :return: the instantiated object
+        """
+        return SpikingArrivalConfig(exponents=obj.exponents, factors=obj.factors)

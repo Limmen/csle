@@ -1,6 +1,7 @@
 from typing import Dict, Any, List
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
+import csle_collector.client_manager.client_manager_pb2
 
 
 class PieceWiseConstantArrivalConfig(ArrivalConfig):
@@ -47,3 +48,22 @@ class PieceWiseConstantArrivalConfig(ArrivalConfig):
         """
         obj = PieceWiseConstantArrivalConfig(breakvalues=d["breakvalues"], breakpoints=d["breakpoints"])
         return obj
+
+    def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.PieceWiseConstantArrivalConfigDTO:
+        """
+        :return: a GRPC serializable version of the object
+        """
+        return csle_collector.client_manager.client_manager_pb2.PieceWiseConstantArrivalConfigDTO(
+            breakvalues=self.breakvalues, breakpoints=self.breakpoints
+        )
+
+    @staticmethod
+    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.PieceWiseConstantArrivalConfigDTO) \
+            -> "PieceWiseConstantArrivalConfig":
+        """
+        Instantiates the object from a GRPC DTO
+
+        :param obj: the object to instantiate from
+        :return: the instantiated object
+        """
+        return PieceWiseConstantArrivalConfig(breakvalues=obj.breakvalues, breakpoints=obj.breakpoints)

@@ -1,6 +1,7 @@
 from typing import Dict, Any
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
+import csle_collector.client_manager.client_manager_pb2
 
 
 class SineArrivalConfig(ArrivalConfig):
@@ -50,3 +51,24 @@ class SineArrivalConfig(ArrivalConfig):
         obj = SineArrivalConfig(lamb=d["lamb"], time_scaling_factor=d["time_scaling_factor"],
                                 period_scaling_factor=d["period_scaling_factor"])
         return obj
+
+    def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.SineArrivalConfigDTO:
+        """
+        :return: a GRPC serializable version of the object
+        """
+        return csle_collector.client_manager.client_manager_pb2.SineArrivalConfigDTO(
+            lamb=self.lamb, time_scaling_factor=self.time_scaling_factor,
+            period_scaling_factor=self.period_scaling_factor
+        )
+
+    @staticmethod
+    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.ConstantArrivalConfigDTO) \
+            -> "SineArrivalConfig":
+        """
+        Instantiates the object from a GRPC DTO
+
+        :param obj: the object to instantiate from
+        :return: the instantiated object
+        """
+        return SineArrivalConfig(lamb=obj.lamb, time_scaling_factor=obj.time_scaling_factor,
+                                 period_scaling_factor=obj.period_scaling_factor)

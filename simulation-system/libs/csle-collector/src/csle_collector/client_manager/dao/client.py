@@ -6,6 +6,7 @@ from csle_collector.client_manager.dao.sine_arrival_config import SineArrivalCon
 from csle_collector.client_manager.dao.piece_wise_constant_arrival_config import PieceWiseConstantArrivalConfig
 from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
+import csle_collector.client_manager.client_manager_pb2
 
 
 class Client:
@@ -109,6 +110,71 @@ class Client:
         :return: a copy of the DTO
         """
         return Client.from_dict(self.to_dict())
+
+    def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.ClientDTO:
+        """
+        :return: a GRPC serializable version of the object
+        """
+        constant_arrival_config = None
+        sine_arrival_config = None
+        spiking_arrival_config = None
+        piece_wise_constant_arrival_config = None
+        eptmp_arrival_config = None
+        if self.arrival_config.client_arrival_type == ClientArrivalType.CONSTANT:
+            constant_arrival_config = self.arrival_config.to_grpc_object()
+        elif self.arrival_config.client_arrival_type == ClientArrivalType.SINE_MODULATED:
+            sine_arrival_config = self.arrival_config.to_grpc_object()
+        elif self.arrival_config.client_arrival_type == ClientArrivalType.SPIKING:
+            spiking_arrival_config = self.arrival_config.to_grpc_object()
+        elif self.arrival_config.client_arrival_type == ClientArrivalType.PIECE_WISE_CONSTANT:
+            piece_wise_constant_arrival_config = self.arrival_config.to_grpc_object()
+        elif self.arrival_config.client_arrival_type == ClientArrivalType.EPTMP:
+            eptmp_arrival_config = self.arrival_config.to_grpc_object()
+        return csle_collector.client_manager.client_manager_pb2.ClientDTO(
+            id=self.id, workflow_distribution=self.workflow_distribution, mu=self.mu,
+            exponential_service_time=self.exponential_service_time, constant_arrival_config=constant_arrival_config,
+            sine_arrival_config=sine_arrival_config, spiking_arrival_config=spiking_arrival_config,
+            piece_wise_constant_arrival_config=piece_wise_constant_arrival_config,
+            eptmp_arrival_config=eptmp_arrival_config)
+
+    @staticmethod
+    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.WorkflowsConfigDTO) \
+            -> "Client":
+        """
+        Instantiates the object from a GRPC DTO
+
+        :param obj: the object to instantiate from
+        :return: the instantiated object
+        """
+        mcs = list(map(lambda x: x.from_grpc_object(), obj.workflow_markov_chains))
+        services = list(map(lambda x: x.from_grpc_object(), obj.workflow_services))
+        arrival_config = None
+        try:
+            arrival_config = ConstantArrivalConfig.from_grpc_object(obj.constant_arrival_config)
+        except Exception:
+            pass
+        if arrival_config is None:
+            try:
+                arrival_config = SineArrivalConfig.from_grpc_object(obj.sine_arrival_config)
+            except Exception:
+                pass
+        if arrival_config is None:
+            try:
+                arrival_config = SpikingArrivalConfig.from_grpc_object(obj.spiking_arrival_config)
+            except Exception:
+                pass
+        if arrival_config is None:
+            try:
+                arrival_config = PieceWiseConstantArrivalConfig.from_grpc_object(obj.piece_wise_constant_arrival_config)
+            except Exception:
+                pass
+        if arrival_config is None:
+            try:
+                arrival_config = EPTMPArrivalConfig.from_grpc_object(obj.eptmp_arrival_config)
+            except Exception:
+                pass
+        return Client(id=obj.id, workflow_distribution=obj.workflow_distribution, mu=obj.mu,
+                      exponential_service_time=obj.exponential_service_time, arrival_config=arrival_config)
         
         
     

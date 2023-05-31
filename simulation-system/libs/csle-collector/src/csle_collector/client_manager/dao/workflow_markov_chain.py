@@ -1,6 +1,7 @@
 from typing import List, Dict, Any
 import random
 import numpy as np
+import csle_collector.client_manager.client_manager_pb2
 
 
 class WorkflowMarkovChain:
@@ -123,3 +124,29 @@ class WorkflowMarkovChain:
         :return: a copy of the DTO
         """
         return WorkflowMarkovChain.from_dict(self.to_dict())
+
+    def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.WorkflowMarkovChainDTO:
+        """
+        :return: a GRPC serializable version of the object
+        """
+        rows = []
+        for i in range(len(self.transition_matrix)):
+            rows.append(csle_collector.client_manager.client_manager_pb2.ProbabilityDistributionDTO(
+                probabilities=self.transition_matrix[i]))
+        transition_matrix = csle_collector.client_manager.client_manager_pb2.TransitionMatrixDTO(rows=rows)
+        return csle_collector.client_manager.client_manager_pb2.WorkflowMarkovChainDTO(
+            initial_state=self.initial_state, id=self.id, transition_matrix=transition_matrix)
+
+    @staticmethod
+    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.WorkflowMarkovChainDTO) \
+            -> "WorkflowMarkovChain":
+        """
+        Instantiates the object from a GRPC DTO
+
+        :param obj: the object to instantiate from
+        :return: the instantiated object
+        """
+        transition_matrix = []
+        for i in range(len(obj.transition_matrix.rows)):
+            transition_matrix.append(obj.transition_matrix.rows[i].probabilities)
+        return WorkflowMarkovChain(id=obj.id, initial_state=obj.intial_state, transition_matrix=transition_matrix)

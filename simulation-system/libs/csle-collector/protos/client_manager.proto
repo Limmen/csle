@@ -16,15 +16,21 @@ message StopClientsMsg {}
 message StartClientsMsg {
   int32 time_step_len_seconds = 1;
   int32 client_arrival_type = 2;
+  WorkflowsConfigDTO workflows_config = 3;
+  repeated ClientDTO clients = 4;
+}
+
+// ClientDTO
+message ClientDTO {
+  int32 id = 1;
+  repeated float workflow_distribution = 2;
   ConstantArrivalConfigDTO constant_arrival_config = 3;
   SineArrivalConfigDTO sine_arrival_config = 4;
   SpikingArrivalConfigDTO spiking_arrival_config = 5;
   PieceWiseConstantArrivalConfigDTO piece_wise_constant_arrival_config = 6;
   EPTMPArrivalConfigDTO eptmp_arrival_config = 7;
-  int32 num_commands = 8;
-  WorkflowsConfigDTO workflows_Config = 9;
-  float mu = 10;
-  bool exponential_service_time = 11;
+  float mu = 9;
+  bool exponential_service_time = 10;
 }
 
 // Message that the client sends to extract the ClientsDTO
@@ -47,7 +53,7 @@ message ProbabilityDistributionDTO {
 
 // TransitionMatrixDTO
 message TransitionMatrixDTO {
-  repeated ProbabilityDistributionDTO rows = 2;
+  repeated ProbabilityDistributionDTO rows = 1;
 }
 
 // WorkflowMarkovChainDTO
@@ -87,26 +93,26 @@ message ConstantArrivalConfigDTO {
 // SineArrivalConfigDTO
 message SineArrivalConfigDTO {
   float lamb = 1;
-  float time_scaling_factor = 3;
-  float period_scaling_factor = 4;
+  float time_scaling_factor = 2;
+  float period_scaling_factor = 3;
 }
 
 // SpikingArrivalConfigDTO
 message SpikingArrivalConfigDTO {
-  repeated float exponents = 2;
-  repeated float factors = 3;
+  repeated float exponents = 1;
+  repeated float factors = 2;
 }
 
 // PieceWiseConstantArrivalConfigDTO
 message PieceWiseConstantArrivalConfigDTO {
-  repeated float breakvalues = 2;
-  repeated int32 breakpoints = 3;
+  repeated float breakvalues = 1;
+  repeated int32 breakpoints = 2;
 }
 
 // EPTMPArrivalConfigDTO
 message EPTMPArrivalConfigDTO {
-  repeated float thetas = 2;
-  repeated float gammas = 3;
-  repeated float phis = 4;
-  repeated float omegas = 5;
+  repeated float thetas = 1;
+  repeated float gammas = 2;
+  repeated float phis = 3;
+  repeated float omegas = 4;
 }

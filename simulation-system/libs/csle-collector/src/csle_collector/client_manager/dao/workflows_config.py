@@ -1,6 +1,7 @@
 from typing import List, Dict, Any
 from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMarkovChain
 from csle_collector.client_manager.dao.workflow_service import WorkflowService
+import csle_collector.client_manager.client_manager_pb2
 
 
 class WorkflowsConfig:
@@ -94,3 +95,25 @@ class WorkflowsConfig:
         config.workflow_services = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
                                    config.workflow_services))
         return config
+
+    def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.WorkflowsConfigDTO:
+        """
+        :return: a GRPC serializable version of the object
+        """
+        mcs = list(map(lambda x: x.to_grpc_object(), self.workflow_markov_chains))
+        services = list(map(lambda x: x.to_grpc_object(), self.workflow_services))
+        return csle_collector.client_manager.client_manager_pb2.WorkflowsConfigDTO(
+            workflow_markov_chains=mcs, workflow_services=services)
+
+    @staticmethod
+    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.WorkflowsConfigDTO) \
+            -> "WorkflowsConfig":
+        """
+        Instantiates the object from a GRPC DTO
+
+        :param obj: the object to instantiate from
+        :return: the instantiated object
+        """
+        mcs = list(map(lambda x: x.from_grpc_object(), obj.workflow_markov_chains))
+        services = list(map(lambda x: x.from_grpc_object(), obj.workflow_services))
+        return WorkflowsConfig(workflow_markov_chains=mcs, workflow_services=services)

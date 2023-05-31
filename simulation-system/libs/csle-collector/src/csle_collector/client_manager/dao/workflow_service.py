@@ -1,4 +1,5 @@
 from typing import List, Dict, Any, Tuple
+import csle_collector.client_manager.client_manager_pb2
 
 
 class WorkflowService:
@@ -103,3 +104,26 @@ class WorkflowService:
             self.ips_and_commands[i][0] = WorkflowService.replace_first_octet_of_ip(ip=self.ips_and_commands[i][0],
                                                                                     ip_first_octet=ip_first_octet)
         return config
+
+    def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.WorkflowServiceDTO:
+        """
+        :return: a GRPC serializable version of the object
+        """
+        return csle_collector.client_manager.client_manager_pb2.WorkflowServiceDTO(
+            id=self.id, ips = list(map(lambda x: x[0], self.ips_and_commands)),
+            commands = list(map(lambda x: x[1], self.ips_and_commands))
+        )
+
+    @staticmethod
+    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.WorkflowServiceDTO) \
+            -> "WorkflowService":
+        """
+        Instantiates the object from a GRPC DTO
+
+        :param obj: the object to instantiate from
+        :return: the instantiated object
+        """
+        ips_and_commands = []
+        for i in range(obj.ips):
+            ips_and_commands.append((obj.ips[i], obj.commands[i]))
+        return WorkflowService(id=obj.id, ips_and_commands=ips_and_commands)

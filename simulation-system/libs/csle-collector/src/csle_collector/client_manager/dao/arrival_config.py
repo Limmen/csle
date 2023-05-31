@@ -34,6 +34,24 @@ class ArrivalConfig(ABC):
         """
         pass
 
+    @abstractmethod
+    def to_grpc_object(self):
+        """
+        :return: a grpc serializable version of the object
+        """
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def from_grpc_object(obj):
+        """
+        Instantiate the object from a GRPC object
+
+        :param obj: the objet to instantiate from
+        :return: the instantiated grpc object
+        """
+        pass
+
     def to_json_str(self) -> str:
         """
         Converts the DTO into a json string

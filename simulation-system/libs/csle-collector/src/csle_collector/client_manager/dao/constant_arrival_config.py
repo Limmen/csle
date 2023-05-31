@@ -1,6 +1,7 @@
 from typing import Dict, Any
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
+import csle_collector.client_manager.client_manager_pb2
 
 
 class ConstantArrivalConfig(ArrivalConfig):
@@ -42,3 +43,22 @@ class ConstantArrivalConfig(ArrivalConfig):
         """
         obj = ConstantArrivalConfig(lamb=d["lamb"])
         return obj
+
+    def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.ConstantArrivalConfigDTO:
+        """
+        :return: a GRPC serializable version of the object
+        """
+        return csle_collector.client_manager.client_manager_pb2.ConstantArrivalConfigDTO(
+            lamb=self.lamb
+        )
+
+    @staticmethod
+    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.ConstantArrivalConfigDTO) \
+            -> "ConstantArrivalConfig":
+        """
+        Instantiates the object from a GRPC DTO
+
+        :param obj: the object to instantiate from
+        :return: the instantiated object
+        """
+        return ConstantArrivalConfig(lamb=obj.lamb)

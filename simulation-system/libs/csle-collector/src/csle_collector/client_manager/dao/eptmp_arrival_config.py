@@ -1,6 +1,7 @@
 from typing import Dict, Any, List
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
+import csle_collector.client_manager.client_manager_pb2
 
 
 class EPTMPArrivalConfig(ArrivalConfig):
@@ -53,3 +54,22 @@ class EPTMPArrivalConfig(ArrivalConfig):
         """
         obj = EPTMPArrivalConfig(thetas=d["thetas"], gammas=d["gammas"], phis=d["phis"], omegas=d["omegas"])
         return obj
+
+    def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.EPTMPArrivalConfigDTO:
+        """
+        :return: a GRPC serializable version of the object
+        """
+        return csle_collector.client_manager.client_manager_pb2.EPTMPArrivalConfigDTO(
+            thetas=self.thetas, gammas=self.gammas, phis=self.phis, omegas=self.omegas
+        )
+
+    @staticmethod
+    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.EPTMPArrivalConfigDTO) \
+            -> "EPTMPArrivalConfig":
+        """
+        Instantiates the object from a GRPC DTO
+
+        :param obj: the object to instantiate from
+        :return: the instantiated object
+        """
+        return EPTMPArrivalConfig(thetas=obj.thetas, gammas=obj.gammas, phis=obj.phis, omegas=obj.omegas)
