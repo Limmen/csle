@@ -29,7 +29,8 @@ class EPTMPArrivalConfig(ArrivalConfig):
         """
         :return: a string representation of the object
         """
-        return f"thetas: {self.thetas}, gammas: {self.gammas}, phis: {self.phis}, omegas: {self.omegas}, " \
+        return f"Arrival type: Poisson process with EPTMP rate function, " \
+               f"thetas: {self.thetas}, gammas: {self.gammas}, phis: {self.phis}, omegas: {self.omegas}, " \
                f"client_arrival_type: {self.client_arrival_type}"
 
     def to_dict(self) -> Dict[str, Any]:

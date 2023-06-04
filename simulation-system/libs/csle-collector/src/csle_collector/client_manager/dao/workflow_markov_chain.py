@@ -150,3 +150,10 @@ class WorkflowMarkovChain:
         for i in range(len(obj.transition_matrix.rows)):
             transition_matrix.append(list(obj.transition_matrix.rows[i].probabilities))
         return WorkflowMarkovChain(id=obj.id, initial_state=obj.initial_state, transition_matrix=transition_matrix)
+
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
+        return f"Workflow MC, id: {self.id}, initial_state: {self.initial_state}, " \
+               f"transition_matrix: {self.transition_matrix}"

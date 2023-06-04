@@ -143,3 +143,9 @@ class WorkflowService:
             for j in range(len(self.ips_and_commands[i][1])):
                 commands.append(self.ips_and_commands[i][1][j].format(self.ips_and_commands[i][0]))
         return commands
+
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
+        return f"Workflow service, ips and commands: {self.ips_and_commands}"

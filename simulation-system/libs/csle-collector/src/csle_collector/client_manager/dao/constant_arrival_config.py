@@ -22,7 +22,7 @@ class ConstantArrivalConfig(ArrivalConfig):
         """
         :return: a string representation of the object
         """
-        return f"lamb: {self.lamb}, client_arrival_type: {self.client_arrival_type}"
+        return f"Arrival type: stationary Poisson, lamb: {self.lamb}, client_arrival_type: {self.client_arrival_type}"
 
     def to_dict(self) -> Dict[str, Any]:
         """

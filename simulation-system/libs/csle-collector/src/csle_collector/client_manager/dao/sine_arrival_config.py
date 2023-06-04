@@ -26,7 +26,8 @@ class SineArrivalConfig(ArrivalConfig):
         """
         :return: a string representation of the object
         """
-        return f"lamb: {self.lamb}, time_scaling_factor: {self.time_scaling_factor}, " \
+        return f"Arrival type: Sine-modulated Poisson process, " \
+               f"lamb: {self.lamb}, time_scaling_factor: {self.time_scaling_factor}, " \
                f"period_scaling_factor: {self.period_scaling_factor}, client_arrival_type: {self.client_arrival_type}"
 
     def to_dict(self) -> Dict[str, Any]:

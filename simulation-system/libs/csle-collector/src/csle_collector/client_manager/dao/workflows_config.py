@@ -8,6 +8,7 @@ class WorkflowsConfig:
     """
     Workflows configuration
     """
+
     def __init__(self, workflow_markov_chains: List[WorkflowMarkovChain], workflow_services: List[WorkflowService]) \
             -> None:
         """
@@ -117,7 +118,7 @@ class WorkflowsConfig:
         """
         config = self.copy()
         config.workflow_services = list(map(lambda x: x.create_execution_config(ip_first_octet=ip_first_octet),
-                                   config.workflow_services))
+                                            config.workflow_services))
         return config
 
     def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.WorkflowsConfigDTO:
@@ -152,3 +153,10 @@ class WorkflowsConfig:
         for w in self.workflow_services:
             commands = commands + w.get_commands()
         return commands
+
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
+        return f"Workflows configuration; markov chains: {list(map(lambda x: str(x), self.workflow_markov_chains))}, " \
+               f"workflow services: {list(map(lambda x: str(x), self.workflow_services))}"

@@ -24,7 +24,8 @@ class SpikingArrivalConfig(ArrivalConfig):
         """
         :return: a string representation of the object
         """
-        return f"exponents: {self.exponents}, factors: {self.factors}, client_arrival_type: {self.client_arrival_type}"
+        return f"Arrival type: Poisson process with spiking rate, " \
+               f"exponents: {self.exponents}, factors: {self.factors}, client_arrival_type: {self.client_arrival_type}"
 
     def to_dict(self) -> Dict[str, Any]:
         """

@@ -100,7 +100,8 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         logging.info(f"Starting clients, num clients:{len(clients)}, "
                      f"num workflows: {len(workflows_config.workflow_markov_chains)}, "
                      f"num services: {len(workflows_config.workflow_services)}, "
-                     f"commands: {workflows_config.commands()}")
+                     f"clients: {list(map(lambda x: str(x), clients))}"
+                     f"\n commands: {workflows_config.commands()}")
         producer_time_step_len_seconds = 0
         if self.arrival_thread is not None:
             self.arrival_thread.stopped = True

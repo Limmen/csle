@@ -25,7 +25,8 @@ class PieceWiseConstantArrivalConfig(ArrivalConfig):
         """
         :return: a string representation of the object
         """
-        return f"breakvalues: {self.breakvalues}, breakpoints: {self.breakpoints}, " \
+        return f"Arrival type: Poisson process with piece-wise constant arrival rate, " \
+               f"breakvalues: {self.breakvalues}, breakpoints: {self.breakpoints}, " \
                f"client_arrival_type: {self.client_arrival_type}"
 
     def to_dict(self) -> Dict[str, Any]:
