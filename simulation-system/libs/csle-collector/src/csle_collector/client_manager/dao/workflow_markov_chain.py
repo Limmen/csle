@@ -18,7 +18,7 @@ class WorkflowMarkovChain:
         """
         self.transition_matrix = transition_matrix
         for i in range(len(transition_matrix)):
-            assert sum(self.transition_matrix[i]) == 1
+            assert round(sum(self.transition_matrix[i]), 3) == 1
         self.initial_state = initial_state
         self.current_state = initial_state
         self.t = 0
@@ -148,5 +148,5 @@ class WorkflowMarkovChain:
         """
         transition_matrix = []
         for i in range(len(obj.transition_matrix.rows)):
-            transition_matrix.append(obj.transition_matrix.rows[i].probabilities)
+            transition_matrix.append(list(obj.transition_matrix.rows[i].probabilities))
         return WorkflowMarkovChain(id=obj.id, initial_state=obj.initial_state, transition_matrix=transition_matrix)

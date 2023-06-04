@@ -128,8 +128,10 @@ class WorkflowService:
         :return: the instantiated object
         """
         ips_and_commands = []
-        for i in range(obj.ips):
-            ips_and_commands.append((obj.ips[i], obj.commands[i].commands))
+        ips = list(obj.ips)
+        commands = list(obj.commands)
+        for i in range(len(list(ips))):
+            ips_and_commands.append((ips[i], commands[i].commands))
         return WorkflowService(id=obj.id, ips_and_commands=ips_and_commands)
 
     def get_commands(self) -> List[str]:

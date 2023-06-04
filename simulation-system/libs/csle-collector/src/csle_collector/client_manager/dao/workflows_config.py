@@ -141,3 +141,14 @@ class WorkflowsConfig:
         mcs = list(map(lambda x: WorkflowMarkovChain.from_grpc_object(x), obj.workflow_markov_chains))
         services = list(map(lambda x: WorkflowService.from_grpc_object(x), obj.workflow_services))
         return WorkflowsConfig(workflow_markov_chains=mcs, workflow_services=services)
+
+    def commands(self) -> List[str]:
+        """
+        Gets the list of all commands across all services
+
+        :return: the list of commands
+        """
+        commands = []
+        for w in self.workflow_services:
+            commands = commands + w.get_commands()
+        return commands

@@ -1,3 +1,4 @@
+import logging
 import random
 from typing import List, Dict, Any
 import numpy as np
@@ -195,14 +196,20 @@ class Client:
             service_time = expon.rvs(scale=(self.mu), loc=0, size=1)[0]
         done = False
         while not done:
-            service = workflows_config.get_workflow_service(id=s)
-            service_cmds = service.get_commands()
-            commands.append(random.choice(service_cmds))
-            s = mc.step_forward()
             if not self.exponential_service_time:
-                done = s != len(workflows_config.workflow_services)-1
+                done = s == len(workflows_config.workflow_services)
             else:
                 done = len(commands) > service_time
+            if not done:
+                service = workflows_config.get_workflow_service(id=s)
+                if service is None:
+                    raise ValueError(f"Service with id: {s} not found, available service ids: "
+                                     f"{list(map(lambda x: x.id, workflows_config.workflow_services))}")
+                service_cmds = service.get_commands()
+                commands.append(random.choice(service_cmds))
+                s_prime = mc.step_forward()
+                if not self.exponential_service_time or s_prime != len(workflows_config.workflow_services):
+                    s = s_prime
         mc.reset()
         return commands
         
