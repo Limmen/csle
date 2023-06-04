@@ -148,4 +148,4 @@ class WorkflowService:
         """
         :return: a string representation of the object
         """
-        return f"Workflow service, ips and commands: {self.ips_and_commands}"
+        return f"Workflow service, id: {self.id}, ips and commands: {self.ips_and_commands}"
