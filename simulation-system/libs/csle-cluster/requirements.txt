@@ -1,5 +1,5 @@
-csle-common==0.2.8
-csle-collector==0.2.8
-csle-ryu==0.2.8
+csle-common==0.2.9
+csle-collector==0.2.9
+csle-ryu==0.2.9
 grcpio==1.46.3
 grpcio-tools==1.46.3

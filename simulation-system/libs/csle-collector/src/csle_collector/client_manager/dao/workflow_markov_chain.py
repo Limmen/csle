@@ -149,4 +149,4 @@ class WorkflowMarkovChain:
         transition_matrix = []
         for i in range(len(obj.transition_matrix.rows)):
             transition_matrix.append(obj.transition_matrix.rows[i].probabilities)
-        return WorkflowMarkovChain(id=obj.id, initial_state=obj.intial_state, transition_matrix=transition_matrix)
+        return WorkflowMarkovChain(id=obj.id, initial_state=obj.initial_state, transition_matrix=transition_matrix)
