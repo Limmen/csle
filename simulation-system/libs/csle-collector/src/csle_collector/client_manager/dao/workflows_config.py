@@ -138,6 +138,6 @@ class WorkflowsConfig:
         :param obj: the object to instantiate from
         :return: the instantiated object
         """
-        mcs = list(map(lambda x: x.from_grpc_object(), obj.workflow_markov_chains))
-        services = list(map(lambda x: x.from_grpc_object(), obj.workflow_services))
+        mcs = list(map(lambda x: WorkflowMarkovChain.from_grpc_object(x), obj.workflow_markov_chains))
+        services = list(map(lambda x: WorkflowService.from_grpc_object(x), obj.workflow_services))
         return WorkflowsConfig(workflow_markov_chains=mcs, workflow_services=services)
