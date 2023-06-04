@@ -49,7 +49,7 @@ def start_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cl
     :param timeout: the timeout for sending a request to the GRPC server
     :return: a clients DTO describing the state of the clients
     """
-    clients_grpcs = list(map(lambda x: x.to_grpc_object, clients))
+    clients_grpcs = list(map(lambda x: x.to_grpc_object(), clients))
     workflows_config_grpc = workflows_config.to_grpc_object()
     start_clients_msg = csle_collector.client_manager.client_manager_pb2.StartClientsMsg(
         time_step_len_seconds=time_step_len_seconds, clients=clients_grpcs,
