@@ -95,7 +95,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :param context: the gRPC context
         :return: a clients DTO with the state of the clients
         """
-        clients = list(map(lambda x: Client.from_grpc_object(x, obj.client_arrival_type), request.clients))
+        clients = list(map(lambda x: Client.from_grpc_object(x), request.clients))
         workflows_config = WorkflowsConfig.from_grpc_object(request.workflows_config)
         logging.info(f"Starting clients, num clients:{len(clients)}, "
                      f"num workflows: {len(workflows_config.workflow_markov_chains)}, "
