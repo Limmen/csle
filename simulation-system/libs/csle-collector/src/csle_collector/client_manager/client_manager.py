@@ -100,7 +100,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         logging.info(f"Starting clients, num clients:{len(clients)}, "
                      f"num workflows: {len(workflows_config.workflow_markov_chains)}, "
                      f"num services: {len(workflows_config.workflow_services)}, "
-                     f"clients: {list(map(lambda x: str(x), clients))},"
+                     f"client types: {list(map(lambda x: str(x), clients))},"
                      f"workflow markov chains: {list(map(lambda x: str(x), workflows_config.workflow_markov_chains))},"
                      f"workflow services: {list(map(lambda x: str(x), workflows_config.workflow_services))},"
                      f"\n commands: {workflows_config.commands()}")
