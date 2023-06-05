@@ -61,8 +61,8 @@ def stop_client_producer(emulation: str, execution_id: int):
 
 def start_client_producer(emulation: str, execution_id: int):
     execution = MetastoreFacade.get_emulation_execution(emulation_name=emulation, ip_first_octet=execution_id)
-    kafka_ip = execution.emulation_env_config.kafka_config.container.docker_gw_bridge_ip
-    kafka_port = execution.emulation_env_config.kafka_config.kafka_port_external
+    kafka_ip = execution.emulation_env_config.kafka_config.container.get_ips()[0]
+    kafka_port = execution.emulation_env_config.kafka_config.kafka_port
     client_container_external_ip = \
         execution.emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip
     client_manager_port = execution.emulation_env_config.traffic_config.client_population_config.client_manager_port
@@ -89,6 +89,6 @@ if __name__ == '__main__':
     # time.sleep(2)
     # stop_client_population(emulation=emulation, execution_id=execution_id)
     # time.sleep(2)
-    start_client_population(emulation=emulation, execution_id=execution_id, clients=clients)
-    time.sleep(2)
+    # start_client_population(emulation=emulation, execution_id=execution_id, clients=clients)
+    # time.sleep(2)
     start_client_producer(emulation=emulation, execution_id=execution_id)

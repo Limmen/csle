@@ -72,6 +72,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         producer_time_step_len_seconds = 0
 
         if self.arrival_thread is not None:
+            clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
             self.arrival_thread.stopped = True
             time.sleep(1)
         self.arrival_thread = None
