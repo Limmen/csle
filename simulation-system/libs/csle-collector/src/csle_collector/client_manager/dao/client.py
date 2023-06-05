@@ -135,6 +135,8 @@ class Client:
             piece_wise_constant_arrival_config = self.arrival_config.to_grpc_object()
         elif self.arrival_config.client_arrival_type == ClientArrivalType.EPTMP:
             eptmp_arrival_config = self.arrival_config.to_grpc_object()
+        else:
+            raise ValueError(f"Client arrival type: {self.arrival_config.client_arrival_type} not recognized")
         return csle_collector.client_manager.client_manager_pb2.ClientDTO(
             id=self.id, workflow_distribution=self.workflow_distribution, mu=self.mu,
             exponential_service_time=self.exponential_service_time, constant_arrival_config=constant_arrival_config,
@@ -162,6 +164,8 @@ class Client:
             arrival_config = PieceWiseConstantArrivalConfig.from_grpc_object(obj.piece_wise_constant_arrival_config)
         elif arrival_type.value == ClientArrivalType.CONSTANT:
             arrival_config = ConstantArrivalConfig.from_grpc_object(obj.constant_arrival_config)
+        else:
+            raise ValueError(f"Client arrival type: {arrival_type} not recognized")
         return Client(id=obj.id, workflow_distribution=obj.workflow_distribution, mu=obj.mu,
                       exponential_service_time=obj.exponential_service_time, arrival_config=arrival_config)
 
