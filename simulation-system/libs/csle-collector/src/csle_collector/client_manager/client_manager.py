@@ -135,7 +135,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :param context: the gRPC context
         :return: a clients DTO with the state of the clients
         """
-        logging.info(f"Starting producer, time-step:{request.time_step_len_seconds}, "
+        logging.info(f"Starting producer, time-step len:{request.time_step_len_seconds}s, "
                      f"arrival_thread: {self.arrival_thread}")
         clients_time_step_len_seconds = 0
         time.sleep(5)

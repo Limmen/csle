@@ -140,7 +140,7 @@ class Client:
             exponential_service_time=self.exponential_service_time, constant_arrival_config=constant_arrival_config,
             sine_arrival_config=sine_arrival_config, spiking_arrival_config=spiking_arrival_config,
             piece_wise_constant_arrival_config=piece_wise_constant_arrival_config,
-            eptmp_arrival_config=eptmp_arrival_config)
+            eptmp_arrival_config=eptmp_arrival_config, arrival_type=self.arrival_config.client_arrival_type.value)
 
     @staticmethod
     def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.ClientDTO) -> "Client":
@@ -151,30 +151,17 @@ class Client:
         :return: the instantiated object
         """
         arrival_config = None
-        try:
+        arrival_type = ClientArrivalType(obj.arrival_type)
+        if arrival_type.value == ClientArrivalType.EPTMP:
+            arrival_config = EPTMPArrivalConfig.from_grpc_object(obj.eptmp_arrival_config)
+        elif arrival_type.value == ClientArrivalType.SINE_MODULATED:
+            arrival_config = SineArrivalConfig.from_grpc_object(obj.sine_arrival_config)
+        elif arrival_type.value == ClientArrivalType.SPIKING:
+            arrival_config = SpikingArrivalConfig.from_grpc_object(obj.spiking_arrival_config)
+        elif arrival_type.value == ClientArrivalType.PIECE_WISE_CONSTANT:
+            arrival_config = PieceWiseConstantArrivalConfig.from_grpc_object(obj.piece_wise_constant_arrival_config)
+        elif arrival_type.value == ClientArrivalType.CONSTANT:
             arrival_config = ConstantArrivalConfig.from_grpc_object(obj.constant_arrival_config)
-        except Exception:
-            pass
-        if arrival_config is None:
-            try:
-                arrival_config = SineArrivalConfig.from_grpc_object(obj.sine_arrival_config)
-            except Exception:
-                pass
-        if arrival_config is None:
-            try:
-                arrival_config = SpikingArrivalConfig.from_grpc_object(obj.spiking_arrival_config)
-            except Exception:
-                pass
-        if arrival_config is None:
-            try:
-                arrival_config = PieceWiseConstantArrivalConfig.from_grpc_object(obj.piece_wise_constant_arrival_config)
-            except Exception:
-                pass
-        if arrival_config is None:
-            try:
-                arrival_config = EPTMPArrivalConfig.from_grpc_object(obj.eptmp_arrival_config)
-            except Exception:
-                pass
         return Client(id=obj.id, workflow_distribution=obj.workflow_distribution, mu=obj.mu,
                       exponential_service_time=obj.exponential_service_time, arrival_config=arrival_config)
 

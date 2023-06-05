@@ -128,23 +128,29 @@ class ArrivalThread(threading.Thread):
             self.client_threads = new_client_threads
             self.t += 1
             for c in self.clients:
-                if c.arrival_config.client_arrival_type.value == ClientArrivalType.SINE_MODULATED.value:
-                    self.rate = self.sine_modulated_poisson_rate(t=self.t, arrival_config=c.arrival_config)
-                    num_new_clients = poisson.rvs(self.rate, size=1)[0]
-                elif c.arrival_config.client_arrival_type.value == ClientArrivalType.CONSTANT.value:
-                    self.rate = self.constant_poisson_rate(arrival_config=c.arrival_config)
-                    num_new_clients = poisson.rvs(self.rate, size=1)[0]
-                elif c.arrival_config.client_arrival_type.value == ClientArrivalType.PIECE_WISE_CONSTANT.value:
-                    self.rate = self.piece_wise_constant_rate(t=self.t, arrival_config=c.arrival_config)
-                    num_new_clients = poisson.rvs(self.rate, size=1)[0]
-                elif c.arrival_config.client_arrival_type.value == ClientArrivalType.EPTMP.value:
-                    self.rate = self.eptmp_rate(t=self.t, arrival_config=c.arrival_config)
-                    num_new_clients = poisson.rvs(self.rate, size=1)[0]
-                else:
-                    raise ValueError(f"Client arrival type: {self.client_arrival_type} not recognized")
-                for nc in range(num_new_clients):
-                    commands = c.generate_commands(workflows_config=self.workflows_config)
-                    thread = ClientThread(commands=commands, time_step_len_seconds=self.time_step_len_seconds)
-                    thread.start()
-                    self.client_threads.append(thread)
+                try:
+                    if c.arrival_config.client_arrival_type.value == ClientArrivalType.SINE_MODULATED.value:
+                        self.rate = self.sine_modulated_poisson_rate(t=self.t, arrival_config=c.arrival_config)
+                        num_new_clients = poisson.rvs(self.rate, size=1)[0]
+                    elif c.arrival_config.client_arrival_type.value == ClientArrivalType.CONSTANT.value:
+                        self.rate = self.constant_poisson_rate(arrival_config=c.arrival_config)
+                        num_new_clients = poisson.rvs(self.rate, size=1)[0]
+                    elif c.arrival_config.client_arrival_type.value == ClientArrivalType.PIECE_WISE_CONSTANT.value:
+                        self.rate = self.piece_wise_constant_rate(t=self.t, arrival_config=c.arrival_config)
+                        num_new_clients = poisson.rvs(self.rate, size=1)[0]
+                    elif c.arrival_config.client_arrival_type.value == ClientArrivalType.EPTMP.value:
+                        self.rate = self.eptmp_rate(t=self.t, arrival_config=c.arrival_config)
+                        num_new_clients = poisson.rvs(self.rate, size=1)[0]
+                    else:
+                        raise ValueError(f"Client arrival type: {self.client_arrival_type} not recognized")
+                except Exception as e:
+                    logging.info(f"There was an error computing the arrival rate: {str(e)}, {repr(e)}")
+                try:
+                    for nc in range(num_new_clients):
+                        commands = c.generate_commands(workflows_config=self.workflows_config)
+                        thread = ClientThread(commands=commands, time_step_len_seconds=self.time_step_len_seconds)
+                        thread.start()
+                        self.client_threads.append(thread)
+                except Exception as e:
+                    logging.info(f"There was an error starting the client threads: {str(e), repr(e)}")
             time.sleep(self.time_step_len_seconds)

@@ -30,6 +30,7 @@ message ClientDTO {
   EPTMPArrivalConfigDTO eptmp_arrival_config = 7;
   float mu = 9;
   bool exponential_service_time = 10;
+  int32 arrival_type = 11;
 }
 
 // Message that the client sends to extract the ClientsDTO
