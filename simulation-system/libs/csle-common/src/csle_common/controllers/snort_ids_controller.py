@@ -81,7 +81,8 @@ class SnortIDSController:
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{ip}:'
-                    f'{emulation_env_config.snort_ids_manager_config.snort_ids_manager_port}') as channel:
+                    f'{emulation_env_config.snort_ids_manager_config.snort_ids_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
                 csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids(
                     stub=stub, ingress_interface=ingress_interface, egress_interface=egress_interface,
@@ -105,7 +106,8 @@ class SnortIDSController:
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{ip}:'
-                    f'{emulation_env_config.snort_ids_manager_config.snort_ids_manager_port}') as channel:
+                    f'{emulation_env_config.snort_ids_manager_config.snort_ids_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
                 csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids(stub=stub)
 
@@ -246,7 +248,8 @@ class SnortIDSController:
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{ip}:'
-                    f'{emulation_env_config.snort_ids_manager_config.snort_ids_manager_port}') as channel:
+                    f'{emulation_env_config.snort_ids_manager_config.snort_ids_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
                 csle_collector.snort_ids_manager.query_snort_ids_manager.start_snort_ids_monitor(
                     stub=stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
@@ -290,7 +293,8 @@ class SnortIDSController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{ip}:'
-                f'{emulation_env_config.snort_ids_manager_config.snort_ids_manager_port}') as channel:
+                f'{emulation_env_config.snort_ids_manager_config.snort_ids_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
             logger.info(f"Stopping the Snort IDS monitor thread on {ip}.")
             csle_collector.snort_ids_manager.query_snort_ids_manager.stop_snort_ids_monitor(stub=stub)
@@ -337,7 +341,7 @@ class SnortIDSController:
         :param ip: the ip of the SnortIDSManager
         :return: the status of the SnortIDSManager
         """
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerStub(channel)
             status = \
                 csle_collector.snort_ids_manager.query_snort_ids_manager.get_snort_ids_monitor_status(

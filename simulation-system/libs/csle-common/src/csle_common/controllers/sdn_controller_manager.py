@@ -121,9 +121,7 @@ class SDNControllerManager:
         :return: an RyuDTO with the status
         """
         # Open a gRPC session
-        with grpc.insecure_channel(
-                f'{ip}:'
-                f'{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
             ryu_dto = csle_collector.ryu_manager.query_ryu_server.get_ryu_status(stub)
             return ryu_dto
@@ -145,7 +143,8 @@ class SDNControllerManager:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.sdn_controller_config.manager_port}') as channel:
+                f'{emulation_env_config.sdn_controller_config.manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
             ryu_dto = csle_collector.ryu_manager.query_ryu_server.stop_ryu(stub)
             return ryu_dto
@@ -171,7 +170,8 @@ class SDNControllerManager:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.sdn_controller_config.manager_port}') as channel:
+                f'{emulation_env_config.sdn_controller_config.manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
             logger.info(
                 f"Starting RYU, port: {emulation_env_config.sdn_controller_config.controller_port}, "
@@ -204,7 +204,8 @@ class SDNControllerManager:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.sdn_controller_config.manager_port}') as channel:
+                f'{emulation_env_config.sdn_controller_config.manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
             ryu_dto = csle_collector.ryu_manager.query_ryu_server.start_ryu_monitor(
                 stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
@@ -230,7 +231,8 @@ class SDNControllerManager:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.sdn_controller_config.manager_port}') as channel:
+                f'{emulation_env_config.sdn_controller_config.manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStub(channel)
             ryu_dto = csle_collector.ryu_manager.query_ryu_server.stop_ryu_monitor(stub)
             return ryu_dto

@@ -72,7 +72,8 @@ class OSSECIDSController:
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{ip}:'
-                    f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}') as channel:
+                    f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
                 Logger.__call__().get_logger().info(
                     f"Starting OSSEC IDS on {ip}.")
@@ -94,7 +95,8 @@ class OSSECIDSController:
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{ip}:'
-                    f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}') as channel:
+                    f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
                 Logger.__call__().get_logger().info(
                     f"Stopping OSSEC IDS on {ip}.")
@@ -235,7 +237,8 @@ class OSSECIDSController:
                 f"OSSEC IDS monitor thread is not running on {ip}, starting it.")
             with grpc.insecure_channel(
                     f'{ip}:'
-                    f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}') as channel:
+                    f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
                 csle_collector.ossec_ids_manager.query_ossec_ids_manager.start_ossec_ids_monitor(
                     stub=stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
@@ -256,7 +259,8 @@ class OSSECIDSController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{ip}:'
-                f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}') as channel:
+                f'{emulation_env_config.ossec_ids_manager_config.ossec_ids_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
             Logger.__call__().get_logger().info(
                 f"Stopping the OSSEC IDS monitor thread on {ip}.")
@@ -348,7 +352,7 @@ class OSSECIDSController:
         :param ip: the ip of the OSSECIDSManager
         :return: the status of the OSSECIDSManager
         """
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerStub(channel)
             status = \
                 csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_monitor_status(stub=stub)

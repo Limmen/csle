@@ -105,7 +105,8 @@ class KafkaController:
             port=emulation_env_config.kafka_config.kafka_manager_port)
         with grpc.insecure_channel(
                 f'{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.kafka_config.kafka_manager_port}') as channel:
+                f'{emulation_env_config.kafka_config.kafka_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
 
             if not kafka_dto.running:
@@ -148,9 +149,7 @@ class KafkaController:
         :return: a KafkaDTO with the status of the server
         """
         # Open a gRPC session
-        with grpc.insecure_channel(
-                f'{ip}:'
-                f'{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.get_kafka_status(stub)
             return kafka_dto
@@ -172,7 +171,8 @@ class KafkaController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.kafka_config.kafka_manager_port}') as channel:
+                f'{emulation_env_config.kafka_config.kafka_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.stop_kafka(stub)
             return kafka_dto
@@ -228,7 +228,8 @@ class KafkaController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.kafka_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.kafka_config.kafka_manager_port}') as channel:
+                f'{emulation_env_config.kafka_config.kafka_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerStub(channel)
             kafka_dto = csle_collector.kafka_manager.query_kafka_server.start_kafka(stub)
             return kafka_dto

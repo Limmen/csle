@@ -213,7 +213,8 @@ class TrafficController:
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}:'
-                    f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}') as channel:
+                    f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
                 csle_collector.client_manager.query_clients.stop_clients(stub)
 
@@ -244,7 +245,8 @@ class TrafficController:
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}:'
-                    f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}') as channel:
+                    f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
 
                 # Start the producer thread
@@ -282,7 +284,8 @@ class TrafficController:
             # Open a gRPC session
             with grpc.insecure_channel(
                     f'{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}:'
-                    f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}') as channel:
+                    f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
 
                 # Stop the producer thread
@@ -314,7 +317,8 @@ class TrafficController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}') as channel:
+                f'{emulation_env_config.traffic_config.client_population_config.client_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
 
             # Stop the client population if it is already running
@@ -367,8 +371,7 @@ class TrafficController:
         :return: the status of the clientmanager
         """
         # Open a gRPC session
-        with grpc.insecure_channel(
-                f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.client_manager.client_manager_pb2_grpc.ClientManagerStub(channel)
             status = csle_collector.client_manager.query_clients.get_clients(stub=stub)
             return status
@@ -408,7 +411,8 @@ class TrafficController:
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{node_traffic_config.docker_gw_bridge_ip}:{node_traffic_config.traffic_manager_port}') as channel:
+                f'{node_traffic_config.docker_gw_bridge_ip}:{node_traffic_config.traffic_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub(channel)
             csle_collector.traffic_manager.query_traffic_manager.stop_traffic(stub)
 
@@ -481,7 +485,8 @@ class TrafficController:
 
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{node_traffic_config.docker_gw_bridge_ip}:{node_traffic_config.traffic_manager_port}') as channel:
+                f'{node_traffic_config.docker_gw_bridge_ip}:{node_traffic_config.traffic_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub(channel)
             csle_collector.traffic_manager.query_traffic_manager.start_traffic(stub, commands=commands,
                                                                                sleep_time=sleep_time)
@@ -559,8 +564,7 @@ class TrafficController:
         :return: the status of the traffic manager
         """
         # Open a gRPC session
-        with grpc.insecure_channel(
-                f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.traffic_manager.traffic_manager_pb2_grpc.TrafficManagerStub(channel)
             status = csle_collector.traffic_manager.query_traffic_manager.get_traffic_status(stub=stub)
             return status

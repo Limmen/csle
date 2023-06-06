@@ -482,7 +482,8 @@ class ContainerController:
             f"{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}")
         with grpc.insecure_channel(
                 f'{ip}:'
-                f'{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}') as channel:
+                f'{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             container_ip_dtos = []
             for c in execution.emulation_env_config.containers_config.containers:
@@ -524,8 +525,8 @@ class ContainerController:
         ip = physical_server_ip
         with grpc.insecure_channel(
                 f'{ip}:'
-                f'{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}') \
-                as channel:
+                f'{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
             csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor(
                 stub=stub, emulation=execution.emulation_name, execution_first_ip_octet=execution.ip_first_octet)
@@ -555,7 +556,7 @@ class ContainerController:
         :return: None
         """
         try:
-            with grpc.insecure_channel(f'{ip}:{port}') as channel:
+            with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
                 docker_stats_monitor_dto = \
                     csle_collector.docker_stats_manager.query_docker_stats_manager.get_docker_stats_manager_status(

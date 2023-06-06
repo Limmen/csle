@@ -29,6 +29,8 @@ class GRPC_SERVERS:
     OSSEC_IDS_MANAGER_PORT = 50047
     SNORT_IDS_MANAGER_PORT = 50048
     HOST_MANAGER_PORT = 50049
+    GRPC_OPTIONS = [('grpc.max_message_length', 100000000), ('grpc.max_send_message_length', 100000000),
+                    ('grpc.max_receive_message_length', 100000000)]
 
 
 class CONFIG_FILE:

@@ -115,9 +115,7 @@ class ELKController:
         :return: an ELKDTO with the status of the server
         """
         # Open a gRPC session
-        with grpc.insecure_channel(
-                f'{ip}:'
-                f'{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.get_elk_status(stub)
             return elk_dto
@@ -138,7 +136,8 @@ class ELKController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
+                f'{emulation_env_config.elk_config.elk_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.stop_elk(stub)
             return elk_dto
@@ -162,7 +161,8 @@ class ELKController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
+                f'{emulation_env_config.elk_config.elk_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.start_elk(stub)
             return elk_dto
@@ -184,7 +184,8 @@ class ELKController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
+                f'{emulation_env_config.elk_config.elk_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.start_elastic(stub)
             return elk_dto
@@ -206,7 +207,8 @@ class ELKController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
+                f'{emulation_env_config.elk_config.elk_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.start_kibana(stub)
             return elk_dto
@@ -228,7 +230,8 @@ class ELKController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
+                f'{emulation_env_config.elk_config.elk_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.start_logstash(stub)
             return elk_dto
@@ -250,7 +253,8 @@ class ELKController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
+                f'{emulation_env_config.elk_config.elk_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.stop_elastic(stub)
             return elk_dto
@@ -272,7 +276,8 @@ class ELKController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
+                f'{emulation_env_config.elk_config.elk_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.stop_kibana(stub)
             return elk_dto
@@ -294,7 +299,8 @@ class ELKController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{emulation_env_config.elk_config.container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.elk_config.elk_manager_port}') as channel:
+                f'{emulation_env_config.elk_config.elk_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.elk_manager.elk_manager_pb2_grpc.ElkManagerStub(channel)
             elk_dto = csle_collector.elk_manager.query_elk_server.stop_logstash(stub)
             return elk_dto

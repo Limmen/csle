@@ -23,7 +23,6 @@ def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str
     fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(16, 13))
     col = 0
     row = 0
-    print(statistic.conditionals_counts[condition].keys())
 
     max_val = 0
     for ip in ips:

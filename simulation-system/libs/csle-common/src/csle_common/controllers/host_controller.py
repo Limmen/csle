@@ -676,7 +676,8 @@ class HostController:
             logger.info(f"Host monitor thread is not running on {ip}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
-                    f'{ip}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                    f'{ip}:{emulation_env_config.host_manager_config.host_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                 csle_collector.host_manager.query_host_manager.start_host_monitor(
                     stub=stub, kafka_ip=emulation_env_config.kafka_config.container.get_ips()[0],
@@ -707,7 +708,8 @@ class HostController:
             logger.info(f"Filebeat is not running on {ips[0]}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
-                    f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                    f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                 csle_collector.host_manager.query_host_manager.start_filebeat(stub=stub)
 
@@ -736,7 +738,8 @@ class HostController:
                 f"Packetbeat is not running on {ips[0]}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
-                    f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                    f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                 csle_collector.host_manager.query_host_manager.start_packetbeat(stub=stub)
 
@@ -765,7 +768,8 @@ class HostController:
                 f"Metricbeat is not running on {ips[0]}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
-                    f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                    f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                 csle_collector.host_manager.query_host_manager.start_metricbeat(stub=stub)
 
@@ -795,7 +799,8 @@ class HostController:
                 f"Heartbeat is not running on {ips[0]}, starting it.")
             # Open a gRPC session
             with grpc.insecure_channel(
-                    f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                    f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
                 stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
                 csle_collector.host_manager.query_host_manager.start_heartbeat(stub=stub)
 
@@ -851,7 +856,8 @@ class HostController:
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0], logger=logger)
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             csle_collector.host_manager.query_host_manager.start_spark(stub=stub)
 
@@ -869,7 +875,8 @@ class HostController:
         HostController.start_host_manager(emulation_env_config=emulation_env_config, ip=ips[0], logger=logger)
         # Open a gRPC session
         with grpc.insecure_channel(
-                f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                f'{ips[0]}:{emulation_env_config.host_manager_config.host_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             csle_collector.host_manager.query_host_manager.stop_spark(stub=stub)
 
@@ -895,7 +902,8 @@ class HostController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                f'{emulation_env_config.host_manager_config.host_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             logger.info(f"Configuring filebeat on {container.docker_gw_bridge_ip}, {container.get_full_name()}, "
                         f"ips: {container.get_ips()}")
@@ -930,7 +938,8 @@ class HostController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                f'{emulation_env_config.host_manager_config.host_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             logger.info(f"Configuring packetbeat on {container.docker_gw_bridge_ip}, {container.get_full_name()}, "
                         f"ips: {container.get_ips()}")
@@ -962,7 +971,8 @@ class HostController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                f'{emulation_env_config.host_manager_config.host_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             logger.info(f"Configuring metricbeat on {container.docker_gw_bridge_ip}, {container.get_full_name()}, "
                         f"ips: {container.get_ips()}")
@@ -998,7 +1008,8 @@ class HostController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{container.docker_gw_bridge_ip}:'
-                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                f'{emulation_env_config.host_manager_config.host_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             logger.info(f"Configuring heartbeat on {container.docker_gw_bridge_ip}, {container.get_full_name()}, "
                         f"ips: {container.get_ips()}")
@@ -1060,7 +1071,8 @@ class HostController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{ip}:'
-                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                f'{emulation_env_config.host_manager_config.host_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             logger.info(f"Stopping the Host monitor thread on {ip}.")
             csle_collector.host_manager.query_host_manager.stop_host_monitor(stub=stub)
@@ -1080,7 +1092,8 @@ class HostController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{ip}:'
-                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                f'{emulation_env_config.host_manager_config.host_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             logger.info(f"Stopping filebeat on {ip}.")
             csle_collector.host_manager.query_host_manager.stop_filebeat(stub=stub)
@@ -1100,7 +1113,8 @@ class HostController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{ip}:'
-                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                f'{emulation_env_config.host_manager_config.host_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             logger.info(f"Stopping packetbeat on {ip}.")
             csle_collector.host_manager.query_host_manager.stop_packetbeat(stub=stub)
@@ -1120,7 +1134,8 @@ class HostController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{ip}:'
-                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                f'{emulation_env_config.host_manager_config.host_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             logger.info(f"Stopping metricbeat on {ip}.")
             csle_collector.host_manager.query_host_manager.stop_metricbeat(stub=stub)
@@ -1140,7 +1155,8 @@ class HostController:
         # Open a gRPC session
         with grpc.insecure_channel(
                 f'{ip}:'
-                f'{emulation_env_config.host_manager_config.host_manager_port}') as channel:
+                f'{emulation_env_config.host_manager_config.host_manager_port}',
+                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             logger.info(f"Stopping heartbeat on {ip}.")
             csle_collector.host_manager.query_host_manager.stop_heartbeat(stub=stub)
@@ -1203,7 +1219,7 @@ class HostController:
         :return: the status of the host manager
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_collector.host_manager.host_manager_pb2_grpc.HostManagerStub(channel)
             status = csle_collector.host_manager.query_host_manager.get_host_status(stub=stub)
             return status

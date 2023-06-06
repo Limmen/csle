@@ -31,7 +31,7 @@ class ClusterController:
         :return: The node status
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             node_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_containers_in_execution(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -51,7 +51,7 @@ class ClusterController:
         :return: The node status
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             node_status_dto = \
                 csle_cluster.cluster_manager.query_cluster_manager.attach_containers_in_execution_to_networks(
@@ -69,7 +69,7 @@ class ClusterController:
         :param timeout_sec: timeout in seconds
         :return: True if it is running, otherwise False.
         """
-        channel = grpc.insecure_channel(f'{ip}:{port}')
+        channel = grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS)
         try:
             grpc.channel_ready_future(channel).result(timeout=timeout_sec)
             return True
@@ -86,7 +86,7 @@ class ClusterController:
         :return: The node status
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             node_status_dto = csle_cluster.cluster_manager.query_cluster_manager.get_node_status(stub)
             return node_status_dto
@@ -101,7 +101,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_postgresql(stub)
             return service_status_dto
@@ -116,7 +116,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_cadvisor(stub)
             return service_status_dto
@@ -131,7 +131,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_node_exporter(stub)
             return service_status_dto
@@ -146,7 +146,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_grafana(stub)
             return service_status_dto
@@ -161,7 +161,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_prometheus(stub)
             return service_status_dto
@@ -176,7 +176,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_pgadmin(stub)
             return service_status_dto
@@ -191,7 +191,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_nginx(stub)
             return service_status_dto
@@ -206,7 +206,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_flask(stub)
             return service_status_dto
@@ -222,7 +222,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_docker_statsmanager(stub)
             return service_status_dto
@@ -237,7 +237,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_docker_engine(stub)
             return service_status_dto
@@ -252,7 +252,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_postgresql(stub)
             return service_status_dto
@@ -267,7 +267,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_cadvisor(stub)
             return service_status_dto
@@ -282,7 +282,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_node_exporter(stub)
             return service_status_dto
@@ -297,7 +297,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_grafana(stub)
             return service_status_dto
@@ -312,7 +312,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_prometheus(stub)
             return service_status_dto
@@ -327,7 +327,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_pgadmin(stub)
             return service_status_dto
@@ -342,7 +342,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_nginx(stub)
             return service_status_dto
@@ -357,7 +357,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_flask(stub)
             return service_status_dto
@@ -373,7 +373,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_statsmanager(stub)
             return service_status_dto
@@ -388,7 +388,7 @@ class ClusterController:
         :return: The status of the service
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             service_status_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_engine(stub)
             return service_status_dto
@@ -403,7 +403,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_csle_log_files(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
@@ -418,7 +418,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_docker_statsmanager_logs(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
@@ -433,7 +433,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_prometheus_logs(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
@@ -448,7 +448,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_node_exporter_logs(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
@@ -463,7 +463,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_cadvisor_logs(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
@@ -478,7 +478,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_pgadmin_logs(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
@@ -493,7 +493,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_grafana_logs(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
@@ -508,7 +508,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_nginx_logs(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
@@ -523,7 +523,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_docker_logs(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
@@ -538,7 +538,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_postgresql_logs(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
@@ -553,7 +553,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_flask_logs(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
@@ -568,7 +568,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_log_file(stub,
                                                                                        log_file_name=log_file_name)
@@ -587,7 +587,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.install_libraries(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -607,7 +607,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_kafka_config(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -627,7 +627,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_sdn_controller(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -647,7 +647,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_resource_constraints(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -667,7 +667,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_ovs_switches(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -687,7 +687,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.ping_execution(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -707,7 +707,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.configure_ovs(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -727,7 +727,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_sdn_controller_monitor(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -747,7 +747,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_users(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -767,7 +767,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_vulnerabilities(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -787,7 +787,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_flags(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -807,7 +807,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_topology(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -827,7 +827,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_traffic_managers(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -847,7 +847,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_traffic_generators(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -867,7 +867,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_client_population(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -887,7 +887,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_kafka_client_producer(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -907,7 +907,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_kafka_client_producer(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -927,7 +927,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_snort_idses(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -947,7 +947,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = \
                 csle_cluster.cluster_manager.query_cluster_manager.start_snort_idses_monitor_threads(
@@ -967,7 +967,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_idses(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -987,7 +987,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = \
                 csle_cluster.cluster_manager.query_cluster_manager.start_ossec_idses_monitor_threads(
@@ -1007,7 +1007,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_elk_stack(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1027,7 +1027,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_host_managers(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1047,7 +1047,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_filebeats_config(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1067,7 +1067,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_packetbeats_config(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1087,7 +1087,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_metricbeats_config(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1107,7 +1107,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_heartbeats_config(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1128,7 +1128,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_filebeats(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet, initial_start=initial_start
@@ -1149,7 +1149,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_metricbeats(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet, initial_start=initial_start
@@ -1170,7 +1170,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_heartbeats(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet, initial_start=initial_start
@@ -1191,7 +1191,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_packetbeats(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet, initial_start=initial_start
@@ -1211,7 +1211,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_docker_statsmanager_thread(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1230,7 +1230,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_all_executions_of_emulation(
                 stub=stub, emulation=emulation)
@@ -1249,7 +1249,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_execution(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1266,7 +1266,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_all_executions(stub=stub)
             return operation_outcome_dto
@@ -1282,7 +1282,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.clean_all_executions(stub=stub)
             return operation_outcome_dto
@@ -1299,7 +1299,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = \
                 csle_cluster.cluster_manager.query_cluster_manager.clean_all_executions_of_emulation(
@@ -1319,7 +1319,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.clean_execution(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1340,7 +1340,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_traffic_manager(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet, container_ip=container_ip
@@ -1361,7 +1361,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_traffic_manager(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet, container_ip=container_ip
@@ -1381,7 +1381,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_traffic_managers(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1401,7 +1401,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_client_manager(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1421,7 +1421,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_client_manager(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1441,7 +1441,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_client_population(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1461,7 +1461,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             clients_dto = csle_cluster.cluster_manager.query_cluster_manager.get_num_active_clients(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1481,7 +1481,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_traffic_generators(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1502,7 +1502,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_traffic_generator(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet, container_ip=container_ip
@@ -1523,7 +1523,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_traffic_generator(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet, container_ip=container_ip
@@ -1543,7 +1543,7 @@ class ClusterController:
         :return: a ClientManagersInfoDTO
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             client_managers_info_dto = csle_cluster.cluster_manager.query_cluster_manager.get_client_managers_info(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1563,7 +1563,7 @@ class ClusterController:
         :return: a TrafficManagersInfoDTO
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             traffic_managers_info_dto = csle_cluster.cluster_manager.query_cluster_manager.get_traffic_managers_info(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -1581,7 +1581,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_all_running_containers(
                 stub=stub)
@@ -1598,7 +1598,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_container(
                 stub=stub, container_name=container_name)
@@ -1615,7 +1615,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_all_stopped_containers(
                 stub=stub)
@@ -1633,7 +1633,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_container(
                 stub=stub, container_name=container_name)
@@ -1650,7 +1650,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_all_container_images(
                 stub=stub)
@@ -1668,7 +1668,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_container_image(
                 stub=stub, image_name=image_name)
@@ -1685,7 +1685,7 @@ class ClusterController:
         :return: The container images
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             images_dto = csle_cluster.cluster_manager.query_cluster_manager.list_all_container_images(
                 stub=stub)
@@ -1702,7 +1702,7 @@ class ClusterController:
         :return: The docker networks
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             docker_networks_dto = csle_cluster.cluster_manager.query_cluster_manager.list_all_docker_networks(
                 stub=stub)
@@ -1719,7 +1719,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_all_stopped_containers(
                 stub=stub)
@@ -1737,7 +1737,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_container(
                 stub=stub, container_name=container_name)
@@ -1754,7 +1754,7 @@ class ClusterController:
         :return: The docker networks
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             running_containers_dto = csle_cluster.cluster_manager.query_cluster_manager.list_all_running_containers(
                 stub=stub)
@@ -1771,7 +1771,7 @@ class ClusterController:
         :return: The docker networks
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             running_emulations_dto = csle_cluster.cluster_manager.query_cluster_manager.list_all_running_emulations(
                 stub=stub)
@@ -1788,7 +1788,7 @@ class ClusterController:
         :return: The docker networks
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             stopped_containers_dto = csle_cluster.cluster_manager.query_cluster_manager.list_all_stopped_containers(
                 stub=stub)
@@ -1807,7 +1807,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_emulation_networks(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet)
@@ -1826,7 +1826,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_stats_manager_thread(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet)
@@ -1843,7 +1843,7 @@ class ClusterController:
         :return: The docker stats manager status
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             docker_stats_manager_status_dwto = \
                 csle_cluster.cluster_manager.query_cluster_manager.get_docker_stats_manager_status(
@@ -1862,7 +1862,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_docker_networks(
                 stub=stub, networks=networks)
@@ -1879,7 +1879,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_all_docker_networks(
                 stub=stub)
@@ -1898,7 +1898,7 @@ class ClusterController:
         :return: a DockerStatsManagersInfoDTO
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             docker_stats_managers_info_dto = \
                 csle_cluster.cluster_manager.query_cluster_manager.get_docker_stats_manager_info(
@@ -1919,7 +1919,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_elk_manager(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -1938,7 +1938,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_elk_manager(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -1957,7 +1957,7 @@ class ClusterController:
         :return: The status of the ELK stack
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             elk_status_dto = csle_cluster.cluster_manager.query_cluster_manager.get_elk_status(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -1976,7 +1976,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_elk_stack(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -1995,7 +1995,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_elastic(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2014,7 +2014,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_elastic(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2033,7 +2033,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_kibana(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2052,7 +2052,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_kibana(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2071,7 +2071,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_logstash(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2090,7 +2090,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_logstash(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2109,7 +2109,7 @@ class ClusterController:
         :return: an ElkManagersInfoDTO
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             elk_managers_info_dto = \
                 csle_cluster.cluster_manager.query_cluster_manager.get_elk_managers_info(
@@ -2130,7 +2130,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_containers_of_execution(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2153,7 +2153,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.run_container(
                 stub=stub, image=image, name=name, memory=memory, num_cpus=num_cpus, create_network=create_network,
@@ -2173,7 +2173,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_containers_of_execution(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2193,7 +2193,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_host_manager(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2212,7 +2212,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_host_managers(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2232,7 +2232,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_host_manager(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2251,7 +2251,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_host_monitor_threads(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2270,7 +2270,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_filebeats(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2289,7 +2289,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_packetbeats(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2308,7 +2308,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_metricbeats(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2327,7 +2327,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_heartbeats(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2347,7 +2347,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_host_monitor_thread(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2369,7 +2369,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_filebeat(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip,
@@ -2392,7 +2392,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_packetbeat(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip,
@@ -2415,7 +2415,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_metricbeat(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip,
@@ -2438,7 +2438,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_heartbeat(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip,
@@ -2459,7 +2459,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_filebeat(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2479,7 +2479,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_packetbeat(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2499,7 +2499,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_metricbeat(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2519,7 +2519,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_heartbeat(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2539,7 +2539,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_filebeat_config(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2559,7 +2559,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_packetbeat_config(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2579,7 +2579,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_metricbeat_config(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2599,7 +2599,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.apply_heartbeat_config(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2618,7 +2618,7 @@ class ClusterController:
         :return: The statuses
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             statuses_dtos = \
                 csle_cluster.cluster_manager.query_cluster_manager.get_host_monitor_threads_statuses(
@@ -2638,7 +2638,7 @@ class ClusterController:
         :return: The host managers info
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             managers_info_dto = csle_cluster.cluster_manager.query_cluster_manager.get_host_managers_info(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2657,7 +2657,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_kafka_manager(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2676,7 +2676,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_kafka_manager(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2695,7 +2695,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_kafka_topics(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2714,7 +2714,7 @@ class ClusterController:
         :return: The kafka status
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             status_dto = csle_cluster.cluster_manager.query_cluster_manager.get_kafka_status(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2733,7 +2733,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_kafka_server(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2752,7 +2752,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_kafka_server(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2771,7 +2771,7 @@ class ClusterController:
         :return: The kafka managers infos
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             kafka_managers_info = csle_cluster.cluster_manager.query_cluster_manager.get_kafka_managers_info(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2790,7 +2790,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ossec_idses(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2810,7 +2810,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ossec_ids(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2829,7 +2829,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_ids(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2848,7 +2848,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_ids_managers(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2867,7 +2867,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ossec_ids_managers(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2887,7 +2887,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_ids_manager(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2907,7 +2907,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ossec_ids_manager(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2928,7 +2928,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ossec_ids_monitor_thread(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2948,7 +2948,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ossec_ids_monitor_thread(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -2967,7 +2967,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ossec_ids_monitor_threads(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -2986,7 +2986,7 @@ class ClusterController:
         :return: The thread statuses
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             statuses_dtos = \
                 csle_cluster.cluster_manager.query_cluster_manager.get_ossec_ids_monitor_thread_statuses(
@@ -3006,7 +3006,7 @@ class ClusterController:
         :return: The managers infos
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             managers_info = csle_cluster.cluster_manager.query_cluster_manager.get_ossec_ids_managers_info(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3025,7 +3025,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ryu_manager(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3044,7 +3044,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ryu_manager(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3063,7 +3063,7 @@ class ClusterController:
         :return: The Ryu status
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             ryu_status_dto = csle_cluster.cluster_manager.query_cluster_manager.get_ryu_status(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3082,7 +3082,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ryu(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3101,7 +3101,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ryu(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3120,7 +3120,7 @@ class ClusterController:
         :return: The ryu manager infos
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             ryu_manager_infos = csle_cluster.cluster_manager.query_cluster_manager.get_ryu_managers_info(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3139,7 +3139,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_idses(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3158,7 +3158,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_idses_monitor_threads(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3178,7 +3178,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_ids(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -3197,7 +3197,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_ids_monitor_thread(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -3217,7 +3217,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_snort_ids(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -3236,7 +3236,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_snort_ids_monitor_thread(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -3255,7 +3255,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_snort_ids_monitor_threads(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3274,7 +3274,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_snort_ids_managers(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3293,7 +3293,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_ids_managers(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3313,7 +3313,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_snort_ids_manager(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -3333,7 +3333,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_ids_manager(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -3352,7 +3352,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_snort_ids_monitor_threads(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3371,7 +3371,7 @@ class ClusterController:
         :return: The Snort IDS managers infos
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             snort_managers_info = csle_cluster.cluster_manager.query_cluster_manager.get_snort_ids_managers_info(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3390,7 +3390,7 @@ class ClusterController:
         :return: The execution info
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             exec_info_dto = csle_cluster.cluster_manager.query_cluster_manager.get_execution_info(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3409,7 +3409,7 @@ class ClusterController:
         :return: The thread statuses
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             statuses_dtos = \
                 csle_cluster.cluster_manager.query_cluster_manager.get_snort_ids_monitor_thread_statuses(
@@ -3429,7 +3429,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_ryu_tunnel(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3448,7 +3448,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.create_kibana_tunnel(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3464,7 +3464,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.list_kibana_tunnels(stub=stub)
             return operation_outcome_dto
@@ -3479,7 +3479,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.list_ryu_tunnels(stub=stub)
             return operation_outcome_dto
@@ -3516,7 +3516,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_kibana_tunnel(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3535,7 +3535,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.remove_ryu_tunnel(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3554,7 +3554,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_host_monitor_threads(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3574,7 +3574,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_host_monitor_thread(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -3593,7 +3593,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_ryu_monitor(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -3612,7 +3612,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_ryu_monitor(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -4071,7 +4071,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_ryu_manager_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -4090,7 +4090,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_ryu_controller_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -4109,7 +4109,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_elk_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -4128,7 +4128,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_elk_manager_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -4148,7 +4148,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_traffic_manager_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -4168,7 +4168,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_host_manager_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -4188,7 +4188,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_ossec_ids_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -4208,7 +4208,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_ossec_ids_manager_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -4228,7 +4228,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_snort_ids_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -4248,7 +4248,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_snort_ids_manager_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -4267,7 +4267,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_kafka_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -4286,7 +4286,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_kafka_manager_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -4305,7 +4305,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_client_manager_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation)
@@ -4325,7 +4325,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_container_logs(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -4341,7 +4341,7 @@ class ClusterController:
         :return: A DTO with the log files
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             logs_dto = csle_cluster.cluster_manager.query_cluster_manager.get_cluster_manager_logs(stub)
             return ClusterManagerUtil.logs_dto_to_dict(logs_dto=logs_dto)
@@ -4360,7 +4360,7 @@ class ClusterController:
         :return: The time series data dto
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             time_series_data_dto = csle_cluster.cluster_manager.query_cluster_manager.get_execution_time_series_data(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet, minutes=minutes
@@ -4381,7 +4381,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_spark_servers(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -4401,7 +4401,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_spark_servers(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
@@ -4422,7 +4422,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_spark_server(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -4442,7 +4442,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_spark_server(
                 stub=stub, ip_first_octet=ip_first_octet, emulation=emulation, container_ip=container_ip)
@@ -4459,7 +4459,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.check_pid(stub=stub, pid=pid)
             return operation_outcome_dto
@@ -4475,7 +4475,7 @@ class ClusterController:
         :return: The operation outcome
         """
         # Open a gRPC session
-        with grpc.insecure_channel(f'{ip}:{port}') as channel:
+        with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
             operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_pid(stub=stub, pid=pid)
             return operation_outcome_dto
