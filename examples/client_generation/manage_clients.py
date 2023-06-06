@@ -111,12 +111,19 @@ if __name__ == '__main__':
     #     Client(id=0, workflow_distribution=[1],
     #            arrival_config=ConstantArrivalConfig(lamb=40), mu=4, exponential_service_time=True)
     # ]
+    # clients = [
+    #     Client(id=0, workflow_distribution=[1],
+    #            arrival_config=EPTMPArrivalConfig(thetas=[3.6269], gammas=[2.1, 1.1], omegas=[0.1731, 0.3264],
+    #                                              phis = [-0.6193, 0.5]),
+    #            mu=4, exponential_service_time=False)
+    # ]
+
     clients = [
         Client(id=0, workflow_distribution=[1],
-               arrival_config=EPTMPArrivalConfig(thetas=[3.6269], gammas=[2.1, 1.1], omegas=[0.1731, 0.3264],
-                                                 phis = [-0.6193, 0.5]),
+               arrival_config=EPTMPArrivalConfig(thetas=[1, 0.003], gammas=[0], omegas=[0], phis = [0]),
                mu=4, exponential_service_time=False)
     ]
+
     workflows_config = WorkflowsConfig(
         workflow_services=
         execution.emulation_env_config.traffic_config.client_population_config.workflows_config.workflow_services,
