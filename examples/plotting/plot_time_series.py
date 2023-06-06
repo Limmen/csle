@@ -17,9 +17,9 @@ def plot(time_series: EmulationMetricsTimeSeries, time_step_len_seconds :int = 3
     colors = plt.cm.viridis(np.linspace(0.3, 1, 2))[-2:]
     file_name="time_series_plot"
     fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(8, 8))
-    rates = list(map(lambda x: x.rate, time_series.client_metrics))[0:1000]
-    time = list(map(lambda x: (x*time_step_len_seconds/60)/60, range(len(rates))))[0:1000]
-    num_clients = list(map(lambda x: x.num_clients, time_series.client_metrics))[0:1000]
+    rates = list(map(lambda x: x.rate, time_series.client_metrics))[100:1100]
+    time = list(map(lambda x: (x*time_step_len_seconds/60)/60, range(len(rates))))
+    num_clients = list(map(lambda x: x.num_clients, time_series.client_metrics))[100:1100]
     ids_alerts = list(map(lambda x: x.alerts_weighted_by_priority, time_series.agg_snort_ids_metrics))
     logins = list(map(lambda x: x.num_failed_login_attempts, time_series.aggregated_host_metrics))
     connections = list(map(lambda x: x.num_open_connections, time_series.aggregated_host_metrics))
@@ -89,5 +89,5 @@ if __name__ == '__main__':
     time_series = ClusterController.get_execution_time_series_data(ip='172.31.212.92', port=50041, minutes=60*24,
                                                                    emulation=emulation_name,
                                                                    ip_first_octet=execution_id)
-    # time_series.to_json_file("/home/kim/arvid_time_series_plot.json")
+    time_series.to_json_file("/home/kim/arvid_time_series_plot_2.json")
     plot(time_series=time_series)
