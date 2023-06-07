@@ -169,9 +169,7 @@ if __name__ == '__main__':
     )
     stopping_env = "csle-intrusion-response-game-local-stopping-pomdp-defender-v1"
     defender_simulation_env_config.gym_env_name = stopping_env
-
-
-    ppo_experiment_config.name = f"dfsp_local_self_play"
+    ppo_experiment_config.name = "dfsp_local_self_play"
     number_of_zones = 6
     X_max = 100
     eta = 0.5

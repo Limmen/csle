@@ -4,11 +4,9 @@ import grpc
 import csle_collector.client_manager.client_manager_pb2_grpc
 import csle_collector.client_manager.client_manager_pb2
 import csle_collector.client_manager.query_clients
-from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
 from csle_collector.client_manager.dao.eptmp_arrival_config import EPTMPArrivalConfig
 from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
 from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMarkovChain
-from csle_collector.client_manager.dao.workflow_service import WorkflowService
 from csle_collector.client_manager.dao.client import Client
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
@@ -50,8 +48,8 @@ def start_client_population(execution: EmulationExecution, clients: List[Client]
         workflows_config = execution.emulation_env_config.traffic_config.client_population_config.workflows_config
     workflows_config_grpc = workflows_config.to_grpc_object()
     start_clients_msg = csle_collector.client_manager.client_manager_pb2.StartClientsMsg(
-        time_step_len_seconds=execution.emulation_env_config.traffic_config.client_population_config.
-            client_time_step_len_seconds,
+        time_step_len_seconds=(
+            execution.emulation_env_config.traffic_config.client_population_config.client_time_step_len_seconds),
         clients=clients_grpcs, workflows_config=workflows_config_grpc)
     client_container_external_ip = \
         execution.emulation_env_config.traffic_config.client_population_config.docker_gw_bridge_ip
@@ -120,13 +118,13 @@ if __name__ == '__main__':
 
     clients = [
         Client(id=0, workflow_distribution=[1],
-               arrival_config=EPTMPArrivalConfig(thetas=[1, 0.003], gammas=[0], omegas=[0], phis = [0]),
+               arrival_config=EPTMPArrivalConfig(thetas=[1, 0.003], gammas=[0], omegas=[0], phis=[0]),
                mu=4, exponential_service_time=False)
     ]
 
     workflows_config = WorkflowsConfig(
-        workflow_services=
-        execution.emulation_env_config.traffic_config.client_population_config.workflows_config.workflow_services,
+        workflow_services=(
+            execution.emulation_env_config.traffic_config.client_population_config.workflows_config.workflow_services),
         workflow_markov_chains=[
             WorkflowMarkovChain(
                 transition_matrix=[

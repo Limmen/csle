@@ -17,7 +17,6 @@ from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConf
 from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.util.emulation_util import EmulationUtil
-from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 
 
 class TrafficController:
@@ -333,7 +332,7 @@ class TrafficController:
             num_services = len(
                 emulation_env_config.traffic_config.client_population_config.workflows_config.workflow_services)
             logger.info(
-                f"Starting the client population, "                
+                f"Starting the client population, "
                 f"time_step_len_seconds: {time_step_len},\n"
                 f"num client profiles: {len(emulation_env_config.traffic_config.client_population_config.clients)}, \n"
                 f"num workflows: {num_workflows}, num_services: {num_services}")

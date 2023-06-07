@@ -1,4 +1,3 @@
-import logging
 import random
 from typing import List, Dict, Any
 import numpy as np
@@ -18,8 +17,9 @@ class Client:
     """
     A client, which is characterized by its arrival process and its workflow distribution.
     """
+
     def __init__(self, id: int, workflow_distribution: List[float], arrival_config: ArrivalConfig, mu: float = 4,
-                 exponential_service_time : bool = False) -> None:
+                 exponential_service_time: bool = False) -> None:
         """
         Initializes the object
 
@@ -33,7 +33,7 @@ class Client:
         self.mu = mu
         self.exponential_service_time = exponential_service_time
         self.arrival_config = arrival_config
-        assert round(sum(workflow_distribution),2) == 1
+        assert round(sum(workflow_distribution), 2) == 1
         self.workflow_distribution = workflow_distribution
 
     @staticmethod
@@ -210,6 +210,3 @@ class Client:
         """
         return f"id: {self.id}, workflow distribution: {self.workflow_distribution}, mu: {self.mu}, " \
                f"exponential service time: {self.exponential_service_time}, arrival config: {str(self.arrival_config)}"
-        
-        
-    

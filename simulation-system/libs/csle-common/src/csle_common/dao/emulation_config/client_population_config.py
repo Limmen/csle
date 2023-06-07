@@ -81,7 +81,7 @@ class ClientPopulationConfig:
                             workflow_distribution=[1])],
             workflows_config=WorkflowsConfig(
                 workflow_markov_chains=[WorkflowMarkovChain(
-                    initial_state=0, transition_matrix=[[0.8,0.2], [0,1]], id=0)],
+                    initial_state=0, transition_matrix=[[0.8, 0.2], [0, 1]], id=0)],
                 workflow_services=[WorkflowService(ips_and_commands=[('localhost', "echo ' '")], id=0)])
         )
 

@@ -92,7 +92,7 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.ATTACKER, player_idx=0
     )
-    experiment_config.name = f"dfsp_local_self_play"
+    experiment_config.name = "dfsp_local_self_play"
     number_of_zones = 6
     X_max = 100
     eta = 0.5

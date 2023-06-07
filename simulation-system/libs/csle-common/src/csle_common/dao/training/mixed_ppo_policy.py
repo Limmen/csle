@@ -142,7 +142,6 @@ class MixedPPOPolicy(Policy):
         """
         return self.from_dict(self.to_dict())
 
-
     def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
         """
         Returns the stage policy for a given observation
@@ -157,6 +156,6 @@ class MixedPPOPolicy(Policy):
         for i, s_a in enumerate(self.states):
             for j, a in enumerate(self.actions):
                 stage_strategy[i][j] = sum([stage_policies[k][i][j]
-                                            for k in range(len(stage_policies))])/len(stage_policies)
+                                            for k in range(len(stage_policies))]) / len(stage_policies)
             stage_strategy[i] = iteround.saferound(stage_strategy[i], 2)
         return stage_strategy.tolist()

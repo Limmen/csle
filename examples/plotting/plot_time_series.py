@@ -4,7 +4,8 @@ from csle_common.dao.emulation_config.emulation_metrics_time_series import Emula
 import numpy as np
 import matplotlib.pyplot as plt
 
-def plot(time_series: EmulationMetricsTimeSeries, time_step_len_seconds :int = 30):
+
+def plot(time_series: EmulationMetricsTimeSeries, time_step_len_seconds: int = 30):
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts,amsmath}')
     plt.rcParams['font.family'] = ['serif']
@@ -15,10 +16,10 @@ def plot(time_series: EmulationMetricsTimeSeries, time_step_len_seconds :int = 3
     ncols = 1
     nrows = 6
     colors = plt.cm.viridis(np.linspace(0.3, 1, 2))[-2:]
-    file_name="time_series_plot"
+    file_name = "time_series_plot"
     fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(8, 8))
     rates = list(map(lambda x: x.rate, time_series.client_metrics))[100:1100]
-    time = list(map(lambda x: (x*time_step_len_seconds/60)/60, range(len(rates))))
+    time = list(map(lambda x: (x * time_step_len_seconds / 60) / 60, range(len(rates))))
     num_clients = list(map(lambda x: x.num_clients, time_series.client_metrics))[100:1100]
     ids_alerts = list(map(lambda x: x.alerts_weighted_by_priority, time_series.agg_snort_ids_metrics))
     logins = list(map(lambda x: x.num_failed_login_attempts, time_series.aggregated_host_metrics))
@@ -41,7 +42,7 @@ def plot(time_series: EmulationMetricsTimeSeries, time_step_len_seconds :int = 3
     ax[1].set_xlim(min(time), max(time))
     ax[1].set_xticks([])
 
-    ax[2].plot(time, ids_alerts[len(ids_alerts)-len(time):], ls='-', color=colors[0], lw=0.75)
+    ax[2].plot(time, ids_alerts[len(ids_alerts) - len(time):], ls='-', color=colors[0], lw=0.75)
     ax[2].spines['top'].set_visible(False)
     ax[2].spines['right'].set_visible(False)
     ax[2].set_ylabel(r"\# IDS alerts")
@@ -49,7 +50,7 @@ def plot(time_series: EmulationMetricsTimeSeries, time_step_len_seconds :int = 3
     ax[2].set_xlim(min(time), max(time))
     ax[2].set_xticks([])
 
-    ax[3].plot(time, logins[len(logins)-len(time):], ls='-', color=colors[0], lw=0.75)
+    ax[3].plot(time, logins[len(logins) - len(time):], ls='-', color=colors[0], lw=0.75)
     ax[3].spines['top'].set_visible(False)
     ax[3].spines['right'].set_visible(False)
     ax[3].set_ylabel(r"\# Login events")
@@ -57,7 +58,7 @@ def plot(time_series: EmulationMetricsTimeSeries, time_step_len_seconds :int = 3
     ax[3].set_xlim(min(time), max(time))
     ax[3].set_xticks([])
 
-    ax[4].plot(time, connections[len(connections)-len(time):], ls='-', color=colors[0], lw=0.75)
+    ax[4].plot(time, connections[len(connections) - len(time):], ls='-', color=colors[0], lw=0.75)
     ax[4].spines['top'].set_visible(False)
     ax[4].spines['right'].set_visible(False)
     ax[4].set_ylabel(r"\# TCP connections")
@@ -65,7 +66,7 @@ def plot(time_series: EmulationMetricsTimeSeries, time_step_len_seconds :int = 3
     ax[4].set_xlim(min(time), max(time))
     ax[4].set_xticks([])
 
-    ax[5].plot(time, processes[len(processes)-len(time):], ls='-', color=colors[0], lw=0.75)
+    ax[5].plot(time, processes[len(processes) - len(time):], ls='-', color=colors[0], lw=0.75)
     ax[5].spines['top'].set_visible(False)
     ax[5].spines['right'].set_visible(False)
     ax[5].set_ylabel(r"\# Processes")
@@ -74,7 +75,6 @@ def plot(time_series: EmulationMetricsTimeSeries, time_step_len_seconds :int = 3
     ax[5].set_xlabel(r"$t$ (hours)")
 
     fig.tight_layout()
-
 
     fig.subplots_adjust(wspace=0.0, hspace=0.2)
     fig.savefig(file_name + ".png", format="png", dpi=600)
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     emulation_name = "csle-level4-020"
     execution_id = 15
     execution = MetastoreFacade.get_emulation_execution(emulation_name=emulation_name, ip_first_octet=execution_id)
-    time_series = ClusterController.get_execution_time_series_data(ip='172.31.212.92', port=50041, minutes=60*24,
+    time_series = ClusterController.get_execution_time_series_data(ip='172.31.212.92', port=50041, minutes=60 * 24,
                                                                    emulation=emulation_name,
                                                                    ip_first_octet=execution_id)
     time_series.to_json_file("/home/kim/arvid_time_series_plot_2.json")

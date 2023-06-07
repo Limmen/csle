@@ -8,6 +8,7 @@ class WorkflowMarkovChain:
     """
     A Markov chain representation of a workflow.
     """
+
     def __init__(self, transition_matrix: List[List[float]], initial_state: int, id: int) -> None:
         """
         Initializes the object
@@ -23,7 +24,7 @@ class WorkflowMarkovChain:
         self.current_state = initial_state
         self.t = 0
         self.id = id
-    
+
     def step_forward(self) -> int:
         """
         Move t forward by one and possibly transition to a new state.
@@ -33,7 +34,7 @@ class WorkflowMarkovChain:
         next_state = WorkflowMarkovChain.markov_next_state(row=self.transition_matrix[self.current_state])
         self.current_state = next_state
         return self.current_state
-    
+
     def reset(self) -> None:
         """
         Resets the Markov chain
@@ -51,11 +52,11 @@ class WorkflowMarkovChain:
         :param row: a numpy array of probabilities that sum up to 1.
         :return:  an integer from 0 to len(row)-1.
         """
-        cumsum = np.cumsum(row) # cumulative sum of probabilities
-        r = random.random() # random number between 0 and 1
+        cumsum = np.cumsum(row)  # cumulative sum of probabilities
+        r = random.random()  # random number between 0 and 1
         for i in range(len(cumsum)):
-            if r < cumsum[i]: # find the first index where r is smaller than cumsum[i]
-                return i # return that index as the outcome
+            if r < cumsum[i]:  # find the first index where r is smaller than cumsum[i]
+                return i  # return that index as the outcome
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "WorkflowMarkovChain":

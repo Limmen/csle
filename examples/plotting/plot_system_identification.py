@@ -63,10 +63,10 @@ def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str
             else:
                 attack_counts_temp[k] = v
         attack_counts_temp_2 = attack_counts_temp.copy()
-        for k,v in attack_counts_temp.items():
+        for k, v in attack_counts_temp.items():
             k2 = k + mean
             if k2 in attack_counts_temp_2:
-                attack_counts_temp_2[k2] =  attack_counts_temp_2[k2] + v
+                attack_counts_temp_2[k2] = attack_counts_temp_2[k2] + v
             else:
                 attack_counts_temp_2[k2] = v
             if k2 > max_val:

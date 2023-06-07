@@ -85,9 +85,11 @@ class MixedLinearTabularPolicy(Policy):
         """
         linear_tabular_policies = list(map(lambda x: x.from_dict(), d["linear_tabular_policies"]))
         obj = MixedLinearTabularPolicy(simulation_name=d["simulation_name"],
-                             states=list(map(lambda x: State.from_dict(x), d["states"])), player_type=d["player_type"],
-                             actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
-                             experiment_config=ExperimentConfig.from_dict(d["experiment_config"]), avg_R=d["avg_R"])
+                                       states=list(map(lambda x: State.from_dict(x), d["states"])),
+                                       player_type=d["player_type"],
+                                       actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
+                                       experiment_config=ExperimentConfig.from_dict(d["experiment_config"]),
+                                       avg_R=d["avg_R"])
         obj.linear_tabular_policies = linear_tabular_policies
         obj.id = d["id"]
         return obj
@@ -157,6 +159,6 @@ class MixedLinearTabularPolicy(Policy):
         for i, s_a in enumerate(self.states):
             for j, a in enumerate(self.actions):
                 stage_strategy[i][j] = sum([stage_policies[k][i][j]
-                                            for k in range(len(stage_policies))])/len(stage_policies)
+                                            for k in range(len(stage_policies))]) / len(stage_policies)
             stage_strategy[i] = iteround.saferound(stage_strategy[i], 2)
         return stage_strategy.tolist()

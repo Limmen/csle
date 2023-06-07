@@ -32,6 +32,7 @@ import gym_csle_stopping_game.constants.constants as env_constants
 from gym_csle_intrusion_response_game.util.intrusion_response_game_util import IntrusionResponseGameUtil
 from csle_agents.agents.vi.vi_agent import VIAgent
 
+
 def reduce_T(T, strategy):
     attacker_state = 2
     reduced_T = np.zeros((T.shape[0], T.shape[2], T.shape[3]))
@@ -55,7 +56,6 @@ def reduce_R(R, strategy):
                 r += strategy[attacker_state][a2] * R[i][a2][j]
             reduced_R[i][j] = r
     return reduced_R
-
 
 
 class DFSPLocalAgent(BaseAgent):
@@ -433,7 +433,8 @@ class DFSPLocalAgent(BaseAgent):
         self.de_experiment_config.output_dir = str(self.root_output_dir)
         self.vi_experiment_config.output_dir = str(self.root_output_dir)
         self.de_experiment_config.agent_type = AgentType.DIFFERENTIAL_EVOLUTION
-        self.defender_simulation_env_config.gym_env_name = "csle-intrusion-response-game-local-stopping-pomdp-defender-v1"
+        self.defender_simulation_env_config.gym_env_name = \
+            "csle-intrusion-response-game-local-stopping-pomdp-defender-v1"
         agent = DifferentialEvolutionAgent(
             emulation_env_config=self.emulation_env_config,
             simulation_env_config=self.defender_simulation_env_config,
@@ -442,17 +443,20 @@ class DFSPLocalAgent(BaseAgent):
                                             f"against defender strategy: {defender_strategy}")
         experiment_execution = agent.train()
         stopping_policy: LinearThresholdStoppingPolicy = experiment_execution.result.policies[seed]
+        S_D = self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D
         self.defender_simulation_env_config.gym_env_name = "csle-intrusion-response-game-local-pomdp-defender-v1"
         T = IntrusionResponseGameUtil.local_stopping_mdp_transition_tensor(
             S=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S,
             A1=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A1,
             A2=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A2,
-            S_D=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D,
+            S_D=S_D,
             T=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.T[0]
         )
-        T = reduce_T(T=T, strategy=self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy.stage_policy(
-            o=[self.defender_simulation_env_config.simulation_env_input_config.stopping_zone] +
-              list(self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.a_b1)))
+        o = [self.defender_simulation_env_config.simulation_env_input_config.stopping_zone] + \
+            list(self.defender_simulation_env_config.simulation_env_input_config.
+                 local_intrusion_response_game_config.a_b1)
+        strategy = self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy
+        T = reduce_T(T=T, strategy=strategy.stage_policy(o=o))
         R = IntrusionResponseGameUtil.local_stopping_mdp_reward_tensor(
             S=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S,
             A1=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.A1,
@@ -460,9 +464,11 @@ class DFSPLocalAgent(BaseAgent):
             R=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.R[0],
             S_D=self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.S_D
         )
-        R = reduce_R(R=R, strategy=self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy.stage_policy(
-            o=[self.defender_simulation_env_config.simulation_env_input_config.stopping_zone] +
-              list(self.defender_simulation_env_config.simulation_env_input_config.local_intrusion_response_game_config.a_b1)))
+        o = [self.defender_simulation_env_config.simulation_env_input_config.stopping_zone] + \
+            list(self.defender_simulation_env_config.simulation_env_input_config
+                 .local_intrusion_response_game_config.a_b1)
+        strategy = self.defender_simulation_env_config.simulation_env_input_config.attacker_strategy
+        R = reduce_R(R=R, strategy=strategy.stage_policy(o=o))
         self.vi_experiment_config.hparams[agents_constants.VI.REWARD_TENSOR].value == list(R.tolist())
         self.vi_experiment_config.hparams[agents_constants.VI.TRANSITION_TENSOR].value == list(T.tolist())
         vi_agent = VIAgent(simulation_env_config=self.defender_simulation_env_config,
@@ -473,7 +479,7 @@ class DFSPLocalAgent(BaseAgent):
             stopping_policy=stopping_policy, action_policy=action_policy,
             simulation_name=self.defender_simulation_env_config.name,
             states=self.simulation_env_config.state_space_config.states,
-            actions = self.simulation_env_config.joint_action_space_config.action_spaces,
+            actions=self.simulation_env_config.joint_action_space_config.action_spaces,
             experiment_config=None, avg_R=-1, agent_type=AgentType.DFSP_LOCAL,
             player_type=PlayerType.DEFENDER
         )

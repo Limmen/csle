@@ -8,7 +8,8 @@ class WorkflowService:
     The service might be distributed across several network nodes.
     The service is defined by the series of commands that a client executes to make use of the service.
     """
-    def __init__(self, ips_and_commands: List[Tuple[str,str]], id: int) -> None:
+
+    def __init__(self, ips_and_commands: List[Tuple[str, str]], id: int) -> None:
         """
         Initializes the object
 
@@ -26,7 +27,7 @@ class WorkflowService:
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = WorkflowService(ips_and_commands= d["ips_and_commands"], id = d["id"])
+        obj = WorkflowService(ips_and_commands=d["ips_and_commands"], id=d["id"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -116,7 +117,7 @@ class WorkflowService:
             commands.append(csle_collector.client_manager.client_manager_pb2.NodeCommandsDTO(
                 commands=self.ips_and_commands[i][1]))
         return csle_collector.client_manager.client_manager_pb2.WorkflowServiceDTO(
-            id=self.id, ips = ips, commands = commands)
+            id=self.id, ips=ips, commands=commands)
 
     @staticmethod
     def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.WorkflowServiceDTO) \
