@@ -14,6 +14,7 @@ from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
 
+
 def reduce_T(T, strategy):
     reduced_T = np.zeros((T.shape[1], T.shape[2], T.shape[3]))
     for i in range(T.shape[1]):

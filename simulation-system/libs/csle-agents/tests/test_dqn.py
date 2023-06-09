@@ -160,7 +160,7 @@ class TestDQNAgentSuite(object):
         simulation_env_config = mocker.MagicMock()
         pytest.logger.info("Creating the DQN Agent")
         DQNAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                   experiment_config=experiment_config)
+                 experiment_config=experiment_config)
         pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker, experiment_config: ExperimentConfig,
@@ -217,8 +217,8 @@ class TestDQNAgentSuite(object):
             return_value=True
         )
         agent = DQNAgent(emulation_env_config=emulation_env_config,
-                           simulation_env_config=simulation_env_config,
-                           experiment_config=experiment_config)
+                         simulation_env_config=simulation_env_config,
+                         experiment_config=experiment_config)
         pytest.logger.info("Starting training of the DQN Agent")
         experiment_execution = agent.train()
         pytest.logger.info("Training completed succesfully")

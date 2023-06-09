@@ -1,4 +1,3 @@
-from typing import Tuple
 import numpy as np
 import logging
 import pytest
@@ -89,10 +88,12 @@ class TestLPNFSuite(object):
         """
         simulation_env_config = mocker.MagicMock()
         pytest.logger.info("Creating the LP-NF Agent")
-        LinearProgrammingNormalFormGameAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
+        LinearProgrammingNormalFormGameAgent(simulation_env_config=simulation_env_config,
+                                             experiment_config=experiment_config)
         pytest.logger.info("Agent created successfully")
 
-    def test_run_agent(self, mocker, experiment_config: ExperimentConfig, simulation_config: SimulationEnvConfig) -> None:
+    def test_run_agent(self, mocker, experiment_config: ExperimentConfig,
+                       simulation_config: SimulationEnvConfig) -> None:
         """
         Tests running the agent
 

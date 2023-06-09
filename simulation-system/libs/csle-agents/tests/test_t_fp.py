@@ -1,4 +1,3 @@
-import numpy as np
 import logging
 import pytest
 import csle_common.constants.constants as constants
@@ -12,7 +11,6 @@ import csle_agents.constants.constants as agents_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
-import gym_csle_stopping_game.constants.constants as env_constants
 
 
 class TestTFPSuite(object):
@@ -147,7 +145,6 @@ class TestTFPSuite(object):
         """
         # Mock emulation and simulation configs
         emulation_env_config = mocker.MagicMock()
-        simulation_env_config = mocker.MagicMock()
 
         # Set attributes of the mocks
         emulation_env_config.configure_mock(**{
@@ -160,7 +157,7 @@ class TestTFPSuite(object):
         )
         mocker.patch(
             'csle_common.metastore.metastore_facade.MetastoreFacade.get_training_job_config',
-            return_value=TrainingJobConfig(simulation_env_name= "", experiment_config=experiment_config,
+            return_value=TrainingJobConfig(simulation_env_name="", experiment_config=experiment_config,
                                            progress_percentage=0.0, pid=1, experiment_result=None,
                                            emulation_env_name="", simulation_traces=[], num_cached_traces=0,
                                            log_file_path="", descr="", physical_host_ip="")

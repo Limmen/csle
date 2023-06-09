@@ -13,7 +13,6 @@ from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import Stopp
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
-import gym_csle_stopping_game.constants.constants as env_constants
 
 
 class TestShapleyIterationSuite(object):
@@ -36,7 +35,8 @@ class TestShapleyIterationSuite(object):
         action_space_player_2 = simulation_env_config.joint_action_space_config.action_spaces[1].actions_ids()
         experiment_config = ExperimentConfig(
             output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}shapley_iteration_test",
-            title="Shapley iteration  training attacker and defender through self-play to approximate a Nash equilibrium",
+            title="Shapley iteration  training attacker and defender through self-play to approximate a Nash "
+                  "equilibrium",
             random_seeds=[399, 98912], agent_type=AgentType.SHAPLEY_ITERATION,
             log_every=1, br_log_every=5000,
             hparams={

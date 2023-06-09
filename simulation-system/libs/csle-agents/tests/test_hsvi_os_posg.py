@@ -148,8 +148,6 @@ class TestHSVISuite(object):
         :return: the example experiment config
         """
         Z = observation_tensor()
-        R = reward_tensor()
-        T = transition_tensor()
         A1, _ = player_1_actions()
         A2, _ = player_2_actions()
         O, _ = observations()
@@ -245,7 +243,6 @@ class TestHSVISuite(object):
         :return: None
         """
         # Mock emulation and simulation configs
-        emulation_env_config = mocker.MagicMock()
         simulation_env_config = mocker.MagicMock()
 
         # Mock metastore facade

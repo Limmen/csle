@@ -43,7 +43,8 @@ class TestCrossEntropySuite(object):
                 agents_constants.CROSS_ENTROPY.K: HParam(value=10, name=agents_constants.CROSS_ENTROPY.K,
                                                          descr="the number of samples in each iteration of CE"),
                 agents_constants.CROSS_ENTROPY.LAMB: HParam(value=0.25, name=agents_constants.CROSS_ENTROPY.K,
-                                                            descr="the number of samples to keep in each iteration of CE"),
+                                                            descr="the number of samples to keep in each iteration of "
+                                                                  "CE"),
                 agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                                 descr="number of iterations to evaluate theta"),
                 agents_constants.CROSS_ENTROPY.THETA1: HParam(value=[-3, -3, -3],
@@ -174,8 +175,9 @@ class TestCrossEntropySuite(object):
             'csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
             return_value=True
         )
-        agent = CrossEntropyAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                              experiment_config=experiment_config)
+        agent = CrossEntropyAgent(emulation_env_config=emulation_env_config,
+                                  simulation_env_config=simulation_env_config,
+                                  experiment_config=experiment_config)
         pytest.logger.info("Starting training of Cross Entropy Agent")
         experiment_execution = agent.train()
         pytest.logger.info("Training completed succesfully")

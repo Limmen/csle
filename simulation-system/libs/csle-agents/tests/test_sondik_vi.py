@@ -71,34 +71,24 @@ class TestSondikVISuite(object):
                 [0.5, 0.5],
                 [0.5, 0.5]
             ])
-
         T = np.array(simulation_env_config.transition_operator_config.transition_tensor)
         if len(T.shape) == 5:
             T = T[0]
-        num_states = len(simulation_env_config.state_space_config.states)
-
         simulation_env_config.reward_function_config.reward_tensor = list(StoppingGameUtil.reward_tensor(
             R_INT=-10, R_COST=-10, R_SLA=0, R_ST=100, L=1))
-
         R = np.array(simulation_env_config.reward_function_config.reward_tensor)
         if len(R.shape) == 4:
             R = R[0]
-        # Z = np.array(simulation_env_config.observation_function_config.observation_tensor)
         num_observations = 3
         Z = StoppingGameUtil.observation_tensor(len(range(0, num_observations)))
         if len(R.shape) == 5:
             Z = Z[0]
-        num_actions = len(simulation_env_config.joint_action_space_config.action_spaces[0].actions)
-
         T = reduce_T(T)
         R = reduce_R(R)
         Z = reduce_Z(Z, simulation_env_config.simulation_env_input_config.attacker_strategy)
-
         state_space = simulation_env_config.state_space_config.states_ids()
         action_space = simulation_env_config.joint_action_space_config.action_spaces[0].actions_ids()
-        # observation_space = simulation_env_config.joint_observation_space_config.observation_spaces[0].observation_ids()
         observation_space = list(range(0, num_observations + 1))
-
         experiment_config = ExperimentConfig(
             output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}sondik_vi_test",
             title="Sondik-Vi computation",

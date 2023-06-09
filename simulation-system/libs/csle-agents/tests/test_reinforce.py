@@ -197,8 +197,8 @@ class TestReinforceAgentSuite(object):
             return_value=True
         )
         agent = ReinforceAgent(emulation_env_config=emulation_env_config,
-                           simulation_env_config=simulation_env_config,
-                           experiment_config=experiment_config)
+                               simulation_env_config=simulation_env_config,
+                               experiment_config=experiment_config)
         pytest.logger.info("Starting training of the Reinforce Agent")
         experiment_execution = agent.train()
         pytest.logger.info("Training completed succesfully")

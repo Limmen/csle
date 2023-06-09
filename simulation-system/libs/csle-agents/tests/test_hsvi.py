@@ -13,7 +13,6 @@ from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import Stopp
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
 from csle_common.metastore.metastore_facade import MetastoreFacade
-import gym_csle_stopping_game.constants.constants as env_constants
 
 
 def reduce_T(T, intrusion_start_prob: float = 0.1, intrusion_stop_prob: float = 0.05):
@@ -75,7 +74,6 @@ class TestHSVISuite(object):
         T = np.array(simulation_env_config.transition_operator_config.transition_tensor)
         if len(T.shape) == 5:
             T = T[0]
-        num_states = len(simulation_env_config.state_space_config.states)
         simulation_env_config.reward_function_config.reward_tensor = list(StoppingGameUtil.reward_tensor(
             R_INT=-10, R_COST=-10, R_SLA=0, R_ST=100, L=1))
         R = np.array(simulation_env_config.reward_function_config.reward_tensor)
@@ -85,7 +83,6 @@ class TestHSVISuite(object):
         Z = StoppingGameUtil.observation_tensor(len(range(0, num_observations)))
         if len(R.shape) == 5:
             Z = Z[0]
-        num_actions = len(simulation_env_config.joint_action_space_config.action_spaces[0].actions)
         T = reduce_T(T)
         R = reduce_R(R)
         Z = reduce_Z(Z, simulation_env_config.simulation_env_input_config.attacker_strategy)
