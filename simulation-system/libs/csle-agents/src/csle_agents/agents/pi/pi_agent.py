@@ -26,7 +26,8 @@ class PIAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True,
+                 env: Optional[gym.Env] = None):
         """
         Initializes the value iteration agent
 
@@ -34,14 +35,14 @@ class PIAgent(BaseAgent):
         :param experiment_config: the experiment configuration
         :param training_job: an existing training job to use (optional)
         :param save_to_metastore: boolean flag whether to save the execution to the metastore
+        :param env: the gym environment for training
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=None,
                          experiment_config=experiment_config)
         assert experiment_config.agent_type == AgentType.POLICY_ITERATION
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
-        self.env = gym.make(self.simulation_env_config.gym_env_name,
-                            config=self.simulation_env_config.simulation_env_input_config)
+        self.env = env
 
     def train(self) -> ExperimentExecution:
         """
@@ -63,6 +64,10 @@ class PIAgent(BaseAgent):
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
+
+        if self.env is None:
+            self.env = gym.make(self.simulation_env_config.gym_env_name,
+                                config=self.simulation_env_config.simulation_env_input_config)
 
         # Initialize training job
         if self.training_job is None:
@@ -333,10 +338,10 @@ class PIAgent(BaseAgent):
         returns = []
         for i in range(eval_batch_size):
             done = False
-            s = self.env.reset()
+            s, _ = self.env.reset()
             R = 0
             while not done:
-                s, r, done, info = self.env.step(policy)
+                s, r, done, _, info = self.env.step(policy)
                 R += r
             returns.append(R)
         avg_return = np.mean(returns)
