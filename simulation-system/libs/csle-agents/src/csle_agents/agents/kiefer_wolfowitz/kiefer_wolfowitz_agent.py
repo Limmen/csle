@@ -375,7 +375,7 @@ class KieferWolfowitzAgent(BaseAgent):
         metrics = {}
         for j in range(eval_batch_size):
             done = False
-            o = self.env.reset()
+            o, _ = self.env.reset()
             l = int(o[0])
             b1 = o[1]
             t = 1
@@ -389,7 +389,7 @@ class KieferWolfowitzAgent(BaseAgent):
                     a = policy.action(o=o)
                 else:
                     a = policy.action(o=o)
-                o, r, done, info = self.env.step(a)
+                o, r, done, _, info = self.env.step(a)
                 l = int(o[0])
                 b1 = o[1]
                 t += 1
@@ -512,8 +512,8 @@ class KieferWolfowitzAgent(BaseAgent):
         :param L: the number of parameters
         :return: the policy
         """
-        if self.experiment_config.hparams[agents_constants.KIEFER_WOLFOWITZ.POLICY_TYPE] \
-                == PolicyType.MULTI_THRESHOLD:
+        if self.experiment_config.hparams[agents_constants.KIEFER_WOLFOWITZ.POLICY_TYPE].value \
+                == PolicyType.MULTI_THRESHOLD.value:
             policy = MultiThresholdStoppingPolicy(
                 theta=theta, simulation_name=self.simulation_env_config.name,
                 states=self.simulation_env_config.state_space_config.states,
