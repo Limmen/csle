@@ -131,7 +131,7 @@ if __name__ == '__main__':
         },
         player_type=PlayerType.DEFENDER, player_idx=0
     )
-    system_identifcation_config = SystemIdentificationConfig(
+    system_identification_config = SystemIdentificationConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}em_level9_test",
         title="Expectation-Maximization level 9 test",
         model_type=SystemModelType.GAUSSIAN_MIXTURE,
@@ -170,5 +170,5 @@ if __name__ == '__main__':
     simulation_env_config.simulation_env_input_config.stopping_game_config.O = np.array(list(range(0, 10000)))
     agent = DynaSecAgent(emulation_executions=emulation_executions, simulation_env_config=simulation_env_config,
                          experiment_config=experiment_config, attacker_sequence=attacker_sequence,
-                         defender_sequence=defender_sequence, system_identification_config=system_identifcation_config)
+                         defender_sequence=defender_sequence, system_identification_config=system_identification_config)
     experiment_execution = agent.train()

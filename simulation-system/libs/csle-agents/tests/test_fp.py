@@ -12,7 +12,6 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
-from csle_common.metastore.metastore_facade import MetastoreFacade
 import gym_csle_stopping_game.constants.constants as env_constants
 
 
