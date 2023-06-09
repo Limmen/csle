@@ -26,7 +26,8 @@ class QLearningAgent(BaseAgent):
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  experiment_config: ExperimentConfig,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True,
+                 env: Optional[gym.Env] = None):
         """
         Initializes the q-learning agent
 
@@ -40,8 +41,7 @@ class QLearningAgent(BaseAgent):
         assert experiment_config.agent_type == AgentType.Q_LEARNING
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
-        self.env = gym.make(self.simulation_env_config.gym_env_name,
-                            config=self.simulation_env_config.simulation_env_input_config)
+        self.env = env
 
     def train(self) -> ExperimentExecution:
         """
@@ -64,6 +64,10 @@ class QLearningAgent(BaseAgent):
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
+
+        if self.env is None:
+            self.env = gym.make(self.simulation_env_config.gym_env_name,
+                                config=self.simulation_env_config.simulation_env_input_config)
 
         # Initialize training job
         if self.training_job is None:
@@ -206,21 +210,21 @@ class QLearningAgent(BaseAgent):
         count_table = self.initialize_count_table(n_states=256, n_actions=5)
         steps = []
 
-        o = self.env.reset()
+        o, _ = self.env.reset()
         if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
             s = int(o[2])
         else:
             s = o
         for i in range(N):
             a = self.eps_greedy(q_table=q_table, A=A, s=s, epsilon=epsilon)
-            o, r, done, _ = self.env.step(a)
+            o, r, done, _, _ = self.env.step(a)
             if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
                 s_prime = int(o[2])
             else:
                 s_prime = o
             q_table, count_table = self.q_learning_update(q_table=q_table, count_table=count_table,
                                                           s=s, a=a, r=r, s_prime=s_prime, gamma=gamma)
-
+            print(self.simulation_env_config.initial_state_distribution_config.initial_state_distribution)
             if i % self.experiment_config.hparams[agents_constants.COMMON.EVAL_EVERY].value == 0:
                 steps.append(i)
                 state_val = np.sum(
@@ -246,7 +250,7 @@ class QLearningAgent(BaseAgent):
 
             s = s_prime
             if done:
-                o = self.env.reset()
+                o, _ = self.env.reset()
                 if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
                     s = int(o[2])
                 else:
@@ -353,7 +357,7 @@ class QLearningAgent(BaseAgent):
             s = self.env.reset()
             R = 0
             while not done:
-                s, r, done, info = self.env.step(policy)
+                s, r, done, _, info = self.env.step(policy)
                 R += r
             returns.append(R)
         avg_return = np.mean(returns)

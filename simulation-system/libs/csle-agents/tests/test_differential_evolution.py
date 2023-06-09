@@ -138,6 +138,7 @@ class TestDifferentialEvolutionSuite(object):
     def test_run_agent(self, mocker, experiment_config: ExperimentConfig,
                        pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
         """
+        Tests running the agent
 
         :param mocker: object for mocking API calls
         :param experiment_config: the example experiment config

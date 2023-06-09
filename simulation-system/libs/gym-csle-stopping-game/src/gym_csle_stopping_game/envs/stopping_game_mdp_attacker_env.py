@@ -61,13 +61,13 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         else:
             if self.model is not None:
                 pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
-                a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.state_idx)
+                a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
             else:
                 pi2 = np.array(pi2)
                 if (not pi2.shape[0] == len(self.config.stopping_game_config.S)
                         or pi2.shape[1] != len(self.config.stopping_game_config.A1)) and self.model is not None:
                     pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
-                a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.state_idx)
+                a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
 
         # a2 = pi2
         # pi2 = np.array([
@@ -82,7 +82,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         a1 = self.static_defender_strategy.action(o=self.latest_defender_obs)
 
         # Step the game
-        o, r, d, info = self.stopping_game_env.step((a1, (pi2, a2)))
+        o, r, d, _, info = self.stopping_game_env.step((a1, (pi2, a2)))
         self.latest_defender_obs = o[0]
         self.latest_attacker_obs = o[1]
         attacker_obs = o[1]

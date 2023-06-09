@@ -3,25 +3,25 @@ import logging
 import pytest
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
+from csle_common.dao.simulation_config.initial_state_distribution_config import InitialStateDistributionConfig
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-from csle_common.dao.training.policy_type import PolicyType
-from csle_agents.agents.random_search.random_search_agent import RandomSearchAgent
+from csle_agents.agents.q_learning.q_learning_agent import QLearningAgent
+from csle_common.metastore.metastore_facade import MetastoreFacade
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
-from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
+from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
-import gym_csle_stopping_game.constants.constants as env_constants
 
 
-class TestRandomSearchSuite(object):
+class TestQLearningSuite(object):
     """
-    Test suite for the RandomSearchAgent
+    Test suite for the QLearningAgent
     """
 
-    pytest.logger = logging.getLogger("random_search_tests")
+    pytest.logger = logging.getLogger("q_learning_tests")
 
     @pytest.fixture
     def experiment_config(self) -> ExperimentConfig:
@@ -30,48 +30,57 @@ class TestRandomSearchSuite(object):
 
         :return: the example experiment config
         """
+        simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-002")
+        simulation_env_config.simulation_env_input_config.defender_strategy = RandomPolicy(
+            actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
+            player_type=PlayerType.DEFENDER, stage_policy_tensor=None)
+        A = simulation_env_config.joint_action_space_config.action_spaces[1].actions_ids()
+        S = simulation_env_config.state_space_config.states_ids()
+
         experiment_config = ExperimentConfig(
-            output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}random_search_test", title="Random search test",
-            random_seeds=[399],
-            agent_type=AgentType.RANDOM_SEARCH,
+            output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}q_learning_test",
+            title="Q-learning",
+            random_seeds=[399], agent_type=AgentType.Q_LEARNING,
             log_every=1,
             hparams={
-                agents_constants.RANDOM_SEARCH.N: HParam(value=2, name=constants.T_SPSA.N,
-                                                         descr="the number of training iterations"),
-                agents_constants.RANDOM_SEARCH.DELTA: HParam(value=0.5, name=agents_constants.RANDOM_SEARCH.DELTA,
-                                                             descr="the step size for random perturbations"),
-                agents_constants.RANDOM_SEARCH.L: HParam(value=1, name="L", descr="the number of stop actions"),
-                agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+                agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=2,
+                                                                name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                                 descr="number of iterations to evaluate theta"),
-                agents_constants.RANDOM_SEARCH.THETA1: HParam(value=[-3, -3, -3],
-                                                              name=agents_constants.RANDOM_SEARCH.THETA1,
-                                                              descr="initial thresholds"),
+                agents_constants.COMMON.EVAL_EVERY: HParam(value=1,
+                                                           name=agents_constants.COMMON.EVAL_EVERY,
+                                                           descr="how frequently to run evaluation"),
                 agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                            descr="how frequently to save the model"),
                 agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                     value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                     descr="confidence interval"),
-                agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                    value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
-                    descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
                 agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                     value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                     descr="the number of samples to include when computing the running avg"),
                 agents_constants.COMMON.GAMMA: HParam(
                     value=0.99, name=agents_constants.COMMON.GAMMA,
                     descr="the discount factor"),
-                agents_constants.RANDOM_SEARCH.POLICY_TYPE: HParam(
-                    value=PolicyType.MULTI_THRESHOLD, name=agents_constants.RANDOM_SEARCH.POLICY_TYPE,
-                    descr="policy type for the execution")
+                agents_constants.Q_LEARNING.S: HParam(
+                    value=S, name=agents_constants.Q_LEARNING.S,
+                    descr="the state spaec"),
+                agents_constants.Q_LEARNING.A: HParam(
+                    value=A, name=agents_constants.Q_LEARNING.A,
+                    descr="the action space"),
+                agents_constants.Q_LEARNING.EPSILON: HParam(
+                    value=0.05, name=agents_constants.Q_LEARNING.EPSILON,
+                    descr="the exploration parameter"),
+                agents_constants.Q_LEARNING.N: HParam(
+                    value=2, name=agents_constants.Q_LEARNING.N,
+                    descr="the number of iterations")
             },
-            player_type=PlayerType.DEFENDER, player_idx=0
+            player_type=PlayerType.ATTACKER, player_idx=1
         )
         return experiment_config
 
     @pytest.fixture
-    def pomdp_config(self) -> StoppingGameDefenderPomdpConfig:
+    def mdp_config(self) -> StoppingGameAttackerMdpConfig:
         """
-        Fixture, which is run before every test. It sets up an input POMDP config
+        Fixture, which is run before every test. It sets up an input MDP config
 
         :return: The example config
         """
@@ -101,35 +110,47 @@ class TestRandomSearchSuite(object):
             R=StoppingGameUtil.reward_tensor(R_SLA=R_SLA, R_INT=R_INT, R_COST=R_COST, L=L, R_ST=R_ST),
             S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1", checkpoint_traces_freq=100000,
             gamma=1)
-        pomdp_config = StoppingGameDefenderPomdpConfig(
+        simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-002")
+        mdp_config = StoppingGameAttackerMdpConfig(
             stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
-            attacker_strategy=RandomPolicy(actions=list(stopping_game_config.A2),
-                                           player_type=PlayerType.ATTACKER,
-                                           stage_policy_tensor=list(attacker_stage_strategy)),
-            env_name="csle-stopping-game-pomdp-defender-v1")
-        return pomdp_config
+            defender_strategy=RandomPolicy(
+                actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
+                player_type=PlayerType.DEFENDER, stage_policy_tensor=None),
+            env_name="csle-stopping-game-mdp-attacker-v1")
+        return mdp_config
+
+    @pytest.fixture
+    def initial_state_distribution_config(self) -> InitialStateDistributionConfig:
+        """
+        Fixture, which is run before every test. It sets up an initial state distribution config
+
+        :return: The example config
+        """
+        simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-002")
+        initial_state_distribution_config = simulation_env_config.initial_state_distribution_config
+        return initial_state_distribution_config
 
     def test_create_agent(self, mocker, experiment_config: ExperimentConfig) -> None:
         """
-        Tests creation of the RandomSearchAgent
+        Tests creation of the QLearningAgent
 
         :return: None
         """
-        emulation_env_config = mocker.MagicMock()
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the Random Search Agent")
-        RandomSearchAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                          experiment_config=experiment_config)
+        pytest.logger.info("Creating the Q-learning Agent")
+        QLearningAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
         pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker, experiment_config: ExperimentConfig,
-                       pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
+                       mdp_config: StoppingGameAttackerMdpConfig,
+                       initial_state_distribution_config: InitialStateDistributionConfig) -> None:
         """
         Tests running the agent
 
         :param mocker: object for mocking API calls
         :param experiment_config: the example experiment config
-        :param pomdp_config: the example POMDP config
+        :param mdp_config: the example MDP config
+        :param initial_state_distribution_config: the example initial state distribiution config
 
         :return: None
         """
@@ -139,8 +160,9 @@ class TestRandomSearchSuite(object):
 
         # Set attributes of the mocks
         simulation_env_config.configure_mock(**{
-            "name": "simulation-test-env", "gym_env_name": "csle-stopping-game-pomdp-defender-v1",
-            "simulation_env_input_config": pomdp_config
+            "name": "simulation-test-env", "gym_env_name": "csle-stopping-game-mdp-attacker-v1",
+            "simulation_env_input_config": mdp_config,
+            "initial_state_distribution_config": initial_state_distribution_config
         })
         emulation_env_config.configure_mock(**{
             "name": "emulation-test-env"
@@ -171,10 +193,8 @@ class TestRandomSearchSuite(object):
             'csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
             return_value=True
         )
-        agent = RandomSearchAgent(emulation_env_config=emulation_env_config,
-                                  simulation_env_config=simulation_env_config,
-                                  experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the Random Search Agent")
+        agent = QLearningAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
+        pytest.logger.info("Starting training of the Q-learning Agent")
         experiment_execution = agent.train()
         pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
@@ -183,30 +203,7 @@ class TestRandomSearchSuite(object):
         assert experiment_execution.config == experiment_config
         assert agents_constants.COMMON.AVERAGE_RETURN in experiment_execution.result.plot_metrics
         assert agents_constants.COMMON.RUNNING_AVERAGE_RETURN in experiment_execution.result.plot_metrics
-        assert env_constants.ENV_METRICS.INTRUSION_LENGTH in experiment_execution.result.plot_metrics
-        assert agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH in experiment_execution.result.plot_metrics
-        assert env_constants.ENV_METRICS.INTRUSION_START in experiment_execution.result.plot_metrics
-        assert agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START in experiment_execution.result.plot_metrics
-
-        assert env_constants.ENV_METRICS.TIME_HORIZON in experiment_execution.result.plot_metrics
-        assert agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON in experiment_execution.result.plot_metrics
-        assert env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN in experiment_execution.result.plot_metrics
-        assert env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN in \
-               experiment_execution.result.plot_metrics
         for seed in experiment_config.random_seeds:
             assert seed in experiment_execution.result.all_metrics
-            assert agents_constants.RANDOM_SEARCH.THETAS in experiment_execution.result.all_metrics[seed]
             assert agents_constants.COMMON.AVERAGE_RETURN in experiment_execution.result.all_metrics[seed]
             assert agents_constants.COMMON.RUNNING_AVERAGE_RETURN in experiment_execution.result.all_metrics[seed]
-            assert agents_constants.RANDOM_SEARCH.THRESHOLDS in experiment_execution.result.all_metrics[seed]
-            assert (agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START in
-                    experiment_execution.result.all_metrics[seed])
-            assert (agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON in
-                    experiment_execution.result.all_metrics[seed])
-            assert (agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH in
-                    experiment_execution.result.all_metrics[seed])
-            assert env_constants.ENV_METRICS.INTRUSION_START in experiment_execution.result.all_metrics[seed]
-            assert env_constants.ENV_METRICS.TIME_HORIZON in experiment_execution.result.all_metrics[seed]
-            assert env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN in experiment_execution.result.all_metrics[seed]
-            assert (env_constants.ENV_METRICS.AVERAGE_DEFENDER_BASELINE_STOP_ON_FIRST_ALERT_RETURN in
-                    experiment_execution.result.all_metrics[seed])
