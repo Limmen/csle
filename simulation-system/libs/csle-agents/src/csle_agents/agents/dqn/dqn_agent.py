@@ -323,17 +323,17 @@ class DQNTrainingCallback(BaseCallback):
                 model=self.model, simulation_name=self.simulation_name, save_path=save_path,
                 states=self.states, player_type=self.player_type, actions=self.actions,
                 experiment_config=self.experiment_config, avg_R=-1)
-            o = self.env.reset()
+            o, _ = self.env.reset()
             max_horizon = self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value
             avg_rewards = []
             for i in range(self.eval_batch_size):
-                o = self.env.reset()
+                o, _ = self.env.reset()
                 done = False
                 t = 0
                 cumulative_reward = 0
                 while not done and t <= max_horizon:
                     a = policy.action(o=o)
-                    o, r, done, info = self.env.step(a)
+                    o, r, done, _, info = self.env.step(a)
                     cumulative_reward += r
                     t += 1
                     Logger.__call__().get_logger().debug(f"t:{t}, a1:{a}, r:{r}, info:{info}, done:{done}")
