@@ -138,11 +138,16 @@ make types
 
 ## Unit tests
 
-To run the unit tests, execute the following command:
+To run all the unit tests, execute the following command:
 ```
 pytest
 # or (equivalently):
 make unit_tests
+```
+
+To run tests of a specific test suite, execute the following command:
+```
+pytest -k "ClassName"
 ```
 
 To generate a coverage report, execute the following command:

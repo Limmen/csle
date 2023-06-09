@@ -144,6 +144,11 @@ pytest
 make unit_tests
 ``` 
 
+To run tests of a specific test suite, execute the following command:
+```
+pytest -k "ClassName"
+```
+
 To generate a coverage report, execute the following command:
 ```
 pytest --cov=gym_csle_stopping_game

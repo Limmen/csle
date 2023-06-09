@@ -263,6 +263,8 @@ class CrossEntropyAgent(BaseAgent):
             norm_dist = stats.multivariate_normal(mean=means, cov=np.diag(stds))
             for k in range(K):
                 theta_sample = norm_dist.rvs(1)
+                if isinstance(theta_sample, np.floating):
+                    theta_sample = np.array([theta_sample])
                 for i in range(len(theta_sample)):
                     if theta_sample[i] > 1:
                         theta_sample[i] = 0.99

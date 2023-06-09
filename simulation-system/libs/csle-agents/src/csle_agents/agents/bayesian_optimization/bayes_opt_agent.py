@@ -494,8 +494,8 @@ class BayesOptAgent(BaseAgent):
         :param L: the number of parameters
         :return: the policy
         """
-        if self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE] \
-                == PolicyType.MULTI_THRESHOLD:
+        if self.experiment_config.hparams[agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE].value \
+                == PolicyType.MULTI_THRESHOLD.value:
             policy = MultiThresholdStoppingPolicy(
                 theta=list(theta), simulation_name=self.simulation_env_config.name,
                 states=self.simulation_env_config.state_space_config.states,

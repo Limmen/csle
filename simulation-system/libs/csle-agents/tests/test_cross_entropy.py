@@ -7,7 +7,7 @@ from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy_type import PolicyType
-from csle_agents.agents.bayesian_optimization.bayes_opt_agent import BayesOptAgent
+from csle_agents.agents.cross_entropy.cross_entropy_agent import CrossEntropyAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
@@ -16,12 +16,12 @@ from csle_common.dao.training.random_policy import RandomPolicy
 import gym_csle_stopping_game.constants.constants as env_constants
 
 
-class TestBayesOptSuite(object):
+class TestCrossEntropySuite(object):
     """
-    Test suite for the BayesOptAgent
+    Test suite for the CrossEntropyAgent
     """
 
-    pytest.logger = logging.getLogger("bayes_opt_tests")
+    pytest.logger = logging.getLogger("cross_entropy_tests")
 
     @pytest.fixture
     def experiment_config(self) -> ExperimentConfig:
@@ -31,51 +31,40 @@ class TestBayesOptSuite(object):
         :return: the example experiment config
         """
         experiment_config = ExperimentConfig(
-            output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}bayes_opt_test", title="Bayesian Optimization test",
-            random_seeds=[399],
-            agent_type=AgentType.BAYESIAN_OPTIMIZATION,
+            output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}cross_entropy_test", title="Cross-entropy test",
+            random_seeds=[399, 98912, 999],
+            agent_type=AgentType.CROSS_ENTROPY,
             log_every=1,
             hparams={
-                agents_constants.BAYESIAN_OPTIMIZATION.N: HParam(value=5, name=constants.T_SPSA.N,
-                                                                 descr="the number of training iterations"),
-                agents_constants.BAYESIAN_OPTIMIZATION.L: HParam(value=1, name="L", descr="the number of stop actions"),
+                agents_constants.CROSS_ENTROPY.N: HParam(value=2, name=constants.T_SPSA.N,
+                                                         descr="the number of training iterations"),
+                agents_constants.CROSS_ENTROPY.L: HParam(value=1, name=agents_constants.CROSS_ENTROPY.L,
+                                                         descr="the number of stop actions"),
+                agents_constants.CROSS_ENTROPY.K: HParam(value=10, name=agents_constants.CROSS_ENTROPY.K,
+                                                         descr="the number of samples in each iteration of CE"),
+                agents_constants.CROSS_ENTROPY.LAMB: HParam(value=0.25, name=agents_constants.CROSS_ENTROPY.K,
+                                                            descr="the number of samples to keep in each iteration of CE"),
                 agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                                 descr="number of iterations to evaluate theta"),
-                agents_constants.BAYESIAN_OPTIMIZATION.THETA1: HParam(
-                    value=[-3], name=agents_constants.BAYESIAN_OPTIMIZATION.THETA1,
-                    descr="initial thresholds"),
+                agents_constants.CROSS_ENTROPY.THETA1: HParam(value=[-3, -3, -3],
+                                                              name=agents_constants.CROSS_ENTROPY.THETA1,
+                                                              descr="initial thresholds"),
                 agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                            descr="how frequently to save the model"),
                 agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                     value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                     descr="confidence interval"),
                 agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                    value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                    value=100, name=agents_constants.COMMON.MAX_ENV_STEPS,
                     descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
                 agents_constants.COMMON.RUNNING_AVERAGE: HParam(
-                    value=2, name=agents_constants.COMMON.RUNNING_AVERAGE,
+                    value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                     descr="the number of samples to include when computing the running avg"),
                 agents_constants.COMMON.GAMMA: HParam(
-                    value=1, name=agents_constants.COMMON.GAMMA,
+                    value=0.99, name=agents_constants.COMMON.GAMMA,
                     descr="the discount factor"),
-                agents_constants.BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION: HParam(
-                    value=agents_constants.BAYESIAN_OPTIMIZATION.UCB,
-                    name=agents_constants.BAYESIAN_OPTIMIZATION.UTILITY_FUNCTION,
-                    descr="utility/acquisition function"),
-                agents_constants.BAYESIAN_OPTIMIZATION.UCB_KAPPA: HParam(
-                    value=2.5,
-                    name=agents_constants.BAYESIAN_OPTIMIZATION.UCB_KAPPA,
-                    descr="kappa parameter for the ucb utility function"),
-                agents_constants.BAYESIAN_OPTIMIZATION.UCB_XI: HParam(
-                    value=0,
-                    name=agents_constants.BAYESIAN_OPTIMIZATION.UCB_XI,
-                    descr="kappa parameter for the xi utility function"),
-                agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS: HParam(
-                    value=[(-3, 3)],
-                    name=agents_constants.BAYESIAN_OPTIMIZATION.PARAMETER_BOUNDS,
-                    descr="parameter bounds"),
-                agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE: HParam(
-                    value=PolicyType.MULTI_THRESHOLD, name=agents_constants.BAYESIAN_OPTIMIZATION.POLICY_TYPE,
+                agents_constants.CROSS_ENTROPY.POLICY_TYPE: HParam(
+                    value=PolicyType.MULTI_THRESHOLD, name=agents_constants.CROSS_ENTROPY.POLICY_TYPE,
                     descr="policy type for the execution")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
@@ -125,15 +114,15 @@ class TestBayesOptSuite(object):
 
     def test_create_agent(self, mocker, experiment_config: ExperimentConfig) -> None:
         """
-        Tests creation of the BayesOptAgent
+        Tests creation of the CrossEntropyAgent
 
         :return: None
         """
         emulation_env_config = mocker.MagicMock()
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating Bayesian Optimization Agent")
-        BayesOptAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                      experiment_config=experiment_config)
+        pytest.logger.info("Creating Cross Entropy Agent")
+        CrossEntropyAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+                          experiment_config=experiment_config)
         pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker, experiment_config: ExperimentConfig,
@@ -184,9 +173,9 @@ class TestBayesOptSuite(object):
             'csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
             return_value=True
         )
-        agent = BayesOptAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+        agent = CrossEntropyAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                               experiment_config=experiment_config)
-        pytest.logger.info("Starting training of Bayesian Optimization Agent")
+        pytest.logger.info("Starting training of Cross Entropy Agent")
         experiment_execution = agent.train()
         pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
@@ -199,6 +188,7 @@ class TestBayesOptSuite(object):
         assert agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_LENGTH in experiment_execution.result.plot_metrics
         assert env_constants.ENV_METRICS.INTRUSION_START in experiment_execution.result.plot_metrics
         assert agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START in experiment_execution.result.plot_metrics
+
         assert env_constants.ENV_METRICS.TIME_HORIZON in experiment_execution.result.plot_metrics
         assert agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON in experiment_execution.result.plot_metrics
         assert env_constants.ENV_METRICS.AVERAGE_UPPER_BOUND_RETURN in experiment_execution.result.plot_metrics
@@ -206,10 +196,10 @@ class TestBayesOptSuite(object):
                experiment_execution.result.plot_metrics
         for seed in experiment_config.random_seeds:
             assert seed in experiment_execution.result.all_metrics
-            assert agents_constants.BAYESIAN_OPTIMIZATION.THETAS in experiment_execution.result.all_metrics[seed]
+            assert agents_constants.CROSS_ENTROPY.THETAS in experiment_execution.result.all_metrics[seed]
             assert agents_constants.COMMON.AVERAGE_RETURN in experiment_execution.result.all_metrics[seed]
             assert agents_constants.COMMON.RUNNING_AVERAGE_RETURN in experiment_execution.result.all_metrics[seed]
-            assert agents_constants.BAYESIAN_OPTIMIZATION.THRESHOLDS in experiment_execution.result.all_metrics[seed]
+            assert agents_constants.CROSS_ENTROPY.THRESHOLDS in experiment_execution.result.all_metrics[seed]
             assert (agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START in
                     experiment_execution.result.all_metrics[seed])
             assert (agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON in
