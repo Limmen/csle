@@ -241,7 +241,7 @@ class ReinforceAgent(BaseAgent):
             log_probs_batch = []
             metrics = {}
             ts = time.time()
-            save_path = f"{self.experiment_config.output_dir}/ppo_policy_seed_{seed}_{ts}.zip"
+            save_path = f"{self.experiment_config.output_dir}/reinforce_policy_seed_{seed}_{ts}.zip"
             policy = FNNWithSoftmaxPolicy(
                 policy_network=policy_network, simulation_name=self.simulation_env_config.name,
                 save_path=save_path,
@@ -258,13 +258,13 @@ class ReinforceAgent(BaseAgent):
                 rewards = []
                 log_probs = []
                 done = False
-                o = self.env.reset()
+                o, _ = self.env.reset()
                 while not done:
                     # get action
                     action, log_prob = policy.get_action_and_log_prob(state=o)
 
                     # Take a step in the environment
-                    o_prime, reward, done, info = self.env.step(action)
+                    o_prime, reward, done, _, info = self.env.step(action)
 
                     # Update metrics
                     cumulative_reward += reward
