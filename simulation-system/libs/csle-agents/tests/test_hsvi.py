@@ -55,7 +55,7 @@ class TestHSVISuite(object):
     Test suite for the HSVIAgent
     """
 
-    pytest.logger = logging.getLogger("t_spsa_tests")
+    pytest.logger = logging.getLogger("hsvi_tests")
 
     @pytest.fixture
     def experiment_config(self) -> ExperimentConfig:
@@ -207,7 +207,7 @@ class TestHSVISuite(object):
         :return: None
         """
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the T-SPSA Agent")
+        pytest.logger.info("Creating the HSVI Agent")
         HSVIAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
         pytest.logger.info("Agent created successfully")
 
