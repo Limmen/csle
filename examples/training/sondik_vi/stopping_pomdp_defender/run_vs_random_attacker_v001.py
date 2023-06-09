@@ -47,7 +47,6 @@ def reduce_Z(Z, strategy):
 
 if __name__ == '__main__':
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
-
     simulation_env_config.simulation_env_input_config.attacker_strategy = RandomPolicy(
         actions=simulation_env_config.joint_action_space_config.action_spaces[1].actions,
         player_type=PlayerType.ATTACKER, stage_policy_tensor=[

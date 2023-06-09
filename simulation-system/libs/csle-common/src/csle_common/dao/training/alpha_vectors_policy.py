@@ -65,7 +65,10 @@ class AlphaVectorsPolicy(Policy):
             if v_a > max_a_v:
                 max_a_v = v_a
                 max_a = a
-        return max_a.id
+        try:
+            return max_a.id
+        except Exception:
+            return max_a
 
     def probability(self, o: Union[List[Union[int, float]], int, float], a: int) -> float:
         """
