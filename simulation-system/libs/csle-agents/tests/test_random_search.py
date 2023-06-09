@@ -7,7 +7,7 @@ from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.policy_type import PolicyType
-from csle_agents.agents.cross_entropy.cross_entropy_agent import CrossEntropyAgent
+from csle_agents.agents.random_search.random_search_agent import RandomSearchAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
@@ -16,12 +16,12 @@ from csle_common.dao.training.random_policy import RandomPolicy
 import gym_csle_stopping_game.constants.constants as env_constants
 
 
-class TestCrossEntropySuite(object):
+class TestRandomSearchSuite(object):
     """
-    Test suite for the CrossEntropyAgent
+    Test suite for the RandomSearchAgent
     """
 
-    pytest.logger = logging.getLogger("cross_entropy_tests")
+    pytest.logger = logging.getLogger("random_search_tests")
 
     @pytest.fixture
     def experiment_config(self) -> ExperimentConfig:
@@ -31,23 +31,20 @@ class TestCrossEntropySuite(object):
         :return: the example experiment config
         """
         experiment_config = ExperimentConfig(
-            output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}cross_entropy_test", title="Cross-entropy test",
+            output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}random_search_test", title="Random search test",
             random_seeds=[399],
-            agent_type=AgentType.CROSS_ENTROPY,
+            agent_type=AgentType.RANDOM_SEARCH,
             log_every=1,
             hparams={
-                agents_constants.CROSS_ENTROPY.N: HParam(value=2, name=constants.T_SPSA.N,
+                agents_constants.RANDOM_SEARCH.N: HParam(value=2, name=constants.T_SPSA.N,
                                                          descr="the number of training iterations"),
-                agents_constants.CROSS_ENTROPY.L: HParam(value=1, name=agents_constants.CROSS_ENTROPY.L,
-                                                         descr="the number of stop actions"),
-                agents_constants.CROSS_ENTROPY.K: HParam(value=10, name=agents_constants.CROSS_ENTROPY.K,
-                                                         descr="the number of samples in each iteration of CE"),
-                agents_constants.CROSS_ENTROPY.LAMB: HParam(value=0.25, name=agents_constants.CROSS_ENTROPY.K,
-                                                            descr="the number of samples to keep in each iteration of CE"),
-                agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=50, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+                agents_constants.RANDOM_SEARCH.DELTA: HParam(value=0.5, name=agents_constants.RANDOM_SEARCH.DELTA,
+                                                             descr="the step size for random perturbations"),
+                agents_constants.RANDOM_SEARCH.L: HParam(value=1, name="L", descr="the number of stop actions"),
+                agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=100, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                                 descr="number of iterations to evaluate theta"),
-                agents_constants.CROSS_ENTROPY.THETA1: HParam(value=[-3, -3, -3],
-                                                              name=agents_constants.CROSS_ENTROPY.THETA1,
+                agents_constants.RANDOM_SEARCH.THETA1: HParam(value=[-3, -3, -3],
+                                                              name=agents_constants.RANDOM_SEARCH.THETA1,
                                                               descr="initial thresholds"),
                 agents_constants.COMMON.SAVE_EVERY: HParam(value=1000, name=agents_constants.COMMON.SAVE_EVERY,
                                                            descr="how frequently to save the model"),
@@ -55,7 +52,7 @@ class TestCrossEntropySuite(object):
                     value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                     descr="confidence interval"),
                 agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                    value=100, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                    value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                     descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
                 agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                     value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
@@ -63,8 +60,8 @@ class TestCrossEntropySuite(object):
                 agents_constants.COMMON.GAMMA: HParam(
                     value=0.99, name=agents_constants.COMMON.GAMMA,
                     descr="the discount factor"),
-                agents_constants.CROSS_ENTROPY.POLICY_TYPE: HParam(
-                    value=PolicyType.MULTI_THRESHOLD, name=agents_constants.CROSS_ENTROPY.POLICY_TYPE,
+                agents_constants.RANDOM_SEARCH.POLICY_TYPE: HParam(
+                    value=PolicyType.MULTI_THRESHOLD, name=agents_constants.RANDOM_SEARCH.POLICY_TYPE,
                     descr="policy type for the execution")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
@@ -114,14 +111,14 @@ class TestCrossEntropySuite(object):
 
     def test_create_agent(self, mocker, experiment_config: ExperimentConfig) -> None:
         """
-        Tests creation of the CrossEntropyAgent
+        Tests creation of the RandomSearchAgent
 
         :return: None
         """
         emulation_env_config = mocker.MagicMock()
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating Cross Entropy Agent")
-        CrossEntropyAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+        pytest.logger.info("Creating the Random Search Agent")
+        RandomSearchAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                           experiment_config=experiment_config)
         pytest.logger.info("Agent created successfully")
 
@@ -173,9 +170,10 @@ class TestCrossEntropySuite(object):
             'csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
             return_value=True
         )
-        agent = CrossEntropyAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
-                              experiment_config=experiment_config)
-        pytest.logger.info("Starting training of Cross Entropy Agent")
+        agent = RandomSearchAgent(emulation_env_config=emulation_env_config,
+                                  simulation_env_config=simulation_env_config,
+                                  experiment_config=experiment_config)
+        pytest.logger.info("Starting training of the Random Search Agent")
         experiment_execution = agent.train()
         pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
@@ -196,10 +194,10 @@ class TestCrossEntropySuite(object):
                experiment_execution.result.plot_metrics
         for seed in experiment_config.random_seeds:
             assert seed in experiment_execution.result.all_metrics
-            assert agents_constants.CROSS_ENTROPY.THETAS in experiment_execution.result.all_metrics[seed]
+            assert agents_constants.RANDOM_SEARCH.THETAS in experiment_execution.result.all_metrics[seed]
             assert agents_constants.COMMON.AVERAGE_RETURN in experiment_execution.result.all_metrics[seed]
             assert agents_constants.COMMON.RUNNING_AVERAGE_RETURN in experiment_execution.result.all_metrics[seed]
-            assert agents_constants.CROSS_ENTROPY.THRESHOLDS in experiment_execution.result.all_metrics[seed]
+            assert agents_constants.RANDOM_SEARCH.THRESHOLDS in experiment_execution.result.all_metrics[seed]
             assert (agents_constants.COMMON.RUNNING_AVERAGE_INTRUSION_START in
                     experiment_execution.result.all_metrics[seed])
             assert (agents_constants.COMMON.RUNNING_AVERAGE_TIME_HORIZON in

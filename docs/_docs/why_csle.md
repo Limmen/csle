@@ -28,8 +28,8 @@ Recently, efforts to build similar frameworks as CSLE has started (see
 <a href="https://github.com/microsoft/CyberBattleSim">CyberBattleSim</a> by Microsoft,
 <a href="https://github.com/cage-challenge/CybORG">CyBorg</a> by
 the Australian department of defence, <a href="https://github.com/dstl/YAWNING-TITAN">Yawning Titan</a> by
-the UK Defence Science and Technology Laboratory (DSTL), and
-<a href="https://arxiv.org/pdf/2103.07583.pdf">FARLAND</a>
+the UK Defence Science and Technology Laboratory (DSTL), <a href="https://arxiv.org/pdf/2305.17246.pdf">NASimEmu</a>
+by the Czech Technical University in Prague and <a href="https://arxiv.org/pdf/2103.07583.pdf">FARLAND</a>
 , which is developed at USA's National Security Agency (NSA). Some of these frameworks only include
 simulation components and some of them include both simulation and emulation components.
 
