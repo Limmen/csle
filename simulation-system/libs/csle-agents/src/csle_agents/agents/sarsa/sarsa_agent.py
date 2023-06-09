@@ -25,7 +25,8 @@ class SARSAAgent(BaseAgent):
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig, experiment_config: ExperimentConfig,
-                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True):
+                 training_job: Optional[TrainingJobConfig] = None, save_to_metastore: bool = True,
+                 env: Optional[gym.Env] = None):
         """
         Initializes the SARSA agent
 
@@ -33,14 +34,14 @@ class SARSAAgent(BaseAgent):
         :param experiment_config: the experiment configuration
         :param training_job: an existing training job to use (optional)
         :param save_to_metastore: boolean flag whether to save the execution to the metastore
+        :param env: the gym environment for training
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=None,
                          experiment_config=experiment_config)
         assert experiment_config.agent_type == AgentType.SARSA
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
-        self.env = gym.make(self.simulation_env_config.gym_env_name,
-                            config=self.simulation_env_config.simulation_env_input_config)
+        self.env = env
 
     def train(self) -> ExperimentExecution:
         """
@@ -63,6 +64,10 @@ class SARSAAgent(BaseAgent):
             exp_result.all_metrics[seed] = {}
             exp_result.all_metrics[seed][agents_constants.COMMON.AVERAGE_RETURN] = []
             exp_result.all_metrics[seed][agents_constants.COMMON.RUNNING_AVERAGE_RETURN] = []
+
+        if self.env is None:
+            self.env = gym.make(self.simulation_env_config.gym_env_name,
+                                config=self.simulation_env_config.simulation_env_input_config)
 
         # Initialize training job
         if self.training_job is None:
@@ -208,14 +213,14 @@ class SARSAAgent(BaseAgent):
         state_val = 0
         avg_return = 0
 
-        o = self.env.reset()
+        o, _ = self.env.reset()
         if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
             s = int(o[2])
         else:
             s = o
         for i in range(N):
             a = self.eps_greedy(q_table=q_table, A=A, s=s, epsilon=epsilon)
-            o, r, done, _ = self.env.step(a)
+            o, r, done, _, _ = self.env.step(a)
             if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
                 s_prime = int(o[2])
             else:
@@ -249,7 +254,7 @@ class SARSAAgent(BaseAgent):
 
             s = s_prime
             if done:
-                o = self.env.reset()
+                o, _ = self.env.reset()
                 if self.simulation_env_config.gym_env_name in agents_constants.COMMON.STOPPING_ENVS:
                     s = int(o[2])
                 else:
@@ -357,7 +362,7 @@ class SARSAAgent(BaseAgent):
             self.env.reset()
             R = 0
             while not done:
-                s, r, done, info = self.env.step(policy)
+                s, r, done, info, _ = self.env.step(policy)
                 R += r
             returns.append(R)
         avg_return = np.mean(returns)

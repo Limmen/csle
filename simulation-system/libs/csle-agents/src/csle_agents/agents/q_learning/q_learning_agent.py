@@ -35,6 +35,7 @@ class QLearningAgent(BaseAgent):
         :param experiment_config: the experiment configuration
         :param training_job: an existing training job to use (optional)
         :param save_to_metastore: boolean flag whether to save the execution to the metastore
+        :param env: the gym environment for training
         """
         super().__init__(simulation_env_config=simulation_env_config, emulation_env_config=None,
                          experiment_config=experiment_config)
