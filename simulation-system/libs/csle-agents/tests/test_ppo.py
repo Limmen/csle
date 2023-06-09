@@ -6,7 +6,7 @@ from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-from csle_agents.agents.dqn.dqn_agent import DQNAgent
+from csle_agents.agents.ppo.ppo_agent import PPOAgent
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
@@ -14,12 +14,12 @@ from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
 
 
-class TestDQNAgentSuite(object):
+class TestPPOAgentSuite(object):
     """
-    Test suite for the DQNAgent
+    Test suite for the PPOAgent
     """
 
-    pytest.logger = logging.getLogger("dqn_tests")
+    pytest.logger = logging.getLogger("ppo_tests")
 
     @pytest.fixture
     def experiment_config(self) -> ExperimentConfig:
@@ -29,81 +29,69 @@ class TestDQNAgentSuite(object):
         :return: the example experiment config
         """
         experiment_config = ExperimentConfig(
-            output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}dqn_test",
-            title="DQN test", random_seeds=[399], agent_type=AgentType.DQN,
-            log_every=100,
+            output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}ppo_test",
+            title="PPO test", random_seeds=[399], agent_type=AgentType.PPO,
+            log_every=1,
             hparams={
                 constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER: HParam(
-                    value=64, name=constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
+                    value=16, name=constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,
                     descr="neurons per hidden layer of the policy network"),
                 constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS: HParam(
-                    value=4, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
+                    value=1, name=constants.NEURAL_NETWORKS.NUM_HIDDEN_LAYERS,
                     descr="number of layers of the policy network"),
-                agents_constants.COMMON.BATCH_SIZE: HParam(value=64, name=agents_constants.COMMON.BATCH_SIZE,
+                agents_constants.PPO.STEPS_BETWEEN_UPDATES: HParam(
+                    value=10, name=agents_constants.PPO.STEPS_BETWEEN_UPDATES,
+                    descr="number of steps in the environment for doing rollouts between policy updates"),
+                agents_constants.COMMON.BATCH_SIZE: HParam(value=8, name=agents_constants.COMMON.BATCH_SIZE,
                                                            descr="batch size for updates"),
                 agents_constants.COMMON.LEARNING_RATE: HParam(value=0.0001,
                                                               name=agents_constants.COMMON.LEARNING_RATE,
                                                               descr="learning rate for updating the policy"),
-                constants.NEURAL_NETWORKS.DEVICE: HParam(value="cuda:1",
+                constants.NEURAL_NETWORKS.DEVICE: HParam(value="cpu",
                                                          name=constants.NEURAL_NETWORKS.DEVICE,
                                                          descr="the device to train on (cpu or cuda:x)"),
+                agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
+                    value=1, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
+                    descr="the nunmber of parallel environments for training"),
                 agents_constants.COMMON.GAMMA: HParam(
                     value=1, name=agents_constants.COMMON.GAMMA, descr="the discount factor"),
-                agents_constants.DQN.MAX_GRAD_NORM: HParam(
-                    value=0.5, name=agents_constants.DQN.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
+                agents_constants.PPO.GAE_LAMBDA: HParam(
+                    value=0.95, name=agents_constants.PPO.GAE_LAMBDA, descr="the GAE weighting term"),
+                agents_constants.PPO.CLIP_RANGE: HParam(
+                    value=0.2, name=agents_constants.PPO.CLIP_RANGE, descr="the clip range for PPO"),
+                agents_constants.PPO.CLIP_RANGE_VF: HParam(
+                    value=None, name=agents_constants.PPO.CLIP_RANGE_VF,
+                    descr="the clip range for PPO-update of the value network"),
+                agents_constants.PPO.ENT_COEF: HParam(
+                    value=0.0, name=agents_constants.PPO.ENT_COEF,
+                    descr="the entropy coefficient for exploration"),
+                agents_constants.PPO.VF_COEF: HParam(value=0.5, name=agents_constants.PPO.VF_COEF,
+                                                     descr="the coefficient of the value network for the loss"),
+                agents_constants.PPO.MAX_GRAD_NORM: HParam(
+                    value=0.5, name=agents_constants.PPO.MAX_GRAD_NORM, descr="the maximum allows gradient norm"),
+                agents_constants.PPO.TARGET_KL: HParam(value=None,
+                                                       name=agents_constants.PPO.TARGET_KL,
+                                                       descr="the target kl"),
                 agents_constants.COMMON.NUM_TRAINING_TIMESTEPS: HParam(
                     value=int(100), name=agents_constants.COMMON.NUM_TRAINING_TIMESTEPS,
                     descr="number of timesteps to train"),
-                agents_constants.COMMON.NUM_PARALLEL_ENVS: HParam(
-                    value=1, name=agents_constants.COMMON.NUM_PARALLEL_ENVS,
-                    descr="the number of parallel environments for training"),
-                agents_constants.COMMON.EVAL_EVERY: HParam(value=1000, name=agents_constants.COMMON.EVAL_EVERY,
+                agents_constants.COMMON.EVAL_EVERY: HParam(value=10, name=agents_constants.COMMON.EVAL_EVERY,
                                                            descr="training iterations between evaluations"),
-                agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=20, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
+                agents_constants.COMMON.EVAL_BATCH_SIZE: HParam(value=10, name=agents_constants.COMMON.EVAL_BATCH_SIZE,
                                                                 descr="the batch size for evaluation"),
-                agents_constants.COMMON.SAVE_EVERY: HParam(value=100000, name=agents_constants.COMMON.SAVE_EVERY,
+                agents_constants.COMMON.SAVE_EVERY: HParam(value=10000, name=agents_constants.COMMON.SAVE_EVERY,
                                                            descr="how frequently to save the model"),
                 agents_constants.COMMON.CONFIDENCE_INTERVAL: HParam(
                     value=0.95, name=agents_constants.COMMON.CONFIDENCE_INTERVAL,
                     descr="confidence interval"),
                 agents_constants.COMMON.MAX_ENV_STEPS: HParam(
-                    value=100, name=agents_constants.COMMON.MAX_ENV_STEPS,
+                    value=500, name=agents_constants.COMMON.MAX_ENV_STEPS,
                     descr="maximum number of steps in the environment (for envs with infinite horizon generally)"),
                 agents_constants.COMMON.RUNNING_AVERAGE: HParam(
                     value=100, name=agents_constants.COMMON.RUNNING_AVERAGE,
                     descr="the number of samples to include when computing the running avg"),
                 agents_constants.COMMON.L: HParam(value=1, name=agents_constants.COMMON.L,
-                                                  descr="the number of stop actions"),
-                agents_constants.DQN.LEARNING_STARTS: HParam(
-                    value=50, name=agents_constants.DQN.LEARNING_STARTS,
-                    descr="time-step learning starts after warmup"),
-                agents_constants.DQN.EXPLORATION_FRACTION: HParam(
-                    value=0.1, name=agents_constants.DQN.EXPLORATION_FRACTION,
-                    descr="epsilon for exploration"),
-                agents_constants.DQN.EXPLORATION_INITIAL_EPS: HParam(
-                    value=1.0, name=agents_constants.DQN.EXPLORATION_INITIAL_EPS,
-                    descr="initial epsilon for exploration"),
-                agents_constants.DQN.EXPLORATION_FINAL_EPS: HParam(
-                    value=0.05, name=agents_constants.DQN.EXPLORATION_FINAL_EPS,
-                    descr="final epsilon for exploration"),
-                agents_constants.DQN.TRAIN_FREQ: HParam(
-                    value=4, name=agents_constants.DQN.TRAIN_FREQ,
-                    descr="how frequently to update policy"),
-                agents_constants.DQN.GRADIENT_STEPS: HParam(
-                    value=1, name=agents_constants.DQN.GRADIENT_STEPS,
-                    descr="number of gradient steps for each update"),
-                agents_constants.DQN.N_EPISODES_ROLLOUT: HParam(
-                    value=1, name=agents_constants.DQN.N_EPISODES_ROLLOUT,
-                    descr="number of episodes rollout"),
-                agents_constants.DQN.TARGET_UPDATE_INTERVAL: HParam(
-                    value=10, name=agents_constants.DQN.TARGET_UPDATE_INTERVAL,
-                    descr="how frequently to update the target network"),
-                agents_constants.DQN.BUFFER_SIZE: HParam(
-                    value=200, name=agents_constants.DQN.BUFFER_SIZE,
-                    descr="size of the replay buffer"),
-                agents_constants.DQN.DQN_BATCH_SIZE: HParam(
-                    value=10, name=agents_constants.DQN.DQN_BATCH_SIZE,
-                    descr="the DQN batch size")
+                                                  descr="the number of stop actions")
             },
             player_type=PlayerType.DEFENDER, player_idx=0
         )
@@ -152,14 +140,14 @@ class TestDQNAgentSuite(object):
 
     def test_create_agent(self, mocker, experiment_config: ExperimentConfig) -> None:
         """
-        Tests creation of the DQNAgent
+        Tests creation of the PPOAgent
 
         :return: None
         """
         emulation_env_config = mocker.MagicMock()
         simulation_env_config = mocker.MagicMock()
-        pytest.logger.info("Creating the DQN Agent")
-        DQNAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
+        pytest.logger.info("Creating the PPO Agent")
+        PPOAgent(emulation_env_config=emulation_env_config, simulation_env_config=simulation_env_config,
                    experiment_config=experiment_config)
         pytest.logger.info("Agent created successfully")
 
@@ -213,13 +201,13 @@ class TestDQNAgentSuite(object):
             return_value=True
         ),
         mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_dqn_policy',
+            'csle_common.metastore.metastore_facade.MetastoreFacade.save_ppo_policy',
             return_value=True
         )
-        agent = DQNAgent(emulation_env_config=emulation_env_config,
+        agent = PPOAgent(emulation_env_config=emulation_env_config,
                            simulation_env_config=simulation_env_config,
                            experiment_config=experiment_config)
-        pytest.logger.info("Starting training of the DQN Agent")
+        pytest.logger.info("Starting training of the PPO Agent")
         experiment_execution = agent.train()
         pytest.logger.info("Training completed succesfully")
         assert experiment_execution is not None
