@@ -377,6 +377,7 @@ class TFPAgent(BaseAgent):
                 progress = round(iterations_done / total_iterations, 2)
                 training_job.progress_percentage = progress
                 MetastoreFacade.update_training_job(training_job=training_job, id=training_job.id)
+        return exp_result
 
     def evaluate_defender_policy(self, defender_thresholds: List[float],
                                  attacker_strategy: MixedMultiThresholdStoppingPolicy) -> Dict[str, Union[float, int]]:
@@ -486,12 +487,12 @@ class TFPAgent(BaseAgent):
         metrics = {}
         for j in range(num_iterations):
             done = False
-            o = env.reset()
+            o, _ = env.reset()
             J = 0
             t = 1
             while not done and t <= self.experiment_config.hparams[agents_constants.COMMON.MAX_ENV_STEPS].value:
                 a = policy.action(o=o)
-                o, r, done, info = env.step(a)
+                o, r, done, _, info = env.step(a)
                 J += r
                 t += 1
             metrics = TSPSAAgent.update_metrics(metrics=metrics, info=info)
@@ -599,6 +600,7 @@ class TFPAgent(BaseAgent):
             constants.T_SPSA.c: self.experiment_config.hparams[constants.T_SPSA.c],
             constants.T_SPSA.a: self.experiment_config.hparams[constants.T_SPSA.a],
             constants.T_SPSA.A: self.experiment_config.hparams[constants.T_SPSA.A],
+            constants.T_SPSA.POLICY_TYPE: self.experiment_config.hparams[constants.T_SPSA.POLICY_TYPE],
             constants.T_SPSA.LAMBDA: self.experiment_config.hparams[constants.T_SPSA.LAMBDA],
             constants.T_SPSA.EPSILON: self.experiment_config.hparams[constants.T_SPSA.EPSILON],
             constants.T_SPSA.L: self.experiment_config.hparams[constants.T_SPSA.L],
@@ -635,6 +637,7 @@ class TFPAgent(BaseAgent):
             constants.T_SPSA.c: self.experiment_config.hparams[constants.T_SPSA.c],
             constants.T_SPSA.a: self.experiment_config.hparams[constants.T_SPSA.a],
             constants.T_SPSA.A: self.experiment_config.hparams[constants.T_SPSA.A],
+            constants.T_SPSA.POLICY_TYPE: self.experiment_config.hparams[constants.T_SPSA.POLICY_TYPE],
             constants.T_SPSA.LAMBDA: self.experiment_config.hparams[constants.T_SPSA.LAMBDA],
             constants.T_SPSA.EPSILON: self.experiment_config.hparams[constants.T_SPSA.EPSILON],
             constants.T_SPSA.L: self.experiment_config.hparams[constants.T_SPSA.L],
