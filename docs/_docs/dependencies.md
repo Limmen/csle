@@ -9,6 +9,9 @@ Python dependencies in CSLE are managed with PyPi and JavaScript dependencies ar
 
 The Python dependencies are defined in the following files:
 
+- `csle/simulation-system/libs/csle-base/requirements.txt`
+- `csle/simulation-system/libs/csle-base/requirements_dev.txt`
+- `csle/simulation-system/libs/csle-base/setup.cfg`
 - `csle/simulation-system/libs/csle-agents/requirements.txt`
 - `csle/simulation-system/libs/csle-agents/requirements_dev.txt`
 - `csle/simulation-system/libs/csle-agents/setup.cfg`

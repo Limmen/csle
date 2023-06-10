@@ -24,6 +24,7 @@ available on DockerHub:
 <a href="https://hub.docker.com/u/kimham">https://hub.docker.com/u/kimham</a>. 
 Further, binaries of the Python libraries in CSLE are available on PyPi:
 
+- <a href="https://pypi.org/project/csle-base">https://pypi.org/project/csle-base</a>
 - <a href="https://pypi.org/project/csle-collector">https://pypi.org/project/csle-collector</a>
 - <a href="https://pypi.org/project/csle-common">https://pypi.org/project/csle-common</a>
 - <a href="https://pypi.org/project/csle-attacker">https://pypi.org/project/csle-attacker</a>
@@ -40,11 +41,11 @@ Further, binaries of the Python libraries in CSLE are available on PyPi:
 
 #### Lines of code
 
-CSLE consists of around 120,000 lines of Python \cite{van1995python}, 
-30,000 lines of JavaScript, 
-2,500 lines of Dockerfiles, 
-1,400 lines of Makefile, 
-and 1,600 lines of Bash. 
+CSLE consists of around 200,000 lines of Python \cite{van1995python}, 
+40,000 lines of JavaScript, 
+3000 lines of Dockerfiles, 
+5000 lines of Makefile, 
+and 14000 lines of Bash. 
 The lines of code can be counted by executing the following commands from the project root:
 ```bash
 find . -name '*.py' | xargs wc -l

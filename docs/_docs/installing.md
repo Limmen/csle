@@ -249,7 +249,7 @@ Listing 21: Command to install Python 3.9 using Anaconda \cite{anaconda`.
 </p>
 
 The simulation system includes 10 Python libraries: 
-`csle-collector`, `csle-ryu`, `csle-common`, `csle-attacker`, 
+`csle-base`, `csle-collector`, `csle-ryu`, `csle-common`, `csle-attacker`, 
 `csle-defender`, `csle-system-identification`, `gym-csle-stopping-game`, 
 `csle-agents`, `csle-rest-api`, `csle-cli`, `csle-cluster`, and `gym-csle-intrusion-response-game` 
 These libraries can either be installed from 
@@ -258,14 +258,37 @@ These libraries can either be installed from
 To install all libraries at once from PyPi, run the command:
 
 ```bash
-pip install csle-collector csle-ryu csle-common csle-attacker csle-defender csle-system-identification gym-csle-stopping-game csle-agents csle-rest-api csle-cli csle-cluster gym-csle-intrusion-response-game
+pip install csle-base csle-collector csle-ryu csle-common csle-attacker csle-defender csle-system-identification gym-csle-stopping-game csle-agents csle-rest-api csle-cli csle-cluster gym-csle-intrusion-response-game
 ```
 
 <p class="captionFig">
 Listing 22: Command to install all CSLE python libraries from PyPi.
 </p>
 
-Install `csle-collector` from PyPi by running the command:
+Install `csle-base` from PyPi by running the command:
+
+```bash
+pip install csle-base
+```
+
+<p class="captionFig">
+Listing 23: Command to install `csle-base` from PyPi.
+</p>
+
+
+Alternatively, install `csle-base` from source by running the commands:
+
+```bash
+cd simulation-system/libs/csle-base/
+pip install -e .
+cd ../../../
+```
+
+<p class="captionFig">
+Listing 24: Commands to install `csle-base` from source.
+</p>
+
+Next, install `csle-collector` from PyPi by running the command:
 
 ```bash
 pip install csle-collector

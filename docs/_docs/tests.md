@@ -9,6 +9,7 @@ CSLE uses `pytest` for Python tests and integration tests, and `jest` for JavaSc
 
 The Python unit tests are available at:
 
+- `csle/simulation-system/libs/csle-base/tests`
 - `csle/simulation-system/libs/csle-agents/tests`
 - `csle/simulation-system/libs/csle-attacker/tests`
 - `csle/simulation-system/libs/csle-collector/tests`

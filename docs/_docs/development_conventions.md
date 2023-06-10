@@ -40,16 +40,19 @@ should help you with that.
 - `metastore`. SQL files that define the data model of the metastore.
 - `management-system/csle-mgmt-webapp`. Web application that implements the web interface of CSLE.
 - `simulation-system/envs`. Simulation configurations.
+- `simulation-system/libs/csle-base`. A Python library with definitions and base classes for the other Python libraries in CSLE. 
 - `simulation-system/libs/csle-agents`. A Python library with implementations of control, learning, and game-theoretic algorithms for finding defender strategies.
 - `simulation-system/libs/csle-attacker`. A Python library that contains code for emulating attacker actions.
 - `simulation-system/libs/csle-cli`. A Python library with the CSLE CLI.
 - `simulation-system/libs/csle-collector`. A Python library that implements the monitoring and management agents.
 - `simulation-system/libs/csle-common`. A Python library that contains common functionality to all CSLE Python libraries.
 - `simulation-system/libs/csle-defender`. A Python library that contains code for emulating defender actions.
+- `simulation-system/libs/csle-cluster`. A Python library that contains a gRPC server for cluster management in CSLE.
 - `simulation-system/libs/csle-rest-api`. A Python library with the CSLE REST API.
 - `simulation-system/libs/csle-ryu`. A Python library with RYU SDN controllers.
 - `simulation-system/libs/csle-system-identification`. A Python library with implementations of system identification algorithms to learn system models based on measured data and traces.
 - `simulation-system/libs/gym-csle-stopping-game`. A gym environment for an optimal stopping game.
+- `simulation-system/libs/gym-csle-intrusion-response-game`. A gym environment for an intrusion response game.
 
 #### Code Readability
 
