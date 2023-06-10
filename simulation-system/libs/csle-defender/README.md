@@ -8,6 +8,7 @@ Scrips and programs for automating defensive actions in emulations of CSLE.
 ## Requirements
 
 - Python 3.8+
+- `csle-base`
 - `csle-common`
 
 ## Development Requirements

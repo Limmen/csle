@@ -27,6 +27,7 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --gr
 ## Requirements
 
 - Python 3.8+
+- `csle-base`
 - `grpcio` (for the collector API)
 - `grpcio-tools` (for the collector API)
 - `scipy` (for statistical models of client processes)

@@ -8,6 +8,7 @@ An OpenAI gym reinforcement learning environment that represents an intrusion re
 ## Requirements
 
 - Python 3.8+
+- `csle-base`
 - `csle-common`
 - `csle-attacker`
 - `csle-defender`

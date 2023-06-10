@@ -9,6 +9,7 @@ These attacks are used to evaluate defender policies and to collect data.
 ## Requirements
 
 - Python 3.8+
+- `csle-base`
 - `csle-common`
 
 ## Development Requirements

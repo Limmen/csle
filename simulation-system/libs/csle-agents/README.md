@@ -9,6 +9,7 @@ and game-theoretic algorithms for finding defender policies.
 ## Requirements
 
 - Python 3.8+
+- `csle-base`
 - `csle-common`
 - `csle-collector`
 - `csle-attacker`

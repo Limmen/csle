@@ -19,6 +19,7 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_cluster/. --grpc
 ## Requirements
 
 - Python 3.8+
+- `csle-base`
 - `csle-common`
 - `csle-collector`
 - `csle-ryu` 

@@ -5,6 +5,30 @@ The command-line-interface (CLI) tool for CSLE.
 [![PyPI version](https://badge.fury.io/py/csle-agents.svg)](https://badge.fury.io/py/csle-cli)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-cli)
 
+## Requirements
+
+- Python 3.8+
+- `csle-base`
+- `csle-common`
+- `csle-cluster`
+- `csle-collector`
+- `csle-attacker`
+- `csle-defender`
+- `csle-system-identification`
+- `gym-csle-stopping-game`
+- `gym-csle-intrusion-response-game`
+- `csle-agents`
+
+## Development Requirements
+
+- Python 3.8+
+- `flake8` (for linting)
+- `tox` (for automated testing)
+- `mypy` (for static typing)
+- `sphinx` (for API documentation)
+- `sphinxcontrib-napoleon` (for API documentation)
+- `sphinx-rtd-theme` (for API documentation)
+
 ## Quickstart
 
 To see the available commands, run:
