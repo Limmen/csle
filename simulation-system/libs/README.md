@@ -2,6 +2,11 @@
 
 This folder contains python projects that implement the functionality of the simulation system.
 
+- **csle-base** ([csle-common](./csle-base)):
+  - [![PyPI version](https://badge.fury.io/py/csle-base.svg)](https://badge.fury.io/py/csle-base)
+  - ![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-base)
+  - Contains base classes and definitions for the other CSLE libraries
+
 - **csle-collector** ([csle-collector](./csle-collector)):
   - Contains functionality for sensors and collecting data from nodes in the emulation
   - [![PyPI version](https://badge.fury.io/py/csle-collector.svg)](https://badge.fury.io/py/csle-collector)
