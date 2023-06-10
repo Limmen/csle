@@ -10,9 +10,10 @@ from csle_common.dao.emulation_config.traffic_managers_info import TrafficManage
 from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
+from csle_base.json_serializable import JSONSerializable
 
 
-class EmulationExecutionInfo:
+class EmulationExecutionInfo(JSONSerializable):
     """
     DTO containing the runtime status of an emulation execution
     """
@@ -125,3 +126,17 @@ class EmulationExecutionInfo:
             inactive_networks=list(map(lambda x: x.from_dict(), d["inactive_networks"])),
             ryu_managers_info=d["ryu_managers_info"])
         return dto
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "EmulationExecutionInfo":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return EmulationExecutionInfo.from_dict(json.loads(json_str))

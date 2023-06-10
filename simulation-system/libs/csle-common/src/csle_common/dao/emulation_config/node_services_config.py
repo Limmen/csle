@@ -1,9 +1,10 @@
 from typing import List, Dict, Any
 from csle_common.dao.emulation_config.network_service import NetworkService
 from csle_common.util.general_util import GeneralUtil
+from csle_base.json_serializable import JSONSerializable
 
 
-class NodeServicesConfig:
+class NodeServicesConfig(JSONSerializable):
     """
     A DTO object representing the services configuration of a node in an emulation environment
     """
@@ -42,28 +43,6 @@ class NodeServicesConfig:
         :return: a string representation of the object
         """
         return "ip:{}, services:{}".format(self.ip, ",".join(list(map(lambda x: str(x), self.services))))
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "NodeServicesConfig":

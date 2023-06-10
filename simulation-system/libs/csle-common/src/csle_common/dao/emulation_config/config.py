@@ -1,12 +1,13 @@
 from typing import Dict, Any, Union
 from csle_common.dao.emulation_config.cluster_config import ClusterConfig
 import csle_common.constants.constants as constants
+from csle_base.json_serializable import JSONSerializable
 import os
 import io
 import json
 
 
-class Config:
+class Config(JSONSerializable):
     """
     A DTO Class representing the CSLE configuration
     """
@@ -705,28 +706,6 @@ class Config:
                f"pgadmin_username: {self.pgadmin_username}, pgadmin_password: {self.pgadmin_password}," \
                f"postgresql_log_dir: {self.postgresql_log_dir}, nginx_log_dir: {self.nginx_log_dir}," \
                f"flask_log_file: {self.flask_log_file}, cluster_manager_log_file: {self.cluster_manager_log_file}"
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "Config":

@@ -1,9 +1,10 @@
 from typing import Dict, Any
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
+from csle_base.json_serializable import JSONSerializable
 
 
-class EmulationSimulationTrace:
+class EmulationSimulationTrace(JSONSerializable):
     """
     DTO class representing a combined emulation and simulation trace
     """
@@ -44,33 +45,11 @@ class EmulationSimulationTrace:
         d["id"] = self.id
         return d
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         :return: a string representation of the object
         """
         return f"emulation_trace:{self.emulation_trace}, simulation_trace:{self.simulation_trace}, id:{self.id}"
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "EmulationSimulationTrace":

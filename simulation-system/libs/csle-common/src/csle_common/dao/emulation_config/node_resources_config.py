@@ -1,9 +1,10 @@
 from typing import List, Tuple, Dict, Any
 from csle_common.dao.emulation_config.node_network_config import NodeNetworkConfig
 from csle_common.util.general_util import GeneralUtil
+from csle_base.json_serializable import JSONSerializable
 
 
-class NodeResourcesConfig:
+class NodeResourcesConfig(JSONSerializable):
     """
     A DTO object representing the resources of a specific container in an emulation environment
     """
@@ -73,28 +74,6 @@ class NodeResourcesConfig:
         return f"num_cpus: {self.num_cpus}, available_memory_gb:{self.available_memory_gb}, " \
                f"container_name:{self.container_name}, ips_and_network_configs: {self.ips_and_network_configs}," \
                f"docker_gw_bridge_ip: {self.docker_gw_bridge_ip}, physical_host_ip: {self.physical_host_ip}"
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "NodeResourcesConfig":

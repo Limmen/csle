@@ -1,8 +1,9 @@
 from typing import Dict, Any, List
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_base.json_serializable import JSONSerializable
 
 
-class EmulationExecution:
+class EmulationExecution(JSONSerializable):
     """
     A DTO representing an execution of an emulation
     """
@@ -57,3 +58,17 @@ class EmulationExecution:
         return f"emulation_name:{self.emulation_name}, timestamp: {self.timestamp}, " \
                f"emulation_env_config: {self.emulation_env_config}," \
                f"ip_first_octet:{self.ip_first_octet}, physical_servers: {self.physical_servers}"
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "EmulationExecution":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return EmulationExecution.from_dict(json.loads(json_str))

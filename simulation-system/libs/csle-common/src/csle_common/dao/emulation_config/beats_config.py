@@ -1,8 +1,9 @@
 from typing import List, Dict, Any, Union
 from csle_common.dao.emulation_config.node_beats_config import NodeBeatsConfig
+from csle_base.json_serializable import JSONSerializable
 
 
-class BeatsConfig:
+class BeatsConfig(JSONSerializable):
     """
     A DTO object representing the beats configuration of an emulation environment
     """
@@ -61,28 +62,6 @@ class BeatsConfig:
         """
         return f"node_beats_configs:{','.join(list(map(lambda x: str(x), self.node_beats_configs)))}, " \
                f"num_elastic_shards: {self.num_elastic_shards}, reload_enabled: {self.reload_enabled}"
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "BeatsConfig":

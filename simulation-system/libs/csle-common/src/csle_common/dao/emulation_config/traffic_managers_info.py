@@ -2,9 +2,10 @@ from typing import List, Dict, Any
 import csle_collector.traffic_manager.traffic_manager_pb2_grpc
 import csle_collector.traffic_manager.traffic_manager_pb2
 import csle_collector.traffic_manager.traffic_manager_util as traffic_manager_util
+from csle_base.json_serializable import JSONSerializable
 
 
-class TrafficManagersInfo:
+class TrafficManagersInfo(JSONSerializable):
     """
     DTO containing the status of the Traffic managers for a given emulation execution
     """
@@ -69,3 +70,17 @@ class TrafficManagersInfo:
             traffic_managers_statuses=list(map(lambda x: traffic_manager_util.TrafficManagerUtil.traffic_dto_to_dict(x),
                                                d["traffic_managers_statuses"])))
         return dto
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "TrafficManagersInfo":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return TrafficManagersInfo.from_dict(json.loads(json_str))

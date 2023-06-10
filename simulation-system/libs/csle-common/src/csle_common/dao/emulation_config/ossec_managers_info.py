@@ -2,9 +2,10 @@ from typing import List, Dict, Any
 import csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc
 import csle_collector.ossec_ids_manager.ossec_ids_manager_pb2
 import csle_collector.ossec_ids_manager.ossec_ids_manager_util as ossec_ids_manager_util
+from csle_base.json_serializable import JSONSerializable
 
 
-class OSSECIDSManagersInfo:
+class OSSECIDSManagersInfo(JSONSerializable):
     """
     DTO containing the status of the OSSEC IDS managers for a given emulation execution
     """
@@ -71,3 +72,17 @@ class OSSECIDSManagersInfo:
                 map(lambda x: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO.from_dict(x),
                     d["ossec_ids_managers_statuses"])))
         return dto
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "OSSECIDSManagersInfo":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return OSSECIDSManagersInfo.from_dict(json.loads(json_str))

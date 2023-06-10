@@ -1,13 +1,15 @@
+from typing import Dict, Any
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_base.json_serializable import JSONSerializable
 
 
-class EmulationStatisticsWindowed:
+class EmulationStatisticsWindowed(JSONSerializable):
     """
-    Windowed emulation statistic. The statistic is updated with the last <window size> sampels
+    Windowed emulation statistic. The statistic is updated with the last <window size> samples
     """
 
     def __init__(self, window_size: int, emulation_name: str, descr: str):
@@ -75,3 +77,47 @@ class EmulationStatisticsWindowed:
                                                        id=self.statistics_id)
         except Exception:
             pass
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "EmulationStatisticsWindowed":
+        """
+        Converts a dict representation of the object into an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = EmulationStatisticsWindowed(
+            window_size=d["window_size"], emulation_name=d["emulation_name"], descr=d["descr"]
+        )
+        obj.emulation_statistics = EmulationStatistics.from_dict(d["emulation_statistics"])
+        obj.statistics_id = d["statistics_id"]
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["window_size"] = self.window_size
+        d["initial_states"] = self.initial_states
+        d["state_transitions"] = self.state_transitions
+        d["emulation_name"] = self.emulation_name
+        d["descr"] = self.descr
+        d["emulation_statistics"] = self.emulation_statistics.to_dict()
+        d["statistics_id"] = self.statistics_id
+        return d
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "EmulationStatisticsWindowed":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return EmulationStatisticsWindowed.from_dict(json.loads(json_str))
+

@@ -3,9 +3,10 @@ from csle_common.dao.emulation_config.node_container_config import NodeContainer
 from csle_common.dao.emulation_config.node_resources_config import NodeResourcesConfig
 from csle_common.dao.emulation_config.node_firewall_config import NodeFirewallConfig
 from csle_common.dao.emulation_config.kafka_topic import KafkaTopic
+from csle_base.json_serializable import JSONSerializable
 
 
-class KafkaConfig:
+class KafkaConfig(JSONSerializable):
     """
     Represents the configuration of the Kafka node in a CSLE emulation
     """
@@ -102,28 +103,6 @@ class KafkaConfig:
                f"kafka_manager_log_dir: {self.kafka_manager_log_dir}, " \
                f"kafka_manager_max_workers: {self.kafka_manager_max_workers}," \
                f"kafka_port_external: {self.kafka_port_external}"
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "KafkaConfig":

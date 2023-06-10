@@ -2,9 +2,10 @@ from typing import List, Dict, Any
 import csle_collector.kafka_manager.kafka_manager_pb2_grpc
 import csle_collector.kafka_manager.kafka_manager_pb2
 import csle_collector.kafka_manager.kafka_manager_util as kafka_manager_util
+from csle_base.json_serializable import JSONSerializable
 
 
-class KafkaManagersInfo:
+class KafkaManagersInfo(JSONSerializable):
     """
     DTO containing the status of the Kafka managers for a given emulation execution
     """
@@ -69,3 +70,17 @@ class KafkaManagersInfo:
             kafka_managers_statuses=list(map(
                 lambda x: kafka_manager_util.KafkaManagerUtil.kafka_dto_from_dict(x), d["kafka_managers_statuses"])))
         return dto
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "KafkaManagersInfo":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return KafkaManagersInfo.from_dict(json.loads(json_str))

@@ -2,9 +2,10 @@ from typing import List, Dict, Any
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
 import csle_collector.docker_stats_manager.docker_stats_util as docker_stats_util
+from csle_base.json_serializable import JSONSerializable
 
 
-class DockerStatsManagersInfo:
+class DockerStatsManagersInfo(JSONSerializable):
     """
     DTO containing the status of the docker stats managers for a given emulation execution
     """
@@ -72,3 +73,17 @@ class DockerStatsManagersInfo:
                 lambda x: docker_stats_util.DockerStatsUtil.docker_stats_monitor_dto_from_dict(x),
                 d["host_managers_statuses"])))
         return dto
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "DockerStatsManagersInfo":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return DockerStatsManagersInfo.from_dict(json.loads(json_str))

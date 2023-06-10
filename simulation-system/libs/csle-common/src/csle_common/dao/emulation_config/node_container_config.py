@@ -2,9 +2,10 @@ from typing import List, Tuple, Dict, Any
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.util.general_util import GeneralUtil
+from csle_base.json_serializable import JSONSerializable
 
 
-class NodeContainerConfig:
+class NodeContainerConfig(JSONSerializable):
     """
     A DTO object representing an individual container in an emulation environment
     """
@@ -115,28 +116,6 @@ class NodeContainerConfig:
         """
         return f"csle-{self.name}{self.suffix}-{constants.CSLE.LEVEL}{self.level}_" \
                f"{self.execution_ip_first_octet}"
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "NodeContainerConfig":

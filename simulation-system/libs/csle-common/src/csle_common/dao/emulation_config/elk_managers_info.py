@@ -2,9 +2,10 @@ from typing import List, Dict, Any
 import csle_collector.elk_manager.elk_manager_pb2_grpc
 import csle_collector.elk_manager.elk_manager_pb2
 import csle_collector.elk_manager.elk_manager_util as elk_manager_util
+from csle_base.json_serializable import JSONSerializable
 
 
-class ELKManagersInfo:
+class ELKManagersInfo(JSONSerializable):
     """
     DTO containing the status of the ELK managers for a given emulation execution
     """
@@ -76,3 +77,17 @@ class ELKManagersInfo:
                                   d["elk_managers_statuses"])), local_kibana_port=d["local_kibana_port"],
                               physical_server_ip=d["physical_server_ip"])
         return dto
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "ELKManagersInfo":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return ELKManagersInfo.from_dict(json.loads(json_str))

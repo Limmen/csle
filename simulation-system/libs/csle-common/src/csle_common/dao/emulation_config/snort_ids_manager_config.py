@@ -1,7 +1,8 @@
 from typing import Dict, Any
+from csle_base.json_serializable import JSONSerializable
 
 
-class SnortIDSManagerConfig:
+class SnortIDSManagerConfig(JSONSerializable):
     """
     Represents the configuration of the Snort IDS managers in a CSLE emulation
     """
@@ -62,28 +63,6 @@ class SnortIDSManagerConfig:
                f" version: {self.version}, snort_ids_manager_max_workers: {self.snort_ids_manager_max_workers}," \
                f"snort_ids_manager_log_file: {self.snort_ids_manager_log_file}, " \
                f"snort_ids_manager_log_dir: {self.snort_ids_manager_log_dir}"
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "SnortIDSManagerConfig":

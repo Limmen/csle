@@ -2,7 +2,7 @@
 
 This folder contains python projects that implement the functionality of the simulation system.
 
-- **csle-base** ([csle-common](./csle-base)):
+- **csle-base** ([csle-base](./csle-base)):
   - [![PyPI version](https://badge.fury.io/py/csle-base.svg)](https://badge.fury.io/py/csle-base)
   - ![PyPI - Downloads](https://img.shields.io/pypi/dm/csle-base)
   - Contains base classes and definitions for the other CSLE libraries

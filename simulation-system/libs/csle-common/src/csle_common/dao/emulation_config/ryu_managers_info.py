@@ -2,9 +2,10 @@ from typing import List, Dict, Any
 import csle_collector.ryu_manager.ryu_manager_pb2_grpc
 import csle_collector.ryu_manager.ryu_manager_pb2
 import csle_collector.ryu_manager.ryu_manager_util as ryu_manager_util
+from csle_base.json_serializable import JSONSerializable
 
 
-class RyuManagersInfo:
+class RyuManagersInfo(JSONSerializable):
     """
     DTO containing the status of the Ryu managers for a given emulation execution
     """
@@ -78,3 +79,17 @@ class RyuManagersInfo:
                               local_controller_web_port=d["local_controller_web_port"],
                               physical_server_ip=d["physical_server_ip"])
         return dto
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "RyuManagersInfo":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return RyuManagersInfo.from_dict(json.loads(json_str))

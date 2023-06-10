@@ -1,11 +1,12 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.emulation_observation.common.emulation_connection_observation_state \
     import EmulationConnectionObservationState
 from csle_common.dao.emulation_config.credential import Credential
 from csle_common.tunneling.forward_tunnel_thread import ForwardTunnelThread
+from csle_base.json_serializable import JSONSerializable
 
 
-class ConnectionSetupDTO:
+class ConnectionSetupDTO(JSONSerializable):
     """
     DTO class containing information for setting up connections in the emulation
     """
@@ -85,3 +86,49 @@ class ConnectionSetupDTO:
             interactive_shells=self.interactive_shells, total_time=self.total_time,
             non_failed_credentials=self.non_failed_credentials, proxies=self.proxies, ip=self.ip
         )
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "ConnectionSetupDTO":
+        """
+        Converts a dict representation of the object into a an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = ConnectionSetupDTO(
+            connected=d["connected"],
+            credentials=list(map(lambda x: Credential.from_dict(x), d["credentials"])),
+            ports=d["ports"], total_time=d["total_time"],
+            non_failed_credentials=list(map(lambda x: Credential.from_dict(x), d["non_failed_credentials"])),
+            proxies=list(map(lambda x: EmulationConnectionObservationState.from_dict(x), d["proxies"])),
+            ip = d["ip"]
+        )
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["connected"] = self.connected
+        d["credentials"] = list(map(lambda x: x.to_dict(), self.credentials))
+        d["ports"] = self.ports
+        d["total_time"] = self.total_time
+        d["non_failed_credentials"] = list(map(lambda x: x.to_dict(), self.non_failed_credentials))
+        d["ip"] = self.ip
+        d["proxies"] = list(map(lambda x: x.to_dict(), self.proxies))
+        return d
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "ConnectionSetupDTO":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return ConnectionSetupDTO.from_dict(json.loads(json_str))

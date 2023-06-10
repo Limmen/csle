@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Dict, Any
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state \
@@ -11,9 +11,10 @@ from csle_common.dao.emulation_observation.defender.emulation_defender_machine_o
     import EmulationDefenderMachineObservationState
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_config import EmulationAttackerActionConfig
 from csle_common.dao.emulation_action.defender.emulation_defender_action_config import EmulationDefenderActionConfig
+from csle_base.json_serializable import JSONSerializable
 
 
-class EmulationEnvState:
+class EmulationEnvState(JSONSerializable):
     """
     Represents the combined state of the emulation environment,
     including both the attacker's and the defender's states.
@@ -160,3 +161,40 @@ class EmulationEnvState:
         """
         return f"Attacker observation state: {self.attacker_obs_state}" \
                f"Defender observation state: {self.defender_obs_state}"
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "EmulationEnvState":
+        """
+        Converts a dict representation of the object into a an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = EmulationEnvState(emulation_env_config=EmulationEnvConfig.from_dict(d["emulation_env_config"]))
+        obj.attacker_action_config = EmulationAttackerActionConfig.from_dict(d["attacker_action_config"])
+        obj.defender_action_config = EmulationDefenderActionConfig.from_dict(d["defender_action_config"])
+        return obj
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["emulation_env_config"] = self.emulation_env_config.to_dict()
+        d["attacker_action_config"] = self.attacker_action_config.to_dict()
+        d["defender_action_config"] = self.defender_action_config.to_dict()
+        return d
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "EmulationEnvState":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return EmulationEnvState.from_dict(json.loads(json_str))

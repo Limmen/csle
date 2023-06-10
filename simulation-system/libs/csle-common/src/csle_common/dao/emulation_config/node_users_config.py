@@ -1,9 +1,10 @@
 from typing import List, Dict, Any
 from csle_common.dao.emulation_config.user import User
 from csle_common.util.general_util import GeneralUtil
+from csle_base.json_serializable import JSONSerializable
 
 
-class NodeUsersConfig:
+class NodeUsersConfig(JSONSerializable):
     """
     A DTO object representing the users of a container in an emulation environment
     """
@@ -54,28 +55,6 @@ class NodeUsersConfig:
         """
         return f"ip:{self.ip}, docker_gw_bridge_ip:{self.docker_gw_bridge_ip}, " \
                f"users:{','.join(list(map(lambda x: str(x), self.users)))}, physical_host_ip: {self.physical_host_ip}"
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "NodeUsersConfig":

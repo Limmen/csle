@@ -2,9 +2,10 @@ from typing import List, Dict, Any
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 import csle_collector.snort_ids_manager.snort_ids_manager_util as snort_ids_manager_util
+from csle_base.json_serializable import JSONSerializable
 
 
-class SnortIdsManagersInfo:
+class SnortIdsManagersInfo(JSONSerializable):
     """
     DTO containing the status of the snort managers for a given emulation execution
     """
@@ -80,3 +81,17 @@ class SnortIdsManagersInfo:
         return SnortIdsManagersInfo(
             ips=[], ports=[], emulation_name="", execution_id=-1, snort_ids_managers_statuses=[],
             snort_ids_managers_running=[])
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "SnortIdsManagersInfo":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return SnortIdsManagersInfo.from_dict(json.loads(json_str))
