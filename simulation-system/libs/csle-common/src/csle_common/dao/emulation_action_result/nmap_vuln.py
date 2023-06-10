@@ -1,11 +1,12 @@
-from typing import List
+from typing import List, Dict, Any
 from csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state import \
     EmulationVulnerabilityObservationState
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_config.credential import Credential
+from csle_base.json_serializable import JSONSerializable
 
 
-class NmapVuln:
+class NmapVuln(JSONSerializable):
     """
     DTO representing a vulnerability found with NMAP
     """
@@ -66,3 +67,44 @@ class NmapVuln:
         """
         return f"name:{self.name}, port:{self.port}, protocol:{self.protocol}, cvss:{self.cvss}, " \
                f"service:{self.service}, credentials:{list(map(lambda x: str(x), self.credentials))}"
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["name"] = self.name
+        d["port"] = self.port
+        d["protocol"] = self.protocol
+        d["cvss"] = self.cvss
+        d["service"] = self.service
+        d["credentials"] = list(map(lambda x: x.to_dict(), self.credentials))
+        return d
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "NmapVuln":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = NmapVuln(
+            name=d["name"], port=d["port"], protocol=d["protocol"], cvss=d["cvss"], service=d["service"],
+            credentials=list(map(lambda x: Credential.from_dict(x), d["credentials"]))
+        )
+        return obj
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "NmapVuln":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return NmapVuln.from_dict(json.loads(json_str))

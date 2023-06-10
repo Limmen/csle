@@ -1,3 +1,4 @@
+from typing import Dict, Any
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_observation.common.emulation_port_observation_state import EmulationPortObservationState
 from csle_common.dao.emulation_action_result.nmap_port_status import NmapPortStatus
@@ -5,9 +6,10 @@ from csle_common.dao.emulation_config.transport_protocol import TransportProtoco
 from csle_common.dao.emulation_action_result.nmap_http_enum import NmapHttpEnum
 from csle_common.dao.emulation_action_result.nmap_http_grep import NmapHttpGrep
 from csle_common.dao.emulation_action_result.nmap_vulscan import NmapVulscan
+from csle_base.json_serializable import JSONSerializable
 
 
-class NmapPort:
+class NmapPort(JSONSerializable):
     """
     DTO Representing a Port found with a NMAP scan
     """
@@ -86,3 +88,47 @@ class NmapPort:
                                                  http_grep=hp_grep, vulscan=vulscan, version=self.service_version,
                                                  fingerprint=self.service_fp)
         return port_obs
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["port_id"] = self.port_id
+        d["protocol"] = self.protocol
+        d["status"] = self.status
+        d["service_name"] = self.service_name
+        d["http_enum"] = self.http_enum.to_dict()
+        d["http_grep"] = self.http_grep.to_dict()
+        d["vulscan"] = self.vulscan.to_dict()
+        d["service_version"] = self.service_version
+        d["service_fp"] = self.service_fp
+        return d
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "NmapPort":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = NmapPort(port_id=d["port_id"], protocol=d["protocol"], status=d["status"],
+                       service_name=d["service_name"], http_enum=NmapHttpEnum.from_dict(d["http_enum"]),
+                       http_grep=NmapHttpGrep.from_dict(d["http_grep"]), vulscan=NmapVulscan.from_dict(d["vulscan"]),
+                       service_version=d["service_version"], service_fp=d["service_fp"])
+        return obj
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "NmapPort":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return NmapPort.from_dict(json.loads(json_str))

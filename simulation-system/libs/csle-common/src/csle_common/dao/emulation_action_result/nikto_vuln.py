@@ -1,10 +1,11 @@
-from typing import Union
+from typing import Union, Dict, Any
 from csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state \
     import EmulationVulnerabilityObservationState
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
+from csle_base.json_serializable import JSONSerializable
 
 
-class NiktoVuln:
+class NiktoVuln(JSONSerializable):
     """
     DTO representing a vulnerability found with a Nikto scan
     """
@@ -48,3 +49,43 @@ class NiktoVuln:
         """
         return f"id:{self.id}, osvdb_id:{self.osvdb_id}, method:{self.method}, iplink:{self.iplink}, " \
                f"namelink:{self.namelink}, uri:{self.uri}, descr:{self.description}"
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["id"] = self.id
+        d["osvdb"] = self.osvdb_id
+        d["method"]= self.method
+        d["iplink"] = self.iplink
+        d["namelink"] = self.namelink
+        d["uri"] = self.uri
+        d["description"] = self.description
+        return d
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "NiktoVuln":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = NiktoVuln(id=d["id"], osvdb_id=d["osvdb_id"], method=d["method"], iplink=d["iplink"],
+                        namelink=d["namelink"], uri=d["uri"], description=d["description"])
+        return obj
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "NiktoVuln":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return NiktoVuln.from_dict(json.loads(json_str))

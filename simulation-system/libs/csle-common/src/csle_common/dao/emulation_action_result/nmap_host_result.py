@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 import copy
 from csle_common.dao.emulation_action_result.nmap_host_status import NmapHostStatus
 from csle_common.dao.emulation_action_result.nmap_port import NmapPort
@@ -6,9 +6,10 @@ from csle_common.dao.emulation_action_result.nmap_os import NmapOs
 from csle_common.dao.emulation_action_result.nmap_vuln import NmapVuln
 from csle_common.dao.emulation_action_result.nmap_brute_credentials import NmapBruteCredentials
 from csle_common.dao.emulation_action_result.nmap_trace import NmapTrace
+from csle_base.json_serializable import JSONSerializable
 
 
-class NmapHostResult:
+class NmapHostResult(JSONSerializable):
     """
     A DTO representing a host found with an NMAP scan
     """
@@ -74,3 +75,53 @@ class NmapHostResult:
             if ip in ips:
                 return True
         return False
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["status"] = self.status
+        d["ips"] = self.ips
+        d["mac_addr"] = self.mac_addr
+        d["hostnames"]  = self.hostnames
+        d["ports"] = list(map(lambda x: x.to_dict(), self.ports))
+        d["os"] = self.os.to_dict()
+        d["os_matches"] = list(map(lambda x: x.to_dict(), self.os_matches))
+        d["vulnerabilities"] = list(map(lambda x: x.to_dict(), self.vulnerabilities))
+        d["credentials"] = list(map(lambda x: x.to_dict(), self.credentials))
+        d["trace"] = self.trace.to_dict()
+        return d
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "NmapHostResult":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = NmapHostResult(
+            status = d["status"], ips = d["ips"], mac_addr=d["mac_addr"], hostnames=d["hostnames"],
+            ports = list(map(lambda x: NmapPort.from_dict(x), d["ports"])),
+            os = NmapOs.from_dict(d["os"]),
+            os_matches = list(map(lambda x: NmapOs.from_dict(x), d["os_matches"])),
+            vulnerabilities = list(map(lambda x: NmapVuln.from_dict(x), d["vulnerabilities"])),
+            credentials = list(map(lambda x: NmapBruteCredentials.from_dict(x), d["credentials"])),
+            trace=NmapTrace.from_dict(d["trace"])
+        )
+        return obj
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "NmapHostResult":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return NmapHostResult.from_dict(json.loads(json_str))

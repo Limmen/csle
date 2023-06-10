@@ -1,12 +1,13 @@
-from typing import List
+from typing import List, Dict, Any
 import gymnasium as gym
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
 from csle_common.dao.emulation_action.defender.emulation_defender_stopping_actions \
     import EmulationDefenderStoppingActions
+from csle_base.json_serializable import JSONSerializable
 
 
-class EmulationDefenderActionConfig:
+class EmulationDefenderActionConfig(JSONSerializable):
     """
     Configuration of the action space for the defender
     """
@@ -91,3 +92,54 @@ class EmulationDefenderActionConfig:
         defender_action_config = EmulationDefenderActionConfig(
             num_indices=num_nodes + 1, actions=defender_actions, stopping_action_ids=stopping_action_ids)
         return defender_action_config
+
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
+        return f"num_indices: {self.num_indices}, actions: {self.actions}, " \
+               f"stopping_action_ids: {self.stopping_action_ids}, " \
+               f"multiple_stop_actions: {self.multiple_stop_actions}, " \
+               f"multiple_stop_actions_ids: {self.multiple_stop_actions_ids}"
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["num_indices"] = self.num_indices
+        d["actions"] = self.actions
+        d["stopping_action_ids"] = self.stopping_action_ids
+        d["multiple_stop_actions"] = self.multiple_stop_actions
+        d["multiple_stop_actions_ids"] = self.multiple_stop_actions_ids
+        return d
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "EmulationDefenderActionConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = EmulationDefenderActionConfig(
+            num_indices=d["num_indices"], actions=d["actions"],
+            stopping_action_ids=d["stopping_action_ids"],
+            multiple_stop_actions_ids=d["multiple_stop_actions_ids"],
+            multiple_stop_actions=d["multiple_stop_actions"]
+        )
+        return obj
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "EmulationDefenderActionConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return EmulationDefenderActionConfig.from_dict(json.loads(json_str))

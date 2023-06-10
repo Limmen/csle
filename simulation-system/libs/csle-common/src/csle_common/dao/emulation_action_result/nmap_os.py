@@ -1,5 +1,8 @@
+from typing import Dict, Any
+from csle_base.json_serializable import JSONSerializable
 
-class NmapOs:
+
+class NmapOs(JSONSerializable):
     """
     DTO representing the operating system found with an NMAP scan
     """
@@ -38,3 +41,39 @@ class NmapOs:
             if os.accuracy > best_accuracy:
                 best_os = os
         return best_os
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["name"] = self.name
+        d["vendor"] = self.vendor
+        d["osfamily"] = self.osfamily
+        d["accuracy"] = self.accuracy
+        return d
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "NmapOs":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = NmapOs(name=d["name"], vendor=d["vendor"], osfamily=d["osfamily"], accuracy=d["accuracy"])
+        return obj
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "NmapOs":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return NmapOs.from_dict(json.loads(json_str))

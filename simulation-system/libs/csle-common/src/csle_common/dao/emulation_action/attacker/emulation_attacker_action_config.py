@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict, Any
 import gymnasium as gym
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
@@ -11,9 +11,10 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_network_servic
 from csle_common.dao.emulation_action.attacker.emulation_attacker_shell_actions import EmulationAttackerShellActions
 from csle_common.dao.emulation_action.attacker.emulation_attacker_stopping_actions \
     import EmulationAttackerStoppingActions
+from csle_base.json_serializable import JSONSerializable
 
 
-class EmulationAttackerActionConfig:
+class EmulationAttackerActionConfig(JSONSerializable):
     """
     Configuration of the action space for the attacker in the emulation
     """
@@ -312,3 +313,58 @@ class EmulationAttackerActionConfig:
                                                                masscan_action_ids=masscan_action_ids,
                                                                stopping_action_ids=stopping_action_ids)
         return attacker_action_config
+
+    def __str__(self) -> str:
+        """
+        :return: a string representation of the object
+        """
+        return f"num_indices: {self.num_indices}, actions: {self.actions}, nmap_action_ids: {self.nmap_action_ids}, " \
+               f"network_service_action_ids: {self.network_service_action_ids}, " \
+               f"shell_action_ids: {self.shell_action_ids}, nikto_action_ids: {self.nikto_action_ids}, " \
+               f"masscan_action_ids: {self.masscan_action_ids}, stopping_action_ids: {self.stopping_action_ids}"
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        :return: a dict representation of the object
+        """
+        d = {}
+        d["num_indices"] = self.num_indices
+        d["actions"] = self.actions
+        d["nmap_action_ids"] = self.nmap_action_ids
+        d["network_service_action_ids"] = self.network_service_action_ids
+        d["shell_action_ids"] = self.shell_action_ids
+        d["nikto_action_ids"] = self.nikto_action_ids
+        d["masscan_action_ids"] = self.masscan_action_ids
+        d["stopping_action_ids"] = self.stopping_action_ids
+        return d
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]) -> "EmulationAttackerActionConfig":
+        """
+        Converts a dict representation to an instance
+
+        :param d: the dict to convert
+        :return: the created instance
+        """
+        obj = EmulationAttackerActionConfig(
+            num_indices=d["num_indices"], actions=d["actions"], nmap_action_ids=d["nmap_action_ids"],
+            network_service_action_ids=d["network_service_action_ids"], shell_action_ids=d["shell_action_ids"],
+            nikto_action_ids=d["nikto_action_ids"], masscan_action_ids=d["masscan_action_ids"],
+            stopping_action_ids=d["stopping_action_ids"]
+        )
+        return obj
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "EmulationAttackerActionConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return EmulationAttackerActionConfig.from_dict(json.loads(json_str))
+
