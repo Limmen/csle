@@ -3,9 +3,10 @@ import gpytorch
 import numpy as np
 import torch
 from csle_system_identification.gp.gp_regression_model_with_gauissan_noise import GPRegressionModelWithGaussianNoise
+from csle_base.json_serializable import JSONSerializable
 
 
-class GPConditional:
+class GPConditional(JSONSerializable):
     """
     A DTO representing a Gaussian process conditional distribution
     """
@@ -70,28 +71,6 @@ class GPConditional:
         return f"conditional_name:{self.conditional_name}, metric_name: {self.metric_name}, " \
                f"sample_space: {self.sample_space}, observed_x: {self.observed_x}, observed_y: {self.observed_y}," \
                f"scale_parameter: {self.scale_parameter}, noise_parameter: {self.noise_parameter}"
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "GPConditional":

@@ -291,7 +291,6 @@ class MultiThresholdStoppingPolicy(Policy):
                                 stop_dist.append(round(1 - prob, 3))
                             distributions[constants.T_SPSA.STOP_DISTRIBUTION_ATTACKER + f"_l={l}_s={s.id}"] = \
                                 stop_dist
-
         return distributions
 
     def __str__(self) -> str:
@@ -302,28 +301,6 @@ class MultiThresholdStoppingPolicy(Policy):
                f"thresholds: {self.thresholds()}, player_type: {self.player_type}, " \
                f"L:{self.L}, states: {self.states}, agent_type: {self.agent_type}, actions: {self.actions}," \
                f"experiment_config: {self.experiment_config}, avg_R: {self.avg_R}, policy_type: {self.policy_type}"
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "MultiThresholdStoppingPolicy":

@@ -2,9 +2,10 @@ from typing import List, Dict, Any, Optional
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.hparam import HParam
+from csle_base.json_serializable import JSONSerializable
 
 
-class ExperimentConfig:
+class ExperimentConfig(JSONSerializable):
     """
     DTO representing the configuration of an experiment
     """
@@ -81,28 +82,6 @@ class ExperimentConfig:
         return f"output_dir:{self.output_dir}, title:{self.title}, random_seeds:{self.random_seeds}, " \
                f"agent_type: {self.agent_type}, hparams: {self.hparams}, log_every: {self.log_every}, " \
                f"player_type: {self.player_type}, player_idx: {self.player_idx}, br_log_every: {self.br_log_every}"
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "ExperimentConfig":

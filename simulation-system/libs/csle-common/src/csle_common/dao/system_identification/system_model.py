@@ -1,9 +1,10 @@
 from typing import Dict, Any
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from csle_common.dao.system_identification.system_model_type import SystemModelType
+from csle_base.json_serializable import JSONSerializable
 
 
-class SystemModel(ABC):
+class SystemModel(JSONSerializable):
     """
     Abstract system model
     """
@@ -20,13 +21,35 @@ class SystemModel(ABC):
 
     @abstractmethod
     def to_dict(self) -> Dict[str, Any]:
-        pass
+        """
+        :return: a dict representation of the object
+        """
 
     @staticmethod
     @abstractmethod
     def from_dict(d: Dict[str, Any]) -> "SystemModel":
+        """
+        Converts a dict representation of the object to an instance
+
+        :param d: the dict to convert
+        :return: the converted instance
+        """
         pass
 
     @abstractmethod
     def copy(self) -> "SystemModel":
+        """
+        :return: a copy of the object
+        """
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def from_json_file(json_file_path: str) -> "SystemModel":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
         pass
