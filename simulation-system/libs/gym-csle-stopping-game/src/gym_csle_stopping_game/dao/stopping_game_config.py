@@ -125,3 +125,17 @@ class StoppingGameConfig(SimulationEnvInputConfig):
         :return: the defender's action space
         """
         return gym.spaces.Discrete(len(self.A1))
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "StoppingGameConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return StoppingGameConfig.from_dict(json.loads(json_str))

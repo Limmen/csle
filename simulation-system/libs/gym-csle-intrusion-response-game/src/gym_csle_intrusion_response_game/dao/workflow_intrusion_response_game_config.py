@@ -1,9 +1,10 @@
 from typing import Dict, Any
 import gymnasium as gym
 import numpy as np
+from csle_base.json_serializable import JSONSerializable
 
 
-class WorkflowIntrusionResponseGameConfig:
+class WorkflowIntrusionResponseGameConfig(JSONSerializable):
     """
     DTO representing the configuration of a workflow intrusion response game
     """
@@ -107,3 +108,17 @@ class WorkflowIntrusionResponseGameConfig:
             A_P=np.array(d["A_P"]), Z_U=np.array(d["Z_U"]), X_max=d["X_max"], beta=d["beta"], gamma=d["gamma"],
             adjacency_matrix=np.array(d["adjacency_matrix"]), eta=d["eta"], gw_reachable=np.array(d["gw_reachable"]))
         return obj
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "WorkflowIntrusionResponseGameConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return WorkflowIntrusionResponseGameConfig.from_dict(json.loads(json_str))

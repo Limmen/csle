@@ -2,9 +2,10 @@ from typing import Dict, Any
 import numpy as np
 import gymnasium as gym
 import gym_csle_intrusion_response_game.constants.constants as env_constants
+from csle_base.json_serializable import JSONSerializable
 
 
-class LocalIntrusionResponseGameConfig:
+class LocalIntrusionResponseGameConfig(JSONSerializable):
     """
     DTO representing the configuration of the local intrusion response game
     """
@@ -149,3 +150,17 @@ class LocalIntrusionResponseGameConfig:
             Z_D_P=np.array(d["Z_D_P"]), A_P=np.array(d["A_P"]), C_D=np.array(d["C_D"]), S_D=np.array(d["S_D"]),
             S_A=np.array(d["S_A"]), s_1_idx=d["s_1_idx"], zones=np.array(d["zones"]))
         return obj
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "LocalIntrusionResponseGameConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return LocalIntrusionResponseGameConfig.from_dict(json.loads(json_str))

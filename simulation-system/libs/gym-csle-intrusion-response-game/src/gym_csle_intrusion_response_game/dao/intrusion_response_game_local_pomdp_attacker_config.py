@@ -84,3 +84,17 @@ class IntrusionResponseGameLocalPOMDPAttackerConfig(SimulationEnvInputConfig):
         return f"local_intrusion_response_game_config: {self.local_intrusion_response_game_config}, " \
                f"defender_strategy: {self.defender_strategy}," \
                f"env_name: {self.env_name} attacker_Strategy: {self.attacker_strategy}"
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "IntrusionResponseGameLocalPOMDPAttackerConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return IntrusionResponseGameLocalPOMDPAttackerConfig.from_dict(json.loads(json_str))

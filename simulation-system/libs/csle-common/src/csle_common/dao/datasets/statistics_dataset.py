@@ -107,7 +107,6 @@ class StatisticsDataset(JSONSerializable):
                f"file_format: {self.file_format}, added_by: {self.added_by}, metrics: {self.metrics}, " \
                f"conditions: {self.conditions}, num_conditions: {self.num_conditions}"
 
-
     @staticmethod
     def from_json_file(json_file_path: str) -> "StatisticsDataset":
         """

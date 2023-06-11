@@ -65,3 +65,17 @@ class WorkflowIntrusionResponsePOMDPDefenderConfig(SimulationEnvInputConfig):
             env_name=d["env_name"], game_config=WorkflowIntrusionResponseGameConfig.from_dict(d["game_config"]),
             attacker_strategies=attacker_strategies)
         return obj
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "WorkflowIntrusionResponsePOMDPDefenderConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return WorkflowIntrusionResponsePOMDPDefenderConfig.from_dict(json.loads(json_str))
