@@ -8,11 +8,12 @@ from csle_common.dao.emulation_observation.common.emulation_connection_observati
     import EmulationConnectionObservationState
 from csle_common.dao.emulation_action_result.nmap_host_result import NmapHostResult
 from csle_common.dao.emulation_action_result.nmap_trace import NmapTrace
+from csle_base.json_serializable import JSONSerializable
 
 
-class EmulationAttackerMachineObservationState:
+class EmulationAttackerMachineObservationState(JSONSerializable):
     """
-    Represent's the attacker's belief state of a component in the emulation
+    Represents the attacker's belief state of a component in the emulation
     """
 
     def __init__(self, ips: List[str]):
@@ -341,28 +342,6 @@ class EmulationAttackerMachineObservationState:
         d["cve_2015_5602_tried"] = self.cve_2015_5602_tried
         d["reachable"] = list(self.reachable)
         return d
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "EmulationAttackerMachineObservationState":

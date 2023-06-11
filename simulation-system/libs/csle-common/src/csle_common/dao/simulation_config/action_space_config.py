@@ -1,9 +1,10 @@
 from typing import List, Dict, Any
 from csle_common.dao.simulation_config.value_type import ValueType
 from csle_common.dao.simulation_config.action import Action
+from csle_base.json_serializable import JSONSerializable
 
 
-class ActionSpaceConfig:
+class ActionSpaceConfig(JSONSerializable):
     """
     DTO Class representing the action space configuration of a player in a simulation environment
     """
@@ -59,3 +60,17 @@ class ActionSpaceConfig:
         """
         return f"actions:{list(map(lambda x: str(x), self.actions))}, action_type: {self.action_type}, " \
                f"descr: {self.descr}, player_id: {self.player_id}"
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "ActionSpaceConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return ActionSpaceConfig.from_dict(json.loads(json_str))

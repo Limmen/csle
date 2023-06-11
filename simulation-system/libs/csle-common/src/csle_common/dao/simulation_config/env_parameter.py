@@ -1,7 +1,8 @@
 from typing import Dict, Any
+from csle_base.json_serializable import JSONSerializable
 
 
-class EnvParameter:
+class EnvParameter(JSONSerializable):
     """
     DTO representing the a general parameter of a simulation environment
     """
@@ -46,3 +47,17 @@ class EnvParameter:
         :return: a string representation of the object
         """
         return f"id:{self.id}, name:{self.name}, descr:{self.descr}"
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "EnvParameter":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return EnvParameter.from_dict(json.loads(json_str))

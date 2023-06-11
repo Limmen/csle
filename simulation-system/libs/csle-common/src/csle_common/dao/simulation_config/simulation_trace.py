@@ -3,9 +3,10 @@ import json
 import os
 import csle_common.constants.constants as constants
 from csle_common.dao.encoding.np_encoder import NpEncoder
+from csle_base.json_serializable import JSONSerializable
 
 
-class SimulationTrace:
+class SimulationTrace(JSONSerializable):
     """
     Class that represents a trace in the simulation system
     """
@@ -135,3 +136,17 @@ class SimulationTrace:
         else:
             print("Warning: Could not read traces file, path does not exist:{}".format(path))
             return []
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "SimulationTrace":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return SimulationTrace.from_dict(json.loads(json_str))

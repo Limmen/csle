@@ -1,9 +1,10 @@
 from typing import List, Dict, Any
 from csle_common.dao.simulation_config.value_type import ValueType
 from csle_common.dao.simulation_config.observation import Observation
+from csle_base.json_serializable import JSONSerializable
 
 
-class ObservationSpaceConfig:
+class ObservationSpaceConfig(JSONSerializable):
     """
     DTO representing the configuration of the observation space of a single player in a simulation environment
     """
@@ -97,3 +98,17 @@ class ObservationSpaceConfig:
                f"component_observations: {self.component_observations}, " \
                f"observation_id_to_observation_vector: {self.observation_id_to_observation_vector}," \
                f"observation_id_to_observation_id_vector: {self.observation_id_to_observation_id_vector}"
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "ObservationSpaceConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return ObservationSpaceConfig.from_dict(json.loads(json_str))

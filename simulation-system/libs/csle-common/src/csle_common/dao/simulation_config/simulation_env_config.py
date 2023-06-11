@@ -21,9 +21,10 @@ from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_defe
     import WorkflowIntrusionResponsePOMDPDefenderConfig
 from gym_csle_intrusion_response_game.dao.workflow_intrusion_response_pomdp_attacker_config \
     import WorkflowIntrusionResponsePOMDPAttackerConfig
+from csle_base.json_serializable import JSONSerializable
 
 
-class SimulationEnvConfig:
+class SimulationEnvConfig(JSONSerializable):
     """
     A DTO class representing the configuration of a simulation environment
     """
@@ -181,3 +182,17 @@ class SimulationEnvConfig:
         :return: a copy of the DTO
         """
         return self.from_dict(self.to_dict())
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "SimulationEnvConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return SimulationEnvConfig.from_dict(json.loads(json_str))

@@ -1,7 +1,8 @@
 from typing import Union, Dict, Any
+from csle_base.json_serializable import JSONSerializable
 
 
-class Action:
+class Action(JSONSerializable):
     """
     DTO representing an action in a simulation environment
     """
@@ -43,3 +44,17 @@ class Action:
         :return: a string representation of the DTO
         """
         return f"id:{self.id}, descr:{self.descr}"
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "Action":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return Action.from_dict(json.loads(json_str))

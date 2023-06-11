@@ -1,8 +1,9 @@
 from typing import Dict, Any
 from csle_common.dao.simulation_config.state_type import StateType
+from csle_base.json_serializable import JSONSerializable
 
 
-class State:
+class State(JSONSerializable):
     """
     DTO representing the state of a simulation environment
     """
@@ -50,3 +51,17 @@ class State:
         :return: a string representation of the object
         """
         return f"id:{self.id}, name:{self.name}, descr:{self.descr}, state_type: {self.state_type}"
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "State":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return State.from_dict(json.loads(json_str))

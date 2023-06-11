@@ -1,8 +1,9 @@
 from typing import List, Dict, Any
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
+from csle_base.json_serializable import JSONSerializable
 
 
-class EnvParametersConfig:
+class EnvParametersConfig(JSONSerializable):
     """
     DTO representing the the configuration of custom environment parameters of a simulation
     """
@@ -39,3 +40,17 @@ class EnvParametersConfig:
         :return: a string representation of the DTO
         """
         return f"parameters: {list(map(lambda x: str(x), self.parameters))}"
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "EnvParametersConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return EnvParametersConfig.from_dict(json.loads(json_str))

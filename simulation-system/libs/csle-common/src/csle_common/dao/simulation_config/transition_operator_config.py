@@ -1,7 +1,8 @@
 from typing import List, Dict, Any
+from csle_base.json_serializable import JSONSerializable
 
 
-class TransitionOperatorConfig:
+class TransitionOperatorConfig(JSONSerializable):
     """
     DTO representing the transition operator definition of a simulation
     """
@@ -40,3 +41,17 @@ class TransitionOperatorConfig:
         :return: a string representation of the object
         """
         return f"transition tensor: {self.transition_tensor}"
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "TransitionOperatorConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return TransitionOperatorConfig.from_dict(json.loads(json_str))

@@ -13,9 +13,10 @@ from csle_collector.host_manager.host_metrics import HostMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
 from csle_collector.snort_ids_manager.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
 from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
+from csle_base.json_serializable import JSONSerializable
 
 
-class EmulationDefenderMachineObservationState:
+class EmulationDefenderMachineObservationState(JSONSerializable):
     """
     Represents the defender's belief state of a component in the emulation
     """
@@ -200,28 +201,6 @@ class EmulationDefenderMachineObservationState:
         m_copy.snort_ids_ip_alert_counters = self.snort_ids_ip_alert_counters.copy()
         m_copy.ossec_ids_alert_counters = self.ossec_ids_alert_counters.copy()
         return m_copy
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "EmulationDefenderMachineObservationState":

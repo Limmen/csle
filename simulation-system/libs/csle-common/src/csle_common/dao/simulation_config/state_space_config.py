@@ -1,8 +1,9 @@
 from typing import List, Dict, Any
 from csle_common.dao.simulation_config.state import State
+from csle_base.json_serializable import JSONSerializable
 
 
-class StateSpaceConfig:
+class StateSpaceConfig(JSONSerializable):
     """
     DTO representing the state space configuration of a simulation environment
     """
@@ -45,3 +46,17 @@ class StateSpaceConfig:
         :return: a string representation of the DTO
         """
         return f"states: {list(map(lambda x: str(x), self.states))}"
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "StateSpaceConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return StateSpaceConfig.from_dict(json.loads(json_str))

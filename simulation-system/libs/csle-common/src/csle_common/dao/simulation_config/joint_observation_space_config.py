@@ -1,8 +1,9 @@
 from typing import List, Dict, Any
 from csle_common.dao.simulation_config.observation_space_config import ObservationSpaceConfig
+from csle_base.json_serializable import JSONSerializable
 
 
-class JointObservationSpaceConfig:
+class JointObservationSpaceConfig(JSONSerializable):
 
     def __init__(self, observation_spaces: List[ObservationSpaceConfig]):
         self.observation_spaces = observation_spaces
@@ -33,3 +34,17 @@ class JointObservationSpaceConfig:
         :return: a string representation of the object
         """
         return f"observation spaces: {list(map(lambda x: str(x), self.observation_spaces))}"
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "JointObservationSpaceConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return JointObservationSpaceConfig.from_dict(json.loads(json_str))

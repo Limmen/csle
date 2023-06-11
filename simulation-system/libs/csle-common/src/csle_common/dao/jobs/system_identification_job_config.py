@@ -2,9 +2,10 @@ from typing import Dict, Any
 from csle_common.dao.system_identification.system_model import SystemModel
 from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
+from csle_base.json_serializable import JSONSerializable
 
 
-class SystemIdentificationJobConfig:
+class SystemIdentificationJobConfig(JSONSerializable):
     """
     DTO representing a system identification job
     """
@@ -81,28 +82,6 @@ class SystemIdentificationJobConfig:
         if "running" in d:
             obj.running = d["running"]
         return obj
-
-    def to_json_str(self) -> str:
-        """
-        Converts the DTO into a json string
-
-        :return: the json string representation of the DTO
-        """
-        import json
-        json_str = json.dumps(self.to_dict(), indent=4, sort_keys=True)
-        return json_str
-
-    def to_json_file(self, json_file_path: str) -> None:
-        """
-        Saves the DTO to a json file
-
-        :param json_file_path: the json file path to save  the DTO to
-        :return: None
-        """
-        import io
-        json_str = self.to_json_str()
-        with io.open(json_file_path, 'w', encoding='utf-8') as f:
-            f.write(json_str)
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "SystemIdentificationJobConfig":
