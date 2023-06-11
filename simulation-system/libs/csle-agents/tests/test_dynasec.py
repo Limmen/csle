@@ -1,6 +1,6 @@
 import logging
 import pytest
-from csle_common.dao.training.experiment_config import ExperimentConfig
+from csle_common.dao.training.agent_type import AgentType
 from csle_agents.agents.dynasec.dynasec_agent import DynaSecAgent
 
 
@@ -11,7 +11,7 @@ class TestDynaSecSuite(object):
 
     pytest.logger = logging.getLogger("dynasec_tests")
 
-    def test_create_agent(self, mocker, experiment_config: ExperimentConfig) -> None:
+    def test_create_agent(self, mocker) -> None:
         """
         Tests creation of the FPAgent
 
@@ -21,6 +21,8 @@ class TestDynaSecSuite(object):
         attacker_sequence = mocker.MagicMock()
         defender_sequence = mocker.MagicMock()
         system_id_config = mocker.MagicMock()
+        experiment_config = mocker.MagicMock()
+        experiment_config.configure_mock(**{"agent_type": AgentType.DYNA_SEC})
         simulation_env_config = mocker.MagicMock()
         pytest.logger.info("Creating the DynaSec Agent")
         DynaSecAgent(emulation_executions=emulation_executions, simulation_env_config=simulation_env_config,
