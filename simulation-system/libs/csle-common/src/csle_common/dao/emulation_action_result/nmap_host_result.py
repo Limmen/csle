@@ -84,7 +84,7 @@ class NmapHostResult(JSONSerializable):
         d["status"] = self.status
         d["ips"] = self.ips
         d["mac_addr"] = self.mac_addr
-        d["hostnames"]  = self.hostnames
+        d["hostnames"] = self.hostnames
         d["ports"] = list(map(lambda x: x.to_dict(), self.ports))
         d["os"] = self.os.to_dict()
         d["os_matches"] = list(map(lambda x: x.to_dict(), self.os_matches))
@@ -102,12 +102,12 @@ class NmapHostResult(JSONSerializable):
         :return: the created instance
         """
         obj = NmapHostResult(
-            status = d["status"], ips = d["ips"], mac_addr=d["mac_addr"], hostnames=d["hostnames"],
-            ports = list(map(lambda x: NmapPort.from_dict(x), d["ports"])),
-            os = NmapOs.from_dict(d["os"]),
-            os_matches = list(map(lambda x: NmapOs.from_dict(x), d["os_matches"])),
-            vulnerabilities = list(map(lambda x: NmapVuln.from_dict(x), d["vulnerabilities"])),
-            credentials = list(map(lambda x: NmapBruteCredentials.from_dict(x), d["credentials"])),
+            status=d["status"], ips=d["ips"], mac_addr=d["mac_addr"], hostnames=d["hostnames"],
+            ports=list(map(lambda x: NmapPort.from_dict(x), d["ports"])),
+            os=NmapOs.from_dict(d["os"]),
+            os_matches=list(map(lambda x: NmapOs.from_dict(x), d["os_matches"])),
+            vulnerabilities=list(map(lambda x: NmapVuln.from_dict(x), d["vulnerabilities"])),
+            credentials=list(map(lambda x: NmapBruteCredentials.from_dict(x), d["credentials"])),
             trace=NmapTrace.from_dict(d["trace"])
         )
         return obj

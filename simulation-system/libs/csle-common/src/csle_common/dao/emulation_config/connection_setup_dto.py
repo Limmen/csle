@@ -101,7 +101,7 @@ class ConnectionSetupDTO(JSONSerializable):
             ports=d["ports"], total_time=d["total_time"],
             non_failed_credentials=list(map(lambda x: Credential.from_dict(x), d["non_failed_credentials"])),
             proxies=list(map(lambda x: EmulationConnectionObservationState.from_dict(x), d["proxies"])),
-            ip = d["ip"]
+            ip=d["ip"]
         )
         return obj
 

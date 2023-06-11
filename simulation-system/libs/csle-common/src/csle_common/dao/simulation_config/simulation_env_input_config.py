@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from csle_base.json_serializable import JSONSerializable
 
 

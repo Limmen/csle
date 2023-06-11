@@ -1,7 +1,6 @@
 from typing import Dict
 from abc import abstractmethod
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
-from csle_base.json_serializable import JSONSerializable
 from csle_base.grpc_serializable import GRPCSerializable
 
 

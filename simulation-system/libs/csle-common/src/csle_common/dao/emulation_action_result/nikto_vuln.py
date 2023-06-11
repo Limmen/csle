@@ -57,7 +57,7 @@ class NiktoVuln(JSONSerializable):
         d = {}
         d["id"] = self.id
         d["osvdb"] = self.osvdb_id
-        d["method"]= self.method
+        d["method"] = self.method
         d["iplink"] = self.iplink
         d["namelink"] = self.namelink
         d["uri"] = self.uri

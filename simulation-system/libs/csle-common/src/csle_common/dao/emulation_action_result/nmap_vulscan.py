@@ -2,7 +2,7 @@ from typing import Dict, Any
 from csle_base.json_serializable import JSONSerializable
 
 
-class NmapVulscan:
+class NmapVulscan(JSONSerializable):
     """
     DTO representing the result of a NMAP Vulscan
     """

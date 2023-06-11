@@ -11,6 +11,7 @@ class EmulationDefenderActionConfig(JSONSerializable):
     """
     Configuration of the action space for the defender
     """
+
     def __init__(self, num_indices: int, actions: List[EmulationDefenderAction] = None,
                  stopping_action_ids: List[EmulationDefenderActionId] = None,
                  multiple_stop_actions: List[EmulationDefenderAction] = None,

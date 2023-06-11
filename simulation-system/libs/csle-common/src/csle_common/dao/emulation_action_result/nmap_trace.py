@@ -63,4 +63,3 @@ class NmapTrace(JSONSerializable):
         :return: get the schema of the DTO
         """
         return NmapTrace(hops=[NmapHop.schema()])
-
