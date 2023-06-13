@@ -127,6 +127,8 @@ class TestBayesOptSuite(object):
         """
         Tests creation of the BayesOptAgent
 
+        :param mocker: the mocker object
+        :param experiment_config: the example experiment config fixture
         :return: None
         """
         emulation_env_config = mocker.MagicMock()

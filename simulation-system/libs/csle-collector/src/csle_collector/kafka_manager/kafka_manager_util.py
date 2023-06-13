@@ -31,9 +31,8 @@ class KafkaManagerUtil:
         :param d: the dict to convert
         :return: the converted DTO
         """
-        kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO()
-        kafka_dto.running = d["running"]
-        kafka_dto.topics = d["topics"]
+        kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(running = d["running"],
+                                                                            topics = d["topics"])
         return kafka_dto
 
     @staticmethod
@@ -44,3 +43,13 @@ class KafkaManagerUtil:
         kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO()
         kafka_dto.running = False
         return kafka_dto
+
+    @staticmethod
+    def hours_to_ms(hours: float) -> float:
+        """
+        Convert hours to ms
+
+        :param hours: the hours to convert
+        :return: the ms
+        """
+        return int((((hours * 1000) * 60) * 60))

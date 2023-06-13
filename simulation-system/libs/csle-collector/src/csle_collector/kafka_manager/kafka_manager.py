@@ -12,6 +12,7 @@ import confluent_kafka.admin
 import csle_collector.kafka_manager.kafka_manager_pb2_grpc
 import csle_collector.kafka_manager.kafka_manager_pb2
 import csle_collector.constants.constants as constants
+from csle_collector.kafka_manager.kafka_manager_util import KafkaManagerUtil
 
 
 class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaManagerServicer):
@@ -95,15 +96,6 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(running=True, topics=[])
         return kafka_dto
 
-    def hours_to_ms(self, hours: int) -> float:
-        """
-        Convert hours to ms
-
-        :param hours: the hours to convert
-        :return: the ms
-        """
-        return int((((hours * 1000) * 60) * 60))
-
     def createTopic(self, request: csle_collector.kafka_manager.kafka_manager_pb2.CreateTopicMsg,
                     context: grpc.ServicerContext) -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
         """
@@ -118,7 +110,7 @@ class KafkaManagerServicer(csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
         running, topics = self._get_kafka_status_and_topics()
         client = confluent_kafka.admin.AdminClient(self.conf)
         config = {
-            constants.KAFKA.RETENTION_MS_CONFIG_PROPERTY: self.hours_to_ms(request.retention_time_hours)}
+            constants.KAFKA.RETENTION_MS_CONFIG_PROPERTY: KafkaManagerUtil.hours_to_ms(request.retention_time_hours)}
         new_topic = confluent_kafka.admin.NewTopic(
             request.name, request.partitions, request.replicas,
             config=config)
