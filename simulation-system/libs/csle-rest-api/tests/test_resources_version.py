@@ -1,6 +1,6 @@
 import logging
 import pytest
-from ..rest_api import create_app
+from csle_rest_api.rest_api import create_app
 import csle_rest_api.constants.constants as api_constants
 
 
