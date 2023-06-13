@@ -1,62 +1,14 @@
 import logging
 import socket
-import time
 import grpc
-import threading
 import subprocess
 import netifaces
 from concurrent import futures
-from confluent_kafka import Producer
+import csle_collector.constants.constants as constants
 import csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc
 import csle_collector.ossec_ids_manager.ossec_ids_manager_pb2
 from csle_collector.ossec_ids_manager.ossec_ids_manager_util import OSSecManagerUtil
-import csle_collector.constants.constants as constants
-
-
-class OSSecIdsMonitorThread(threading.Thread):
-    """
-    Thread that collects the OSSEC IDS statistics and pushes it to Kafka periodically
-    """
-
-    def __init__(self, kafka_ip: str, kafka_port: int, ip: str, hostname: str, log_file_path: str,
-                 time_step_len_seconds: int):
-        """
-        Initializes the thread
-
-        :param kafka_ip: IP of the Kafka server to push to
-        :param kafka_port: port of the Kafka server to push to
-        :param ip: ip of the server we are pushing from
-        :param hostname: hostname of the server we are pushing from
-        :param log_file_path: path to the IDS log
-        :param time_step_len_seconds: the length of a timestep
-        """
-        threading.Thread.__init__(self)
-        self.kafka_ip = kafka_ip
-        self.kafka_port = kafka_port
-        self.ip = ip
-        self.hostname = hostname
-        self.log_file_path = log_file_path
-        self.latest_ts = time.time()
-        self.time_step_len_seconds = time_step_len_seconds
-        self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_ip}:{self.kafka_port}",
-                     constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
-        self.producer = Producer(**self.conf)
-        self.running = True
-        logging.info("OSSEC IDSMonitor thread started successfully")
-
-    def run(self) -> None:
-        """
-        Main loop of the thread. Parses the IDS log and pushes it to Kafka periodically
-
-        :return: None
-        """
-        while self.running:
-            time.sleep(self.time_step_len_seconds)
-            alert_counters = OSSecManagerUtil.read_ossec_ids_data(self.latest_ts)
-            record = alert_counters.to_kafka_record(ip=self.ip)
-            self.producer.produce(constants.KAFKA_CONFIG.OSSEC_IDS_LOG_TOPIC_NAME, record)
-            self.producer.poll(0)
-            self.latest_ts = time.time()
+from csle_collector.ossec_ids_manager.threads.ossec_ids_monitor_thread import OSSecIdsMonitorThread
 
 
 class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc.OSSECIdsManagerServicer):
@@ -95,6 +47,16 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
         logging.info(f"Running status: {running}")
         return running
 
+    def _is_monitor_running(self) -> bool:
+        """
+        Utility method to check if the monitor is running
+
+        :return: True if running else false
+        """
+        if self.ids_monitor_thread is not None:
+            return self.ids_monitor_thread.running
+        return False
+
     def getOSSECIdsAlerts(self, request: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.GetOSSECIdsAlertsMsg,
                           context: grpc.ServicerContext) \
             -> csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsLogDTO:
@@ -106,7 +68,8 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
         :return: a DTO with IDS statistics
         """
         alert_counters = OSSecManagerUtil.read_ossec_ids_data(request.timestamp)
-        ossec_ids_log_dto = alert_counters.to_dto(ip=self.ip)
+        ossec_ids_log_dto = alert_counters.to_grpc_object()
+        ossec_ids_log_dto.ip = self.ip
         return ossec_ids_log_dto
 
     def startOSSECIdsMonitor(self,
@@ -163,9 +126,7 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
         :return: a DTO with the status of the IDS and its monitor thread
         """
         logging.info("Starting the OSSEC IDS")
-        monitor_running = False
-        if self.ids_monitor_thread is not None:
-            monitor_running = self.ids_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         ossec_running = self._is_ossec_running()
         if ossec_running:
             result = subprocess.run(constants.OSSEC.STOP_OSSEC_IDS.split(" "), capture_output=True, text=True)
@@ -188,9 +149,7 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
         :return: a DTO with the status of the IDS and its monitor thread
         """
         logging.info("Stopping the OSSECIDS")
-        monitor_running = False
-        if self.ids_monitor_thread is not None:
-            monitor_running = self.ids_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         result = subprocess.run(constants.OSSEC.STOP_OSSEC_IDS.split(" "), capture_output=True, text=True)
         logging.info(f"Stopped the OSSECIDS, stdout: {result.stdout}, stderr: {result.stderr}")
         return csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO(
@@ -206,9 +165,7 @@ class OSSECIdsManagerServicer(csle_collector.ossec_ids_manager.ossec_ids_manager
         :param context: the gRPC context
         :return: a DTO with the status of the IDS monitor
         """
-        monitor_running = False
-        if self.ids_monitor_thread is not None:
-            monitor_running = self.ids_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         ossec_ids_running = self._is_ossec_running()
         return csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO(
             monitor_running=monitor_running, ossec_ids_running=ossec_ids_running)

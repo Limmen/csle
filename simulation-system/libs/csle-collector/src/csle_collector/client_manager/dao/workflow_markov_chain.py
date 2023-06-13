@@ -3,9 +3,10 @@ import random
 import numpy as np
 import csle_collector.client_manager.client_manager_pb2
 from csle_base.json_serializable import JSONSerializable
+from csle_base.grpc_serializable import GRPCSerializable
 
 
-class WorkflowMarkovChain(JSONSerializable):
+class WorkflowMarkovChain(JSONSerializable, GRPCSerializable):
     """
     A Markov chain representation of a workflow.
     """

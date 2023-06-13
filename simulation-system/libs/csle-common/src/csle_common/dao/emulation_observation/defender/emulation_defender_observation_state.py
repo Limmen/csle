@@ -18,7 +18,7 @@ from csle_collector.client_manager.client_population_metrics import ClientPopula
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
 from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
 from csle_collector.snort_ids_manager.snort_ids_rule_counters import SnortIdsRuleCounters
-from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
+from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_collector.host_manager.host_metrics import HostMetrics
 from csle_base.json_serializable import JSONSerializable
 

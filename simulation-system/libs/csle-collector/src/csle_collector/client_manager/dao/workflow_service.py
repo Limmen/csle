@@ -1,9 +1,10 @@
 from typing import List, Dict, Any, Tuple
 import csle_collector.client_manager.client_manager_pb2
 from csle_base.json_serializable import JSONSerializable
+from csle_base.grpc_serializable import GRPCSerializable
 
 
-class WorkflowService(JSONSerializable):
+class WorkflowService(JSONSerializable, GRPCSerializable):
     """
     A service of the network.
     The service might be distributed across several network nodes.

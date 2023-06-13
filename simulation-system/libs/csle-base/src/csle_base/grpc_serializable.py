@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod, ABC
 
 
 class GRPCSerializable(ABC):
@@ -15,11 +15,11 @@ class GRPCSerializable(ABC):
 
     @staticmethod
     @abstractmethod
-    def from_grpc_object(obj):
+    def from_grpc_object(obj) -> "GRPCSerializable":
         """
         Instantiate the object from a GRPC object
 
-        :param obj: the objet to instantiate from
+        :param obj: the object to instantiate from
         :return: the instantiated grpc object
         """
         pass

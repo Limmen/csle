@@ -1,10 +1,12 @@
 from typing import Dict, Any, List
+from csle_base.grpc_serializable import GRPCSerializable
+from csle_base.json_serializable import JSONSerializable
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 import csle_collector.client_manager.client_manager_pb2
 
 
-class EPTMPArrivalConfig(ArrivalConfig):
+class EPTMPArrivalConfig(ArrivalConfig, JSONSerializable, GRPCSerializable):
     """
     DTO representing the configuration of a homogenous poisson arrival process with an
     Exponential-Polynomial-Trigonometric rate function having Multiple Periodicities
@@ -74,3 +76,17 @@ class EPTMPArrivalConfig(ArrivalConfig):
         :return: the instantiated object
         """
         return EPTMPArrivalConfig(thetas=obj.thetas, gammas=obj.gammas, phis=obj.phis, omegas=obj.omegas)
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "EPTMPArrivalConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return EPTMPArrivalConfig.from_dict(json.loads(json_str))

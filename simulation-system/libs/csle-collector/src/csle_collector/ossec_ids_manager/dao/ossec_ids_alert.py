@@ -1,12 +1,16 @@
 from typing import Dict, Any, List
 import csle_collector.constants.constants as constants
+from csle_base.json_serializable import JSONSerializable
 
 
-class OSSECIDSAlert:
+class OSSECIDSAlert(JSONSerializable):
+    """
+    DTO representing an OSSECIDS alert
+    """
 
     def __init__(self, timestamp: float, groups: List[str] = "", host: str = "", ip: str = "", rule_id: str = "",
                  level: int = 1, descr: str = "",
-                 src: str = "", user: str = ""):
+                 src: str = "", user: str = "") -> None:
         """
         A DTO representing an alert from the OSSEC IDS
 
@@ -84,3 +88,17 @@ class OSSECIDSAlert:
         :return: a copy of the DTO
         """
         return OSSECIDSAlert.from_dict(self.to_dict())
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "OSSECIDSAlert":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return OSSECIDSAlert.from_dict(json.loads(json_str))

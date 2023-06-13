@@ -1,8 +1,8 @@
 from typing import List, Dict, Any
 from datetime import datetime
 import subprocess
-from csle_collector.ossec_ids_manager.ossec_ids_alert import OSSECIDSAlert
-from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
+from csle_collector.ossec_ids_manager.dao.ossec_ids_alert import OSSECIDSAlert
+from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
 import csle_collector.ossec_ids_manager.ossec_ids_manager_pb2
 import csle_collector.constants.constants as constants
 

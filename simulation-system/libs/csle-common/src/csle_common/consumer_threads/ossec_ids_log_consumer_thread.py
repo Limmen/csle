@@ -2,7 +2,7 @@ import threading
 import time
 from confluent_kafka import Consumer, KafkaError, KafkaException
 import csle_collector.constants.constants as collector_constants
-from csle_collector.ossec_ids_manager.ossec_ids_alert_counters import OSSECIdsAlertCounters
+from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_common.logging.log import Logger
 
 

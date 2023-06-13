@@ -3,9 +3,10 @@ from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMark
 from csle_collector.client_manager.dao.workflow_service import WorkflowService
 import csle_collector.client_manager.client_manager_pb2
 from csle_base.json_serializable import JSONSerializable
+from csle_base.grpc_serializable import GRPCSerializable
 
 
-class WorkflowsConfig(JSONSerializable):
+class WorkflowsConfig(JSONSerializable, GRPCSerializable):
     """
     Workflows configuration
     """

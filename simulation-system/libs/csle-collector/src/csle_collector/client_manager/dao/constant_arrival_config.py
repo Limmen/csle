@@ -1,10 +1,12 @@
 from typing import Dict, Any
+from csle_base.grpc_serializable import GRPCSerializable
+from csle_base.json_serializable import JSONSerializable
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
 import csle_collector.client_manager.client_manager_pb2
 
 
-class ConstantArrivalConfig(ArrivalConfig):
+class ConstantArrivalConfig(ArrivalConfig, JSONSerializable, GRPCSerializable):
     """
     DTO representing the configuration of a stationary poisson arrival process with exponential service times
     """
@@ -62,3 +64,17 @@ class ConstantArrivalConfig(ArrivalConfig):
         :return: the instantiated object
         """
         return ConstantArrivalConfig(lamb=obj.lamb)
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "ConstantArrivalConfig":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return ConstantArrivalConfig.from_dict(json.loads(json_str))

@@ -2,15 +2,18 @@ from typing import List, Dict, Any, Tuple
 import time
 import numpy as np
 import csle_collector.constants.constants as constants
-from csle_collector.ossec_ids_manager.ossec_ids_alert import OSSECIDSAlert
+from csle_collector.ossec_ids_manager.dao.ossec_ids_alert import OSSECIDSAlert
 import csle_collector.ossec_ids_manager.ossec_ids_manager_pb2
+from csle_base.grpc_serializable import GRPCSerializable
+from csle_base.kafka_serializable import KafkaSerializable
+from csle_base.json_serializable import JSONSerializable
 
 
-class OSSECIdsAlertCounters:
+class OSSECIdsAlertCounters(GRPCSerializable, KafkaSerializable, JSONSerializable):
     """
     DTO containing statistics from the OSSEC log
     """
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initializes the DTO
         """
@@ -124,49 +127,94 @@ class OSSECIdsAlertCounters:
         record_str = ",".join(list(map(lambda x: str(x), total_counters)))
         return record_str
 
-    def to_dto(self, ip: str) -> csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsLogDTO:
+    @staticmethod
+    def from_grpc_object(obj: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsLogDTO) \
+            -> "OSSECIdsAlertCounters":
+        """
+        Instantiate the object from a GRPC object
+
+        :param obj: the object to instantiate from
+        :return: the instantiated grpc object
+        """
+        instance = OSSECIdsAlertCounters()
+        instance.ts = obj.ts
+        instance.ip = obj.ip
+        instance.total_alerts = obj.total_alerts
+        instance.warning_alerts = obj.warning_alerts
+        instance.severe_alerts = obj.severe_alerts
+        instance.alerts_weighted_by_level = obj.alerts_weighted_by_level
+        instance.level_alerts[0] = obj.level_0_alerts
+        instance.level_alerts[1] = obj.level_1_alerts
+        instance.level_alerts[2] = obj.level_2_alerts
+        instance.level_alerts[3] = obj.level_3_alerts
+        instance.level_alerts[4] = obj.level_4_alerts
+        instance.level_alerts[5] = obj.level_5_alerts
+        instance.level_alerts[6] = obj.level_6_alerts
+        instance.level_alerts[7] = obj.level_7_alerts
+        instance.level_alerts[8] = obj.level_8_alerts
+        instance.level_alerts[9] = obj.level_9_alerts
+        instance.level_alerts[10] = obj.level_10_alerts
+        instance.level_alerts[11] = obj.level_11_alerts
+        instance.level_alerts[12] = obj.level_12_alerts
+        instance.level_alerts[13] = obj.level_13_alerts
+        instance.level_alerts[14] = obj.level_14_alerts
+        instance.level_alerts[15] = obj.level_15_alerts
+        instance.group_alerts[0] = obj.invalid_login_alerts
+        instance.group_alerts[1] = obj.authentication_success_alerts
+        instance.group_alerts[2] = obj.authentication_failed_alerts
+        instance.group_alerts[3] = obj.connection_attempt_alerts
+        instance.group_alerts[4] = obj.attacks_alerts
+        instance.group_alerts[5] = obj.adduser_alerts
+        instance.group_alerts[6] = obj.sshd_alerts
+        instance.group_alerts[7] = obj.ids_alerts
+        instance.group_alerts[8] = obj.firewall_alerts
+        instance.group_alerts[9] = obj.squid_alerts
+        instance.group_alerts[10] = obj.apache_alerts
+        instance.group_alerts[11] = obj.syslog_alerts
+        return instance
+
+    def to_grpc_object(self) -> csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsLogDTO:
         """
         Converts the object into a gRPC DTO for serialization
 
-        :param ip: the ip to add to the DTO in addition to the statistics
         :return: A csle_collector.snort_ids_manager.snort_ids_manager_pb2.IdsLogDTOb
         """
         ts = time.time()
-        csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsLogDTO(
-            timestamp=ts,
-            ip=ip,
-            total_alerts=self.total_alerts,
-            warning_alerts=self.warning_alerts,
-            severe_alerts=self.severe_alerts,
-            alerts_weighted_by_level=self.alerts_weighted_by_level,
-            level_0_alerts=self.level_alerts[0],
-            level_1_alerts=self.level_alerts[1],
-            level_2_alerts=self.level_alerts[2],
-            level_3_alerts=self.level_alerts[3],
-            level_4_alerts=self.level_alerts[4],
-            level_5_alerts=self.level_alerts[5],
-            level_6_alerts=self.level_alerts[6],
-            level_7_alerts=self.level_alerts[7],
-            level_8_alerts=self.level_alerts[8],
-            level_9_alerts=self.level_alerts[9],
-            level_10_alerts=self.level_alerts[10],
-            level_11_alerts=self.level_alerts[11],
-            level_12_alerts=self.level_alerts[12],
-            level_13_alerts=self.level_alerts[13],
-            level_14_alerts=self.level_alerts[14],
-            level_15_alerts=self.level_alerts[15],
-            invalid_login_alerts=self.group_alerts[0],
-            authentication_success_alerts=self.group_alerts[1],
-            authentication_failed_alerts=self.group_alerts[2],
-            connection_attempt_alerts=self.group_alerts[3],
-            attacks_alerts=self.group_alerts[4],
-            adduser_alerts=self.group_alerts[5],
-            sshd_alerts=self.group_alerts[6],
-            ids_alerts=self.group_alerts[7],
-            firewall_alerts=self.group_alerts[8],
-            squid_alerts=self.group_alerts[9],
-            apache_alerts=self.group_alerts[10],
-            syslog_alerts=self.group_alerts[11]
+        return csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsLogDTO(
+            timestamp=float(ts),
+            ip=self.ip,
+            total_alerts=int(self.total_alerts),
+            warning_alerts=int(self.warning_alerts),
+            severe_alerts=int(self.severe_alerts),
+            alerts_weighted_by_level=int(self.alerts_weighted_by_level),
+            level_0_alerts=int(self.level_alerts[0]),
+            level_1_alerts=int(self.level_alerts[1]),
+            level_2_alerts=int(self.level_alerts[2]),
+            level_3_alerts=int(self.level_alerts[3]),
+            level_4_alerts=int(self.level_alerts[4]),
+            level_5_alerts=int(self.level_alerts[5]),
+            level_6_alerts=int(self.level_alerts[6]),
+            level_7_alerts=int(self.level_alerts[7]),
+            level_8_alerts=int(self.level_alerts[8]),
+            level_9_alerts=int(self.level_alerts[9]),
+            level_10_alerts=int(self.level_alerts[10]),
+            level_11_alerts=int(self.level_alerts[11]),
+            level_12_alerts=int(self.level_alerts[12]),
+            level_13_alerts=int(self.level_alerts[13]),
+            level_14_alerts=int(self.level_alerts[14]),
+            level_15_alerts=int(self.level_alerts[15]),
+            invalid_login_alerts=int(self.group_alerts[0]),
+            authentication_success_alerts=int(self.group_alerts[1]),
+            authentication_failed_alerts=int(self.group_alerts[2]),
+            connection_attempt_alerts=int(self.group_alerts[3]),
+            attacks_alerts=int(self.group_alerts[4]),
+            adduser_alerts=int(self.group_alerts[5]),
+            sshd_alerts=int(self.group_alerts[6]),
+            ids_alerts=int(self.group_alerts[7]),
+            firewall_alerts=int(self.group_alerts[8]),
+            squid_alerts=int(self.group_alerts[9]),
+            apache_alerts=int(self.group_alerts[10]),
+            syslog_alerts=int(self.group_alerts[11])
         )
 
     def __str__(self) -> str:
@@ -255,3 +303,17 @@ class OSSECIdsAlertCounters:
         :return: get the schema of the DTO
         """
         return OSSECIdsAlertCounters()
+
+    @staticmethod
+    def from_json_file(json_file_path: str) -> "OSSECIdsAlertCounters":
+        """
+        Reads a json file and converts it to a DTO
+
+        :param json_file_path: the json file path
+        :return: the converted DTO
+        """
+        import io
+        import json
+        with io.open(json_file_path, 'r') as f:
+            json_str = f.read()
+        return OSSECIdsAlertCounters.from_dict(json.loads(json_str))
