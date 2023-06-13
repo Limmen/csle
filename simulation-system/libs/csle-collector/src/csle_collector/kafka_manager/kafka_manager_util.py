@@ -31,8 +31,8 @@ class KafkaManagerUtil:
         :param d: the dict to convert
         :return: the converted DTO
         """
-        kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(running = d["running"],
-                                                                            topics = d["topics"])
+        kafka_dto = csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO(running=d["running"],
+                                                                            topics=d["topics"])
         return kafka_dto
 
     @staticmethod

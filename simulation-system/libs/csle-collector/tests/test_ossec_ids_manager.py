@@ -53,6 +53,7 @@ class TestOSSECIDSManagerSuite(object):
         :param mocker: the mocker object to mock functions with external dependencies
         :return: None
         """
+
         def read_ossec_ids_data(timestamp: float):
             if timestamp == 0:
                 return OSSECIdsAlertCounters()
@@ -65,6 +66,7 @@ class TestOSSECIDSManagerSuite(object):
                 alerts.ip = "test"
                 alerts.ts = 0.0
                 return alerts
+
         read_data_mock = mocker.MagicMock(side_effect=read_ossec_ids_data)
         mocker.patch('csle_collector.ossec_ids_manager.ossec_ids_manager.OSSecManagerUtil.read_ossec_ids_data',
                      side_effect=read_data_mock)
@@ -249,6 +251,3 @@ class TestOSSECIDSManagerSuite(object):
             csle_collector.ossec_ids_manager.query_ossec_ids_manager.get_ossec_ids_monitor_status(stub=grpc_stub)
         assert response.monitor_running
         assert response.ossec_ids_running
-
-
-

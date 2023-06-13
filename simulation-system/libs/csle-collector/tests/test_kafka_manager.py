@@ -96,8 +96,8 @@ class TestKafkaManagerSuite(object):
 
         :return: None
         """
-        assert KafkaManagerUtil.hours_to_ms(1/(60*60)) == 1000
-        assert KafkaManagerUtil.hours_to_ms(1/(60)) == 60000
+        assert KafkaManagerUtil.hours_to_ms(1 / (60 * 60)) == 1000
+        assert KafkaManagerUtil.hours_to_ms(1 / (60)) == 60000
         assert KafkaManagerUtil.hours_to_ms(1) == 3.6e6
 
     def test_kafka_dto_empty(self) -> None:
