@@ -73,9 +73,15 @@ currently support each release for a window of 12 months.
 <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/Tux.svg" width="7%" height="7%" style="margin-left:70px;"/>
 </p>
 
-## Author & Maintainer
+## Maintainer
 
-Kim Hammar <kimham@kth.se>
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://limmen.dev"><img src="https://github.com/Limmen.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a><br /><kimham@kth.se></td>
+    </tr>
+  </tbody>
+</table>
 
 ## Contribute
 
@@ -88,8 +94,8 @@ Thanks go to these people!
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://limmen.dev"><img src="https://github.com/Limmen.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a><br /></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/arvid123"><img src="https://github.com/arvid123.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Arvid Lagerqvist</b></sub></a><br /></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://limmen.dev"><img src="https://github.com/Limmen.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/arvid123"><img src="https://github.com/arvid123.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Arvid Lagerqvist</b></sub></a></td>
     </tr>
   </tbody>
 </table>
