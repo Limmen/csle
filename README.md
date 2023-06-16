@@ -77,6 +77,23 @@ currently support each release for a window of 12 months.
 
 Kim Hammar <kimham@kth.se>
 
+## Contribute
+
+Contributions are very welcome. Please use Github issues and pull requests. See the [documentation](https://limmen.dev/csle/) for further instructions.
+
+### List of Contributors :star2:
+
+Thanks go to these people!
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://limmen.dev"><img src="https://github.com/Limmen.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a><br /></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/arvid123"><img src="https://github.com/arvid123.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Arvid Lagerqvist</b></sub></a><br /></td>
+    </tr>
+  </tbody>
+</table>
+
 ## Copyright and license
 
 <p>
