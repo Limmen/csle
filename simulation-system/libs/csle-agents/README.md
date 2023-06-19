@@ -18,6 +18,7 @@ and game-theoretic algorithms for finding defender policies.
 - `gym-csle-stopping-game`
 - `pulp` (for linear and convex optimization)
 - `Bayesian optimization` (for Bayesian optimization algorithms)
+- `iteround` (utility library)
 
 ## Development Requirements
 
@@ -30,6 +31,8 @@ and game-theoretic algorithms for finding defender policies.
 - `sphinx` (for API documentation)
 - `sphinxcontrib-napoleon` (for API documentation)
 - `sphinx-rtd-theme` (for API documentation)
+- `pytest-mock` (for mocking tests)
+- `pytest-grpc` (for grpc tests)
 
 ## Installation
 

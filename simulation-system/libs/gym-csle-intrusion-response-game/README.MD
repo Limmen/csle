@@ -24,6 +24,8 @@ An OpenAI gym reinforcement learning environment that represents an intrusion re
 - `pytest-cov` (for unit test coverage)
 - `mypy` (for static typing)
 - `sphinx` (for API documentation)
+- `pytest-mock` (for mocking tests)
+- `pytest-grpc` (for grpc tests)
 - `sphinxcontrib-napoleon` (for API documentation)
 - `sphinx-rtd-theme` (for API documentation)
 

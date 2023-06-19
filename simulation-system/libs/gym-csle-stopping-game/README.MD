@@ -24,6 +24,8 @@ An OpenAI gym reinforcement learning environment that represents the optimal sto
 - `tox` (for automated testing)
 - `pytest` (for unit tests)
 - `pytest-cov` (for unit test coverage)
+- `pytest-mock` (for mocking tests)
+- `pytest-grpc` (for grpc tests)
 - `mypy` (for static typing)
 - `sphinx` (for API documentation)
 - `sphinxcontrib-napoleon` (for API documentation)

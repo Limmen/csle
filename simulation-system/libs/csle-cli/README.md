@@ -28,6 +28,8 @@ The command-line-interface (CLI) tool for CSLE.
 - `sphinx` (for API documentation)
 - `sphinxcontrib-napoleon` (for API documentation)
 - `sphinx-rtd-theme` (for API documentation)
+- `pytest-mock` (for mocking tests)
+- `pytest-grpc` (for grpc tests)
 
 ## Quickstart
 
