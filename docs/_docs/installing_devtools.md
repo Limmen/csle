@@ -7,6 +7,30 @@ permalink: /docs/installing-devtools/
 This section contains instructions on how to install development tools that CSLE uses, 
 such as test libraries and static code analyzers.
 
+To install all Python build tools at once, run the following commands:
+
+```bash
+csle/simulation-system/libs/csle-base; pip install -r requirements_dev.txt
+csle/simulation-system/libs/csle-collector; pip install -r requirements_dev.txt
+csle/simulation-system/libs/csle-ryu; pip install -r requirements_dev.txt
+csle/simulation-system/libs/csle-common; pip install -r requirements_dev.txt
+csle/simulation-system/libs/csle-attacker; pip install -r requirements_dev.txt
+csle/simulation-system/libs/csle-defender; pip install -r requirements_dev.txt
+csle/simulation-system/libs/csle-system-identification; pip install -r requirements_dev.txt
+csle/simulation-system/libs/gym-csle-stopping-game; pip install -r requirements_dev.txt
+csle/simulation-system/libs/csle-agents; pip install -r requirements_dev.txt
+csle/simulation-system/libs/csle-rest-api; pip install -r requirements_dev.txt
+csle/simulation-system/libs/csle-cli; pip install -r requirements_dev.txt
+csle/simulation-system/libs/csle-cluster; pip install -r requirements_dev.txt
+csle/simulation-system/libs/gym-csle-intrusion-response-game; pip install -r requirements_dev.txt 
+```
+
+<p class="captionFig">
+Listing 110: Command to install the Python build tool.
+</p>
+
+Alternatively, install each development library separately by following the commands below.
+
 The Python build tool, which is used to package Python libraries, 
 can be installed by running the command:
 
@@ -15,7 +39,7 @@ pip install -q build
 ```
 
 <p class="captionFig">
-Listing 110: Command to install the Python build tool.
+Listing 111: Command to install the Python build tool.
 </p>
 
 The `twine` tool (a tool for publishing Python packages to PyPi) 
@@ -26,7 +50,7 @@ python3 -m pip install --upgrade twine
 ```
 
 <p class="captionFig">
-Listing 111: Command to install `twine`.
+Listing 112: Command to install `twine`.
 </p>
 
 The `flake8` Python linter can be installed by running the command:
@@ -36,7 +60,7 @@ python -m pip install flake8
 ```
 
 <p class="captionFig">
-Listing 112: Command to install `flake8`.
+Listing 113: Command to install `flake8`.
 </p>
 
 The `mypy` static type checker for Python can be installed by running the command:
@@ -46,17 +70,17 @@ The `mypy` static type checker for Python can be installed by running the comman
 ```
 
 <p class="captionFig">
-Listing 113: Command to install `mypy`.
+Listing 114: Command to install `mypy`.
 </p>
 
-The `pytest` and `mock` test libraries for Python can be installed by running the command:
+The `pytest` and associated test libraries for Python can be installed by running the command:
 
 ```bash
-pip install -U pytest mock pytest-mock pytest-cov
+pip install -U pytest mock pytest-mock pytest-cov pytest-grpc
 ```
 
 <p class="captionFig">
-Listing 114: Command to install `pytest` and `mock`.
+Listing 115: Command to install `pytest` and `mock`.
 </p>
 
 Ruby and its bundler, which are used to generate the CSLE 
@@ -68,7 +92,7 @@ sudo gem install bundler
 ```
 
 <p class="captionFig">
-Listing 115: Commands to install Ruby and its bundler.
+Listing 116: Commands to install Ruby and its bundler.
 </p>
 
 The `sphinx` Python library for automatic generation of API documentation 
@@ -79,7 +103,7 @@ The `sphinx` Python library for automatic generation of API documentation can be
 ```
 
 <p class="captionFig">
-Listing 116: Commands to install `sphinx`.
+Listing 117: Commands to install `sphinx`.
 </p>
 
 Lastly, the `tox` Python library for automatic testing can be installed by running the command:
@@ -89,6 +113,6 @@ pip install tox
 ```
 
 <p class="captionFig">
-Listing 117: Command to install `tox`.
+Listing 118: Command to install `tox`.
 </p>
 
