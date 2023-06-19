@@ -49,11 +49,12 @@ $ pip install -e csle-cluster
 make install
 # force upgrade deps
 $ pip install -e csle-cluster --upgrade
-
 # git clone and install from source
 git clone https://github.com/Limmen/csle
 cd csle/simulation-system/libs/csle-cluster
 pip3 install -e .
+# Install development dependencies
+$ pip install -r requirements_dev.txt
 ```
 
 ### Development tools
@@ -62,42 +63,10 @@ Install all development tools at once:
 ```bash
 make install_dev
 ```
-
-Install the Python build tool
+or
 ```bash
-pip install -q build
+pip install -r requirements_dev.txt
 ```
-
-Install `twine` for publishing the package to PyPi:
-```bash
-python3 -m pip install --upgrade twine
-```
-
-Install the `flake8` linter:
-```bash
-python -m pip install flake8
-```
-
-Install the mypy for static type checking:
-```bash
-python3 -m pip install -U mypy
-```
-
-Install `pytest` and `mock` for unit tests:
-```bash
-pip install -U pytest mock pytest-mock pytest-cov
-```
-
-Install Sphinx to automatically generate API documentation from docstrings:
-```bash
-pip install sphinx sphinxcontrib-napoleon sphinx-rtd-theme
-```
-
-Install tox for automatically running tests in different python environments:
-```bash
-pip install tox
-```
-
 ## API documentation
 
 This section contains instructions for generating API documentation using `sphinx`.

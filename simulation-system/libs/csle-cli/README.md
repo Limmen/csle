@@ -219,45 +219,24 @@ $ pip install -e csle-cli
 make install
 # force upgrade deps
 $ pip install -e csle-cli --upgrade
-
 # git clone and install from source
 git clone https://github.com/Limmen/csle
 cd csle-cli
 pip3 install -e .
+# Install development dependencies
+$ pip install -r requirements_dev.txt
 ```
 
 ### Development tools
 
 Install all development tools at once:
-
 ```bash
 make install_dev
 ```
-
-Install the Python build tool
-
+or
 ```bash
-pip install -q build
+pip install -r requirements_dev.txt
 ```
-
-Install `twine` for publishing the package to PyPi:
-
-```bash
-python3 -m pip install --upgrade twine
-```
-
-Install the `flake8` linter:
-
-```bash
-python -m pip install flake8
-```
-
-Install `pytest` and `mock`:
-
-```bash
-pip install -U pytest mock pytest-mock
-```
-
 ## API documentation
 
 The latest documentation is available at [https://limmen.dev/csle/docs](https://limmen.dev/csle/docs)
