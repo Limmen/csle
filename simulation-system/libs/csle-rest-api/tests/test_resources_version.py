@@ -20,6 +20,10 @@ class TestResourcesVersionSuite(object):
         """
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
+        #OBS  pytest.logger.info för print-statements, inget annat
+
+        #blablabla
+
     def test_version_resource(self, flask_app) -> None:
         """
         Tests the /version resource
