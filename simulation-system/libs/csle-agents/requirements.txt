@@ -5,7 +5,7 @@ csle-attacker==0.2.14
 csle-defender==0.2.14
 csle-system-identification==0.2.14
 gym-csle-stopping-game==0.2.14
-stable-baselines3==1.8.0
+stable-baselines3==2.0.0a5
 pulp==2.7.0
 bayesian-optimization==1.3.1
 iteround==1.0.4
