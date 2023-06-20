@@ -20,10 +20,6 @@ class TestResourcesVersionSuite(object):
         """
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
-        #OBS  pytest.logger.info för print-statements, inget annat
-
-        #blablabla
-
     def test_version_resource(self, flask_app) -> None:
         """
         Tests the /version resource
@@ -31,6 +27,8 @@ class TestResourcesVersionSuite(object):
         :return: None
         """
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.VERSION_RESOURCE)
+        pytest.logger.info(response.status_code)
+        pytest.logger.info(response.data.decode('utf-8'))
         assert response.status_code == 200
         assert api_constants.MGMT_WEBAPP.VERSION_RESOURCE in response.data.decode("utf-8")
         assert len(response.data.decode("utf-8").split(".")) == 3
