@@ -71,3 +71,15 @@ class TestResourcesLoginSuite(object):
         #pytest.logger.info(f_response.status_code)
 
         assert f_response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+
+    def test_malformed_login_request(slf, flask_app):
+
+        '''Testing malformed login request. Please note that explicit return-statements
+        had to be added at row 30 and 38 in the /login resource file, routes.py'''
+
+        m_response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.LOGIN_RESOURCE, data=json.dumps({}))
+        
+        #pytest.logger.info(m_response.status_code)
+
+        assert m_response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        
