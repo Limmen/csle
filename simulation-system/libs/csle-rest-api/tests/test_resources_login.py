@@ -42,7 +42,7 @@ class TestResourcesLoginSuite(object):
         assert a_response_data_dict[api_constants.MGMT_WEBAPP.ADMIN_PROPERTY] == True 
         assert a_response_data_dict[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY] == api_constants.MGMT_WEBAPP.ADMIN_PROPERTY
         assert a_response_data_dict[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == api_constants.MGMT_WEBAPP.ADMIN_PROPERTY
-        
+        assert a_response_data_dict.keys() == a_response_data_dict.values()
         '''assert response.status_code == constants.HTTPS.OK_STATUS_CODE
 
         assert api_constants.MGMT_WEBAPP.ADMIN_PROPERTY in a_response_data
@@ -63,9 +63,10 @@ class TestResourcesLoginSuite(object):
         g_response_data = g_response.data.decode("utf-8")
         g_response_data_dict = json.loads (g_response_data)
         
-        pytest.logger.info(g_response_data_dict)
-        
+        pytest.logger.info(g_response_data)
+
         assert g_response.status_code == 200
         assert g_response_data_dict[api_constants.MGMT_WEBAPP.ADMIN_PROPERTY] == False
         assert g_response_data_dict[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY] == 'guest'
         assert g_response_data_dict[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == 'guest'
+        assert g_response_data_dict.keys() == g_response_data_dict.values()
