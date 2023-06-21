@@ -1,20 +1,24 @@
 """
 Routes and sub-resources for the /login resource
 """
-import time
 import json
 import secrets
+import time
+
 import bcrypt
-from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
-from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.management.session_token import SessionToken
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, jsonify, request
+
+import csle_rest_api.constants.constants as api_constants
 
 # Creates a blueprint "sub application" of the main REST app
 login_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.LOGIN_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.LOGIN_RESOURCE}")
+    api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.LOGIN_RESOURCE}",
+)
 
 
 @login_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
@@ -31,7 +35,9 @@ def read_login():
     username = json_data[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
     user_account = MetastoreFacade.get_management_user_by_username(username=username)
     import logging
+
     import pytest
+
     pytest.logger = logging.getLogger("resources_login_tests")
     pytest.logger.info(f"USER ACCOUNT: {user_account}")
     response_code = constants.HTTPS.UNAUTHORIZED_STATUS_CODE
@@ -41,8 +47,10 @@ def read_login():
             return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
         password = json_data[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
         pytest.logger.info(f"submitted password: {password}")
-        byte_pwd = password.encode('utf-8')
-        pw_hash = bcrypt.hashpw(byte_pwd, user_account.salt.encode("utf-8")).decode("utf-8")
+        byte_pwd = password.encode("utf-8")
+        pw_hash = bcrypt.hashpw(byte_pwd, user_account.salt.encode("utf-8")).decode(
+            "utf-8"
+        )
         if user_account.password == pw_hash:
             response_code = constants.HTTPS.OK_STATUS_CODE
             new_token = MetastoreFacade.get_session_token_by_username(username=username)
@@ -52,7 +60,9 @@ def read_login():
                 MetastoreFacade.save_session_token(session_token=new_token)
             else:
                 new_token.timestamp = ts
-                MetastoreFacade.update_session_token(session_token=new_token, token=new_token.token)
+                MetastoreFacade.update_session_token(
+                    session_token=new_token, token=new_token.token
+                )
             data_dict = {
                 api_constants.MGMT_WEBAPP.TOKEN_PROPERTY: new_token.token,
                 api_constants.MGMT_WEBAPP.ADMIN_PROPERTY: user_account.admin,
@@ -64,5 +74,7 @@ def read_login():
                 api_constants.MGMT_WEBAPP.ID_PROPERTY: user_account.id,
             }
             response = jsonify(data_dict)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, response_code

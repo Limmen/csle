@@ -1,9 +1,11 @@
-import logging
-import pytest
 import json
-from csle_rest_api.rest_api import create_app
+import logging
+
 import csle_common.constants.constants as constants
+import pytest
+
 import csle_rest_api.constants.constants as api_constants
+from csle_rest_api.rest_api import create_app
 
 
 class TestResourcesLoginSuite(object):
@@ -18,7 +20,9 @@ class TestResourcesLoginSuite(object):
         """
         :return: the flask app fixture representing the webserver
         """
-        return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
+        return create_app(
+            static_folder="../../../../../management-system/csle-mgmt-webapp/build"
+        )
 
     @pytest.fixture
     def token(self, mocker):
@@ -27,15 +31,19 @@ class TestResourcesLoginSuite(object):
         :return: the token fixture for mocking the token calls to the database
         """
         from csle_common.dao.management.session_token import SessionToken
+
         def get_session_token_by_username(username: str):
             if username == "admin":
-                return SessionToken(token = "123", timestamp=0.0, username="admin")
+                return SessionToken(token="123", timestamp=0.0, username="admin")
             elif username == "guest":
-                return SessionToken(token = "123", timestamp=0.0, username="guest")
+                return SessionToken(token="123", timestamp=0.0, username="guest")
             else:
                 return None
-        get_session_token_by_username = mocker.MagicMock(side_effect=get_session_token_by_username)
-        return get_session_token_by_username
+
+        get_session_token_by_username_mock = mocker.MagicMock(
+            side_effect=get_session_token_by_username
+        )
+        return get_session_token_by_username_mock
 
     @pytest.fixture
     def database(self, mocker):
@@ -43,34 +51,50 @@ class TestResourcesLoginSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the users in the database
         """
-        from csle_common.dao.management.management_user import ManagementUser
         import bcrypt
+        from csle_common.dao.management.management_user import ManagementUser
+
         def get_management_user_by_username(username: str):
             if username == "admin":
-                byte_pwd = "admin".encode('utf-8')
+                byte_pwd = "admin".encode("utf-8")
                 salt = bcrypt.gensalt()
                 pw_hash = bcrypt.hashpw(byte_pwd, salt)
                 password = pw_hash.decode("utf-8")
                 user = ManagementUser(
-                    username="admin", password=password, email="admin@CSLE.com", admin=True,
-                    first_name="Admin", last_name="Adminson", organization="CSLE", salt=salt.decode("utf-8")
+                    username="admin",
+                    password=password,
+                    email="admin@CSLE.com",
+                    admin=True,
+                    first_name="Admin",
+                    last_name="Adminson",
+                    organization="CSLE",
+                    salt=salt.decode("utf-8"),
                 )
                 user.id = 1
                 return user
             elif username == "guest":
-                byte_pwd = "guest".encode('utf-8')
+                byte_pwd = "guest".encode("utf-8")
                 salt = bcrypt.gensalt()
                 pw_hash = bcrypt.hashpw(byte_pwd, salt)
                 password = pw_hash.decode("utf-8")
                 user = ManagementUser(
-                    username="guest", password=password, email="guest@CSLE.com", admin=False,
-                    first_name="Guest", last_name="Guestson", organization="CSLE", salt=salt.decode("utf-8")
+                    username="guest",
+                    password=password,
+                    email="guest@CSLE.com",
+                    admin=False,
+                    first_name="Guest",
+                    last_name="Guestson",
+                    organization="CSLE",
+                    salt=salt.decode("utf-8"),
                 )
                 user.id = 2
                 return user
             else:
                 return None
-        get_management_user_by_username_mock = mocker.MagicMock(side_effect=get_management_user_by_username)
+
+        get_management_user_by_username_mock = mocker.MagicMock(
+            side_effect=get_management_user_by_username
+        )
         return get_management_user_by_username_mock
 
     def test_successful_admin_login(self, flask_app, mocker, database, token) -> None:
@@ -84,12 +108,18 @@ class TestResourcesLoginSuite(object):
         :param token: the token fixture
         :return: None
         """
-        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_by_username',
-                     side_effect=database)
-        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username',
-                     side_effect=token)
-        a_response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
-                                                  data=json.dumps({'username': 'admin', 'password': 'admin'}))
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_by_username",
+            side_effect=database,
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username",
+            side_effect=token,
+        )
+        a_response = flask_app.test_client().post(
+            api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
+            data=json.dumps({"username": "admin", "password": "admin"}),
+        )
         a_response_data = a_response.data.decode("utf-8")
         a_response_data_dict = json.loads(a_response_data)
         assert a_response.status_code == constants.HTTPS.OK_STATUS_CODE
@@ -103,13 +133,27 @@ class TestResourcesLoginSuite(object):
         assert api_constants.MGMT_WEBAPP.EMAIL_PROPERTY in a_response_data_dict
         assert api_constants.MGMT_WEBAPP.ID_PROPERTY in a_response_data_dict
         assert a_response_data_dict[api_constants.MGMT_WEBAPP.ADMIN_PROPERTY] is True
-        assert a_response_data_dict[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY] == "Admin"
-        assert a_response_data_dict[api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY] == "Adminson"
-        assert a_response_data_dict[api_constants.MGMT_WEBAPP.EMAIL_PROPERTY] == "admin@CSLE.com"
-        assert a_response_data_dict[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == "admin"
-        assert a_response_data_dict[api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY] == "CSLE"
+        assert (
+            a_response_data_dict[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY]
+            == "Admin"
+        )
+        assert (
+            a_response_data_dict[api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY]
+            == "Adminson"
+        )
+        assert (
+            a_response_data_dict[api_constants.MGMT_WEBAPP.EMAIL_PROPERTY]
+            == "admin@CSLE.com"
+        )
+        assert (
+            a_response_data_dict[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == "admin"
+        )
+        assert (
+            a_response_data_dict[api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY]
+            == "CSLE"
+        )
 
-    def test_successgful_guest_login(self, flask_app, mocker, database, token) -> None:
+    def test_successful_guest_login(self, flask_app, mocker, database, token) -> None:
         """
         Tests the /login resource when logging in with 'guest' username- and password credentials
 
@@ -119,12 +163,18 @@ class TestResourcesLoginSuite(object):
         :param token: the token fixture
         :return: None
         """
-        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_by_username',
-                     side_effect=database)
-        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username',
-                     side_effect=token)
-        g_response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
-                                                  data=json.dumps({'username': 'guest', 'password': 'guest'}))
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_by_username",
+            side_effect=database,
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username",
+            side_effect=token,
+        )
+        g_response = flask_app.test_client().post(
+            api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
+            data=json.dumps({"username": "guest", "password": "guest"}),
+        )
         response_data = g_response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert g_response.status_code == constants.HTTPS.OK_STATUS_CODE
@@ -138,13 +188,30 @@ class TestResourcesLoginSuite(object):
         assert api_constants.MGMT_WEBAPP.EMAIL_PROPERTY in response_data_dict
         assert api_constants.MGMT_WEBAPP.ID_PROPERTY in response_data_dict
         assert response_data_dict[api_constants.MGMT_WEBAPP.ADMIN_PROPERTY] is False
-        assert response_data_dict[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY] == "Guest"
-        assert response_data_dict[api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY] == "Guestson"
-        assert response_data_dict[api_constants.MGMT_WEBAPP.EMAIL_PROPERTY] == "guest@CSLE.com"
-        assert response_data_dict[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == "guest"
-        assert response_data_dict[api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY] == "CSLE"
-        assert response_data_dict[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY] == 'Guest'
-        assert response_data_dict[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == 'guest'
+        assert (
+            response_data_dict[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY] == "Guest"
+        )
+        assert (
+            response_data_dict[api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY]
+            == "Guestson"
+        )
+        assert (
+            response_data_dict[api_constants.MGMT_WEBAPP.EMAIL_PROPERTY]
+            == "guest@CSLE.com"
+        )
+        assert (
+            response_data_dict[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == "guest"
+        )
+        assert (
+            response_data_dict[api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY]
+            == "CSLE"
+        )
+        assert (
+            response_data_dict[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY] == "Guest"
+        )
+        assert (
+            response_data_dict[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == "guest"
+        )
 
     def test_unsuccessful_login(self, flask_app, mocker, database, token) -> None:
         """
@@ -156,12 +223,18 @@ class TestResourcesLoginSuite(object):
         :param token: the token fixture
         :return: None
         """
-        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_by_username',
-                     side_effect=database)
-        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username',
-                     side_effect=token)
-        f_response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
-                                                  data=json.dumps({'username': 'asdf', 'password': 'asdf'}))
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_by_username",
+            side_effect=database,
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username",
+            side_effect=token,
+        )
+        f_response = flask_app.test_client().post(
+            api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
+            data=json.dumps({"username": "asdf", "password": "asdf"}),
+        )
         response_data = f_response.data.decode("utf-8")
         response_dict = json.loads(response_data)
         assert f_response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
@@ -178,11 +251,17 @@ class TestResourcesLoginSuite(object):
         :param token: the token fixture
         :return: None
         """
-        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_by_username',
-                     side_effect=database)
-        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username',
-                     side_effect=token)
-        m_response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.LOGIN_RESOURCE, data=json.dumps({}))
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_by_username",
+            side_effect=database,
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username",
+            side_effect=token,
+        )
+        m_response = flask_app.test_client().post(
+            api_constants.MGMT_WEBAPP.LOGIN_RESOURCE, data=json.dumps({})
+        )
         response_data = m_response.data.decode("utf-8")
         response_dict = json.loads(response_data)
         assert m_response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
