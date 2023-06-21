@@ -27,15 +27,20 @@ def read_login():
     token = secrets.token_urlsafe(32)
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.USERNAME_PROPERTY not in json_data:
-        jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     username = json_data[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
     user_account = MetastoreFacade.get_management_user_by_username(username=username)
+    import logging
+    import pytest
+    pytest.logger = logging.getLogger("resources_login_tests")
+    pytest.logger.info(f"USER ACCOUNT: {user_account}")
     response_code = constants.HTTPS.UNAUTHORIZED_STATUS_CODE
     response = jsonify({})
     if user_account is not None:
         if api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY not in json_data:
-            jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+            return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
         password = json_data[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
+        pytest.logger.info(f"submitted password: {password}")
         byte_pwd = password.encode('utf-8')
         pw_hash = bcrypt.hashpw(byte_pwd, user_account.salt.encode("utf-8")).decode("utf-8")
         if user_account.password == pw_hash:
