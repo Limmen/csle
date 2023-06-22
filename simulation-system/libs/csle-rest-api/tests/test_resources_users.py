@@ -91,7 +91,35 @@ class TestResourcesUsersSuite(object):
         list_management_users_mock = mocker.MagicMock(side_effect=list_management_users)
         return list_management_users_mock
 
+    @pytest.fixture
+    def management_config(self, mocker):
+        def get_management_user_config(id):
+            user = [
+                ManagementUser(
+                    username="admin",
+                    password="admin",
+                    email="admin@CSLE.com",
+                    admin=True,
+                    first_name="Admin",
+                    last_name="Adminson",
+                    organization="CSLE",
+                    salt="123",
+                ),
+            ]
+            return user
+
+        get_management_user_config_mock = mocker.MagicMock(
+            side_effect=get_management_user_config
+        )
+        return get_management_user_config_mock
+
         # def remove_management_user(management_user: ManagementUser) -> None:
+
+    """@pytest.fixture
+    def authorized(self, mocker):
+        def check_if_user_edit_is_authorized(request, user):
+            return "johndoe"
+        check_if_user_edit_is_authorized_mock = mocker.MagicMock(side_effect = )"""
 
     def test_list_users(
         self, flask_app, mocker, logged_in, management_users, not_logged_in
@@ -119,6 +147,7 @@ class TestResourcesUsersSuite(object):
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert len(response_data_list) == 2
+        pytest.logger.info(response_data_list)
         users = list(map(lambda x: ManagementUser.from_dict(x), response_data_list))
         assert users[0].username == "admin"
         assert users[0].password == ""
@@ -146,17 +175,31 @@ class TestResourcesUsersSuite(object):
         response_data_list = json.loads(response_data)
         assert len(response_data_list) == 0
 
-    def test_remove_user(
-        self, flask_app, mocker, logged_in, management_users, not_logged_in
+    def test_management_user_config(
+        self,
+        flask_app,
+        mocker,
+        logged_in,
+        not_logged_in,
+        management_config,
+        management_users,
     ) -> None:
+        """
+        Tests /login resource for getting management user configuration"""
         mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
             side_effect=management_users,
         )
         mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_config",
+            side_effect=management_config,
+        )
+        mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in,
         )
-        response = flask_app.test_client().delete(
-            api_constants.MGMT_WEBAPP.USERS_RESOURCE
-        )
+        response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.USERS_RESOURCE)
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        pytest.logger.info(response_data_list)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE

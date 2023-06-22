@@ -113,7 +113,9 @@ class TestResourcesLoginSuite(object):
         update_session_token_mock = mocker.MagicMock(side_effect=update_session_token)
         return update_session_token_mock
 
-    def test_successful_admin_login(self, flask_app, mocker, database, token) -> None:
+    def test_successful_admin_login(
+        self, flask_app, mocker, database, token, save, update
+    ) -> None:
         """
         Tests the /login resource when logging in with 'admin' and 'admin as
         username- and password credentials
@@ -131,6 +133,15 @@ class TestResourcesLoginSuite(object):
         mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username",
             side_effect=token,
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.save_session_token",
+            side_effect=save,
+        )
+
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.update_session_token",
+            side_effect=update,
         )
         a_response = flask_app.test_client().post(
             api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
@@ -170,7 +181,7 @@ class TestResourcesLoginSuite(object):
         )
 
     def test_successful_guest_login(
-        self, flask_app, mocker, database, token, save
+        self, flask_app, mocker, database, token, save, update
     ) -> None:
         """
         Tests the /login resource when logging in with 'guest' username- and password credentials
@@ -193,6 +204,11 @@ class TestResourcesLoginSuite(object):
         mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.save_session_token",
             side_effect=save,
+        )
+
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.update_session_token",
+            side_effect=update,
         )
 
         g_response = flask_app.test_client().post(
@@ -238,7 +254,9 @@ class TestResourcesLoginSuite(object):
             response_data_dict[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == "guest"
         )
 
-    def test_unsuccessful_login(self, flask_app, mocker, database, token) -> None:
+    def test_unsuccessful_login(
+        self, flask_app, mocker, database, token, save, update
+    ) -> None:
         """
         Ensuring that unauthorized login credential fails to enter
 
@@ -256,6 +274,15 @@ class TestResourcesLoginSuite(object):
             "csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username",
             side_effect=token,
         )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.save_session_token",
+            side_effect=save,
+        )
+
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.update_session_token",
+            side_effect=update,
+        )
         f_response = flask_app.test_client().post(
             api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
             data=json.dumps({"username": "asdf", "password": "asdf"}),
@@ -265,7 +292,9 @@ class TestResourcesLoginSuite(object):
         assert f_response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_dict == {}
 
-    def test_malformed_login_request(self, flask_app, mocker, database, token) -> None:
+    def test_malformed_login_request(
+        self, flask_app, mocker, database, token, save, update
+    ) -> None:
         """
         Testing malformed login request. Please note that explicit return-statements
         had to be added at row 30 and 38 in the /login resource file, routes.py
@@ -283,6 +312,15 @@ class TestResourcesLoginSuite(object):
         mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username",
             side_effect=token,
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.save_session_token",
+            side_effect=save,
+        )
+
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.update_session_token",
+            side_effect=update,
         )
         m_response = flask_app.test_client().post(
             api_constants.MGMT_WEBAPP.LOGIN_RESOURCE, data=json.dumps({})
