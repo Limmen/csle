@@ -91,6 +91,8 @@ class TestResourcesUsersSuite(object):
         list_management_users_mock = mocker.MagicMock(side_effect=list_management_users)
         return list_management_users_mock
 
+        # def remove_management_user(management_user: ManagementUser) -> None:
+
     def test_list_users(
         self, flask_app, mocker, logged_in, management_users, not_logged_in
     ) -> None:
@@ -143,3 +145,18 @@ class TestResourcesUsersSuite(object):
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert len(response_data_list) == 0
+
+    def test_remove_user(
+        self, flask_app, mocker, logged_in, management_users, not_logged_in
+    ) -> None:
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
+            side_effect=management_users,
+        )
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=logged_in,
+        )
+        response = flask_app.test_client().delete(
+            api_constants.MGMT_WEBAPP.USERS_RESOURCE
+        )

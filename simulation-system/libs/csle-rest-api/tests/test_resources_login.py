@@ -99,14 +99,19 @@ class TestResourcesLoginSuite(object):
 
     @pytest.fixture
     def save(self, mocker):
-        """import bcrypt
-        from csle_common.dao.management.management_user import ManagementUser"""
-
         def save_session_token(session_token: bool):
             return True
 
         save_session_token_mock = mocker.MagicMock(side_effect=save_session_token)
         return save_session_token_mock
+
+    @pytest.fixture
+    def update(self, mocker):
+        def update_session_token(session_token, token):
+            return True
+
+        update_session_token_mock = mocker.MagicMock(side_effect=update_session_token)
+        return update_session_token_mock
 
     def test_successful_admin_login(self, flask_app, mocker, database, token) -> None:
         """
@@ -164,7 +169,9 @@ class TestResourcesLoginSuite(object):
             == "CSLE"
         )
 
-    def test_successful_guest_login(self, flask_app, mocker, database, token) -> None:
+    def test_successful_guest_login(
+        self, flask_app, mocker, database, token, save
+    ) -> None:
         """
         Tests the /login resource when logging in with 'guest' username- and password credentials
 
@@ -182,12 +189,19 @@ class TestResourcesLoginSuite(object):
             "csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username",
             side_effect=token,
         )
+
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.save_session_token",
+            side_effect=save,
+        )
+
         g_response = flask_app.test_client().post(
             api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
             data=json.dumps({"username": "guest", "password": "guest"}),
         )
         response_data = g_response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        pytest.logger.info(response_data_dict)
         assert g_response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert len(response_data_dict.keys()) == 8
         assert api_constants.MGMT_WEBAPP.TOKEN_PROPERTY in response_data_dict
@@ -279,11 +293,3 @@ class TestResourcesLoginSuite(object):
         pytest.logger.info(m_response)
         assert m_response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         assert response_dict == {}
-
-    def test_save_session_token(self, flask_app, mocker, database, token, save):
-        mocker.patch(
-            "csle_common.metastore.metastore_facade.MetastoreFacade.save_session_token",
-            side_effect=save,
-        )
-        s_response = flask_app.test_client().post()
-        # s_response_data = s_response.data.encode("utf-8")
