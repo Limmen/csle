@@ -1,10 +1,12 @@
-import logging
-import pytest
 import json
-from csle_rest_api.rest_api import create_app
+import logging
+
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
+import pytest
 from csle_common.dao.management.management_user import ManagementUser
+
+import csle_rest_api.constants.constants as api_constants
+from csle_rest_api.rest_api import create_app
 
 
 class TestResourcesUsersSuite(object):
@@ -19,7 +21,9 @@ class TestResourcesUsersSuite(object):
         """
         :return: the flask app fixture representing the webserver
         """
-        return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
+        return create_app(
+            static_folder="../../../../../management-system/csle-mgmt-webapp/build"
+        )
 
     @pytest.fixture
     def logged_in(self, mocker):
@@ -31,7 +35,10 @@ class TestResourcesUsersSuite(object):
         def check_if_user_is_authorized(request, requires_admin):
             return None
 
-        check_if_user_is_authorized_mock = mocker.MagicMock(side_effect=check_if_user_is_authorized)
+        check_if_user_is_authorized_mock = mocker.MagicMock(
+            side_effect=check_if_user_is_authorized
+        )
+        # pytest.logger.info(check_if_user_is_authorized)
         return check_if_user_is_authorized_mock
 
     @pytest.fixture
@@ -44,7 +51,9 @@ class TestResourcesUsersSuite(object):
         def check_if_user_is_authorized(request, requires_admin):
             return [], constants.HTTPS.UNAUTHORIZED_STATUS_CODE
 
-        check_if_user_is_authorized_mock = mocker.MagicMock(side_effect=check_if_user_is_authorized)
+        check_if_user_is_authorized_mock = mocker.MagicMock(
+            side_effect=check_if_user_is_authorized
+        )
         return check_if_user_is_authorized_mock
 
     @pytest.fixture
@@ -53,21 +62,38 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the users in the database
         """
+
         def list_management_users():
             users = [
                 ManagementUser(
-                    username="admin", password="admin", email="admin@CSLE.com", admin=True,
-                    first_name="Admin", last_name="Adminson", organization="CSLE", salt="123"),
-                ManagementUser(username="guest", password="guest",
-                               email="guest@CSLE.com", admin=False,
-                               first_name="Guest", last_name="Guestson", organization="CSLE", salt="123")
+                    username="admin",
+                    password="admin",
+                    email="admin@CSLE.com",
+                    admin=True,
+                    first_name="Admin",
+                    last_name="Adminson",
+                    organization="CSLE",
+                    salt="123",
+                ),
+                ManagementUser(
+                    username="guest",
+                    password="guest",
+                    email="guest@CSLE.com",
+                    admin=False,
+                    first_name="Guest",
+                    last_name="Guestson",
+                    organization="CSLE",
+                    salt="123",
+                ),
             ]
             return users
 
         list_management_users_mock = mocker.MagicMock(side_effect=list_management_users)
         return list_management_users_mock
 
-    def test_list_users(self, flask_app, mocker, logged_in, management_users, not_logged_in) -> None:
+    def test_list_users(
+        self, flask_app, mocker, logged_in, management_users, not_logged_in
+    ) -> None:
         """
         Tests the /users resource for listing management user accounts
 
@@ -78,10 +104,14 @@ class TestResourcesUsersSuite(object):
         :param not_logged_in: the not_logged_in fixture
         :return: None
         """
-        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users',
-                     side_effect=management_users)
-        mocker.patch('csle_rest_api.util.rest_api_util.check_if_user_is_authorized',
-                     side_effect=logged_in)
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
+            side_effect=management_users,
+        )
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=logged_in,
+        )
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.USERS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -104,8 +134,10 @@ class TestResourcesUsersSuite(object):
         assert users[1].last_name == "Guestson"
         assert users[1].salt == ""
         assert users[1].organization == "CSLE"
-        mocker.patch('csle_rest_api.util.rest_api_util.check_if_user_is_authorized',
-                     side_effect=not_logged_in)
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=not_logged_in,
+        )
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.USERS_RESOURCE)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         response_data = response.data.decode("utf-8")

@@ -97,6 +97,17 @@ class TestResourcesLoginSuite(object):
         )
         return get_management_user_by_username_mock
 
+    @pytest.fixture
+    def save(self, mocker):
+        """import bcrypt
+        from csle_common.dao.management.management_user import ManagementUser"""
+
+        def save_session_token(session_token: bool):
+            return True
+
+        save_session_token_mock = mocker.MagicMock(side_effect=save_session_token)
+        return save_session_token_mock
+
     def test_successful_admin_login(self, flask_app, mocker, database, token) -> None:
         """
         Tests the /login resource when logging in with 'admin' and 'admin as
@@ -262,7 +273,17 @@ class TestResourcesLoginSuite(object):
         m_response = flask_app.test_client().post(
             api_constants.MGMT_WEBAPP.LOGIN_RESOURCE, data=json.dumps({})
         )
+
         response_data = m_response.data.decode("utf-8")
         response_dict = json.loads(response_data)
+        pytest.logger.info(m_response)
         assert m_response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         assert response_dict == {}
+
+    def test_save_session_token(self, flask_app, mocker, database, token, save):
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.save_session_token",
+            side_effect=save,
+        )
+        s_response = flask_app.test_client().post()
+        # s_response_data = s_response.data.encode("utf-8")

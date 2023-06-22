@@ -55,7 +55,7 @@ def users():
 
         users = MetastoreFacade.list_management_users()
 
-        pytest.logger.info(users)
+        pytest.logger.info(authorized)
 
         for i in range(len(users)):
             users[i].password = ""
