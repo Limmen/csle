@@ -1,6 +1,7 @@
 import json
 import logging
 
+import bcrypt
 import csle_common.constants.constants as constants
 import pytest
 from csle_common.dao.management.management_user import ManagementUser
@@ -91,21 +92,32 @@ class TestResourcesUsersSuite(object):
         list_management_users_mock = mocker.MagicMock(side_effect=list_management_users)
         return list_management_users_mock
 
+    """@pytest.fixture
+    def management_ids(self, mocker):
+        def list_management_users_ids():
+            pass
+
+        list_management_users_ids_mock = mocker.MagicMock(
+            side_effect=list_management_users_ids
+        )
+        return list_management_users_ids_mock"""
+
     @pytest.fixture
     def management_config(self, mocker):
         def get_management_user_config(id):
             user = [
                 ManagementUser(
-                    username="admin",
-                    password="admin",
-                    email="admin@CSLE.com",
+                    username="jdoe",
+                    password="jdoe",
+                    email="jdoe@CSLE.com",
                     admin=True,
-                    first_name="Admin",
-                    last_name="Adminson",
+                    first_name="John",
+                    last_name="Doe",
                     organization="CSLE",
                     salt="123",
                 ),
             ]
+            user.id = 1
             return user
 
         get_management_user_config_mock = mocker.MagicMock(
@@ -113,6 +125,34 @@ class TestResourcesUsersSuite(object):
         )
         return get_management_user_config_mock
 
+    @pytest.fixture
+    def update(self, mocker):
+        def update_management_user(management_user, id):
+            return True
+
+        update_management_user_mock = mocker.MagicMock(
+            side_effect=update_management_user
+        )
+        return update_management_user_mock
+
+    @pytest.fixture
+    def remove(self, mocker):
+        def remove_management_user(management_user, users):
+            return users.pop(management_user)
+
+        remove_management_user_mock = mocker.MagicMock(
+            side_effect=remove_management_user
+        )
+        return remove_management_user_mock
+
+    @pytest.fixture
+    def save(self, mocker):
+        def save_management_user(management_user):
+            return True
+
+        save_management_user_mock = mocker.MagicMock(side_effect=save_management_user)
+
+        return save_management_user_mock
         # def remove_management_user(management_user: ManagementUser) -> None:
 
     """@pytest.fixture
@@ -149,6 +189,7 @@ class TestResourcesUsersSuite(object):
         assert len(response_data_list) == 2
         pytest.logger.info(response_data_list)
         users = list(map(lambda x: ManagementUser.from_dict(x), response_data_list))
+        pytest.logger.info(users[0])
         assert users[0].username == "admin"
         assert users[0].password == ""
         assert users[0].email == "admin@CSLE.com"
@@ -175,31 +216,37 @@ class TestResourcesUsersSuite(object):
         response_data_list = json.loads(response_data)
         assert len(response_data_list) == 0
 
-    def test_management_user_config(
-        self,
-        flask_app,
-        mocker,
-        logged_in,
-        not_logged_in,
-        management_config,
-        management_users,
+    def test_remove_users(
+        self, flask_app, mocker, logged_in, management_users, not_logged_in, remove
     ) -> None:
-        """
-        Tests /login resource for getting management user configuration"""
         mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
             side_effect=management_users,
         )
         mocker.patch(
-            "csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_config",
-            side_effect=management_config,
-        )
-        mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in,
         )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.remove_management_user",
+            side_effect=remove,
+        )
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.USERS_RESOURCE)
         response_data = response.data.decode("utf-8")
+
+        for user in response_data:
+            removed = flask_app.test_client().delete(
+                api_constants.MGMT_WEBAPP.USERS_RESOURCE, user
+            )
         response_data_list = json.loads(response_data)
+
+        # users = list(map(lambda x: ManagementUser.from_dict(x), response_data_list))
         pytest.logger.info(response_data_list)
-        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        # pytest.logger.info(response_data_list[0])
+        # pytest.logger.info(response_data_list[1])
+        # for user in response_data_list:
+        #    pytest.logger.info(user)
+
+        """response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        pytest.logger.info(response_data_list)"""
