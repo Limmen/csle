@@ -393,6 +393,7 @@ class TestResourcesUsersSuite(object):
         logged_in,
         authorized,
         unauthorized,
+        update,
         management_config,
     ) -> None:
         """
@@ -501,3 +502,89 @@ class TestResourcesUsersSuite(object):
         )
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
+
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=not_logged_in,
+        )
+
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
+            side_effect=unauthorized,
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.remove_management_user",
+            side_effect=remove,
+        )
+        response = flask_app.test_client().delete(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}235"
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+
+        response = flask_app.test_client().delete(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}11"
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == []
+
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=logged_in,
+        )
+
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
+            side_effect=authorized,
+        )
+
+        guest_user = ManagementUser(
+            username="guest",
+            password="guest",
+            email="guest@CSLE.com",
+            admin=False,
+            first_name="Guest",
+            last_name="Guestson",
+            organization="CSLE",
+            salt="123",
+        )
+
+        guest_data_test = guest_user.to_dict()
+        response = flask_app.test_client().put(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}235",
+            data=json.dumps(guest_data_test),
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+
+        assert len(response_data_list) == 9
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+
+        bad_guest_user = ManagementUser(
+            username="blablaba",
+            password="guest",
+            email="guest@CSLE.com",
+            admin=False,
+            first_name="Guest",
+            last_name="Guestson",
+            organization="CSLE",
+            salt="123",
+        )
+        bad_guest_data_test = bad_guest_user.to_dict()
+        del bad_guest_data_test[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
+
+        response = flask_app.test_client().put(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}235",
+            data=json.dumps(bad_guest_data_test),
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+
+        assert len(response_data_list) < 9
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE

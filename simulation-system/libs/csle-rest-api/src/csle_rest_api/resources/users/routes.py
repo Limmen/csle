@@ -97,9 +97,6 @@ def user(user_id: int):
 
     :return: The given user or deletes the user
     """
-    import logging
-
-    import pytest
 
     # Check that token is valid
     authorized = rest_api_util.check_if_user_is_authorized(
@@ -118,11 +115,26 @@ def user(user_id: int):
         return request_user
 
     response = jsonify({})
+
     if user is not None:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             response = jsonify(user.to_dict())
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_PUT:
-            new_user = json.loads(request.data)[api_constants.MGMT_WEBAPP.USER_PROPERTY]
+            new_user = json.loads(request.data)
+            if not (
+                api_constants.MGMT_WEBAPP.USERNAME_PROPERTY in new_user
+                and api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY in new_user
+                and api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY in new_user
+                and api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY in new_user
+                and api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY in new_user
+                and api_constants.MGMT_WEBAPP.ID_PROPERTY in new_user
+                and api_constants.MGMT_WEBAPP.EMAIL_PROPERTY in new_user
+                and api_constants.MGMT_WEBAPP.ADMIN_PROPERTY in new_user
+            ):
+                # response = jsonify(new_user.to_dict())
+                response = jsonify(new_user)
+                return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
             new_user = ManagementUser.from_dict(new_user)
             if new_user.password == "":
                 new_user.password = user.password
@@ -178,7 +190,10 @@ def create_user():
                 api_constants.MGMT_WEBAPP.USERNAME_PROPERTY in json_data
                 and api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY in json_data
                 and api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY in json_data
-                and api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY in json_data
+                and api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY in json_data
+                and api_constants.MGMT_WEBAPP.EMAIL_PROPERTY in json_data
+                and api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY in json_data
+                and api_constants.MGMT_WEBAPP.ID_PROPERTY in json_data
             ):
                 username = json_data[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
                 password = json_data[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
