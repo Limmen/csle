@@ -28,15 +28,17 @@ def read_login():
 
     :return: Authenticates the login information and returns the result
     """
+    import logging
+
+    import pytest
+
     token = secrets.token_urlsafe(32)
     json_data = json.loads(request.data)
+    pytest.logger.info(json_data)
     if api_constants.MGMT_WEBAPP.USERNAME_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     username = json_data[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
     user_account = MetastoreFacade.get_management_user_by_username(username=username)
-    import logging
-
-    import pytest
 
     pytest.logger = logging.getLogger("resources_login_tests")
     pytest.logger.info(f"USER ACCOUNT: {user_account}")

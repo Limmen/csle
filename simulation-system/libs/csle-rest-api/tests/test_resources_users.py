@@ -1,10 +1,12 @@
-from typing import Tuple, List, Union
 import json
 import logging
+from typing import List, Tuple, Union
+
 import csle_common.constants.constants as constants
 import pytest
-from flask import jsonify
 from csle_common.dao.management.management_user import ManagementUser
+from flask import jsonify
+
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
@@ -33,8 +35,10 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: the logged in as admin fixture for mocking the logged in check
         """
+
         def check_if_user_is_authorized(request, requires_admin):
             return None
+
         check_if_user_is_authorized_mock = mocker.MagicMock(
             side_effect=check_if_user_is_authorized
         )
@@ -48,12 +52,16 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: the logged in fixture for mocking the logged in check
         """
+
         def check_if_user_is_authorized(request, requires_admin):
             if requires_admin:
                 response = jsonify({})
-                response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+                response.headers.add(
+                    api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+                )
                 return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
             return None
+
         check_if_user_is_authorized_mock = mocker.MagicMock(
             side_effect=check_if_user_is_authorized
         )
@@ -67,8 +75,10 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: the not-logged-in fixture for mocking the logged in check
         """
+
         def check_if_user_is_authorized(request, requires_admin):
             return [], constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+
         check_if_user_is_authorized_mock = mocker.MagicMock(
             side_effect=check_if_user_is_authorized
         )
@@ -107,6 +117,7 @@ class TestResourcesUsersSuite(object):
                 ),
             ]
             return users
+
         list_management_users_mock = mocker.MagicMock(side_effect=list_management_users)
         return list_management_users_mock
 
@@ -118,8 +129,10 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the management user ids
         """
+
         def list_management_users_ids() -> List[Tuple]:
             return [(1,), (2,)]
+
         list_management_users_ids_mock = mocker.MagicMock(
             side_effect=list_management_users_ids
         )
@@ -133,6 +146,7 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the get_management_user_config function of the MetastoreFacade
         """
+
         def get_management_user_config(id: int) -> Union[None, ManagementUser]:
             admin_user = ManagementUser(
                 username="admin",
@@ -162,6 +176,7 @@ class TestResourcesUsersSuite(object):
                 return guest_user
             else:
                 return None
+
         get_management_user_config_mock = mocker.MagicMock(
             side_effect=get_management_user_config
         )
@@ -175,8 +190,10 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the update_management_user of the MetastoreFacade
         """
-        def update_management_user(management_user: ManagementUser, id : int) -> None:
+
+        def update_management_user(management_user: ManagementUser, id: int) -> None:
             return None
+
         update_management_user_mock = mocker.MagicMock(
             side_effect=update_management_user
         )
@@ -190,8 +207,10 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the remove_management_user function of the Metastore
         """
+
         def remove_management_user(management_user: ManagementUser):
             return None
+
         remove_management_user_mock = mocker.MagicMock(
             side_effect=remove_management_user
         )
@@ -205,8 +224,10 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the save_management_user function in the MetastoreFacade
         """
+
         def save_management_user(management_user: ManagementUser) -> int:
             return 1
+
         save_management_user_mock = mocker.MagicMock(side_effect=save_management_user)
         return save_management_user_mock
 
@@ -218,12 +239,15 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the check_if_user_edit_is_authorized function
         """
-        def check_if_user_edit_is_authorized(request, requires_admin: bool = False):
+
+        def check_if_user_edit_is_authorized(request, user: ManagementUser):
             token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
             if token != "":
-                return None
+                return user
             response = jsonify({})
-            response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+            response.headers.add(
+                api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+            )
             return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
 
         check_if_user_edit_is_authorized_mock = mocker.MagicMock(
@@ -239,11 +263,14 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the check_if_user_edit_is_authorized function
         """
+
         def check_if_user_edit_is_authorized(request, user: ManagementUser):
             token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
             if token == "":
                 response = jsonify({})
-                response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+                response.headers.add(
+                    api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+                )
                 return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
             return user
 
@@ -252,8 +279,17 @@ class TestResourcesUsersSuite(object):
         )
         return check_if_user_edit_is_authorized_mock
 
-    def test_users(self, flask_app, mocker, logged_in_as_admin, management_users, not_logged_in, management_ids,
-                   remove, logged_in) -> None:
+    def test_users(
+        self,
+        flask_app,
+        mocker,
+        logged_in_as_admin,
+        management_users,
+        not_logged_in,
+        management_ids,
+        remove,
+        logged_in,
+    ) -> None:
         """
         Tests the /users resource for listing management user accounts
 
@@ -301,8 +337,10 @@ class TestResourcesUsersSuite(object):
             "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users_ids",
             side_effect=management_ids,
         )
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-                                               f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
+        response = flask_app.test_client().get(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true"
+        )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
@@ -335,10 +373,131 @@ class TestResourcesUsersSuite(object):
             "csle_common.metastore.metastore_facade.MetastoreFacade.remove_management_user",
             side_effect=remove,
         )
-        response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.USERS_RESOURCE)
+        response = flask_app.test_client().delete(
+            api_constants.MGMT_WEBAPP.USERS_RESOURCE
+        )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
+    def test_users_id(
+        self,
+        flask_app,
+        mocker,
+        logged_in_as_admin,
+        management_users,
+        not_logged_in,
+        management_ids,
+        remove,
+        logged_in,
+        authorized,
+        unauthorized,
+        management_config,
+    ) -> None:
+        """
+        Testing the /users/id
+        """
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
+            side_effect=management_users,
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_config",
+            side_effect=management_config,
+        )
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=logged_in,
+        )
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
+            side_effect=authorized,
+        )
+        response = flask_app.test_client().get(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}11"
+        )
 
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert len(response_data_list) == 9
+        assert response_data_list["admin"] is True
+        assert response_data_list["email"] == "admin@CSLE.com"
+        assert response_data_list["first_name"] == "Admin"
+        assert response_data_list["last_name"] == "Adminson"
+        assert response_data_list["id"] == 11
+        assert response_data_list["organization"] == "CSLE"
+        assert response_data_list["password"] == "admin"
+        assert response_data_list["salt"] == "123"
+        assert response_data_list["username"] == "admin"
+
+        response = flask_app.test_client().get(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}235"
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert len(response_data_list) == 9
+        assert response_data_list["admin"] is False
+        assert response_data_list["email"] == "guest@CSLE.com"
+        assert response_data_list["first_name"] == "Guest"
+        assert response_data_list["last_name"] == "Guestson"
+        assert response_data_list["id"] == 235
+        assert response_data_list["organization"] == "CSLE"
+        assert response_data_list["password"] == "guest"
+        assert response_data_list["salt"] == "123"
+        assert response_data_list["username"] == "guest"
+
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=not_logged_in,
+        )
+
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
+            side_effect=unauthorized,
+        )
+
+        response = flask_app.test_client().get(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}11"
+        )
+
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert len(response_data_list) == 0
+        assert response_data_list == []
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=logged_in,
+        )
+
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
+            side_effect=authorized,
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.remove_management_user",
+            side_effect=remove,
+        )
+        response = flask_app.test_client().delete(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}235"
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}
+
+        response = flask_app.test_client().delete(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}11"
+        )
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}

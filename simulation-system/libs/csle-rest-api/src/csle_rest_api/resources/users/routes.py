@@ -2,11 +2,13 @@
 Routes and sub-resources for the /users resource
 """
 import json
+
 import bcrypt
 import csle_common.constants.constants as constants
 from csle_common.dao.management.management_user import ManagementUser
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from flask import Blueprint, jsonify, request
+
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -16,6 +18,7 @@ users_bp = Blueprint(
     __name__,
     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.USERS_RESOURCE}",
 )
+
 
 @users_bp.route(
     "",
@@ -94,15 +97,20 @@ def user(user_id: int):
 
     :return: The given user or deletes the user
     """
+    import logging
+
+    import pytest
 
     # Check that token is valid
     authorized = rest_api_util.check_if_user_is_authorized(
         request=request, requires_admin=False
     )
+
     if authorized is not None:
         return authorized
     # Check if user is admin or is editing his/hers own account
-    user = MetastoreFacade.get_management_user_config(id=user_id)
+    user = MetastoreFacade.get_management_user_config(id=int(user_id))
+
     request_user = rest_api_util.check_if_user_edit_is_authorized(
         request=request, user=user
     )
