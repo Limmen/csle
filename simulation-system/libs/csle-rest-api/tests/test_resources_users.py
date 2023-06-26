@@ -1,7 +1,6 @@
 import json
 import logging
 
-import bcrypt
 import csle_common.constants.constants as constants
 import pytest
 from csle_common.dao.management.management_user import ManagementUser
@@ -263,10 +262,10 @@ class TestResourcesUsersSuite(object):
         not_logged_in,
         management_ids,
     ) -> None:
-        """mocker.patch(
+        mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
             side_effect=management_users,
-        )"""
+        )
         mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users_ids",
             side_effect=management_ids,
