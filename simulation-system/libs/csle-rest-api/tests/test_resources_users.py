@@ -268,12 +268,12 @@ class TestResourcesUsersSuite(object):
             side_effect=management_users,
         )"""
         mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
-        mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users_ids",
             side_effect=management_ids,
+        )
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=logged_in,
         )
 
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.USERS_RESOURCE)
