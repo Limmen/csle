@@ -1,11 +1,10 @@
 import json
 import logging
-
 import csle_common.constants.constants as constants
 import pytest
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
+from csle_common.dao.management.session_token import SessionToken
 
 
 class TestResourcesLoginSuite(object):
@@ -27,6 +26,7 @@ class TestResourcesLoginSuite(object):
     @pytest.fixture
     def token(self, mocker):
         """
+        Fixture for mocking login tokens
         :param mocker: the pytest mocker object
         :return: the token fixture for mocking the token calls to the database
         """
@@ -48,6 +48,8 @@ class TestResourcesLoginSuite(object):
     @pytest.fixture
     def database(self, mocker):
         """
+        Fixture for mocking the database
+
         :param mocker: the pytest mocker object
         :return: fixture for mocking the users in the database
         """
@@ -99,17 +101,28 @@ class TestResourcesLoginSuite(object):
 
     @pytest.fixture
     def save(self, mocker):
-        def save_session_token(session_token: bool):
-            return True
+        """
+        Fixture for mocking the save_session_token call
+
+        :param mocker: the pytest mocker object
+        :return: fixture for mocking the save_session_token_call
+        """
+        def save_session_token(session_token: SessionToken) -> str:
+            return "mytesttoken"
 
         save_session_token_mock = mocker.MagicMock(side_effect=save_session_token)
         return save_session_token_mock
 
     @pytest.fixture
     def update(self, mocker):
-        def update_session_token(session_token, token):
-            return True
+        """
+        Fixture for mocking the session-update function call
 
+        :param mocker: the pytest mocker object
+        :return: fixture for mocking the update_session_token call
+        """
+        def update_session_token(session_token: SessionToken, token: str) -> None:
+            return None
         update_session_token_mock = mocker.MagicMock(side_effect=update_session_token)
         return update_session_token_mock
 
@@ -138,7 +151,6 @@ class TestResourcesLoginSuite(object):
             "csle_common.metastore.metastore_facade.MetastoreFacade.save_session_token",
             side_effect=save,
         )
-
         mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.update_session_token",
             side_effect=update,

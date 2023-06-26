@@ -2870,7 +2870,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_management_users_ids() -> List[Dict]:
+    def list_management_users_ids() -> List[Tuple]:
         """
         :return: A list of management user ids in the metastore
         """
@@ -2906,7 +2906,7 @@ class MetastoreFacade:
                 return record
 
     @staticmethod
-    def save_management_user(management_user: ManagementUser) -> Union[Any, int]:
+    def save_management_user(management_user: ManagementUser) -> int:
         """
         Saves a management user to the metastore
 
@@ -3046,7 +3046,7 @@ class MetastoreFacade:
                 return record
 
     @staticmethod
-    def save_session_token(session_token: SessionToken) -> Union[Any, int]:
+    def save_session_token(session_token: SessionToken) -> str:
         """
         Saves a session token to the metastore
 
@@ -3060,14 +3060,19 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
-                cur.execute(f"INSERT INTO {constants.METADATA_STORE.SESSION_TOKENS_TABLE} "
-                            f"(token, timestamp, username) "
-                            f"VALUES (%s, %s, %s) RETURNING token",
-                            (session_token.token, ts, session_token.username))
-                token_of_new_row = cur.fetchone()[0]
-                conn.commit()
-                Logger.__call__().get_logger().debug("session token saved successfully")
-                return token_of_new_row
+                try:
+                    cur.execute(f"INSERT INTO {constants.METADATA_STORE.SESSION_TOKENS_TABLE} "
+                                f"(token, timestamp, username) "
+                                f"VALUES (%s, %s, %s) RETURNING token",
+                                (session_token.token, ts, session_token.username))
+                    token_of_new_row = cur.fetchone()[0]
+                    conn.commit()
+                    Logger.__call__().get_logger().debug("Session token saved successfully")
+                    return token_of_new_row
+                except Exception as e:
+                    Logger.__call__().get_logger().error(f"Could not save session token to database, error: {str(e)}, "
+                                                         f"{repr(e)}")
+                    return ""
 
     @staticmethod
     def update_session_token(session_token: SessionToken, token: str) -> None:
@@ -3076,7 +3081,7 @@ class MetastoreFacade:
 
         :param session_token: the session token to update
         :param token: the token of the row to update
-        :return: token of the created record
+        :return: None
         """
         Logger.__call__().get_logger().debug(f"Updating session token with token: {token} in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "

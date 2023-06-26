@@ -228,7 +228,7 @@ class EmulationStatistics(JSONSerializable):
                                  s=s, s_prime=s_prime)
 
         logged_in_ips = list(map(lambda x: "_".join(x.ips), filter(
-            lambda x: x.logged_in and x.tools_installed and x.backdoor_installed and x.root,
+            lambda x: x.logged_in_as_admin and x.tools_installed and x.backdoor_installed and x.root,
             s.attacker_obs_state.machines)))
         # Action conditionals
         if f"A:{a2.name}_D:{a1.name}_M:{logged_in_ips}" not in self.conditionals_counts:

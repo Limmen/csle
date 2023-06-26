@@ -2,13 +2,11 @@
 Routes and sub-resources for the /users resource
 """
 import json
-
 import bcrypt
 import csle_common.constants.constants as constants
 from csle_common.dao.management.management_user import ManagementUser
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from flask import Blueprint, jsonify, request
-
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -18,7 +16,6 @@ users_bp = Blueprint(
     __name__,
     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.USERS_RESOURCE}",
 )
-
 
 @users_bp.route(
     "",
@@ -33,11 +30,6 @@ def users():
 
     :return: A list of management users or a list of ids of the users or deletes all users
     """
-
-    import logging
-
-    import pytest
-
     requires_admin = True
     authorized = rest_api_util.check_if_user_is_authorized(
         request=request, requires_admin=requires_admin
@@ -50,13 +42,7 @@ def users():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
             return users_ids()
-
-        pytest.logger = logging.getLogger("resources_users_tests")
-
         users = MetastoreFacade.list_management_users()
-
-        pytest.logger.info(authorized)
-
         for i in range(len(users)):
             users[i].password = ""
             users[i].salt = ""
