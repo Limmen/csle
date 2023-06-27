@@ -107,6 +107,7 @@ class TestResourcesLoginSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the save_session_token_call
         """
+
         def save_session_token(session_token: SessionToken) -> str:
             return "mytesttoken"
 
@@ -121,8 +122,10 @@ class TestResourcesLoginSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the update_session_token call
         """
+
         def update_session_token(session_token: SessionToken, token: str) -> None:
             return None
+
         update_session_token_mock = mocker.MagicMock(side_effect=update_session_token)
         return update_session_token_mock
 

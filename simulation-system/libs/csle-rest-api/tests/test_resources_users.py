@@ -3,15 +3,14 @@ import logging
 from typing import List, Tuple, Union
 
 import csle_common.constants.constants as constants
+import csle_rest_api.constants.constants as api_constants
 import pytest
 from csle_common.dao.emulation_config.cluster_config import ClusterConfig
 from csle_common.dao.emulation_config.cluster_node import ClusterNode
 from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.management.management_user import ManagementUser
-from flask import jsonify
-
-import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
+from flask import jsonify
 
 
 class TestResourcesUsersSuite(object):
@@ -230,7 +229,6 @@ class TestResourcesUsersSuite(object):
 
         def save_management_user(management_user: ManagementUser) -> int:
             return 1
-            # return True
 
         save_management_user_mock = mocker.MagicMock(side_effect=save_management_user)
         return save_management_user_mock
@@ -371,6 +369,15 @@ class TestResourcesUsersSuite(object):
         assert len(response_data_list) == 0
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=not_logged_in,
+        )
+        response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.USERS_RESOURCE)
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert len(response_data_list) == 0
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
         )
         mocker.patch(
@@ -446,7 +453,32 @@ class TestResourcesUsersSuite(object):
         assert response_data_list["password"] == "admin"
         assert response_data_list["salt"] == "123"
         assert response_data_list["username"] == "admin"
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=not_logged_in,
+        )
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
+            side_effect=unauthorized,
+        )
+        response = flask_app.test_client().get(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}11"
+        )
 
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert len(response_data_list) == 0
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=logged_in,
+        )
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
+            side_effect=authorized,
+        )
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}235"
@@ -464,6 +496,31 @@ class TestResourcesUsersSuite(object):
         assert response_data_list["password"] == "guest"
         assert response_data_list["salt"] == "123"
         assert response_data_list["username"] == "guest"
+
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=not_logged_in,
+        )
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
+            side_effect=unauthorized,
+        )
+        response = flask_app.test_client().get(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}235"
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert len(response_data_list) == 0
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        '''response = flask_app.test_client().get(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}999"
+        )'''
+
+        # response_data = response.data.decode("utf-8")
+        # response_data_list = json.loads(response_data)
+        # pytest.logger.info(response)
 
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
