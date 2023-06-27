@@ -5,17 +5,17 @@ permalink: /docs/development-conventions/
 
 ## Development Conventions
 
-Being a project of certain size and complexity, 
-it is important that the general development conventions of CSLE are followed. 
+Being a project of certain size and complexity,
+it is important that the general development conventions of CSLE are followed.
 By adopting good practices it will be easier to deal with the growth of this project.
 
-Please note that if you decide to contribute to CSLE you automatically 
+Please note that if you decide to contribute to CSLE you automatically
 accept the licensing conditions of this project (CC BY-SA 4.0 license).
 
 ### General Principles
 
-CSLE tries to follow a few high-level principles in making both technical and community decisions, 
-which are listed below. 
+CSLE tries to follow a few high-level principles in making both technical and community decisions,
+which are listed below.
 They are goals to shoot for, and may not be followed perfectly all the time.
 
 - **Code over configuration.** We aim to make CSLE fully programmable, everything from starting/stopping emulations to configuring a service running on a container should be possible through a program function. To achieve this level of programmability, as much as possible of CSLE should be defined in code rather than configuration files. If a configuration file is necessary, it should be defined in a serialization format that easily can be converted back to code, e.g. a JSON file that maps to a Python class. Another benefit of defining configuration in code is that we can run the configuration through the code quality toolchain to identify bugs and style errors.
@@ -27,11 +27,11 @@ They are goals to shoot for, and may not be followed perfectly all the time.
 
 ### Structure of CSLE
 
-CSLE is made up of numerous libraries and artifacts in different programming languages (mainly Python, 
-JavaScript, Bash, and Dockerfiles). When you initially consider contributing to CSLE, 
-you might be unsure about which of those libraries implement 
-the functionality you want to change or report a bug for. 
-The list below, which explains the main components of CSLE and their location in the code repository, 
+CSLE is made up of numerous libraries and artifacts in different programming languages (mainly Python,
+JavaScript, Bash, and Dockerfiles). When you initially consider contributing to CSLE,
+you might be unsure about which of those libraries implement
+the functionality you want to change or report a bug for.
+The list below, which explains the main components of CSLE and their location in the code repository,
 should help you with that.
 
 - `examples/`. Examples of using CSLE.
@@ -40,7 +40,7 @@ should help you with that.
 - `metastore`. SQL files that define the data model of the metastore.
 - `management-system/csle-mgmt-webapp`. Web application that implements the web interface of CSLE.
 - `simulation-system/envs`. Simulation configurations.
-- `simulation-system/libs/csle-base`. A Python library with definitions and base classes for the other Python libraries in CSLE. 
+- `simulation-system/libs/csle-base`. A Python library with definitions and base classes for the other Python libraries in CSLE.
 - `simulation-system/libs/csle-agents`. A Python library with implementations of control, learning, and game-theoretic algorithms for finding defender strategies.
 - `simulation-system/libs/csle-attacker`. A Python library that contains code for emulating attacker actions.
 - `simulation-system/libs/csle-cli`. A Python library with the CSLE CLI.
@@ -56,7 +56,7 @@ should help you with that.
 
 #### Code Readability
 
-The code style in CSLE is defined using the `flake8` Python linter and the `eslint` JavaScript linter. You can configure your IDE or editor to automatically enforce these guidelines.
+The code style in CSLE is based on [PEP 8](https://peps.python.org/pep-0008/) defined using the `flake8` Python linter and the `eslint` JavaScript linter. You can configure your IDE or editor to automatically enforce these guidelines.
 
 The configuration file of the Python linter is located at:
 
@@ -79,21 +79,23 @@ Listing 107: Configuration file for the `eslint` JavaScript linter.
 </p>
 
 
-Names of variable, functions, methods etc. should be clear and descriptive, not cryptic. 
-All Python functions and variables should be written in `snake_case`, 
-e.g. `stop_all_executions()`. All JavaScript functions and variables should be 
+Names of variable, functions, methods etc. should be clear and descriptive, not cryptic.
+All Python functions and variables should be written in `snake_case`,
+e.g. `stop_all_executions()`. All JavaScript functions and variables should be
 in `CamelCase`, e.g. `getAgentType()`.
 
-It is common practice to name simple loop variables i, j, and k, so there's no 
+It is common practice to name simple loop variables i, j, and k, so there's no
 need to give them silly names like `the_index` unless it's necessary for some reason or other.
 
-Avoid long lines (>120 characters) if possible. This principle makes pull requests smaller, 
-makes the code more readable, and benefits co-developers editing code in 
+Avoid long lines (>120 characters) if possible. This principle makes pull requests smaller,
+makes the code more readable, and benefits co-developers editing code in
 Emacs/Vim over SSH and/or in narrower windows.
 
+It is highly recommended that you configure your editor or Integrated Development Environment (IDE) to automatically enforce the style guidelines.
+
 ### Comments in Code
-All functions and classes should have comments that document the input/output arguments, 
-the purpose of the function/class, and its return value. 
+All functions and classes should have comments that document the input/output arguments,
+the purpose of the function/class, and its return value.
 These comments are used to automatically generate API documentation.
 
 Example of a comment to a Python function:
@@ -145,8 +147,8 @@ Listing 109: Example of a JavaScript function with a comment.
 </p>
 
 ### Unit and Integration Testing
-Every new change to the code must pass the tests (tests are performed automatically on each pull request). 
-Whenever a new feature is added to CSLE, a corresponding test should be added 
+Every new change to the code must pass the tests (tests are performed automatically on each pull request).
+Whenever a new feature is added to CSLE, a corresponding test should be added
 (see <a href="../tests">this page</a> for instructions on how to add tests).
 
 ### How We Use Git
@@ -158,32 +160,32 @@ We use the Git-Flow branching model, in which branches are categorized into:
 - One or several feature branches.
 - One or several hotfix branches.
 
-The code on the main branch (often called `main` or `release`) is stable, 
-properly tested and is the version of the code that a typical user should pick. 
+The code on the main branch (often called `main` or `release`) is stable,
+properly tested and is the version of the code that a typical user should pick.
 No changes are made directly on the master branch.
 
-The code on the development branch (often called `develop`) 
-should be working, but without guarantees. For small features, 
-development might well happen directly on the development branch 
-and the code here may therefore sometimes be broken (this should ideally never happen though). 
-When the development branch is deemed "done" and has undergone testing and review, 
+The code on the development branch (often called `develop`)
+should be working, but without guarantees. For small features,
+development might well happen directly on the development branch
+and the code here may therefore sometimes be broken (this should ideally never happen though).
+When the development branch is deemed "done" and has undergone testing and review,
 it is merged into the master branch. The release is then tagged with an appropriate release version.
 
-A feature branch (often called `feature/some_name` where `some_name` 
-is a very short descriptive name of the feature) is branched off 
-from the main development branch when a new "feature" is being implemented. 
-A new feature is any logically connected set of changes to the code 
+A feature branch (often called `feature/some_name` where `some_name`
+is a very short descriptive name of the feature) is branched off
+from the main development branch when a new "feature" is being implemented.
+A new feature is any logically connected set of changes to the code
 base regardless of how many files are being changed.
 
-A hotfix branch (often called `hotfix/some_name`) is a branch that implements 
-a bugfix to a release. In terms of branching, it is thus very similar 
-to a feature branch but for the master branch rather than for the development branch. 
-A hotfix should fix critical errors that were not caught in testing 
-before the release was made. Hotfixes should not implement new behavior, 
-unless this is needed to fix a critical bug. Hotfixes need to undergo 
+A hotfix branch (often called `hotfix/some_name`) is a branch that implements
+a bugfix to a release. In terms of branching, it is thus very similar
+to a feature branch but for the master branch rather than for the development branch.
+A hotfix should fix critical errors that were not caught in testing
+before the release was made. Hotfixes should not implement new behavior,
+unless this is needed to fix a critical bug. Hotfixes need to undergo
 review before they are merged back into the master and development branches.
 
-The master and development branches are never deleted, 
+The master and development branches are never deleted,
 while the others are transient (temporary, for the duration of the development and code review).
 
 The benefits of this type of branching model in development are:
@@ -192,25 +194,25 @@ The benefits of this type of branching model in development are:
 - Co-developers and users have a stable master branch to use.
 - Features in "feature" branches are independent of each other. Any conflicts are resolved when merging.
 
-Commit often, possibly several times a day. It's easier to roll back a small commit than 
-to roll back large commits. This practice also makes the code easier to review. 
-Remember to push the commits to GitHub every once in a while too. 
-Write a helpful commit message with each commit that describes 
+Commit often, possibly several times a day. It's easier to roll back a small commit than
+to roll back large commits. This practice also makes the code easier to review.
+Remember to push the commits to GitHub every once in a while too.
+Write a helpful commit message with each commit that describes
 what the changes are and possibly even why they were necessary.
 
 ### Continuous Integration
 
-We use continuous integration (CI) with GitHub Actions to build the project 
-and run tests on every pull request submitted to CSLE. 
-The CI pipeline used in CSLE is illustrated in Fig. 29. 
-Developers make commits on a branch that is separated from the master/main branch. 
-Once a developer has completed a bugfix or a new feature, he/she submits a pull request to GitHub. 
-The pull request then triggers a set of automated tests and automated builds using GitHub actions. 
-If all automated tests pass, the pull request undergoes code review, 
-otherwise the developer has to fix the failing tests or builds. 
-Finally, when the code review and associated fixes are completed, 
-the pull request is merged into the main/master branch and 
-may optionally trigger a release pipeline where build artifacts are pushed 
+We use continuous integration (CI) with GitHub Actions to build the project
+and run tests on every pull request submitted to CSLE.
+The CI pipeline used in CSLE is illustrated in Fig. 29.
+Developers make commits on a branch that is separated from the master/main branch.
+Once a developer has completed a bugfix or a new feature, he/she submits a pull request to GitHub.
+The pull request then triggers a set of automated tests and automated builds using GitHub actions.
+If all automated tests pass, the pull request undergoes code review,
+otherwise the developer has to fix the failing tests or builds.
+Finally, when the code review and associated fixes are completed,
+the pull request is merged into the main/master branch and
+may optionally trigger a release pipeline where build artifacts are pushed
 to code servers (i.e. DockerHub and PyPi).
 
 <p align="center">
@@ -235,8 +237,8 @@ Please be aware of the following things when filing bug reports:
    If you do not provide all of these things, it will take us much longer to fix your problem. If we ask you to clarify these things and you never respond, we will close your issue without fixing it.
 
 ### Contribution Flow
-Our contribution flow is very straightforward and follows an issue-pull request workflow. 
-Contributors need to fork the repository for having their contributions landed on the project. 
+Our contribution flow is very straightforward and follows an issue-pull request workflow.
+Contributors need to fork the repository for having their contributions landed on the project.
 If you are looking to contribute, we have laid down a series of steps that we would like you to follow.
 
 1. **Find an issue to work on.** The first step is to go through the issues to find one that you would like to contribute to (or possibly open a new issue). Exploring the issues and pull requests will give you an idea of how the contribution flow works. Upon finding something to work on, you can either request for the issue to be assigned to you (if someone else has created the Issue) or you can make your own. To ensure that the issue is received positively by the maintainers, make sure of the following:
