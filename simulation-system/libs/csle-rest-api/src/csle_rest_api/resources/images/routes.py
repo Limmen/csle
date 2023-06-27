@@ -11,8 +11,10 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 images_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.IMAGES_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}")
+    api_constants.MGMT_WEBAPP.IMAGES_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.IMAGES_RESOURCE}",
+)
 
 
 @images_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
@@ -29,7 +31,8 @@ def images():
     images = []
     for node in config.cluster_config.cluster_nodes:
         images_dto = ClusterController.list_all_container_images(
-            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
+        )
         images_dtos = list(images_dto.images)
         images = images + images_dtos
     images_dicts = []
@@ -37,9 +40,11 @@ def images():
         images_dicts.append(
             {
                 api_constants.MGMT_WEBAPP.NAME_PROPERTY: img.repoTags,
-                api_constants.MGMT_WEBAPP.SIZE_PROPERTY: img.size
+                api_constants.MGMT_WEBAPP.SIZE_PROPERTY: img.size,
             }
         )
     response = jsonify(images_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE

@@ -9,11 +9,19 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 experiments_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}")
+    api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}",
+)
 
 
-@experiments_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@experiments_bp.route(
+    "",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def experiments():
     """
     The /experiments resource.
@@ -23,7 +31,9 @@ def experiments():
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -36,14 +46,18 @@ def experiments():
         experiments = MetastoreFacade.list_experiment_executions()
         experiment_dicts = list(map(lambda x: x.to_dict(), experiments))
         response = jsonify(experiment_dicts)
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         experiments = MetastoreFacade.list_experiment_executions()
         for exp in experiments:
             MetastoreFacade.remove_experiment_execution(experiment_execution=exp)
         response = jsonify({})
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
 
 
@@ -54,18 +68,27 @@ def experiments_ids():
     experiments_ids = MetastoreFacade.list_experiment_executions_ids()
     response_dicts = []
     for tup in experiments_ids:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY: tup[1],
-            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[2]
-        })
+        response_dicts.append(
+            {
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+                api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY: tup[1],
+                api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[2],
+            }
+        )
     response = jsonify(response_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@experiments_bp.route("/<experiment_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@experiments_bp.route(
+    "/<experiment_id>",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def experiment(experiment_id: int):
     """
     The /experiments/id resource.
@@ -77,7 +100,9 @@ def experiment(experiment_id: int):
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -88,5 +113,7 @@ def experiment(experiment_id: int):
             response = jsonify(experiment.to_dict())
         else:
             MetastoreFacade.remove_experiment_execution(experiment_execution=experiment)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE

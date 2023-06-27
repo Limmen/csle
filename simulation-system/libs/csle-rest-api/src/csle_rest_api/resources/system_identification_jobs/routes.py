@@ -6,19 +6,28 @@ from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_system_identification.job_controllers.system_identification_job_manager import SystemIdentificationJobManager
+from csle_system_identification.job_controllers.system_identification_job_manager import (
+    SystemIdentificationJobManager,
+)
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 
 # Creates a blueprint "sub application" of the main REST app
 system_identification_jobs_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}")
+    api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SYSTEM_IDENTIFICATION_JOBS_RESOUCE}",
+)
 
 
-@system_identification_jobs_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                  api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@system_identification_jobs_bp.route(
+    "",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def system_identification_jobs():
     """
     The /system-identification-jobs resource.
@@ -28,7 +37,9 @@ def system_identification_jobs():
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -42,23 +53,35 @@ def system_identification_jobs():
         system_identification_jobs = MetastoreFacade.list_system_identification_jobs()
         alive_jobs = []
         for job in system_identification_jobs:
-            if ClusterController.check_pid(ip=job.physical_host_ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                           pid=job.pid).outcome:
+            if ClusterController.check_pid(
+                ip=job.physical_host_ip,
+                port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                pid=job.pid,
+            ).outcome:
                 job.running = True
             alive_jobs.append(job)
         system_identification_jobs_dicts = list(map(lambda x: x.to_dict(), alive_jobs))
         response = jsonify(system_identification_jobs_dicts)
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         jobs = MetastoreFacade.list_system_identification_jobs()
         for job in jobs:
-            ClusterController.stop_pid(ip=job.physical_host_ip,
-                                       port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, pid=job.pid)
-            MetastoreFacade.remove_system_identification_job(system_identification_job=job)
+            ClusterController.stop_pid(
+                ip=job.physical_host_ip,
+                port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                pid=job.pid,
+            )
+            MetastoreFacade.remove_system_identification_job(
+                system_identification_job=job
+            )
         time.sleep(2)
         response = jsonify({})
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
 
 
@@ -69,20 +92,32 @@ def system_identification_jobs_ids():
     system_identification_jobs = MetastoreFacade.list_system_identification_jobs()
     response_dicts = []
     for job in system_identification_jobs:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: job.id,
-            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: job.emulation_env_name,
-            api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: ClusterController.check_pid(
-                ip=job.physical_host_ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, pid=job.pid).outcome
-        })
+        response_dicts.append(
+            {
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: job.id,
+                api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: job.emulation_env_name,
+                api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: ClusterController.check_pid(
+                    ip=job.physical_host_ip,
+                    port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                    pid=job.pid,
+                ).outcome,
+            }
+        )
     response = jsonify(response_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@system_identification_jobs_bp.route("/<job_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                           api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
-                                                           api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+@system_identification_jobs_bp.route(
+    "/<job_id>",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+        api_constants.MGMT_WEBAPP.HTTP_REST_POST,
+    ],
+)
 def system_identification_policy(job_id: int):
     """
     The /system-identification-jobs/id resource.
@@ -94,7 +129,9 @@ def system_identification_policy(job_id: int):
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -102,14 +139,22 @@ def system_identification_policy(job_id: int):
     response = jsonify({})
     if job is not None:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-            if ClusterController.check_pid(ip=job.physical_host_ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                                           pid=job.pid).outcome:
+            if ClusterController.check_pid(
+                ip=job.physical_host_ip,
+                port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                pid=job.pid,
+            ).outcome:
                 job.running = True
             response = jsonify(job.to_dict())
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
-            ClusterController.stop_pid(ip=job.physical_host_ip,
-                                       port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, pid=job.pid)
-            MetastoreFacade.remove_system_identification_job(system_identification_job=job)
+            ClusterController.stop_pid(
+                ip=job.physical_host_ip,
+                port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                pid=job.pid,
+            )
+            MetastoreFacade.remove_system_identification_job(
+                system_identification_job=job
+            )
             time.sleep(2)
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
             start = True
@@ -118,12 +163,18 @@ def system_identification_policy(job_id: int):
                 start = False
             if start:
                 SystemIdentificationJobManager.start_system_identification_job_in_background(
-                    system_identification_job=job)
+                    system_identification_job=job
+                )
                 time.sleep(4)
             else:
-                ClusterController.stop_pid(ip=job.physical_host_ip,
-                                           port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, pid=job.pid)
+                ClusterController.stop_pid(
+                    ip=job.physical_host_ip,
+                    port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                    pid=job.pid,
+                )
                 time.sleep(2)
 
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE

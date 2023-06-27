@@ -10,8 +10,10 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 system_models_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}")
+    api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SYSTEM_MODELS_RESOURCE}",
+)
 
 
 @system_models_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
@@ -32,7 +34,9 @@ def system_models():
             return system_models_ids()
         else:
             response = jsonify({})
-            response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+            response.headers.add(
+                api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+            )
         return response, constants.HTTPS.OK_STATUS_CODE
 
 
@@ -41,30 +45,40 @@ def system_models_ids():
     :return: An HTTP response with all system models ids
     """
     response_dicts = []
-    gaussian_mixture_system_models_ids = MetastoreFacade.list_gaussian_mixture_system_models_ids()
+    gaussian_mixture_system_models_ids = (
+        MetastoreFacade.list_gaussian_mixture_system_models_ids()
+    )
     for tup in gaussian_mixture_system_models_ids:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
-            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: tup[2],
-            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE: api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE
-        })
+        response_dicts.append(
+            {
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+                api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
+                api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: tup[2],
+                api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE: api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE,
+            }
+        )
     empirical_system_models_ids = MetastoreFacade.list_empirical_system_models_ids()
     for tup in empirical_system_models_ids:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
-            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: tup[2],
-            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE: api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODEL_TYPE
-        })
+        response_dicts.append(
+            {
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+                api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
+                api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: tup[2],
+                api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE: api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODEL_TYPE,
+            }
+        )
     gp_system_models_ids = MetastoreFacade.list_gp_system_models_ids()
     for tup in gp_system_models_ids:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
-            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: tup[2],
-            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE: api_constants.MGMT_WEBAPP.GP_SYSTEM_MODEL_TYPE
-        })
+        response_dicts.append(
+            {
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+                api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
+                api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: tup[2],
+                api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE: api_constants.MGMT_WEBAPP.GP_SYSTEM_MODEL_TYPE,
+            }
+        )
     response = jsonify(response_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE

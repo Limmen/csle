@@ -16,18 +16,24 @@ def get_emulation_statistics_page_bp(static_folder: str) -> Blueprint:
     """
     # Creates a blueprint "sub application" of the main REST app
     emulation_statistics_page_bp = Blueprint(
-        api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE, __name__,
+        api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE,
+        __name__,
         url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE}",
-        static_url_path=f'{constants.COMMANDS.SLASH_DELIM}'
-                        f'{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE}'
-                        f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
-        static_folder=static_folder)
+        static_url_path=f"{constants.COMMANDS.SLASH_DELIM}"
+        f"{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_PAGE_RESOURCE}"
+        f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}",
+        static_folder=static_folder,
+    )
 
-    @emulation_statistics_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+    @emulation_statistics_page_bp.route(
+        "", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET]
+    )
     def emulation_statistics_page():
         """
         :return: static resources for the /emulation-statistics-page url
         """
-        return emulation_statistics_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)
+        return emulation_statistics_page_bp.send_static_file(
+            api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX
+        )
 
     return emulation_statistics_page_bp

@@ -10,12 +10,19 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 vector_policies_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}")
+    api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}",
+)
 
 
-@vector_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                       api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@vector_policies_bp.route(
+    "",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def vector_policies():
     """
     The /vector-policies resource.
@@ -25,7 +32,9 @@ def vector_policies():
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -38,14 +47,18 @@ def vector_policies():
         vector_policies = MetastoreFacade.list_vector_policies()
         vector_policies_dicts = list(map(lambda x: x.to_dict(), vector_policies))
         response = jsonify(vector_policies_dicts)
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         policies = MetastoreFacade.list_vector_policies()
         for policy in policies:
             MetastoreFacade.remove_vector_policy(vector_policy=policy)
         response = jsonify({})
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
 
 
@@ -56,17 +69,26 @@ def vector_policies_ids():
     vector_policies_ids = MetastoreFacade.list_vector_policies_ids()
     response_dicts = []
     for tup in vector_policies_ids:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY: tup[1]
-        })
+        response_dicts.append(
+            {
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+                api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY: tup[1],
+            }
+        )
     response = jsonify(response_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@vector_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@vector_policies_bp.route(
+    "/<policy_id>",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def vector_policy(policy_id: int):
     """
     The /vector-policies/id resource.
@@ -78,7 +100,9 @@ def vector_policy(policy_id: int):
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -89,5 +113,7 @@ def vector_policy(policy_id: int):
             response = jsonify(policy.to_dict())
         else:
             MetastoreFacade.remove_vector_policy(vector_policy=policy)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE

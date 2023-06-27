@@ -5,12 +5,11 @@ import json
 
 import bcrypt
 import csle_common.constants.constants as constants
+import csle_rest_api.constants.constants as api_constants
+import csle_rest_api.util.rest_api_util as rest_api_util
 from csle_common.dao.management.management_user import ManagementUser
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from flask import Blueprint, jsonify, request
-
-import csle_rest_api.constants.constants as api_constants
-import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 users_bp = Blueprint(
@@ -90,6 +89,7 @@ def users_ids():
     ],
 )
 def user(user_id: int):
+
     """
     The /users/id resource.
 
@@ -106,6 +106,7 @@ def user(user_id: int):
     if authorized is not None:
         return authorized
     # Check if user is admin or is editing his/hers own account
+
     user = MetastoreFacade.get_management_user_config(id=int(user_id))
 
     request_user = rest_api_util.check_if_user_edit_is_authorized(

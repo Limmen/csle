@@ -10,12 +10,19 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 emulation_simulation_traces_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}")
+    api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATION_SIMULATION_TRACES_RESOURCE}",
+)
 
 
-@emulation_simulation_traces_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@emulation_simulation_traces_bp.route(
+    "",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def emulation_simulation_traces():
     """
     The /emulation-traces resource.
@@ -25,7 +32,9 @@ def emulation_simulation_traces():
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
@@ -35,20 +44,24 @@ def emulation_simulation_traces():
         if ids is not None and ids:
             return emulation_simulation_traces_ids()
 
-        f = open('/var/log/csle/one_tau.json')
+        f = open("/var/log/csle/one_tau.json")
         d = json.load(f)
         response = jsonify(d[api_constants.MGMT_WEBAPP.TRAJECTORIES_PROPERTY])
         # emulation_trcs = MetastoreFacade.list_emulation_simulation_traces()
         # traces_dicts = list(map(lambda x: x.to_dict(), emulation_trcs))
         # response = jsonify(traces_dicts)
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         traces = MetastoreFacade.list_emulation_simulation_traces()
         for trace in traces:
             MetastoreFacade.remove_emulation_simulation_trace(trace)
         response = jsonify({})
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
 
 
@@ -59,16 +72,21 @@ def emulation_simulation_traces_ids():
     ids_emulations = MetastoreFacade.list_emulation_simulation_traces_ids()
     response_dicts = []
     for tup in ids_emulations:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0]
-        })
+        response_dicts.append({api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0]})
     response = jsonify(response_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@emulation_simulation_traces_bp.route("/<trace_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@emulation_simulation_traces_bp.route(
+    "/<trace_id>",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def emulation_trace(trace_id: int):
     """
     The /emulation-traces/id resource.
@@ -84,5 +102,7 @@ def emulation_trace(trace_id: int):
             response = jsonify(trace.to_dict())
         else:
             MetastoreFacade.remove_emulation_trace(trace)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE

@@ -10,12 +10,19 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 gp_system_models_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}")
+    api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}",
+)
 
 
-@gp_system_models_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@gp_system_models_bp.route(
+    "",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def gp_system_models():
     """
     The /gp-system-models resource.
@@ -25,7 +32,9 @@ def gp_system_models():
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -38,14 +47,18 @@ def gp_system_models():
         models = MetastoreFacade.list_gp_system_models()
         models_dicts = list(map(lambda x: x.to_dict(), models))
         response = jsonify(models_dicts)
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         models = MetastoreFacade.list_gp_system_models()
         for model in models:
             MetastoreFacade.remove_gp_system_model(model)
         response = jsonify({})
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
 
 
@@ -56,18 +69,27 @@ def gp_system_models_ids():
     models_ids = MetastoreFacade.list_gp_system_models_ids()
     response_dicts = []
     for tup in models_ids:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
-            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: tup[2]
-        })
+        response_dicts.append(
+            {
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+                api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
+                api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: tup[2],
+            }
+        )
     response = jsonify(response_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@gp_system_models_bp.route("/<model_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@gp_system_models_bp.route(
+    "/<model_id>",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def gp_system_model(model_id: int):
     """
     The /system-models/id resource.
@@ -79,7 +101,9 @@ def gp_system_model(model_id: int):
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -90,5 +114,7 @@ def gp_system_model(model_id: int):
             response = jsonify(model.to_dict())
         else:
             MetastoreFacade.remove_gp_system_model(gp_system_model=model)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE

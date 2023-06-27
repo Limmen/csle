@@ -10,12 +10,19 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 dqn_policies_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}")
+    api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}",
+)
 
 
-@dqn_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@dqn_policies_bp.route(
+    "",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def dqn_policies():
     """
     The /dqn-policies resource.
@@ -25,7 +32,9 @@ def dqn_policies():
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -38,14 +47,18 @@ def dqn_policies():
         dqn_policies = MetastoreFacade.list_dqn_policies()
         dqn_policies_dicts = list(map(lambda x: x.to_dict(), dqn_policies))
         response = jsonify(dqn_policies_dicts)
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         policies = MetastoreFacade.list_dqn_policies()
         for policy in policies:
             MetastoreFacade.remove_dqn_policy(dqn_policy=policy)
         response = jsonify({})
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
 
 
@@ -56,17 +69,26 @@ def dqn_policies_ids():
     dqn_policies_ids = MetastoreFacade.list_dqn_policies_ids()
     response_dicts = []
     for tup in dqn_policies_ids:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY: tup[1]
-        })
+        response_dicts.append(
+            {
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+                api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY: tup[1],
+            }
+        )
     response = jsonify(response_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response
 
 
-@dqn_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@dqn_policies_bp.route(
+    "/<policy_id>",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def dqn_policy(policy_id: int):
     """
     The /dqn-policies/id resource.
@@ -78,7 +100,9 @@ def dqn_policy(policy_id: int):
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -89,5 +113,7 @@ def dqn_policy(policy_id: int):
             response = jsonify(policy.to_dict())
         else:
             MetastoreFacade.remove_dqn_policy(dqn_policy=policy)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response

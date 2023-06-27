@@ -12,12 +12,19 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 statistics_datasets_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE}")
+    api_constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE}",
+)
 
 
-@statistics_datasets_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                           api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@statistics_datasets_bp.route(
+    "",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def statistics_datasets():
     """
     The /statistics-datasets resource.
@@ -26,7 +33,9 @@ def statistics_datasets():
     """
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-        authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+        authorized = rest_api_util.check_if_user_is_authorized(
+            request=request, requires_admin=requires_admin
+        )
         if authorized is not None:
             return authorized
 
@@ -39,14 +48,18 @@ def statistics_datasets():
         statistics_datasets = MetastoreFacade.list_statistics_datasets()
         statistics_dicts = list(map(lambda x: x.to_dict(), statistics_datasets))
         response = jsonify(statistics_dicts)
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         statistics_datasets = MetastoreFacade.list_statistics_datasets()
         for statistics_dataset in statistics_datasets:
             MetastoreFacade.remove_statistics_dataset(statistics_dataset)
         response = jsonify({})
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
 
 
@@ -57,17 +70,26 @@ def statistics_datasets_ids():
     ids_statistics_datasets = MetastoreFacade.list_statistics_datasets_ids()
     response_dicts = []
     for tup in ids_statistics_datasets:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.STATISTICS_DATASET_PROPERTY: tup[1]
-        })
+        response_dicts.append(
+            {
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+                api_constants.MGMT_WEBAPP.STATISTICS_DATASET_PROPERTY: tup[1],
+            }
+        )
     response = jsonify(response_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@statistics_datasets_bp.route("/<statistics_dataset_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@statistics_datasets_bp.route(
+    "/<statistics_dataset_id>",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def statistics_dataset(statistics_dataset_id: int):
     """
     The /statistics-datasets/id resource.
@@ -77,11 +99,15 @@ def statistics_dataset(statistics_dataset_id: int):
     """
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-        authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+        authorized = rest_api_util.check_if_user_is_authorized(
+            request=request, requires_admin=requires_admin
+        )
         if authorized is not None:
             return authorized
 
-    statistics_dataset = MetastoreFacade.get_statistics_dataset_metadata(id=statistics_dataset_id)
+    statistics_dataset = MetastoreFacade.get_statistics_dataset_metadata(
+        id=statistics_dataset_id
+    )
     response = jsonify({})
     if statistics_dataset is not None:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
@@ -93,7 +119,9 @@ def statistics_dataset(statistics_dataset_id: int):
                 response = jsonify(statistics_dataset.to_dict())
         else:
             MetastoreFacade.remove_statistics_dataset(statistics_dataset)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
@@ -109,7 +137,9 @@ def download_dataset_file(statistics_dataset: StatisticsDataset):
         dir = dir_filename[0]
         filename = dir_filename[1]
         statistics_dataset.download_count = statistics_dataset.download_count + 1
-        MetastoreFacade.update_statistics_dataset(statistics_dataset=statistics_dataset, id=statistics_dataset.id)
+        MetastoreFacade.update_statistics_dataset(
+            statistics_dataset=statistics_dataset, id=statistics_dataset.id
+        )
         try:
             return send_from_directory(dir, filename, as_attachment=True)
         except FileNotFoundError:

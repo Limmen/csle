@@ -10,13 +10,21 @@ from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
 # Creates a blueprint "sub application" of the main REST app
-node_exporter_bp = Blueprint(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE, __name__,
-                             url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
-                                        f"{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}")
+node_exporter_bp = Blueprint(
+    api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+    f"{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}",
+)
 
 
-@node_exporter_bp.route("",
-                        methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+@node_exporter_bp.route(
+    "",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_POST,
+    ],
+)
 def node_exporter():
     """
     :return: static resources for the /node-exporter url
@@ -24,7 +32,9 @@ def node_exporter():
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -36,14 +46,20 @@ def node_exporter():
     config = MetastoreFacade.get_config(id=1)
     cluster_statuses = []
     for node in config.cluster_config.cluster_nodes:
-        node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        node_status = ClusterController.get_node_status(
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
+        )
         if node.ip == ip:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
                 if node_status.nodeExporterRunning:
-                    ClusterController.stop_node_exporter(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                    ClusterController.stop_node_exporter(
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
+                    )
                     node_status.nodeExporterRunning = False
                 else:
-                    ClusterController.start_node_exporter(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                    ClusterController.start_node_exporter(
+                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
+                    )
                     node_status.nodeExporterRunning = True
         cluster_status_dict = {
             api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY: node_status.cAdvisorRunning,
@@ -58,10 +74,10 @@ def node_exporter():
             api_constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.CADVISOR_PORT}/",
             api_constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.GRAFANA_PORT}/",
             api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY: f"http://{node.ip}:"
-                                                                  f"{constants.COMMANDS.NODE_EXPORTER_PORT}/",
+            f"{constants.COMMANDS.NODE_EXPORTER_PORT}/",
             api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.FLASK_PORT}/",
             api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY: f"http://{node.ip}:"
-                                                               f"{constants.COMMANDS.PROMETHEUS_PORT}/",
+            f"{constants.COMMANDS.PROMETHEUS_PORT}/",
             api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.PGADMIN_PORT}/",
             api_constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY: constants.COMMANDS.CADVISOR_PORT,
             api_constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY: constants.COMMANDS.GRAFANA_PORT,
@@ -73,9 +89,11 @@ def node_exporter():
             api_constants.MGMT_WEBAPP.CPUS_PROPERTY: node.cpus,
             api_constants.MGMT_WEBAPP.GPUS_PROPERTY: node.gpus,
             api_constants.MGMT_WEBAPP.RAM_PROPERTY: node.RAM,
-            api_constants.MGMT_WEBAPP.LEADER_PROPERTY: node.leader
+            api_constants.MGMT_WEBAPP.LEADER_PROPERTY: node.leader,
         }
         cluster_statuses.append(cluster_status_dict)
     response = jsonify(cluster_statuses)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE

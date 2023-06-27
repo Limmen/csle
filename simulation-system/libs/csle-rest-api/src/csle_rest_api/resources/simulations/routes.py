@@ -12,11 +12,19 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 simulations_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}")
+    api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}",
+)
 
 
-@simulations_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@simulations_bp.route(
+    "",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def simulations():
     """
     The /simulations resource
@@ -26,7 +34,9 @@ def simulations():
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -51,7 +61,9 @@ def simulations():
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         simulations_dicts = {}
     response = jsonify(simulations_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
@@ -62,17 +74,21 @@ def simulation_ids():
     simulation_ids = MetastoreFacade.list_simulation_ids()
     response_dicts = []
     for tup in simulation_ids:
-        response_dicts.append({
-            "id": tup[0],
-            "simulation": tup[1]
-        })
+        response_dicts.append({"id": tup[0], "simulation": tup[1]})
     response = jsonify(response_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@simulations_bp.route('/<simulation_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                   api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@simulations_bp.route(
+    "/<simulation_id>",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def get_simulation(simulation_id: int):
     """
     The /simulations/id resource. Gets or delets a simulation with a given id.
@@ -83,7 +99,9 @@ def get_simulation(simulation_id: int):
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -97,5 +115,7 @@ def get_simulation(simulation_id: int):
             response = jsonify(simulation.to_dict())
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             SimulationEnvController.uninstall_simulation(simulation)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE

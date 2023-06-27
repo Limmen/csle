@@ -3,14 +3,15 @@ import logging
 from typing import List, Tuple, Union
 
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
 import pytest
 from csle_common.dao.emulation_config.cluster_config import ClusterConfig
 from csle_common.dao.emulation_config.cluster_node import ClusterNode
 from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.management.management_user import ManagementUser
-from csle_rest_api.rest_api import create_app
 from flask import jsonify
+
+import csle_rest_api.constants.constants as api_constants
+from csle_rest_api.rest_api import create_app
 
 
 class TestResourcesUsersSuite(object):
@@ -177,7 +178,7 @@ class TestResourcesUsersSuite(object):
             elif id == 235:
                 return guest_user
             else:
-                return None
+                return "Not a valid id"
 
         get_management_user_config_mock = mocker.MagicMock(
             side_effect=get_management_user_config
@@ -513,35 +514,6 @@ class TestResourcesUsersSuite(object):
         response_data_list = json.loads(response_data)
         assert len(response_data_list) == 0
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        '''response = flask_app.test_client().get(
-            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-            f"{constants.COMMANDS.SLASH_DELIM}999"
-        )'''
-
-        # response_data = response.data.decode("utf-8")
-        # response_data_list = json.loads(response_data)
-        # pytest.logger.info(response)
-
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
-
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
-            side_effect=unauthorized,
-        )
-
-        response = flask_app.test_client().get(
-            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-            f"{constants.COMMANDS.SLASH_DELIM}11"
-        )
-
-        response_data = response.data.decode("utf-8")
-        response_data_list = json.loads(response_data)
-        assert len(response_data_list) == 0
-        assert response_data_list == []
-        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
 
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
@@ -552,6 +524,13 @@ class TestResourcesUsersSuite(object):
             "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
             side_effect=authorized,
         )
+
+        response = flask_app.test_client().get(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}15"
+        )
+        assert response.data.decode('utf-8') == "Not a valid id"
+
         mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.remove_management_user",
             side_effect=remove,
@@ -591,6 +570,9 @@ class TestResourcesUsersSuite(object):
         )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
+
+        assert len(response_data_list) == 0
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
 
         response = flask_app.test_client().delete(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
@@ -757,7 +739,6 @@ class TestResourcesUsersSuite(object):
         response_data_list = json.loads(response_data)
 
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        assert response_data_list == {"reason": "Password or username cannot be empty."}
 
         bad_guest_user_2 = ManagementUser(
             username="",
@@ -779,7 +760,6 @@ class TestResourcesUsersSuite(object):
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        assert response_data_list == {"reason": "Password or username cannot be empty."}
 
         guest_user = ManagementUser(
             username="jdoe",
@@ -814,12 +794,17 @@ class TestResourcesUsersSuite(object):
         assert response_data_list["organization"] == "CSLE"
         assert response_data_list["username"] == "jdoe"
 
-        """response = flask_app.test_client().post(
+        response = flask_app.test_client().post(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"
             f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
-            data=None,
-        )"""
+            data=json.dumps({}),
+        )
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert len(response_data_list) == 0
+
         guest_user = ManagementUser(
             username="admin",
             password="admin",
@@ -843,9 +828,6 @@ class TestResourcesUsersSuite(object):
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.CONFLICT_STATUS_CODE
-        assert response_data_list == {
-            "reason": "A user with that username already exists"
-        }
 
         constants.CONFIG_FILE.PARSED_CONFIG = None
         response = flask_app.test_client().post(

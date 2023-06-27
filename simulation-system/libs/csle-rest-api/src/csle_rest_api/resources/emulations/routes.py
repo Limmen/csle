@@ -13,11 +13,19 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 emulations_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}")
+    api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}",
+)
 
 
-@emulations_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@emulations_bp.route(
+    "",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def emulations():
     """
     The /emulations resource
@@ -39,13 +47,17 @@ def emulations():
     running_emulation_names = []
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
-        running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(
-            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
-        ).runningEmulations)
+        running_emulation_names = running_emulation_names + list(
+            ClusterController.list_all_running_emulations(
+                ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
+            ).runningEmulations
+        )
 
     emulations_dicts = []
     for em in all_emulations:
-        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
+        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
+            emulation_name=em.name
+        )
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             if em.name in running_emulation_names:
                 em.running = True
@@ -60,16 +72,23 @@ def emulations():
                     for exec in executions:
                         exec.emulation_env_config.image = base64.b64encode(img).decode()
             em_dict = em.to_dict()
-            em_dict[api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE] = list(map(lambda x: x.to_dict(), executions))
+            em_dict[api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE] = list(
+                map(lambda x: x.to_dict(), executions)
+            )
             emulations_dicts.append(em_dict)
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             if em.name in running_emulation_names:
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.clean_all_executions_of_emulation(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=em.name)
+                        ip=node.ip,
+                        port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=em.name,
+                    )
             EmulationEnvController.uninstall_emulation(config=em)
     response = jsonify(emulations_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
@@ -83,28 +102,38 @@ def emulation_ids():
     running_emulation_names = []
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
-        running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(
-            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
-        ).runningEmulations)
+        running_emulation_names = running_emulation_names + list(
+            ClusterController.list_all_running_emulations(
+                ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
+            ).runningEmulations
+        )
     response_dicts = []
     for tup in emulation_ids:
         running = False
         if tup[1] in running_emulation_names:
             running = True
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
-            api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running
-        })
+        response_dicts.append(
+            {
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+                api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
+                api_constants.MGMT_WEBAPP.RUNNING_PROPERTY: running,
+            }
+        )
     response = jsonify(response_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@emulations_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>',
-                     methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
-                              api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+@emulations_bp.route(
+    f"{constants.COMMANDS.SLASH_DELIM}<emulation_id>",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+        api_constants.MGMT_WEBAPP.HTTP_REST_POST,
+    ],
+)
 def emulation_by_id(emulation_id: int):
     """
     The /emulations/id resource. Gets an emulation by its id.
@@ -120,14 +149,22 @@ def emulation_by_id(emulation_id: int):
     running_emulation_names = []
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
-        running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(
-            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
-        ).runningEmulations)
+        running_emulation_names = running_emulation_names + list(
+            ClusterController.list_all_running_emulations(
+                ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
+            ).runningEmulations
+        )
     em_dict = {}
     if em is not None:
-        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET or \
-                request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
-            executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
+        if (
+            request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET
+            or request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST
+        ):
+            executions = (
+                MetastoreFacade.list_emulation_executions_for_a_given_emulation(
+                    emulation_name=em.name
+                )
+            )
             if em.name in running_emulation_names:
                 em.running = True
                 for exec in executions:
@@ -137,36 +174,52 @@ def emulation_by_id(emulation_id: int):
             for exec in executions:
                 exec.emulation_env_config.image = base64.b64encode(img).decode()
             em_dict = em.to_dict()
-            em_dict[api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE] = list(map(lambda x: x.to_dict(), executions))
+            em_dict[api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE] = list(
+                map(lambda x: x.to_dict(), executions)
+            )
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
                 if em.running:
                     for node in config.cluster_config.cluster_nodes:
                         ClusterController.clean_all_executions_of_emulation(
-                            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=em.name)
+                            ip=node.ip,
+                            port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                            emulation=em.name,
+                        )
                     em.running = False
                 else:
                     physical_servers = [GeneralUtil.get_host_ip()]
                     emulation_execution = EmulationEnvController.create_execution(
-                        emulation_env_config=em, physical_servers=physical_servers)
-                    ClusterController.run_emulation(execution=emulation_execution,
-                                                    no_traffic=False, no_clients=False,
-                                                    physical_servers=physical_servers)
+                        emulation_env_config=em, physical_servers=physical_servers
+                    )
+                    ClusterController.run_emulation(
+                        execution=emulation_execution,
+                        no_traffic=False,
+                        no_clients=False,
+                        physical_servers=physical_servers,
+                    )
                     em.running = True
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             if em.name in running_emulation_names:
                 for node in config.cluster_config.cluster_nodes:
                     ClusterController.clean_all_executions_of_emulation(
-                        ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=em.name)
+                        ip=node.ip,
+                        port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                        emulation=em.name,
+                    )
             EmulationEnvController.uninstall_emulation(config=em)
             em_dict = {}
     response = jsonify(em_dict)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response
 
 
-@emulations_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
-                     f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}',
-                     methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@emulations_bp.route(
+    f"{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}"
+    f"{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}",
+    methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET],
+)
 def get_executions_of_emulation(emulation_id: int):
     """
     The /emulations/id/executions resource. Gets all executions of a given emulation.
@@ -181,18 +234,26 @@ def get_executions_of_emulation(emulation_id: int):
     em = MetastoreFacade.get_emulation(id=emulation_id)
     execution_dicts = []
     if em is not None:
-        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
+        executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
+            emulation_name=em.name
+        )
         execution_dicts = list(map(lambda x: x.to_dict(), executions))
     response = jsonify(execution_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@emulations_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
-                     f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}'
-                     f'<execution_id>',
-                     methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@emulations_bp.route(
+    f"{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}"
+    f"{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}{constants.COMMANDS.SLASH_DELIM}"
+    f"<execution_id>",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def get_execution_of_emulation(emulation_id: int, execution_id: int):
     """
     The /emulations/ids/executions/id resource. Gets a given execution of a given emulation.
@@ -209,7 +270,9 @@ def get_execution_of_emulation(emulation_id: int, execution_id: int):
     execution = None
     emulation = MetastoreFacade.get_emulation(id=emulation_id)
     if emulation is not None:
-        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation.name)
+        execution = MetastoreFacade.get_emulation_execution(
+            ip_first_octet=execution_id, emulation_name=emulation.name
+        )
     response = jsonify({})
     if execution is not None:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
@@ -218,17 +281,25 @@ def get_execution_of_emulation(emulation_id: int, execution_id: int):
             config = MetastoreFacade.get_config(id=1)
             for node in config.cluster_config.cluster_nodes:
                 ClusterController.clean_execution(
-                    ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
-                    ip_first_octet=execution.ip_first_octet, emulation=emulation.name)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+                    ip=node.ip,
+                    port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+                    ip_first_octet=execution.ip_first_octet,
+                    emulation=emulation.name,
+                )
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@emulations_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>'
-                     f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}'
-                     f'{constants.COMMANDS.SLASH_DELIM}<execution_id>'
-                     f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.MONITOR_SUBRESOURCE}'
-                     f'{constants.COMMANDS.SLASH_DELIM}<minutes>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
+@emulations_bp.route(
+    f"{constants.COMMANDS.SLASH_DELIM}<emulation_id>"
+    f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}"
+    f"{constants.COMMANDS.SLASH_DELIM}<execution_id>"
+    f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.MONITOR_SUBRESOURCE}"
+    f"{constants.COMMANDS.SLASH_DELIM}<minutes>",
+    methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET],
+)
 def monitor_emulation(emulation_id: int, execution_id: int, minutes: int):
     """
     The /emulations/id/executions/id/monitor/minutes resource. Fetches monitoring data from Kafka.
@@ -246,16 +317,22 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int):
     execution = None
     emulation = MetastoreFacade.get_emulation(id=emulation_id)
     if emulation is not None:
-        execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation.name)
+        execution = MetastoreFacade.get_emulation_execution(
+            ip_first_octet=execution_id, emulation_name=emulation.name
+        )
     if execution is None:
         time_series = None
     else:
         time_series = ClusterController.get_execution_time_series_data(
             ip=execution.emulation_env_config.kafka_config.container.physical_host_ip,
-            port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, minutes=minutes,
-            ip_first_octet=execution.ip_first_octet, emulation=execution.emulation_env_config.name
+            port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
+            minutes=minutes,
+            ip_first_octet=execution.ip_first_octet,
+            emulation=execution.emulation_env_config.name,
         )
         time_series = time_series.to_dict()
     response = jsonify(time_series)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE

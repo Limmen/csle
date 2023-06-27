@@ -9,12 +9,19 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 linear_threshold_policies_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}")
+    api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE,
+    __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}",
+)
 
 
-@linear_threshold_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                 api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@linear_threshold_policies_bp.route(
+    "",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def linear_threshold_policies():
     """
     The /linear-threshold-policies resource.
@@ -24,7 +31,9 @@ def linear_threshold_policies():
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    authorized = rest_api_util.check_if_user_is_authorized(
+        request=request, requires_admin=requires_admin
+    )
     if authorized is not None:
         return authorized
 
@@ -35,17 +44,27 @@ def linear_threshold_policies():
         if ids is not None and ids:
             return linear_threshold_policies_ids()
 
-        linear_threshold_stopping_policies = MetastoreFacade.list_linear_threshold_stopping_policies()
-        linear_threshold_stopping_policies_dicts = list(map(lambda x: x.to_dict(), linear_threshold_stopping_policies))
+        linear_threshold_stopping_policies = (
+            MetastoreFacade.list_linear_threshold_stopping_policies()
+        )
+        linear_threshold_stopping_policies_dicts = list(
+            map(lambda x: x.to_dict(), linear_threshold_stopping_policies)
+        )
         response = jsonify(linear_threshold_stopping_policies_dicts)
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         policies = MetastoreFacade.list_linear_threshold_stopping_policies()
         for policy in policies:
-            MetastoreFacade.remove_linear_threshold_stopping_policy(linear_threshold_stopping_policy=policy)
+            MetastoreFacade.remove_linear_threshold_stopping_policy(
+                linear_threshold_stopping_policy=policy
+            )
         response = jsonify({})
-        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
         return response, constants.HTTPS.OK_STATUS_CODE
 
 
@@ -53,20 +72,31 @@ def linear_threshold_policies_ids():
     """
     :return: An HTTP response with all linear theshold policies ids
     """
-    linear_threshold_stopping_policies_ids = MetastoreFacade.list_linear_threshold_stopping_policies_ids()
+    linear_threshold_stopping_policies_ids = (
+        MetastoreFacade.list_linear_threshold_stopping_policies_ids()
+    )
     response_dicts = []
     for tup in linear_threshold_stopping_policies_ids:
-        response_dicts.append({
-            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
-            api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY: tup[1]
-        })
+        response_dicts.append(
+            {
+                api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+                api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY: tup[1],
+            }
+        )
     response = jsonify(response_dicts)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@linear_threshold_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-                                                             api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+@linear_threshold_policies_bp.route(
+    "/<policy_id>",
+    methods=[
+        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+    ],
+)
 def linear_threshold_policy(policy_id: int):
     """
     The /linear-threshold-policies/id resource.
@@ -85,6 +115,10 @@ def linear_threshold_policy(policy_id: int):
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             response = jsonify(policy.to_dict())
         else:
-            MetastoreFacade.remove_linear_threshold_stopping_policy(linear_threshold_stopping_policy=policy)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+            MetastoreFacade.remove_linear_threshold_stopping_policy(
+                linear_threshold_stopping_policy=policy
+            )
+    response.headers.add(
+        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+    )
     return response, constants.HTTPS.OK_STATUS_CODE

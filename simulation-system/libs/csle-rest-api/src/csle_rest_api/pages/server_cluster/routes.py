@@ -15,17 +15,21 @@ def get_server_cluster_page_bp(static_folder: str) -> Blueprint:
     """
     # Creates a blueprint "sub application" of the main REST app
     server_cluster_page_bp = Blueprint(
-        api_constants.MGMT_WEBAPP.SERVER_CLUSTER_PAGE_RESOURCE, __name__,
+        api_constants.MGMT_WEBAPP.SERVER_CLUSTER_PAGE_RESOURCE,
+        __name__,
         url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SERVER_CLUSTER_PAGE_RESOURCE}",
-        static_url_path=f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SERVER_CLUSTER_PAGE_RESOURCE}'
-                        f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}',
-        static_folder=static_folder)
+        static_url_path=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SERVER_CLUSTER_PAGE_RESOURCE}"
+        f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.STATIC}",
+        static_folder=static_folder,
+    )
 
     @server_cluster_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
     def server_cluster_page():
         """
         :return: static resources for the /server-cluster-page url
         """
-        return server_cluster_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)
+        return server_cluster_page_bp.send_static_file(
+            api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX
+        )
 
     return server_cluster_page_bp
