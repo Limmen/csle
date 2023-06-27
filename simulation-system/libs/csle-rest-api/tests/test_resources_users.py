@@ -4,6 +4,9 @@ from typing import List, Tuple, Union
 
 import csle_common.constants.constants as constants
 import pytest
+from csle_common.dao.emulation_config.cluster_config import ClusterConfig
+from csle_common.dao.emulation_config.cluster_node import ClusterNode
+from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.management.management_user import ManagementUser
 from flask import jsonify
 
@@ -227,6 +230,7 @@ class TestResourcesUsersSuite(object):
 
         def save_management_user(management_user: ManagementUser) -> int:
             return 1
+            # return True
 
         save_management_user_mock = mocker.MagicMock(side_effect=save_management_user)
         return save_management_user_mock
@@ -385,19 +389,27 @@ class TestResourcesUsersSuite(object):
         self,
         flask_app,
         mocker,
-        logged_in_as_admin,
         management_users,
         not_logged_in,
-        management_ids,
         remove,
         logged_in,
         authorized,
         unauthorized,
-        update,
         management_config,
     ) -> None:
         """
         Testing the /users/id
+        :param flask_app: the flask app representing the web server
+        :param mocker: the mocker object for mocking functions
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param management_users: the management_users fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param management_config: the management_config fixture
+        :param remove: the remove fixture
+        :param logged_in: the logged_in fixture
+        :param authorized: the athourized fixture
+        :param unauthorized: the unathourized fixture
+        :return: None
         """
         mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
@@ -588,3 +600,204 @@ class TestResourcesUsersSuite(object):
 
         assert len(response_data_list) < 9
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+    def test_create(
+        self,
+        flask_app,
+        mocker,
+        save,
+        management_users,
+    ):
+        """
+        Testing the /users/id
+        :param flask_app: the flask app representing the web server
+        :param mocker: the mocker object for mocking functions
+
+        :param management_users: the management_users fixture
+        :param save: the save fixture
+        :return: None
+        """
+        c_node = ClusterNode(ip="12.345.67.89", leader=True, cpus=1, gpus=2, RAM=3)
+        constants.CONFIG_FILE.PARSED_CONFIG = Config(
+            management_admin_username_default="null",
+            management_admin_password_default="null",
+            management_admin_first_name_default="null",
+            management_admin_last_name_default="null",
+            management_admin_email_default="null",
+            management_admin_organization_default="null",
+            management_guest_username_default="null",
+            management_guest_password_default="null",
+            management_guest_first_name_default="null",
+            management_guest_last_name_default="null",
+            management_guest_email_default="null",
+            management_guest_organization_default="null",
+            ssh_admin_username="null",
+            ssh_admin_password="null",
+            ssh_agent_username="null",
+            ssh_agent_password="null",
+            metastore_user="null",
+            metastore_password="null",
+            metastore_database_name="null",
+            metastore_ip="null",
+            node_exporter_port=1,
+            grafana_port=1,
+            management_system_port=1,
+            cadvisor_port=1,
+            prometheus_port=1,
+            node_exporter_pid_file="null",
+            pgadmin_port=1,
+            csle_mgmt_webapp_pid_file="null",
+            docker_stats_manager_log_file="null",
+            docker_stats_manager_log_dir="null",
+            docker_stats_manager_port=1,
+            docker_stats_manager_max_workers=1,
+            docker_stats_manager_outfile="null",
+            docker_stats_manager_pidfile="null",
+            prometheus_pid_file="null",
+            prometheus_log_file="null",
+            prometheus_config_file="null",
+            default_log_dir="null",
+            cluster_config=ClusterConfig([c_node]),
+            node_exporter_log_file="null",
+            allow_registration=True,
+            grafana_username="null",
+            grafana_password="null",
+            pgadmin_username="null",
+            pgadmin_password="null",
+            postgresql_log_dir="null",
+            nginx_log_dir="null",
+            flask_log_file="null",
+            cluster_manager_log_file="null",
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
+            side_effect=management_users,
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.save_management_user",
+            side_effect=save,
+        )
+        bad_guest_user_1 = ManagementUser(
+            username="guest",
+            password="",
+            email="guest@CSLE.com",
+            admin=False,
+            first_name="Guest",
+            last_name="Guestson",
+            organization="CSLE",
+            salt="123",
+        )
+
+        bad_guest_data_test_1 = bad_guest_user_1.to_dict()
+
+        response = flask_app.test_client().post(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}"
+            f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
+            data=json.dumps(bad_guest_data_test_1),
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_list == {"reason": "Password or username cannot be empty."}
+
+        bad_guest_user_2 = ManagementUser(
+            username="",
+            password="guest",
+            email="guest@CSLE.com",
+            admin=False,
+            first_name="Guest",
+            last_name="Guestson",
+            organization="CSLE",
+            salt="123",
+        )
+        bad_guest_data_test_2 = bad_guest_user_2.to_dict()
+        response = flask_app.test_client().post(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}"
+            f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
+            data=json.dumps(bad_guest_data_test_2),
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_list == {"reason": "Password or username cannot be empty."}
+
+        guest_user = ManagementUser(
+            username="jdoe",
+            password="jdoe",
+            email="jdoe@CSLE.com",
+            admin=False,
+            first_name="John",
+            last_name="Doe",
+            organization="CSLE",
+            salt="123",
+        )
+
+        guest_data_test = guest_user.to_dict()
+
+        response = flask_app.test_client().post(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}"
+            f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
+            data=json.dumps(guest_data_test),
+        )
+
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+
+        assert response_data_list["admin"] is False
+        assert response_data_list["email"] == "jdoe@CSLE.com"
+        assert response_data_list["first_name"] == "John"
+        assert response_data_list["last_name"] == "Doe"
+        assert response_data_list["id"] == -1
+        assert response_data_list["organization"] == "CSLE"
+        assert response_data_list["username"] == "jdoe"
+
+        """response = flask_app.test_client().post(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}"
+            f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
+            data=None,
+        )"""
+        guest_user = ManagementUser(
+            username="admin",
+            password="admin",
+            email="admin@CSLE.com",
+            admin=True,
+            first_name="Admin",
+            last_name="Adminson",
+            organization="CSLE",
+            salt="123",
+        )
+
+        guest_data_test = guest_user.to_dict()
+
+        response = flask_app.test_client().post(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}"
+            f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
+            data=json.dumps(guest_data_test),
+        )
+
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.CONFLICT_STATUS_CODE
+        assert response_data_list == {
+            "reason": "A user with that username already exists"
+        }
+
+        constants.CONFIG_FILE.PARSED_CONFIG = None
+        response = flask_app.test_client().post(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}"
+            f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
+            data=json.dumps(guest_data_test),
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response_data_list == {}
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE

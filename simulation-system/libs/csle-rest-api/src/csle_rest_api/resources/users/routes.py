@@ -131,7 +131,6 @@ def user(user_id: int):
                 and api_constants.MGMT_WEBAPP.EMAIL_PROPERTY in new_user
                 and api_constants.MGMT_WEBAPP.ADMIN_PROPERTY in new_user
             ):
-                # response = jsonify(new_user.to_dict())
                 response = jsonify(new_user)
                 return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
@@ -193,7 +192,7 @@ def create_user():
                 and api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY in json_data
                 and api_constants.MGMT_WEBAPP.EMAIL_PROPERTY in json_data
                 and api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY in json_data
-                and api_constants.MGMT_WEBAPP.ID_PROPERTY in json_data
+                and api_constants.MGMT_WEBAPP.ADMIN_PROPERTY in json_data
             ):
                 username = json_data[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
                 password = json_data[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
@@ -203,6 +202,7 @@ def create_user():
                     api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY
                 ]
                 email = json_data[api_constants.MGMT_WEBAPP.EMAIL_PROPERTY]
+
                 if password == "" or username == "":
                     error_reason = "Password or username cannot be empty."
                     response = jsonify({"reason": error_reason})
