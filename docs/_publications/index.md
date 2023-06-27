@@ -8,16 +8,33 @@ permalink: /publications/
 
 The following publications are based on CSLE:
 
-##### **Intrusion Prevention through Optimal Stopping** 
-**Journal**: IEEE Transactions on Network and Service Management (IEEE TNSM), special issue on recent advances in network security management. 
+##### **Digital Twins for Security Automation**
+**Journal**: NOMS 2023 IEEE/IFIP Network Operations and Management Symposium
+[Proceedings.](https://ieeexplore.ieee.org/document/10154288)
+
+**Bibtex**:
+```bash
+@INPROCEEDINGS{hammar_stadle4_noms_23,
+  author={Hammar, Kim and Stadler, Rolf},
+  booktitle={NOMS 2023-2023 IEEE/IFIP Network Operations and Management Symposium},
+  title={Digital Twins for Security Automation},
+  year={2023},
+  volume={},
+  number={},
+  pages={1-6},
+  doi={10.1109/NOMS56928.2023.10154288}}
+```
+
+##### **Intrusion Prevention through Optimal Stopping**
+**Journal**: IEEE Transactions on Network and Service Management (IEEE TNSM), special issue on recent advances in network security management.
 [Proceedings.](https://ieeexplore.ieee.org/document/9779345), [Preprint.](https://arxiv.org/abs/2111.00289)
 
 **Bibtex**:
 ```bash
 @ARTICLE{9779345,
   author={Hammar, Kim and Stadler, Rolf},
-  journal={IEEE Transactions on Network and Service Management}, 
-  title={Intrusion Prevention Through Optimal Stopping}, 
+  journal={IEEE Transactions on Network and Service Management},
+  title={Intrusion Prevention Through Optimal Stopping},
   year={2022},
   volume={19},
   number={3},
@@ -28,7 +45,7 @@ The following publications are based on CSLE:
 ##### **An Online Framework for Adapting Security Policies in Dynamic IT Environments**
 
 **Conference**: the 18th International Conference on Network and Service Management (CNSM).
-[Proceedings.](https://ieeexplore.ieee.org/document/9964838), [Preprint.](https://limmen.dev/assets/papers/CNSM22_preprint_8_sep_Hammar_Stadler.pdf) 
+[Proceedings.](https://ieeexplore.ieee.org/document/9964838), [Preprint.](https://limmen.dev/assets/papers/CNSM22_preprint_8_sep_Hammar_Stadler.pdf)
 
 **Bibtex**:
 ```bash
@@ -60,8 +77,8 @@ The following publications are based on CSLE:
 }
 ```
 
-##### **A System for Interactive Examination of Learned Security Policies** <span style="color:red">(Best Demo paper award)</span>. 
-**Conference**: IEEE/IFIP Network Operations and Management Symposium (NOMS) 2022. 
+##### **A System for Interactive Examination of Learned Security Policies** <span style="color:red">(Best Demo paper award)</span>.
+**Conference**: IEEE/IFIP Network Operations and Management Symposium (NOMS) 2022.
 [Proceedings](https://ieeexplore.ieee.org/document/9789707)
 
 **Bibtex**:
@@ -97,7 +114,7 @@ ABSTRACT="We study automated intrusion prevention using reinforcement learning. 
 ```
 
 ##### **Finding Effective Security Strategies through Reinforcement Learning and Self-Play**
-**Conference**: the 16th International Conference on Network and Service Management (CNSM). 
+**Conference**: the 16th International Conference on Network and Service Management (CNSM).
 [Proceedings.](https://ieeexplore.ieee.org/document/9269092)
 
 **Bibtex**:
