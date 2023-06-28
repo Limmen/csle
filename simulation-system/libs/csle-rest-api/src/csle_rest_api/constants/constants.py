@@ -7,6 +7,7 @@ class MGMT_WEBAPP:
     """
     Constants related to the management webapp
     """
+
     ACCESS_CONTROL_ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin"
     IDS_QUERY_PARAM = "ids"
     DOWNLOAD_QUERY_PARAM = "download"
@@ -153,6 +154,7 @@ class MGMT_WEBAPP:
     REGISTRATION_ALLOWED_PROPERTY = "registration_allowed"
     VERSION_PROPERTY = "version"
     OUTPUT_PROPERTY = "output"
+    SALT_PROPOERTY = "salt"
     INPUT_PROPERTY = "input"
     ROWS_PROPERTY = "rows"
     COLS_PROPERTY = "cols"
@@ -232,4 +234,5 @@ class SESSION_TOKENS:
     """
     Constants related to session tokens
     """
+
     EXPIRE_TIME_HOURS = 48
