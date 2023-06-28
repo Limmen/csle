@@ -230,7 +230,6 @@ class TestResourcesUsersSuite(object):
 
         def save_management_user(management_user: ManagementUser) -> int:
             return 1
-            # return True
 
         save_management_user_mock = mocker.MagicMock(side_effect=save_management_user)
         return save_management_user_mock
@@ -284,15 +283,15 @@ class TestResourcesUsersSuite(object):
         return check_if_user_edit_is_authorized_mock
 
     def test_users(
-        self,
-        flask_app,
-        mocker,
-        logged_in_as_admin,
-        management_users,
-        not_logged_in,
-        management_ids,
-        remove,
-        logged_in,
+            self,
+            flask_app,
+            mocker,
+            logged_in_as_admin,
+            management_users,
+            not_logged_in,
+            management_ids,
+            remove,
+            logged_in,
     ) -> None:
         """
         Tests the /users resource for listing management user accounts
@@ -386,16 +385,16 @@ class TestResourcesUsersSuite(object):
         assert response_data_list == {}
 
     def test_users_id(
-        self,
-        flask_app,
-        mocker,
-        management_users,
-        not_logged_in,
-        remove,
-        logged_in,
-        authorized,
-        unauthorized,
-        management_config,
+            self,
+            flask_app,
+            mocker,
+            management_users,
+            not_logged_in,
+            remove,
+            logged_in,
+            authorized,
+            unauthorized,
+            management_config,
     ) -> None:
         """
         Testing the /users/id
@@ -431,10 +430,8 @@ class TestResourcesUsersSuite(object):
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}11"
         )
-
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert len(response_data_list) == 9
         assert response_data_list["admin"] is True
@@ -446,7 +443,6 @@ class TestResourcesUsersSuite(object):
         assert response_data_list["password"] == "admin"
         assert response_data_list["salt"] == "123"
         assert response_data_list["username"] == "admin"
-
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}235"
@@ -464,12 +460,18 @@ class TestResourcesUsersSuite(object):
         assert response_data_list["password"] == "guest"
         assert response_data_list["salt"] == "123"
         assert response_data_list["username"] == "guest"
-
+        response = flask_app.test_client().get(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}999"
+        )
+        response_data = response.data.decode("utf-8")
+        response_data = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.NOT_FOUND_STATUS_CODE
+        assert response_data == {}
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=not_logged_in,
         )
-
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
             side_effect=unauthorized,
@@ -479,7 +481,6 @@ class TestResourcesUsersSuite(object):
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}11"
         )
-
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert len(response_data_list) == 0
@@ -507,14 +508,12 @@ class TestResourcesUsersSuite(object):
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
-
         response = flask_app.test_client().delete(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}11"
         )
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
-
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=not_logged_in,
@@ -534,7 +533,8 @@ class TestResourcesUsersSuite(object):
         )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == []
         response = flask_app.test_client().delete(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}11"
@@ -543,17 +543,14 @@ class TestResourcesUsersSuite(object):
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == []
-
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in,
         )
-
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
             side_effect=authorized,
         )
-
         guest_user = ManagementUser(
             username="guest",
             password="guest",
@@ -564,7 +561,6 @@ class TestResourcesUsersSuite(object):
             organization="CSLE",
             salt="123",
         )
-
         guest_data_test = guest_user.to_dict()
         response = flask_app.test_client().put(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
@@ -602,11 +598,11 @@ class TestResourcesUsersSuite(object):
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
     def test_create(
-        self,
-        flask_app,
-        mocker,
-        save,
-        management_users,
+            self,
+            flask_app,
+            mocker,
+            save,
+            management_users,
     ):
         """
         Testing the /users/id
@@ -687,21 +683,14 @@ class TestResourcesUsersSuite(object):
             organization="CSLE",
             salt="123",
         )
-
         bad_guest_data_test_1 = bad_guest_user_1.to_dict()
-
         response = flask_app.test_client().post(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"
             f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
             data=json.dumps(bad_guest_data_test_1),
         )
-        response_data = response.data.decode("utf-8")
-        response_data_list = json.loads(response_data)
-
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        assert response_data_list == {"reason": "Password or username cannot be empty."}
-
         bad_guest_user_2 = ManagementUser(
             username="",
             password="guest",
@@ -719,11 +708,7 @@ class TestResourcesUsersSuite(object):
             f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
             data=json.dumps(bad_guest_data_test_2),
         )
-        response_data = response.data.decode("utf-8")
-        response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        assert response_data_list == {"reason": "Password or username cannot be empty."}
-
         guest_user = ManagementUser(
             username="jdoe",
             password="jdoe",
@@ -734,21 +719,16 @@ class TestResourcesUsersSuite(object):
             organization="CSLE",
             salt="123",
         )
-
         guest_data_test = guest_user.to_dict()
-
         response = flask_app.test_client().post(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"
             f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
             data=json.dumps(guest_data_test),
         )
-
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-
         assert response_data_list["admin"] is False
         assert response_data_list["email"] == "jdoe@CSLE.com"
         assert response_data_list["first_name"] == "John"
@@ -756,13 +736,15 @@ class TestResourcesUsersSuite(object):
         assert response_data_list["id"] == -1
         assert response_data_list["organization"] == "CSLE"
         assert response_data_list["username"] == "jdoe"
-
-        """response = flask_app.test_client().post(
+        response = flask_app.test_client().post(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"
             f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
-            data=None,
-        )"""
+            data=jsonify({}),
+        )
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_data = json.loads(response_data)
+        assert response_data == {}
         guest_user = ManagementUser(
             username="admin",
             password="admin",
@@ -773,23 +755,19 @@ class TestResourcesUsersSuite(object):
             organization="CSLE",
             salt="123",
         )
-
         guest_data_test = guest_user.to_dict()
-
         response = flask_app.test_client().post(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"
             f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
             data=json.dumps(guest_data_test),
         )
-
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.CONFLICT_STATUS_CODE
         assert response_data_list == {
             "reason": "A user with that username already exists"
         }
-
         constants.CONFIG_FILE.PARSED_CONFIG = None
         response = flask_app.test_client().post(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"

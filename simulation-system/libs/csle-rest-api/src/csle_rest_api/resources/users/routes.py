@@ -108,6 +108,13 @@ def user(user_id: int):
     # Check if user is admin or is editing his/hers own account
     user = MetastoreFacade.get_management_user_config(id=int(user_id))
 
+    if user is None:
+        response = jsonify({})
+        response.headers.add(
+            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+        )
+        return response, constants.HTTPS.NOT_FOUND_STATUS_CODE
+
     request_user = rest_api_util.check_if_user_edit_is_authorized(
         request=request, user=user
     )
