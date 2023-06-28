@@ -38,7 +38,6 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: the logged in as admin fixture for mocking the logged in check
         """
-
         def check_if_user_is_authorized(request, requires_admin):
             return None
 
@@ -55,7 +54,6 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: the logged in fixture for mocking the logged in check
         """
-
         def check_if_user_is_authorized(request, requires_admin):
             if requires_admin:
                 response = jsonify({})
@@ -132,10 +130,8 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the management user ids
         """
-
         def list_management_users_ids() -> List[Tuple]:
             return [(1,), (2,)]
-
         list_management_users_ids_mock = mocker.MagicMock(
             side_effect=list_management_users_ids
         )
@@ -149,7 +145,6 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the get_management_user_config function of the MetastoreFacade
         """
-
         def get_management_user_config(id: int) -> Union[None, ManagementUser]:
             admin_user = ManagementUser(
                 username="admin",
@@ -179,7 +174,6 @@ class TestResourcesUsersSuite(object):
                 return guest_user
             else:
                 return None
-
         get_management_user_config_mock = mocker.MagicMock(
             side_effect=get_management_user_config
         )
@@ -193,10 +187,8 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the update_management_user of the MetastoreFacade
         """
-
         def update_management_user(management_user: ManagementUser, id: int) -> None:
             return None
-
         update_management_user_mock = mocker.MagicMock(
             side_effect=update_management_user
         )
@@ -210,10 +202,8 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the remove_management_user function of the Metastore
         """
-
         def remove_management_user(management_user: ManagementUser):
             return None
-
         remove_management_user_mock = mocker.MagicMock(
             side_effect=remove_management_user
         )
@@ -242,7 +232,6 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the check_if_user_edit_is_authorized function
         """
-
         def check_if_user_edit_is_authorized(request, user: ManagementUser):
             token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
             if token != "":
@@ -252,7 +241,6 @@ class TestResourcesUsersSuite(object):
                 api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
             )
             return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-
         check_if_user_edit_is_authorized_mock = mocker.MagicMock(
             side_effect=check_if_user_edit_is_authorized
         )
@@ -266,7 +254,6 @@ class TestResourcesUsersSuite(object):
         :param mocker: the pytest mocker object
         :return: fixture for mocking the check_if_user_edit_is_authorized function
         """
-
         def check_if_user_edit_is_authorized(request, user: ManagementUser):
             token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
             if token == "":
@@ -276,7 +263,6 @@ class TestResourcesUsersSuite(object):
                 )
                 return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
             return user
-
         check_if_user_edit_is_authorized_mock = mocker.MagicMock(
             side_effect=check_if_user_edit_is_authorized
         )
@@ -398,6 +384,7 @@ class TestResourcesUsersSuite(object):
     ) -> None:
         """
         Testing the /users/id
+
         :param flask_app: the flask app representing the web server
         :param mocker: the mocker object for mocking functions
         :param logged_in_as_admin: the logged_in_as_admin fixture
@@ -476,7 +463,6 @@ class TestResourcesUsersSuite(object):
             "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
             side_effect=unauthorized,
         )
-
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}11"
@@ -486,12 +472,10 @@ class TestResourcesUsersSuite(object):
         assert len(response_data_list) == 0
         assert response_data_list == []
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in,
         )
-
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
             side_effect=authorized,
@@ -518,7 +502,6 @@ class TestResourcesUsersSuite(object):
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=not_logged_in,
         )
-
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
             side_effect=unauthorized,
@@ -569,10 +552,8 @@ class TestResourcesUsersSuite(object):
         )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-
         assert len(response_data_list) == 9
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-
         bad_guest_user = ManagementUser(
             username="blablaba",
             password="guest",
@@ -585,7 +566,6 @@ class TestResourcesUsersSuite(object):
         )
         bad_guest_data_test = bad_guest_user.to_dict()
         del bad_guest_data_test[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
-
         response = flask_app.test_client().put(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}235",
@@ -593,7 +573,6 @@ class TestResourcesUsersSuite(object):
         )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-
         assert len(response_data_list) < 9
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
