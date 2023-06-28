@@ -1,15 +1,16 @@
 """
 Routes and sub-resources for the /config resource
 """
-from flask import Blueprint, jsonify, request
 import json
+
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
-import csle_rest_api.util.rest_api_util as rest_api_util
-from csle_common.util.cluster_util import ClusterUtil
 from csle_common.dao.emulation_config.config import Config
 from csle_common.logging.log import Logger
+from csle_common.util.cluster_util import ClusterUtil
+from flask import Blueprint, jsonify, request
 
+import csle_rest_api.constants.constants as api_constants
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 config_bp = Blueprint(
@@ -42,9 +43,21 @@ def config():
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_PUT:
         json_data = json.loads(request.data)
         # Verify payload
-        if api_constants.MGMT_WEBAPP.CONFIG_RESOURCE not in json_data:
+        if api_constants.MGMT_WEBAPP.CONFIG_PROPERTY not in json_data:
             return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
         config = json_data[api_constants.MGMT_WEBAPP.CONFIG_PROPERTY]
+        if not ("parameters" in config and
+                "cluster_config" in config
+                ):
+            return config, constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        found_param_names = []
+        for i in range((len(config["parameters"]))):
+            found_param_names.append(config["parameters"][i]["param"])
+        std_param_names = Config.get_std_param_names()
+
+        for name in std_param_names:
+            if name not in found_param_names:
+                return config, constants.HTTPS.BAD_REQUEST_STATUS_CODE
         config = Config.from_param_dict(config)
         Config.save_config_file(config=config.to_dict())
         ClusterUtil.set_config_parameters_from_config_file()
