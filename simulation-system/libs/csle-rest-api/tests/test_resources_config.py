@@ -423,5 +423,5 @@ class TestResourcesConfigSuite(object):
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.CONFIG_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"
-            f"{api_constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_SUBRESOURCE}", )
+            f"{api_constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_SUBRESOURCE}")
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE

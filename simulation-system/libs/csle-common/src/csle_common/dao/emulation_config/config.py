@@ -1,10 +1,11 @@
-from typing import Dict, Any, Union
-from csle_common.dao.emulation_config.cluster_config import ClusterConfig
-import csle_common.constants.constants as constants
-from csle_base.json_serializable import JSONSerializable
-import os
 import io
 import json
+import os
+from typing import Any, Dict, Union
+
+import csle_common.constants.constants as constants
+from csle_base.json_serializable import JSONSerializable
+from csle_common.dao.emulation_config.cluster_config import ClusterConfig
 
 
 class Config(JSONSerializable):
@@ -12,25 +13,58 @@ class Config(JSONSerializable):
     A DTO Class representing the CSLE configuration
     """
 
-    def __init__(self, management_admin_username_default: str, management_admin_password_default: str,
-                 management_admin_first_name_default: str, management_admin_last_name_default: str,
-                 management_admin_email_default: str, management_admin_organization_default: str,
-                 management_guest_username_default: str, management_guest_password_default: str,
-                 management_guest_first_name_default: str, management_guest_last_name_default: str,
-                 management_guest_email_default: str, management_guest_organization_default: str,
-                 ssh_admin_username: str, ssh_admin_password: str, ssh_agent_username: str, ssh_agent_password: str,
-                 metastore_user: str, metastore_password: str, metastore_database_name: str, metastore_ip: str,
-                 node_exporter_port: int, grafana_port: int,
-                 management_system_port: int, cadvisor_port: int, prometheus_port: int, node_exporter_pid_file: str,
-                 pgadmin_port: int,
-                 csle_mgmt_webapp_pid_file: str, docker_stats_manager_log_file: str, docker_stats_manager_log_dir: str,
-                 docker_stats_manager_port: int, docker_stats_manager_max_workers: int,
-                 docker_stats_manager_outfile: str, docker_stats_manager_pidfile: str, prometheus_pid_file: str,
-                 prometheus_log_file: str, prometheus_config_file: str, default_log_dir: str,
-                 cluster_config: ClusterConfig, node_exporter_log_file: str,
-                 allow_registration: bool, grafana_username: str, grafana_password: str,
-                 pgadmin_username: str, pgadmin_password: str, postgresql_log_dir: str, nginx_log_dir: str,
-                 flask_log_file: str, cluster_manager_log_file: str):
+    def __init__(
+            self,
+            management_admin_username_default: str,
+            management_admin_password_default: str,
+            management_admin_first_name_default: str,
+            management_admin_last_name_default: str,
+            management_admin_email_default: str,
+            management_admin_organization_default: str,
+            management_guest_username_default: str,
+            management_guest_password_default: str,
+            management_guest_first_name_default: str,
+            management_guest_last_name_default: str,
+            management_guest_email_default: str,
+            management_guest_organization_default: str,
+            ssh_admin_username: str,
+            ssh_admin_password: str,
+            ssh_agent_username: str,
+            ssh_agent_password: str,
+            metastore_user: str,
+            metastore_password: str,
+            metastore_database_name: str,
+            metastore_ip: str,
+            node_exporter_port: int,
+            grafana_port: int,
+            management_system_port: int,
+            cadvisor_port: int,
+            prometheus_port: int,
+            node_exporter_pid_file: str,
+            pgadmin_port: int,
+            csle_mgmt_webapp_pid_file: str,
+            docker_stats_manager_log_file: str,
+            docker_stats_manager_log_dir: str,
+            docker_stats_manager_port: int,
+            docker_stats_manager_max_workers: int,
+            docker_stats_manager_outfile: str,
+            docker_stats_manager_pidfile: str,
+            prometheus_pid_file: str,
+            prometheus_log_file: str,
+            prometheus_config_file: str,
+            default_log_dir: str,
+            cluster_config: ClusterConfig,
+            node_exporter_log_file: str,
+            allow_registration: bool,
+            grafana_username: str,
+            grafana_password: str,
+            pgadmin_username: str,
+            pgadmin_password: str,
+            postgresql_log_dir: str,
+            nginx_log_dir: str,
+            flask_log_file: str,
+            cluster_manager_log_file: str,
+    ):
         """
         Initializes the DTO
 
@@ -90,13 +124,17 @@ class Config(JSONSerializable):
         self.management_admin_first_name_default = management_admin_first_name_default
         self.management_admin_last_name_default = management_admin_last_name_default
         self.management_admin_email_default = management_admin_email_default
-        self.management_admin_organization_default = management_admin_organization_default
+        self.management_admin_organization_default = (
+            management_admin_organization_default
+        )
         self.management_guest_username_default = management_guest_username_default
         self.management_guest_password_default = management_guest_password_default
         self.management_guest_first_name_default = management_guest_first_name_default
         self.management_guest_last_name_default = management_guest_last_name_default
         self.management_guest_email_default = management_guest_email_default
-        self.management_guest_organization_default = management_guest_organization_default
+        self.management_guest_organization_default = (
+            management_guest_organization_default
+        )
         self.ssh_admin_username = ssh_admin_username
         self.ssh_admin_password = ssh_admin_password
         self.ssh_agent_username = ssh_agent_username
@@ -143,16 +181,28 @@ class Config(JSONSerializable):
         d = {}
         d["management_admin_username_default"] = self.management_admin_username_default
         d["management_admin_password_default"] = self.management_admin_password_default
-        d["management_admin_first_name_default"] = self.management_admin_first_name_default
-        d["management_admin_last_name_default"] = self.management_admin_last_name_default
+        d[
+            "management_admin_first_name_default"
+        ] = self.management_admin_first_name_default
+        d[
+            "management_admin_last_name_default"
+        ] = self.management_admin_last_name_default
         d["management_admin_email_default"] = self.management_admin_email_default
-        d["management_admin_organization_default"] = self.management_admin_organization_default
+        d[
+            "management_admin_organization_default"
+        ] = self.management_admin_organization_default
         d["management_guest_username_default"] = self.management_guest_username_default
         d["management_guest_password_default"] = self.management_guest_password_default
-        d["management_guest_first_name_default"] = self.management_guest_first_name_default
-        d["management_guest_last_name_default"] = self.management_guest_last_name_default
+        d[
+            "management_guest_first_name_default"
+        ] = self.management_guest_first_name_default
+        d[
+            "management_guest_last_name_default"
+        ] = self.management_guest_last_name_default
         d["management_guest_email_default"] = self.management_guest_email_default
-        d["management_guest_organization_default"] = self.management_guest_organization_default
+        d[
+            "management_guest_organization_default"
+        ] = self.management_guest_organization_default
         d["ssh_admin_username"] = self.ssh_admin_username
         d["ssh_admin_password"] = self.ssh_admin_password
         d["ssh_agent_username"] = self.ssh_agent_username
@@ -203,336 +253,252 @@ class Config(JSONSerializable):
             {
                 "id": 0,
                 "param": "management_admin_username_default",
-                "value": self.management_admin_username_default
+                "value": self.management_admin_username_default,
             }
         )
         d["parameters"].append(
             {
                 "id": 1,
                 "param": "management_admin_password_default",
-                "value": self.management_admin_password_default
+                "value": self.management_admin_password_default,
             }
         )
         d["parameters"].append(
             {
                 "id": 2,
                 "param": "management_admin_first_name_default",
-                "value": self.management_admin_first_name_default
+                "value": self.management_admin_first_name_default,
             }
         )
         d["parameters"].append(
             {
                 "id": 3,
                 "param": "management_admin_last_name_default",
-                "value": self.management_admin_last_name_default
+                "value": self.management_admin_last_name_default,
             }
         )
         d["parameters"].append(
             {
                 "id": 4,
                 "param": "management_admin_email_default",
-                "value": self.management_admin_email_default
+                "value": self.management_admin_email_default,
             }
         )
         d["parameters"].append(
             {
                 "id": 5,
                 "param": "management_admin_organization_default",
-                "value": self.management_admin_organization_default
+                "value": self.management_admin_organization_default,
             }
         )
         d["parameters"].append(
             {
                 "id": 6,
                 "param": "management_guest_username_default",
-                "value": self.management_guest_username_default
+                "value": self.management_guest_username_default,
             }
         )
         d["parameters"].append(
             {
                 "id": 7,
                 "param": "management_guest_password_default",
-                "value": self.management_guest_password_default
+                "value": self.management_guest_password_default,
             }
         )
         d["parameters"].append(
             {
                 "id": 8,
                 "param": "management_guest_first_name_default",
-                "value": self.management_guest_first_name_default
+                "value": self.management_guest_first_name_default,
             }
         )
         d["parameters"].append(
             {
                 "id": 9,
                 "param": "management_guest_last_name_default",
-                "value": self.management_guest_last_name_default
+                "value": self.management_guest_last_name_default,
             }
         )
         d["parameters"].append(
             {
                 "id": 10,
                 "param": "management_guest_email_default",
-                "value": self.management_guest_email_default
+                "value": self.management_guest_email_default,
             }
         )
         d["parameters"].append(
             {
                 "id": 11,
                 "param": "management_guest_organization_default",
-                "value": self.management_guest_organization_default
+                "value": self.management_guest_organization_default,
             }
         )
         d["parameters"].append(
-            {
-                "id": 12,
-                "param": "ssh_admin_username",
-                "value": self.ssh_admin_username
-            }
+            {"id": 12, "param": "ssh_admin_username", "value": self.ssh_admin_username}
         )
         d["parameters"].append(
-            {
-                "id": 13,
-                "param": "ssh_admin_password",
-                "value": self.ssh_admin_password
-            }
+            {"id": 13, "param": "ssh_admin_password", "value": self.ssh_admin_password}
         )
         d["parameters"].append(
-            {
-                "id": 14,
-                "param": "ssh_agent_username",
-                "value": self.ssh_agent_username
-            }
+            {"id": 14, "param": "ssh_agent_username", "value": self.ssh_agent_username}
         )
         d["parameters"].append(
-            {
-                "id": 15,
-                "param": "ssh_agent_password",
-                "value": self.ssh_agent_password
-            }
+            {"id": 15, "param": "ssh_agent_password", "value": self.ssh_agent_password}
         )
         d["parameters"].append(
-            {
-                "id": 16,
-                "param": "metastore_user",
-                "value": self.metastore_user
-            }
+            {"id": 16, "param": "metastore_user", "value": self.metastore_user}
         )
         d["parameters"].append(
-            {
-                "id": 17,
-                "param": "metastore_password",
-                "value": self.metastore_password
-            }
+            {"id": 17, "param": "metastore_password", "value": self.metastore_password}
         )
         d["parameters"].append(
             {
                 "id": 18,
                 "param": "metastore_database_name",
-                "value": self.metastore_database_name
+                "value": self.metastore_database_name,
             }
         )
         d["parameters"].append(
-            {
-                "id": 19,
-                "param": "metastore_ip",
-                "value": self.metastore_ip
-            }
+            {"id": 19, "param": "metastore_ip", "value": self.metastore_ip}
         )
         d["parameters"].append(
-            {
-                "id": 20,
-                "param": "node_exporter_port",
-                "value": self.node_exporter_port
-            }
+            {"id": 20, "param": "node_exporter_port", "value": self.node_exporter_port}
         )
         d["parameters"].append(
-            {
-                "id": 21,
-                "param": "grafana_port",
-                "value": self.grafana_port
-            }
+            {"id": 21, "param": "grafana_port", "value": self.grafana_port}
         )
         d["parameters"].append(
             {
                 "id": 23,
                 "param": "management_system_port",
-                "value": self.management_system_port
+                "value": self.management_system_port,
             }
         )
         d["parameters"].append(
-            {
-                "id": 24,
-                "param": "cadvisor_port",
-                "value": self.cadvisor_port
-            }
+            {"id": 24, "param": "cadvisor_port", "value": self.cadvisor_port}
         )
         d["parameters"].append(
-            {
-                "id": 25,
-                "param": "prometheus_port",
-                "value": self.prometheus_port
-            }
+            {"id": 25, "param": "prometheus_port", "value": self.prometheus_port}
         )
         d["parameters"].append(
             {
                 "id": 26,
                 "param": "node_exporter_pid_file",
-                "value": self.node_exporter_pid_file
+                "value": self.node_exporter_pid_file,
             }
         )
         d["parameters"].append(
             {
                 "id": 27,
                 "param": "csle_mgmt_webapp_pid_file",
-                "value": self.csle_mgmt_webapp_pid_file
+                "value": self.csle_mgmt_webapp_pid_file,
             }
         )
         d["parameters"].append(
             {
                 "id": 28,
                 "param": "docker_stats_manager_log_file",
-                "value": self.docker_stats_manager_log_file
+                "value": self.docker_stats_manager_log_file,
             }
         )
         d["parameters"].append(
             {
                 "id": 29,
                 "param": "docker_stats_manager_log_dir",
-                "value": self.docker_stats_manager_log_dir
+                "value": self.docker_stats_manager_log_dir,
             }
         )
         d["parameters"].append(
             {
                 "id": 30,
                 "param": "docker_stats_manager_port",
-                "value": self.docker_stats_manager_port
+                "value": self.docker_stats_manager_port,
             }
         )
         d["parameters"].append(
             {
                 "id": 31,
                 "param": "docker_stats_manager_max_workers",
-                "value": self.docker_stats_manager_max_workers
+                "value": self.docker_stats_manager_max_workers,
             }
         )
         d["parameters"].append(
             {
                 "id": 32,
                 "param": "docker_stats_manager_outfile",
-                "value": self.docker_stats_manager_outfile
+                "value": self.docker_stats_manager_outfile,
             }
         )
         d["parameters"].append(
             {
                 "id": 33,
                 "param": "docker_stats_manager_pidfile",
-                "value": self.docker_stats_manager_pidfile
+                "value": self.docker_stats_manager_pidfile,
             }
         )
         d["parameters"].append(
             {
                 "id": 34,
                 "param": "prometheus_pid_file",
-                "value": self.prometheus_pid_file
+                "value": self.prometheus_pid_file,
             }
         )
         d["parameters"].append(
             {
                 "id": 35,
                 "param": "prometheus_log_file",
-                "value": self.prometheus_log_file
+                "value": self.prometheus_log_file,
             }
         )
         d["parameters"].append(
             {
                 "id": 36,
                 "param": "prometheus_config_file",
-                "value": self.prometheus_config_file
+                "value": self.prometheus_config_file,
             }
         )
         d["parameters"].append(
-            {
-                "id": 37,
-                "param": "default_log_dir",
-                "value": self.default_log_dir
-            }
+            {"id": 37, "param": "default_log_dir", "value": self.default_log_dir}
         )
         d["parameters"].append(
             {
                 "id": 39,
                 "param": "node_exporter_log_file",
-                "value": self.node_exporter_log_file
+                "value": self.node_exporter_log_file,
             }
         ),
         d["parameters"].append(
-            {
-                "id": 40,
-                "param": "allow_registration",
-                "value": self.allow_registration
-            }
+            {"id": 40, "param": "allow_registration", "value": self.allow_registration}
         )
         d["parameters"].append(
-            {
-                "id": 41,
-                "param": "pgadmin_port",
-                "value": self.pgadmin_port
-            }
+            {"id": 41, "param": "pgadmin_port", "value": self.pgadmin_port}
         )
         d["parameters"].append(
-            {
-                "id": 42,
-                "param": "pgadmin_username",
-                "value": self.pgadmin_username
-            }
+            {"id": 42, "param": "pgadmin_username", "value": self.pgadmin_username}
         )
         d["parameters"].append(
-            {
-                "id": 43,
-                "param": "pgadmin_password",
-                "value": self.pgadmin_password
-            }
+            {"id": 43, "param": "pgadmin_password", "value": self.pgadmin_password}
         )
         d["parameters"].append(
-            {
-                "id": 44,
-                "param": "grafana_username",
-                "value": self.grafana_username
-            }
+            {"id": 44, "param": "grafana_username", "value": self.grafana_username}
         )
         d["parameters"].append(
-            {
-                "id": 45,
-                "param": "grafana_password",
-                "value": self.grafana_password
-            }
+            {"id": 45, "param": "grafana_password", "value": self.grafana_password}
         )
         d["parameters"].append(
-            {
-                "id": 46,
-                "param": "postgresql_log_dir",
-                "value": self.postgresql_log_dir
-            }
+            {"id": 46, "param": "postgresql_log_dir", "value": self.postgresql_log_dir}
         )
         d["parameters"].append(
-            {
-                "id": 47,
-                "param": "nginx_log_dir",
-                "value": self.nginx_log_dir
-            }
+            {"id": 47, "param": "nginx_log_dir", "value": self.nginx_log_dir}
         )
         d["parameters"].append(
-            {
-                "id": 48,
-                "param": "flask_log_file",
-                "value": self.flask_log_file
-            }
+            {"id": 48, "param": "flask_log_file", "value": self.flask_log_file}
         )
         d["parameters"].append(
             {
                 "id": 48,
                 "param": "cluster_manager_log_file",
-                "value": self.cluster_manager_log_file
+                "value": self.cluster_manager_log_file,
             }
         )
         d["cluster_config"] = self.cluster_config.to_dict()
@@ -545,56 +511,65 @@ class Config(JSONSerializable):
 
         :return: a dto representation of the object
         """
-        dto = Config(management_admin_username_default=d["management_admin_username_default"],
-                     management_admin_password_default=d["management_admin_password_default"],
-                     management_admin_first_name_default=d["management_admin_first_name_default"],
-                     management_admin_last_name_default=d["management_admin_last_name_default"],
-                     management_admin_email_default=d["management_admin_email_default"],
-                     management_admin_organization_default=d["management_admin_organization_default"],
-                     management_guest_username_default=d["management_guest_username_default"],
-                     management_guest_password_default=d["management_guest_password_default"],
-                     management_guest_first_name_default=d["management_guest_first_name_default"],
-                     management_guest_last_name_default=d["management_guest_last_name_default"],
-                     management_guest_email_default=d["management_guest_email_default"],
-                     management_guest_organization_default=d["management_guest_organization_default"],
-                     ssh_admin_username=d["ssh_admin_username"],
-                     ssh_admin_password=d["ssh_admin_password"],
-                     ssh_agent_username=d["ssh_agent_username"],
-                     ssh_agent_password=d["ssh_agent_password"],
-                     metastore_user=d["metastore_user"],
-                     metastore_password=d["metastore_password"],
-                     metastore_database_name=d["metastore_database_name"],
-                     metastore_ip=d["metastore_ip"],
-                     node_exporter_port=d["node_exporter_port"],
-                     grafana_port=d["grafana_port"],
-                     management_system_port=d["management_system_port"],
-                     cadvisor_port=d["cadvisor_port"],
-                     pgadmin_port=d["pgadmin_port"],
-                     prometheus_port=d["prometheus_port"],
-                     node_exporter_pid_file=d["node_exporter_pid_file"],
-                     csle_mgmt_webapp_pid_file=d["csle_mgmt_webapp_pid_file"],
-                     docker_stats_manager_log_file=d["docker_stats_manager_log_file"],
-                     docker_stats_manager_log_dir=d["docker_stats_manager_log_dir"],
-                     docker_stats_manager_port=d["docker_stats_manager_port"],
-                     docker_stats_manager_max_workers=d["docker_stats_manager_max_workers"],
-                     docker_stats_manager_outfile=d["docker_stats_manager_outfile"],
-                     docker_stats_manager_pidfile=d["docker_stats_manager_pidfile"],
-                     prometheus_pid_file=d["prometheus_pid_file"],
-                     prometheus_log_file=d["prometheus_log_file"],
-                     prometheus_config_file=d["prometheus_config_file"],
-                     default_log_dir=d["default_log_dir"],
-                     cluster_config=ClusterConfig.from_dict(d["cluster_config"]),
-                     node_exporter_log_file=d["node_exporter_log_file"],
-                     allow_registration=d["allow_registration"],
-                     grafana_username=d["grafana_username"],
-                     grafana_password=d["grafana_password"],
-                     pgadmin_username=d["pgadmin_username"],
-                     pgadmin_password=d["pgadmin_password"],
-                     postgresql_log_dir=d["postgresql_log_dir"],
-                     nginx_log_dir=d["nginx_log_dir"],
-                     flask_log_file=d["flask_log_file"],
-                     cluster_manager_log_file=d["cluster_manager_log_file"]
-                     )
+        dto = Config(
+            management_admin_username_default=d["management_admin_username_default"],
+            management_admin_password_default=d["management_admin_password_default"],
+            management_admin_first_name_default=d[
+                "management_admin_first_name_default"
+            ],
+            management_admin_last_name_default=d["management_admin_last_name_default"],
+            management_admin_email_default=d["management_admin_email_default"],
+            management_admin_organization_default=d[
+                "management_admin_organization_default"
+            ],
+            management_guest_username_default=d["management_guest_username_default"],
+            management_guest_password_default=d["management_guest_password_default"],
+            management_guest_first_name_default=d[
+                "management_guest_first_name_default"
+            ],
+            management_guest_last_name_default=d["management_guest_last_name_default"],
+            management_guest_email_default=d["management_guest_email_default"],
+            management_guest_organization_default=d[
+                "management_guest_organization_default"
+            ],
+            ssh_admin_username=d["ssh_admin_username"],
+            ssh_admin_password=d["ssh_admin_password"],
+            ssh_agent_username=d["ssh_agent_username"],
+            ssh_agent_password=d["ssh_agent_password"],
+            metastore_user=d["metastore_user"],
+            metastore_password=d["metastore_password"],
+            metastore_database_name=d["metastore_database_name"],
+            metastore_ip=d["metastore_ip"],
+            node_exporter_port=d["node_exporter_port"],
+            grafana_port=d["grafana_port"],
+            management_system_port=d["management_system_port"],
+            cadvisor_port=d["cadvisor_port"],
+            pgadmin_port=d["pgadmin_port"],
+            prometheus_port=d["prometheus_port"],
+            node_exporter_pid_file=d["node_exporter_pid_file"],
+            csle_mgmt_webapp_pid_file=d["csle_mgmt_webapp_pid_file"],
+            docker_stats_manager_log_file=d["docker_stats_manager_log_file"],
+            docker_stats_manager_log_dir=d["docker_stats_manager_log_dir"],
+            docker_stats_manager_port=d["docker_stats_manager_port"],
+            docker_stats_manager_max_workers=d["docker_stats_manager_max_workers"],
+            docker_stats_manager_outfile=d["docker_stats_manager_outfile"],
+            docker_stats_manager_pidfile=d["docker_stats_manager_pidfile"],
+            prometheus_pid_file=d["prometheus_pid_file"],
+            prometheus_log_file=d["prometheus_log_file"],
+            prometheus_config_file=d["prometheus_config_file"],
+            default_log_dir=d["default_log_dir"],
+            cluster_config=ClusterConfig.from_dict(d["cluster_config"]),
+            node_exporter_log_file=d["node_exporter_log_file"],
+            allow_registration=d["allow_registration"],
+            grafana_username=d["grafana_username"],
+            grafana_password=d["grafana_password"],
+            pgadmin_username=d["pgadmin_username"],
+            pgadmin_password=d["pgadmin_password"],
+            postgresql_log_dir=d["postgresql_log_dir"],
+            nginx_log_dir=d["nginx_log_dir"],
+            flask_log_file=d["flask_log_file"],
+            cluster_manager_log_file=d["cluster_manager_log_file"],
+        )
         if "id" in d:
             dto.id = d["id"]
         return dto
@@ -611,55 +586,65 @@ class Config(JSONSerializable):
         for param_value in d2["parameters"]:
             d[param_value["param"]] = param_value["value"]
 
-        dto = Config(management_admin_username_default=d["management_admin_username_default"],
-                     management_admin_password_default=d["management_admin_password_default"],
-                     management_admin_first_name_default=d["management_admin_first_name_default"],
-                     management_admin_last_name_default=d["management_admin_last_name_default"],
-                     management_admin_email_default=d["management_admin_email_default"],
-                     management_admin_organization_default=d["management_admin_organization_default"],
-                     management_guest_username_default=d["management_guest_username_default"],
-                     management_guest_password_default=d["management_guest_password_default"],
-                     management_guest_first_name_default=d["management_guest_first_name_default"],
-                     management_guest_last_name_default=d["management_guest_last_name_default"],
-                     management_guest_email_default=d["management_guest_email_default"],
-                     management_guest_organization_default=d["management_guest_organization_default"],
-                     ssh_admin_username=d["ssh_admin_username"],
-                     ssh_admin_password=d["ssh_admin_password"],
-                     ssh_agent_username=d["ssh_agent_username"],
-                     ssh_agent_password=d["ssh_agent_password"],
-                     metastore_user=d["metastore_user"],
-                     metastore_password=d["metastore_password"],
-                     metastore_database_name=d["metastore_database_name"],
-                     metastore_ip=d["metastore_ip"],
-                     node_exporter_port=d["node_exporter_port"],
-                     grafana_port=d["grafana_port"],
-                     management_system_port=d["management_system_port"],
-                     cadvisor_port=d["cadvisor_port"],
-                     prometheus_port=d["prometheus_port"],
-                     node_exporter_pid_file=d["node_exporter_pid_file"],
-                     csle_mgmt_webapp_pid_file=d["csle_mgmt_webapp_pid_file"],
-                     docker_stats_manager_log_file=d["docker_stats_manager_log_file"],
-                     docker_stats_manager_log_dir=d["docker_stats_manager_log_dir"],
-                     docker_stats_manager_port=d["docker_stats_manager_port"],
-                     docker_stats_manager_max_workers=d["docker_stats_manager_max_workers"],
-                     docker_stats_manager_outfile=d["docker_stats_manager_outfile"],
-                     docker_stats_manager_pidfile=d["docker_stats_manager_pidfile"],
-                     prometheus_pid_file=d["prometheus_pid_file"],
-                     prometheus_log_file=d["prometheus_log_file"],
-                     prometheus_config_file=d["prometheus_config_file"],
-                     default_log_dir=d["default_log_dir"],
-                     cluster_config=ClusterConfig.from_dict(d["cluster_config"]),
-                     node_exporter_log_file=d["node_exporter_log_file"],
-                     allow_registration=d["allow_registration"],
-                     pgadmin_port=d["pgadmin_port"],
-                     grafana_username=d["grafana_username"],
-                     grafana_password=d["grafana_password"],
-                     pgadmin_username=d["pgadmin_username"],
-                     pgadmin_password=d["pgadmin_password"],
-                     postgresql_log_dir=d["postgresql_log_dir"],
-                     nginx_log_dir=d["nginx_log_dir"],
-                     flask_log_file=d["flask_log_file"],
-                     cluster_manager_log_file=d["cluster_manager_log_file"])
+        dto = Config(
+            management_admin_username_default=d["management_admin_username_default"],
+            management_admin_password_default=d["management_admin_password_default"],
+            management_admin_first_name_default=d[
+                "management_admin_first_name_default"
+            ],
+            management_admin_last_name_default=d["management_admin_last_name_default"],
+            management_admin_email_default=d["management_admin_email_default"],
+            management_admin_organization_default=d[
+                "management_admin_organization_default"
+            ],
+            management_guest_username_default=d["management_guest_username_default"],
+            management_guest_password_default=d["management_guest_password_default"],
+            management_guest_first_name_default=d[
+                "management_guest_first_name_default"
+            ],
+            management_guest_last_name_default=d["management_guest_last_name_default"],
+            management_guest_email_default=d["management_guest_email_default"],
+            management_guest_organization_default=d[
+                "management_guest_organization_default"
+            ],
+            ssh_admin_username=d["ssh_admin_username"],
+            ssh_admin_password=d["ssh_admin_password"],
+            ssh_agent_username=d["ssh_agent_username"],
+            ssh_agent_password=d["ssh_agent_password"],
+            metastore_user=d["metastore_user"],
+            metastore_password=d["metastore_password"],
+            metastore_database_name=d["metastore_database_name"],
+            metastore_ip=d["metastore_ip"],
+            node_exporter_port=d["node_exporter_port"],
+            grafana_port=d["grafana_port"],
+            management_system_port=d["management_system_port"],
+            cadvisor_port=d["cadvisor_port"],
+            prometheus_port=d["prometheus_port"],
+            node_exporter_pid_file=d["node_exporter_pid_file"],
+            csle_mgmt_webapp_pid_file=d["csle_mgmt_webapp_pid_file"],
+            docker_stats_manager_log_file=d["docker_stats_manager_log_file"],
+            docker_stats_manager_log_dir=d["docker_stats_manager_log_dir"],
+            docker_stats_manager_port=d["docker_stats_manager_port"],
+            docker_stats_manager_max_workers=d["docker_stats_manager_max_workers"],
+            docker_stats_manager_outfile=d["docker_stats_manager_outfile"],
+            docker_stats_manager_pidfile=d["docker_stats_manager_pidfile"],
+            prometheus_pid_file=d["prometheus_pid_file"],
+            prometheus_log_file=d["prometheus_log_file"],
+            prometheus_config_file=d["prometheus_config_file"],
+            default_log_dir=d["default_log_dir"],
+            cluster_config=ClusterConfig.from_dict(d["cluster_config"]),
+            node_exporter_log_file=d["node_exporter_log_file"],
+            allow_registration=d["allow_registration"],
+            pgadmin_port=d["pgadmin_port"],
+            grafana_username=d["grafana_username"],
+            grafana_password=d["grafana_password"],
+            pgadmin_username=d["pgadmin_username"],
+            pgadmin_password=d["pgadmin_password"],
+            postgresql_log_dir=d["postgresql_log_dir"],
+            nginx_log_dir=d["nginx_log_dir"],
+            flask_log_file=d["flask_log_file"],
+            cluster_manager_log_file=d["cluster_manager_log_file"],
+        )
         if "id" in d:
             dto.id = d["id"]
         return dto
@@ -668,44 +653,46 @@ class Config(JSONSerializable):
         """
         :return: a string representation of the credential
         """
-        return f"management_admin_username_default:{self.management_admin_username_default}, " \
-               f"management_admin_password_default: {self.management_admin_password_default}," \
-               f"management_admin_first_name_default: {self.management_admin_first_name_default}, " \
-               f"management_admin_last_name_default: {self.management_admin_last_name_default}," \
-               f"management_admin_email_default: {self.management_admin_email_default}, " \
-               f"management_admin_organization_default: {self.management_admin_organization_default}, " \
-               f"ssh_admin_username: {self.ssh_admin_username}, " \
-               f"ssh_admin_password: {self.ssh_admin_password}, " \
-               f"ssh_agent_username: {self.ssh_agent_username}, " \
-               f"ssh_agent_password: {self.ssh_agent_password}, " \
-               f"metastore_user: {self.metastore_user}, " \
-               f"metastore_password: {self.metastore_password}, " \
-               f"metastore_database_name: {self.metastore_database_name}, " \
-               f"metastore_ip: {self.metastore_ip}, " \
-               f"node_exporter_port: {self.node_exporter_port}, " \
-               f"grafana_port: {self.grafana_port}, " \
-               f"management_system_port: {self.management_system_port}, " \
-               f"cadvisor_port: {self.cadvisor_port}, " \
-               f"prometheus_port: {self.prometheus_port}, " \
-               f"node_exporter_pid_file: {self.node_exporter_pid_file}, " \
-               f"csle_mgmt_webapp_pid_file: {self.csle_mgmt_webapp_pid_file}, " \
-               f"docker_stats_manager_log_file: {self.docker_stats_manager_log_file}, " \
-               f"docker_stats_manager_log_dir: {self.docker_stats_manager_log_dir}, " \
-               f"docker_stats_manager_port: {self.docker_stats_manager_port}, " \
-               f"docker_stats_manager_max_workers: {self.docker_stats_manager_max_workers}, " \
-               f"docker_stats_manager_outfile: {self.docker_stats_manager_outfile}, " \
-               f"docker_stats_manager_pidfile: {self.docker_stats_manager_pidfile}, " \
-               f"prometheus_pid_file: {self.prometheus_pid_file}, " \
-               f"prometheus_log_file: {self.prometheus_log_file}, " \
-               f"prometheus_config_file: {self.prometheus_config_file}, " \
-               f"default_log_dir: {self.default_log_dir}, " \
-               f"cluster_config: {self.cluster_config}," \
-               f"node_exporter_log_file: {self.node_exporter_log_file}," \
-               f"allow_registration: {self.allow_registration}, " \
-               f"id:{self.id}, grafana_username: {self.grafana_username}, grafana_password: {self.grafana_password}," \
-               f"pgadmin_username: {self.pgadmin_username}, pgadmin_password: {self.pgadmin_password}," \
-               f"postgresql_log_dir: {self.postgresql_log_dir}, nginx_log_dir: {self.nginx_log_dir}," \
-               f"flask_log_file: {self.flask_log_file}, cluster_manager_log_file: {self.cluster_manager_log_file}"
+        return (
+            f"management_admin_username_default:{self.management_admin_username_default}, "
+            f"management_admin_password_default: {self.management_admin_password_default},"
+            f"management_admin_first_name_default: {self.management_admin_first_name_default}, "
+            f"management_admin_last_name_default: {self.management_admin_last_name_default},"
+            f"management_admin_email_default: {self.management_admin_email_default}, "
+            f"management_admin_organization_default: {self.management_admin_organization_default}, "
+            f"ssh_admin_username: {self.ssh_admin_username}, "
+            f"ssh_admin_password: {self.ssh_admin_password}, "
+            f"ssh_agent_username: {self.ssh_agent_username}, "
+            f"ssh_agent_password: {self.ssh_agent_password}, "
+            f"metastore_user: {self.metastore_user}, "
+            f"metastore_password: {self.metastore_password}, "
+            f"metastore_database_name: {self.metastore_database_name}, "
+            f"metastore_ip: {self.metastore_ip}, "
+            f"node_exporter_port: {self.node_exporter_port}, "
+            f"grafana_port: {self.grafana_port}, "
+            f"management_system_port: {self.management_system_port}, "
+            f"cadvisor_port: {self.cadvisor_port}, "
+            f"prometheus_port: {self.prometheus_port}, "
+            f"node_exporter_pid_file: {self.node_exporter_pid_file}, "
+            f"csle_mgmt_webapp_pid_file: {self.csle_mgmt_webapp_pid_file}, "
+            f"docker_stats_manager_log_file: {self.docker_stats_manager_log_file}, "
+            f"docker_stats_manager_log_dir: {self.docker_stats_manager_log_dir}, "
+            f"docker_stats_manager_port: {self.docker_stats_manager_port}, "
+            f"docker_stats_manager_max_workers: {self.docker_stats_manager_max_workers}, "
+            f"docker_stats_manager_outfile: {self.docker_stats_manager_outfile}, "
+            f"docker_stats_manager_pidfile: {self.docker_stats_manager_pidfile}, "
+            f"prometheus_pid_file: {self.prometheus_pid_file}, "
+            f"prometheus_log_file: {self.prometheus_log_file}, "
+            f"prometheus_config_file: {self.prometheus_config_file}, "
+            f"default_log_dir: {self.default_log_dir}, "
+            f"cluster_config: {self.cluster_config},"
+            f"node_exporter_log_file: {self.node_exporter_log_file},"
+            f"allow_registration: {self.allow_registration}, "
+            f"id:{self.id}, grafana_username: {self.grafana_username}, grafana_password: {self.grafana_password},"
+            f"pgadmin_username: {self.pgadmin_username}, pgadmin_password: {self.pgadmin_password},"
+            f"postgresql_log_dir: {self.postgresql_log_dir}, nginx_log_dir: {self.nginx_log_dir},"
+            f"flask_log_file: {self.flask_log_file}, cluster_manager_log_file: {self.cluster_manager_log_file}"
+        )
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "Config":
@@ -717,7 +704,8 @@ class Config(JSONSerializable):
         """
         import io
         import json
-        with io.open(json_file_path, 'r') as f:
+
+        with io.open(json_file_path, "r") as f:
             json_str = f.read()
         return Config.from_dict(json.loads(json_str))
 
@@ -737,10 +725,14 @@ class Config(JSONSerializable):
         if constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM in os.environ:
             csle_home = os.environ[constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM]
         else:
-            raise Exception(f"The environment parameter {constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM} is not set")
-        config_file_path = f"{csle_home}{constants.COMMANDS.SLASH_DELIM}" \
-                           f"{constants.CONFIG_FILE.CONFIG_FILE_NAME}"
-        with io.open(config_file_path, 'r', encoding='utf-8') as f:
+            raise Exception(
+                f"The environment parameter {constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM} is not set"
+            )
+        config_file_path = (
+            f"{csle_home}{constants.COMMANDS.SLASH_DELIM}"
+            f"{constants.CONFIG_FILE.CONFIG_FILE_NAME}"
+        )
+        with io.open(config_file_path, "r", encoding="utf-8") as f:
             json_str = f.read()
             config_dict = json.loads(json_str)
             config = Config.from_dict(config_dict)
@@ -756,10 +748,14 @@ class Config(JSONSerializable):
         if constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM in os.environ:
             csle_home = os.environ[constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM]
         else:
-            raise Exception(f"The environment parameter {constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM} is not set")
-        config_file_path = f"{csle_home}{constants.COMMANDS.SLASH_DELIM}" \
-                           f"{constants.CONFIG_FILE.CONFIG_FILE_NAME}"
-        with io.open(config_file_path, 'w', encoding='utf-8') as f:
+            raise Exception(
+                f"The environment parameter {constants.CONFIG_FILE.CSLE_HOME_ENV_PARAM} is not set"
+            )
+        config_file_path = (
+            f"{csle_home}{constants.COMMANDS.SLASH_DELIM}"
+            f"{constants.CONFIG_FILE.CONFIG_FILE_NAME}"
+        )
+        with io.open(config_file_path, "w", encoding="utf-8") as f:
             json_str = json.dumps(config, indent=4, sort_keys=True)
             f.write(json_str)
 
@@ -769,3 +765,60 @@ class Config(JSONSerializable):
         :return: The currently parsed config
         """
         return constants.CONFIG_FILE.PARSED_CONFIG
+
+    @staticmethod
+    def get_std_param_names():
+        """
+        :return: The names ought to be included in a config class
+        """
+
+        std_param_names = [
+            "management_admin_username_default",
+            "management_admin_password_default",
+            "management_admin_first_name_default",
+            "management_admin_last_name_default",
+            "management_admin_email_default",
+            "management_admin_organization_default",
+            "management_guest_username_default",
+            "management_guest_password_default",
+            "management_guest_first_name_default",
+            "management_guest_last_name_default",
+            "management_guest_email_default",
+            "management_guest_organization_default",
+            "ssh_admin_username",
+            "ssh_admin_password",
+            "ssh_agent_username",
+            "ssh_agent_password",
+            "metastore_user",
+            "metastore_password",
+            "metastore_database_name",
+            "metastore_ip",
+            "node_exporter_port",
+            "grafana_port",
+            "management_system_port",
+            "cadvisor_port",
+            "prometheus_port",
+            "node_exporter_pid_file",
+            "csle_mgmt_webapp_pid_file",
+            "docker_stats_manager_log_file",
+            "docker_stats_manager_log_dir",
+            "docker_stats_manager_port",
+            "docker_stats_manager_max_workers",
+            "docker_stats_manager_outfile",
+            "docker_stats_manager_pidfile",
+            "prometheus_pid_file",
+            "prometheus_log_file",
+            "prometheus_config_file",
+            "default_log_dir",
+            "node_exporter_log_file",
+            "allow_registration",
+            "pgadmin_port",
+            "pgadmin_username",
+            "pgadmin_password",
+            "grafana_username",
+            "grafana_password",
+            "postgresql_log_dir",
+            "nginx_log_dir",
+            "flask_log_file",
+        ]
+        return std_param_names
