@@ -1,6 +1,5 @@
 import json
 import logging
-
 import csle_common.constants.constants as constants
 import pytest
 from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
@@ -150,53 +149,84 @@ class TestResourcesConfigSuite(object):
             return config
         get_config_mock = mocker.MagicMock(side_effect=get_config)
         return get_config_mock
-    @pytest.fixture
-    def node_status(self, mocker):
-        """Mock object for the node_status fixture
-        :param :
-        :return :
+
+    @staticmethod
+    def example_node_status() -> NodeStatusDTO:
         """
+        Help function that returns an example node status
 
-        def get_node_status(ip, port):
-            class MockedNodeStatusDTO():
-                def __init__(self, ip="12.345.67.89", leader=True,
-                            cAdvisorRunning=False, prometheusRunning=False,
-                            grafanaRunning=False, pgAdminRunning=False,
-                            nginxRunning=False, flaskRunning=False,
-                            dockerStatsManagerRunning=False,
-                            nodeExporterRunning=False, postgreSQLRunning=False,
-                            dockerEngineRunning=False):
-                    self.ip = ip
-                    self.leader = leader
-                    self.cAdvisorRunning = cAdvisorRunning
-                    self.prometheusRunning = prometheusRunning
-                    self.grafanaRunning = grafanaRunning
-                    self.pgAdminRunning = pgAdminRunning
-                    self.nginxRunning = nginxRunning
-                    self.flaskRunning = flaskRunning
-                    self.dockerStatsManagerRunning = dockerStatsManagerRunning
-                    self.nodeExporterRunning = nodeExporterRunning
-                    self.postgreSQLRunning = postgreSQLRunning
-                    self.dockerEngineRunning = dockerEngineRunning
-            return MockedNodeStatusDTO
+        :return: the example node status
+        """
+        node_status = NodeStatusDTO(
+            ip = "172.192.15.2",
+            leader = True,
+            cAdvisorRunning = True,
+            prometheusRunning = True,
+            grafanaRunning = True,
+            pgAdminRunning = True,
+            nginxRunning = True,
+            flaskRunning = True,
+            dockerStatsManager = True,
+            nodeExporterRunning = True,
+            postgreSQLRunning = True,
+            dockerEngineRunning = True
+        )
+        return node_status
 
+    @pytest.fixture
+    def node_status_flask_running(self, mocker):
+        """
+        Fixture for mocking the get_node_status function where flask is running
+
+        :param mocker: the pytest mocker object
+        :return the fixture for the get_node_status_function
+        """
+        def get_node_status(ip: str, port: int) -> NodeStatusDTO:
+            node_status = TestResourcesConfigSuite.example_node_status()
+            node_status.flaskRunning = True
+            return node_status
         get_node_status_mock = mocker.MagicMock(side_effect=get_node_status)
         return get_node_status_mock
 
-    def test_flask(self,
-            flask_app,
-            mocker,
-            logged_in_as_admin,
-            logged_in,
-            not_logged_in,
-            config,
-            node_status
-            ):
+    @pytest.fixture
+    def node_status_flask_not_running(self, mocker):
         """
-        Testing the /flask url
-        :param :
-        :return : None
+        Fixture for mocking the get_node_status function where flask is not running
+
+        :param mocker: the pytest mocker object
+        :return the fixture for the get_node_status_function
         """
+        def get_node_status(ip: str, port: int) -> NodeStatusDTO:
+            node_status = TestResourcesConfigSuite.example_node_status()
+            node_status.flaskRunning = False
+            return node_status
+        get_node_status_mock = mocker.MagicMock(side_effect=get_node_status)
+        return get_node_status_mock
+
+    def test_flask(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in, config,
+                   node_status_flask_running,  node_status_flask_not_running) -> None:
+        """
+        Tests the /flask url
+
+        :param flask_app: the pytest flask app for making requests
+        :param mocker: the pytest mocker object
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param config: the config fixture
+        :param node_status: the node_status fixture
+        :return: None
+        """
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=not_logged_in,
+        )
+        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.FLASK_RESOURCE,
+                                                data=json.dumps({}))
+        response_data = response.data.decode('utf-8')
+        response_data_list = json.loads(response_data)
+        assert response_data_list == {}
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in,
@@ -207,7 +237,6 @@ class TestResourcesConfigSuite(object):
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
@@ -217,8 +246,8 @@ class TestResourcesConfigSuite(object):
             side_effect=config,
         )
         mocker.patch(
-            "csle_cluster.cluster_manager.cluster_manager_pb2.NodeStatusDTO",
-            side_effect=node_status,
+            "csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
+            side_effect=node_status_flask_running,
         )
 
         c_node = ClusterNode(ip="12.345.67.89", leader=True, cpus=1, gpus=2, RAM=3)
