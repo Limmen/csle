@@ -2,12 +2,15 @@
 Routes and sub-resources for the /flask resource
 """
 import json
-from flask import Blueprint, jsonify, request
+
 import csle_common.constants.constants as constants
+import pytest
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, jsonify, request
+
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
-from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
 # Creates a blueprint "sub application" of the main REST app
 flask_bp = Blueprint(api_constants.MGMT_WEBAPP.FLASK_RESOURCE, __name__,
@@ -31,11 +34,13 @@ def flask():
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
-
+    # pytest.logger.info(ip)
     config = MetastoreFacade.get_config(id=1)
+    # pytest.logger.info(config.cluster_config.to_dict())
     cluster_statuses = []
     for node in config.cluster_config.cluster_nodes:
         node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+        # pytest.logger.info(node_status)
         if node.ip == ip:
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
                 if node_status.flaskRunning:

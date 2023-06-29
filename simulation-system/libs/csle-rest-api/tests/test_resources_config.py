@@ -347,7 +347,7 @@ class TestResourcesConfigSuite(object):
         assert config.nginx_log_dir == "null"
         assert config.flask_log_file == "null"
         assert config.cluster_manager_log_file == "null"
-
+        pytest.logger.info(config.cluster_config.to_dict()['cluster_nodes'][0]['ip'])
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=not_logged_in,
