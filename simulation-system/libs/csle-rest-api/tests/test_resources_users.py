@@ -100,26 +100,8 @@ class TestResourcesUsersSuite(object):
 
         def list_management_users() -> List[ManagementUser]:
             users = [
-                ManagementUser(
-                    username="admin",
-                    password="admin",
-                    email="admin@CSLE.com",
-                    admin=True,
-                    first_name="Admin",
-                    last_name="Adminson",
-                    organization="CSLE",
-                    salt="123",
-                ),
-                ManagementUser(
-                    username="guest",
-                    password="guest",
-                    email="guest@CSLE.com",
-                    admin=False,
-                    first_name="Guest",
-                    last_name="Guestson",
-                    organization="CSLE",
-                    salt="123",
-                ),
+                TestResourcesUsersSuite.example_admin_user(),
+                TestResourcesUsersSuite.example_guest_user()
             ]
             return users
 
@@ -141,6 +123,46 @@ class TestResourcesUsersSuite(object):
         )
         return list_management_users_ids_mock
 
+    @staticmethod
+    def example_admin_user() -> ManagementUser:
+        """
+        Help function that returns an example admin user
+
+        :return: the example admin user
+        """
+        admin_user = ManagementUser(
+            username="admin",
+            password="admin",
+            email="admin@CSLE.com",
+            admin=True,
+            first_name="Admin",
+            last_name="Adminson",
+            organization="CSLE",
+            salt="123",
+        )
+        admin_user.id = 11
+        return admin_user
+
+    @staticmethod
+    def example_guest_user() -> ManagementUser:
+        """
+        Help function that returns an example guest user
+
+        :return: the example guest user
+        """
+        guest_user = ManagementUser(
+            username="guest",
+            password="guest",
+            email="guest@CSLE.com",
+            admin=False,
+            first_name="Guest",
+            last_name="Guestson",
+            organization="CSLE",
+            salt="123",
+        )
+        guest_user.id = 235
+        return guest_user
+
     @pytest.fixture
     def management_config(self, mocker):
         """
@@ -150,31 +172,11 @@ class TestResourcesUsersSuite(object):
         :return: fixture for mocking the get_management_user_config function of the MetastoreFacade
         """
         def get_management_user_config(id: int) -> Union[None, ManagementUser]:
-            admin_user = ManagementUser(
-                username="admin",
-                password="admin",
-                email="admin@CSLE.com",
-                admin=True,
-                first_name="Admin",
-                last_name="Adminson",
-                organization="CSLE",
-                salt="123",
-            )
-            admin_user.id = 11
-            guest_user = ManagementUser(
-                username="guest",
-                password="guest",
-                email="guest@CSLE.com",
-                admin=False,
-                first_name="Guest",
-                last_name="Guestson",
-                organization="CSLE",
-                salt="123",
-            )
-            guest_user.id = 235
-            if id == 11:
+            admin_user = TestResourcesUsersSuite.example_admin_user()
+            guest_user = TestResourcesUsersSuite.example_guest_user()
+            if id == admin_user.id:
                 return admin_user
-            elif id == 235:
+            elif id == guest_user.id:
                 return guest_user
             else:
                 return None
@@ -304,28 +306,30 @@ class TestResourcesUsersSuite(object):
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
         )
+        guest_user = TestResourcesUsersSuite.example_guest_user()
+        admin_user = TestResourcesUsersSuite.example_admin_user()
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.USERS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert len(response_data_list) == 2
         users = list(map(lambda x: ManagementUser.from_dict(x), response_data_list))
-        assert users[0].username == "admin"
+        assert users[0].username == admin_user.username
         assert users[0].password == ""
-        assert users[0].email == "admin@CSLE.com"
-        assert users[0].admin is True
-        assert users[0].first_name == "Admin"
-        assert users[0].last_name == "Adminson"
+        assert users[0].email == admin_user.email
+        assert users[0].admin is admin_user.admin
+        assert users[0].first_name == admin_user.first_name
+        assert users[0].last_name == admin_user.last_name
         assert users[0].salt == ""
-        assert users[0].organization == "CSLE"
-        assert users[1].username == "guest"
+        assert users[0].organization == admin_user.organization
+        assert users[1].username == guest_user.username
         assert users[1].password == ""
-        assert users[1].email == "guest@CSLE.com"
-        assert users[1].admin is False
-        assert users[1].first_name == "Guest"
-        assert users[1].last_name == "Guestson"
+        assert users[1].email == guest_user.email
+        assert users[1].admin is guest_user.admin
+        assert users[1].first_name == guest_user.first_name
+        assert users[1].last_name == guest_user.last_name
         assert users[1].salt == ""
-        assert users[1].organization == "CSLE"
+        assert users[1].organization == guest_user.organization
         mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users_ids",
             side_effect=management_ids,
@@ -417,40 +421,42 @@ class TestResourcesUsersSuite(object):
             "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
             side_effect=authorized,
         )
+        guest_user = TestResourcesUsersSuite.example_guest_user()
+        admin_user = TestResourcesUsersSuite.example_admin_user()
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-            f"{constants.COMMANDS.SLASH_DELIM}11"
+            f"{constants.COMMANDS.SLASH_DELIM}{admin_user.id}"
         )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert len(response_data_list) == 9
-        assert response_data_list["admin"] is True
-        assert response_data_list["email"] == "admin@CSLE.com"
-        assert response_data_list["first_name"] == "Admin"
-        assert response_data_list["last_name"] == "Adminson"
-        assert response_data_list["id"] == 11
-        assert response_data_list["organization"] == "CSLE"
-        assert response_data_list["password"] == "admin"
-        assert response_data_list["salt"] == "123"
-        assert response_data_list["username"] == "admin"
+        assert response_data_list[api_constants.MGMT_WEBAPP.ADMIN_PROPERTY] is admin_user.admin
+        assert response_data_list[api_constants.MGMT_WEBAPP.EMAIL_PROPERTY] == admin_user.email
+        assert response_data_list[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY] == admin_user.first_name
+        assert response_data_list[api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY] == admin_user.last_name
+        assert response_data_list[api_constants.MGMT_WEBAPP.ID_PROPERTY] == admin_user.id
+        assert response_data_list[api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY] == admin_user.organization
+        assert response_data_list[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY] == ""
+        assert response_data_list[api_constants.MGMT_WEBAPP.SALT_PROPOERTY] == ""
+        assert response_data_list[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == admin_user.username
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-            f"{constants.COMMANDS.SLASH_DELIM}235"
+            f"{constants.COMMANDS.SLASH_DELIM}{guest_user.id}"
         )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert len(response_data_list) == 9
-        assert response_data_list["admin"] is False
-        assert response_data_list["email"] == "guest@CSLE.com"
-        assert response_data_list["first_name"] == "Guest"
-        assert response_data_list["last_name"] == "Guestson"
-        assert response_data_list["id"] == 235
-        assert response_data_list["organization"] == "CSLE"
-        assert response_data_list["password"] == "guest"
-        assert response_data_list["salt"] == "123"
-        assert response_data_list["username"] == "guest"
+        assert response_data_list[api_constants.MGMT_WEBAPP.ADMIN_PROPERTY] is guest_user.admin
+        assert response_data_list[api_constants.MGMT_WEBAPP.EMAIL_PROPERTY] == guest_user.email
+        assert response_data_list[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY] == guest_user.first_name
+        assert response_data_list[api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY] == guest_user.last_name
+        assert response_data_list[api_constants.MGMT_WEBAPP.ID_PROPERTY] == guest_user.id
+        assert response_data_list[api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY] == guest_user.organization
+        assert response_data_list[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY] == ""
+        assert response_data_list[api_constants.MGMT_WEBAPP.SALT_PROPOERTY] == ""
+        assert response_data_list[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == guest_user.username
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}999"
@@ -469,7 +475,7 @@ class TestResourcesUsersSuite(object):
         )
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-            f"{constants.COMMANDS.SLASH_DELIM}11"
+            f"{constants.COMMANDS.SLASH_DELIM}{admin_user.id}"
         )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -490,7 +496,7 @@ class TestResourcesUsersSuite(object):
         )
         response = flask_app.test_client().delete(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-            f"{constants.COMMANDS.SLASH_DELIM}235"
+            f"{constants.COMMANDS.SLASH_DELIM}{guest_user.id}"
         )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -498,7 +504,7 @@ class TestResourcesUsersSuite(object):
         assert response_data_list == {}
         response = flask_app.test_client().delete(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-            f"{constants.COMMANDS.SLASH_DELIM}11"
+            f"{constants.COMMANDS.SLASH_DELIM}{admin_user.id}"
         )
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
@@ -516,7 +522,7 @@ class TestResourcesUsersSuite(object):
         )
         response = flask_app.test_client().delete(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-            f"{constants.COMMANDS.SLASH_DELIM}235"
+            f"{constants.COMMANDS.SLASH_DELIM}{guest_user.id}"
         )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -524,7 +530,7 @@ class TestResourcesUsersSuite(object):
         assert response_data_list == {}
         response = flask_app.test_client().delete(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-            f"{constants.COMMANDS.SLASH_DELIM}11"
+            f"{constants.COMMANDS.SLASH_DELIM}{admin_user.id}"
         )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -538,16 +544,6 @@ class TestResourcesUsersSuite(object):
             "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
             side_effect=authorized,
         )
-        guest_user = ManagementUser(
-            username="guest",
-            password="guest",
-            email="guest@CSLE.com",
-            admin=False,
-            first_name="Guest",
-            last_name="Guestson",
-            organization="CSLE",
-            salt="123",
-        )
         guest_data_test = guest_user.to_dict()
         response = flask_app.test_client().put(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
@@ -558,21 +554,11 @@ class TestResourcesUsersSuite(object):
         response_data_list = json.loads(response_data)
         assert len(response_data_list) == 9
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        bad_guest_user = ManagementUser(
-            username="blablaba",
-            password="guest",
-            email="guest@CSLE.com",
-            admin=False,
-            first_name="Guest",
-            last_name="Guestson",
-            organization="CSLE",
-            salt="123",
-        )
-        bad_guest_data_test = bad_guest_user.to_dict()
+        bad_guest_data_test = guest_user.to_dict()
         del bad_guest_data_test[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
         response = flask_app.test_client().put(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-            f"{constants.COMMANDS.SLASH_DELIM}235",
+            f"{constants.COMMANDS.SLASH_DELIM}{guest_user.id}",
             data=json.dumps(bad_guest_data_test),
         )
         response_data = response.data.decode("utf-8")
@@ -596,6 +582,8 @@ class TestResourcesUsersSuite(object):
         :param save: the save fixture
         :return: None
         """
+        guest_user = TestResourcesUsersSuite.example_guest_user()
+        admin_user = TestResourcesUsersSuite.example_admin_user()
         c_node = ClusterNode(ip="12.345.67.89", leader=True, cpus=1, gpus=2, RAM=3)
         constants.CONFIG_FILE.PARSED_CONFIG = Config(
             management_admin_username_default="null",
@@ -656,16 +644,8 @@ class TestResourcesUsersSuite(object):
             "csle_common.metastore.metastore_facade.MetastoreFacade.save_management_user",
             side_effect=save,
         )
-        bad_guest_user_1 = ManagementUser(
-            username="guest",
-            password="",
-            email="guest@CSLE.com",
-            admin=False,
-            first_name="Guest",
-            last_name="Guestson",
-            organization="CSLE",
-            salt="123",
-        )
+        bad_guest_user_1 = ManagementUser.from_dict(guest_user.to_dict())
+        bad_guest_user_1.password = ""
         bad_guest_data_test_1 = bad_guest_user_1.to_dict()
         response = flask_app.test_client().post(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
@@ -674,16 +654,8 @@ class TestResourcesUsersSuite(object):
             data=json.dumps(bad_guest_data_test_1),
         )
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        bad_guest_user_2 = ManagementUser(
-            username="",
-            password="guest",
-            email="guest@CSLE.com",
-            admin=False,
-            first_name="Guest",
-            last_name="Guestson",
-            organization="CSLE",
-            salt="123",
-        )
+        bad_guest_user_2 = ManagementUser.from_dict(guest_user.to_dict())
+        bad_guest_user_2.username = ""
         bad_guest_data_test_2 = bad_guest_user_2.to_dict()
         response = flask_app.test_client().post(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
@@ -692,7 +664,7 @@ class TestResourcesUsersSuite(object):
             data=json.dumps(bad_guest_data_test_2),
         )
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        guest_user = ManagementUser(
+        create_user = ManagementUser(
             username="jdoe",
             password="jdoe",
             email="jdoe@CSLE.com",
@@ -702,23 +674,22 @@ class TestResourcesUsersSuite(object):
             organization="CSLE",
             salt="123",
         )
-        guest_data_test = guest_user.to_dict()
         response = flask_app.test_client().post(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"
             f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
-            data=json.dumps(guest_data_test),
+            data=json.dumps(create_user.to_dict()),
         )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert response_data_list["admin"] is False
-        assert response_data_list["email"] == "jdoe@CSLE.com"
-        assert response_data_list["first_name"] == "John"
-        assert response_data_list["last_name"] == "Doe"
-        assert response_data_list["id"] == -1
-        assert response_data_list["organization"] == "CSLE"
-        assert response_data_list["username"] == "jdoe"
+        assert response_data_list[api_constants.MGMT_WEBAPP.ADMIN_PROPERTY] is create_user.admin
+        assert response_data_list[api_constants.MGMT_WEBAPP.EMAIL_PROPERTY] == create_user.email
+        assert response_data_list[api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY] == create_user.first_name
+        assert response_data_list[api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY] == create_user.last_name
+        assert response_data_list[api_constants.MGMT_WEBAPP.ID_PROPERTY] == -1
+        assert response_data_list[api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY] == create_user.organization
+        assert response_data_list[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == create_user.username
         response = flask_app.test_client().post(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"
@@ -726,37 +697,19 @@ class TestResourcesUsersSuite(object):
             data=json.dumps({})
         )
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        response_data = json.loads(response_data)
-        assert response_data == {}
-        guest_user = ManagementUser(
-            username="admin",
-            password="admin",
-            email="admin@CSLE.com",
-            admin=True,
-            first_name="Admin",
-            last_name="Adminson",
-            organization="CSLE",
-            salt="123",
-        )
-        guest_data_test = guest_user.to_dict()
         response = flask_app.test_client().post(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"
             f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
-            data=json.dumps(guest_data_test),
+            data=json.dumps(admin_user.to_dict()),
         )
-        response_data = response.data.decode("utf-8")
-        response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.CONFLICT_STATUS_CODE
-        assert response_data_list == {
-            "reason": "A user with that username already exists"
-        }
         constants.CONFIG_FILE.PARSED_CONFIG = None
         response = flask_app.test_client().post(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"
             f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
-            data=json.dumps(guest_data_test),
+            data=json.dumps(admin_user.to_dict()),
         )
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)

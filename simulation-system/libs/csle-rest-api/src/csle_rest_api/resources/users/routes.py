@@ -125,6 +125,8 @@ def user(user_id: int):
 
     if user is not None:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+            user.password = ""
+            user.salt = ""
             response = jsonify(user.to_dict())
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_PUT:
             new_user = json.loads(request.data)
@@ -138,6 +140,10 @@ def user(user_id: int):
                 and api_constants.MGMT_WEBAPP.EMAIL_PROPERTY in new_user
                 and api_constants.MGMT_WEBAPP.ADMIN_PROPERTY in new_user
             ):
+                if api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY in new_user:
+                    new_user[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY] = ""
+                if api_constants.MGMT_WEBAPP.SALT_PROPOERTY in new_user:
+                    new_user[api_constants.MGMT_WEBAPP.SALT_PROPOERTY] = ""
                 response = jsonify(new_user)
                 return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
@@ -166,6 +172,8 @@ def user(user_id: int):
             MetastoreFacade.update_management_user(management_user=new_user, id=user_id)
             new_user.salt = ""
             new_user.password = ""
+            user.salt = ""
+            user.password = ""
             response = jsonify(user.to_dict())
         else:
             MetastoreFacade.remove_management_user(management_user=user)
@@ -212,7 +220,7 @@ def create_user():
 
                 if password == "" or username == "":
                     error_reason = "Password or username cannot be empty."
-                    response = jsonify({"reason": error_reason})
+                    response = jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: error_reason})
                     return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
                 else:
                     usernames = list(
@@ -223,7 +231,7 @@ def create_user():
                     )
                     if username in usernames:
                         error_reason = "A user with that username already exists"
-                        response = jsonify({"reason": error_reason})
+                        response = jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: error_reason})
                         return response, constants.HTTPS.CONFLICT_STATUS_CODE
                     byte_pwd = password.encode("utf-8")
                     salt = bcrypt.gensalt()
@@ -239,6 +247,8 @@ def create_user():
                         email=email,
                     )
                     MetastoreFacade.save_management_user(management_user=user)
+                    user.salt = ""
+                    user.password = ""
                     response = jsonify(user.to_dict())
                 response.headers.add(
                     api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"

@@ -33,10 +33,6 @@ class TestResourcesVersionSuite(object):
         response = flask_app.test_client().get(
             api_constants.MGMT_WEBAPP.VERSION_RESOURCE
         )
-        pytest.logger.info(response.status_code)
-        pytest.logger.info(response.data.decode("utf-8"))
         assert response.status_code == 200
-        assert api_constants.MGMT_WEBAPP.VERSION_RESOURCE in response.data.decode(
-            "utf-8"
-        )
+        assert api_constants.MGMT_WEBAPP.VERSION_RESOURCE in response.data.decode("utf-8")
         assert len(response.data.decode("utf-8").split(".")) == 3

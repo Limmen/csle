@@ -50,6 +50,7 @@ class MGMT_WEBAPP:
     GRAFANA_RESOURCE = "grafana"
     PARAM_RESOURCE = "param"
     PARAMETERS_PROPERTY = "parameters"
+    REASON_PROPERTY = "reason"
     CLUSTER_CONFIG_PROPERTY = "cluster_config"
     CLUSTER_STATUS_RESOURCE = "clusterstatus"
     NGINX_RESOURCE = "nginx"

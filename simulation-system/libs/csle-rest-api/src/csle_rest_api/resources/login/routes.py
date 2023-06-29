@@ -4,7 +4,6 @@ Routes and sub-resources for the /login resource
 import json
 import secrets
 import time
-
 import bcrypt
 import csle_common.constants.constants as constants
 from csle_common.dao.management.session_token import SessionToken
@@ -28,27 +27,18 @@ def read_login():
 
     :return: Authenticates the login information and returns the result
     """
-    import logging
-
-    import pytest
-
     token = secrets.token_urlsafe(32)
     json_data = json.loads(request.data)
-    pytest.logger.info(json_data)
     if api_constants.MGMT_WEBAPP.USERNAME_PROPERTY not in json_data:
         return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
     username = json_data[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
     user_account = MetastoreFacade.get_management_user_by_username(username=username)
-
-    pytest.logger = logging.getLogger("resources_login_tests")
-    pytest.logger.info(f"USER ACCOUNT: {user_account}")
     response_code = constants.HTTPS.UNAUTHORIZED_STATUS_CODE
     response = jsonify({})
     if user_account is not None:
         if api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY not in json_data:
             return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
         password = json_data[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
-        pytest.logger.info(f"submitted password: {password}")
         byte_pwd = password.encode("utf-8")
         pw_hash = bcrypt.hashpw(byte_pwd, user_account.salt.encode("utf-8")).decode(
             "utf-8"

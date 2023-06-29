@@ -229,7 +229,6 @@ class TestResourcesLoginSuite(object):
         )
         response_data = g_response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        pytest.logger.info(response_data_dict)
         assert g_response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert len(response_data_dict.keys()) == 8
         assert api_constants.MGMT_WEBAPP.TOKEN_PROPERTY in response_data_dict
@@ -340,6 +339,5 @@ class TestResourcesLoginSuite(object):
 
         response_data = m_response.data.decode("utf-8")
         response_dict = json.loads(response_data)
-        pytest.logger.info(m_response)
         assert m_response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         assert response_dict == {}
