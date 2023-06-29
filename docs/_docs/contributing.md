@@ -20,3 +20,14 @@ and make sure that your code changes follow the guidelines stated there.
 
 To contact the maintainers of CSLE, use GitHub issues or email. 
 The GitHub issues page is reviewed regularly by the maintainers.
+
+#### List of Contributors
+
+The following people have contributed to the development of CSLE (contact `kimham@kth.se` if your name 
+should be on the list but is not):
+
+- Kim Hammar, creator and main developer.
+- Rolf Stadler, technical advisor.
+- Jakob Stymne, software development. 
+- Arvid Lagerqvist, software development.
+- Nils Forsgren, software development.

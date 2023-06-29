@@ -95,7 +95,8 @@ Thanks go to these people!
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://limmen.dev"><img src="https://github.com/Limmen.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Kim Hammar</b></sub></a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/arvid123"><img src="https://github.com/arvid123.png" width="100px;" alt="Kim Hammar"/><br /><sub><b>Arvid Lagerqvist</b></sub></a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/arvid123"><img src="https://github.com/arvid123.png" width="100px;" alt="Arvid Lagerqvist"/><br /><sub><b>Arvid Lagerqvist</b></sub></a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/nforsg"><img src="https://github.com/nforsg.png" width="100px;" alt="Nils Forsgren"/><br /><sub><b>Nils Forsgren</b></sub></a></td>
     </tr>
   </tbody>
 </table>
