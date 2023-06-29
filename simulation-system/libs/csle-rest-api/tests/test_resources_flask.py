@@ -255,6 +255,14 @@ class TestResourcesFlaskSuite(object):
             "csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
             side_effect=config,
         )
+        mocker.patch(
+            "csle_cluster.cluster_manager.cluster_controller.ClusterController.start_flask",
+            side_effect=start,
+        )
+        mocker.patch(
+            "csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_flask",
+            side_effect=stop,
+        )
 
         config = TestResourcesFlaskSuite.example_config()
         ip_adress = config.cluster_config.cluster_nodes[0].ip
@@ -334,16 +342,8 @@ class TestResourcesFlaskSuite(object):
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY] \
             == f"http://{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
         mocker.patch(
-            "csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_flask",
-            side_effect=stop,
-        )
-        mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
-        )
-        mocker.patch(
-            "csle_cluster.cluster_manager.cluster_controller.ClusterController.start_flask",
-            side_effect=start,
         )
         config_cluster_dict = config.cluster_config.to_dict()['cluster_nodes'][0]
         response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.FLASK_RESOURCE,
@@ -497,14 +497,6 @@ class TestResourcesFlaskSuite(object):
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
-        )
-        mocker.patch(
-            "csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_flask",
-            side_effect=stop,
-        )
-        mocker.patch(
-            "csle_cluster.cluster_manager.cluster_controller.ClusterController.start_flask",
-            side_effect=start,
         )
         config = TestResourcesFlaskSuite.example_config()
         config_cluster_dict = config.cluster_config.to_dict()['cluster_nodes'][0]
