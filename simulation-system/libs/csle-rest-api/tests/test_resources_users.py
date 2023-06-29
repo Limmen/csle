@@ -78,7 +78,11 @@ class TestResourcesUsersSuite(object):
         """
 
         def check_if_user_is_authorized(request, requires_admin):
-            return [], constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+            response = jsonify({})
+            response.headers.add(
+                api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
+            )
+            return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
 
         check_if_user_is_authorized_mock = mocker.MagicMock(
             side_effect=check_if_user_is_authorized
@@ -470,7 +474,7 @@ class TestResourcesUsersSuite(object):
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert len(response_data_list) == 0
-        assert response_data_list == []
+        assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
@@ -517,7 +521,7 @@ class TestResourcesUsersSuite(object):
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        assert response_data_list == []
+        assert response_data_list == {}
         response = flask_app.test_client().delete(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}11"
@@ -525,7 +529,7 @@ class TestResourcesUsersSuite(object):
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        assert response_data_list == []
+        assert response_data_list == {}
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in,
@@ -581,7 +585,7 @@ class TestResourcesUsersSuite(object):
             flask_app,
             mocker,
             save,
-            management_users,
+            management_users
     ):
         """
         Testing the /users/id
@@ -719,7 +723,7 @@ class TestResourcesUsersSuite(object):
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"
             f"{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
-            data=jsonify({}),
+            data=json.dumps({})
         )
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response_data = json.loads(response_data)
