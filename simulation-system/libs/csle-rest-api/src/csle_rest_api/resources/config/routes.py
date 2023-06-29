@@ -46,13 +46,13 @@ def config():
         if api_constants.MGMT_WEBAPP.CONFIG_PROPERTY not in json_data:
             return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
         config = json_data[api_constants.MGMT_WEBAPP.CONFIG_PROPERTY]
-        if not ("parameters" in config and
-                "cluster_config" in config
-                ):
+        if not (api_constants.MGMT_WEBAPP.PARAMETERS_PROPERTY in config and
+                api_constants.MGMT_WEBAPP.CLUSTER_CONFIG_PROPERTY in config):
             return config, constants.HTTPS.BAD_REQUEST_STATUS_CODE
         found_param_names = []
-        for i in range((len(config["parameters"]))):
-            found_param_names.append(config["parameters"][i]["param"])
+        for i in range((len(config[api_constants.MGMT_WEBAPP.PARAMETERS_PROPERTY]))):
+            found_param_names.append(config[api_constants.MGMT_WEBAPP.PARAMETERS_PROPERTY][i]
+                                     [api_constants.MGMT_WEBAPP.PARAM_RESOURCE])
         std_param_names = Config.get_std_param_names()
 
         for name in std_param_names:

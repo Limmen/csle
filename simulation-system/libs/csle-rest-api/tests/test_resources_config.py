@@ -35,6 +35,7 @@ class TestResourcesConfigSuite(object):
         :param mocker: the pytest mocker object
         :return: the logged in fixture for mocking the logged in check
         """
+
         def check_if_user_is_authorized(request, requires_admin):
             if requires_admin:
                 response = jsonify({})
@@ -94,8 +95,10 @@ class TestResourcesConfigSuite(object):
         param: config
         return: None
         """
+
         def save_config_file(config) -> None:
             return None
+
         save_config_file_mocker = mocker.MagicMock(
             side_effect=save_config_file
         )
@@ -108,6 +111,7 @@ class TestResourcesConfigSuite(object):
         params:
         return: None
         """
+
         def set_config_parameters_from_config_file() -> None:
             return None
 
@@ -115,6 +119,67 @@ class TestResourcesConfigSuite(object):
             side_effect=set_config_parameters_from_config_file
         )
         return set_config_parameters_from_config_file_mocker
+
+    @staticmethod
+    def example_config() -> Config:
+        """
+        Help function that returns an example config
+
+        :return: config
+        """
+        c_node = ClusterNode(ip="12.345.67.89", leader=True, cpus=1, gpus=2, RAM=3)
+        config = Config(
+            management_admin_username_default="admin",
+            management_admin_password_default="admin",
+            management_admin_first_name_default="Admin",
+            management_admin_last_name_default="Adminson",
+            management_admin_email_default="admin@CSLE.com",
+            management_admin_organization_default="CSLE",
+            management_guest_username_default="guest",
+            management_guest_password_default="guest",
+            management_guest_first_name_default="Guest",
+            management_guest_last_name_default="Guestson",
+            management_guest_email_default="guest@CSLE.com",
+            management_guest_organization_default="CSLE",
+            ssh_admin_username="null",
+            ssh_admin_password="null",
+            ssh_agent_username="null",
+            ssh_agent_password="null",
+            metastore_user="null",
+            metastore_password="null",
+            metastore_database_name="null",
+            metastore_ip="null",
+            node_exporter_port=1,
+            grafana_port=1,
+            management_system_port=1,
+            cadvisor_port=1,
+            prometheus_port=1,
+            node_exporter_pid_file="null",
+            pgadmin_port=1,
+            csle_mgmt_webapp_pid_file="null",
+            docker_stats_manager_log_file="null",
+            docker_stats_manager_log_dir="null",
+            docker_stats_manager_port=1,
+            docker_stats_manager_max_workers=1,
+            docker_stats_manager_outfile="null",
+            docker_stats_manager_pidfile="null",
+            prometheus_pid_file="null",
+            prometheus_log_file="null",
+            prometheus_config_file="null",
+            default_log_dir="null",
+            cluster_config=ClusterConfig([c_node]),
+            node_exporter_log_file="null",
+            allow_registration=True,
+            grafana_username="null",
+            grafana_password="null",
+            pgadmin_username="null",
+            pgadmin_password="null",
+            postgresql_log_dir="null",
+            nginx_log_dir="null",
+            flask_log_file="null",
+            cluster_manager_log_file="null",
+        )
+        return config
 
     @pytest.fixture
     def config_read(self, mocker):
@@ -124,60 +189,10 @@ class TestResourcesConfigSuite(object):
         :param mocker: the pytest mocker object
         :return: the Config fixture for mocking read_config_file
         """
+
         def read_config_file() -> Config:
-            c_node = ClusterNode(ip="12.345.67.89", leader=True, cpus=1, gpus=2, RAM=3)
-            config = Config(
-                management_admin_username_default="admin",
-                management_admin_password_default="admin",
-                management_admin_first_name_default="Admin",
-                management_admin_last_name_default="Adminson",
-                management_admin_email_default="admin@CSLE.com",
-                management_admin_organization_default="CSLE",
-                management_guest_username_default="guest",
-                management_guest_password_default="guest",
-                management_guest_first_name_default="Guest",
-                management_guest_last_name_default="Guestson",
-                management_guest_email_default="guest@CSLE.com",
-                management_guest_organization_default="CSLE",
-                ssh_admin_username="null",
-                ssh_admin_password="null",
-                ssh_agent_username="null",
-                ssh_agent_password="null",
-                metastore_user="null",
-                metastore_password="null",
-                metastore_database_name="null",
-                metastore_ip="null",
-                node_exporter_port=1,
-                grafana_port=1,
-                management_system_port=1,
-                cadvisor_port=1,
-                prometheus_port=1,
-                node_exporter_pid_file="null",
-                pgadmin_port=1,
-                csle_mgmt_webapp_pid_file="null",
-                docker_stats_manager_log_file="null",
-                docker_stats_manager_log_dir="null",
-                docker_stats_manager_port=1,
-                docker_stats_manager_max_workers=1,
-                docker_stats_manager_outfile="null",
-                docker_stats_manager_pidfile="null",
-                prometheus_pid_file="null",
-                prometheus_log_file="null",
-                prometheus_config_file="null",
-                default_log_dir="null",
-                cluster_config=ClusterConfig([c_node]),
-                node_exporter_log_file="null",
-                allow_registration=True,
-                grafana_username="null",
-                grafana_password="null",
-                pgadmin_username="null",
-                pgadmin_password="null",
-                postgresql_log_dir="null",
-                nginx_log_dir="null",
-                flask_log_file="null",
-                cluster_manager_log_file="null",
-            )
-            return config
+            return TestResourcesConfigSuite.example_config()
+
         read_config_file_mock = mocker.MagicMock(
             side_effect=read_config_file
         )
@@ -191,60 +206,10 @@ class TestResourcesConfigSuite(object):
         :param mocker: the pytest mocker object
         :return: the Config fixture for mocking read_config_file
         """
+
         def read_config_file():
-            c_node = "This is clearly the wrong datatype for cluster"
-            config = Config(
-                management_admin_username_default="admin",
-                management_admin_password_default="admin",
-                management_admin_first_name_default="Admin",
-                management_admin_last_name_default="Adminson",
-                management_admin_email_default="admin@CSLE.com",
-                management_admin_organization_default="CSLE",
-                management_guest_username_default="guest",
-                management_guest_password_default="guest",
-                management_guest_first_name_default="Guest",
-                management_guest_last_name_default="Guestson",
-                management_guest_email_default="guest@CSLE.com",
-                management_guest_organization_default="CSLE",
-                ssh_admin_username="null",
-                ssh_admin_password="null",
-                ssh_agent_username="null",
-                ssh_agent_password="null",
-                metastore_user="null",
-                metastore_password="null",
-                metastore_database_name="null",
-                metastore_ip="null",
-                node_exporter_port=1,
-                grafana_port=1,
-                management_system_port=1,
-                cadvisor_port=1,
-                prometheus_port=1,
-                node_exporter_pid_file="null",
-                pgadmin_port=1,
-                csle_mgmt_webapp_pid_file="null",
-                docker_stats_manager_log_file="null",
-                docker_stats_manager_log_dir="null",
-                docker_stats_manager_port=1,
-                docker_stats_manager_max_workers=1,
-                docker_stats_manager_outfile="null",
-                docker_stats_manager_pidfile="null",
-                prometheus_pid_file="null",
-                prometheus_log_file="null",
-                prometheus_config_file="null",
-                default_log_dir="null",
-                cluster_config=ClusterConfig([c_node]),
-                node_exporter_log_file="null",
-                allow_registration=True,
-                grafana_username="null",
-                grafana_password="null",
-                pgadmin_username="null",
-                pgadmin_password="null",
-                postgresql_log_dir="null",
-                nginx_log_dir="null",
-                flask_log_file="null",
-                cluster_manager_log_file="null",
-            )
-            return config
+            raise ValueError("Test")
+
         read_failed_config_file_mock = mocker.MagicMock(
             side_effect=read_config_file
         )
@@ -259,7 +224,7 @@ class TestResourcesConfigSuite(object):
             not_logged_in,
             config_read,
             failed_config_read,
-            save, from_config_file,):
+            save, from_config_file, ):
         """
         Tests the /config resource for listing management user accounts
 
@@ -278,7 +243,6 @@ class TestResourcesConfigSuite(object):
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
         )
-
         mocker.patch(
             "csle_common.dao.emulation_config.config.Config.read_config_file",
             side_effect=failed_config_read,
@@ -347,7 +311,6 @@ class TestResourcesConfigSuite(object):
         assert config.nginx_log_dir == "null"
         assert config.flask_log_file == "null"
         assert config.cluster_manager_log_file == "null"
-
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=not_logged_in,
@@ -357,7 +320,6 @@ class TestResourcesConfigSuite(object):
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in,
@@ -367,7 +329,6 @@ class TestResourcesConfigSuite(object):
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
@@ -386,61 +347,11 @@ class TestResourcesConfigSuite(object):
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         assert response_data_list == {}
-        c_node = ClusterNode(ip="12.345.67.89", leader=True, cpus=1, gpus=2, RAM=3)
-        config = Config(
-            management_admin_username_default="admin",
-            management_admin_password_default="admin",
-            management_admin_first_name_default="Admin",
-            management_admin_last_name_default="Adminson",
-            management_admin_email_default="admin@CSLE.com",
-            management_admin_organization_default="CSLE",
-            management_guest_username_default="guest",
-            management_guest_password_default="guest",
-            management_guest_first_name_default="Guest",
-            management_guest_last_name_default="Guestson",
-            management_guest_email_default="guest@CSLE.com",
-            management_guest_organization_default="CSLE",
-            ssh_admin_username="null",
-            ssh_admin_password="null",
-            ssh_agent_username="null",
-            ssh_agent_password="null",
-            metastore_user="null",
-            metastore_password="null",
-            metastore_database_name="null",
-            metastore_ip="null",
-            node_exporter_port=1,
-            grafana_port=1,
-            management_system_port=1,
-            cadvisor_port=1,
-            prometheus_port=1,
-            node_exporter_pid_file="null",
-            pgadmin_port=1,
-            csle_mgmt_webapp_pid_file="null",
-            docker_stats_manager_log_file="null",
-            docker_stats_manager_log_dir="null",
-            docker_stats_manager_port=1,
-            docker_stats_manager_max_workers=1,
-            docker_stats_manager_outfile="null",
-            docker_stats_manager_pidfile="null",
-            prometheus_pid_file="null",
-            prometheus_log_file="null",
-            prometheus_config_file="null",
-            default_log_dir="null",
-            cluster_config=ClusterConfig([c_node]),
-            node_exporter_log_file="null",
-            allow_registration=True,
-            grafana_username="null",
-            grafana_password="null",
-            pgadmin_username="null",
-            pgadmin_password="null",
-            postgresql_log_dir="null",
-            nginx_log_dir="null",
-            flask_log_file="null",
-            cluster_manager_log_file="null",
-        )
+        config = TestResourcesConfigSuite.example_config()
         config_dict = Config.to_param_dict(config)
-        response = flask_app.test_client().put(api_constants.MGMT_WEBAPP.CONFIG_RESOURCE,
-                                               data=json.dumps({"config": config_dict}))
+        response = flask_app.test_client().put(
+            api_constants.MGMT_WEBAPP.CONFIG_RESOURCE,
+            data=json.dumps({api_constants.MGMT_WEBAPP.CONFIG_PROPERTY: config_dict}))
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         config = Config.from_param_dict(response_data_list)
@@ -495,72 +406,22 @@ class TestResourcesConfigSuite(object):
         assert config.nginx_log_dir == "null"
         assert config.flask_log_file == "null"
         assert config.cluster_manager_log_file == "null"
-        del config_dict["parameters"][0]
+        del config_dict[api_constants.MGMT_WEBAPP.PARAMETERS_PROPERTY][0]
         response = flask_app.test_client().put(api_constants.MGMT_WEBAPP.CONFIG_RESOURCE,
-                                               data=json.dumps({"config": config_dict}))
+                                               data=json.dumps(
+                                                   {api_constants.MGMT_WEBAPP.CONFIG_PROPERTY: config_dict}))
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
-    def test_registration_allowed(self, flask_app,):
+    def test_registration_allowed(self, flask_app, ):
         """
         Testing the config/registration-allowed resource
         :param : self
         :param : flask_app
         :return : None
         """
-        c_node = ClusterNode(ip="12.345.67.89", leader=True, cpus=1, gpus=2, RAM=3)
-        constants.CONFIG_FILE.PARSED_CONFIG = Config(
-            management_admin_username_default="admin",
-            management_admin_password_default="admin",
-            management_admin_first_name_default="Admin",
-            management_admin_last_name_default="Adminson",
-            management_admin_email_default="admin@CSLE.com",
-            management_admin_organization_default="CSLE",
-            management_guest_username_default="guest",
-            management_guest_password_default="guest",
-            management_guest_first_name_default="Guest",
-            management_guest_last_name_default="Guestson",
-            management_guest_email_default="guest@CSLE.com",
-            management_guest_organization_default="CSLE",
-            ssh_admin_username="null",
-            ssh_admin_password="null",
-            ssh_agent_username="null",
-            ssh_agent_password="null",
-            metastore_user="null",
-            metastore_password="null",
-            metastore_database_name="null",
-            metastore_ip="null",
-            node_exporter_port=1,
-            grafana_port=1,
-            management_system_port=1,
-            cadvisor_port=1,
-            prometheus_port=1,
-            node_exporter_pid_file="null",
-            pgadmin_port=1,
-            csle_mgmt_webapp_pid_file="null",
-            docker_stats_manager_log_file="null",
-            docker_stats_manager_log_dir="null",
-            docker_stats_manager_port=1,
-            docker_stats_manager_max_workers=1,
-            docker_stats_manager_outfile="null",
-            docker_stats_manager_pidfile="null",
-            prometheus_pid_file="null",
-            prometheus_log_file="null",
-            prometheus_config_file="null",
-            default_log_dir="null",
-            cluster_config=ClusterConfig([c_node]),
-            node_exporter_log_file="null",
-            allow_registration=True,
-            grafana_username="null",
-            grafana_password="null",
-            pgadmin_username="null",
-            pgadmin_password="null",
-            postgresql_log_dir="null",
-            nginx_log_dir="null",
-            flask_log_file="null",
-            cluster_manager_log_file="null",
-        )
+        constants.CONFIG_FILE.PARSED_CONFIG = TestResourcesConfigSuite.example_config()
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.CONFIG_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"
-            f"{api_constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_SUBRESOURCE}",)
+            f"{api_constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_SUBRESOURCE}", )
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
