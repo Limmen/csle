@@ -7,7 +7,6 @@ from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
 from csle_common.dao.emulation_config.cluster_config import ClusterConfig
 from csle_common.dao.emulation_config.cluster_node import ClusterNode
 from csle_common.dao.emulation_config.config import Config
-from flask import jsonify
 
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
@@ -27,66 +26,6 @@ class TestResourcesNodeExporterSuite(object):
         return create_app(
             static_folder="../../../../../management-system/csle-mgmt-webapp/build"
         )
-
-    @pytest.fixture
-    def logged_in_as_admin(self, mocker):
-        """
-        Fixture for mocking the logged-in-as-admin side effect
-
-        :param mocker: the pytest mocker object
-        :return: the logged in as admin fixture for mocking the logged in check
-        """
-
-        def check_if_user_is_authorized(request, requires_admin):
-            return None
-
-        check_if_user_is_authorized_mock = mocker.MagicMock(
-            side_effect=check_if_user_is_authorized
-        )
-        return check_if_user_is_authorized_mock
-
-    @pytest.fixture
-    def logged_in(self, mocker):
-        """
-        Fixture for mocking the logged-in side effect
-
-        :param mocker: the pytest mocker object
-        :return: the logged in fixture for mocking the logged in check
-        """
-        def check_if_user_is_authorized(request, requires_admin):
-            if requires_admin:
-                response = jsonify({})
-                response.headers.add(
-                    api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
-                )
-                return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-            return None
-
-        check_if_user_is_authorized_mock = mocker.MagicMock(
-            side_effect=check_if_user_is_authorized
-        )
-        return check_if_user_is_authorized_mock
-
-    @pytest.fixture
-    def not_logged_in(self, mocker):
-        """
-        Fixture for mocking the not-logged-in side effect
-
-        :param mocker: the pytest mocker object
-        :return: the not-logged-in fixture for mocking the logged in check
-        """
-
-        def check_if_user_is_authorized(request, requires_admin):
-            response = jsonify({})
-            response.headers.add(
-                api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
-            )
-            return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-
-        check_if_user_is_authorized_mock = mocker.MagicMock(
-            side_effect=check_if_user_is_authorized
-        )
-        return check_if_user_is_authorized_mock
 
     @pytest.fixture
     def stop(self, mocker):
@@ -236,6 +175,7 @@ class TestResourcesNodeExporterSuite(object):
         get_node_status_mock = mocker.MagicMock(side_effect=get_node_status)
         return get_node_status_mock
 
+    @pytest.mark.usefixtures("logged_in", "logged_in_as_admin", "not_logged_in")
     def test_cadvisor(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in, config,
                       node_status_cadvisor_running, node_status_cadvisor_not_running, start, stop) -> None:
         """
