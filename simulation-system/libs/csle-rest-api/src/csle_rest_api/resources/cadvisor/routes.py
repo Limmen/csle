@@ -2,12 +2,14 @@
 Routes and sub-resources for the /cadvisor resource
 """
 import json
-from flask import Blueprint, jsonify, request
+
 import csle_common.constants.constants as constants
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, jsonify, request
+
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
-from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
 # Creates a blueprint "sub application" of the main REST app
 cadvisor_bp = Blueprint(api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE, __name__,
@@ -27,10 +29,13 @@ def cadvisor():
     if authorized is not None:
         return authorized
 
-    json_data = json.loads(request.data)
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
-    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        json_data = json.loads(request.data)
+        if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+            return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    else:
+        ip = " "
 
     config = MetastoreFacade.get_config(id=1)
     cluster_statuses = []
