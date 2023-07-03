@@ -12,7 +12,7 @@
     <a href="https://limmen.dev/csle">
         <img src="https://img.shields.io/website-up-down-green-red/http/shields.io.svg" /></a>
      <a href="https://limmen.dev/csle">
-        <img src="https://zenodo.org/badge/doi/10.5281/zenodo.4018965.svg" /></a>
+        <img src="https://zenodo.org/badge/doi/10.1109/TNSM.2022.3176781.svg" /></a>
 </p>
 
 # What is the Cyber Security Learning Environment (CSLE)?
