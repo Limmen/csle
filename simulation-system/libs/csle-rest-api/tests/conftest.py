@@ -1,10 +1,100 @@
 
 import csle_common.constants.constants as constants
 import pytest
+from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
+from csle_common.dao.emulation_config.cluster_config import ClusterConfig
+from csle_common.dao.emulation_config.cluster_node import ClusterNode
+from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.management.management_user import ManagementUser
 from flask import jsonify
 
 import csle_rest_api.constants.constants as api_constants
+
+
+@pytest.fixture
+def example_config():
+    """
+    Help function that returns a config class when making
+    fixtures and testing
+    :return: Config class
+    """
+    c_node = ClusterNode(ip="123.456.78.99", leader=True, cpus=1, gpus=2, RAM=3)
+    config = Config(
+        management_admin_username_default="admin",
+        management_admin_password_default="admin",
+        management_admin_first_name_default="Admin",
+        management_admin_last_name_default="Adminson",
+        management_admin_email_default="admin@CSLE.com",
+        management_admin_organization_default="CSLE",
+        management_guest_username_default="guest",
+        management_guest_password_default="guest",
+        management_guest_first_name_default="Guest",
+        management_guest_last_name_default="Guestson",
+        management_guest_email_default="guest@CSLE.com",
+        management_guest_organization_default="CSLE",
+        ssh_admin_username="null",
+        ssh_admin_password="null",
+        ssh_agent_username="null",
+        ssh_agent_password="null",
+        metastore_user="null",
+        metastore_password="null",
+        metastore_database_name="null",
+        metastore_ip="null",
+        node_exporter_port=1,
+        grafana_port=1,
+        management_system_port=1,
+        cadvisor_port=1,
+        prometheus_port=1,
+        node_exporter_pid_file="null",
+        pgadmin_port=1,
+        csle_mgmt_webapp_pid_file="null",
+        docker_stats_manager_log_file="null",
+        docker_stats_manager_log_dir="null",
+        docker_stats_manager_port=1,
+        docker_stats_manager_max_workers=1,
+        docker_stats_manager_outfile="null",
+        docker_stats_manager_pidfile="null",
+        prometheus_pid_file="null",
+        prometheus_log_file="null",
+        prometheus_config_file="null",
+        default_log_dir="null",
+        cluster_config=ClusterConfig([c_node]),
+        node_exporter_log_file="null",
+        allow_registration=True,
+        grafana_username="null",
+        grafana_password="null",
+        pgadmin_username="null",
+        pgadmin_password="null",
+        postgresql_log_dir="null",
+        nginx_log_dir="null",
+        flask_log_file="null",
+        cluster_manager_log_file="null",
+    )
+    return config
+
+
+@pytest.fixture
+def example_node_status() -> NodeStatusDTO:
+    """
+    Help function that returns an example node status
+
+    :return: the example node status
+    """
+    node_status = NodeStatusDTO(
+        ip="123.456.78.99",
+        leader=True,
+        cAdvisorRunning=True,
+        prometheusRunning=True,
+        grafanaRunning=True,
+        pgAdminRunning=True,
+        nginxRunning=True,
+        flaskRunning=True,
+        dockerStatsManagerRunning=True,
+        nodeExporterRunning=True,
+        postgreSQLRunning=True,
+        dockerEngineRunning=True
+    )
+    return node_status
 
 
 @pytest.fixture
