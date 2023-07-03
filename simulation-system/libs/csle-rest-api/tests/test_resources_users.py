@@ -171,7 +171,7 @@ class TestResourcesUsersSuite(object):
         return save_management_user_mock
 
     @pytest.mark.usefixtures("authorized", "unauthorized", "logged_in", "logged_in_as_admin", "not_logged_in")
-    def test_users(
+    def test_users_get(
             self,
             flask_app,
             mocker,
@@ -179,11 +179,10 @@ class TestResourcesUsersSuite(object):
             management_users,
             not_logged_in,
             management_ids,
-            remove,
             logged_in,
     ) -> None:
         """
-        Tests the /users resource for listing management user accounts
+        Tests the GET HTTPS method /users resource for listing management user accounts
 
         :param flask_app: the flask app representing the web server
         :param mocker: the mocker object for mocking functions
@@ -259,13 +258,28 @@ class TestResourcesUsersSuite(object):
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert len(response_data_list) == 0
+
+    def test_users_delete(
+            self,
+            flask_app,
+            mocker,
+            logged_in_as_admin,
+            management_users,
+            not_logged_in,
+            remove,
+            logged_in,
+    ) -> None:
         mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
+            "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
+            side_effect=management_users,
         )
         mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.remove_management_user",
             side_effect=remove,
+        )
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=logged_in_as_admin,
         )
         response = flask_app.test_client().delete(
             api_constants.MGMT_WEBAPP.USERS_RESOURCE
@@ -275,20 +289,39 @@ class TestResourcesUsersSuite(object):
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_users_id(
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=logged_in,
+        )
+        response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.USERS_RESOURCE)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert len(response_data_list) == 0
+
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=not_logged_in,
+        )
+        response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.USERS_RESOURCE)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert len(response_data_list) == 0
+
+    def test_users_id_get(
             self,
             flask_app,
             mocker,
             management_users,
             not_logged_in,
-            remove,
             logged_in,
             authorized,
             unauthorized,
             management_config,
     ) -> None:
         """
-        Testing the /users/id
+        Testing the GET HTTPS method for the /users/id resource
 
         :param flask_app: the flask app representing the web server
         :param mocker: the mocker object for mocking functions
@@ -379,6 +412,124 @@ class TestResourcesUsersSuite(object):
         assert len(response_data_list) == 0
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+
+    def test_users_id_put(
+            self,
+            flask_app,
+            mocker,
+            management_users,
+            not_logged_in,
+            logged_in,
+            authorized,
+            unauthorized,
+            management_config,
+    ) -> None:
+        """
+        Testing the PUT HTTPS method for the /users/id resource
+
+        :param flask_app: the flask app representing the web server
+        :param mocker: the mocker object for mocking functions
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param management_users: the management_users fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param management_config: the management_config fixture
+        :param remove: the remove fixture
+        :param logged_in: the logged_in fixture
+        :param authorized: the athourized fixture
+        :param unauthorized: the unathourized fixture
+        :return: None
+        """
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
+            side_effect=management_users,
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_config",
+            side_effect=management_config,
+        )
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=logged_in,
+        )
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
+            side_effect=authorized,
+        )
+        guest_user = TestResourcesUsersSuite.example_guest_user()
+        guest_data_test = guest_user.to_dict()
+        response = flask_app.test_client().put(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}{guest_user.id}",
+            data=json.dumps(guest_data_test),
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert len(response_data_list) == 9
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        bad_guest_data_test = guest_user.to_dict()
+        del bad_guest_data_test[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
+        response = flask_app.test_client().put(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}{guest_user.id}",
+            data=json.dumps(bad_guest_data_test),
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert len(response_data_list) < 9
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=not_logged_in,
+        )
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
+            side_effect=unauthorized,
+        )
+        response = flask_app.test_client().put(
+            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
+            f"{constants.COMMANDS.SLASH_DELIM}{guest_user.id}",
+            data=json.dumps(guest_data_test),
+        )
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert len(response_data_list) == 0
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+
+    def test_users_id_delete(
+            self,
+            flask_app,
+            mocker,
+            management_users,
+            not_logged_in,
+            remove,
+            logged_in,
+            authorized,
+            unauthorized,
+            management_config,
+    ) -> None:
+        """
+        Testing the DELETE HTTPS method for the /users/id resource
+
+        :param flask_app: the flask app representing the web server
+        :param mocker: the mocker object for mocking functions
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param management_users: the management_users fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param management_config: the management_config fixture
+        :param remove: the remove fixture
+        :param logged_in: the logged_in fixture
+        :param authorized: the athourized fixture
+        :param unauthorized: the unathourized fixture
+        :return: None
+        """
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
+            side_effect=management_users,
+        )
+        mocker.patch(
+            "csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_config",
+            side_effect=management_config,
+        )
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in,
@@ -391,6 +542,8 @@ class TestResourcesUsersSuite(object):
             "csle_common.metastore.metastore_facade.MetastoreFacade.remove_management_user",
             side_effect=remove,
         )
+        guest_user = TestResourcesUsersSuite.example_guest_user()
+        admin_user = TestResourcesUsersSuite.example_admin_user()
         response = flask_app.test_client().delete(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}{guest_user.id}"
@@ -413,10 +566,6 @@ class TestResourcesUsersSuite(object):
             "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
             side_effect=unauthorized,
         )
-        mocker.patch(
-            "csle_common.metastore.metastore_facade.MetastoreFacade.remove_management_user",
-            side_effect=remove,
-        )
         response = flask_app.test_client().delete(
             f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}{guest_user.id}"
@@ -433,35 +582,6 @@ class TestResourcesUsersSuite(object):
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_edit_is_authorized",
-            side_effect=authorized,
-        )
-        guest_data_test = guest_user.to_dict()
-        response = flask_app.test_client().put(
-            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-            f"{constants.COMMANDS.SLASH_DELIM}235",
-            data=json.dumps(guest_data_test),
-        )
-        response_data = response.data.decode("utf-8")
-        response_data_list = json.loads(response_data)
-        assert len(response_data_list) == 9
-        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        bad_guest_data_test = guest_user.to_dict()
-        del bad_guest_data_test[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
-        response = flask_app.test_client().put(
-            f"{api_constants.MGMT_WEBAPP.USERS_RESOURCE}"
-            f"{constants.COMMANDS.SLASH_DELIM}{guest_user.id}",
-            data=json.dumps(bad_guest_data_test),
-        )
-        response_data = response.data.decode("utf-8")
-        response_data_list = json.loads(response_data)
-        assert len(response_data_list) < 9
-        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
     def test_create(
             self,
@@ -471,7 +591,7 @@ class TestResourcesUsersSuite(object):
             management_users
     ):
         """
-        Testing the /users/id
+        Testing the POST HTTPS method for the /users/id resource
         :param flask_app: the flask app representing the web server
         :param mocker: the mocker object for mocking functions
 

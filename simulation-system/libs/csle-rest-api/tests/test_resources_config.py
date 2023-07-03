@@ -154,7 +154,7 @@ class TestResourcesConfigSuite(object):
         return read_failed_config_file_mock
 
     @pytest.mark.usefixtures("logged_in", "logged_in_as_admin", "not_logged_in")
-    def test_config(
+    def test_config_get(
             self,
             flask_app,
             mocker,
@@ -165,7 +165,7 @@ class TestResourcesConfigSuite(object):
             failed_config_read,
             save, from_config_file, ):
         """
-        Tests the /config resource for listing management user accounts
+        Tests the GET HTTPS method for the /config resource for listing management user accounts
 
         :param : flask_app: the flask app representing the web server
         :param : mocker: the mocker object for mocking functions
@@ -268,6 +268,47 @@ class TestResourcesConfigSuite(object):
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        mocker.patch(
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+            side_effect=logged_in_as_admin,
+        )
+        mocker.patch(
+            "csle_common.dao.emulation_config.config.Config.save_config_file",
+            side_effect=save,
+        )
+        mocker.patch(
+            "csle_common.util.cluster_util.ClusterUtil.set_config_parameters_from_config_file",
+            side_effect=from_config_file,
+        )
+
+    def test_config_put(
+            self,
+            flask_app,
+            mocker,
+            logged_in,
+            logged_in_as_admin,
+            not_logged_in,
+            config_read,
+            failed_config_read,
+            save, from_config_file, ):
+        """
+        Tests the PUT HTTPS method for the /config resource for listing management user accounts
+
+        :param : flask_app: the flask app representing the web server
+        :param : mocker: the mocker object for mocking functions
+        :param : logged_in_as_admin: the logged_in_as_admin fixture
+        :param : logged_in: the logged_in fixture
+        :param : not_logged_in: the not_logged_in fixture
+        :param : config_read: the config_read fixture
+        :param : failed_config_read : the failed_config_read fixture
+        :param : save : the save fixture
+        :param : from_config_file: the from_config_file fixture
+        :return : None
+        """
+        mocker.patch(
+            "csle_common.dao.emulation_config.config.Config.read_config_file",
+            side_effect=config_read,
+        )
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
