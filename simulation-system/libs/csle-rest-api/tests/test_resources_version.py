@@ -26,7 +26,7 @@ class TestResourcesVersionSuite(object):
 
     def test_version_resource(self, flask_app) -> None:
         """
-        Tests the /version resource
+        Tests the GET HTTPS method for the /version resource
 
         :return: None
         """
