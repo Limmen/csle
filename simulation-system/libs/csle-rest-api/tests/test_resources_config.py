@@ -3,8 +3,6 @@ import logging
 
 import csle_common.constants.constants as constants
 import pytest
-from csle_common.dao.emulation_config.cluster_config import ClusterConfig
-from csle_common.dao.emulation_config.cluster_node import ClusterNode
 from csle_common.dao.emulation_config.config import Config
 
 import csle_rest_api.constants.constants as api_constants
@@ -58,69 +56,8 @@ class TestResourcesConfigSuite(object):
         )
         return set_config_parameters_from_config_file_mocker
 
-    @staticmethod
-    def example_config() -> Config:
-        """
-        Help function that returns an example config
-
-        :return: config
-        """
-        c_node = ClusterNode(ip="12.345.67.89", leader=True, cpus=1, gpus=2, RAM=3)
-        config = Config(
-            management_admin_username_default="admin",
-            management_admin_password_default="admin",
-            management_admin_first_name_default="Admin",
-            management_admin_last_name_default="Adminson",
-            management_admin_email_default="admin@CSLE.com",
-            management_admin_organization_default="CSLE",
-            management_guest_username_default="guest",
-            management_guest_password_default="guest",
-            management_guest_first_name_default="Guest",
-            management_guest_last_name_default="Guestson",
-            management_guest_email_default="guest@CSLE.com",
-            management_guest_organization_default="CSLE",
-            ssh_admin_username="null",
-            ssh_admin_password="null",
-            ssh_agent_username="null",
-            ssh_agent_password="null",
-            metastore_user="null",
-            metastore_password="null",
-            metastore_database_name="null",
-            metastore_ip="null",
-            node_exporter_port=1,
-            grafana_port=1,
-            management_system_port=1,
-            cadvisor_port=1,
-            prometheus_port=1,
-            node_exporter_pid_file="null",
-            pgadmin_port=1,
-            csle_mgmt_webapp_pid_file="null",
-            docker_stats_manager_log_file="null",
-            docker_stats_manager_log_dir="null",
-            docker_stats_manager_port=1,
-            docker_stats_manager_max_workers=1,
-            docker_stats_manager_outfile="null",
-            docker_stats_manager_pidfile="null",
-            prometheus_pid_file="null",
-            prometheus_log_file="null",
-            prometheus_config_file="null",
-            default_log_dir="null",
-            cluster_config=ClusterConfig([c_node]),
-            node_exporter_log_file="null",
-            allow_registration=True,
-            grafana_username="null",
-            grafana_password="null",
-            pgadmin_username="null",
-            pgadmin_password="null",
-            postgresql_log_dir="null",
-            nginx_log_dir="null",
-            flask_log_file="null",
-            cluster_manager_log_file="null",
-        )
-        return config
-
     @pytest.fixture
-    def config_read(self, mocker):
+    def config_read(self, mocker, example_config):
         """
         Fixture for mocking the config_read side effect.
 
@@ -129,7 +66,7 @@ class TestResourcesConfigSuite(object):
         """
 
         def read_config_file() -> Config:
-            return TestResourcesConfigSuite.example_config()
+            return example_config
 
         read_config_file_mock = mocker.MagicMock(
             side_effect=read_config_file
@@ -237,7 +174,7 @@ class TestResourcesConfigSuite(object):
         assert config.docker_stats_manager_outfile == "null"
         assert config.docker_stats_manager_pidfile == "null"
         assert config.docker_stats_manager_port == 1
-        assert config.cluster_config.cluster_nodes[0].ip == "12.345.67.89"
+        assert config.cluster_config.cluster_nodes[0].ip == "123.456.78.99"
         assert config.cluster_config.cluster_nodes[0].leader is True
         assert config.cluster_config.cluster_nodes[0].cpus == 1
         assert config.cluster_config.cluster_nodes[0].gpus == 2
@@ -290,7 +227,7 @@ class TestResourcesConfigSuite(object):
             not_logged_in,
             config_read,
             failed_config_read,
-            save, from_config_file, ):
+            save, from_config_file, example_config):
         """
         Tests the PUT HTTPS method for the /config resource for listing management user accounts
 
@@ -327,7 +264,7 @@ class TestResourcesConfigSuite(object):
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         assert response_data_list == {}
-        config = TestResourcesConfigSuite.example_config()
+        config = example_config
         config_dict = Config.to_param_dict(config)
         response = flask_app.test_client().put(
             api_constants.MGMT_WEBAPP.CONFIG_RESOURCE,
@@ -373,7 +310,7 @@ class TestResourcesConfigSuite(object):
         assert config.docker_stats_manager_outfile == "null"
         assert config.docker_stats_manager_pidfile == "null"
         assert config.docker_stats_manager_port == 1
-        assert config.cluster_config.cluster_nodes[0].ip == "12.345.67.89"
+        assert config.cluster_config.cluster_nodes[0].ip == "123.456.78.99"
         assert config.cluster_config.cluster_nodes[0].leader is True
         assert config.cluster_config.cluster_nodes[0].cpus == 1
         assert config.cluster_config.cluster_nodes[0].gpus == 2
@@ -392,14 +329,14 @@ class TestResourcesConfigSuite(object):
                                                    {api_constants.MGMT_WEBAPP.CONFIG_PROPERTY: config_dict}))
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
-    def test_registration_allowed(self, flask_app, ):
+    def test_registration_allowed(self, flask_app, example_config):
         """
         Testing the config/registration-allowed resource
         :param : self
         :param : flask_app
         :return : None
         """
-        constants.CONFIG_FILE.PARSED_CONFIG = TestResourcesConfigSuite.example_config()
+        constants.CONFIG_FILE.PARSED_CONFIG = example_config
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.CONFIG_RESOURCE}"
             f"{constants.COMMANDS.SLASH_DELIM}"

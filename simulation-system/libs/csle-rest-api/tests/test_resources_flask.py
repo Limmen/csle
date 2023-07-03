@@ -4,9 +4,6 @@ import logging
 import csle_common.constants.constants as constants
 import pytest
 from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
-from csle_common.dao.emulation_config.cluster_config import ClusterConfig
-from csle_common.dao.emulation_config.cluster_node import ClusterNode
-from csle_common.dao.emulation_config.config import Config
 
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
@@ -50,103 +47,19 @@ class TestResourcesFlaskSuite(object):
         return start_flask_mocker
 
     @pytest.fixture
-    def config(self, mocker):
+    def config(self, mocker, example_config):
         """
         Fixture for mocking the config side-effect
         """
         def get_config(id):
-            config = TestResourcesFlaskSuite.example_config()
+            config = example_config
             return config
 
         get_config_mock = mocker.MagicMock(side_effect=get_config)
         return get_config_mock
 
-    @staticmethod
-    def example_node_status() -> NodeStatusDTO:
-        """
-        Help function that returns an example node status
-
-        :return: the example node status
-        """
-        node_status = NodeStatusDTO(
-            ip="123.456.78.99",
-            leader=True,
-            cAdvisorRunning=True,
-            prometheusRunning=True,
-            grafanaRunning=True,
-            pgAdminRunning=True,
-            nginxRunning=True,
-            flaskRunning=True,
-            dockerStatsManagerRunning=True,
-            nodeExporterRunning=True,
-            postgreSQLRunning=True,
-            dockerEngineRunning=True
-        )
-        return node_status
-
-    @staticmethod
-    def example_config():
-        """
-        Help function that returns a congif class when making
-        fixtures and testing
-        :return: Config class
-        """
-        c_node = ClusterNode(ip="123.456.78.99", leader=True, cpus=1, gpus=2, RAM=3)
-        config = Config(
-            management_admin_username_default="admin",
-            management_admin_password_default="admin",
-            management_admin_first_name_default="Admin",
-            management_admin_last_name_default="Adminson",
-            management_admin_email_default="admin@CSLE.com",
-            management_admin_organization_default="CSLE",
-            management_guest_username_default="guest",
-            management_guest_password_default="guest",
-            management_guest_first_name_default="Guest",
-            management_guest_last_name_default="Guestson",
-            management_guest_email_default="guest@CSLE.com",
-            management_guest_organization_default="CSLE",
-            ssh_admin_username="null",
-            ssh_admin_password="null",
-            ssh_agent_username="null",
-            ssh_agent_password="null",
-            metastore_user="null",
-            metastore_password="null",
-            metastore_database_name="null",
-            metastore_ip="null",
-            node_exporter_port=1,
-            grafana_port=1,
-            management_system_port=1,
-            cadvisor_port=1,
-            prometheus_port=1,
-            node_exporter_pid_file="null",
-            pgadmin_port=1,
-            csle_mgmt_webapp_pid_file="null",
-            docker_stats_manager_log_file="null",
-            docker_stats_manager_log_dir="null",
-            docker_stats_manager_port=1,
-            docker_stats_manager_max_workers=1,
-            docker_stats_manager_outfile="null",
-            docker_stats_manager_pidfile="null",
-            prometheus_pid_file="null",
-            prometheus_log_file="null",
-            prometheus_config_file="null",
-            default_log_dir="null",
-            cluster_config=ClusterConfig([c_node]),
-            node_exporter_log_file="null",
-            allow_registration=True,
-            grafana_username="null",
-            grafana_password="null",
-            pgadmin_username="null",
-            pgadmin_password="null",
-            postgresql_log_dir="null",
-            nginx_log_dir="null",
-            flask_log_file="null",
-            cluster_manager_log_file="null",
-        )
-        return config
-
     @pytest.fixture
-    def node_status_flask_running(self, mocker):
+    def node_status_flask_running(self, mocker, example_node_status):
         """
         Fixture for mocking the get_node_status function where flask is running
 
@@ -154,14 +67,14 @@ class TestResourcesFlaskSuite(object):
         :return the fixture for the get_node_status_function
         """
         def get_node_status(ip: str, port: int) -> NodeStatusDTO:
-            node_status = TestResourcesFlaskSuite.example_node_status()
+            node_status = example_node_status
             node_status.flaskRunning = True
             return node_status
         get_node_status_mock = mocker.MagicMock(side_effect=get_node_status)
         return get_node_status_mock
 
     @pytest.fixture
-    def node_status_flask_not_running(self, mocker):
+    def node_status_flask_not_running(self, mocker, example_node_status):
         """
         Fixture for mocking the get_node_status function where flask is not running
 
@@ -169,7 +82,7 @@ class TestResourcesFlaskSuite(object):
         :return the fixture for the get_node_status_function
         """
         def get_node_status(ip: str, port: int) -> NodeStatusDTO:
-            node_status = TestResourcesFlaskSuite.example_node_status()
+            node_status = example_node_status
             node_status.flaskRunning = False
             return node_status
         get_node_status_mock = mocker.MagicMock(side_effect=get_node_status)
@@ -177,7 +90,8 @@ class TestResourcesFlaskSuite(object):
 
     @pytest.mark.usefixtures("logged_in", "logged_in_as_admin", "not_logged_in")
     def test_flask_get(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in, config,
-                       node_status_flask_running, node_status_flask_not_running, start, stop) -> None:
+                       node_status_flask_running, node_status_flask_not_running, start, stop,
+                       example_config) -> None:
         """
         Tests the /flask url
 
@@ -204,7 +118,7 @@ class TestResourcesFlaskSuite(object):
             side_effect=stop,
         )
 
-        config = TestResourcesFlaskSuite.example_config()
+        config = example_config
         ip_adress = config.cluster_config.cluster_nodes[0].ip
         RAM = config.cluster_config.cluster_nodes[0].RAM
         cpus = config.cluster_config.cluster_nodes[0].cpus
@@ -415,7 +329,8 @@ class TestResourcesFlaskSuite(object):
             == f"http://{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
 
     def test_flask_post(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in, config,
-                        node_status_flask_running, node_status_flask_not_running, start, stop) -> None:
+                        node_status_flask_running, node_status_flask_not_running, start, stop,
+                        example_config) -> None:
         """
         Tests the POST HTTPS method for the /flask url
 
@@ -441,7 +356,7 @@ class TestResourcesFlaskSuite(object):
             side_effect=stop,
         )
 
-        config = TestResourcesFlaskSuite.example_config()
+        config = example_config
         ip_adress = config.cluster_config.cluster_nodes[0].ip
         RAM = config.cluster_config.cluster_nodes[0].RAM
         cpus = config.cluster_config.cluster_nodes[0].cpus
@@ -552,7 +467,7 @@ class TestResourcesFlaskSuite(object):
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
         )
-        config = TestResourcesFlaskSuite.example_config()
+        config = example_config
         config_cluster_dict = config.cluster_config.to_dict()['cluster_nodes'][0]
         response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.FLASK_RESOURCE,
                                                 data=json.dumps(config_cluster_dict))
