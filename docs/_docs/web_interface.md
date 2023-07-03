@@ -225,6 +225,9 @@ Table 20: REST API resources (1/4).
 | `/empirical-system-models?token=<token>`                            | `GET`, `DELETE` |
 | `/empirical-system-models?ids=true&token=<token>`                   | `GET`, `DELETE` |
 | `/empirical-system-models/<trace_id>?token=<token>`                 | `GET`, `DELETE` |
+| `/mcmc-system-models?token=<token>`                                 | `GET`, `DELETE` |
+| `/mcmc-system-models?ids=true&token=<token>`                        | `GET`, `DELETE` |
+| `/mcmc-system-models/<trace_id>?token=<token>`                      | `GET`, `DELETE` |
 | `/gp-system-models?token=<token>`                                   | `GET`, `DELETE` |
 | `/gp-system-models?ids=true&token=<token>`                          | `GET`, `DELETE` |
 | `/gp-system-models/<model_id>?token=<token>`                        | `GET`, `DELETE` |

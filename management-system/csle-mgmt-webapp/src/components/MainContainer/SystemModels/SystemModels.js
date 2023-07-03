@@ -26,11 +26,13 @@ import serverPort from "../../Common/serverPort";
 import {
     EMPIRICAL_SYSTEM_MODELS_RESOURCE,
     GAUSSIAN_MIXTURE_SYSTEM_MODELS_RESOURCE, GP_SYSTEM_MODELS_RESOURCE,
+    MCMC_SYSTEM_MODELS_RESOURCE,
     HTTP_PREFIX, HTTP_REST_DELETE,
     HTTP_REST_GET,
     LOGIN_PAGE_RESOURCE,
     TOKEN_QUERY_PARAM,
-    IDS_QUERY_PARAM,
+    MCMC_SYSTEM_MODEL_TYPE_INT,
+    IDS_QUERY_PARAM, MCMC_SYSTEM_MODEL_TYPE,
     SYSTEM_MODELS_RESOURCE, GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE, EMPIRICAL_SYSTEM_MODEL_TYPE, GP_SYSTEM_MODEL_TYPE
 } from "../../Common/constants";
 
@@ -140,6 +142,9 @@ const SystemModels = (props) => {
         if(systemModelIdObj.type === GP_SYSTEM_MODEL_TYPE) {
             fetchGPSystemModel(systemModelIdObj)
         }
+        if(systemModelIdObj.type === MCMC_SYSTEM_MODEL_TYPE) {
+            fetchMCMCSystemModel(systemModelIdObj)
+        }
         setLoadingSelectedSystemModel(true)
     }
     const updateSelectedConditionals = (selected) => {
@@ -221,6 +226,57 @@ const SystemModels = (props) => {
                             label: metricName
                         }
                     })
+                    setMetrics(metricOptions)
+                    setSelectedMetric(metricOptions[0])
+                }
+
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, ip, navigate, port, props.sessionData.token, setSessionData]);
+
+    const fetchMCMCSystemModel = useCallback((model_id_obj) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${MCMC_SYSTEM_MODELS_RESOURCE}/`
+                + `${parseInt(model_id_obj.value.split("_")[0])}?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_GET,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                if (response !== null && response !== undefined && !(Object.keys(response).length === 0)) {
+                    var conditionalOptions = []
+                    for (let i = 0; i < response.posteriors.length; i++) {
+                        conditionalOptions.push(
+                            {
+                                value: response.posteriors[i],
+                                label: response.posteriors[i].posterior_name
+                            })
+                    }
+                    setConditionals(conditionalOptions)
+                    setSelectedConditionals([conditionalOptions[0]])
+                    setSelectedSystemModel(response)
+                    setLoadingSelectedSystemModel(false)
+                    const metricOptions = [
+                        {
+                            value: "posterior",
+                            label: "posterior"
+                        }
+                    ]
                     setMetrics(metricOptions)
                     setSelectedMetric(metricOptions[0])
                 }
@@ -386,6 +442,9 @@ const SystemModels = (props) => {
                     if (modelIds[0].type === GP_SYSTEM_MODEL_TYPE) {
                         fetchGPSystemModel(modelIds[0])
                     }
+                    if (modelIds[0].type === MCMC_SYSTEM_MODEL_TYPE) {
+                        fetchMCMCSystemModel(modelIds[0])
+                    }
                     setLoadingSelectedSystemModel(true)
                 } else {
                     setLoadingSelectedSystemModel(false)
@@ -394,7 +453,7 @@ const SystemModels = (props) => {
             })
             .catch(error => console.log("error:" + error))
     }, [alert, fetchEmpiricalSystemModel, fetchGPSystemModel, fetchGaussianMixtureSystemModel,
-        ip, navigate, port, props.sessionData.token, setSessionData]);
+        fetchMCMCSystemModel, ip, navigate, port, props.sessionData.token, setSessionData]);
 
     useEffect(() => {
         setLoading(true)
@@ -460,6 +519,35 @@ const SystemModels = (props) => {
             .catch(error => console.log("error:" + error))
     }, [alert, fetchSystemModelsIds, ip, navigate, port, props.sessionData.token, setSessionData]);
 
+    const removeMCMCSystemModelRequest = useCallback((model_id) => {
+        fetch(
+            (`${HTTP_PREFIX}${ip}:${port}/${MCMC_SYSTEM_MODELS_RESOURCE}/${model_id}`
+                + `?${TOKEN_QUERY_PARAM}=${props.sessionData.token}`),
+            {
+                method: HTTP_REST_DELETE,
+                headers: new Headers({
+                    Accept: "application/vnd.github.cloak-preview"
+                })
+            }
+        )
+            .then(res => {
+                if(res.status === 401) {
+                    alert.show("Session token expired. Please login again.")
+                    setSessionData(null)
+                    navigate(`/${LOGIN_PAGE_RESOURCE}`);
+                    return null
+                }
+                return res.json()
+            })
+            .then(response => {
+                if(response === null) {
+                    return
+                }
+                fetchSystemModelsIds()
+            })
+            .catch(error => console.log("error:" + error))
+    }, [alert, fetchSystemModelsIds, ip, navigate, port, props.sessionData.token, setSessionData]);
+
     const removeGpSystemModelRequest = useCallback((model_id) => {
         fetch(
             (`${HTTP_PREFIX}${ip}:${port}/${GP_SYSTEM_MODELS_RESOURCE}/${model_id}`
@@ -491,14 +579,17 @@ const SystemModels = (props) => {
 
     const removeModel = (model) => {
         setLoading(true)
-        if(getSystemModelTypeStr(model.model_type) === "gaussian_mixture") {
+        if(getSystemModelTypeStr(model.model_type) === GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE) {
             removeGaussianMixtureSystemModelRequest(model.id)
         }
-        if(getSystemModelTypeStr(model.model_type) === "empirical") {
+        if(getSystemModelTypeStr(model.model_type) === EMPIRICAL_SYSTEM_MODEL_TYPE) {
             removeEmpiricalSystemModelRequest(model.id)
         }
-        if(getSystemModelTypeStr(model.model_type) === "gp") {
+        if(getSystemModelTypeStr(model.model_type) === GP_SYSTEM_MODEL_TYPE) {
             removeGpSystemModelRequest(model.id)
+        }
+        if(getSystemModelTypeStr(model.model_type) === MCMC_SYSTEM_MODEL_TYPE) {
+            removeMCMCSystemModelRequest(model.id)
         }
         resetState()
     }
@@ -994,16 +1085,20 @@ const SystemModels = (props) => {
                                                                  selectedConditionals={props.selectedConditionals}/>
 
                                             {conditionalPairs().map((conditionalPair, index) => {
-                                                return (
-                                                    <tr key={conditionalPair.conditional_1 + "-" +
-                                                        conditionalPair.conditional_2 + "-" + index}>
-                                                        <td>Kullback-Leibler divergence between conditional
-                                                            "{conditionalPair.conditional_1}" and
-                                                            "{conditionalPair.conditional_2}"
-                                                        </td>
-                                                        <td>{props.selectedSystemModel.conditionals_kl_divergences[conditionalPair.conditional_1][conditionalPair.conditional_2][props.selectedMetric.label]}</td>
-                                                    </tr>
-                                                )
+                                                if(props.selectedSystemModel.model_type !== MCMC_SYSTEM_MODEL_TYPE_INT){
+                                                    return (
+                                                        <tr key={conditionalPair.conditional_1 + "-" +
+                                                            conditionalPair.conditional_2 + "-" + index}>
+                                                            <td>Kullback-Leibler divergence between conditional
+                                                                "{conditionalPair.conditional_1}" and
+                                                                "{conditionalPair.conditional_2}"
+                                                            </td>
+                                                            <td>{props.selectedSystemModel.conditionals_kl_divergences[conditionalPair.conditional_1][conditionalPair.conditional_2][props.selectedMetric.label]}</td>
+                                                        </tr>
+                                                    )
+                                                } else{
+                                                    return <></>
+                                                }
                                             })}
 
                                             <tr>

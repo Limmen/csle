@@ -340,3 +340,14 @@ CREATE TABLE IF NOT EXISTS linear_threshold_stopping_policies (
 GRANT ALL ON linear_threshold_stopping_policies TO csle;
 GRANT USAGE, SELECT ON SEQUENCE linear_threshold_stopping_policies_id_seq TO csle;
 SELECT create_reference_table('linear_threshold_stopping_policies');
+
+-- Create table that stores the mcmc system models --
+CREATE TABLE IF NOT EXISTS mcmc_system_models (
+    id serial PRIMARY KEY,
+    model json NOT NULL,
+    emulation_name TEXT references emulations(name),
+    emulation_statistic_id int references emulation_statistics(id)
+);
+GRANT ALL ON mcmc_system_models TO csle;
+GRANT USAGE, SELECT ON SEQUENCE mcmc_system_models_id_seq TO csle;
+SELECT create_reference_table('mcmc_system_models');

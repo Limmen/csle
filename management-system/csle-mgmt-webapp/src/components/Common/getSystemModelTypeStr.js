@@ -15,6 +15,9 @@ const getSystemModelTypeStr = (systemModelType) => {
     if(systemModelType === 2) {
         return "gp"
     }
+    if(systemModelType === 3) {
+        return "mcmc"
+    }
     else {
         return "Unknown"
     }

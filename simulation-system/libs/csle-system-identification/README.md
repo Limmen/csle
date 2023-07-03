@@ -15,6 +15,9 @@ from emulated infrastructures.
 - `csle-attacker`
 - `csle-defender`
 - `gpytorch` (For system identification algorithms based on Gaussian processes)
+- `pymc` (For Markov-Chain Monte Carlo and Bayesian modeling)
+- `pytensor` (For numerical computations)
+- `scikit-learn` (For statistical computations)
 
 ## Development Requirements
 

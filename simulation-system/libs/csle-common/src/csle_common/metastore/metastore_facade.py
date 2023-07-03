@@ -18,6 +18,7 @@ from csle_common.dao.jobs.data_collection_job_config import DataCollectionJobCon
 from csle_common.dao.jobs.system_identification_job_config import SystemIdentificationJobConfig
 from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
 from csle_common.dao.system_identification.empirical_system_model import EmpiricalSystemModel
+from csle_common.dao.system_identification.mcmc_system_model import MCMCSystemModel
 from csle_common.dao.system_identification.gp_system_model import GPSystemModel
 from csle_common.dao.encoding.np_encoder import NpEncoder
 from csle_common.dao.training.ppo_policy import PPOPolicy
@@ -1719,7 +1720,7 @@ class MetastoreFacade:
     def _convert_gaussian_mixture_system_model_record_to_dto(gaussian_mixture_system_model_record) -> \
             GaussianMixtureSystemModel:
         """
-        Converts a gaussian mixture system model job record fetched from the metastore into a DTO
+        Converts a gaussian mixture system model record fetched from the metastore into a DTO
 
         :param gaussian_mixture_system_model_record: the record to convert
         :return: the DTO representing the record
@@ -1734,7 +1735,7 @@ class MetastoreFacade:
     @staticmethod
     def list_gaussian_mixture_system_models() -> List[GaussianMixtureSystemModel]:
         """
-        :return: A list of gaussian mixture system model jobs in the metastore
+        :return: A list of gaussian mixture system models in the metastore
         """
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
@@ -1765,10 +1766,10 @@ class MetastoreFacade:
     @staticmethod
     def get_gaussian_mixture_system_model_config(id: int) -> Union[None, GaussianMixtureSystemModel]:
         """
-        Function for fetching a gaussian mixture system model job config with a given id from the metastore
+        Function for fetching a gaussian mixture system model config with a given id from the metastore
 
-        :param id: the id of the gaussian mixture system model job config
-        :return: The gaussian mixture system model job config or None if it could not be found
+        :param id: the id of the gaussian mixture system model config
+        :return: The gaussian mixture system model config or None if it could not be found
         """
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
@@ -1789,10 +1790,10 @@ class MetastoreFacade:
         """
         Saves a gaussian mixture system model to the metastore
 
-        :param gaussian_mixture_system_model: the gaussian mixture system model job to save
+        :param gaussian_mixture_system_model: the gaussian mixture system model to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug("Saving a gaussian mixture system model job in the metastore")
+        Logger.__call__().get_logger().debug("Saving a gaussian mixture system model in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -1815,13 +1816,13 @@ class MetastoreFacade:
     def update_gaussian_mixture_system_model(gaussian_mixture_system_model: GaussianMixtureSystemModel, id: int) \
             -> None:
         """
-        Updates a gaussian mixture system model job in the metastore
+        Updates a gaussian mixture system model in the metastore
 
-        :param gaussian_mixture_system_model: the gaussian mixture system model job to save
+        :param gaussian_mixture_system_model: the gaussian mixture system model to save
         :param id: the id of the row to update
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Updating gaussian mixture system model job with id: {id} "
+        Logger.__call__().get_logger().debug(f"Updating gaussian mixture system model with id: {id} "
                                              f"in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
@@ -1841,12 +1842,12 @@ class MetastoreFacade:
     @staticmethod
     def remove_gaussian_mixture_system_model(gaussian_mixture_system_model: GaussianMixtureSystemModel) -> None:
         """
-        Removes a gaussian mixture system model job from the metastore
+        Removes a gaussian mixture system model from the metastore
 
-        :param gaussian_mixture_system_model: the job to remove
+        :param gaussian_mixture_system_model: the to remove
         :return: None
         """
-        Logger.__call__().get_logger().debug(f"Removing gaussian mixture system model job with "
+        Logger.__call__().get_logger().debug(f"Removing gaussian mixture system model with "
                                              f"id:{gaussian_mixture_system_model.id} from the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
@@ -2568,7 +2569,7 @@ class MetastoreFacade:
     def _convert_empirical_system_model_record_to_dto(empirical_system_model_record) -> \
             EmpiricalSystemModel:
         """
-        Converts a empirical system model job record fetched from the metastore into a DTO
+        Converts a empirical system model record fetched from the metastore into a DTO
 
         :param empirical_system_model_record: the record to convert
         :return: the DTO representing the record
@@ -2582,7 +2583,7 @@ class MetastoreFacade:
     @staticmethod
     def list_empirical_system_models() -> List[EmpiricalSystemModel]:
         """
-        :return: A list of empirical system model jobs in the metastore
+        :return: A list of empirical system models in the metastore
         """
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
@@ -2613,10 +2614,10 @@ class MetastoreFacade:
     @staticmethod
     def get_empirical_system_model_config(id: int) -> Union[None, EmpiricalSystemModel]:
         """
-        Function for fetching a empirical system model job config with a given id from the metastore
+        Function for fetching an empirical system model config with a given id from the metastore
 
-        :param id: the id of the empirical system model job config
-        :return: The empirical system model job config or None if it could not be found
+        :param id: the id of the empirical system model config
+        :return: The empirical system model config or None if it could not be found
         """
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
@@ -2636,10 +2637,10 @@ class MetastoreFacade:
         """
         Saves a empirical system model to the metastore
 
-        :param empirical_system_model: the empirical system model job to save
+        :param empirical_system_model: the empirical system model to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug("Saving a empirical system model job in the metastore")
+        Logger.__call__().get_logger().debug("Saving a empirical system model in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -2660,13 +2661,13 @@ class MetastoreFacade:
     @staticmethod
     def update_empirical_system_model(empirical_system_model: EmpiricalSystemModel, id: int) -> None:
         """
-        Updates a empirical system model job in the metastore
+        Updates a empirical system model in the metastore
 
-        :param empirical_system_model: the empirical system model job to save
+        :param empirical_system_model: the empirical system model to save
         :param id: the id of the row to update
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Updating empirical system model job with id: {id} in the metastore")
+        Logger.__call__().get_logger().debug(f"Updating empirical system model with id: {id} in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -2684,12 +2685,12 @@ class MetastoreFacade:
     @staticmethod
     def remove_empirical_system_model(empirical_system_model: EmpiricalSystemModel) -> None:
         """
-        Removes a empirical system model job from the metastore
+        Removes a empirical system model from the metastore
 
-        :param empirical_system_model: the job to remove
+        :param empirical_system_model: the to remove
         :return: None
         """
-        Logger.__call__().get_logger().debug(f"Removing empirical system model job with "
+        Logger.__call__().get_logger().debug(f"Removing empirical system model with "
                                              f"id:{empirical_system_model.id} from the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
@@ -2703,9 +2704,144 @@ class MetastoreFacade:
                                                      f"id {empirical_system_model.id} deleted successfully")
 
     @staticmethod
+    def _convert_mcmc_system_model_record_to_dto(mcmc_system_model_record) -> MCMCSystemModel:
+        """
+        Converts a MCMC system model record fetched from the metastore into a DTO
+
+        :param mcmc_system_model_record: the record to convert
+        :return: the DTO representing the record
+        """
+        mcmc_system_model_config_json = json.dumps(mcmc_system_model_record[1], indent=4, sort_keys=True)
+        mcmc_system_model_config: MCMCSystemModel = MCMCSystemModel.from_dict(json.loads(mcmc_system_model_config_json))
+        mcmc_system_model_config.id = mcmc_system_model_record[0]
+        return mcmc_system_model_config
+
+    @staticmethod
+    def list_mcmc_system_models() -> List[MCMCSystemModel]:
+        """
+        :return: A list of MCMC system models in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE}")
+                records = cur.fetchall()
+                records = list(map(lambda x: MetastoreFacade._convert_mcmc_system_model_record_to_dto(x),
+                                   records))
+                return records
+
+    @staticmethod
+    def list_mcmc_system_models_ids() -> List[Dict]:
+        """
+        :return: A list of MCMC system model ids in the metastore
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT id,emulation_name,emulation_statistic_id FROM "
+                            f"{constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE}")
+                records = cur.fetchall()
+                return records
+
+    @staticmethod
+    def get_mcmc_system_model_config(id: int) -> Union[None, MCMCSystemModel]:
+        """
+        Function for fetching a mcmc system model config with a given id from the metastore
+
+        :param id: the id of the mcmc system model config
+        :return: The mcmc system model config or None if it could not be found
+        """
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE} "
+                            f"WHERE id = %s", (id,))
+                record = cur.fetchone()
+                if record is not None:
+                    record = MetastoreFacade._convert_mcmc_system_model_record_to_dto(mcmc_system_model_record=record)
+                return record
+
+    @staticmethod
+    def save_mcmc_system_model(mcmc_system_model: MCMCSystemModel) -> Union[Any, int]:
+        """
+        Saves a mcmc system model to the metastore
+
+        :param mcmc_system_model: the mcmc system model to save
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug("Saving a mcmc system model in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                mcmc_system_model_json = json.dumps(mcmc_system_model.to_dict(),
+                                                    indent=4, sort_keys=True, cls=NpEncoder)
+                cur.execute(f"INSERT INTO {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE} "
+                            f"(model, emulation_name, emulation_statistic_id) "
+                            f"VALUES (%s, %s, %s) RETURNING id", (mcmc_system_model_json,
+                                                                  mcmc_system_model.emulation_env_name,
+                                                                  mcmc_system_model.emulation_statistic_id))
+                id_of_new_row = cur.fetchone()[0]
+                conn.commit()
+                Logger.__call__().get_logger().debug("mcmc system model saved successfully")
+                return id_of_new_row
+
+    @staticmethod
+    def update_mcmc_system_model(mcmc_system_model: MCMCSystemModel, id: int) -> None:
+        """
+        Updates a mcmc system model in the metastore
+
+        :param mcmc_system_model: the mcmc system model to save
+        :param id: the id of the row to update
+        :return: id of the created record
+        """
+        Logger.__call__().get_logger().debug(f"Updating mcmc system model with id: {id} in the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                config_json_str = json.dumps(mcmc_system_model.to_dict(), indent=4, sort_keys=True)
+                cur.execute(f"UPDATE "
+                            f"{constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE} "
+                            f" SET config=%s "
+                            f"WHERE {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE}.id = %s",
+                            (config_json_str, id))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"MCMC system model with id: {id} updated successfully")
+
+    @staticmethod
+    def remove_mcmc_system_model(mcmc_system_model: MCMCSystemModel) -> None:
+        """
+        Removes a MCMC system model from the metastore
+
+        :param mcmc_system_model: the system model to remove
+        :return: None
+        """
+        Logger.__call__().get_logger().debug(f"Removing MCMC system model with "
+                                             f"id:{mcmc_system_model.id} from the metastore")
+        with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
+                             f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
+                             f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
+                             f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
+            with conn.cursor() as cur:
+                cur.execute(f"DELETE FROM {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE} WHERE id = %s",
+                            (mcmc_system_model.id,))
+                conn.commit()
+                Logger.__call__().get_logger().debug(f"MCMC system model with "
+                                                     f"id {mcmc_system_model.id} deleted successfully")
+
+    @staticmethod
     def _convert_gp_system_model_record_to_dto(gp_system_model_record) -> GPSystemModel:
         """
-        Converts a gp system model job record fetched from the metastore into a DTO
+        Converts a gp system model record fetched from the metastore into a DTO
 
         :param gp_system_model_record: the record to convert
         :return: the DTO representing the record
@@ -2719,7 +2855,7 @@ class MetastoreFacade:
     @staticmethod
     def list_gp_system_models() -> List[GPSystemModel]:
         """
-        :return: A list of gp system model jobs in the metastore
+        :return: A list of gp system models in the metastore
         """
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
@@ -2750,10 +2886,10 @@ class MetastoreFacade:
     @staticmethod
     def get_gp_system_model_config(id: int) -> Union[None, GPSystemModel]:
         """
-        Function for fetching a gp system model job config with a given id from the metastore
+        Function for fetching a gp system model config with a given id from the metastore
 
-        :param id: the id of the gp system model job config
-        :return: The gp system model job config or None if it could not be found
+        :param id: the id of the gp system model config
+        :return: The gp system model config or None if it could not be found
         """
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
@@ -2773,10 +2909,10 @@ class MetastoreFacade:
         """
         Saves a gp system model to the metastore
 
-        :param gp_system_model: the gp system model job to save
+        :param gp_system_model: the gp system model to save
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug("Saving a gp system model job in the metastore")
+        Logger.__call__().get_logger().debug("Saving a gp system model in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -2796,13 +2932,13 @@ class MetastoreFacade:
     @staticmethod
     def update_gp_system_model(gp_system_model: GPSystemModel, id: int) -> None:
         """
-        Updates a gp system model job in the metastore
+        Updates a gp system model in the metastore
 
-        :param gp_system_model: the gp system model job to save
+        :param gp_system_model: the gp system model to save
         :param id: the id of the row to update
         :return: id of the created record
         """
-        Logger.__call__().get_logger().debug(f"Updating gp system model job with id: {id} in the metastore")
+        Logger.__call__().get_logger().debug(f"Updating gp system model with id: {id} in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
                              f"{constants.METADATA_STORE.PW_PROPERTY}={constants.METADATA_STORE.PASSWORD} "
@@ -2820,12 +2956,12 @@ class MetastoreFacade:
     @staticmethod
     def remove_gp_system_model(gp_system_model: GPSystemModel) -> None:
         """
-        Removes a gp system model job from the metastore
+        Removes a gp system model from the metastore
 
-        :param gp_system_model: the job to remove
+        :param gp_system_model: the model to remove
         :return: None
         """
-        Logger.__call__().get_logger().debug(f"Removing gp system model job with "
+        Logger.__call__().get_logger().debug(f"Removing gp system model with "
                                              f"id:{gp_system_model.id} from the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
                              f"{constants.METADATA_STORE.USER_PROPERTY}={constants.METADATA_STORE.USER} "
@@ -2960,7 +3096,7 @@ class MetastoreFacade:
         """
         Removes a management user from the metastore
 
-        :param management_user: the job to remove
+        :param management_user: the user to remove
         :return: None
         """
         Logger.__call__().get_logger().debug(f"Removing management user with "
@@ -3103,7 +3239,7 @@ class MetastoreFacade:
         """
         Removes a session token from the metastore
 
-        :param session_token: the job to remove
+        :param session_token: the session token to remove
         :return: None
         """
         Logger.__call__().get_logger().debug(f"Removing session token with "
@@ -3310,7 +3446,7 @@ class MetastoreFacade:
         """
         Removes a traces dataset from the metastore
 
-        :param traces_dataset: the job to remove
+        :param traces_dataset: the traces dataset to remove
         :return: None
         """
         Logger.__call__().get_logger().debug(f"Removing traces dataset with "
@@ -3490,7 +3626,7 @@ class MetastoreFacade:
         """
         Removes a statistics dataset from the metastore
 
-        :param statistics_dataset: the job to remove
+        :param statistics_dataset: the statistic dataset to remove
         :return: None
         """
         Logger.__call__().get_logger().debug(f"Removing statistics dataset with "

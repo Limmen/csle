@@ -65,6 +65,14 @@ def system_models_ids():
             api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: tup[2],
             api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE: api_constants.MGMT_WEBAPP.GP_SYSTEM_MODEL_TYPE
         })
+    mcmc_system_models_ids = MetastoreFacade.list_mcmc_system_models_ids()
+    for tup in mcmc_system_models_ids:
+        response_dicts.append({
+            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+            api_constants.MGMT_WEBAPP.EMULATION_PROPERTY: tup[1],
+            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: tup[2],
+            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE: api_constants.MGMT_WEBAPP.MCMC_SYSTEM_MODEL_TYPE
+        })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE

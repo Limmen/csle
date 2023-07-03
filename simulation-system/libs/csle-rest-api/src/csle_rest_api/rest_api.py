@@ -45,6 +45,7 @@ from csle_rest_api.resources.emulation_statistics.routes import emulation_statis
 from csle_rest_api.resources.system_models.routes import system_models_bp
 from csle_rest_api.resources.gaussian_mixture_system_models.routes import gaussian_mixture_system_models_bp
 from csle_rest_api.resources.empirical_system_models.routes import empirical_system_models_bp
+from csle_rest_api.resources.mcmc_system_models.routes import mcmc_system_models_bp
 from csle_rest_api.resources.gp_system_models.routes import gp_system_models_bp
 from csle_rest_api.resources.experiments.routes import experiments_bp
 from csle_rest_api.resources.multi_threshold_policies.routes import multi_threshold_policies_bp
@@ -200,6 +201,9 @@ def create_app(static_folder: str):
     app.register_blueprint(empirical_system_models_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}"),
+    app.register_blueprint(mcmc_system_models_bp,
+                           url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
+                                      f"{api_constants.MGMT_WEBAPP.MCMC_SYSTEM_MODELS_RESOURCE}"),
     app.register_blueprint(gp_system_models_bp,
                            url_prefix=f"{constants.COMMANDS.SLASH_DELIM}"
                                       f"{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}")

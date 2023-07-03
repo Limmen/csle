@@ -1610,6 +1610,7 @@ class METADATA_STORE:
     VECTOR_POLICIES_TABLE = "vector_policies"
     EMULATION_EXECUTIONS_TABLE = "emulation_executions"
     EMPIRICAL_SYSTEM_MODELS_TABLE = "empirical_system_models"
+    MCMC_SYSTEM_MODELS_TABLE = "mcmc_system_models"
     GP_SYSTEM_MODELS_TABLE = "gp_system_models"
     CONFIG_TABLE = "config"
     MANAGEMENT_USERS_TABLE = "management_users"

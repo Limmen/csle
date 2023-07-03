@@ -1,4 +1,3 @@
-
 <p align="center">
 <img src="docs/img/csle_logo_cropped.png" width="40%" height="40%">
 </p>
@@ -12,6 +11,8 @@
         <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
     <a href="https://limmen.dev/csle">
         <img src="https://img.shields.io/website-up-down-green-red/http/shields.io.svg" /></a>
+     <a href="https://limmen.dev/csle">
+        <img src="https://zenodo.org/badge/doi/10.5281/zenodo.4018965.svg" /></a>
 </p>
 
 # What is the Cyber Security Learning Environment (CSLE)?
@@ -29,24 +30,23 @@ is possible to train and evaluate reinforcement learning agents on practical pro
 
 ### **Emulation System**
 
-CLSE includes a system for emulating large scale IT infrastructures, cyber attacks, and client populations.
-It is based on Linux containers and can be used to collect traces and to evaluate security policies.
+CLSE includes a system for emulating large scale IT infrastructures, cyber attacks, and client populations. It is based
+on Linux containers and can be used to collect traces and to evaluate security policies.
 
 ![](docs/img/cli.gif)
 
 ### **Simulation System**
 
-CSLE includes a simulation system for executing reinforcement learning algorithms
-and simulating Markov decision processes and Markov games. It is built in Python and can be integrated
-with standard machine learning libraries.
+CSLE includes a simulation system for executing reinforcement learning algorithms and simulating Markov decision
+processes and Markov games. It is built in Python and can be integrated with standard machine learning libraries.
 
 ![](docs/img/training.gif)
 
 ### **Management System**
 
-CSLE includes a system for managing emulations and simulations which can be accessed either through a REST API
-or through a web interface. The management system allows a) to start/stop emulations/simulations;
-b) real-time monitoring of emulation and simulation processes; and c), shell access to components of emulations.
+CSLE includes a system for managing emulations and simulations which can be accessed either through a REST API or
+through a web interface. The management system allows a) to start/stop emulations/simulations; b) real-time monitoring
+of emulation and simulation processes; and c), shell access to components of emulations.
 
 ![](docs/img/web_ui.gif)
 
@@ -61,9 +61,8 @@ Documentation, installation instructions, and usage examples are available [here
 | [v.0.2.0](https://github.com/Limmen/csle/releases/tag/v0.2.0) | -            | 2024-06-06           |
 | [v.0.1.0](https://github.com/Limmen/csle/releases/tag/v0.1.0) | -            | 2023-12-06           |
 
-Maintenance releases have a stable API and dependency tree,
-and receive bug fixes and critical improvements but not new features. We
-currently support each release for a window of 12 months.
+Maintenance releases have a stable API and dependency tree, and receive bug fixes and critical improvements but not new
+features. We currently support each release for a window of 12 months.
 
 ## Supported Platforms
 
@@ -85,7 +84,8 @@ currently support each release for a window of 12 months.
 
 ## Contribute
 
-Contributions are very welcome. Please use Github issues and pull requests. See the [documentation](https://limmen.dev/csle/) for further instructions.
+Contributions are very welcome. Please use Github issues and pull requests. See
+the [documentation](https://limmen.dev/csle/) for further instructions.
 
 ### List of Contributors :star2:
 
@@ -115,7 +115,6 @@ Thanks go to these people!
 
 
 </p>
-
 
 ## See also
 

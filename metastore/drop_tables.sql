@@ -84,3 +84,6 @@ DROP TABLE IF EXISTS config CASCADE;
 
 DROP TABLE IF EXISTS linear_threshold_stopping_policies CASCADE;
 DROP SEQUENCE IF EXISTS linear_threshold_stopping_policies_id_seq CASCADE;
+
+DROP TABLE IF EXISTS mcmc_system_models CASCADE;
+DROP SEQUENCE IF EXISTS mcmc_system_models_id_seq CASCADE;

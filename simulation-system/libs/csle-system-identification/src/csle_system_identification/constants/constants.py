@@ -10,7 +10,9 @@ class EMULATOR:
 
 class SYSTEM_IDENTIFICATION:
     CONDITIONAL_DISTRIBUTIONS = "conditional_distributions"
+    CONDITIONAL_DISTRIBUTION = "conditional_distribution"
     METRICS = "metrics"
+    METRIC = "metric"
 
 
 class EXPECTATION_MAXIMIZATION:
@@ -26,3 +28,12 @@ class GAUSSIAN_PROCESS_REGRESSION:
     """
     LEARNING_RATE = "learning_rate"
     TRAINING_ITERATIONS = "training_iterations"
+
+
+class MCMC:
+    """
+    String constants related to the MCMC algorithm
+    """
+    PARAMETERS = "parameters"
+    DRAWS = "draws"
+    CHAINS = "chains"

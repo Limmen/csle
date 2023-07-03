@@ -86,6 +86,9 @@ A REST API for the CSLE management platform.
 | `/empirical-system-models?token=<valid_token>`                                                        | List of empirical system-models                                | `GET`,`DELETE`                          |
 | `/empirical-system-models?ids=true&token=<valid_token>`                                               | List of empirical system-model ids only (fast to fetch)        | `GET`,`DELETE`                          |
 | `/empirical-system-models/<trace_id>?token=<valid_token>`                                             | Individual empirical system model                              | `GET`,`DELETE`                          |
+| `/mcmc-system-models?token=<valid_token>`                                                             | List of mcmc system-models                                     | `GET`,`DELETE`                          |
+| `/mcmc-system-models?ids=true&token=<valid_token>`                                                    | List of mcmc system-model ids only (fast to fetch)             | `GET`,`DELETE`                          |
+| `/mcmc-system-models/<trace_id>?token=<valid_token>`                                                  | Individual mcmc system model                                   | `GET`,`DELETE`                          |
 | `/gp-system-models?token=<valid_token>`                                                               | List of gp system-models                                       | `GET`,`DELETE`                          |
 | `/gp-system-models?ids=true&token=<valid_token>`                                                      | List of gp system-model ids only (fast to fetch)               | `GET`,`DELETE`                          |
 | `/gp-system-models/<model_id>?token=<valid_token>`                                                    | Individual gp system model                                     | `GET`,`DELETE`                          |

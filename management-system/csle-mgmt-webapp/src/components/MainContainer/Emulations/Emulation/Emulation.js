@@ -285,30 +285,31 @@ const Emulation = (props) => {
     };
 
     const ArrivalConfigStr = (props) => {
+        var config_str = ""
         if(props.client.arrival_config.client_arrival_type === 0) {
-            var config_str = `Constant arrival process; λ= ${props.client.arrival_config.lamb}`
+            config_str = `Constant arrival process; λ= ${props.client.arrival_config.lamb}`
             return config_str
         }
         if(props.client_population_config.arrival_config.client_arrival_type === 1) {
-            var config_str = `Sine modulated arrival process; λ= ${props.client.arrival_config.lamb}, `
+            config_str = `Sine modulated arrival process; λ= ${props.client.arrival_config.lamb}, `
             config_str = config_str + `time scaling factor=${props.client.arrival_config.time_scaling_factor}, `
             config_str = config_str + `time scaling factor=${props.client.arrival_config.period_scaling_factor}`
             return config_str
         }
         if(props.client_population_config.arrival_config.client_arrival_type === 2) {
-            var config_str = `Spiking arrival process; `
+            config_str = `Spiking arrival process; `
             config_str = config_str + `exponents=${convertListToCommaSeparatedString(props.client.arrival_config.exponents)}, `
             config_str = config_str + `factors=${convertListToCommaSeparatedString(props.client.arrival_config.factors)}`
             return config_str
         }
         if(props.client_population_config.arrival_config.client_arrival_type === 3) {
-            var config_str = `Piece-wise constant process; `
+            config_str = `Piece-wise constant process; `
             config_str = config_str + `breakvalues=${convertListToCommaSeparatedString(props.client.arrival_config.breakvalues)}, `
             config_str = config_str + `breakpoints=${convertListToCommaSeparatedString(props.client.arrival_config.breakpoints)}`
             return config_str
         }
         if(props.client_population_config.arrival_config.client_arrival_type === 4) {
-            var config_str = `EPTMP process; `
+            config_str = `EPTMP process; `
             config_str = config_str + `phis=${convertListToCommaSeparatedString(props.client.arrival_config.phis)}, `
             config_str = config_str + `thetas=${convertListToCommaSeparatedString(props.client.arrival_config.thetas)}, `
             config_str = config_str + `omegas=${convertListToCommaSeparatedString(props.client.arrival_config.omegas)}, `
