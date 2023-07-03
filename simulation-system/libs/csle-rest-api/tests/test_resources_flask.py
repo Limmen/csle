@@ -88,7 +88,6 @@ class TestResourcesFlaskSuite(object):
         get_node_status_mock = mocker.MagicMock(side_effect=get_node_status)
         return get_node_status_mock
 
-    @pytest.mark.usefixtures("logged_in", "logged_in_as_admin", "not_logged_in")
     def test_flask_get(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in, config,
                        node_status_flask_running, node_status_flask_not_running, start, stop,
                        example_config) -> None:
@@ -138,7 +137,6 @@ class TestResourcesFlaskSuite(object):
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in,

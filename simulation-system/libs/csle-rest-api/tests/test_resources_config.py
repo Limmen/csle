@@ -28,8 +28,9 @@ class TestResourcesConfigSuite(object):
     def save(self, mocker):
         """
         Fixture for mocking the save side effect
-        param: config
-        return: None
+
+        param: mocker the pytest mocker object
+        return: the mock
         """
 
         def save_config_file(config) -> None:
@@ -44,13 +45,12 @@ class TestResourcesConfigSuite(object):
     def from_config_file(self, mocker):
         """
         Fixture for mocking the from_config_file side effect
-        params:
-        return: None
-        """
 
+        param: mocker the pytest mocker object
+        return: the mock
+        """
         def set_config_parameters_from_config_file() -> None:
             return None
-
         set_config_parameters_from_config_file_mocker = mocker.MagicMock(
             side_effect=set_config_parameters_from_config_file
         )
@@ -90,31 +90,24 @@ class TestResourcesConfigSuite(object):
         )
         return read_failed_config_file_mock
 
-    @pytest.mark.usefixtures("logged_in", "logged_in_as_admin", "not_logged_in")
-    def test_config_get(
-            self,
-            flask_app,
-            mocker,
-            logged_in,
-            logged_in_as_admin,
-            not_logged_in,
-            config_read,
-            failed_config_read,
-            save, from_config_file, ):
+    def test_config_get(self, flask_app, mocker, logged_in, logged_in_as_admin, not_logged_in, config_read,
+                        failed_config_read, save, from_config_file, example_config):
         """
         Tests the GET HTTPS method for the /config resource for listing management user accounts
 
-        :param : flask_app: the flask app representing the web server
-        :param : mocker: the mocker object for mocking functions
-        :param : logged_in_as_admin: the logged_in_as_admin fixture
-        :param : logged_in: the logged_in fixture
-        :param : not_logged_in: the not_logged_in fixture
-        :param : config_read: the config_read fixture
-        :param : failed_config_read : the failed_config_read fixture
-        :param : save : the save fixture
-        :param : from_config_file: the from_config_file fixture
+        :param flask_app: the flask app representing the web server
+        :param mocker: the mocker object for mocking functions
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param config_read: the config_read fixture
+        :param failed_config_read : the failed_config_read fixture
+        :param save : the save fixture
+        :param from_config_file: the from_config_file fixture
+        :param example_config: the example_config fixture
         :return : None
         """
+        example_c: Config = example_config
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
@@ -137,56 +130,56 @@ class TestResourcesConfigSuite(object):
         response_data_list = json.loads(response_data)
         config = Config.from_param_dict(response_data_list)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert config.management_admin_username_default == "admin"
-        assert config.management_admin_password_default == "admin"
-        assert config.management_admin_first_name_default == "Admin"
-        assert config.management_admin_last_name_default == "Adminson"
-        assert config.management_admin_email_default == "admin@CSLE.com"
-        assert config.management_admin_organization_default == "CSLE"
-        assert config.ssh_admin_username == "null"
-        assert config.ssh_admin_password == "null"
-        assert config.ssh_agent_username == "null"
-        assert config.ssh_agent_password == "null"
-        assert config.management_guest_username_default == "guest"
-        assert config.management_guest_password_default == "guest"
-        assert config.management_guest_first_name_default == "Guest"
-        assert config.management_guest_last_name_default == "Guestson"
-        assert config.management_guest_email_default == "guest@CSLE.com"
-        assert config.management_guest_organization_default == "CSLE"
-        assert config.metastore_user == "null"
-        assert config.metastore_password == "null"
-        assert config.metastore_ip == "null"
-        assert config.metastore_database_name == "null"
-        assert config.node_exporter_pid_file == "null"
-        assert config.node_exporter_log_file == "null"
-        assert config.csle_mgmt_webapp_pid_file == "null"
-        assert config.grafana_username == "null"
-        assert config.grafana_password == "null"
-        assert config.node_exporter_port == 1
-        assert config.grafana_port == 1
-        assert config.management_system_port == 1
-        assert config.prometheus_port == 1
-        assert config.node_exporter_port == 1
-        assert config.cadvisor_port == 1
-        assert config.docker_stats_manager_log_dir == "null"
-        assert config.docker_stats_manager_log_file == "null"
-        assert config.docker_stats_manager_max_workers == 1
-        assert config.docker_stats_manager_outfile == "null"
-        assert config.docker_stats_manager_pidfile == "null"
-        assert config.docker_stats_manager_port == 1
-        assert config.cluster_config.cluster_nodes[0].ip == "123.456.78.99"
-        assert config.cluster_config.cluster_nodes[0].leader is True
-        assert config.cluster_config.cluster_nodes[0].cpus == 1
-        assert config.cluster_config.cluster_nodes[0].gpus == 2
-        assert config.cluster_config.cluster_nodes[0].RAM == 3
-        assert config.allow_registration is True
-        assert config.id == 1
-        assert config.pgadmin_username == "null"
-        assert config.pgadmin_password == "null"
-        assert config.postgresql_log_dir == "null"
-        assert config.nginx_log_dir == "null"
-        assert config.flask_log_file == "null"
-        assert config.cluster_manager_log_file == "null"
+        assert config.management_admin_username_default == example_c.management_admin_username_default
+        assert config.management_admin_password_default == example_c.management_admin_password_default
+        assert config.management_admin_first_name_default == example_c.management_admin_first_name_default
+        assert config.management_admin_last_name_default == example_c.management_admin_last_name_default
+        assert config.management_admin_email_default == example_c.management_admin_email_default
+        assert config.management_admin_organization_default == example_c.management_admin_organization_default
+        assert config.ssh_admin_username == example_c.ssh_admin_username
+        assert config.ssh_admin_password == example_c.ssh_admin_password
+        assert config.ssh_agent_username == example_c.ssh_agent_username
+        assert config.ssh_agent_password == example_c.ssh_agent_password
+        assert config.management_guest_username_default == example_c.management_guest_username_default
+        assert config.management_guest_password_default == example_c.management_guest_password_default
+        assert config.management_guest_first_name_default == example_c.management_guest_first_name_default
+        assert config.management_guest_last_name_default == example_c.management_guest_last_name_default
+        assert config.management_guest_email_default == example_c.management_guest_email_default
+        assert config.management_guest_organization_default == example_c.management_guest_organization_default
+        assert config.metastore_user == example_c.metastore_user
+        assert config.metastore_password == example_c.metastore_password
+        assert config.metastore_ip == example_c.metastore_ip
+        assert config.metastore_database_name == example_c.metastore_database_name
+        assert config.node_exporter_pid_file == example_c.node_exporter_pid_file
+        assert config.node_exporter_log_file == example_c.node_exporter_log_file
+        assert config.csle_mgmt_webapp_pid_file == example_c.csle_mgmt_webapp_pid_file
+        assert config.grafana_username == example_c.grafana_username
+        assert config.grafana_password == example_c.grafana_password
+        assert config.node_exporter_port == example_c.node_exporter_port
+        assert config.grafana_port == example_c.grafana_port
+        assert config.management_system_port == example_c.management_system_port
+        assert config.prometheus_port == example_c.prometheus_port
+        assert config.node_exporter_port == example_c.node_exporter_port
+        assert config.cadvisor_port == example_c.cadvisor_port
+        assert config.docker_stats_manager_log_dir == example_c.docker_stats_manager_log_dir
+        assert config.docker_stats_manager_log_file == example_c.docker_stats_manager_log_file
+        assert config.docker_stats_manager_max_workers == example_c.docker_stats_manager_max_workers
+        assert config.docker_stats_manager_outfile == example_c.docker_stats_manager_outfile
+        assert config.docker_stats_manager_pidfile == example_c.docker_stats_manager_pidfile
+        assert config.docker_stats_manager_port == example_c.docker_stats_manager_port
+        assert config.cluster_config.cluster_nodes[0].ip == example_c.cluster_config.cluster_nodes[0].ip
+        assert config.cluster_config.cluster_nodes[0].leader == example_c.cluster_config.cluster_nodes[0].leader
+        assert config.cluster_config.cluster_nodes[0].cpus == example_c.cluster_config.cluster_nodes[0].cpus
+        assert config.cluster_config.cluster_nodes[0].gpus == example_c.cluster_config.cluster_nodes[0].gpus
+        assert config.cluster_config.cluster_nodes[0].RAM == example_c.cluster_config.cluster_nodes[0].RAM
+        assert config.allow_registration == example_c.allow_registration
+        assert config.id == example_c.id
+        assert config.pgadmin_username == example_c.pgadmin_username
+        assert config.pgadmin_password == example_c.pgadmin_password
+        assert config.postgresql_log_dir == example_c.postgresql_log_dir
+        assert config.nginx_log_dir == example_c.nginx_log_dir
+        assert config.flask_log_file == example_c.flask_log_file
+        assert config.cluster_manager_log_file == example_c.cluster_manager_log_file
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=not_logged_in,
@@ -218,27 +211,22 @@ class TestResourcesConfigSuite(object):
             side_effect=from_config_file,
         )
 
-    def test_config_put(
-            self,
-            flask_app,
-            mocker,
-            logged_in_as_admin,
-            config_read,
-            failed_config_read,
-            save, from_config_file, example_config):
+    def test_config_put(self, flask_app, mocker, logged_in_as_admin, config_read, failed_config_read,
+                        save, from_config_file, example_config) -> None:
         """
         Tests the PUT HTTPS method for the /config resource for listing management user accounts
 
-        :param : flask_app: the flask app representing the web server
-        :param : mocker: the mocker object for mocking functions
-        :param : logged_in_as_admin: the logged_in_as_admin fixture
-        :param : logged_in: the logged_in fixture
-        :param : not_logged_in: the not_logged_in fixture
-        :param : config_read: the config_read fixture
-        :param : failed_config_read : the failed_config_read fixture
-        :param : save : the save fixture
-        :param : from_config_file: the from_config_file fixture
-        :return : None
+        :param flask_app: the flask app representing the web server
+        :param mocker: the mocker object for mocking functions
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param config_read: the config_read fixture
+        :param failed_config_read : the failed_config_read fixture
+        :param save : the save fixture
+        :param from_config_file: the from_config_file fixture
+        :param example_config: the example_config fixture
+        :return None
         """
         mocker.patch(
             "csle_common.dao.emulation_config.config.Config.read_config_file",
@@ -270,57 +258,58 @@ class TestResourcesConfigSuite(object):
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         config = Config.from_param_dict(response_data_list)
+        example_c = example_config
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert config.management_admin_username_default == "admin"
-        assert config.management_admin_password_default == "admin"
-        assert config.management_admin_first_name_default == "Admin"
-        assert config.management_admin_last_name_default == "Adminson"
-        assert config.management_admin_email_default == "admin@CSLE.com"
-        assert config.management_admin_organization_default == "CSLE"
-        assert config.ssh_admin_username == "null"
-        assert config.ssh_admin_password == "null"
-        assert config.ssh_agent_username == "null"
-        assert config.ssh_agent_password == "null"
-        assert config.management_guest_username_default == "guest"
-        assert config.management_guest_password_default == "guest"
-        assert config.management_guest_first_name_default == "Guest"
-        assert config.management_guest_last_name_default == "Guestson"
-        assert config.management_guest_email_default == "guest@CSLE.com"
-        assert config.management_guest_organization_default == "CSLE"
-        assert config.metastore_user == "null"
-        assert config.metastore_password == "null"
-        assert config.metastore_ip == "null"
-        assert config.metastore_database_name == "null"
-        assert config.node_exporter_pid_file == "null"
-        assert config.node_exporter_log_file == "null"
-        assert config.csle_mgmt_webapp_pid_file == "null"
-        assert config.grafana_username == "null"
-        assert config.grafana_password == "null"
-        assert config.node_exporter_port == 1
-        assert config.grafana_port == 1
-        assert config.management_system_port == 1
-        assert config.prometheus_port == 1
-        assert config.node_exporter_port == 1
-        assert config.cadvisor_port == 1
-        assert config.docker_stats_manager_log_dir == "null"
-        assert config.docker_stats_manager_log_file == "null"
-        assert config.docker_stats_manager_max_workers == 1
-        assert config.docker_stats_manager_outfile == "null"
-        assert config.docker_stats_manager_pidfile == "null"
-        assert config.docker_stats_manager_port == 1
-        assert config.cluster_config.cluster_nodes[0].ip == "123.456.78.99"
-        assert config.cluster_config.cluster_nodes[0].leader is True
-        assert config.cluster_config.cluster_nodes[0].cpus == 1
-        assert config.cluster_config.cluster_nodes[0].gpus == 2
-        assert config.cluster_config.cluster_nodes[0].RAM == 3
-        assert config.allow_registration is True
-        assert config.id == 1
-        assert config.pgadmin_username == "null"
-        assert config.pgadmin_password == "null"
-        assert config.postgresql_log_dir == "null"
-        assert config.nginx_log_dir == "null"
-        assert config.flask_log_file == "null"
-        assert config.cluster_manager_log_file == "null"
+        assert config.management_admin_username_default == example_c.management_admin_username_default
+        assert config.management_admin_password_default == example_c.management_admin_password_default
+        assert config.management_admin_first_name_default == example_c.management_admin_first_name_default
+        assert config.management_admin_last_name_default == example_c.management_admin_last_name_default
+        assert config.management_admin_email_default == example_c.management_admin_email_default
+        assert config.management_admin_organization_default == example_c.management_admin_organization_default
+        assert config.ssh_admin_username == example_c.ssh_admin_username
+        assert config.ssh_admin_password == example_c.ssh_admin_password
+        assert config.ssh_agent_username == example_c.ssh_agent_username
+        assert config.ssh_agent_password == example_c.ssh_agent_password
+        assert config.management_guest_username_default == example_c.management_guest_username_default
+        assert config.management_guest_password_default == example_c.management_guest_password_default
+        assert config.management_guest_first_name_default == example_c.management_guest_first_name_default
+        assert config.management_guest_last_name_default == example_c.management_guest_last_name_default
+        assert config.management_guest_email_default == example_c.management_guest_email_default
+        assert config.management_guest_organization_default == example_c.management_guest_organization_default
+        assert config.metastore_user == example_c.metastore_user
+        assert config.metastore_password == example_c.metastore_password
+        assert config.metastore_ip == example_c.metastore_ip
+        assert config.metastore_database_name == example_c.metastore_database_name
+        assert config.node_exporter_pid_file == example_c.node_exporter_pid_file
+        assert config.node_exporter_log_file == example_c.node_exporter_log_file
+        assert config.csle_mgmt_webapp_pid_file == example_c.csle_mgmt_webapp_pid_file
+        assert config.grafana_username == example_c.grafana_username
+        assert config.grafana_password == example_c.grafana_password
+        assert config.node_exporter_port == example_c.node_exporter_port
+        assert config.grafana_port == example_c.grafana_port
+        assert config.management_system_port == example_c.management_system_port
+        assert config.prometheus_port == example_c.prometheus_port
+        assert config.node_exporter_port == example_c.node_exporter_port
+        assert config.cadvisor_port == example_c.cadvisor_port
+        assert config.docker_stats_manager_log_dir == example_c.docker_stats_manager_log_dir
+        assert config.docker_stats_manager_log_file == example_c.docker_stats_manager_log_file
+        assert config.docker_stats_manager_max_workers == example_c.docker_stats_manager_max_workers
+        assert config.docker_stats_manager_outfile == example_c.docker_stats_manager_outfile
+        assert config.docker_stats_manager_pidfile == example_c.docker_stats_manager_pidfile
+        assert config.docker_stats_manager_port == example_c.docker_stats_manager_port
+        assert config.cluster_config.cluster_nodes[0].ip == example_c.cluster_config.cluster_nodes[0].ip
+        assert config.cluster_config.cluster_nodes[0].leader == example_c.cluster_config.cluster_nodes[0].leader
+        assert config.cluster_config.cluster_nodes[0].cpus == example_c.cluster_config.cluster_nodes[0].cpus
+        assert config.cluster_config.cluster_nodes[0].gpus == example_c.cluster_config.cluster_nodes[0].gpus
+        assert config.cluster_config.cluster_nodes[0].RAM == example_c.cluster_config.cluster_nodes[0].RAM
+        assert config.allow_registration == example_c.allow_registration
+        assert config.id == example_c.id
+        assert config.pgadmin_username == example_c.pgadmin_username
+        assert config.pgadmin_password == example_c.pgadmin_password
+        assert config.postgresql_log_dir == example_c.postgresql_log_dir
+        assert config.nginx_log_dir == example_c.nginx_log_dir
+        assert config.flask_log_file == example_c.flask_log_file
+        assert config.cluster_manager_log_file == example_c.cluster_manager_log_file
         del config_dict[api_constants.MGMT_WEBAPP.PARAMETERS_PROPERTY][0]
         response = flask_app.test_client().put(api_constants.MGMT_WEBAPP.CONFIG_RESOURCE,
                                                data=json.dumps(
@@ -330,9 +319,10 @@ class TestResourcesConfigSuite(object):
     def test_registration_allowed(self, flask_app, example_config):
         """
         Testing the config/registration-allowed resource
-        :param : self
-        :param : flask_app
-        :return : None
+
+        :param flask_app the flask app for making requests
+        :param example_config: the example_config fixture
+        :return None
         """
         constants.CONFIG_FILE.PARSED_CONFIG = example_config
         response = flask_app.test_client().get(

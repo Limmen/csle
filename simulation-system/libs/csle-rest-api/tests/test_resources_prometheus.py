@@ -428,7 +428,7 @@ class TestResourcesPrometheusSuite(object):
             == constants.COMMANDS.NODE_EXPORTER_PORT
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY] \
-            == f"{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_PORT_PROPERTY] == constants.COMMANDS.PGADMIN_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY] \

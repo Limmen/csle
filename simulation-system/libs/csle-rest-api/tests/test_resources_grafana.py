@@ -88,7 +88,6 @@ class TestResourcesGrafanaSuite(object):
         get_node_status_mock = mocker.MagicMock(side_effect=get_node_status)
         return get_node_status_mock
 
-    @pytest.mark.usefixtures("logged_in", "logged_in_as_admin", "not_logged_in")
     def test_grafana_get(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in, config,
                          node_status_grafana_running, node_status_grafana_not_running, start, stop,
                          example_config) -> None:

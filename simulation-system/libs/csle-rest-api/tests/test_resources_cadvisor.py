@@ -26,8 +26,10 @@ class TestResourcesCadvisorSuite(object):
     def stop(self, mocker):
         """
         Fixture for mocking the stop side-effect
-        """
 
+        :param mocker: the pytest mocker object
+        :return: the mock
+        """
         def stop_cadvisor(ip, port):
             return None
         stop_cadvisor_mocker = mocker.MagicMock(side_effect=stop_cadvisor)
@@ -37,6 +39,9 @@ class TestResourcesCadvisorSuite(object):
     def start(self, mocker):
         """
         Fixture for mocking the start side-effect
+
+        :param mocker: the pytest mocker object
+        :return: the mock
         """
 
         def start_cadvisor(ip, port):
@@ -48,6 +53,10 @@ class TestResourcesCadvisorSuite(object):
     def config(self, mocker, example_config):
         """
         Fixture for mocking the config side-effect
+
+        :param mocker: the pytest mocker object
+        :param example_config: the example config to use for mocking
+        :return: the mock
         """
         def get_config(id):
             config = example_config
@@ -62,6 +71,7 @@ class TestResourcesCadvisorSuite(object):
         Fixture for mocking the get_node_status function where flask is running
 
         :param mocker: the pytest mocker object
+        :param example_node_status: the exampe node status to use for mocking
         :return the fixture for the get_node_status_function
         """
         def get_node_status(ip: str, port: int) -> NodeStatusDTO:
@@ -77,6 +87,7 @@ class TestResourcesCadvisorSuite(object):
         Fixture for mocking the get_node_status function where flask is not running
 
         :param mocker: the pytest mocker object
+        :param example_node_status: the example node status to use for mocking
         :return the fixture for the get_node_status_function
         """
         def get_node_status(ip: str, port: int) -> NodeStatusDTO:
@@ -86,7 +97,6 @@ class TestResourcesCadvisorSuite(object):
         get_node_status_mock = mocker.MagicMock(side_effect=get_node_status)
         return get_node_status_mock
 
-    @pytest.mark.usefixtures("logged_in", "logged_in_as_admin", "not_logged_in")
     def test_cadvisor_get(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in, config,
                           node_status_cadvisor_running, node_status_cadvisor_not_running, start, stop,
                           example_config) -> None:
@@ -102,6 +112,7 @@ class TestResourcesCadvisorSuite(object):
         :param node_status: the node_status fixture
         :param start: the start fixture
         :param stop: the stop fixture
+        :param example_config: the example config (to use for assertions)
         :return: None
         """
 
@@ -342,6 +353,7 @@ class TestResourcesCadvisorSuite(object):
         :param node_status: the node_status fixture
         :param start: the start fixture
         :param stop: the stop fixture
+        :param example_config: the example config (to use for assertions)
         :return: None
         """
 

@@ -88,7 +88,6 @@ class TestResourcespgAdminSuite(object):
         get_node_status_mock = mocker.MagicMock(side_effect=get_node_status)
         return get_node_status_mock
 
-    @pytest.mark.usefixtures("logged_in", "logged_in_as_admin", "not_logged_in")
     def test_pgadmin_get(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in, config,
                          node_status_pgadmin_running, node_status_pgadmin_not_running, start, stop,
                          example_config) -> None:
@@ -202,7 +201,7 @@ class TestResourcespgAdminSuite(object):
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_PORT_PROPERTY] == constants.COMMANDS.FLASK_PORT
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY] \
-            == f"{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.GPUS_PROPERTY] == gpus
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY] == constants.COMMANDS.GRAFANA_PORT
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY] is True

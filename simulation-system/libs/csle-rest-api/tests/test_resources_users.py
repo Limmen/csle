@@ -170,17 +170,8 @@ class TestResourcesUsersSuite(object):
         save_management_user_mock = mocker.MagicMock(side_effect=save_management_user)
         return save_management_user_mock
 
-    @pytest.mark.usefixtures("authorized", "unauthorized", "logged_in", "logged_in_as_admin", "not_logged_in")
-    def test_users_get(
-            self,
-            flask_app,
-            mocker,
-            logged_in_as_admin,
-            management_users,
-            not_logged_in,
-            management_ids,
-            logged_in,
-    ) -> None:
+    def test_users_get(self, flask_app, mocker, logged_in_as_admin, management_users, not_logged_in, management_ids,
+                       logged_in) -> None:
         """
         Tests the GET HTTPS method /users resource for listing management user accounts
 
