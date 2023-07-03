@@ -222,9 +222,7 @@ class TestResourcesConfigSuite(object):
             self,
             flask_app,
             mocker,
-            logged_in,
             logged_in_as_admin,
-            not_logged_in,
             config_read,
             failed_config_read,
             save, from_config_file, example_config):

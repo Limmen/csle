@@ -155,19 +155,19 @@ class TestResourcesPrometheusSuite(object):
         assert config_node[api_constants.MGMT_WEBAPP.RAM_PROPERTY] == RAM
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.CADVISOR_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.CADVISOR_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY] == constants.COMMANDS.CADVISOR_PORT
         assert config_node[api_constants.MGMT_WEBAPP.CPUS_PROPERTY] == cpus
         assert config_node[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_PORT_PROPERTY] == constants.COMMANDS.FLASK_PORT
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.GPUS_PROPERTY] == gpus
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY] == constants.COMMANDS.GRAFANA_PORT
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.GRAFANA_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.GRAFANA_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.IP_PROPERTY] == '123.456.78.99'
         assert config_node[api_constants.MGMT_WEBAPP.LEADER_PROPERTY] == leader
         assert config_node[api_constants.MGMT_WEBAPP.NGINX_RUNNING_PROPERTY] is True
@@ -175,16 +175,16 @@ class TestResourcesPrometheusSuite(object):
             == constants.COMMANDS.NODE_EXPORTER_PORT
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_PORT_PROPERTY] == constants.COMMANDS.PGADMIN_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.PGADMIN_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PGADMIN_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.POSTGRESQL_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_PORT_PROPERTY] == constants.COMMANDS.PROMETHEUS_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
@@ -197,19 +197,19 @@ class TestResourcesPrometheusSuite(object):
         assert config_node[api_constants.MGMT_WEBAPP.RAM_PROPERTY] == RAM
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.CADVISOR_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.CADVISOR_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY] == constants.COMMANDS.CADVISOR_PORT
         assert config_node[api_constants.MGMT_WEBAPP.CPUS_PROPERTY] == cpus
         assert config_node[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_PORT_PROPERTY] == constants.COMMANDS.FLASK_PORT
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.GPUS_PROPERTY] == gpus
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY] == constants.COMMANDS.GRAFANA_PORT
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.GRAFANA_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.GRAFANA_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.IP_PROPERTY] == '123.456.78.99'
         assert config_node[api_constants.MGMT_WEBAPP.LEADER_PROPERTY] == leader
         assert config_node[api_constants.MGMT_WEBAPP.NGINX_RUNNING_PROPERTY] is True
@@ -217,16 +217,16 @@ class TestResourcesPrometheusSuite(object):
             == constants.COMMANDS.NODE_EXPORTER_PORT
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_PORT_PROPERTY] == constants.COMMANDS.PGADMIN_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.PGADMIN_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PGADMIN_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.POSTGRESQL_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_PORT_PROPERTY] == constants.COMMANDS.PROMETHEUS_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
         mocker.patch(
             "csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
             side_effect=node_status_prometheus_not_running,
@@ -252,7 +252,7 @@ class TestResourcesPrometheusSuite(object):
         assert config_node[api_constants.MGMT_WEBAPP.RAM_PROPERTY] == RAM
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.CADVISOR_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.CADVISOR_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY] \
             == constants.COMMANDS.CADVISOR_PORT
         assert config_node[api_constants.MGMT_WEBAPP.CPUS_PROPERTY] == cpus
@@ -261,12 +261,12 @@ class TestResourcesPrometheusSuite(object):
             == constants.COMMANDS.FLASK_PORT
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.GPUS_PROPERTY] == gpus
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY] == constants.COMMANDS.GRAFANA_PORT
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.GRAFANA_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.GRAFANA_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.IP_PROPERTY] == '123.456.78.99'
         assert config_node[api_constants.MGMT_WEBAPP.LEADER_PROPERTY] == leader
         assert config_node[api_constants.MGMT_WEBAPP.NGINX_RUNNING_PROPERTY] is True
@@ -274,16 +274,16 @@ class TestResourcesPrometheusSuite(object):
             == constants.COMMANDS.NODE_EXPORTER_PORT
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_PORT_PROPERTY] == constants.COMMANDS.PGADMIN_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.PGADMIN_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PGADMIN_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.POSTGRESQL_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_PORT_PROPERTY] == constants.COMMANDS.PROMETHEUS_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY] is False
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
@@ -300,19 +300,19 @@ class TestResourcesPrometheusSuite(object):
         assert config_node[api_constants.MGMT_WEBAPP.RAM_PROPERTY] == RAM
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.CADVISOR_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.CADVISOR_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY] == constants.COMMANDS.CADVISOR_PORT
         assert config_node[api_constants.MGMT_WEBAPP.CPUS_PROPERTY] == cpus
         assert config_node[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_PORT_PROPERTY] == constants.COMMANDS.FLASK_PORT
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.GPUS_PROPERTY] == gpus
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY] == constants.COMMANDS.GRAFANA_PORT
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.GRAFANA_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.GRAFANA_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.IP_PROPERTY] == '123.456.78.99'
         assert config_node[api_constants.MGMT_WEBAPP.LEADER_PROPERTY] == leader
         assert config_node[api_constants.MGMT_WEBAPP.NGINX_RUNNING_PROPERTY] is True
@@ -320,16 +320,16 @@ class TestResourcesPrometheusSuite(object):
             == constants.COMMANDS.NODE_EXPORTER_PORT
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_PORT_PROPERTY] == constants.COMMANDS.PGADMIN_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.PGADMIN_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PGADMIN_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.POSTGRESQL_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_PORT_PROPERTY] == constants.COMMANDS.PROMETHEUS_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY] is False
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
 
     def test_prometheus_post(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in, config,
                              node_status_prometheus_running, node_status_prometheus_not_running, start, stop,
@@ -408,19 +408,19 @@ class TestResourcesPrometheusSuite(object):
         assert config_node[api_constants.MGMT_WEBAPP.RAM_PROPERTY] == RAM
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.CADVISOR_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.CADVISOR_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY] == constants.COMMANDS.CADVISOR_PORT
         assert config_node[api_constants.MGMT_WEBAPP.CPUS_PROPERTY] == cpus
         assert config_node[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_PORT_PROPERTY] == constants.COMMANDS.FLASK_PORT
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.GPUS_PROPERTY] == gpus
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY] == constants.COMMANDS.GRAFANA_PORT
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.GRAFANA_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.GRAFANA_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.IP_PROPERTY] == '123.456.78.99'
         assert config_node[api_constants.MGMT_WEBAPP.LEADER_PROPERTY] == leader
         assert config_node[api_constants.MGMT_WEBAPP.NGINX_RUNNING_PROPERTY] is True
@@ -428,16 +428,16 @@ class TestResourcesPrometheusSuite(object):
             == constants.COMMANDS.NODE_EXPORTER_PORT
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
+            == f"{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_PORT_PROPERTY] == constants.COMMANDS.PGADMIN_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.PGADMIN_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PGADMIN_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.POSTGRESQL_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_PORT_PROPERTY] == constants.COMMANDS.PROMETHEUS_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY] is False
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
         mocker.patch(
             "csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
             side_effect=node_status_prometheus_not_running,
@@ -477,7 +477,7 @@ class TestResourcesPrometheusSuite(object):
         assert config_node[api_constants.MGMT_WEBAPP.RAM_PROPERTY] == RAM
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.CADVISOR_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.CADVISOR_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY] \
             == constants.COMMANDS.CADVISOR_PORT
         assert config_node[api_constants.MGMT_WEBAPP.CPUS_PROPERTY] == cpus
@@ -485,12 +485,12 @@ class TestResourcesPrometheusSuite(object):
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_PORT_PROPERTY] == constants.COMMANDS.FLASK_PORT
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.FLASK_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.GPUS_PROPERTY] == gpus
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY] == constants.COMMANDS.GRAFANA_PORT
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.GRAFANA_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.GRAFANA_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.IP_PROPERTY] == ip_adress
         assert config_node[api_constants.MGMT_WEBAPP.LEADER_PROPERTY] == leader
         assert config_node[api_constants.MGMT_WEBAPP.NGINX_RUNNING_PROPERTY] is True
@@ -498,13 +498,13 @@ class TestResourcesPrometheusSuite(object):
             == constants.COMMANDS.NODE_EXPORTER_PORT
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.NODE_EXPORTER_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_PORT_PROPERTY] == constants.COMMANDS.PGADMIN_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.PGADMIN_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PGADMIN_PORT}/"
         assert config_node[api_constants.MGMT_WEBAPP.POSTGRESQL_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_PORT_PROPERTY] == constants.COMMANDS.PROMETHEUS_PORT
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY] \
-            == f"http://{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
+            == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
