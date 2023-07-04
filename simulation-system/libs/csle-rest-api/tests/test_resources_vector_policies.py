@@ -13,7 +13,7 @@ from csle_rest_api.rest_api import create_app
 
 class TestResourcesVectorSuite(object):
     """
-    Test suite for /users resource
+    Test suite for /vectors resource
     """
 
     pytest.logger = logging.getLogger("resources_users_tests")
@@ -30,7 +30,7 @@ class TestResourcesVectorSuite(object):
     @pytest.fixture
     def list_vector_ids(self, mocker):
         """
-        pytest fixture for listing alpha vec policy ids
+        pytest fixture for listing vector policy ids
         """
         def list_vector_policies_ids():
             policy_id = (111, "some_simulation")
@@ -41,7 +41,7 @@ class TestResourcesVectorSuite(object):
     @pytest.fixture
     def list_vector(self, mocker):
         """
-        pytest fixture for listing alpha vec policies
+        pytest fixture for listing vector policies
         """
         def list_vector_policies():
             policy = TestResourcesVectorSuite.get_example_policy()
@@ -52,7 +52,7 @@ class TestResourcesVectorSuite(object):
     @pytest.fixture
     def remove(self, mocker):
         """
-        pytest fixture for removal of alpha vec policies
+        pytest fixture for removal of vector policies
         """
         def remove_vector_policy(vector_policy):
             return None
@@ -62,7 +62,7 @@ class TestResourcesVectorSuite(object):
     @pytest.fixture
     def get_policy(self, mocker):
         """
-        pytest fixture for the get ppo policy
+        pytest fixture for getting a vector policy
         """
         def get_vector_policy(id):
             policy = TestResourcesVectorSuite.get_example_policy()
@@ -72,7 +72,9 @@ class TestResourcesVectorSuite(object):
 
     @staticmethod
     def get_example_policy():
-
+        """
+        Help function for returning a VectorPolicy class with dummy values made for testing
+        """
         obj = VectorPolicy(player_type=PlayerType(1), actions=[1, 2, 3], policy_vector=[1.1, 1.2, 1.3],
                            agent_type=AgentType(1), simulation_name="JohndoeSimulation",
                            avg_R=1.1)
@@ -89,7 +91,7 @@ class TestResourcesVectorSuite(object):
             list_vector_ids,
     ) -> None:
         """
-        testing the GET HTTPS method  for the /alpha-vec-policies resource
+        testing the GET HTTPS method  for the /vector-policies resource
         """
         test_policy = TestResourcesVectorSuite.get_example_policy()
         mocker.patch(
@@ -156,7 +158,7 @@ class TestResourcesVectorSuite(object):
             remove,
     ) -> None:
         """
-        testing  the DELETE HTTPS method for the /alpha-vec-policies resource
+        testing  the DELETE HTTPS method for the /vector-policies resource
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_vector_policy",
                      side_effect=remove)
@@ -197,7 +199,7 @@ class TestResourcesVectorSuite(object):
                                     not_logged_in, logged_in_as_admin,
                                     get_policy,) -> None:
         """
-        testing the HTTPS GET method for the /alpha-vec-policies-id resource
+        testing the HTTPS GET method for the /vector-policies/d resource
         """
         test_policy = TestResourcesVectorSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_vector_policy",
@@ -246,7 +248,7 @@ class TestResourcesVectorSuite(object):
                                        get_policy, remove) -> None:
 
         """
-        testing the HTTPS DELETE method for the /ppo-policies-id resource
+        testing the HTTPS DELETE method for the /vector-policies/id resource
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_vector_policy",
                      side_effect=get_policy)
