@@ -18,7 +18,7 @@ from csle_rest_api.rest_api import create_app
 
 class TestResourcesFnnWSoftmaxSuite(object):
     """
-    Test suite for /users resource
+    Test suite for /fnn-w-softmax resource
     """
 
     pytest.logger = logging.getLogger("resources_users_tests")
@@ -78,7 +78,7 @@ class TestResourcesFnnWSoftmaxSuite(object):
     @staticmethod
     def get_example_policy():
         """
-        :return: an example fnn_w_softmax plicy class full of cummy values
+        :return: an example fnn_w_softmax plicy class full of dummy values
         """
         state_list = [State(id=1, name="JohnDoe", descr="description", state_type=StateType(0))]
         e_config_class = ExperimentConfig(output_dir="output_directory", title="title", random_seeds=[1, 2, 3],
@@ -104,7 +104,7 @@ class TestResourcesFnnWSoftmaxSuite(object):
             list_fnn_w_softmax_ids,
     ) -> None:
         """
-        testing the GET HTTPS method  for the //dnn-w-softmax-policies resource
+        testing the GET HTTPS method  for the /fnn-w-softmax-policies resource
         """
         test_policy = TestResourcesFnnWSoftmaxSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_fnn_w_softmax_policies",
@@ -226,7 +226,7 @@ class TestResourcesFnnWSoftmaxSuite(object):
             remove,
     ) -> None:
         """
-        testing  the DELETE HTTPS method for the /dnn-w-softmax-policies resource
+        testing  the DELETE HTTPS method for the /fnn-w-softmax-policies resource
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_fnn_w_softmax_policy",
                      side_effect=remove)
@@ -264,7 +264,7 @@ class TestResourcesFnnWSoftmaxSuite(object):
                                     not_logged_in, logged_in_as_admin,
                                     get_policy,) -> None:
         """
-        testing the HTTPS GET method for the /dnn-w-softmax-policies/id resource
+        testing the HTTPS GET method for the /fnn-w-softmax-policies/id resource
         """
         test_policy = TestResourcesFnnWSoftmaxSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_fnn_w_softmax_policy",
