@@ -2191,7 +2191,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_fnn_w_softmax_policies_ids() -> List[Dict]:
+    def list_fnn_w_softmax_policies_ids() -> Tuple[str]:
         """
         :return: A list of FNN with softmax policies ids in the metastore
         """
