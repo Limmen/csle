@@ -10,7 +10,6 @@ from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-from csle_common.dao.training.policy_type import PolicyType
 from csle_common.dao.training.ppo_policy import PPOPolicy
 
 import csle_rest_api.constants.constants as api_constants
