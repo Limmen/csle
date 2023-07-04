@@ -37,7 +37,7 @@ class PPOPolicy(Policy):
         self.id = -1
         self.simulation_name = simulation_name
         self.save_path = save_path
-        if self.model is None:
+        if self.model is None and self.save_path != "":
             try:
                 self.model = PPO.load(path=self.save_path)
             except Exception as e:

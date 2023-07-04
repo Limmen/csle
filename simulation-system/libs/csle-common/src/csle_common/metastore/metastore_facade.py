@@ -1486,7 +1486,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_ppo_policies_ids() -> List[Dict]:
+    def list_ppo_policies_ids() -> List[Tuple]:
         """
         :return: A list of PPO policies ids in the metastore
         """

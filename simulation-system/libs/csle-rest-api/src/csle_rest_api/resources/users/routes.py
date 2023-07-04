@@ -50,6 +50,7 @@ def users():
             users[i].password = ""
             users[i].salt = ""
         users_dicts = list(map(lambda x: x.to_dict(), users))
+
         response = jsonify(users_dicts)
         response.headers.add(
             api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
