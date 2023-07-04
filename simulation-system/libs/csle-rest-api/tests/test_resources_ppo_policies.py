@@ -101,6 +101,10 @@ class TestResourcesPPOPoliciesSuite(object):
             logged_in_as_admin,
             list_ppo_ids,
     ) -> None:
+        """
+        Testing for the GET HTTPS method in the /ppo-policies resource
+        """
+        test_policy = TestResourcesPPOPoliciesSuite.get_example_policy()
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in,
@@ -115,29 +119,31 @@ class TestResourcesPPOPoliciesSuite(object):
         pytest.logger.info(response_data_list)
         ppo_data = PPOPolicy.from_dict(response_data_list[0])
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert ppo_data.actions[0].id == 10
-        assert ppo_data.actions[0].descr == "null"
-        assert ppo_data.model is None
-        assert ppo_data.id == -1
-        assert ppo_data.simulation_name == "JohnDoeSimulation"
-        assert ppo_data.save_path == ""
-        assert ppo_data.states[0].id == 1
-        assert ppo_data.states[0].name == "JohnDoe"
-        assert ppo_data.states[0].descr == "description"
-        assert ppo_data.states[0].state_type == 0
-        assert ppo_data.experiment_config.output_dir == "output_directory"
-        assert ppo_data.experiment_config.title == "title"
-        assert ppo_data.experiment_config.random_seeds == [1, 2, 3]
-        assert ppo_data.experiment_config.agent_type == AgentType(1)
-        assert ppo_data.experiment_config.hparams["element"].value == 10
-        assert ppo_data.experiment_config.hparams["element"].name == "John"
-        assert ppo_data.experiment_config.hparams["element"].descr == "Doe"
-        assert ppo_data.experiment_config.log_every == 10
-        assert ppo_data.experiment_config.player_type == PlayerType(1)
-        assert ppo_data.experiment_config.player_idx == 10
-        assert ppo_data.experiment_config.br_log_every == 10
-        assert ppo_data.avg_R == 1.1
-        assert ppo_data.policy_type == PolicyType.PPO
+        assert ppo_data.actions[0].id == test_policy.actions[0].id
+        assert ppo_data.actions[0].descr == test_policy.actions[0].descr
+        assert ppo_data.model == test_policy.model
+        assert ppo_data.id == test_policy.id
+        assert ppo_data.simulation_name == test_policy.simulation_name
+        assert ppo_data.save_path == test_policy.save_path
+        assert ppo_data.states[0].id == test_policy.states[0].id
+        assert ppo_data.states[0].name == test_policy.states[0].name
+        assert ppo_data.states[0].descr == test_policy.states[0].descr
+        assert ppo_data.states[0].state_type == test_policy.states[0].state_type
+        assert ppo_data.experiment_config.output_dir == test_policy.experiment_config.output_dir
+        assert ppo_data.experiment_config.title == test_policy.experiment_config.title
+        assert ppo_data.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
+        assert ppo_data.experiment_config.agent_type == test_policy.experiment_config.agent_type
+        assert ppo_data.experiment_config.hparams["element"].value == \
+            test_policy.experiment_config.hparams["element"].value
+        assert ppo_data.experiment_config.hparams["element"].name ==\
+            test_policy.experiment_config.hparams["element"].name
+        assert ppo_data.experiment_config.hparams["element"].descr ==\
+            test_policy.experiment_config.hparams["element"].descr
+        assert ppo_data.experiment_config.log_every == test_policy.experiment_config.log_every
+        assert ppo_data.experiment_config.player_type == test_policy.experiment_config.player_type
+        assert ppo_data.experiment_config.player_idx == test_policy.experiment_config.player_idx
+        assert ppo_data.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
+        assert ppo_data.policy_type == test_policy.policy_type
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -153,30 +159,32 @@ class TestResourcesPPOPoliciesSuite(object):
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         ppo_data = PPOPolicy.from_dict(response_data_list[0])
-        assert ppo_data.actions[0].id == 10
-        assert ppo_data.actions[0].descr == "null"
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert ppo_data.model is None
-        assert ppo_data.id == -1
-        assert ppo_data.simulation_name == "JohnDoeSimulation"
-        assert ppo_data.save_path == ""
-        assert ppo_data.states[0].id == 1
-        assert ppo_data.states[0].name == "JohnDoe"
-        assert ppo_data.states[0].descr == "description"
-        assert ppo_data.states[0].state_type == 0
-        assert ppo_data.experiment_config.output_dir == "output_directory"
-        assert ppo_data.experiment_config.title == "title"
-        assert ppo_data.experiment_config.random_seeds == [1, 2, 3]
-        assert ppo_data.experiment_config.agent_type == AgentType(1)
-        assert ppo_data.experiment_config.hparams["element"].value == 10
-        assert ppo_data.experiment_config.hparams["element"].name == "John"
-        assert ppo_data.experiment_config.hparams["element"].descr == "Doe"
-        assert ppo_data.experiment_config.log_every == 10
-        assert ppo_data.experiment_config.player_type == PlayerType(1)
-        assert ppo_data.experiment_config.player_idx == 10
-        assert ppo_data.experiment_config.br_log_every == 10
-        assert ppo_data.avg_R == 1.1
-        assert ppo_data.policy_type == PolicyType.PPO
+        assert ppo_data.actions[0].id == test_policy.actions[0].id
+        assert ppo_data.actions[0].descr == test_policy.actions[0].descr
+        assert ppo_data.model == test_policy.model
+        assert ppo_data.id == test_policy.id
+        assert ppo_data.simulation_name == test_policy.simulation_name
+        assert ppo_data.save_path == test_policy.save_path
+        assert ppo_data.states[0].id == test_policy.states[0].id
+        assert ppo_data.states[0].name == test_policy.states[0].name
+        assert ppo_data.states[0].descr == test_policy.states[0].descr
+        assert ppo_data.states[0].state_type == test_policy.states[0].state_type
+        assert ppo_data.experiment_config.output_dir == test_policy.experiment_config.output_dir
+        assert ppo_data.experiment_config.title == test_policy.experiment_config.title
+        assert ppo_data.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
+        assert ppo_data.experiment_config.agent_type == test_policy.experiment_config.agent_type
+        assert ppo_data.experiment_config.hparams["element"].value == \
+            test_policy.experiment_config.hparams["element"].value
+        assert ppo_data.experiment_config.hparams["element"].name ==\
+            test_policy.experiment_config.hparams["element"].name
+        assert ppo_data.experiment_config.hparams["element"].descr ==\
+            test_policy.experiment_config.hparams["element"].descr
+        assert ppo_data.experiment_config.log_every == test_policy.experiment_config.log_every
+        assert ppo_data.experiment_config.player_type == test_policy.experiment_config.player_type
+        assert ppo_data.experiment_config.player_idx == test_policy.experiment_config.player_idx
+        assert ppo_data.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
+        assert ppo_data.policy_type == test_policy.policy_type
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=not_logged_in,
@@ -226,8 +234,9 @@ class TestResourcesPPOPoliciesSuite(object):
                                  not_logged_in, logged_in_as_admin,
                                  get_policy,) -> None:
         """
-        testing the /ppo-policies-id resource
+        testing the HTTPS GET method for the /ppo-policies-id resource
         """
+        test_policy = TestResourcesPPOPoliciesSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_ppo_policy",
                      side_effect=get_policy)
         mocker.patch(
@@ -247,30 +256,32 @@ class TestResourcesPPOPoliciesSuite(object):
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         ppo_data = PPOPolicy.from_dict(response_data_list)
-        assert ppo_data.actions[0].id == 10
-        assert ppo_data.actions[0].descr == "null"
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert ppo_data.model is None
-        assert ppo_data.id == -1
-        assert ppo_data.simulation_name == "JohnDoeSimulation"
-        assert ppo_data.save_path == ""
-        assert ppo_data.states[0].id == 1
-        assert ppo_data.states[0].name == "JohnDoe"
-        assert ppo_data.states[0].descr == "description"
-        assert ppo_data.states[0].state_type == 0
-        assert ppo_data.experiment_config.output_dir == "output_directory"
-        assert ppo_data.experiment_config.title == "title"
-        assert ppo_data.experiment_config.random_seeds == [1, 2, 3]
-        assert ppo_data.experiment_config.agent_type == AgentType(1)
-        assert ppo_data.experiment_config.hparams["element"].value == 10
-        assert ppo_data.experiment_config.hparams["element"].name == "John"
-        assert ppo_data.experiment_config.hparams["element"].descr == "Doe"
-        assert ppo_data.experiment_config.log_every == 10
-        assert ppo_data.experiment_config.player_type == PlayerType(1)
-        assert ppo_data.experiment_config.player_idx == 10
-        assert ppo_data.experiment_config.br_log_every == 10
-        assert ppo_data.avg_R == 1.1
-        assert ppo_data.policy_type == PolicyType.PPO
+        assert ppo_data.actions[0].id == test_policy.actions[0].id
+        assert ppo_data.actions[0].descr == test_policy.actions[0].descr
+        assert ppo_data.model == test_policy.model
+        assert ppo_data.id == test_policy.id
+        assert ppo_data.simulation_name == test_policy.simulation_name
+        assert ppo_data.save_path == test_policy.save_path
+        assert ppo_data.states[0].id == test_policy.states[0].id
+        assert ppo_data.states[0].name == test_policy.states[0].name
+        assert ppo_data.states[0].descr == test_policy.states[0].descr
+        assert ppo_data.states[0].state_type == test_policy.states[0].state_type
+        assert ppo_data.experiment_config.output_dir == test_policy.experiment_config.output_dir
+        assert ppo_data.experiment_config.title == test_policy.experiment_config.title
+        assert ppo_data.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
+        assert ppo_data.experiment_config.agent_type == test_policy.experiment_config.agent_type
+        assert ppo_data.experiment_config.hparams["element"].value == \
+            test_policy.experiment_config.hparams["element"].value
+        assert ppo_data.experiment_config.hparams["element"].name ==\
+            test_policy.experiment_config.hparams["element"].name
+        assert ppo_data.experiment_config.hparams["element"].descr ==\
+            test_policy.experiment_config.hparams["element"].descr
+        assert ppo_data.experiment_config.log_every == test_policy.experiment_config.log_every
+        assert ppo_data.experiment_config.player_type == test_policy.experiment_config.player_type
+        assert ppo_data.experiment_config.player_idx == test_policy.experiment_config.player_idx
+        assert ppo_data.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
+        assert ppo_data.policy_type == test_policy.policy_type
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=logged_in_as_admin,
@@ -279,34 +290,39 @@ class TestResourcesPPOPoliciesSuite(object):
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         ppo_data = PPOPolicy.from_dict(response_data_list)
-        assert ppo_data.actions[0].id == 10
-        assert ppo_data.actions[0].descr == "null"
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert ppo_data.model is None
-        assert ppo_data.id == -1
-        assert ppo_data.simulation_name == "JohnDoeSimulation"
-        assert ppo_data.save_path == ""
-        assert ppo_data.states[0].id == 1
-        assert ppo_data.states[0].name == "JohnDoe"
-        assert ppo_data.states[0].descr == "description"
-        assert ppo_data.states[0].state_type == 0
-        assert ppo_data.experiment_config.output_dir == "output_directory"
-        assert ppo_data.experiment_config.title == "title"
-        assert ppo_data.experiment_config.random_seeds == [1, 2, 3]
-        assert ppo_data.experiment_config.agent_type == AgentType(1)
-        assert ppo_data.experiment_config.hparams["element"].value == 10
-        assert ppo_data.experiment_config.hparams["element"].name == "John"
-        assert ppo_data.experiment_config.hparams["element"].descr == "Doe"
-        assert ppo_data.experiment_config.log_every == 10
-        assert ppo_data.experiment_config.player_type == PlayerType(1)
-        assert ppo_data.experiment_config.player_idx == 10
-        assert ppo_data.experiment_config.br_log_every == 10
-        assert ppo_data.avg_R == 1.1
-        assert ppo_data.policy_type == PolicyType.PPO
+        assert ppo_data.actions[0].id == test_policy.actions[0].id
+        assert ppo_data.actions[0].descr == test_policy.actions[0].descr
+        assert ppo_data.model == test_policy.model
+        assert ppo_data.id == test_policy.id
+        assert ppo_data.simulation_name == test_policy.simulation_name
+        assert ppo_data.save_path == test_policy.save_path
+        assert ppo_data.states[0].id == test_policy.states[0].id
+        assert ppo_data.states[0].name == test_policy.states[0].name
+        assert ppo_data.states[0].descr == test_policy.states[0].descr
+        assert ppo_data.states[0].state_type == test_policy.states[0].state_type
+        assert ppo_data.experiment_config.output_dir == test_policy.experiment_config.output_dir
+        assert ppo_data.experiment_config.title == test_policy.experiment_config.title
+        assert ppo_data.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
+        assert ppo_data.experiment_config.agent_type == test_policy.experiment_config.agent_type
+        assert ppo_data.experiment_config.hparams["element"].value == \
+            test_policy.experiment_config.hparams["element"].value
+        assert ppo_data.experiment_config.hparams["element"].name ==\
+            test_policy.experiment_config.hparams["element"].name
+        assert ppo_data.experiment_config.hparams["element"].descr ==\
+            test_policy.experiment_config.hparams["element"].descr
+        assert ppo_data.experiment_config.log_every == test_policy.experiment_config.log_every
+        assert ppo_data.experiment_config.player_type == test_policy.experiment_config.player_type
+        assert ppo_data.experiment_config.player_idx == test_policy.experiment_config.player_idx
+        assert ppo_data.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
+        assert ppo_data.policy_type == test_policy.policy_type
 
     def test_ppo_policies_id_delete(self, flask_app, mocker,
                                     logged_in, not_logged_in,
                                     get_policy,) -> None:
+        """
+        testing the HTTPS DELETE method for the /ppo-policies-id resource
+        """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_ppo_policy",
                      side_effect=get_policy)
         mocker.patch(
