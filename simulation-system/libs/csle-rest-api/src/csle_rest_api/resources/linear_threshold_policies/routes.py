@@ -1,10 +1,11 @@
 """
 Routes and sub-resources for the /linear-threshold-policies resource
 """
-from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, jsonify, request
+
+import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
@@ -75,7 +76,10 @@ def linear_threshold_policy(policy_id: int):
 
     :return: The given policy or deletes the policy
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 
