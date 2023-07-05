@@ -1,6 +1,6 @@
+from typing import List, Tuple
 import json
 import logging
-
 import csle_common.constants.constants as constants
 import pytest
 from csle_common.dao.simulation_config.action import Action
@@ -28,16 +28,17 @@ class TestResourcesPPOPoliciesSuite:
         """
         :return: the flask app fixture representing the webserver
         """
-        return create_app(
-            static_folder="../../../../../management-system/csle-mgmt-webapp/build"
-        )
+        return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
     def list_ppo_ids(self, mocker):
         """
-        pytest fixture for listing alpha vec policy ids
+        Pytest fixture for mocking the list_ppo_policies_ids function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
-        def list_ppo_policies_ids():
+        def list_ppo_policies_ids() -> List[Tuple[int, str]]:
             policy_id = (111, "some_simulation")
             return [policy_id]
         list_ppo_plicies_ids_mocker = mocker.MagicMock(side_effect=list_ppo_policies_ids)
@@ -46,9 +47,12 @@ class TestResourcesPPOPoliciesSuite:
     @pytest.fixture
     def list_ppo(self, mocker):
         """
-        pytest fixture for listing alpha vec policies
+        Pytest fixture for mocking the list_ppo_policies function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
-        def list_ppo_policies():
+        def list_ppo_policies() -> List[PPOPolicy]:
             policy = TestResourcesPPOPoliciesSuite.get_example_policy()
             return [policy]
         list_ppo_policies_mocker = mocker.MagicMock(side_effect=list_ppo_policies)
@@ -57,9 +61,12 @@ class TestResourcesPPOPoliciesSuite:
     @pytest.fixture
     def remove(self, mocker):
         """
-        pytest fixture for removal of alpha vec policies
+        Pytest fixture for mocking the remove_ppo_policy function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
-        def remove_ppo_policy(ppo_policy):
+        def remove_ppo_policy(ppo_policy: PPOPolicy) -> None:
             return None
         remove_ppo_policy_mocker = mocker.MagicMock(side_effect=remove_ppo_policy)
         return remove_ppo_policy_mocker
@@ -67,16 +74,24 @@ class TestResourcesPPOPoliciesSuite:
     @pytest.fixture
     def get_policy(self, mocker):
         """
-        pytest fixture for the get ppo policy
+        Pytest fixture for mocking the get_ppo_policy function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
-        def get_ppo_policy(id):
+        def get_ppo_policy(id: int) -> PPOPolicy:
             policy = TestResourcesPPOPoliciesSuite.get_example_policy()
             return policy
         get_ppo_policy_mocker = mocker.MagicMock(side_effect=get_ppo_policy)
         return get_ppo_policy_mocker
 
     @staticmethod
-    def get_example_policy():
+    def get_example_policy() -> PPOPolicy:
+        """
+        Utility function for getting an example instance of a PPOPolicy
+
+        :return: an example isntance of a PPOPOlicy
+        """
         state_list = [State(id=1, name="JohnDoe", descr="description", state_type=StateType(0))]
         e_config_class = ExperimentConfig(output_dir="output_directory", title="title", random_seeds=[1, 2, 3],
                                           agent_type=AgentType(1),
@@ -90,24 +105,22 @@ class TestResourcesPPOPoliciesSuite:
                         experiment_config=e_config_class, avg_R=1.1)
         return obj
 
-    def test_ppo_policies_get(
-            self,
-            flask_app,
-            mocker,
-            list_ppo,
-            logged_in,
-            not_logged_in,
-            logged_in_as_admin,
-            list_ppo_ids,
-    ) -> None:
+    def test_ppo_policies_get(self, flask_app, mocker, list_ppo, logged_in, not_logged_in, logged_in_as_admin,
+                              list_ppo_ids) -> None:
         """
         Testing for the GET HTTPS method in the /ppo-policies resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object
+        :param list_ppo: the list_ppo fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param list_ppo_ids: the list_ppo_ids fixture
+        :return: None
         """
         test_policy = TestResourcesPPOPoliciesSuite.get_example_policy()
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in,)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_ppo_policies",
                      side_effect=list_ppo)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_ppo_policies_ids",
@@ -131,12 +144,12 @@ class TestResourcesPPOPoliciesSuite:
         assert ppo_data.experiment_config.title == test_policy.experiment_config.title
         assert ppo_data.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
         assert ppo_data.experiment_config.agent_type == test_policy.experiment_config.agent_type
-        assert ppo_data.experiment_config.hparams["element"].value == \
-            test_policy.experiment_config.hparams["element"].value
-        assert ppo_data.experiment_config.hparams["element"].name ==\
-            test_policy.experiment_config.hparams["element"].name
-        assert ppo_data.experiment_config.hparams["element"].descr ==\
-            test_policy.experiment_config.hparams["element"].descr
+        assert ppo_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+            test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert ppo_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name ==\
+            test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert ppo_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr ==\
+            test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
         assert ppo_data.experiment_config.log_every == test_policy.experiment_config.log_every
         assert ppo_data.experiment_config.player_type == test_policy.experiment_config.player_type
         assert ppo_data.experiment_config.player_idx == test_policy.experiment_config.player_idx
@@ -172,21 +185,19 @@ class TestResourcesPPOPoliciesSuite:
         assert ppo_data.experiment_config.title == test_policy.experiment_config.title
         assert ppo_data.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
         assert ppo_data.experiment_config.agent_type == test_policy.experiment_config.agent_type
-        assert ppo_data.experiment_config.hparams["element"].value == \
-            test_policy.experiment_config.hparams["element"].value
-        assert ppo_data.experiment_config.hparams["element"].name ==\
-            test_policy.experiment_config.hparams["element"].name
-        assert ppo_data.experiment_config.hparams["element"].descr ==\
-            test_policy.experiment_config.hparams["element"].descr
+        assert ppo_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+            test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert ppo_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name ==\
+            test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert ppo_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr ==\
+            test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
         assert ppo_data.experiment_config.log_every == test_policy.experiment_config.log_every
         assert ppo_data.experiment_config.player_type == test_policy.experiment_config.player_type
         assert ppo_data.experiment_config.player_idx == test_policy.experiment_config.player_idx
         assert ppo_data.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
         assert ppo_data.policy_type == test_policy.policy_type
         mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -195,32 +206,33 @@ class TestResourcesPPOPoliciesSuite:
 
     def test_ppo_policies_delete(self, flask_app, mocker, list_ppo, logged_in, not_logged_in,
                                  logged_in_as_admin, remove) -> None:
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_ppo_policies",
-                     side_effect=list_ppo)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_ppo_policy",
-                     side_effect=remove)
+        """
+        Tests the HTTP DELETE method on the /ppo-policies resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object
+        :param list_ppo: the list_ppo fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param remove: the remove fixture
+        :return: None
+        """
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_ppo_policies", side_effect=list_ppo)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_ppo_policy", side_effect=remove)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -230,24 +242,25 @@ class TestResourcesPPOPoliciesSuite:
     def test_ppo_policies_id_get(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
                                  get_policy,) -> None:
         """
-        testing the HTTPS GET method for the /ppo-policies-id resource
+        Tests the HTTPS GET method for the /ppo-policies-id resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_policy: the get_policy fixture
+        :return: None
         """
         test_policy = TestResourcesPPOPoliciesSuite.get_example_policy()
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_ppo_policy",
-                     side_effect=get_policy)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_ppo_policy", side_effect=get_policy)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -267,21 +280,18 @@ class TestResourcesPPOPoliciesSuite:
         assert ppo_data.experiment_config.title == test_policy.experiment_config.title
         assert ppo_data.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
         assert ppo_data.experiment_config.agent_type == test_policy.experiment_config.agent_type
-        assert ppo_data.experiment_config.hparams["element"].value == \
-            test_policy.experiment_config.hparams["element"].value
-        assert ppo_data.experiment_config.hparams["element"].name ==\
-            test_policy.experiment_config.hparams["element"].name
-        assert ppo_data.experiment_config.hparams["element"].descr ==\
-            test_policy.experiment_config.hparams["element"].descr
+        assert ppo_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+            test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert ppo_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name ==\
+            test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert ppo_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr ==\
+            test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
         assert ppo_data.experiment_config.log_every == test_policy.experiment_config.log_every
         assert ppo_data.experiment_config.player_type == test_policy.experiment_config.player_type
         assert ppo_data.experiment_config.player_idx == test_policy.experiment_config.player_idx
         assert ppo_data.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
         assert ppo_data.policy_type == test_policy.policy_type
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -301,12 +311,12 @@ class TestResourcesPPOPoliciesSuite:
         assert ppo_data.experiment_config.title == test_policy.experiment_config.title
         assert ppo_data.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
         assert ppo_data.experiment_config.agent_type == test_policy.experiment_config.agent_type
-        assert ppo_data.experiment_config.hparams["element"].value == \
-            test_policy.experiment_config.hparams["element"].value
-        assert ppo_data.experiment_config.hparams["element"].name ==\
-            test_policy.experiment_config.hparams["element"].name
-        assert ppo_data.experiment_config.hparams["element"].descr ==\
-            test_policy.experiment_config.hparams["element"].descr
+        assert ppo_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+            test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert ppo_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name ==\
+            test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert ppo_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr ==\
+            test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
         assert ppo_data.experiment_config.log_every == test_policy.experiment_config.log_every
         assert ppo_data.experiment_config.player_type == test_policy.experiment_config.player_type
         assert ppo_data.experiment_config.player_idx == test_policy.experiment_config.player_idx
@@ -315,23 +325,23 @@ class TestResourcesPPOPoliciesSuite:
 
     def test_ppo_policies_id_delete(self, flask_app, mocker, logged_in, not_logged_in, get_policy) -> None:
         """
-        testing the HTTPS DELETE method for the /ppo-policies-id resource
+        Tests the HTTPS DELETE method for the /ppo-policies-id resource
+
+        :param flask_app: the flask app for making the tests requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param get_policy: the get_policy fixture
+        :return: None
         """
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_ppo_policy",
-                     side_effect=get_policy)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_ppo_policy", side_effect=get_policy)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)

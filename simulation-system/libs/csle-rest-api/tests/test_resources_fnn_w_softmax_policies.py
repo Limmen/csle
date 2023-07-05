@@ -1,6 +1,6 @@
+from typing import List, Tuple
 import json
 import logging
-
 import csle_common.constants.constants as constants
 import pytest
 from csle_common.dao.simulation_config.action import Action
@@ -35,50 +35,72 @@ class TestResourcesFnnWSoftmaxPoliciesSuite:
     @pytest.fixture
     def list_fnn_w_softmax_ids(self, mocker):
         """
-        pytest fixture for fnn_w_softmax ids policies
+        Pytest fixture for mocking the list_fnn_w_softmax_policies_ids function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
-        def list_fnn_w_softmax_policies_ids():
+
+        def list_fnn_w_softmax_policies_ids() -> List[Tuple[int, str]]:
             policy_id = (111, "some_simulation")
             return [policy_id]
+
         list_ppo_plicies_ids_mocker = mocker.MagicMock(side_effect=list_fnn_w_softmax_policies_ids)
         return list_ppo_plicies_ids_mocker
 
     @pytest.fixture
     def list_fnn_w_softmax(self, mocker):
         """
-        pytest fixture for listing fnn_w_softmax policies
+        Pytest fixture for mocking the list_fnn_w_softmax_policies function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
-        def list_fnn_w_softmax_policies():
+
+        def list_fnn_w_softmax_policies() -> List[FNNWithSoftmaxPolicy]:
             policy = TestResourcesFnnWSoftmaxPoliciesSuite.get_example_policy()
             return [policy]
+
         list_fnn_w_softmax_policies_mocker = mocker.MagicMock(side_effect=list_fnn_w_softmax_policies)
         return list_fnn_w_softmax_policies_mocker
 
     @pytest.fixture
     def remove(self, mocker):
         """
-        pytest fixture for removal of fnn_w_softmax policies
+        Pytest fixture for mocking the remove_fnn_w_softmax_policy function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
-        def remove_fnn_w_softmax_policy(fnn_w_softmax_policy):
+
+        def remove_fnn_w_softmax_policy(fnn_w_softmax_policy: FNNWithSoftmaxPolicy) -> None:
             return None
+
         remove_fnn_w_softmax_policy_mocker = mocker.MagicMock(side_effect=remove_fnn_w_softmax_policy)
         return remove_fnn_w_softmax_policy_mocker
 
     @pytest.fixture
     def get_policy(self, mocker):
         """
-        pytest fixture for the get fnn_w_softmax policy
+        Pytest fixture for mocking the get_fnn_w_softmax_policy function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
-        def get_fnn_w_softmax_policy(id):
+
+        def get_fnn_w_softmax_policy(id: int) -> FNNWithSoftmaxPolicy:
             policy = TestResourcesFnnWSoftmaxPoliciesSuite.get_example_policy()
             return policy
+
         get_fnn_w_softmax_policy_mocker = mocker.MagicMock(side_effect=get_fnn_w_softmax_policy)
         return get_fnn_w_softmax_policy_mocker
 
     @staticmethod
-    def get_example_policy():
+    def get_example_policy() -> FNNWithSoftmaxPolicy:
         """
-        :return: an example fnn_w_softmax plicy class full of dummy values
+        Utility function for creating an example instance of the FNNWithSoftmaxPolicy class
+
+        :return: an example instance of FNNWithSoftmaxPolicy
         """
         state_list = [State(id=1, name="JohnDoe", descr="description", state_type=StateType(0))]
         e_config_class = ExperimentConfig(output_dir="output_directory", title="title", random_seeds=[1, 2, 3],
@@ -93,28 +115,26 @@ class TestResourcesFnnWSoftmaxPoliciesSuite:
                                    input_dim=15, output_dim=30)
         return obj
 
-    def test_fnnwsm_policies_get(
-            self,
-            flask_app,
-            mocker,
-            list_fnn_w_softmax,
-            logged_in,
-            not_logged_in,
-            logged_in_as_admin,
-            list_fnn_w_softmax_ids
-    ) -> None:
+    def test_fnn_w_softmaxm_policies_get(self, flask_app, mocker, list_fnn_w_softmax, logged_in, not_logged_in,
+                                         logged_in_as_admin, list_fnn_w_softmax_ids) -> None:
         """
-        testing the GET HTTPS method  for the /fnn-w-softmax-policies resource
+        Tests the GET HTTPS method  for the /fnn-w-softmax-policies resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object for mocking
+        :param list_fnn_w_softmax: the list_fnn_w_softmax fixture
+        :param logged_in:the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param list_fnn_w_softmax_ids: the list_fnn_w_softmax_ids fixture
+        :return: None
         """
         test_policy = TestResourcesFnnWSoftmaxPoliciesSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_fnn_w_softmax_policies",
                      side_effect=list_fnn_w_softmax)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_fnn_w_softmax_policies_ids",
                      side_effect=list_fnn_w_softmax_ids)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -142,24 +162,24 @@ class TestResourcesFnnWSoftmaxPoliciesSuite:
         assert fnnwsm_vec.avg_R == test_policy.avg_R
         assert fnnwsm_vec.experiment_config.agent_type == test_policy.experiment_config.agent_type
         assert fnnwsm_vec.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
-        assert fnnwsm_vec.experiment_config.hparams["element"].descr == \
-            test_policy.experiment_config.hparams["element"].descr
-        assert fnnwsm_vec.experiment_config.hparams["element"].name == \
-            test_policy.experiment_config.hparams["element"].name
-        assert fnnwsm_vec.experiment_config.hparams["element"].value == \
-            test_policy.experiment_config.hparams["element"].value
+        assert fnnwsm_vec.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
+        assert fnnwsm_vec.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert fnnwsm_vec.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
         assert fnnwsm_vec.experiment_config.log_every == \
-            test_policy.experiment_config.log_every
+               test_policy.experiment_config.log_every
         assert fnnwsm_vec.experiment_config.output_dir == \
-            test_policy.experiment_config.output_dir
+               test_policy.experiment_config.output_dir
         assert fnnwsm_vec.experiment_config.player_idx == \
-            test_policy.experiment_config.player_idx
+               test_policy.experiment_config.player_idx
         assert fnnwsm_vec.experiment_config.player_type == \
-            test_policy.experiment_config.player_type
+               test_policy.experiment_config.player_type
         assert fnnwsm_vec.experiment_config.random_seeds == \
-            test_policy.experiment_config.random_seeds
+               test_policy.experiment_config.random_seeds
         assert fnnwsm_vec.experiment_config.title == \
-            test_policy.experiment_config.title
+               test_policy.experiment_config.title
         assert fnnwsm_vec.id == test_policy.id
         assert fnnwsm_vec.input_dim == test_policy.input_dim
         assert fnnwsm_vec.output_dim == test_policy.output_dim
@@ -173,7 +193,7 @@ class TestResourcesFnnWSoftmaxPoliciesSuite:
         assert fnnwsm_vec.states[0].state_type == test_policy.states[0].state_type
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,)
+            side_effect=logged_in_as_admin, )
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -186,24 +206,24 @@ class TestResourcesFnnWSoftmaxPoliciesSuite:
         assert fnnwsm_vec.avg_R == test_policy.avg_R
         assert fnnwsm_vec.experiment_config.agent_type == test_policy.experiment_config.agent_type
         assert fnnwsm_vec.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
-        assert fnnwsm_vec.experiment_config.hparams["element"].descr == \
-            test_policy.experiment_config.hparams["element"].descr
-        assert fnnwsm_vec.experiment_config.hparams["element"].name == \
-            test_policy.experiment_config.hparams["element"].name
-        assert fnnwsm_vec.experiment_config.hparams["element"].value == \
-            test_policy.experiment_config.hparams["element"].value
+        assert fnnwsm_vec.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
+        assert fnnwsm_vec.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert fnnwsm_vec.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
         assert fnnwsm_vec.experiment_config.log_every == \
-            test_policy.experiment_config.log_every
+               test_policy.experiment_config.log_every
         assert fnnwsm_vec.experiment_config.output_dir == \
-            test_policy.experiment_config.output_dir
+               test_policy.experiment_config.output_dir
         assert fnnwsm_vec.experiment_config.player_idx == \
-            test_policy.experiment_config.player_idx
+               test_policy.experiment_config.player_idx
         assert fnnwsm_vec.experiment_config.player_type == \
-            test_policy.experiment_config.player_type
+               test_policy.experiment_config.player_type
         assert fnnwsm_vec.experiment_config.random_seeds == \
-            test_policy.experiment_config.random_seeds
+               test_policy.experiment_config.random_seeds
         assert fnnwsm_vec.experiment_config.title == \
-            test_policy.experiment_config.title
+               test_policy.experiment_config.title
         assert fnnwsm_vec.id == test_policy.id
         assert fnnwsm_vec.input_dim == test_policy.input_dim
         assert fnnwsm_vec.output_dim == test_policy.output_dim
@@ -215,73 +235,66 @@ class TestResourcesFnnWSoftmaxPoliciesSuite:
         assert fnnwsm_vec.states[0].name == test_policy.states[0].name
         assert fnnwsm_vec.states[0].state_type == test_policy.states[0].state_type
 
-    def test_fnnwsm_policies_delete(
-            self,
-            flask_app,
-            mocker,
-            list_fnn_w_softmax,
-            logged_in,
-            not_logged_in,
-            logged_in_as_admin,
-            remove,
-    ) -> None:
+    def test_fnn_w_softmax_policies_delete(self, flask_app, mocker, list_fnn_w_softmax, logged_in, not_logged_in,
+                                           logged_in_as_admin, remove) -> None:
         """
-        testing  the DELETE HTTPS method for the /fnn-w-softmax-policies resource
+        Testing the DELETE HTTPS method for the /fnn-w-softmax-policies resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object for mocking
+        :param list_fnn_w_softmax: the list_fnn_w_softmax fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param remove: the remove fixture
+        :return: None
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_fnn_w_softmax_policy",
                      side_effect=remove)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_fnn_w_softmax_policies",
                      side_effect=list_fnn_w_softmax)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_fnnwsm_policies_id_get(self, flask_app, mocker, logged_in,
-                                    not_logged_in, logged_in_as_admin,
-                                    get_policy,) -> None:
+    def test_fnn_w_softmax_policies_id_get(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
+                                           get_policy) -> None:
         """
-        testing the HTTPS GET method for the /fnn-w-softmax-policies/id resource
+        Tests the HTTPS GET method for the /fnn-w-softmax-policies/id resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_policy: the get_policy fixture
+        :return: None
         """
         test_policy = TestResourcesFnnWSoftmaxPoliciesSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_fnn_w_softmax_policy",
                      side_effect=get_policy)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -294,24 +307,18 @@ class TestResourcesFnnWSoftmaxPoliciesSuite:
         assert fnnwsm_vec.avg_R == test_policy.avg_R
         assert fnnwsm_vec.experiment_config.agent_type == test_policy.experiment_config.agent_type
         assert fnnwsm_vec.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
-        assert fnnwsm_vec.experiment_config.hparams["element"].descr == \
-            test_policy.experiment_config.hparams["element"].descr
-        assert fnnwsm_vec.experiment_config.hparams["element"].name == \
-            test_policy.experiment_config.hparams["element"].name
-        assert fnnwsm_vec.experiment_config.hparams["element"].value == \
-            test_policy.experiment_config.hparams["element"].value
-        assert fnnwsm_vec.experiment_config.log_every == \
-            test_policy.experiment_config.log_every
-        assert fnnwsm_vec.experiment_config.output_dir == \
-            test_policy.experiment_config.output_dir
-        assert fnnwsm_vec.experiment_config.player_idx == \
-            test_policy.experiment_config.player_idx
-        assert fnnwsm_vec.experiment_config.player_type == \
-            test_policy.experiment_config.player_type
-        assert fnnwsm_vec.experiment_config.random_seeds == \
-            test_policy.experiment_config.random_seeds
-        assert fnnwsm_vec.experiment_config.title == \
-            test_policy.experiment_config.title
+        assert fnnwsm_vec.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
+        assert fnnwsm_vec.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert fnnwsm_vec.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert fnnwsm_vec.experiment_config.log_every == test_policy.experiment_config.log_every
+        assert fnnwsm_vec.experiment_config.output_dir == test_policy.experiment_config.output_dir
+        assert fnnwsm_vec.experiment_config.player_idx == test_policy.experiment_config.player_idx
+        assert fnnwsm_vec.experiment_config.player_type == test_policy.experiment_config.player_type
+        assert fnnwsm_vec.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
+        assert fnnwsm_vec.experiment_config.title == test_policy.experiment_config.title
         assert fnnwsm_vec.id == test_policy.id
         assert fnnwsm_vec.input_dim == test_policy.input_dim
         assert fnnwsm_vec.output_dim == test_policy.output_dim
@@ -324,7 +331,7 @@ class TestResourcesFnnWSoftmaxPoliciesSuite:
         assert fnnwsm_vec.states[0].state_type == test_policy.states[0].state_type
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,)
+            side_effect=logged_in_as_admin, )
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -337,24 +344,18 @@ class TestResourcesFnnWSoftmaxPoliciesSuite:
         assert fnnwsm_vec.avg_R == test_policy.avg_R
         assert fnnwsm_vec.experiment_config.agent_type == test_policy.experiment_config.agent_type
         assert fnnwsm_vec.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
-        assert fnnwsm_vec.experiment_config.hparams["element"].descr == \
-            test_policy.experiment_config.hparams["element"].descr
-        assert fnnwsm_vec.experiment_config.hparams["element"].name == \
-            test_policy.experiment_config.hparams["element"].name
-        assert fnnwsm_vec.experiment_config.hparams["element"].value == \
-            test_policy.experiment_config.hparams["element"].value
-        assert fnnwsm_vec.experiment_config.log_every == \
-            test_policy.experiment_config.log_every
-        assert fnnwsm_vec.experiment_config.output_dir == \
-            test_policy.experiment_config.output_dir
-        assert fnnwsm_vec.experiment_config.player_idx == \
-            test_policy.experiment_config.player_idx
-        assert fnnwsm_vec.experiment_config.player_type == \
-            test_policy.experiment_config.player_type
-        assert fnnwsm_vec.experiment_config.random_seeds == \
-            test_policy.experiment_config.random_seeds
-        assert fnnwsm_vec.experiment_config.title == \
-            test_policy.experiment_config.title
+        assert fnnwsm_vec.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
+        assert fnnwsm_vec.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert fnnwsm_vec.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert fnnwsm_vec.experiment_config.log_every == test_policy.experiment_config.log_every
+        assert fnnwsm_vec.experiment_config.output_dir == test_policy.experiment_config.output_dir
+        assert fnnwsm_vec.experiment_config.player_idx == test_policy.experiment_config.player_idx
+        assert fnnwsm_vec.experiment_config.player_type == test_policy.experiment_config.player_type
+        assert fnnwsm_vec.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
+        assert fnnwsm_vec.experiment_config.title == test_policy.experiment_config.title
         assert fnnwsm_vec.id == test_policy.id
         assert fnnwsm_vec.input_dim == test_policy.input_dim
         assert fnnwsm_vec.output_dim == test_policy.output_dim
@@ -366,40 +367,38 @@ class TestResourcesFnnWSoftmaxPoliciesSuite:
         assert fnnwsm_vec.states[0].name == test_policy.states[0].name
         assert fnnwsm_vec.states[0].state_type == test_policy.states[0].state_type
 
-    def test_fnnwsm_policies_id_delete(self, flask_app, mocker, logged_in,
-                                       not_logged_in, logged_in_as_admin,
-                                       get_policy, remove) -> None:
-
+    def test_fnn_w_softmax_policies_id_delete(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
+                                              get_policy, remove) -> None:
         """
-        testing the HTTPS DELETE method for the /dnn-w-softmax-policies/id resource
+        Tests the HTTPS DELETE method for the /fnn-w-softmax-policies/id resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_policy: the get_policy fixture
+        :param remove: the remove fixture
+        :return: None
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_fnn_w_softmax_policy",
                      side_effect=get_policy)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_fnn_w_softmax_policy",
                      side_effect=remove)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}"f"/10")
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.FNN_W_SOFTMAX_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response_data_list == {}

@@ -20,7 +20,7 @@ from csle_rest_api.rest_api import create_app
 
 class TestRecourcesLinearThresholdPoliciesSuite:
     """
-    Test suite for /linaer-threshold resource
+    Test suite for /linaer-threshold-policies resource
     """
 
     pytest.logger = logging.getLogger("resources_linear_threshold_tests")
@@ -37,7 +37,10 @@ class TestRecourcesLinearThresholdPoliciesSuite:
     @pytest.fixture
     def list_linear_threshold_ids(self, mocker):
         """
-        pytest fixture for list_linear_threshold_ids policies
+        pytest fixture for mocking list_linear_threshold_policies_ids
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
 
         def list_linear_threshold_stopping_policies_ids():
@@ -50,7 +53,10 @@ class TestRecourcesLinearThresholdPoliciesSuite:
     @pytest.fixture
     def list_linear_theshold(self, mocker):
         """
-        pytest fixture for listing linear_threshold policies
+        pytest fixture for mocking the list_linear_threshold_policies
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
 
         def list_linear_threshold_stopping_policies():
@@ -64,7 +70,10 @@ class TestRecourcesLinearThresholdPoliciesSuite:
     @pytest.fixture
     def remove(self, mocker):
         """
-        pytest fixture for removal of linear_threshold policies
+        pytest fixture for mocking the remove_linear_threshold_stopping_policy function
+
+        :param mocker: the pytest mocker object for mocking
+        :return: a mock object with the mocked function
         """
 
         def remove_linear_threshold_stopping_policy(linear_threshold_stopping_policy):
@@ -77,7 +86,10 @@ class TestRecourcesLinearThresholdPoliciesSuite:
     @pytest.fixture
     def get_policy(self, mocker):
         """
-        pytest fixture for the get linear_threshold policy
+        pytest fixture for the get mocking the get_linear_threshold_stopping_policy
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
 
         def get_linear_threshold_stopping_policy(id):
@@ -88,9 +100,9 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         return get_linear_threshold_stopping_policy_mocker
 
     @staticmethod
-    def get_example_policy():
+    def get_example_policy() -> LinearThresholdStoppingPolicy:
         """
-        :return: an example  class full of dummy values
+        :return: an example LinearThresholdStoppingPolicy object
         """
         state_list = [State(id=1, name="JohnDoe", descr="description", state_type=StateType(0))]
         e_config_class = ExperimentConfig(output_dir="output_directory", title="title", random_seeds=[1, 2, 3],
@@ -124,7 +136,7 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_linear_threshold_stopping_policies",
                      side_effect=list_linear_theshold)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
-                      "list_linear_threshold_stopping_policies_ids", side_effect=list_linear_threshold_ids)
+                     "list_linear_threshold_stopping_policies_ids", side_effect=list_linear_threshold_ids)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=not_logged_in, )
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE)
@@ -155,12 +167,12 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         assert l_thresh.avg_R == test_policy.avg_R
         assert l_thresh.experiment_config.agent_type == test_policy.experiment_config.agent_type
         assert l_thresh.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
-        assert l_thresh.experiment_config.hparams["element"].descr == \
-               test_policy.experiment_config.hparams["element"].descr
-        assert l_thresh.experiment_config.hparams["element"].name == \
-               test_policy.experiment_config.hparams["element"].name
-        assert l_thresh.experiment_config.hparams["element"].value == \
-               test_policy.experiment_config.hparams["element"].value
+        assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
+        assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
         assert l_thresh.experiment_config.log_every == \
                test_policy.experiment_config.log_every
         assert l_thresh.experiment_config.output_dir == \
@@ -196,12 +208,12 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         assert l_thresh.avg_R == test_policy.avg_R
         assert l_thresh.experiment_config.agent_type == test_policy.experiment_config.agent_type
         assert l_thresh.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
-        assert l_thresh.experiment_config.hparams["element"].descr == \
-               test_policy.experiment_config.hparams["element"].descr
-        assert l_thresh.experiment_config.hparams["element"].name == \
-               test_policy.experiment_config.hparams["element"].name
-        assert l_thresh.experiment_config.hparams["element"].value == \
-               test_policy.experiment_config.hparams["element"].value
+        assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
+        assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
         assert l_thresh.experiment_config.log_every == \
                test_policy.experiment_config.log_every
         assert l_thresh.experiment_config.output_dir == \
@@ -311,12 +323,12 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         assert l_thresh.avg_R == test_policy.avg_R
         assert l_thresh.experiment_config.agent_type == test_policy.experiment_config.agent_type
         assert l_thresh.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
-        assert l_thresh.experiment_config.hparams["element"].descr == \
-               test_policy.experiment_config.hparams["element"].descr
-        assert l_thresh.experiment_config.hparams["element"].name == \
-               test_policy.experiment_config.hparams["element"].name
-        assert l_thresh.experiment_config.hparams["element"].value == \
-               test_policy.experiment_config.hparams["element"].value
+        assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
+        assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
         assert l_thresh.experiment_config.log_every == \
                test_policy.experiment_config.log_every
         assert l_thresh.experiment_config.output_dir == \
@@ -352,12 +364,12 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         assert l_thresh.avg_R == test_policy.avg_R
         assert l_thresh.experiment_config.agent_type == test_policy.experiment_config.agent_type
         assert l_thresh.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
-        assert l_thresh.experiment_config.hparams["element"].descr == \
-               test_policy.experiment_config.hparams["element"].descr
-        assert l_thresh.experiment_config.hparams["element"].name == \
-               test_policy.experiment_config.hparams["element"].name
-        assert l_thresh.experiment_config.hparams["element"].value == \
-               test_policy.experiment_config.hparams["element"].value
+        assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
+        assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
         assert l_thresh.experiment_config.log_every == \
                test_policy.experiment_config.log_every
         assert l_thresh.experiment_config.output_dir == \

@@ -33,7 +33,10 @@ class TestResourcesAlphaVecsSuite():
     @pytest.fixture
     def list_alpha_vec_ids(self, mocker):
         """
-        pytest fixture for listing alpha vec policy ids
+        Pytest fixture for mocking the list_alpha_vec_policies_ids function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
         def list_alpha_vec_policies_ids():
             policy_id = (111, "some_simulation")
@@ -44,7 +47,10 @@ class TestResourcesAlphaVecsSuite():
     @pytest.fixture
     def list_alpha_vec(self, mocker):
         """
-        pytest fixture for listing alpha vec policies
+        Pytest fixture for mocking the list_alpha_vec_policies function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
         def list_alpha_vec_policies():
             policy = TestResourcesAlphaVecsSuite.get_example_policy()
@@ -55,9 +61,12 @@ class TestResourcesAlphaVecsSuite():
     @pytest.fixture
     def remove(self, mocker):
         """
-        pytest fixture for removal of alpha vec policies
+        Pytest fixture for mocking the remove_alpha_vec_policy function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
-        def remove_alpha_vec_policy(alpha_vec_policy):
+        def remove_alpha_vec_policy(alpha_vec_policy: AlphaVectorsPolicy) -> None:
             return None
         remove_alpha_vec_policy_mocker = mocker.MagicMock(side_effect=remove_alpha_vec_policy)
         return remove_alpha_vec_policy_mocker
@@ -65,16 +74,24 @@ class TestResourcesAlphaVecsSuite():
     @pytest.fixture
     def get_policy(self, mocker):
         """
-        pytest fixture for the get ppo policy
+        Pytest fixture for mocking the get_alpha_vec_policy function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
         """
-        def get_alpha_vec_policy(id):
+        def get_alpha_vec_policy(id: int) -> AlphaVectorsPolicy:
             policy = TestResourcesAlphaVecsSuite.get_example_policy()
             return policy
         get_alpha_vec_policy_mocker = mocker.MagicMock(side_effect=get_alpha_vec_policy)
         return get_alpha_vec_policy_mocker
 
     @staticmethod
-    def get_example_policy():
+    def get_example_policy() -> AlphaVectorsPolicy:
+        """
+        Utility function for getting an example instance of the AlphaVectorsPolicy class
+
+        :return: an example AlphaVectorsPolicy
+        """
 
         obj = AlphaVectorsPolicy(player_type=PlayerType(1),
                                  actions=[Action(id=10, descr="null")],
@@ -87,18 +104,19 @@ class TestResourcesAlphaVecsSuite():
                                  avg_R=1.1)
         return obj
 
-    def test_alpha_vec_policies_get(
-            self,
-            flask_app,
-            mocker,
-            list_alpha_vec,
-            logged_in,
-            not_logged_in,
-            logged_in_as_admin,
-            list_alpha_vec_ids
-    ) -> None:
+    def test_alpha_vec_policies_get(self, flask_app, mocker, list_alpha_vec, logged_in, not_logged_in,
+                                    logged_in_as_admin, list_alpha_vec_ids) -> None:
         """
         testing the GET HTTPS method  for the /alpha-vec-policies resource
+
+        :param flask_app: the flask app for making the HTTP test requests
+        :param mocker: the pytest mocker object for mocking
+        :param list_alpha_vec: the list_alpha_vec fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param list_alpha_vec_ids: the list_alpha_vec_ids fixture
+        :return: None
         """
         test_policy = TestResourcesAlphaVecsSuite.get_example_policy()
         mocker.patch(
@@ -166,19 +184,20 @@ class TestResourcesAlphaVecsSuite():
         assert alpha_vec.states[0].state_type == test_policy.states[0].state_type
         assert alpha_vec.transition_tensor == test_policy.transition_tensor
 
-    def test_alpha_vec_policies_delete(
-            self,
-            flask_app,
-            mocker,
-            list_alpha_vec,
-            logged_in,
-            not_logged_in,
-            logged_in_as_admin,
-            list_alpha_vec_ids,
-            remove,
-    ) -> None:
+    def test_alpha_vec_policies_delete(self, flask_app, mocker, list_alpha_vec, logged_in, not_logged_in,
+                                       logged_in_as_admin, list_alpha_vec_ids, remove) -> None:
         """
-        testing  the DELETE HTTPS method for the /alpha-vec-policies resource
+        Testing the DELETE HTTPS method for the /alpha-vec-policies resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object
+        :param list_alpha_vec: the list_alpha_vec fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param list_alpha_vec_ids: the list_alpha_vec_ids fixture
+        :param remove: the remove fixture
+        :return: None
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_alpha_vec_policy",
                      side_effect=remove)
@@ -186,11 +205,7 @@ class TestResourcesAlphaVecsSuite():
                      side_effect=list_alpha_vec)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_alpha_vec_policies_ids",
                      side_effect=list_alpha_vec_ids)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
-
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in,)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -219,19 +234,23 @@ class TestResourcesAlphaVecsSuite():
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_alpha_vec_policies_id_get(self, flask_app, mocker, logged_in,
-                                       not_logged_in, logged_in_as_admin,
+    def test_alpha_vec_policies_id_get(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
                                        get_policy) -> None:
         """
-        testing the HTTPS GET method for the /alpha-vec-policies-id resource
+        Testing the HTTPS GET method for the /alpha-vec-policies-id resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_policy: the get_policy fixture
+        :return: None
         """
         test_policy = TestResourcesAlphaVecsSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_alpha_vec_policy",
                      side_effect=get_policy)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -285,18 +304,23 @@ class TestResourcesAlphaVecsSuite():
 
     def test_alpha_vec_policies_id_delete(self, flask_app, mocker, logged_in,
                                           not_logged_in, logged_in_as_admin, get_policy, remove) -> None:
-
         """
-        testing the HTTPS DELETE method for the /ppo-policies-id resource
+        Testing the HTTPS DELETE method for the /ppo-policies?ids=true resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_policy: the get_policy fixture
+        :param remove: the remove fixture
+        :return: None
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_alpha_vec_policy",
                      side_effect=get_policy)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_alpha_vec_policy",
                      side_effect=remove)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in,)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
