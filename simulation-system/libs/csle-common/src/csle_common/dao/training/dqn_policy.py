@@ -36,7 +36,7 @@ class DQNPolicy(Policy):
         self.id = -1
         self.simulation_name = simulation_name
         self.save_path = save_path
-        if self.model is None:
+        if self.model is None and save_path != "":
             try:
                 self.model = DQN.load(path=self.save_path)
             except Exception as e:
