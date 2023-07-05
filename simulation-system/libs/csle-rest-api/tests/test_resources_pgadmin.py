@@ -9,11 +9,11 @@ import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
 
-class TestResourcespgAdminSuite(object):
+class TestResourcespgAdminSuite():
     """
-        Test suite for /cadvisor resource
+        Test suite for /pgadmin resource
     """
-    pytest.logger = logging.getLogger("resources_users_tests")
+    pytest.logger = logging.getLogger("resources_pgadmin_tests")
 
     @pytest.fixture
     def flask_app(self):

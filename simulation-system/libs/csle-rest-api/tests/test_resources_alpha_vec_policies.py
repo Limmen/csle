@@ -14,12 +14,12 @@ import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
 
-class TestResourcesAlphaVecsSuite(object):
+class TestResourcesAlphaVecsSuite():
     """
-    Test suite for /users resource
+    Test suite for /alpha-vec-policies resource
     """
 
-    pytest.logger = logging.getLogger("resources_users_tests")
+    pytest.logger = logging.getLogger("resources_alpha_vec_policies_tests")
 
     @pytest.fixture
     def flask_app(self):
@@ -95,7 +95,7 @@ class TestResourcesAlphaVecsSuite(object):
             logged_in,
             not_logged_in,
             logged_in_as_admin,
-            list_alpha_vec_ids,
+            list_alpha_vec_ids
     ) -> None:
         """
         testing the GET HTTPS method  for the /alpha-vec-policies resource
@@ -150,7 +150,6 @@ class TestResourcesAlphaVecsSuite(object):
         )
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.ALPHA_VEC_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
-        response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert alpha_vec.actions[0].descr == test_policy.actions[0].descr
         assert alpha_vec.actions[0].id == test_policy.actions[0].id
@@ -222,7 +221,7 @@ class TestResourcesAlphaVecsSuite(object):
 
     def test_alpha_vec_policies_id_get(self, flask_app, mocker, logged_in,
                                        not_logged_in, logged_in_as_admin,
-                                       get_policy,) -> None:
+                                       get_policy) -> None:
         """
         testing the HTTPS GET method for the /alpha-vec-policies-id resource
         """

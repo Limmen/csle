@@ -6,7 +6,7 @@ import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
 
-class TestResourcesVersionSuite(object):
+class TestResourcesVersionSuite:
     """
     Test suite for /version resource
     """

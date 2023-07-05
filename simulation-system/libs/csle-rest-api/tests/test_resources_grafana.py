@@ -9,11 +9,11 @@ import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
 
-class TestResourcesGrafanaSuite(object):
+class TestResourcesGrafanaSuite:
     """
-        Test suite for /config resource
+        Test suite for /grafana resource
     """
-    pytest.logger = logging.getLogger("resources_users_tests")
+    pytest.logger = logging.getLogger("resources_grafana_tests")
 
     @pytest.fixture
     def flask_app(self):
