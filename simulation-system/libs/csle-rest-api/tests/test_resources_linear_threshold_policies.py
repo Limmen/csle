@@ -20,7 +20,7 @@ from csle_rest_api.rest_api import create_app
 
 class TestRecourcesLinearThresholdSuite(object):
     """
-    Test suite for /users resource
+    Test suite for /linaer-threshold resource
     """
 
     pytest.logger = logging.getLogger("resources_users_tests")
@@ -82,7 +82,7 @@ class TestRecourcesLinearThresholdSuite(object):
     @staticmethod
     def get_example_policy():
         """
-        :return: an example  class full of dummy values
+        :return: an example class full of dummy values
         """
         state_list = [State(id=1, name="JohnDoe", descr="description", state_type=StateType(0))]
         e_config_class = ExperimentConfig(output_dir="output_directory", title="title", random_seeds=[1, 2, 3],
@@ -112,11 +112,11 @@ class TestRecourcesLinearThresholdSuite(object):
         testing the GET HTTPS method  for the /linear-threshold-policies resource
         """
         test_policy = TestRecourcesLinearThresholdSuite.get_example_policy()
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade." +
                      "list_linear_threshold_stopping_policies",
                      side_effect=list_linear_theshold)
-        mocker.patch(("csle_common.metastore.metastore_facade.MetastoreFacade.",
-                      "list_linear_threshold_stopping_policies_ids"),
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade." +
+                     "list_linear_threshold_stopping_policies_ids",
                      side_effect=list_linear_threshold_ids)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=not_logged_in,)
@@ -229,9 +229,11 @@ class TestRecourcesLinearThresholdSuite(object):
         """
         testing  the DELETE HTTPS method for the /linear-threshold-policies resource
         """
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_linear_threshold_stopping_policy",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade." +
+                     "remove_linear_threshold_stopping_policy",
                      side_effect=remove)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_linear_threshold_stopping_policies",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade." +
+                     "list_linear_threshold_stopping_policies",
                      side_effect=list_linear_theshold)
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
@@ -268,7 +270,8 @@ class TestRecourcesLinearThresholdSuite(object):
         testing the HTTPS GET method for the /linear-threshold-policies/id resource
         """
         test_policy = TestRecourcesLinearThresholdSuite.get_example_policy()
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_linear_threshold_stopping_policy",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade." +
+                     "get_linear_threshold_stopping_policy",
                      side_effect=get_policy)
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
@@ -370,9 +373,11 @@ class TestRecourcesLinearThresholdSuite(object):
         """
         testing the HTTPS DELETE method for the /linear-threshold-policies/id resource
         """
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_linear_threshold_stopping_policy",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade." +
+                     "get_linear_threshold_stopping_policy",
                      side_effect=get_policy)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_linear_threshold_stopping_policy",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade." +
+                     "remove_linear_threshold_stopping_policy",
                      side_effect=remove)
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
