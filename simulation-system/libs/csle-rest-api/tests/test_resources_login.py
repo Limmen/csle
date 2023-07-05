@@ -7,7 +7,7 @@ from csle_rest_api.rest_api import create_app
 from csle_common.dao.management.session_token import SessionToken
 
 
-class TestResourcesLoginSuite(object):
+class TestResourcesLoginSuite:
     """
     Test suite for /login resource
     """
@@ -126,9 +126,7 @@ class TestResourcesLoginSuite(object):
         update_session_token_mock = mocker.MagicMock(side_effect=update_session_token)
         return update_session_token_mock
 
-    def test_successful_admin_login(
-        self, flask_app, mocker, database, token, save, update
-    ) -> None:
+    def test_successful_admin_login(self, flask_app, mocker, database, token, save, update) -> None:
         """
         Tests the /login resource when logging in with 'admin' and 'admin as
         username- and password credentials
@@ -192,9 +190,7 @@ class TestResourcesLoginSuite(object):
             == "CSLE"
         )
 
-    def test_successful_guest_login(
-        self, flask_app, mocker, database, token, save, update
-    ) -> None:
+    def test_successful_guest_login(self, flask_app, mocker, database, token, save, update) -> None:
         """
         Tests the /login resource when logging in with 'guest' username- and password credentials
 
@@ -265,9 +261,7 @@ class TestResourcesLoginSuite(object):
             response_data_dict[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY] == "guest"
         )
 
-    def test_unsuccessful_login(
-        self, flask_app, mocker, database, token, save, update
-    ) -> None:
+    def test_unsuccessful_login(self, flask_app, mocker, database, token, save, update) -> None:
         """
         Ensuring that unauthorized login credential fails to enter
 
@@ -303,9 +297,7 @@ class TestResourcesLoginSuite(object):
         assert f_response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_dict == {}
 
-    def test_malformed_login_request(
-        self, flask_app, mocker, database, token, save, update
-    ) -> None:
+    def test_malformed_login_request(self, flask_app, mocker, database, token, save, update) -> None:
         """
         Testing malformed login request. Please note that explicit return-statements
         had to be added at row 30 and 38 in the /login resource file, routes.py

@@ -16,12 +16,12 @@ import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
 
-class TestResourcesPPOPoliciesSuite(object):
+class TestResourcesPPOPoliciesSuite:
     """
     Test suite for /users resource
     """
 
-    pytest.logger = logging.getLogger("resources_users_tests")
+    pytest.logger = logging.getLogger("resources_ppo_policies_tests")
 
     @pytest.fixture
     def flask_app(self):
@@ -115,7 +115,6 @@ class TestResourcesPPOPoliciesSuite(object):
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-        pytest.logger.info(response_data_list)
         ppo_data = PPOPolicy.from_dict(response_data_list[0])
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert ppo_data.actions[0].id == test_policy.actions[0].id
@@ -194,8 +193,7 @@ class TestResourcesPPOPoliciesSuite(object):
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
 
-    def test_ppo_policies_delete(self, flask_app, mocker,
-                                 list_ppo, logged_in, not_logged_in,
+    def test_ppo_policies_delete(self, flask_app, mocker, list_ppo, logged_in, not_logged_in,
                                  logged_in_as_admin, remove) -> None:
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
@@ -226,11 +224,10 @@ class TestResourcesPPOPoliciesSuite(object):
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-        response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_ppo_policies_id_get(self, flask_app, mocker, logged_in,
-                                 not_logged_in, logged_in_as_admin,
+    def test_ppo_policies_id_get(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
                                  get_policy,) -> None:
         """
         testing the HTTPS GET method for the /ppo-policies-id resource
@@ -316,9 +313,7 @@ class TestResourcesPPOPoliciesSuite(object):
         assert ppo_data.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
         assert ppo_data.policy_type == test_policy.policy_type
 
-    def test_ppo_policies_id_delete(self, flask_app, mocker,
-                                    logged_in, not_logged_in,
-                                    get_policy,) -> None:
+    def test_ppo_policies_id_delete(self, flask_app, mocker, logged_in, not_logged_in, get_policy) -> None:
         """
         testing the HTTPS DELETE method for the /ppo-policies-id resource
         """

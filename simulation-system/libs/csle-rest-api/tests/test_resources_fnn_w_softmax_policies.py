@@ -16,12 +16,12 @@ import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
 
-class TestResourcesFnnWSoftmaxSuite(object):
+class TestResourcesFnnWSoftmaxPoliciesSuite:
     """
-    Test suite for /fnn-w-softmax resource
+    Test suite for /fnn-w-softmax-policies resource
     """
 
-    pytest.logger = logging.getLogger("resources_users_tests")
+    pytest.logger = logging.getLogger("resources_fnn_w_softmax_policies_tests")
 
     @pytest.fixture
     def flask_app(self):
@@ -49,7 +49,7 @@ class TestResourcesFnnWSoftmaxSuite(object):
         pytest fixture for listing fnn_w_softmax policies
         """
         def list_fnn_w_softmax_policies():
-            policy = TestResourcesFnnWSoftmaxSuite.get_example_policy()
+            policy = TestResourcesFnnWSoftmaxPoliciesSuite.get_example_policy()
             return [policy]
         list_fnn_w_softmax_policies_mocker = mocker.MagicMock(side_effect=list_fnn_w_softmax_policies)
         return list_fnn_w_softmax_policies_mocker
@@ -70,7 +70,7 @@ class TestResourcesFnnWSoftmaxSuite(object):
         pytest fixture for the get fnn_w_softmax policy
         """
         def get_fnn_w_softmax_policy(id):
-            policy = TestResourcesFnnWSoftmaxSuite.get_example_policy()
+            policy = TestResourcesFnnWSoftmaxPoliciesSuite.get_example_policy()
             return policy
         get_fnn_w_softmax_policy_mocker = mocker.MagicMock(side_effect=get_fnn_w_softmax_policy)
         return get_fnn_w_softmax_policy_mocker
@@ -101,12 +101,12 @@ class TestResourcesFnnWSoftmaxSuite(object):
             logged_in,
             not_logged_in,
             logged_in_as_admin,
-            list_fnn_w_softmax_ids,
+            list_fnn_w_softmax_ids
     ) -> None:
         """
         testing the GET HTTPS method  for the /fnn-w-softmax-policies resource
         """
-        test_policy = TestResourcesFnnWSoftmaxSuite.get_example_policy()
+        test_policy = TestResourcesFnnWSoftmaxPoliciesSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_fnn_w_softmax_policies",
                      side_effect=list_fnn_w_softmax)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_fnn_w_softmax_policies_ids",
@@ -266,7 +266,7 @@ class TestResourcesFnnWSoftmaxSuite(object):
         """
         testing the HTTPS GET method for the /fnn-w-softmax-policies/id resource
         """
-        test_policy = TestResourcesFnnWSoftmaxSuite.get_example_policy()
+        test_policy = TestResourcesFnnWSoftmaxPoliciesSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_fnn_w_softmax_policy",
                      side_effect=get_policy)
         mocker.patch(

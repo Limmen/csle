@@ -9,11 +9,11 @@ import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
 
-class TestResourcesFlaskSuite(object):
+class TestResourcesFlaskSuite:
     """
         Test suite for /config resource
     """
-    pytest.logger = logging.getLogger("resources_users_tests")
+    pytest.logger = logging.getLogger("resources_flask_tests")
 
     @pytest.fixture
     def flask_app(self):

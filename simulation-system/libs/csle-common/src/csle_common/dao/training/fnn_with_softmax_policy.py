@@ -48,7 +48,7 @@ class FNNWithSoftmaxPolicy(Policy):
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.policy_type = PolicyType.FNN_W_SOFTMAX
-        if self.policy_network is None and self.save_path!="":
+        if self.policy_network is None and self.save_path != "":
             try:
                 self.policy_network = FNNwithSoftmax(
                     input_dim=input_dim,
@@ -171,7 +171,7 @@ class FNNWithSoftmaxPolicy(Policy):
                                    actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
                                    experiment_config=ExperimentConfig.from_dict(d["experiment_config"]),
                                    avg_R=d["avg_R"], input_dim=d["input_dim"], output_dim=d["output_dim"])
-                                   # policy_type=d["policy_type"])
+        # policy_type=d["policy_type"])
         obj.id = d["id"]
         return obj
 

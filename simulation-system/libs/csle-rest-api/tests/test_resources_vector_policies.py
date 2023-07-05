@@ -11,12 +11,12 @@ import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
 
-class TestResourcesVectorSuite(object):
+class TestResourcesVectorPoliciesSuite:
     """
-    Test suite for /vectors resource
+    Test suite for /vector-policies resource
     """
 
-    pytest.logger = logging.getLogger("resources_users_tests")
+    pytest.logger = logging.getLogger("resources_vector_policies_tests")
 
     @pytest.fixture
     def flask_app(self):
@@ -44,7 +44,7 @@ class TestResourcesVectorSuite(object):
         pytest fixture for listing vector policies
         """
         def list_vector_policies():
-            policy = TestResourcesVectorSuite.get_example_policy()
+            policy = TestResourcesVectorPoliciesSuite.get_example_policy()
             return [policy]
         list_vector_policies_mocker = mocker.MagicMock(side_effect=list_vector_policies)
         return list_vector_policies_mocker
@@ -65,7 +65,7 @@ class TestResourcesVectorSuite(object):
         pytest fixture for getting a vector policy
         """
         def get_vector_policy(id):
-            policy = TestResourcesVectorSuite.get_example_policy()
+            policy = TestResourcesVectorPoliciesSuite.get_example_policy()
             return policy
         get_vector_policy_mocker = mocker.MagicMock(side_effect=get_vector_policy)
         return get_vector_policy_mocker
@@ -80,20 +80,21 @@ class TestResourcesVectorSuite(object):
                            avg_R=1.1)
         return obj
 
-    def test_vector_policies_get(
-            self,
-            flask_app,
-            mocker,
-            list_vector,
-            logged_in,
-            not_logged_in,
-            logged_in_as_admin,
-            list_vector_ids,
-    ) -> None:
+    def test_vector_policies_get(self, flask_app, mocker, list_vector, logged_in, not_logged_in, logged_in_as_admin,
+                                 list_vector_ids) -> None:
         """
-        testing the GET HTTPS method  for the /vector-policies resource
+        Tests the GET HTTP method for the /vector-policies resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object for mocking
+        :param list_vector: the list_vector fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param list_vector_ids: the list_vector_ids_fixture
+        :return: None
         """
-        test_policy = TestResourcesVectorSuite.get_example_policy()
+        test_policy = TestResourcesVectorPoliciesSuite.get_example_policy()
         mocker.patch(
             "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
             side_effect=not_logged_in,
@@ -146,19 +147,20 @@ class TestResourcesVectorSuite(object):
         assert vector.id == test_policy.id
         assert vector.policy_type == test_policy.policy_type
 
-    def test_vector_policies_delete(
-            self,
-            flask_app,
-            mocker,
-            list_vector,
-            logged_in,
-            not_logged_in,
-            logged_in_as_admin,
-            list_vector_ids,
-            remove,
-    ) -> None:
+    def test_vector_policies_delete(self, flask_app, mocker, list_vector, logged_in, not_logged_in, logged_in_as_admin,
+                                    list_vector_ids, remove) -> None:
         """
-        testing  the DELETE HTTPS method for the /vector-policies resource
+        Tests the DELETE HTTP method for the /vector-policies resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object for mocking
+        :param list_vector: the list_vector fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param list_vector_ids: the list_vector_ids fixture
+        :param remove: the remove fixture
+        :return: None
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_vector_policy",
                      side_effect=remove)
@@ -195,13 +197,20 @@ class TestResourcesVectorSuite(object):
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_vector_policies_id_get(self, flask_app, mocker, logged_in,
-                                    not_logged_in, logged_in_as_admin,
-                                    get_policy,) -> None:
+    def test_vector_policies_id_get(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
+                                    get_policy) -> None:
         """
-        testing the HTTPS GET method for the /vector-policies/d resource
+        Tests the GET HTTP method for /policies?ids=true
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object for mocking
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_policy: the get_policy fixture
+        :return: None
         """
-        test_policy = TestResourcesVectorSuite.get_example_policy()
+        test_policy = TestResourcesVectorPoliciesSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_vector_policy",
                      side_effect=get_policy)
         mocker.patch(
@@ -243,9 +252,20 @@ class TestResourcesVectorSuite(object):
         assert vector.id == test_policy.id
         assert vector.policy_type == test_policy.policy_type
 
-    def test_vector_policies_id_delete(self, flask_app, mocker, logged_in,
-                                       not_logged_in, logged_in_as_admin,
+    def test_vector_policies_id_delete(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
                                        get_policy, remove) -> None:
+        """
+        Tests the HTTP DELETE method for the /vector-policies/id resource
+
+        :param flask_app: the pytest flask App for making requests
+        :param mocker:
+        :param logged_in:
+        :param not_logged_in:
+        :param logged_in_as_admin:
+        :param get_policy:
+        :param remove:
+        :return:
+        """
 
         """
         testing the HTTPS DELETE method for the /vector-policies/id resource

@@ -13,7 +13,7 @@ import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
 
-class TestResourcesUsersSuite(object):
+class TestResourcesUsersSuite:
     """
     Test suite for /users resource
     """
@@ -250,16 +250,20 @@ class TestResourcesUsersSuite(object):
         response_data_list = json.loads(response_data)
         assert len(response_data_list) == 0
 
-    def test_users_delete(
-            self,
-            flask_app,
-            mocker,
-            logged_in_as_admin,
-            management_users,
-            not_logged_in,
-            remove,
-            logged_in,
-    ) -> None:
+    def test_users_delete(self, flask_app, mocker, logged_in_as_admin, management_users, not_logged_in,
+                          remove, logged_in) -> None:
+        """
+        Test the DELETE method on /users
+
+        :param flask_app: the flask app for making the requests
+        :param mocker: the mocker object from pytest
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param management_users: the management_users fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param remove: the remove fixture
+        :param logged_in: the logged_in fixture
+        :return: None
+        """
         mocker.patch(
             "csle_common.metastore.metastore_facade.MetastoreFacade.list_management_users",
             side_effect=management_users,
@@ -300,17 +304,8 @@ class TestResourcesUsersSuite(object):
         response_data_list = json.loads(response_data)
         assert len(response_data_list) == 0
 
-    def test_users_id_get(
-            self,
-            flask_app,
-            mocker,
-            management_users,
-            not_logged_in,
-            logged_in,
-            authorized,
-            unauthorized,
-            management_config,
-    ) -> None:
+    def test_users_id_get(self, flask_app, mocker, management_users, not_logged_in, logged_in, authorized,
+                          unauthorized, management_config) -> None:
         """
         Testing the GET HTTPS method for the /users/id resource
 
@@ -404,17 +399,8 @@ class TestResourcesUsersSuite(object):
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
 
-    def test_users_id_put(
-            self,
-            flask_app,
-            mocker,
-            management_users,
-            not_logged_in,
-            logged_in,
-            authorized,
-            unauthorized,
-            management_config,
-    ) -> None:
+    def test_users_id_put(self, flask_app, mocker, management_users, not_logged_in, logged_in, authorized, unauthorized,
+                          management_config) -> None:
         """
         Testing the PUT HTTPS method for the /users/id resource
 
@@ -486,18 +472,8 @@ class TestResourcesUsersSuite(object):
         assert len(response_data_list) == 0
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
 
-    def test_users_id_delete(
-            self,
-            flask_app,
-            mocker,
-            management_users,
-            not_logged_in,
-            remove,
-            logged_in,
-            authorized,
-            unauthorized,
-            management_config,
-    ) -> None:
+    def test_users_id_delete(self, flask_app, mocker, management_users, not_logged_in, remove, logged_in, authorized,
+                             unauthorized, management_config) -> None:
         """
         Testing the DELETE HTTPS method for the /users/id resource
 
@@ -574,13 +550,7 @@ class TestResourcesUsersSuite(object):
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
 
-    def test_create(
-            self,
-            flask_app,
-            mocker,
-            save,
-            management_users
-    ):
+    def test_create(self, flask_app, mocker, save, management_users) -> None:
         """
         Testing the POST HTTPS method for the /users/id resource
         :param flask_app: the flask app representing the web server
