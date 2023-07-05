@@ -31,19 +31,6 @@ class TestResourcesTrainingjobsSuite:
         """
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
-    '''@pytest.fixture
-    def list_ppo_ids(self, mocker):
-        """
-        Pytest fixture for mocking the list_training_jobs_ids function
-
-        :param mocker: the pytest mocker object
-        :return: a mock object with the mocked function
-        """
-        def list_training_jobs_ids() -> List[TrainingJobConfig]:
-            policy_id = (111, "some_simulation")
-            return [policy_id]
-        list_ppo_plicies_ids_mocker = mocker.MagicMock(side_effect=list_training_jobs_ids)
-        return list_ppo_plicies_ids_mocker'''
     @pytest.fixture
     def pid_true(self, mocker):
         """
@@ -51,7 +38,7 @@ class TestResourcesTrainingjobsSuite:
         :param mocker: The pytest mocker object
         :return: A mocker object with the mocked function
         """
-        def check_pid(ip, port, pid) -> OperationOutcomeDTO:
+        def check_pid(ip: str, port: int, pid: int) -> OperationOutcomeDTO:
             op_outcome = OperationOutcomeDTO(outcome=True)
             return op_outcome
         check_pid_mocker = mocker.MagicMock(side_effect=check_pid)
@@ -65,7 +52,7 @@ class TestResourcesTrainingjobsSuite:
         :param mocker: The pytest mocker object
         :return: A mocker object with the mocked function
         """
-        def check_pid(ip, port, pid) -> OperationOutcomeDTO:
+        def check_pid(ip: str, port: int, pid: int) -> OperationOutcomeDTO:
             op_outcome = OperationOutcomeDTO(outcome=False)
             return op_outcome
         check_pid_mocker = mocker.MagicMock(side_effect=check_pid)
@@ -102,13 +89,13 @@ class TestResourcesTrainingjobsSuite:
     @pytest.fixture
     def stop(self, mocker):
         """
-        Pytest fixture mocking the stop_pid functio
+        Pytest fixture mocking the stop_pid function
 
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
 
         """
-        def stop_pid(ip, port, pid):
+        def stop_pid(ip: str, port: int, pid: int) -> None:
             return None
         stop_pid_mocker = mocker.MagicMock(side_effect=stop_pid)
         return stop_pid_mocker
@@ -121,7 +108,7 @@ class TestResourcesTrainingjobsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
-        def start_training_job_in_background(training_job):
+        def start_training_job_in_background(training_job: TrainingJobConfig) -> None:
             return None
         start_training_job_in_background_mocker = mocker.MagicMock(
             side_effect=start_training_job_in_background)
@@ -203,12 +190,12 @@ class TestResourcesTrainingjobsSuite:
         assert tjob_data.experiment_config.title == test_job.experiment_config.title
         assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
         assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams["element"].value == \
-            test_job.experiment_config.hparams["element"].value
-        assert tjob_data.experiment_config.hparams["element"].name == \
-            test_job.experiment_config.hparams["element"].name
-        assert tjob_data.experiment_config.hparams["element"].descr == \
-            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
         assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
         assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
         assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
@@ -255,11 +242,11 @@ class TestResourcesTrainingjobsSuite:
         response_data_list = json.loads(response_data)
         tjob_dict = response_data_list[0]
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert tjob_dict["emulation"] == test_job.emulation_env_name
-        assert tjob_dict["id"] == test_job.id
-        assert tjob_dict["running"] is True
+        assert tjob_dict[api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == test_job.emulation_env_name
+        assert tjob_dict[api_constants.MGMT_WEBAPP.ID_PROPERTY] == test_job.id
+        assert tjob_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] is True
         assert test_job.running is False
-        assert tjob_dict["simulation"] == test_job.simulation_env_name
+        assert tjob_dict[api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == test_job.simulation_env_name
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
                      side_effect=pid_false)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
@@ -273,12 +260,12 @@ class TestResourcesTrainingjobsSuite:
         assert tjob_data.experiment_config.title == test_job.experiment_config.title
         assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
         assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams["element"].value == \
-            test_job.experiment_config.hparams["element"].value
-        assert tjob_data.experiment_config.hparams["element"].name == \
-            test_job.experiment_config.hparams["element"].name
-        assert tjob_data.experiment_config.hparams["element"].descr == \
-            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
         assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
         assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
         assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
@@ -326,13 +313,12 @@ class TestResourcesTrainingjobsSuite:
         response_data_list = json.loads(response_data)
         tjob_dict = response_data_list[0]
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert tjob_dict["emulation"] == test_job.emulation_env_name
-        assert tjob_dict["id"] == test_job.id
-        assert tjob_dict["running"] is False
+        assert tjob_dict[api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == test_job.emulation_env_name
+        assert tjob_dict[api_constants.MGMT_WEBAPP.ID_PROPERTY] == test_job.id
+        assert tjob_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] is False
         assert test_job.running is False
-        assert tjob_dict["running"] == test_job.running
-        assert tjob_dict["running"] == test_job.running
-        assert tjob_dict["simulation"] == test_job.simulation_env_name
+        assert tjob_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] == test_job.running
+        assert tjob_dict[api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == test_job.simulation_env_name
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in_as_admin,)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
@@ -348,12 +334,12 @@ class TestResourcesTrainingjobsSuite:
         assert tjob_data.experiment_config.title == test_job.experiment_config.title
         assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
         assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams["element"].value == \
-            test_job.experiment_config.hparams["element"].value
-        assert tjob_data.experiment_config.hparams["element"].name == \
-            test_job.experiment_config.hparams["element"].name
-        assert tjob_data.experiment_config.hparams["element"].descr == \
-            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
         assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
         assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
         assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
@@ -400,12 +386,12 @@ class TestResourcesTrainingjobsSuite:
         response_data_list = json.loads(response_data)
         tjob_dict = response_data_list[0]
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert tjob_dict["emulation"] == test_job.emulation_env_name
-        assert tjob_dict["id"] == test_job.id
-        assert tjob_dict["running"] is True
+        assert tjob_dict[api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == test_job.emulation_env_name
+        assert tjob_dict[api_constants.MGMT_WEBAPP.ID_PROPERTY] == test_job.id
+        assert tjob_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] is True
         assert test_job.running is False
-        assert tjob_dict["running"] != test_job.running
-        assert tjob_dict["simulation"] == test_job.simulation_env_name
+        assert tjob_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] != test_job.running
+        assert tjob_dict[api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == test_job.simulation_env_name
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
                      side_effect=pid_false)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
@@ -419,12 +405,12 @@ class TestResourcesTrainingjobsSuite:
         assert tjob_data.experiment_config.title == test_job.experiment_config.title
         assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
         assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams["element"].value == \
-            test_job.experiment_config.hparams["element"].value
-        assert tjob_data.experiment_config.hparams["element"].name == \
-            test_job.experiment_config.hparams["element"].name
-        assert tjob_data.experiment_config.hparams["element"].descr == \
-            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
         assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
         assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
         assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
@@ -472,13 +458,13 @@ class TestResourcesTrainingjobsSuite:
         response_data_list = json.loads(response_data)
         tjob_dict = response_data_list[0]
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert tjob_dict["emulation"] == test_job.emulation_env_name
-        assert tjob_dict["id"] == test_job.id
-        assert tjob_dict["running"] is False
+        assert tjob_dict[api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == test_job.emulation_env_name
+        assert tjob_dict[api_constants.MGMT_WEBAPP.ID_PROPERTY] == test_job.id
+        assert tjob_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] is False
         assert test_job.running is False
-        assert tjob_dict["running"] == test_job.running
-        assert tjob_dict["running"] == test_job.running
-        assert tjob_dict["simulation"] == test_job.simulation_env_name
+        assert tjob_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] == test_job.running
+        assert tjob_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] == test_job.running
+        assert tjob_dict[api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == test_job.simulation_env_name
 
     def test_training_jobs_delete(self, flask_app, mocker, list_jobs, logged_in,
                                   not_logged_in, logged_in_as_admin, remove, stop) -> None:
@@ -563,12 +549,12 @@ class TestResourcesTrainingjobsSuite:
         assert tjob_data.experiment_config.title == test_job.experiment_config.title
         assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
         assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams["element"].value == \
-            test_job.experiment_config.hparams["element"].value
-        assert tjob_data.experiment_config.hparams["element"].name == \
-            test_job.experiment_config.hparams["element"].name
-        assert tjob_data.experiment_config.hparams["element"].descr == \
-            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
         assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
         assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
         assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
@@ -622,12 +608,12 @@ class TestResourcesTrainingjobsSuite:
         assert tjob_data.experiment_config.title == test_job.experiment_config.title
         assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
         assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams["element"].value == \
-            test_job.experiment_config.hparams["element"].value
-        assert tjob_data.experiment_config.hparams["element"].name == \
-            test_job.experiment_config.hparams["element"].name
-        assert tjob_data.experiment_config.hparams["element"].descr == \
-            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
         assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
         assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
         assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
@@ -684,12 +670,12 @@ class TestResourcesTrainingjobsSuite:
         assert tjob_data.experiment_config.title == test_job.experiment_config.title
         assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
         assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams["element"].value == \
-            test_job.experiment_config.hparams["element"].value
-        assert tjob_data.experiment_config.hparams["element"].name == \
-            test_job.experiment_config.hparams["element"].name
-        assert tjob_data.experiment_config.hparams["element"].descr == \
-            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
         assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
         assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
         assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
@@ -743,12 +729,12 @@ class TestResourcesTrainingjobsSuite:
         assert tjob_data.experiment_config.title == test_job.experiment_config.title
         assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
         assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams["element"].value == \
-            test_job.experiment_config.hparams["element"].value
-        assert tjob_data.experiment_config.hparams["element"].name == \
-            test_job.experiment_config.hparams["element"].name
-        assert tjob_data.experiment_config.hparams["element"].descr == \
-            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
         assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
         assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
         assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx

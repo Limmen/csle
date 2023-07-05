@@ -47,7 +47,6 @@ def training_jobs():
                 job.running = True
             alive_jobs.append(job)
         training_jobs_dicts = list(map(lambda x: x.to_dict(), alive_jobs))
-        # pytest.logger.info(alive_jobs[0].running)
         response = jsonify(training_jobs_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
