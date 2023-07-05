@@ -20,7 +20,7 @@ from csle_rest_api.rest_api import create_app
 
 class TestRecourcesLinearThresholdPoliciesSuite:
     """
-    Test suite for /users resource
+    Test suite for /linaer-threshold resource
     """
 
     pytest.logger = logging.getLogger("resources_linear_threshold_tests")
