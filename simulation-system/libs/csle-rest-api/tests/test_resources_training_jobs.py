@@ -1,0 +1,894 @@
+import json
+import logging
+from typing import List
+
+import csle_common.constants.constants as constants
+import pytest
+from csle_cluster.cluster_manager.cluster_manager_pb2 import OperationOutcomeDTO
+from csle_common.dao.jobs.training_job_config import TrainingJobConfig
+from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
+from csle_common.dao.training.agent_type import AgentType
+from csle_common.dao.training.experiment_config import ExperimentConfig
+from csle_common.dao.training.experiment_result import ExperimentResult
+from csle_common.dao.training.hparam import HParam
+from csle_common.dao.training.player_type import PlayerType
+
+import csle_rest_api.constants.constants as api_constants
+from csle_rest_api.rest_api import create_app
+
+
+class TestResourcesTrainingjobsSuite:
+    """
+    Test suite for /training-jobs resource
+    """
+
+    pytest.logger = logging.getLogger("resources_training_jobs_tests")
+
+    @pytest.fixture
+    def flask_app(self):
+        """
+        :return: the flask app fixture representing the webserver
+        """
+        return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
+
+    '''@pytest.fixture
+    def list_ppo_ids(self, mocker):
+        """
+        Pytest fixture for mocking the list_training_jobs_ids function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
+        """
+        def list_training_jobs_ids() -> List[TrainingJobConfig]:
+            policy_id = (111, "some_simulation")
+            return [policy_id]
+        list_ppo_plicies_ids_mocker = mocker.MagicMock(side_effect=list_training_jobs_ids)
+        return list_ppo_plicies_ids_mocker'''
+    @pytest.fixture
+    def pid_true(self, mocker):
+        """
+        Pytest fixture for mocking the check_pid function
+        :param mocker: The pytest mocker object
+        :return: A mocker object with the mocked function
+        """
+        def check_pid(ip, port, pid) -> OperationOutcomeDTO:
+            op_outcome = OperationOutcomeDTO(outcome=True)
+            return op_outcome
+        check_pid_mocker = mocker.MagicMock(side_effect=check_pid)
+
+        return check_pid_mocker
+
+    @pytest.fixture
+    def pid_false(self, mocker):
+        """
+        Pytest fixture for mocking the check_pid function
+        :param mocker: The pytest mocker object
+        :return: A mocker object with the mocked function
+        """
+        def check_pid(ip, port, pid) -> OperationOutcomeDTO:
+            op_outcome = OperationOutcomeDTO(outcome=False)
+            return op_outcome
+        check_pid_mocker = mocker.MagicMock(side_effect=check_pid)
+
+        return check_pid_mocker
+
+    @pytest.fixture
+    def list_jobs(self, mocker):
+        """
+        Pytest fixture for mocking the list_training_jobs function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
+        """
+        def list_training_jobs() -> List[TrainingJobConfig]:
+            policy = TestResourcesTrainingjobsSuite.get_example_job()
+            return [policy]
+        list_training_jobs_mocker = mocker.MagicMock(side_effect=list_training_jobs)
+        return list_training_jobs_mocker
+
+    @pytest.fixture
+    def remove(self, mocker):
+        """
+        Pytest fixture for mocking the remove_training_job function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
+        """
+        def remove_training_job(training_job: TrainingJobConfig) -> None:
+            return None
+        remove_training_job_mocker = mocker.MagicMock(side_effect=remove_training_job)
+        return remove_training_job_mocker
+
+    @pytest.fixture
+    def stop(self, mocker):
+        """
+        Pytest fixture mocking the stop_pid functio
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
+
+        """
+        def stop_pid(ip, port, pid):
+            return None
+        stop_pid_mocker = mocker.MagicMock(side_effect=stop_pid)
+        return stop_pid_mocker
+
+    @pytest.fixture
+    def start(self, mocker):
+        """
+        Pytest fixture for the start_training_job_in_background function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
+        """
+        def start_training_job_in_background(training_job):
+            return None
+        start_training_job_in_background_mocker = mocker.MagicMock(
+            side_effect=start_training_job_in_background)
+        return start_training_job_in_background_mocker
+
+    @pytest.fixture
+    def get_job_config(self, mocker) -> TrainingJobConfig:
+        """
+        Pytest fixture for mocking the get_training_job_config function
+
+        :param mocker: the pytest mocker object
+        :return: a mock object with the mocked function
+        """
+        def get_training_job_config(id: int) -> TrainingJobConfig:
+            policy = TestResourcesTrainingjobsSuite.get_example_job()
+            return policy
+        get_training_job_config_mocker = mocker.MagicMock(side_effect=get_training_job_config)
+        return get_training_job_config_mocker
+
+    @staticmethod
+    def get_example_job() -> TrainingJobConfig:
+        """
+        Utility function for getting an example instance of a PPOPolicy
+
+        :return: an example isntance of a PPOPOlicy
+        """
+        e_config_class = ExperimentConfig(output_dir="output_directory", title="title", random_seeds=[1, 2, 3],
+                                          agent_type=AgentType(1),
+                                          hparams={'element': HParam(10, name="John", descr="Doe")},
+                                          log_every=10, player_type=PlayerType(1),
+                                          player_idx=10, br_log_every=10)
+
+        obj = TrainingJobConfig(simulation_env_name="JohnDoeSimulation",
+                                experiment_config=e_config_class, progress_percentage=20.5,
+                                pid=5, experiment_result=ExperimentResult(),
+                                emulation_env_name="JDoe_env",
+                                simulation_traces=[SimulationTrace(simulation_env="JDoe_env")],
+                                num_cached_traces=10, log_file_path="JohnDoeLog", descr="null",
+                                physical_host_ip="123.456.78.99")
+        return obj
+
+    def test_training_jobs_get(self, flask_app, mocker, list_jobs,
+                               logged_in, not_logged_in, logged_in_as_admin,
+                               pid_true, pid_false,) -> None:
+        """
+        Testing for the GET HTTPS method in the /training-jobs resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object
+        :param list_ppo: the list_ppo fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param list_ppo_ids: the list_ppo_ids fixture
+        :return: None
+        """
+        test_job = TestResourcesTrainingjobsSuite.get_example_job()
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_training_jobs",
+                     side_effect=list_jobs)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
+                     side_effect=pid_true)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in,)
+        response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in,)
+        response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        tjob_data = TrainingJobConfig.from_dict(response_data_list[0])
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.emulation_env_name == test_job.emulation_env_name
+        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
+        assert tjob_data.experiment_config.title == test_job.experiment_config.title
+        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
+        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
+        assert tjob_data.experiment_config.hparams["element"].value == \
+            test_job.experiment_config.hparams["element"].value
+        assert tjob_data.experiment_config.hparams["element"].name == \
+            test_job.experiment_config.hparams["element"].name
+        assert tjob_data.experiment_config.hparams["element"].descr == \
+            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
+        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
+        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
+        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
+        assert tjob_data.progress_percentage == test_job.progress_percentage
+        assert tjob_data.pid == test_job.pid
+        assert tjob_data.id == test_job.id
+        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
+        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
+        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
+        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        assert tjob_data.running is True
+        assert test_job.running is False
+        assert tjob_data.running != test_job.running
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.simulation_traces[0].attacker_actions == \
+            test_job.simulation_traces[0].attacker_actions
+        assert tjob_data.simulation_traces[0].attacker_observations == \
+            test_job.simulation_traces[0].attacker_observations
+        assert tjob_data.simulation_traces[0].attacker_rewards == \
+            test_job.simulation_traces[0].attacker_rewards
+        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
+        assert tjob_data.simulation_traces[0].defender_actions == \
+            test_job.simulation_traces[0].defender_actions
+        assert tjob_data.simulation_traces[0].defender_observations == \
+            test_job.simulation_traces[0].defender_observations
+        assert tjob_data.simulation_traces[0].defender_rewards == \
+            test_job.simulation_traces[0].defender_rewards
+        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
+        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
+        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
+        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
+            test_job.simulation_traces[0].infrastructure_metrics
+        assert tjob_data.simulation_traces[0].simulation_env == \
+            test_job.simulation_traces[0].simulation_env
+        assert tjob_data.num_cached_traces == test_job.num_cached_traces
+        assert tjob_data.log_file_path == test_job.log_file_path
+        assert tjob_data.descr == test_job.descr
+        assert tjob_data.physical_host_ip == test_job.physical_host_ip
+        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"
+                                               f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        tjob_dict = response_data_list[0]
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert tjob_dict["emulation"] == test_job.emulation_env_name
+        assert tjob_dict["id"] == test_job.id
+        assert tjob_dict["running"] is True
+        assert test_job.running is False
+        assert tjob_dict["simulation"] == test_job.simulation_env_name
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
+                     side_effect=pid_false)
+        response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        tjob_data = TrainingJobConfig.from_dict(response_data_list[0])
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.emulation_env_name == test_job.emulation_env_name
+        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
+        assert tjob_data.experiment_config.title == test_job.experiment_config.title
+        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
+        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
+        assert tjob_data.experiment_config.hparams["element"].value == \
+            test_job.experiment_config.hparams["element"].value
+        assert tjob_data.experiment_config.hparams["element"].name == \
+            test_job.experiment_config.hparams["element"].name
+        assert tjob_data.experiment_config.hparams["element"].descr == \
+            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
+        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
+        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
+        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
+        assert tjob_data.progress_percentage == test_job.progress_percentage
+        assert tjob_data.pid == test_job.pid
+        assert tjob_data.id == test_job.id
+        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
+        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
+        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
+        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        assert tjob_data.running is False
+        assert test_job.running is False
+        assert tjob_data.running == test_job.running
+        assert tjob_data.running == test_job.running
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.simulation_traces[0].attacker_actions == \
+            test_job.simulation_traces[0].attacker_actions
+        assert tjob_data.simulation_traces[0].attacker_observations == \
+            test_job.simulation_traces[0].attacker_observations
+        assert tjob_data.simulation_traces[0].attacker_rewards == \
+            test_job.simulation_traces[0].attacker_rewards
+        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
+        assert tjob_data.simulation_traces[0].defender_actions == \
+            test_job.simulation_traces[0].defender_actions
+        assert tjob_data.simulation_traces[0].defender_observations == \
+            test_job.simulation_traces[0].defender_observations
+        assert tjob_data.simulation_traces[0].defender_rewards == \
+            test_job.simulation_traces[0].defender_rewards
+        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
+        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
+        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
+        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
+            test_job.simulation_traces[0].infrastructure_metrics
+        assert tjob_data.simulation_traces[0].simulation_env == \
+            test_job.simulation_traces[0].simulation_env
+        assert tjob_data.num_cached_traces == test_job.num_cached_traces
+        assert tjob_data.log_file_path == test_job.log_file_path
+        assert tjob_data.descr == test_job.descr
+        assert tjob_data.physical_host_ip == test_job.physical_host_ip
+        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"
+                                               f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        tjob_dict = response_data_list[0]
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert tjob_dict["emulation"] == test_job.emulation_env_name
+        assert tjob_dict["id"] == test_job.id
+        assert tjob_dict["running"] is False
+        assert test_job.running is False
+        assert tjob_dict["running"] == test_job.running
+        assert tjob_dict["running"] == test_job.running
+        assert tjob_dict["simulation"] == test_job.simulation_env_name
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin,)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
+                     side_effect=pid_true)
+        response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        tjob_data = TrainingJobConfig.from_dict(response_data_list[0])
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.emulation_env_name == test_job.emulation_env_name
+        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
+        assert tjob_data.experiment_config.title == test_job.experiment_config.title
+        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
+        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
+        assert tjob_data.experiment_config.hparams["element"].value == \
+            test_job.experiment_config.hparams["element"].value
+        assert tjob_data.experiment_config.hparams["element"].name == \
+            test_job.experiment_config.hparams["element"].name
+        assert tjob_data.experiment_config.hparams["element"].descr == \
+            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
+        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
+        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
+        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
+        assert tjob_data.progress_percentage == test_job.progress_percentage
+        assert tjob_data.pid == test_job.pid
+        assert tjob_data.id == test_job.id
+        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
+        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
+        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
+        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        assert tjob_data.running is True
+        assert test_job.running is False
+        assert tjob_data.running != test_job.running
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.simulation_traces[0].attacker_actions == \
+            test_job.simulation_traces[0].attacker_actions
+        assert tjob_data.simulation_traces[0].attacker_observations == \
+            test_job.simulation_traces[0].attacker_observations
+        assert tjob_data.simulation_traces[0].attacker_rewards == \
+            test_job.simulation_traces[0].attacker_rewards
+        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
+        assert tjob_data.simulation_traces[0].defender_actions == \
+            test_job.simulation_traces[0].defender_actions
+        assert tjob_data.simulation_traces[0].defender_observations == \
+            test_job.simulation_traces[0].defender_observations
+        assert tjob_data.simulation_traces[0].defender_rewards == \
+            test_job.simulation_traces[0].defender_rewards
+        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
+        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
+        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
+        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
+            test_job.simulation_traces[0].infrastructure_metrics
+        assert tjob_data.simulation_traces[0].simulation_env == \
+            test_job.simulation_traces[0].simulation_env
+        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
+        assert tjob_data.num_cached_traces == test_job.num_cached_traces
+        assert tjob_data.log_file_path == test_job.log_file_path
+        assert tjob_data.descr == test_job.descr
+        assert tjob_data.physical_host_ip == test_job.physical_host_ip
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"
+                                               f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        tjob_dict = response_data_list[0]
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert tjob_dict["emulation"] == test_job.emulation_env_name
+        assert tjob_dict["id"] == test_job.id
+        assert tjob_dict["running"] is True
+        assert test_job.running is False
+        assert tjob_dict["running"] != test_job.running
+        assert tjob_dict["simulation"] == test_job.simulation_env_name
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
+                     side_effect=pid_false)
+        response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        tjob_data = TrainingJobConfig.from_dict(response_data_list[0])
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.emulation_env_name == test_job.emulation_env_name
+        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
+        assert tjob_data.experiment_config.title == test_job.experiment_config.title
+        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
+        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
+        assert tjob_data.experiment_config.hparams["element"].value == \
+            test_job.experiment_config.hparams["element"].value
+        assert tjob_data.experiment_config.hparams["element"].name == \
+            test_job.experiment_config.hparams["element"].name
+        assert tjob_data.experiment_config.hparams["element"].descr == \
+            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
+        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
+        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
+        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
+        assert tjob_data.progress_percentage == test_job.progress_percentage
+        assert tjob_data.pid == test_job.pid
+        assert tjob_data.id == test_job.id
+        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
+        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
+        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
+        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        assert tjob_data.running is False
+        assert test_job.running is False
+        assert tjob_data.running == test_job.running
+        assert tjob_data.running == test_job.running
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.simulation_traces[0].attacker_actions == \
+            test_job.simulation_traces[0].attacker_actions
+        assert tjob_data.simulation_traces[0].attacker_observations == \
+            test_job.simulation_traces[0].attacker_observations
+        assert tjob_data.simulation_traces[0].attacker_rewards == \
+            test_job.simulation_traces[0].attacker_rewards
+        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
+        assert tjob_data.simulation_traces[0].defender_actions == \
+            test_job.simulation_traces[0].defender_actions
+        assert tjob_data.simulation_traces[0].defender_observations == \
+            test_job.simulation_traces[0].defender_observations
+        assert tjob_data.simulation_traces[0].defender_rewards == \
+            test_job.simulation_traces[0].defender_rewards
+        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
+        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
+        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
+        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
+            test_job.simulation_traces[0].infrastructure_metrics
+        assert tjob_data.simulation_traces[0].simulation_env == \
+            test_job.simulation_traces[0].simulation_env
+        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
+        assert tjob_data.num_cached_traces == test_job.num_cached_traces
+        assert tjob_data.log_file_path == test_job.log_file_path
+        assert tjob_data.descr == test_job.descr
+        assert tjob_data.physical_host_ip == test_job.physical_host_ip
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"
+                                               f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        tjob_dict = response_data_list[0]
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert tjob_dict["emulation"] == test_job.emulation_env_name
+        assert tjob_dict["id"] == test_job.id
+        assert tjob_dict["running"] is False
+        assert test_job.running is False
+        assert tjob_dict["running"] == test_job.running
+        assert tjob_dict["running"] == test_job.running
+        assert tjob_dict["simulation"] == test_job.simulation_env_name
+
+    def test_training_jobs_delete(self, flask_app, mocker, list_jobs, logged_in,
+                                  not_logged_in, logged_in_as_admin, remove, stop) -> None:
+        """
+        Tests the HTTP DELETE method on the /training-jobs resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object
+        :param list_ppo: the list_ppo fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param remove: the remove fixture
+        :return: None
+        """
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_training_jobs",
+                     side_effect=list_jobs)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_training_job",
+                     side_effect=remove)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid",
+                     side_effect=stop)
+        response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}
+
+    def test_training_jobs_id_get(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
+                                  get_job_config, pid_true, pid_false,) -> None:
+        """
+        Tests the HTTPS GET method for the /trianing-jobs/id resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_job_config: the get_job_config fixture
+        :param pid_true: the pid_true fixture
+        :param pid_false: the pid_false fixture
+        :return: None
+        """
+        test_job = TestResourcesTrainingjobsSuite.get_example_job()
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_training_job_config",
+                     side_effect=get_job_config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
+                     side_effect=pid_true)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        tjob_data = TrainingJobConfig.from_dict(response_data_list)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.emulation_env_name == test_job.emulation_env_name
+        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
+        assert tjob_data.experiment_config.title == test_job.experiment_config.title
+        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
+        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
+        assert tjob_data.experiment_config.hparams["element"].value == \
+            test_job.experiment_config.hparams["element"].value
+        assert tjob_data.experiment_config.hparams["element"].name == \
+            test_job.experiment_config.hparams["element"].name
+        assert tjob_data.experiment_config.hparams["element"].descr == \
+            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
+        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
+        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
+        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
+        assert tjob_data.progress_percentage == test_job.progress_percentage
+        assert tjob_data.pid == test_job.pid
+        assert tjob_data.id == test_job.id
+        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
+        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
+        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
+        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        assert tjob_data.running is True
+        assert test_job.running is False
+        assert tjob_data.running != test_job.running
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.simulation_traces[0].attacker_actions == \
+            test_job.simulation_traces[0].attacker_actions
+        assert tjob_data.simulation_traces[0].attacker_observations == \
+            test_job.simulation_traces[0].attacker_observations
+        assert tjob_data.simulation_traces[0].attacker_rewards == \
+            test_job.simulation_traces[0].attacker_rewards
+        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
+        assert tjob_data.simulation_traces[0].defender_actions == \
+            test_job.simulation_traces[0].defender_actions
+        assert tjob_data.simulation_traces[0].defender_observations == \
+            test_job.simulation_traces[0].defender_observations
+        assert tjob_data.simulation_traces[0].defender_rewards == \
+            test_job.simulation_traces[0].defender_rewards
+        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
+        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
+        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
+        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
+            test_job.simulation_traces[0].infrastructure_metrics
+        assert tjob_data.simulation_traces[0].simulation_env == \
+            test_job.simulation_traces[0].simulation_env
+        assert tjob_data.num_cached_traces == test_job.num_cached_traces
+        assert tjob_data.log_file_path == test_job.log_file_path
+        assert tjob_data.descr == test_job.descr
+        assert tjob_data.physical_host_ip == test_job.physical_host_ip
+        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
+                     side_effect=pid_false)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        tjob_data = TrainingJobConfig.from_dict(response_data_list)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.emulation_env_name == test_job.emulation_env_name
+        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
+        assert tjob_data.experiment_config.title == test_job.experiment_config.title
+        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
+        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
+        assert tjob_data.experiment_config.hparams["element"].value == \
+            test_job.experiment_config.hparams["element"].value
+        assert tjob_data.experiment_config.hparams["element"].name == \
+            test_job.experiment_config.hparams["element"].name
+        assert tjob_data.experiment_config.hparams["element"].descr == \
+            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
+        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
+        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
+        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
+        assert tjob_data.progress_percentage == test_job.progress_percentage
+        assert tjob_data.pid == test_job.pid
+        assert tjob_data.id == test_job.id
+        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
+        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
+        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
+        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        assert tjob_data.running is False
+        assert test_job.running is False
+        assert tjob_data.running == test_job.running
+        assert tjob_data.running == test_job.running
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.simulation_traces[0].attacker_actions == \
+            test_job.simulation_traces[0].attacker_actions
+        assert tjob_data.simulation_traces[0].attacker_observations == \
+            test_job.simulation_traces[0].attacker_observations
+        assert tjob_data.simulation_traces[0].attacker_rewards == \
+            test_job.simulation_traces[0].attacker_rewards
+        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
+        assert tjob_data.simulation_traces[0].defender_actions == \
+            test_job.simulation_traces[0].defender_actions
+        assert tjob_data.simulation_traces[0].defender_observations == \
+            test_job.simulation_traces[0].defender_observations
+        assert tjob_data.simulation_traces[0].defender_rewards == \
+            test_job.simulation_traces[0].defender_rewards
+        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
+        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
+        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
+        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
+            test_job.simulation_traces[0].infrastructure_metrics
+        assert tjob_data.simulation_traces[0].simulation_env == \
+            test_job.simulation_traces[0].simulation_env
+        assert tjob_data.num_cached_traces == test_job.num_cached_traces
+        assert tjob_data.log_file_path == test_job.log_file_path
+        assert tjob_data.descr == test_job.descr
+        assert tjob_data.physical_host_ip == test_job.physical_host_ip
+        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
+                     side_effect=pid_true)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        tjob_data = TrainingJobConfig.from_dict(response_data_list)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.emulation_env_name == test_job.emulation_env_name
+        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
+        assert tjob_data.experiment_config.title == test_job.experiment_config.title
+        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
+        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
+        assert tjob_data.experiment_config.hparams["element"].value == \
+            test_job.experiment_config.hparams["element"].value
+        assert tjob_data.experiment_config.hparams["element"].name == \
+            test_job.experiment_config.hparams["element"].name
+        assert tjob_data.experiment_config.hparams["element"].descr == \
+            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
+        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
+        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
+        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
+        assert tjob_data.progress_percentage == test_job.progress_percentage
+        assert tjob_data.pid == test_job.pid
+        assert tjob_data.id == test_job.id
+        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
+        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
+        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
+        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        assert tjob_data.running is True
+        assert test_job.running is False
+        assert tjob_data.running != test_job.running
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.simulation_traces[0].attacker_actions == \
+            test_job.simulation_traces[0].attacker_actions
+        assert tjob_data.simulation_traces[0].attacker_observations == \
+            test_job.simulation_traces[0].attacker_observations
+        assert tjob_data.simulation_traces[0].attacker_rewards == \
+            test_job.simulation_traces[0].attacker_rewards
+        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
+        assert tjob_data.simulation_traces[0].defender_actions == \
+            test_job.simulation_traces[0].defender_actions
+        assert tjob_data.simulation_traces[0].defender_observations == \
+            test_job.simulation_traces[0].defender_observations
+        assert tjob_data.simulation_traces[0].defender_rewards == \
+            test_job.simulation_traces[0].defender_rewards
+        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
+        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
+        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
+        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
+            test_job.simulation_traces[0].infrastructure_metrics
+        assert tjob_data.simulation_traces[0].simulation_env == \
+            test_job.simulation_traces[0].simulation_env
+        assert tjob_data.num_cached_traces == test_job.num_cached_traces
+        assert tjob_data.log_file_path == test_job.log_file_path
+        assert tjob_data.descr == test_job.descr
+        assert tjob_data.physical_host_ip == test_job.physical_host_ip
+        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
+                     side_effect=pid_false)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        tjob_data = TrainingJobConfig.from_dict(response_data_list)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.emulation_env_name == test_job.emulation_env_name
+        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
+        assert tjob_data.experiment_config.title == test_job.experiment_config.title
+        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
+        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
+        assert tjob_data.experiment_config.hparams["element"].value == \
+            test_job.experiment_config.hparams["element"].value
+        assert tjob_data.experiment_config.hparams["element"].name == \
+            test_job.experiment_config.hparams["element"].name
+        assert tjob_data.experiment_config.hparams["element"].descr == \
+            test_job.experiment_config.hparams["element"].descr
+        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
+        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
+        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
+        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
+        assert tjob_data.progress_percentage == test_job.progress_percentage
+        assert tjob_data.pid == test_job.pid
+        assert tjob_data.id == test_job.id
+        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
+        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
+        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
+        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        assert tjob_data.running is False
+        assert test_job.running is False
+        assert tjob_data.running == test_job.running
+        assert tjob_data.running == test_job.running
+        assert tjob_data.simulation_env_name == test_job.simulation_env_name
+        assert tjob_data.simulation_traces[0].attacker_actions == \
+            test_job.simulation_traces[0].attacker_actions
+        assert tjob_data.simulation_traces[0].attacker_observations == \
+            test_job.simulation_traces[0].attacker_observations
+        assert tjob_data.simulation_traces[0].attacker_rewards == \
+            test_job.simulation_traces[0].attacker_rewards
+        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
+        assert tjob_data.simulation_traces[0].defender_actions == \
+            test_job.simulation_traces[0].defender_actions
+        assert tjob_data.simulation_traces[0].defender_observations == \
+            test_job.simulation_traces[0].defender_observations
+        assert tjob_data.simulation_traces[0].defender_rewards == \
+            test_job.simulation_traces[0].defender_rewards
+        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
+        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
+        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
+        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
+            test_job.simulation_traces[0].infrastructure_metrics
+        assert tjob_data.simulation_traces[0].simulation_env == \
+            test_job.simulation_traces[0].simulation_env
+        assert tjob_data.num_cached_traces == test_job.num_cached_traces
+        assert tjob_data.log_file_path == test_job.log_file_path
+        assert tjob_data.descr == test_job.descr
+        assert tjob_data.physical_host_ip == test_job.physical_host_ip
+        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
+
+    def test_training_jobs_id_delete(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in,
+                                     get_job_config, remove, stop) -> None:
+        """
+        Tests the HTTPS DELETE method for the /training-jobs-id resource
+
+        :param flask_app: the flask app for making the tests requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin:  the logged_in_as_admin fixure
+        :param get_job_config: the get_job_config fixture
+        :param remove: the remove fixture
+        :param stop: the stop fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_training_job_config",
+                     side_effect=get_job_config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid",
+                     side_effect=stop)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_training_job",
+                     side_effect=remove)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}
+
+    def test_training_jobs_id_post(self, flask_app, mocker, logged_in_as_admin, logged_in,
+                                   not_logged_in, get_job_config, stop, start) -> None:
+        """
+        Tests the HTTPS POST method for the /training-jobs-id resource
+
+        :param flask_app: the flask app for making the tests requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param start: the start fixture
+        :param stop: the stop fixture
+        :param get_job_config: the get_job_config fixture
+        :return: None
+        """
+        mocker.patch("csle_agents.job_controllers.training_job_manager.TrainingJobManager."
+                     "start_training_job_in_background",
+                     side_effect=start)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid",
+                     side_effect=stop)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_training_job_config",
+                     side_effect=get_job_config)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10"
+                                                f"?{api_constants.MGMT_WEBAPP.STOP_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10"
+                                                f"?{api_constants.MGMT_WEBAPP.STOP_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10"
+                                                f"?{api_constants.MGMT_WEBAPP.STOP_QUERY_PARAM}=false")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10"
+                                                f"?{api_constants.MGMT_WEBAPP.STOP_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10"
+                                                f"?{api_constants.MGMT_WEBAPP.STOP_QUERY_PARAM}=false")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}

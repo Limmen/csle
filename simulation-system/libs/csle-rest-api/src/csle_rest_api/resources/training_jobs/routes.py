@@ -2,14 +2,15 @@
 Routes and sub-resources for the /training-jobs resource
 """
 import time
-from flask import Blueprint, jsonify, request
+
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
-from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_agents.job_controllers.training_job_manager import TrainingJobManager
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
-import csle_rest_api.util.rest_api_util as rest_api_util
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, jsonify, request
 
+import csle_rest_api.constants.constants as api_constants
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 training_jobs_bp = Blueprint(
@@ -46,6 +47,7 @@ def training_jobs():
                 job.running = True
             alive_jobs.append(job)
         training_jobs_dicts = list(map(lambda x: x.to_dict(), alive_jobs))
+        # pytest.logger.info(alive_jobs[0].running)
         response = jsonify(training_jobs_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
@@ -100,6 +102,7 @@ def training_policy(job_id: int):
 
     job = MetastoreFacade.get_training_job_config(id=job_id)
     response = jsonify({})
+
     if job is not None:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
             if ClusterController.check_pid(ip=job.physical_host_ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
