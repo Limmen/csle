@@ -126,8 +126,8 @@ class EmulationDefenderActionConfig(JSONSerializable):
         obj = EmulationDefenderActionConfig(
             num_indices=d["num_indices"], actions=d["actions"],
             stopping_action_ids=d["stopping_action_ids"],
-            multiple_stop_actions_ids=d["multiple_stop_actions_ids"],
-            multiple_stop_actions=d["multiple_stop_actions"]
+            multiple_stop_actions=d["multiple_stop_actions"],
+            multiple_stop_actions_ids=d["multiple_stop_actions_ids"]
         )
         return obj
 

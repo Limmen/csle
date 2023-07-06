@@ -60,10 +60,10 @@ class ClientPopulationMetrics:
         :return: the created instance
         """
         rate = 0
-        if rate in d:
+        if "rate" in d:
             rate = d["rate"]
         if "service_time" in d:
-            service_time - d["service_time"]
+            service_time = d["service_time"]
         else:
             service_time = -1
         obj = ClientPopulationMetrics(

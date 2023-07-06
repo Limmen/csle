@@ -39,7 +39,7 @@ class EmulationAttackerObservationState(JSONSerializable):
             catched_flags=d["catched_flags"], agent_reachable=set(d["agent_reachable"]),
         )
         obj.machines = list(map(lambda x: EmulationAttackerMachineObservationState.from_dict(x), d["machines"]))
-        obj.actions_tried = d["actions_tried"]
+        obj.actions_tried = set(d["actions_tried"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:

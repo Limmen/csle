@@ -2,14 +2,17 @@
 Routes and sub-resources for the /data-collection-jobs resource
 """
 import time
-from flask import Blueprint, jsonify, request
-import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
-from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
-from csle_cluster.cluster_manager.cluster_controller import ClusterController
-import csle_rest_api.util.rest_api_util as rest_api_util
 
+import csle_common.constants.constants as constants
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_system_identification.job_controllers.data_collection_job_manager import (
+    DataCollectionJobManager,
+)
+from flask import Blueprint, jsonify, request
+
+import csle_rest_api.constants.constants as api_constants
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 data_collection_jobs_bp = Blueprint(
@@ -37,7 +40,6 @@ def data_collection_jobs():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
             return data_collection_jobs_ids()
-
         data_collection_jobs = MetastoreFacade.list_data_collection_jobs()
         alive_jobs = []
         for job in data_collection_jobs:
@@ -46,6 +48,7 @@ def data_collection_jobs():
                 job.running = True
             alive_jobs.append(job)
         data_collection_jobs_dicts = list(map(lambda x: x.to_dict(), alive_jobs))
+
         response = jsonify(data_collection_jobs_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
