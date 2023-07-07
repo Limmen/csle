@@ -8,7 +8,6 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.t_fp.t_fp_agent import TFPAgent
 from csle_common.dao.training.policy_type import PolicyType
 import csle_agents.constants.constants as agents_constants
-from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 
@@ -93,53 +92,35 @@ class TestTFPSuite(object):
         )
         return experiment_config
 
-    @pytest.fixture
-    def attacker_simulation_config(self) -> SimulationEnvConfig:
-        """
-        Fixture, which is run before every test. It sets up an input attacker simulation config
-
-        :return: The example config
-        """
-        return MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-002")
-
-    @pytest.fixture
-    def defender_simulation_config(self) -> SimulationEnvConfig:
-        """
-        Fixture, which is run before every test. It sets up an input defender simulation config
-
-        :return: The example config
-        """
-        return MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
-
     def test_create_agent(self, mocker, experiment_config: ExperimentConfig,
-                          attacker_simulation_config: SimulationEnvConfig,
-                          defender_simulation_config: SimulationEnvConfig) -> None:
+                          example_attacker_simulation_config: SimulationEnvConfig,
+                          example_defender_simulation_config: SimulationEnvConfig) -> None:
         """
         Tests creation of the TFPAgent
 
         :param mocker: the mocker object
         :param experiment_config: the experiment confi
-        :param attacker_simulation_config: the simulation config for the attacker
-        :param defender_simulation_config: the simulation config for the defender
+        :param example_attacker_simulation_config: the simulation config for the attacker
+        :param example_defender_simulation_config: the simulation config for the defender
         :return: None
         """
         emulation_env_config = mocker.MagicMock()
         pytest.logger.info("Creating the T-FP Agent")
         TFPAgent(emulation_env_config=emulation_env_config,
-                 attacker_simulation_env_config=attacker_simulation_config,
-                 defender_simulation_env_config=defender_simulation_config, experiment_config=experiment_config)
+                 attacker_simulation_env_config=example_attacker_simulation_config,
+                 defender_simulation_env_config=example_defender_simulation_config, experiment_config=experiment_config)
         pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker, experiment_config: ExperimentConfig,
-                       attacker_simulation_config: SimulationEnvConfig,
-                       defender_simulation_config: SimulationEnvConfig) -> None:
+                       example_attacker_simulation_config: SimulationEnvConfig,
+                       example_defender_simulation_config: SimulationEnvConfig) -> None:
         """
         Tests running the agent
 
         :param mocker: object for mocking API calls
         :param experiment_config: the example experiment config
-        :param attacker_simulation_config: the simulation config for the attacker
-        :param defender_simulation_config: the simulation config for the defender
+        :param example_attacker_simulation_config: the simulation config for the attacker
+        :param example_defender_simulation_config: the simulation config for the defender
 
         :return: None
         """
@@ -183,8 +164,9 @@ class TestTFPSuite(object):
             return_value=True
         )
         agent = TFPAgent(emulation_env_config=emulation_env_config,
-                         attacker_simulation_env_config=attacker_simulation_config,
-                         defender_simulation_env_config=defender_simulation_config, experiment_config=experiment_config)
+                         attacker_simulation_env_config=example_attacker_simulation_config,
+                         defender_simulation_env_config=example_defender_simulation_config,
+                         experiment_config=experiment_config)
         pytest.logger.info("Starting training of the T-FP Agent")
         experiment_execution = agent.train()
         pytest.logger.info("Training completed succesfully")

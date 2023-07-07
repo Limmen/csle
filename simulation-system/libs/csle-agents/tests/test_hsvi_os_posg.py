@@ -7,9 +7,9 @@ from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
+from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_agents.agents.hsvi_os_posg.hsvi_os_posg_agent import HSVIOSPOSGAgent
 import csle_agents.constants.constants as agents_constants
-from csle_common.metastore.metastore_facade import MetastoreFacade
 
 
 def states() -> Tuple[np.ndarray, dict]:
@@ -141,10 +141,11 @@ class TestHSVISuite(object):
     pytest.logger = logging.getLogger("hsvi_os_posg_tests")
 
     @pytest.fixture
-    def experiment_config(self) -> ExperimentConfig:
+    def experiment_config(self, example_simulation_config: SimulationEnvConfig) -> ExperimentConfig:
         """
         Fixture, which is run before every test. It sets up an example experiment config
 
+        :param: example_simulation_config: the example_simulation_config fixture
         :return: the example experiment config
         """
         Z = observation_tensor()
@@ -153,7 +154,7 @@ class TestHSVISuite(object):
         O, _ = observations()
         S, _ = states()
         b0 = initial_belief()
-        simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-game-002")
+        simulation_env_config = example_simulation_config
         experiment_config = ExperimentConfig(
             output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}hsvi_os_posg_iteration_test",
             title="HSVI for OS-POSGs to approximate a Nash equilibrium",

@@ -8,7 +8,7 @@ from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.sarsa.sarsa_agent import SARSAAgent
-from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
@@ -24,13 +24,14 @@ class TestSarsaSuite(object):
     pytest.logger = logging.getLogger("sarsa_tests")
 
     @pytest.fixture
-    def experiment_config(self) -> ExperimentConfig:
+    def experiment_config(self, example_simulation_config: SimulationEnvConfig) -> ExperimentConfig:
         """
         Fixture, which is run before every test. It sets up an example experiment config
 
+        :param: example_simulation_config: the example_simulation_config fixture with an example simulation config
         :return: the example experiment config
         """
-        simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-002")
+        simulation_env_config = example_simulation_config
         simulation_env_config.simulation_env_input_config.defender_strategy = RandomPolicy(
             actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
             player_type=PlayerType.DEFENDER, stage_policy_tensor=None)
@@ -77,10 +78,11 @@ class TestSarsaSuite(object):
         return experiment_config
 
     @pytest.fixture
-    def mdp_config(self) -> StoppingGameAttackerMdpConfig:
+    def mdp_config(self, example_simulation_config: SimulationEnvConfig) -> StoppingGameAttackerMdpConfig:
         """
         Fixture, which is run before every test. It sets up an input MDP config
 
+        :param: example_simulation_config: the example_simulation_config fixture with an example simulation config
         :return: The example config
         """
         L = 1
@@ -109,24 +111,24 @@ class TestSarsaSuite(object):
             R=StoppingGameUtil.reward_tensor(R_SLA=R_SLA, R_INT=R_INT, R_COST=R_COST, L=L, R_ST=R_ST),
             S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1", checkpoint_traces_freq=100000,
             gamma=1)
-        simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-002")
         mdp_config = StoppingGameAttackerMdpConfig(
             stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
             defender_strategy=RandomPolicy(
-                actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
+                actions=example_simulation_config.joint_action_space_config.action_spaces[0].actions,
                 player_type=PlayerType.DEFENDER, stage_policy_tensor=None),
             env_name="csle-stopping-game-mdp-attacker-v1")
         return mdp_config
 
     @pytest.fixture
-    def initial_state_distribution_config(self) -> InitialStateDistributionConfig:
+    def initial_state_distribution_config(self, example_simulation_config: SimulationEnvConfig) \
+            -> InitialStateDistributionConfig:
         """
         Fixture, which is run before every test. It sets up an initial state distribution config
 
+        :param: example_simulation_config: the example_simulation_config fixture with an example simulation config
         :return: The example config
         """
-        simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-002")
-        initial_state_distribution_config = simulation_env_config.initial_state_distribution_config
+        initial_state_distribution_config = example_simulation_config.initial_state_distribution_config
         return initial_state_distribution_config
 
     def test_create_agent(self, mocker, experiment_config: ExperimentConfig) -> None:
@@ -150,7 +152,6 @@ class TestSarsaSuite(object):
         :param experiment_config: the example experiment config
         :param mdp_config: the example MDP config
         :param initial_state_distribution_config: the example initial state distribiution config
-
         :return: None
         """
         # Mock emulation and simulation configs

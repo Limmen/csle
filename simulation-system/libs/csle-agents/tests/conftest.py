@@ -22,6 +22,10 @@ from csle_common.dao.simulation_config.initial_state_distribution_config import 
 from csle_common.dao.simulation_config.env_parameters_config import EnvParametersConfig
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
 from csle_common.dao.simulation_config.state_type import StateType
+from csle_common.dao.training.random_policy import RandomPolicy
+from csle_common.dao.training.player_type import PlayerType
+from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
+from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 
@@ -301,4 +305,47 @@ def example_simulation_config() -> SimulationEnvConfig:
     :return: the example configuration
     """
     config = default_config(name="csle-stopping-game-002", version="0.0.2")
+    return config
+
+
+@pytest.fixture
+def example_attacker_simulation_config() -> SimulationEnvConfig:
+    """
+    Help fixture that returns an example attacker simulation environment configuration
+
+    :return: the example configuration
+    """
+    config = default_config(name="csle-stopping-mdp-attacker-002", version="0.0.2")
+    config.gym_env_name = "csle-stopping-game-mdp-attacker-v1"
+    config.players_config = PlayersConfig(player_configs=[config.players_config.player_configs[1]])
+    config.simulation_env_input_config = StoppingGameAttackerMdpConfig(
+        stopping_game_config=config.simulation_env_input_config, stopping_game_name="csle-stopping-game-v1",
+        defender_strategy=RandomPolicy(actions=[config.joint_action_space_config.action_spaces[0].actions],
+                                       player_type=PlayerType.DEFENDER, stage_policy_tensor=None),
+        env_name="csle-stopping-game-mdp-attacker-v1")
+    return config
+
+
+@pytest.fixture
+def example_defender_simulation_config() -> SimulationEnvConfig:
+    """
+    Help fixture that returns an example defender simulation environment configuration
+
+    :return: the example configuration
+    """
+    config = default_config(name="csle-stopping-pomdp-defender-002", version="0.0.2")
+    config.gym_env_name = "csle-stopping-game-pomdp-defender-v1"
+    config.players_config = PlayersConfig(player_configs=[config.players_config.player_configs[0]])
+    attacker_stage_strategy = np.zeros((3, 2))
+    attacker_stage_strategy[0][0] = 0.9
+    attacker_stage_strategy[0][1] = 0.1
+    attacker_stage_strategy[1][0] = 0.9
+    attacker_stage_strategy[1][1] = 0.1
+    attacker_stage_strategy[2] = attacker_stage_strategy[1]
+    config.simulation_env_input_config = StoppingGameDefenderPomdpConfig(
+        stopping_game_config=config.simulation_env_input_config, stopping_game_name="csle-stopping-game-v1",
+        attacker_strategy=RandomPolicy(actions=config.joint_action_space_config.action_spaces[1].actions,
+                                       player_type=PlayerType.ATTACKER,
+                                       stage_policy_tensor=list(attacker_stage_strategy)),
+        env_name="csle-stopping-game-pomdp-defender-v1")
     return config

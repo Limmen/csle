@@ -8,7 +8,6 @@ from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_agents.agents.lp_nf.linear_programming_normal_form_game_agent import LinearProgrammingNormalFormGameAgent
 import csle_agents.constants.constants as agents_constants
-from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 
 
@@ -70,16 +69,6 @@ class TestLPNFSuite(object):
         )
         return experiment_config
 
-    @pytest.fixture
-    def simulation_config(self) -> SimulationEnvConfig:
-        """
-        Fixture, which is run before every test. It sets up an example simulation config
-
-        :return: the example experiment config
-        """
-        simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-game-002")
-        return simulation_env_config
-
     def test_create_agent(self, mocker, experiment_config: ExperimentConfig) -> None:
         """
         Tests creation of the LP-NF agent
@@ -93,13 +82,13 @@ class TestLPNFSuite(object):
         pytest.logger.info("Agent created successfully")
 
     def test_run_agent(self, mocker, experiment_config: ExperimentConfig,
-                       simulation_config: SimulationEnvConfig) -> None:
+                       example_simulation_config: SimulationEnvConfig) -> None:
         """
         Tests running the agent
 
         :param mocker: object for mocking API calls
         :param experiment_config: the example experiment config
-        :param simulation_config: the example simulation config
+        :param example_simulation_config: the example_simulation_config fixture
 
         :return: None
         """
@@ -128,7 +117,7 @@ class TestLPNFSuite(object):
             'csle_common.metastore.metastore_facade.MetastoreFacade.save_vector_policy',
             return_value=True
         )
-        agent = LinearProgrammingNormalFormGameAgent(simulation_env_config=simulation_config,
+        agent = LinearProgrammingNormalFormGameAgent(simulation_env_config=example_simulation_config,
                                                      experiment_config=experiment_config)
         pytest.logger.info("Starting training of the LP-NF Agent")
         experiment_execution = agent.train()

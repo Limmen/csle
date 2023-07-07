@@ -12,7 +12,7 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
-from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 
 
 class TestShapleyIterationSuite(object):
@@ -23,13 +23,14 @@ class TestShapleyIterationSuite(object):
     pytest.logger = logging.getLogger("shapley_iteration_tests")
 
     @pytest.fixture
-    def experiment_config(self) -> ExperimentConfig:
+    def experiment_config(self, example_simulation_config: SimulationEnvConfig) -> ExperimentConfig:
         """
         Fixture, which is run before every test. It sets up an example experiment config
 
+        :param: example_simulation_config: the example_simulation_config fixture with an example simulation config
         :return: the example experiment config
         """
-        simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-game-002")
+        simulation_env_config = example_simulation_config
         state_space = simulation_env_config.state_space_config.states_ids()
         action_space_player_1 = simulation_env_config.joint_action_space_config.action_spaces[0].actions_ids()
         action_space_player_2 = simulation_env_config.joint_action_space_config.action_spaces[1].actions_ids()

@@ -12,7 +12,7 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import StoppingGameAttackerMdpConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
-from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 
 
 def reduce_T(T, strategy):
@@ -41,13 +41,14 @@ class TestVISuite(object):
     pytest.logger = logging.getLogger("vi_tests")
 
     @pytest.fixture
-    def experiment_config(self) -> ExperimentConfig:
+    def experiment_config(self, example_attacker_simulation_config: SimulationEnvConfig) -> ExperimentConfig:
         """
         Fixture, which is run before every test. It sets up an example experiment config
 
+        :param: example_simulation_config: the example_simulation_config fixture with an example simulation config
         :return: the example experiment config
         """
-        simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-002")
+        simulation_env_config = example_attacker_simulation_config
         simulation_env_config.simulation_env_input_config.defender_strategy = RandomPolicy(
             actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
             player_type=PlayerType.DEFENDER, stage_policy_tensor=None)
@@ -108,10 +109,11 @@ class TestVISuite(object):
         return experiment_config
 
     @pytest.fixture
-    def mdp_config(self) -> StoppingGameAttackerMdpConfig:
+    def mdp_config(self, example_attacker_simulation_config: SimulationEnvConfig) -> StoppingGameAttackerMdpConfig:
         """
         Fixture, which is run before every test. It sets up an input MDP config
 
+        :param: example_simulation_config: the example_simulation_config fixture with an example simulation config
         :return: The example config
         """
         L = 1
@@ -140,11 +142,10 @@ class TestVISuite(object):
             R=StoppingGameUtil.reward_tensor(R_SLA=R_SLA, R_INT=R_INT, R_COST=R_COST, L=L, R_ST=R_ST),
             S=StoppingGameUtil.state_space(), env_name="csle-stopping-game-v1", checkpoint_traces_freq=100000,
             gamma=1)
-        simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-mdp-attacker-002")
         mdp_config = StoppingGameAttackerMdpConfig(
             stopping_game_config=stopping_game_config, stopping_game_name="csle-stopping-game-v1",
             defender_strategy=RandomPolicy(
-                actions=simulation_env_config.joint_action_space_config.action_spaces[0].actions,
+                actions=example_attacker_simulation_config.joint_action_space_config.action_spaces[0].actions,
                 player_type=PlayerType.DEFENDER, stage_policy_tensor=None),
             env_name="csle-stopping-game-mdp-attacker-v1")
         return mdp_config
