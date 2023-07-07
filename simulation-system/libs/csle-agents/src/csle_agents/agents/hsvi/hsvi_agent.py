@@ -674,8 +674,7 @@ class HSVIAgent(BaseAgent):
         :return: the value of the belief point
         """
         upper_bound_point_set, corner_points = upper_bound
-        alpha_corner = np.array(corner_points)[:, 1]
-
+        alpha_corner = np.array(list(map(lambda x: x[1], corner_points)))
         # min_val = corner_points_belief_value
         interior_belief_values = []
         for point in upper_bound_point_set:
