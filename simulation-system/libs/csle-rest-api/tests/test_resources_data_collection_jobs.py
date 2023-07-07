@@ -75,7 +75,7 @@ class TestResourcesDataCollectionSuite:
         """
         Pytest fixture for mocking the check_pid function
         :param mocker: The pytest mocker object
-        :return: A mocker object with the mocked function
+        :return: a mocker object with the mocked function
         """
         def check_pid(ip: str, port: int, pid: int) -> OperationOutcomeDTO:
             op_outcome = OperationOutcomeDTO(outcome=True)
