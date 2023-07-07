@@ -5,6 +5,7 @@ from csle_collector.kafka_manager.kafka_manager_pb2 import KafkaDTO
 from csle_collector.kafka_manager.kafka_manager import KafkaManagerServicer
 from csle_collector.kafka_manager.kafka_manager_util import KafkaManagerUtil
 import csle_collector.kafka_manager.query_kafka_server
+import csle_collector.constants.constants as constants
 
 
 class TestKafkaManagerSuite(object):
@@ -117,14 +118,14 @@ class TestKafkaManagerSuite(object):
         :return: None
         """
         dicts = [
-            {"running": True, "topics": ["topic1", "topic2"]},
-            {"running": False, "topics": []},
-            {"running": False, "topics": ["topic3"]},
+            {constants.DICT_PROPERTIES.RUNNING: True, constants.DICT_PROPERTIES.TOPICS: ["topic1", "topic2"]},
+            {constants.DICT_PROPERTIES.RUNNING: False, constants.DICT_PROPERTIES.TOPICS: []},
+            {constants.DICT_PROPERTIES.RUNNING: False, constants.DICT_PROPERTIES.TOPICS: ["topic3"]},
         ]
         for d in dicts:
             dto: KafkaDTO = KafkaManagerUtil.kafka_dto_from_dict(d=d)
-            assert dto.running == d["running"]
-            assert dto.topics == d["topics"]
+            assert dto.running == d[constants.DICT_PROPERTIES.RUNNING]
+            assert dto.topics == d[constants.DICT_PROPERTIES.TOPICS]
 
     def test_kafka_dto_to_dict(self) -> None:
         """
@@ -139,5 +140,5 @@ class TestKafkaManagerSuite(object):
         ]
         for dto in dtos:
             d = KafkaManagerUtil.kafka_dto_to_dict(kafka_dto=dto)
-            assert dto.running == d["running"]
-            assert dto.topics == d["topics"]
+            assert dto.running == d[constants.DICT_PROPERTIES.RUNNING]
+            assert dto.topics == d[constants.DICT_PROPERTIES.TOPICS]
