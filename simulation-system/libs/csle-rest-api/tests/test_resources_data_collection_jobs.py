@@ -61,7 +61,7 @@ class TestResourcesDataCollectionSuite:
     Test suite for /data-collection-jobs resource
     """
 
-    pytest.logger = logging.getLogger("resources_training_jobs_tests")
+    pytest.logger = logging.getLogger("resources_data_collection_jobs_tests")
 
     @pytest.fixture
     def flask_app(self):
@@ -77,7 +77,7 @@ class TestResourcesDataCollectionSuite:
         :param mocker: The pytest mocker object
         :return: A mocker object with the mocked function
         """
-        def check_pid(ip, port, pid) -> OperationOutcomeDTO:
+        def check_pid(ip: str, port: int, pid: int) -> OperationOutcomeDTO:
             op_outcome = OperationOutcomeDTO(outcome=True)
             return op_outcome
         check_pid_mocker = mocker.MagicMock(side_effect=check_pid)
@@ -91,7 +91,7 @@ class TestResourcesDataCollectionSuite:
         :param mocker: The pytest mocker object
         :return: A mocker object with the mocked function
         """
-        def check_pid(ip, port, pid) -> OperationOutcomeDTO:
+        def check_pid(ip: str, port: int, pid: int) -> OperationOutcomeDTO:
             op_outcome = OperationOutcomeDTO(outcome=False)
             return op_outcome
         check_pid_mocker = mocker.MagicMock(side_effect=check_pid)
@@ -126,7 +126,7 @@ class TestResourcesDataCollectionSuite:
         return remove_data_collection_job_mocker
 
     @pytest.fixture
-    def stop(self, mocker):
+    def stop(self, mocker) -> None:
         """
         Pytest fixture mocking the stop_pid functio
 
@@ -134,7 +134,7 @@ class TestResourcesDataCollectionSuite:
         :return: a mock object with the mocked function
 
         """
-        def stop_pid(ip, port, pid):
+        def stop_pid(ip: str, port: int, pid: int):
             return None
         stop_pid_mocker = mocker.MagicMock(side_effect=stop_pid)
         return stop_pid_mocker
@@ -142,16 +142,17 @@ class TestResourcesDataCollectionSuite:
     @pytest.fixture
     def start(self, mocker):
         """
-        Pytest fixture for the start_training_job_in_background function
+        Pytest fixture for the start_data_collection_job_in_background function
 
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
-        def start_training_job_in_background(training_job):
+        def start_data_collection_job_in_background(data_collection_job:
+                                                    DataCollectionJobConfig) -> None:
             return None
-        start_training_job_in_background_mocker = mocker.MagicMock(
-            side_effect=start_training_job_in_background)
-        return start_training_job_in_background_mocker
+        start_data_collection_job_in_background_mocker = mocker.MagicMock(
+            side_effect=start_data_collection_job_in_background)
+        return start_data_collection_job_in_background_mocker
 
     @pytest.fixture
     def get_job_config(self, mocker) -> DataCollectionJobConfig:
@@ -170,9 +171,9 @@ class TestResourcesDataCollectionSuite:
     @staticmethod
     def get_example_job() -> DataCollectionJobConfig:
         """
-        Utility function for getting an example instance of a PPOPolicy
+        Utility function for getting an example instance of a data-collection-job cofiguration
 
-        :return: an example isntance of a PPOPOlicy
+        :return: an example isntance of a data-collection-job cofiguration
         """
         nn_config = NodeNetworkConfig(packet_delay_distribution=PacketDelayDistributionType.PARETO.value,
                                       packet_loss_type=PacketLossType.GEMODEL.value)
@@ -190,17 +191,12 @@ class TestResourcesDataCollectionSuite:
                                         ips_and_network_configs=[("123.456.78.99", nn_config)],
                                         docker_gw_bridge_ip="", physical_host_ip="123.456.78.99")
         nf_cofig = NodeFirewallConfig(
-            ips_gw_default_policy_networks=[DefaultNetworkFirewallConfig(ip="123.456.78.99",
-                                                                         default_gw="gateway",
-                                                                         default_input="input",
-                                                                         default_output="output",
-                                                                         default_forward="forward",
-                                                                         network=ContainerNetwork(name="JohnDoe",
-                                                                                                  subnet_mask="JDoeMask",
-                                                                                                  bitmask="BitMask",
-                                                                                                  subnet_prefix="SubPrefix",
-                                                                                                  interface="eth0")
-                                                                         )],
+            ips_gw_default_policy_networks=[
+                DefaultNetworkFirewallConfig(ip="123.456.78.99", default_gw="gateway", default_input="input",
+                                             default_output="output", default_forward="forward",
+                                             network=ContainerNetwork(name="JohnDoe", subnet_mask="JDoeMask",
+                                                                      bitmask="BitMask", subnet_prefix="SubPrefix",
+                                                                      interface="eth0"))],
             hostname="JohnDoe", output_accept={"out_accept"},
             input_accept={"in_accept"}, forward_accept={"forward_accept"},
             output_drop={"out_drop"}, input_drop={"in_drop"},
@@ -214,8 +210,9 @@ class TestResourcesDataCollectionSuite:
                                kafka_manager_log_file="log_file", kafka_manager_log_dir="log_dir",
                                kafka_manager_max_workers=5, kafka_port=9092, kafka_port_external=9292,
                                time_step_len_seconds=15, kafka_manager_port=50051, version="0.0.1")
-        e_a_action = EmulationAttackerAction(id=EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST.value, name="JohnDoe",
-                                             cmds=["JohnDoeCommands"], type=EmulationAttackerActionType.RECON.value,
+        e_a_action = EmulationAttackerAction(id=EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST.value,
+                                             name="JohnDoe", cmds=["JohnDoeCommands"],
+                                             type=EmulationAttackerActionType.RECON.value,
                                              descr="null", ips=["JohnDoeIPs"], index=10,
                                              action_outcome=EmulationAttackerActionOutcome.INFORMATION_GATHERING.value,
                                              vulnerability="Vulnerability", alt_cmds=["JDoeCommands"],
@@ -271,6 +268,16 @@ class TestResourcesDataCollectionSuite:
         assert response_data_list == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in,)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                               f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == \
+            test_job.emulation_env_name
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] is \
+            True
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.ID_PROPERTY] == \
+            test_job.id
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -295,7 +302,7 @@ class TestResourcesDataCollectionSuite:
         assert d_c_job_data.defender_sequence[0].alt_cmds[0] == test_job.defender_sequence[0].alt_cmds[0]
         assert d_c_job_data.defender_sequence[0].cmds[0] == test_job.defender_sequence[0].cmds[0]
         assert d_c_job_data.defender_sequence[0].descr == test_job.defender_sequence[0].descr
-        # assert d_c_job_data.defender_sequence[0].execution_time == test_job.defender_sequence[0].execution_time
+        assert d_c_job_data.defender_sequence[0].execution_time == test_job.defender_sequence[0].execution_time
         assert d_c_job_data.defender_sequence[0].id == test_job.defender_sequence[0].id
         assert d_c_job_data.defender_sequence[0].index == test_job.defender_sequence[0].index
         assert d_c_job_data.defender_sequence[0].ips[0] == test_job.defender_sequence[0].ips[0]
@@ -339,11 +346,13 @@ class TestResourcesDataCollectionSuite:
         assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
             num_failed_login_attempts == \
             test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_failed_login_attempts
-        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_logged_in_users == \
-            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_logged_in_users
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
+            num_logged_in_users == test_job.traces[0].initial_defender_observation_state. \
+            aggregated_host_metrics.num_logged_in_users
         assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_login_events == \
             test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_login_events
-        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_open_connections == \
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
+            num_open_connections == \
             test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_open_connections
         assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_processes == \
             test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_processes
@@ -525,7 +534,7 @@ class TestResourcesDataCollectionSuite:
             kafka_config.container.ips_and_networks[0][1].subnet_mask
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
             ips_and_networks[0][1].subnet_prefix == test_job.traces[0].initial_defender_observation_state. \
-            kafka_config.container.ips_and_networks[0][1].subnet_prefix        
+            kafka_config.container.ips_and_networks[0][1].subnet_prefix
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
             level == test_job.traces[0].initial_defender_observation_state. \
             kafka_config.container.level
@@ -551,7 +560,7 @@ class TestResourcesDataCollectionSuite:
             docker_gw_bridge_ip == test_job.traces[0].initial_defender_observation_state.kafka_config. \
             firewall_config.docker_gw_bridge_ip
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
-            forward_accept ==test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            forward_accept == test_job.traces[0].initial_defender_observation_state.kafka_config. \
             firewall_config.forward_accept
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
             forward_drop == test_job.traces[0].initial_defender_observation_state.kafka_config. \
@@ -563,8 +572,9 @@ class TestResourcesDataCollectionSuite:
             input_drop == test_job.traces[0].initial_defender_observation_state.kafka_config. \
             firewall_config.input_drop
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
-            ips_gw_default_policy_networks[0].default_forward == test_job.traces[0].initial_defender_observation_state. \
-            kafka_config.firewall_config.ips_gw_default_policy_networks[0].default_forward
+            ips_gw_default_policy_networks[0].default_forward == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config.firewall_config. \
+            ips_gw_default_policy_networks[0].default_forward
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
             ips_gw_default_policy_networks[0].default_gw == test_job.traces[0].initial_defender_observation_state. \
             kafka_config.firewall_config.ips_gw_default_policy_networks[0].default_gw
@@ -579,8 +589,9 @@ class TestResourcesDataCollectionSuite:
             initial_defender_observation_state.kafka_config. \
             firewall_config.ips_gw_default_policy_networks[0].ip
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
-            ips_gw_default_policy_networks[0].network.bitmask == test_job.traces[0].initial_defender_observation_state. \
-            kafka_config.firewall_config.ips_gw_default_policy_networks[0].network.bitmask
+            ips_gw_default_policy_networks[0].network.bitmask == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config.firewall_config. \
+            ips_gw_default_policy_networks[0].network.bitmask
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
             ips_gw_default_policy_networks[0].network.interface == test_job.traces[0]. \
             initial_defender_observation_state.kafka_config. \
@@ -639,14 +650,16 @@ class TestResourcesDataCollectionSuite:
             ips_and_network_configs[0][0] == test_job.traces[0].initial_defender_observation_state.kafka_config. \
             resources.ips_and_network_configs[0][0]
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
-            ips_and_network_configs[0][1].cell_overhead_bytes == test_job.traces[0].initial_defender_observation_state. \
-            kafka_config.resources.ips_and_network_configs[0][1].cell_overhead_bytes
+            ips_and_network_configs[0][1].cell_overhead_bytes == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config.resources.ips_and_network_configs[0][1]. \
+            cell_overhead_bytes
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
             ips_and_network_configs[0][1].interface == test_job.traces[0].initial_defender_observation_state. \
             kafka_config.resources.ips_and_network_configs[0][1].interface
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
-            ips_and_network_configs[0][1].limit_packets_queue == test_job.traces[0].initial_defender_observation_state. \
-            kafka_config.resources.ips_and_network_configs[0][1].limit_packets_queue
+            ips_and_network_configs[0][1].limit_packets_queue == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].limit_packets_queue
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
             ips_and_network_configs[0][1].loss_gemodel_h == test_job.traces[0].initial_defender_observation_state. \
             kafka_config.resources.ips_and_network_configs[0][1].loss_gemodel_h
@@ -833,6 +846,16 @@ class TestResourcesDataCollectionSuite:
             snort_ids_rule_counters.ts
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
                      side_effect=pid_false)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                               f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == \
+            test_job.emulation_env_name
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] is \
+            False
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.ID_PROPERTY] == \
+            test_job.id
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -845,10 +868,19 @@ class TestResourcesDataCollectionSuite:
                      side_effect=pid_true)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in_as_admin,)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                               f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == \
+            test_job.emulation_env_name
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] is \
+            True
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.ID_PROPERTY] == \
+            test_job.id
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-
         d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list[0])
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert d_c_job_data.attacker_sequence[0].action_outcome == \
@@ -870,7 +902,7 @@ class TestResourcesDataCollectionSuite:
         assert d_c_job_data.defender_sequence[0].alt_cmds[0] == test_job.defender_sequence[0].alt_cmds[0]
         assert d_c_job_data.defender_sequence[0].cmds[0] == test_job.defender_sequence[0].cmds[0]
         assert d_c_job_data.defender_sequence[0].descr == test_job.defender_sequence[0].descr
-        # assert d_c_job_data.defender_sequence[0].execution_time == test_job.defender_sequence[0].execution_time
+        assert d_c_job_data.defender_sequence[0].execution_time == test_job.defender_sequence[0].execution_time
         assert d_c_job_data.defender_sequence[0].id == test_job.defender_sequence[0].id
         assert d_c_job_data.defender_sequence[0].index == test_job.defender_sequence[0].index
         assert d_c_job_data.defender_sequence[0].ips[0] == test_job.defender_sequence[0].ips[0]
@@ -914,12 +946,14 @@ class TestResourcesDataCollectionSuite:
         assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
             num_failed_login_attempts == \
             test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_failed_login_attempts
-        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_logged_in_users == \
-            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_logged_in_users
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
+            num_logged_in_users == test_job.traces[0].initial_defender_observation_state. \
+            aggregated_host_metrics.num_logged_in_users
         assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_login_events == \
             test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_login_events
-        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_open_connections == \
-            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_open_connections
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
+            num_open_connections == test_job.traces[0].initial_defender_observation_state. \
+            aggregated_host_metrics.num_open_connections
         assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_processes == \
             test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_processes
         assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_users == \
@@ -1100,7 +1134,7 @@ class TestResourcesDataCollectionSuite:
             kafka_config.container.ips_and_networks[0][1].subnet_mask
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
             ips_and_networks[0][1].subnet_prefix == test_job.traces[0].initial_defender_observation_state. \
-            kafka_config.container.ips_and_networks[0][1].subnet_prefix        
+            kafka_config.container.ips_and_networks[0][1].subnet_prefix
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
             level == test_job.traces[0].initial_defender_observation_state. \
             kafka_config.container.level
@@ -1126,7 +1160,7 @@ class TestResourcesDataCollectionSuite:
             docker_gw_bridge_ip == test_job.traces[0].initial_defender_observation_state.kafka_config. \
             firewall_config.docker_gw_bridge_ip
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
-            forward_accept ==test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            forward_accept == test_job.traces[0].initial_defender_observation_state.kafka_config. \
             firewall_config.forward_accept
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
             forward_drop == test_job.traces[0].initial_defender_observation_state.kafka_config. \
@@ -1278,7 +1312,7 @@ class TestResourcesDataCollectionSuite:
             resources.ips_and_network_configs[0][1].packet_delay_jitter_ms
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
             ips_and_network_configs[0][1].packet_delay_ms == test_job.traces[0].initial_defender_observation_state. \
-                kafka_config.resources.ips_and_network_configs[0][1].packet_delay_ms
+            kafka_config.resources.ips_and_network_configs[0][1].packet_delay_ms
         assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
             ips_and_network_configs[0][1].packet_duplicate_percentage == test_job.traces[0]. \
             initial_defender_observation_state.kafka_config. \
@@ -1417,6 +1451,16 @@ class TestResourcesDataCollectionSuite:
         assert d_c_job_data.running is False
         assert test_job.running is False
         assert d_c_job_data.running == test_job.running
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                               f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == \
+            test_job.emulation_env_name
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] is \
+            False
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.ID_PROPERTY] == \
+            test_job.id
 
     def test_d_c_jobs_delete(self, flask_app, mocker, list_jobs, logged_in,
                              not_logged_in, logged_in_as_admin, remove, stop) -> None:
@@ -1455,6 +1499,1299 @@ class TestResourcesDataCollectionSuite:
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in_as_admin)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE)
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}
+
+    def test_d_c_jobs_id_get(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
+                             get_job_config, pid_true, pid_false,) -> None:
+        """
+        Tests the HTTPS GET method for the /data-collection-jobs/id resource
+
+        :param flask_app: the flask app for making the test requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_job_config: the get_job_config fixture
+        :param pid_true: the pid_true fixture
+        :param pid_false: the pid_false fixture
+        :return: None
+        """
+        test_job = TestResourcesDataCollectionSuite.get_example_job()
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_data_collection_job_config",
+                     side_effect=get_job_config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
+                     side_effect=pid_true)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in,)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                               f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in,)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                               f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert d_c_job_data.attacker_sequence[0].action_outcome == \
+            test_job.attacker_sequence[0].action_outcome
+        assert d_c_job_data.attacker_sequence[0].alt_cmds[0] == test_job.attacker_sequence[0].alt_cmds[0]
+        assert d_c_job_data.attacker_sequence[0].backdoor == test_job.attacker_sequence[0].backdoor
+        assert d_c_job_data.attacker_sequence[0].cmds[0] == test_job.attacker_sequence[0].cmds[0]
+        assert d_c_job_data.attacker_sequence[0].descr == test_job.attacker_sequence[0].descr
+        assert d_c_job_data.attacker_sequence[0].execution_time == \
+            test_job.attacker_sequence[0].execution_time
+        assert d_c_job_data.attacker_sequence[0].id == test_job.attacker_sequence[0].id
+        assert d_c_job_data.attacker_sequence[0].index == test_job.attacker_sequence[0].index
+        assert d_c_job_data.attacker_sequence[0].ips[0] == test_job.attacker_sequence[0].ips[0]
+        assert d_c_job_data.attacker_sequence[0].name == test_job.attacker_sequence[0].name
+        assert d_c_job_data.attacker_sequence[0].ts == test_job.attacker_sequence[0].ts
+        assert d_c_job_data.attacker_sequence[0].type == test_job.attacker_sequence[0].type
+        assert d_c_job_data.attacker_sequence[0].vulnerability == test_job.attacker_sequence[0].vulnerability
+        assert d_c_job_data.defender_sequence[0].action_outcome == test_job.defender_sequence[0].action_outcome
+        assert d_c_job_data.defender_sequence[0].alt_cmds[0] == test_job.defender_sequence[0].alt_cmds[0]
+        assert d_c_job_data.defender_sequence[0].cmds[0] == test_job.defender_sequence[0].cmds[0]
+        assert d_c_job_data.defender_sequence[0].descr == test_job.defender_sequence[0].descr
+        assert d_c_job_data.defender_sequence[0].execution_time == test_job.defender_sequence[0].execution_time
+        assert d_c_job_data.defender_sequence[0].id == test_job.defender_sequence[0].id
+        assert d_c_job_data.defender_sequence[0].index == test_job.defender_sequence[0].index
+        assert d_c_job_data.defender_sequence[0].ips[0] == test_job.defender_sequence[0].ips[0]
+        assert d_c_job_data.defender_sequence[0].ts == test_job.defender_sequence[0].ts
+        assert d_c_job_data.defender_sequence[0].type == test_job.defender_sequence[0].type
+        assert d_c_job_data.defender_sequence[0].name == test_job.defender_sequence[0].name
+        assert d_c_job_data.running is True
+        assert test_job.running is False
+        assert d_c_job_data != test_job.running
+        assert d_c_job_data.descr == test_job.descr
+        assert d_c_job_data.emulation_env_name == test_job.emulation_env_name
+        assert d_c_job_data.emulation_statistic_id == test_job.emulation_statistic_id
+        assert d_c_job_data.id == test_job.id
+        assert d_c_job_data.log_file_path == test_job.log_file_path
+        assert d_c_job_data.num_cached_traces == test_job.num_cached_traces
+        assert d_c_job_data.num_collected_steps == test_job.num_collected_steps
+        assert d_c_job_data.num_sequences_completed == test_job.num_sequences_completed
+        assert d_c_job_data.physical_host_ip == test_job.physical_host_ip
+        assert d_c_job_data.pid == test_job.pid
+        assert d_c_job_data.progress_percentage == test_job.progress_percentage
+        assert d_c_job_data.repeat_times == test_job.repeat_times
+        assert d_c_job_data.save_emulation_traces_every == test_job.save_emulation_traces_every
+        assert d_c_job_data.traces[0].attacker_actions == test_job.traces[0].attacker_actions
+        assert d_c_job_data.traces[0].attacker_observation_states == test_job.traces[0].attacker_observation_states
+        assert d_c_job_data.traces[0].defender_actions == test_job.traces[0].defender_actions
+        assert d_c_job_data.traces[0].defender_observation_states == test_job.traces[0].defender_actions
+        assert d_c_job_data.traces[0].emulation_name == test_job.traces[0].emulation_name
+        assert d_c_job_data.traces[0].id == test_job.traces[0].id
+        assert d_c_job_data.traces[0].initial_attacker_observation_state.actions_tried == \
+            test_job.traces[0].initial_attacker_observation_state.actions_tried
+        assert d_c_job_data.traces[0].initial_attacker_observation_state.agent_reachable == \
+            test_job.traces[0].initial_attacker_observation_state.agent_reachable
+        assert d_c_job_data.traces[0].initial_attacker_observation_state.catched_flags == \
+            test_job.traces[0].initial_attacker_observation_state.catched_flags
+        assert d_c_job_data.traces[0].initial_attacker_observation_state.machines == \
+            test_job.traces[0].initial_attacker_observation_state.machines
+        assert d_c_job_data.traces[0].initial_defender_observation_state.actions_tried == \
+            test_job.traces[0].initial_defender_observation_state.actions_tried
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.ip == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
+            num_failed_login_attempts == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_failed_login_attempts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
+            num_logged_in_users == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_logged_in_users
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_login_events == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_login_events
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
+            num_open_connections == test_job.traces[0].initial_defender_observation_state. \
+            aggregated_host_metrics.num_open_connections
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_processes == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_processes
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_users == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_users
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.ts == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.ts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.attacker_actions == \
+            test_job.traces[0].initial_defender_observation_state.attacker_actions
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_client_population_metrics.ip == \
+            test_job.traces[0].initial_defender_observation_state.avg_client_population_metrics.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_client_population_metrics.num_clients == \
+            test_job.traces[0].initial_defender_observation_state.avg_client_population_metrics.num_clients
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_client_population_metrics.rate == \
+            test_job.traces[0].initial_defender_observation_state.avg_client_population_metrics.rate
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_client_population_metrics.service_time == \
+            test_job.traces[0].initial_defender_observation_state.avg_client_population_metrics.service_time
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_client_population_metrics.ts == \
+            test_job.traces[0].initial_defender_observation_state.avg_client_population_metrics.ts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.blk_read == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.blk_read
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.blk_write == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.blk_write
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.container_name == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.container_name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.cpu_percent == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.cpu_percent
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.mem_current == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.mem_current
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.mem_percent == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.mem_current
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.mem_total == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.mem_total
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.net_rx == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.net_rx
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.net_tx == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.net_tx
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.pids == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.pids
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.timestamp == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.timestamp
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.alerts_weighted_by_level == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.alerts_weighted_by_level
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.group_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.group_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.ip == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.level_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.level_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.severe_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.severe_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.total_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.total_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.warning_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.warning_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.alerts_weighted_by_priority == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.alerts_weighted_by_priority
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.class_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.class_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.ip == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.priority_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.priority_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.severe_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.severe_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.total_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.total_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.warning_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.warning_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_rule_counters.ip == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_rule_counters.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_rule_counters.rule_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_rule_counters.rule_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_rule_counters.ts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_rule_counters.ts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            client_population_metrics.ip == \
+            test_job.traces[0].initial_defender_observation_state. \
+            client_population_metrics.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            client_population_metrics.num_clients == \
+            test_job.traces[0].initial_defender_observation_state. \
+            client_population_metrics.num_clients
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            client_population_metrics.rate == \
+            test_job.traces[0].initial_defender_observation_state. \
+            client_population_metrics.rate
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            client_population_metrics.service_time == \
+            test_job.traces[0].initial_defender_observation_state. \
+            client_population_metrics.service_time
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            client_population_metrics.ts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            client_population_metrics.ts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.defender_actions == \
+            test_job.traces[0].initial_defender_observation_state.defender_actions
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.blk_read == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.blk_read
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.blk_write == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.blk_write
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.container_name == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.container_name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.container_name == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.container_name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.cpu_percent == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.cpu_percent
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.mem_current == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.mem_current
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.mem_percent == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.mem_percent
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.mem_total == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.mem_total
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.net_rx == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.net_rx
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.net_tx == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.net_tx
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.pids == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.pids
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.timestamp == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.timestamp
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            docker_gw_bridge_ip == test_job.traces[0].initial_defender_observation_state.\
+            kafka_config.container.docker_gw_bridge_ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            execution_ip_first_octet == test_job.traces[0].initial_defender_observation_state.\
+            kafka_config.container.execution_ip_first_octet
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            full_name_str == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.full_name_str
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            ips_and_networks[0][0] == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.ips_and_networks[0][0]
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            ips_and_networks[0][1].bitmask == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.ips_and_networks[0][1].bitmask
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            ips_and_networks[0][1].interface == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.ips_and_networks[0][1].interface
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            ips_and_networks[0][1].name == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.ips_and_networks[0][1].name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            ips_and_networks[0][1].subnet_mask == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.ips_and_networks[0][1].subnet_mask
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            ips_and_networks[0][1].subnet_prefix == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.ips_and_networks[0][1].subnet_prefix
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            level == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.level
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            name == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            os == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.os
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            physical_host_ip == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.physical_host_ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            restart_policy == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.restart_policy
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            suffix == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.suffix
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            version == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.version
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            docker_gw_bridge_ip == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.docker_gw_bridge_ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            forward_accept == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.forward_accept
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            forward_drop == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.forward_drop
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            input_accept == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.input_accept
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            input_drop == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.input_drop
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].default_forward == test_job.traces[0]. \
+            initial_defender_observation_state. \
+            kafka_config.firewall_config.ips_gw_default_policy_networks[0].default_forward
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].default_gw == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.firewall_config.ips_gw_default_policy_networks[0].default_gw
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].default_input == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.firewall_config.ips_gw_default_policy_networks[0].default_input
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].default_output == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.firewall_config.ips_gw_default_policy_networks[0].default_output
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].ip == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            firewall_config.ips_gw_default_policy_networks[0].ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].network.bitmask == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config.firewall_config. \
+            ips_gw_default_policy_networks[0].network.bitmask
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].network.interface == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            firewall_config.ips_gw_default_policy_networks[0].network.interface
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].network.name == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.firewall_config.ips_gw_default_policy_networks[0].network.name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].network.subnet_mask == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            firewall_config.ips_gw_default_policy_networks[0].network.subnet_mask
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].network.subnet_prefix == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            firewall_config.ips_gw_default_policy_networks[0].network.subnet_prefix
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            output_accept == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.output_accept
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            output_drop == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.output_drop
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            physical_host_ip == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.physical_host_ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            routes == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.routes
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.kafka_manager_log_dir == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            kafka_manager_log_dir
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.kafka_manager_log_file == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            kafka_manager_log_file
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.kafka_manager_max_workers == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            kafka_manager_max_workers
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.kafka_manager_port == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            kafka_manager_port
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.kafka_port == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            kafka_port
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.kafka_port_external == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            kafka_port_external
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            available_memory_gb == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            resources.available_memory_gb
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            container_name == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            resources.container_name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            docker_gw_bridge_ip == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            resources.docker_gw_bridge_ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][0] == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][0]
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].cell_overhead_bytes == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].cell_overhead_bytes
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].interface == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].interface
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].limit_packets_queue == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config.resources.ips_and_network_configs[0][1]. \
+            limit_packets_queue
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_gemodel_h == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].loss_gemodel_h
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_gemodel_k == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].loss_gemodel_k
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_gemodel_p == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].loss_gemodel_p
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_gemodel_r == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].loss_gemodel_r
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_state_markov_chain_p13 == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].loss_state_markov_chain_p13
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_state_markov_chain_p14 == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].loss_state_markov_chain_p14
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_state_markov_chain_p23 == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].loss_state_markov_chain_p23
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_state_markov_chain_p31 == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].loss_state_markov_chain_p31
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_state_markov_chain_p32 == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].loss_state_markov_chain_p32
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_corrupt_correlation_percentage == test_job.traces[0].\
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_corrupt_correlation_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_corrupt_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_corrupt_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_delay_correlation_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_delay_correlation_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_delay_distribution == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_delay_distribution
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_delay_jitter_ms == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_delay_jitter_ms
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_delay_ms == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].packet_delay_ms
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_duplicate_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_duplicate_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_duplicate_correlation_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_duplicate_correlation_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_duplicate_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_duplicate_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_loss_random_correlation_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_loss_random_correlation_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_loss_rate_random_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_loss_rate_random_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_loss_type == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].packet_loss_type
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_overhead_bytes == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_overhead_bytes
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_reorder_correlation_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_reorder_correlation_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_reorder_gap == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].packet_reorder_gap
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_reorder_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_reorder_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].rate_limit_mbit == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].rate_limit_mbit
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            num_cpus == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            resources.num_cpus
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            physical_host_ip == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            resources.physical_host_ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            time_step_len_seconds == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            time_step_len_seconds
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            time_step_len_seconds == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            time_step_len_seconds
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].attributes == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].attributes
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].name == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].num_partitions == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].num_partitions
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].num_replicas == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].num_replicas
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].retention_time_hours == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].retention_time_hours
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.version == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config.version
+        assert d_c_job_data.traces[0].initial_defender_observation_state.machines == \
+            test_job.traces[0].initial_defender_observation_state.machines
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            alerts_weighted_by_level == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.alerts_weighted_by_level
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            group_alerts == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.group_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            ip == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            level_alerts == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.level_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            severe_alerts == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.severe_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            total_alerts == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.total_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            ts == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.ts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            warning_alerts == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.warning_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            alerts_weighted_by_priority == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.alerts_weighted_by_priority
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            class_alerts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.class_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            ip == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            priority_alerts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.priority_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            severe_alerts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.severe_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            total_alerts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.total_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            ts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.ts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            warning_alerts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.warning_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_rule_counters. \
+            ip == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_rule_counters.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_rule_counters. \
+            rule_alerts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_rule_counters.rule_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_rule_counters. \
+            ts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_rule_counters.ts
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
+                     side_effect=pid_false)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                               f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert d_c_job_data.attacker_sequence[0].action_outcome == \
+            test_job.attacker_sequence[0].action_outcome
+        assert d_c_job_data.attacker_sequence[0].alt_cmds[0] == test_job.attacker_sequence[0].alt_cmds[0]
+        assert d_c_job_data.attacker_sequence[0].backdoor == test_job.attacker_sequence[0].backdoor
+        assert d_c_job_data.attacker_sequence[0].cmds[0] == test_job.attacker_sequence[0].cmds[0]
+        assert d_c_job_data.attacker_sequence[0].descr == test_job.attacker_sequence[0].descr
+        assert d_c_job_data.attacker_sequence[0].execution_time == \
+            test_job.attacker_sequence[0].execution_time
+        assert d_c_job_data.attacker_sequence[0].id == test_job.attacker_sequence[0].id
+        assert d_c_job_data.attacker_sequence[0].index == test_job.attacker_sequence[0].index
+        assert d_c_job_data.attacker_sequence[0].ips[0] == test_job.attacker_sequence[0].ips[0]
+        assert d_c_job_data.attacker_sequence[0].name == test_job.attacker_sequence[0].name
+        assert d_c_job_data.attacker_sequence[0].ts == test_job.attacker_sequence[0].ts
+        assert d_c_job_data.attacker_sequence[0].type == test_job.attacker_sequence[0].type
+        assert d_c_job_data.attacker_sequence[0].vulnerability == test_job.attacker_sequence[0].vulnerability
+        assert d_c_job_data.defender_sequence[0].action_outcome == test_job.defender_sequence[0].action_outcome
+        assert d_c_job_data.defender_sequence[0].alt_cmds[0] == test_job.defender_sequence[0].alt_cmds[0]
+        assert d_c_job_data.defender_sequence[0].cmds[0] == test_job.defender_sequence[0].cmds[0]
+        assert d_c_job_data.defender_sequence[0].descr == test_job.defender_sequence[0].descr
+        assert d_c_job_data.defender_sequence[0].execution_time == test_job.defender_sequence[0].execution_time
+        assert d_c_job_data.defender_sequence[0].id == test_job.defender_sequence[0].id
+        assert d_c_job_data.defender_sequence[0].index == test_job.defender_sequence[0].index
+        assert d_c_job_data.defender_sequence[0].ips[0] == test_job.defender_sequence[0].ips[0]
+        assert d_c_job_data.defender_sequence[0].ts == test_job.defender_sequence[0].ts
+        assert d_c_job_data.defender_sequence[0].type == test_job.defender_sequence[0].type
+        assert d_c_job_data.defender_sequence[0].name == test_job.defender_sequence[0].name
+        assert d_c_job_data.running is False
+        assert test_job.running is False
+        assert d_c_job_data != test_job.running
+        assert d_c_job_data.descr == test_job.descr
+        assert d_c_job_data.emulation_env_name == test_job.emulation_env_name
+        assert d_c_job_data.emulation_statistic_id == test_job.emulation_statistic_id
+        assert d_c_job_data.id == test_job.id
+        assert d_c_job_data.log_file_path == test_job.log_file_path
+        assert d_c_job_data.num_cached_traces == test_job.num_cached_traces
+        assert d_c_job_data.num_collected_steps == test_job.num_collected_steps
+        assert d_c_job_data.num_sequences_completed == test_job.num_sequences_completed
+        assert d_c_job_data.physical_host_ip == test_job.physical_host_ip
+        assert d_c_job_data.pid == test_job.pid
+        assert d_c_job_data.progress_percentage == test_job.progress_percentage
+        assert d_c_job_data.repeat_times == test_job.repeat_times
+        assert d_c_job_data.save_emulation_traces_every == test_job.save_emulation_traces_every
+        assert d_c_job_data.traces[0].attacker_actions == test_job.traces[0].attacker_actions
+        assert d_c_job_data.traces[0].attacker_observation_states == test_job.traces[0].attacker_observation_states
+        assert d_c_job_data.traces[0].defender_actions == test_job.traces[0].defender_actions
+        assert d_c_job_data.traces[0].defender_observation_states == test_job.traces[0].defender_actions
+        assert d_c_job_data.traces[0].emulation_name == test_job.traces[0].emulation_name
+        assert d_c_job_data.traces[0].id == test_job.traces[0].id
+        assert d_c_job_data.traces[0].initial_attacker_observation_state.actions_tried == \
+            test_job.traces[0].initial_attacker_observation_state.actions_tried
+        assert d_c_job_data.traces[0].initial_attacker_observation_state.agent_reachable == \
+            test_job.traces[0].initial_attacker_observation_state.agent_reachable
+        assert d_c_job_data.traces[0].initial_attacker_observation_state.catched_flags == \
+            test_job.traces[0].initial_attacker_observation_state.catched_flags
+        assert d_c_job_data.traces[0].initial_attacker_observation_state.machines == \
+            test_job.traces[0].initial_attacker_observation_state.machines
+        assert d_c_job_data.traces[0].initial_defender_observation_state.actions_tried == \
+            test_job.traces[0].initial_defender_observation_state.actions_tried
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.ip == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
+            num_failed_login_attempts == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_failed_login_attempts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
+            num_logged_in_users == test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
+            num_logged_in_users
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_login_events == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_login_events
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics. \
+            num_open_connections == test_job.traces[0].initial_defender_observation_state. \
+            aggregated_host_metrics.num_open_connections
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_processes == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_processes
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_users == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.num_users
+        assert d_c_job_data.traces[0].initial_defender_observation_state.aggregated_host_metrics.ts == \
+            test_job.traces[0].initial_defender_observation_state.aggregated_host_metrics.ts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.attacker_actions == \
+            test_job.traces[0].initial_defender_observation_state.attacker_actions
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_client_population_metrics.ip == \
+            test_job.traces[0].initial_defender_observation_state.avg_client_population_metrics.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_client_population_metrics.num_clients == \
+            test_job.traces[0].initial_defender_observation_state.avg_client_population_metrics.num_clients
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_client_population_metrics.rate == \
+            test_job.traces[0].initial_defender_observation_state.avg_client_population_metrics.rate
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_client_population_metrics.service_time == \
+            test_job.traces[0].initial_defender_observation_state.avg_client_population_metrics.service_time
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_client_population_metrics.ts == \
+            test_job.traces[0].initial_defender_observation_state.avg_client_population_metrics.ts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.blk_read == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.blk_read
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.blk_write == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.blk_write
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.container_name == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.container_name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.cpu_percent == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.cpu_percent
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.mem_current == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.mem_current
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.mem_percent == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.mem_current
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.mem_total == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.mem_total
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.net_rx == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.net_rx
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.net_tx == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.net_tx
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.pids == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.pids
+        assert d_c_job_data.traces[0].initial_defender_observation_state.avg_docker_stats.timestamp == \
+            test_job.traces[0].initial_defender_observation_state.avg_docker_stats.timestamp
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.alerts_weighted_by_level == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.alerts_weighted_by_level
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.group_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.group_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.ip == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.level_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.level_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.severe_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.severe_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.total_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.total_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.warning_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_ossec_ids_alert_counters.warning_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.alerts_weighted_by_priority == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.alerts_weighted_by_priority
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.class_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.class_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.ip == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.priority_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.priority_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.severe_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.severe_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.total_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.total_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.warning_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_alert_counters.warning_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_rule_counters.ip == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_rule_counters.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_rule_counters.rule_alerts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_rule_counters.rule_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_rule_counters.ts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            avg_snort_ids_rule_counters.ts
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            client_population_metrics.ip == \
+            test_job.traces[0].initial_defender_observation_state. \
+            client_population_metrics.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            client_population_metrics.num_clients == \
+            test_job.traces[0].initial_defender_observation_state. \
+            client_population_metrics.num_clients
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            client_population_metrics.rate == \
+            test_job.traces[0].initial_defender_observation_state. \
+            client_population_metrics.rate
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            client_population_metrics.service_time == \
+            test_job.traces[0].initial_defender_observation_state. \
+            client_population_metrics.service_time
+        assert d_c_job_data.traces[0].initial_defender_observation_state. \
+            client_population_metrics.ts == \
+            test_job.traces[0].initial_defender_observation_state. \
+            client_population_metrics.ts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.defender_actions == \
+            test_job.traces[0].initial_defender_observation_state.defender_actions
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.blk_read == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.blk_read
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.blk_write == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.blk_write
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.container_name == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.container_name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.container_name == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.container_name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.cpu_percent == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.cpu_percent
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.mem_current == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.mem_current
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.mem_percent == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.mem_percent
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.mem_total == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.mem_total
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.net_rx == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.net_rx
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.net_tx == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.net_tx
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.pids == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.pids
+        assert d_c_job_data.traces[0].initial_defender_observation_state.docker_stats.timestamp == \
+            test_job.traces[0].initial_defender_observation_state.docker_stats.timestamp
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            docker_gw_bridge_ip == test_job.traces[0].initial_defender_observation_state.\
+            kafka_config.container.docker_gw_bridge_ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            execution_ip_first_octet == test_job.traces[0].initial_defender_observation_state.\
+            kafka_config.container.execution_ip_first_octet
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            full_name_str == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.full_name_str
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            ips_and_networks[0][0] == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.ips_and_networks[0][0]
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            ips_and_networks[0][1].bitmask == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.ips_and_networks[0][1].bitmask
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            ips_and_networks[0][1].interface == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.ips_and_networks[0][1].interface
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            ips_and_networks[0][1].name == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.ips_and_networks[0][1].name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            ips_and_networks[0][1].subnet_mask == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.ips_and_networks[0][1].subnet_mask
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            ips_and_networks[0][1].subnet_prefix == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.ips_and_networks[0][1].subnet_prefix
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            level == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.level
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            name == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            os == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.os
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            physical_host_ip == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.physical_host_ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            restart_policy == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.restart_policy
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            suffix == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.suffix
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.container.\
+            version == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.container.version
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            docker_gw_bridge_ip == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.docker_gw_bridge_ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            forward_accept == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.forward_accept
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            forward_drop == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.forward_drop
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            input_accept == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.input_accept
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            input_drop == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.input_drop
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].default_forward == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config.firewall_config. \
+            ips_gw_default_policy_networks[0].default_forward
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].default_gw == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.firewall_config.ips_gw_default_policy_networks[0].default_gw
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].default_input == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.firewall_config.ips_gw_default_policy_networks[0].default_input
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].default_output == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.firewall_config.ips_gw_default_policy_networks[0].default_output
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].ip == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            firewall_config.ips_gw_default_policy_networks[0].ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].network.bitmask == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config.firewall_config. \
+            ips_gw_default_policy_networks[0].network.bitmask
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].network.interface == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            firewall_config.ips_gw_default_policy_networks[0].network.interface
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].network.name == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.firewall_config.ips_gw_default_policy_networks[0].network.name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].network.subnet_mask == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            firewall_config.ips_gw_default_policy_networks[0].network.subnet_mask
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            ips_gw_default_policy_networks[0].network.subnet_prefix == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            firewall_config.ips_gw_default_policy_networks[0].network.subnet_prefix
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            output_accept == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.output_accept
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            output_drop == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.output_drop
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            physical_host_ip == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.physical_host_ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.firewall_config.\
+            routes == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            firewall_config.routes
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.kafka_manager_log_dir == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            kafka_manager_log_dir
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.kafka_manager_log_file == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            kafka_manager_log_file
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.kafka_manager_max_workers == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            kafka_manager_max_workers
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.kafka_manager_port == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            kafka_manager_port
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.kafka_port == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            kafka_port
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.kafka_port_external == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            kafka_port_external
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            available_memory_gb == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            resources.available_memory_gb
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            container_name == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            resources.container_name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            docker_gw_bridge_ip == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            resources.docker_gw_bridge_ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][0] == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][0]
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].cell_overhead_bytes == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].cell_overhead_bytes
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].interface == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].interface
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].limit_packets_queue == test_job.traces[0]. \
+            initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].limit_packets_queue
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_gemodel_h == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].loss_gemodel_h
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_gemodel_k == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].loss_gemodel_k
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_gemodel_p == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].loss_gemodel_p
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_gemodel_r == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].loss_gemodel_r
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_state_markov_chain_p13 == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].loss_state_markov_chain_p13
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_state_markov_chain_p14 == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].loss_state_markov_chain_p14
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_state_markov_chain_p23 == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].loss_state_markov_chain_p23
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_state_markov_chain_p31 == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].loss_state_markov_chain_p31
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].loss_state_markov_chain_p32 == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].loss_state_markov_chain_p32
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_corrupt_correlation_percentage == test_job.traces[0].\
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_corrupt_correlation_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_corrupt_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_corrupt_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_delay_correlation_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_delay_correlation_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_delay_distribution == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_delay_distribution
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_delay_jitter_ms == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_delay_jitter_ms
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_delay_ms == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].packet_delay_ms
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_duplicate_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_duplicate_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_duplicate_correlation_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_duplicate_correlation_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_duplicate_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_duplicate_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_loss_random_correlation_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_loss_random_correlation_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_loss_rate_random_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_loss_rate_random_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_loss_type == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].packet_loss_type
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_overhead_bytes == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_overhead_bytes
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_reorder_correlation_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_reorder_correlation_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_reorder_gap == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].packet_reorder_gap
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].packet_reorder_percentage == test_job.traces[0]. \
+            initial_defender_observation_state.kafka_config. \
+            resources.ips_and_network_configs[0][1].packet_reorder_percentage
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            ips_and_network_configs[0][1].rate_limit_mbit == test_job.traces[0].initial_defender_observation_state. \
+            kafka_config.resources.ips_and_network_configs[0][1].rate_limit_mbit
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            num_cpus == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            resources.num_cpus
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.resources. \
+            physical_host_ip == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            resources.physical_host_ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            time_step_len_seconds == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            time_step_len_seconds
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            time_step_len_seconds == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            time_step_len_seconds
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].attributes == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].attributes
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].name == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].name
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].num_partitions == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].num_partitions
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].num_replicas == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].num_replicas
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].retention_time_hours == test_job.traces[0].initial_defender_observation_state.kafka_config. \
+            topics[0].retention_time_hours
+        assert d_c_job_data.traces[0].initial_defender_observation_state.kafka_config.version == \
+            test_job.traces[0].initial_defender_observation_state.kafka_config.version
+        assert d_c_job_data.traces[0].initial_defender_observation_state.machines == \
+            test_job.traces[0].initial_defender_observation_state.machines
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            alerts_weighted_by_level == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.alerts_weighted_by_level
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            group_alerts == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.group_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            ip == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            level_alerts == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.level_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            severe_alerts == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.severe_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            total_alerts == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.total_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            ts == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.ts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.ossec_ids_alert_counters. \
+            warning_alerts == test_job.traces[0].initial_defender_observation_state. \
+            ossec_ids_alert_counters.warning_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            alerts_weighted_by_priority == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.alerts_weighted_by_priority
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            class_alerts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.class_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            ip == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            priority_alerts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.priority_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            severe_alerts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.severe_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            total_alerts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.total_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            ts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.ts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_alert_counters. \
+            warning_alerts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_alert_counters.warning_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_rule_counters. \
+            ip == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_rule_counters.ip
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_rule_counters. \
+            rule_alerts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_rule_counters.rule_alerts
+        assert d_c_job_data.traces[0].initial_defender_observation_state.snort_ids_rule_counters. \
+            ts == test_job.traces[0].initial_defender_observation_state. \
+            snort_ids_rule_counters.ts
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin,)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
+                     side_effect=pid_true)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                               f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert d_c_job_data.running is True
+        assert test_job.running is False
+        assert d_c_job_data != test_job.running
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
+                     side_effect=pid_false)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                               f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list)
+        assert d_c_job_data.running is False
+        assert test_job.running is False
+        assert d_c_job_data.running == test_job.running
+
+    def test_d_c_jobs_id_delete(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in,
+                                get_job_config, remove, stop) -> None:
+        """
+        Tests the HTTPS DELETE method for the /data-collection-jobs/id resource
+
+        :param flask_app: the flask app for making the tests requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin:  the logged_in_as_admin fixure
+        :param get_job_config: the get_job_config fixture
+        :param remove: the remove fixture
+        :param stop: the stop fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_data_collection_job_config",
+                     side_effect=get_job_config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller."
+                     "ClusterController.stop_pid",
+                     side_effect=stop)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "remove_data_collection_job",
+                     side_effect=remove)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                                  f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                                  f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}
+
+    def test_d_c_jobs_id_post(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in,
+                              get_job_config, start, stop) -> None:
+        """
+        Tests the HTTPS DELETE method for the /data-collection-jobs/id resource
+
+        :param flask_app: the flask app for making the tests requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin:  the logged_in_as_admin fixure
+        :param get_job_config: the get_job_config fixture
+        :param remove: the remove fixture
+        :param stop: the stop fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "get_data_collection_job_config",
+                     side_effect=get_job_config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller."
+                     "ClusterController.stop_pid",
+                     side_effect=stop)
+        mocker.patch("csle_system_identification.job_controllers.data_collection_job_manager.DataCollectionJobManager."
+                     "start_data_collection_job_in_background",
+                     side_effect=start)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                                  f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"
+                                                  f"/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"f"/10"
+                                                f"?{api_constants.MGMT_WEBAPP.STOP_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE}"f"/10"
+                                                f"?{api_constants.MGMT_WEBAPP.STOP_QUERY_PARAM}=false")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
