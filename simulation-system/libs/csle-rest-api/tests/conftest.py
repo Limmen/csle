@@ -53,7 +53,7 @@ def stop(mocker) -> None:
     :return: a mock object with the mocked function
 
     """
-    def stop_pid(ip: str, port: int, pid: int):
+    def stop_pid(ip: str, port: int, pid: int) -> None:
         return None
     stop_pid_mocker = mocker.MagicMock(side_effect=stop_pid)
     return stop_pid_mocker
