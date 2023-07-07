@@ -47,7 +47,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, pi2: Union[List[List[float]], int, float, np.int64, np.float]) \
+    def step(self, pi2: Union[List[List[float]], int, float, np.int64, float, np.float64]) \
             -> Tuple[np.ndarray, int, bool, bool, dict]:
         """
         Takes a step in the environment by executing the given action
@@ -55,7 +55,8 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         :param pi2: attacker stage policy
         :return: (obs, reward, terminated, truncated, info)
         """
-        if type(pi2) is int or type(pi2) is float or type(pi2) is np.int64 or type(pi2) is np.float:
+        if type(pi2) is int or type(pi2) is float or type(pi2) is np.int64 or type(pi2) is float \
+                or type(pi2) is np.float64:
             a2 = pi2
             pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs, a2=a2)
         else:

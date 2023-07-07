@@ -49,7 +49,7 @@ class ReinforceAgent(BaseAgent):
         self.env = env
         self.training_job = training_job
         self.save_to_metastore = save_to_metastore
-        self.machine_eps = np.finfo(np.float32).eps.item()
+        self.machine_eps = np.finfo(np.float64).eps.item()
 
     def train(self) -> ExperimentExecution:
         """

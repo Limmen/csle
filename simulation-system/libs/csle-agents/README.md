@@ -13,6 +13,7 @@ and game-theoretic algorithms for finding defender policies.
 - `csle-common`
 - `csle-collector`
 - `csle-attacker`
+- `csle-cluster`
 - `csle-defender`
 - `csle-system-identification`
 - `gym-csle-stopping-game`

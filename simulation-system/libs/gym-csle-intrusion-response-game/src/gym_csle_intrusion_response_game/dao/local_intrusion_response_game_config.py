@@ -71,7 +71,7 @@ class LocalIntrusionResponseGameConfig(JSONSerializable):
         """
         return gym.spaces.Box(low=np.array([0] * (len(self.S_D) + 1)),
                               high=np.array([len(self.S_A)] + [1] * len(self.S_D)),
-                              dtype=np.float32, shape=(len(self.S_D) + 1,))
+                              dtype=np.float64, shape=(len(self.S_D) + 1,))
 
     def defender_observation_space(self) -> gym.spaces.Box:
         """
@@ -79,7 +79,7 @@ class LocalIntrusionResponseGameConfig(JSONSerializable):
         """
         return gym.spaces.Box(low=np.array(([0] * (len(self.S_A) + 1))),
                               high=np.array([len(self.zones)] + [1] * len(self.S_A)),
-                              dtype=np.float32, shape=(len(self.S_A) + 1,))
+                              dtype=np.float64, shape=(len(self.S_A) + 1,))
 
     def defender_observation_space_stopping(self) -> gym.spaces.Box:
         """
@@ -87,7 +87,7 @@ class LocalIntrusionResponseGameConfig(JSONSerializable):
         """
         return gym.spaces.Box(low=np.array(([0] * (len(self.S_A)))),
                               high=np.array([1] * len(self.S_A)),
-                              dtype=np.float32, shape=(len(self.S_A),))
+                              dtype=np.float64, shape=(len(self.S_A),))
 
     def attacker_action_space(self) -> gym.spaces.Discrete:
         """

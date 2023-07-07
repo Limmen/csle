@@ -51,7 +51,7 @@ class WorkflowIntrusionResponseGameConfig(JSONSerializable):
         """
         return gym.spaces.Box(low=np.array([0] * ((len(self.zones) + 1) * len(self.nodes))),
                               high=np.array([len(self.zones)] * ((1 + len(self.zones)) * len(self.nodes))),
-                              dtype=np.float32, shape=((1 + len(self.zones)) * len(self.nodes),))
+                              dtype=np.float64, shape=((1 + len(self.zones)) * len(self.nodes),))
 
     def defender_observation_space(self) -> gym.spaces.Box:
         """
@@ -59,7 +59,7 @@ class WorkflowIntrusionResponseGameConfig(JSONSerializable):
         """
         return gym.spaces.Box(low=np.array([0] * ((4) * len(self.nodes))),
                               high=np.array([len(self.zones)] * (4 * len(self.nodes))),
-                              dtype=np.float32, shape=(4 * len(self.nodes),))
+                              dtype=np.float64, shape=(4 * len(self.nodes),))
 
     def attacker_action_space(self) -> gym.spaces.MultiDiscrete:
         """

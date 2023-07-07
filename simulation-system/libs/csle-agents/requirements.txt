@@ -1,6 +1,7 @@
 csle-base==0.2.15
 csle-common==0.2.15
 csle-collector==0.2.15
+csle-cluster==0.2.15
 csle-attacker==0.2.15
 csle-defender==0.2.15
 csle-system-identification==0.2.15
