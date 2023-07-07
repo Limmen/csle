@@ -12,7 +12,6 @@ from gym_csle_stopping_game.dao.stopping_game_config import StoppingGameConfig
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_common.dao.training.random_policy import RandomPolicy
-from csle_common.metastore.metastore_facade import MetastoreFacade
 
 
 def reduce_T(T, intrusion_start_prob: float = 0.1, intrusion_stop_prob: float = 0.05):
@@ -57,13 +56,16 @@ class TestHSVISuite(object):
     pytest.logger = logging.getLogger("hsvi_tests")
 
     @pytest.fixture
-    def experiment_config(self) -> ExperimentConfig:
+    def experiment_config(self, example_simulation_config) -> ExperimentConfig:
         """
         Fixture, which is run before every test. It sets up an example experiment config
 
+        :param example_simulation_config: the example_simulation_config fixture
         :return: the example experiment config
         """
-        simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
+        simulation_env_config = example_simulation_config
+
+        # simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
         simulation_env_config.simulation_env_input_config.attacker_strategy = RandomPolicy(
             actions=simulation_env_config.joint_action_space_config.action_spaces[1].actions,
             player_type=PlayerType.ATTACKER, stage_policy_tensor=[
@@ -216,7 +218,6 @@ class TestHSVISuite(object):
         :param mocker: object for mocking API calls
         :param experiment_config: the example experiment config
         :param pomdp_config: the example POMDP config
-
         :return: None
         """
         # Mock emulation and simulation configs
