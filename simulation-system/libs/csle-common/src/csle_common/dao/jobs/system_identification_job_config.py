@@ -1,6 +1,5 @@
 from typing import Dict, Any
 from csle_common.dao.system_identification.system_model import SystemModel
-from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
 from csle_base.json_serializable import JSONSerializable
 
@@ -69,7 +68,7 @@ class SystemIdentificationJobConfig(JSONSerializable):
         :return: the created instance
         """
         system_model = None
-        system_model = GaussianMixtureSystemModel.from_dict(d["system_model"])
+        system_model = SystemModel.from_dict(d["system_model"])
         obj = SystemIdentificationJobConfig(
             emulation_env_name=d["emulation_env_name"], pid=d["pid"],
             progress_percentage=d["progress_percentage"], emulation_statistics_id=d["emulation_statistics_id"],
