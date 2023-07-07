@@ -15,7 +15,7 @@ class EmulationDefenderAction(JSONSerializable):
                  type: EmulationDefenderActionType, descr: str,
                  ips: List[str], index: int,
                  action_outcome: EmulationDefenderActionOutcome = EmulationDefenderActionOutcome.GAME_END,
-                 alt_cmds: List[str] = None, execution_time: float = 0.0, ts: float = None):
+                 alt_cmds: List[str] = None, execution_time: float = 0.0, ts: float = 0.0):
         """
         Class constructor
 
