@@ -152,6 +152,10 @@ class TestTFPSuite(object):
             return_value=True
         )
         mocker.patch(
+            'csle_common.metastore.metastore_facade.MetastoreFacade.remove_training_job',
+            return_value=True
+        )
+        mocker.patch(
             'csle_common.metastore.metastore_facade.MetastoreFacade.update_experiment_execution',
             return_value=True
         )
