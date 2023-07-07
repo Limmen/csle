@@ -67,7 +67,7 @@ class EmulationDefenderAction(JSONSerializable):
             id=d["id"], name=d["name"], cmds=d["cmds"], type=d["type"], descr=d["descr"],
             ips=d["ips"],
             index=d["index"], action_outcome=d["action_outcome"], alt_cmds=d["alt_cmds"],
-            ts=d["ts"])
+            ts=d["ts"], execution_time=d["execution_time"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
