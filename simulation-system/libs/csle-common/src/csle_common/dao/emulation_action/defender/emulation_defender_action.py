@@ -34,11 +34,17 @@ class EmulationDefenderAction(JSONSerializable):
         self.id = id
         self.name = name
         self.cmds = cmds
+        if self.cmds is None:
+            self.cmds = []
         self.type = type
         self.descr = descr
         self.ips = ips
+        if self.ips is None:
+            self.ips = []
         self.action_outcome = action_outcome
         self.alt_cmds = alt_cmds
+        if self.alt_cmds is None:
+            self.alt_cmds = []
         self.index = index
         self.ts = ts
         self.execution_time = execution_time

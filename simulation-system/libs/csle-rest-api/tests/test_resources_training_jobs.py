@@ -856,13 +856,13 @@ class TestResourcesTrainingjobsSuite:
                                                 f"?{api_constants.MGMT_WEBAPP.STOP_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10"
                                                 f"?{api_constants.MGMT_WEBAPP.STOP_QUERY_PARAM}=false")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in_as_admin)

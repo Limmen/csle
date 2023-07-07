@@ -16,7 +16,7 @@ class EmulationAttackerAction(JSONSerializable):
                  type: EmulationAttackerActionType, descr: str, ips: List[str], index: int,
                  action_outcome: EmulationAttackerActionOutcome = EmulationAttackerActionOutcome.INFORMATION_GATHERING,
                  vulnerability: str = None, alt_cmds: List[str] = None, backdoor: bool = False,
-                 execution_time: float = 0, ts: float = None):
+                 execution_time: float = 0.0, ts: float = None):
         """
         Class constructor
 
