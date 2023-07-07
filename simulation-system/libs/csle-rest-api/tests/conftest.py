@@ -1,7 +1,10 @@
 
 import csle_common.constants.constants as constants
 import pytest
-from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
+from csle_cluster.cluster_manager.cluster_manager_pb2 import (
+    NodeStatusDTO,
+    OperationOutcomeDTO,
+)
 from csle_common.dao.emulation_config.cluster_config import ClusterConfig
 from csle_common.dao.emulation_config.cluster_node import ClusterNode
 from csle_common.dao.emulation_config.config import Config
@@ -9,6 +12,51 @@ from csle_common.dao.management.management_user import ManagementUser
 from flask import jsonify
 
 import csle_rest_api.constants.constants as api_constants
+
+
+@pytest.fixture
+def pid_false(mocker):
+    """
+    Pytest fixture for mocking the check_pid function
+    :param mocker: The pytest mocker object
+    :return: A mocker object with the mocked function
+    """
+    def check_pid(ip: str, port: int, pid: int) -> OperationOutcomeDTO:
+        op_outcome = OperationOutcomeDTO(outcome=False)
+        return op_outcome
+    check_pid_mocker = mocker.MagicMock(side_effect=check_pid)
+
+    return check_pid_mocker
+
+
+@pytest.fixture
+def pid_true(mocker):
+    """
+    Pytest fixture for mocking the check_pid function
+    :param mocker: The pytest mocker object
+    :return: a mocker object with the mocked function
+    """
+    def check_pid(ip: str, port: int, pid: int) -> OperationOutcomeDTO:
+        op_outcome = OperationOutcomeDTO(outcome=True)
+        return op_outcome
+    check_pid_mocker = mocker.MagicMock(side_effect=check_pid)
+
+    return check_pid_mocker
+
+
+@pytest.fixture
+def stop(mocker) -> None:
+    """
+    Pytest fixture mocking the stop_pid functio
+
+    :param mocker: the pytest mocker object
+    :return: a mock object with the mocked function
+
+    """
+    def stop_pid(ip: str, port: int, pid: int) -> None:
+        return None
+    stop_pid_mocker = mocker.MagicMock(side_effect=stop_pid)
+    return stop_pid_mocker
 
 
 @pytest.fixture

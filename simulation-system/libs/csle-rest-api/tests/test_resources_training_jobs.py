@@ -4,7 +4,6 @@ from typing import List
 
 import csle_common.constants.constants as constants
 import pytest
-from csle_cluster.cluster_manager.cluster_manager_pb2 import OperationOutcomeDTO
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.training.agent_type import AgentType
@@ -32,34 +31,6 @@ class TestResourcesTrainingjobsSuite:
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def pid_true(self, mocker):
-        """
-        Pytest fixture for mocking the check_pid function
-        :param mocker: The pytest mocker object
-        :return: A mocker object with the mocked function
-        """
-        def check_pid(ip: str, port: int, pid: int) -> OperationOutcomeDTO:
-            op_outcome = OperationOutcomeDTO(outcome=True)
-            return op_outcome
-        check_pid_mocker = mocker.MagicMock(side_effect=check_pid)
-
-        return check_pid_mocker
-
-    @pytest.fixture
-    def pid_false(self, mocker):
-        """
-        Pytest fixture for mocking the check_pid function
-        :param mocker: The pytest mocker object
-        :return: A mocker object with the mocked function
-        """
-        def check_pid(ip: str, port: int, pid: int) -> OperationOutcomeDTO:
-            op_outcome = OperationOutcomeDTO(outcome=False)
-            return op_outcome
-        check_pid_mocker = mocker.MagicMock(side_effect=check_pid)
-
-        return check_pid_mocker
-
-    @pytest.fixture
     def list_jobs(self, mocker):
         """
         Pytest fixture for mocking the list_training_jobs function
@@ -85,20 +56,6 @@ class TestResourcesTrainingjobsSuite:
             return None
         remove_training_job_mocker = mocker.MagicMock(side_effect=remove_training_job)
         return remove_training_job_mocker
-
-    @pytest.fixture
-    def stop(self, mocker):
-        """
-        Pytest fixture mocking the stop_pid function
-
-        :param mocker: the pytest mocker object
-        :return: a mock object with the mocked function
-
-        """
-        def stop_pid(ip: str, port: int, pid: int) -> None:
-            return None
-        stop_pid_mocker = mocker.MagicMock(side_effect=stop_pid)
-        return stop_pid_mocker
 
     @pytest.fixture
     def start(self, mocker):
@@ -140,9 +97,8 @@ class TestResourcesTrainingjobsSuite:
                                           hparams={'element': HParam(10, name="John", descr="Doe")},
                                           log_every=10, player_type=PlayerType(1),
                                           player_idx=10, br_log_every=10)
-
-        obj = TrainingJobConfig(simulation_env_name="JohnDoeSimulation",
-                                experiment_config=e_config_class, progress_percentage=20.5,
+        obj = TrainingJobConfig(simulation_env_name="JohnDoeSimulation", experiment_config=e_config_class,
+                                progress_percentage=20.5,
                                 pid=5, experiment_result=ExperimentResult(),
                                 emulation_env_name="JDoe_env",
                                 simulation_traces=[SimulationTrace(simulation_env="JDoe_env")],
@@ -166,6 +122,7 @@ class TestResourcesTrainingjobsSuite:
         :return: None
         """
         test_job = TestResourcesTrainingjobsSuite.get_example_job()
+        test_job_dict = test_job.to_dict()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_training_jobs",
                      side_effect=list_jobs)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
@@ -183,59 +140,16 @@ class TestResourcesTrainingjobsSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         tjob_data = TrainingJobConfig.from_dict(response_data_list[0])
+        tjob_data_dict = tjob_data.to_dict()
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.emulation_env_name == test_job.emulation_env_name
-        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
-        assert tjob_data.experiment_config.title == test_job.experiment_config.title
-        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
-        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
-        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
-        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
-        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
-        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
-        assert tjob_data.progress_percentage == test_job.progress_percentage
-        assert tjob_data.pid == test_job.pid
-        assert tjob_data.id == test_job.id
-        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
-        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
-        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
-        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        for k in tjob_data_dict:
+            if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
+                assert tjob_data_dict[k] == test_job_dict[k]
+            else:
+                continue
         assert tjob_data.running is True
         assert test_job.running is False
         assert tjob_data.running != test_job.running
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.simulation_traces[0].attacker_actions == \
-            test_job.simulation_traces[0].attacker_actions
-        assert tjob_data.simulation_traces[0].attacker_observations == \
-            test_job.simulation_traces[0].attacker_observations
-        assert tjob_data.simulation_traces[0].attacker_rewards == \
-            test_job.simulation_traces[0].attacker_rewards
-        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
-        assert tjob_data.simulation_traces[0].defender_actions == \
-            test_job.simulation_traces[0].defender_actions
-        assert tjob_data.simulation_traces[0].defender_observations == \
-            test_job.simulation_traces[0].defender_observations
-        assert tjob_data.simulation_traces[0].defender_rewards == \
-            test_job.simulation_traces[0].defender_rewards
-        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
-        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
-        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
-        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
-            test_job.simulation_traces[0].infrastructure_metrics
-        assert tjob_data.simulation_traces[0].simulation_env == \
-            test_job.simulation_traces[0].simulation_env
-        assert tjob_data.num_cached_traces == test_job.num_cached_traces
-        assert tjob_data.log_file_path == test_job.log_file_path
-        assert tjob_data.descr == test_job.descr
-        assert tjob_data.physical_host_ip == test_job.physical_host_ip
-        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -253,60 +167,16 @@ class TestResourcesTrainingjobsSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         tjob_data = TrainingJobConfig.from_dict(response_data_list[0])
+        tjob_data_dict = tjob_data.to_dict()
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.emulation_env_name == test_job.emulation_env_name
-        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
-        assert tjob_data.experiment_config.title == test_job.experiment_config.title
-        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
-        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
-        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
-        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
-        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
-        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
-        assert tjob_data.progress_percentage == test_job.progress_percentage
-        assert tjob_data.pid == test_job.pid
-        assert tjob_data.id == test_job.id
-        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
-        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
-        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
-        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        for k in tjob_data_dict:
+            if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
+                assert tjob_data_dict[k] == test_job_dict[k]
+            else:
+                continue
         assert tjob_data.running is False
         assert test_job.running is False
         assert tjob_data.running == test_job.running
-        assert tjob_data.running == test_job.running
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.simulation_traces[0].attacker_actions == \
-            test_job.simulation_traces[0].attacker_actions
-        assert tjob_data.simulation_traces[0].attacker_observations == \
-            test_job.simulation_traces[0].attacker_observations
-        assert tjob_data.simulation_traces[0].attacker_rewards == \
-            test_job.simulation_traces[0].attacker_rewards
-        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
-        assert tjob_data.simulation_traces[0].defender_actions == \
-            test_job.simulation_traces[0].defender_actions
-        assert tjob_data.simulation_traces[0].defender_observations == \
-            test_job.simulation_traces[0].defender_observations
-        assert tjob_data.simulation_traces[0].defender_rewards == \
-            test_job.simulation_traces[0].defender_rewards
-        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
-        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
-        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
-        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
-            test_job.simulation_traces[0].infrastructure_metrics
-        assert tjob_data.simulation_traces[0].simulation_env == \
-            test_job.simulation_traces[0].simulation_env
-        assert tjob_data.num_cached_traces == test_job.num_cached_traces
-        assert tjob_data.log_file_path == test_job.log_file_path
-        assert tjob_data.descr == test_job.descr
-        assert tjob_data.physical_host_ip == test_job.physical_host_ip
-        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -327,59 +197,16 @@ class TestResourcesTrainingjobsSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         tjob_data = TrainingJobConfig.from_dict(response_data_list[0])
+        tjob_data_dict = tjob_data.to_dict()
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.emulation_env_name == test_job.emulation_env_name
-        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
-        assert tjob_data.experiment_config.title == test_job.experiment_config.title
-        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
-        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
-        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
-        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
-        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
-        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
-        assert tjob_data.progress_percentage == test_job.progress_percentage
-        assert tjob_data.pid == test_job.pid
-        assert tjob_data.id == test_job.id
-        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
-        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
-        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
-        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        for k in tjob_data_dict:
+            if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
+                assert tjob_data_dict[k] == test_job_dict[k]
+            else:
+                continue
         assert tjob_data.running is True
         assert test_job.running is False
         assert tjob_data.running != test_job.running
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.simulation_traces[0].attacker_actions == \
-            test_job.simulation_traces[0].attacker_actions
-        assert tjob_data.simulation_traces[0].attacker_observations == \
-            test_job.simulation_traces[0].attacker_observations
-        assert tjob_data.simulation_traces[0].attacker_rewards == \
-            test_job.simulation_traces[0].attacker_rewards
-        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
-        assert tjob_data.simulation_traces[0].defender_actions == \
-            test_job.simulation_traces[0].defender_actions
-        assert tjob_data.simulation_traces[0].defender_observations == \
-            test_job.simulation_traces[0].defender_observations
-        assert tjob_data.simulation_traces[0].defender_rewards == \
-            test_job.simulation_traces[0].defender_rewards
-        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
-        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
-        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
-        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
-            test_job.simulation_traces[0].infrastructure_metrics
-        assert tjob_data.simulation_traces[0].simulation_env == \
-            test_job.simulation_traces[0].simulation_env
-        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
-        assert tjob_data.num_cached_traces == test_job.num_cached_traces
-        assert tjob_data.log_file_path == test_job.log_file_path
-        assert tjob_data.descr == test_job.descr
-        assert tjob_data.physical_host_ip == test_job.physical_host_ip
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -399,59 +226,16 @@ class TestResourcesTrainingjobsSuite:
         response_data_list = json.loads(response_data)
         tjob_data = TrainingJobConfig.from_dict(response_data_list[0])
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.emulation_env_name == test_job.emulation_env_name
-        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
-        assert tjob_data.experiment_config.title == test_job.experiment_config.title
-        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
-        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
-        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
-        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
-        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
-        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
-        assert tjob_data.progress_percentage == test_job.progress_percentage
-        assert tjob_data.pid == test_job.pid
-        assert tjob_data.id == test_job.id
-        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
-        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
-        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
-        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        tjob_data_dict = tjob_data.to_dict()
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        for k in tjob_data_dict:
+            if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
+                assert tjob_data_dict[k] == test_job_dict[k]
+            else:
+                continue
         assert tjob_data.running is False
         assert test_job.running is False
         assert tjob_data.running == test_job.running
-        assert tjob_data.running == test_job.running
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.simulation_traces[0].attacker_actions == \
-            test_job.simulation_traces[0].attacker_actions
-        assert tjob_data.simulation_traces[0].attacker_observations == \
-            test_job.simulation_traces[0].attacker_observations
-        assert tjob_data.simulation_traces[0].attacker_rewards == \
-            test_job.simulation_traces[0].attacker_rewards
-        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
-        assert tjob_data.simulation_traces[0].defender_actions == \
-            test_job.simulation_traces[0].defender_actions
-        assert tjob_data.simulation_traces[0].defender_observations == \
-            test_job.simulation_traces[0].defender_observations
-        assert tjob_data.simulation_traces[0].defender_rewards == \
-            test_job.simulation_traces[0].defender_rewards
-        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
-        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
-        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
-        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
-            test_job.simulation_traces[0].infrastructure_metrics
-        assert tjob_data.simulation_traces[0].simulation_env == \
-            test_job.simulation_traces[0].simulation_env
-        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
-        assert tjob_data.num_cached_traces == test_job.num_cached_traces
-        assert tjob_data.log_file_path == test_job.log_file_path
-        assert tjob_data.descr == test_job.descr
-        assert tjob_data.physical_host_ip == test_job.physical_host_ip
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -524,6 +308,7 @@ class TestResourcesTrainingjobsSuite:
         :return: None
         """
         test_job = TestResourcesTrainingjobsSuite.get_example_job()
+        test_job_dict = test_job.to_dict()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_training_job_config",
                      side_effect=get_job_config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
@@ -542,119 +327,32 @@ class TestResourcesTrainingjobsSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         tjob_data = TrainingJobConfig.from_dict(response_data_list)
+        tjob_data_dict = tjob_data.to_dict()
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.emulation_env_name == test_job.emulation_env_name
-        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
-        assert tjob_data.experiment_config.title == test_job.experiment_config.title
-        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
-        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
-        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
-        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
-        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
-        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
-        assert tjob_data.progress_percentage == test_job.progress_percentage
-        assert tjob_data.pid == test_job.pid
-        assert tjob_data.id == test_job.id
-        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
-        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
-        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
-        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        for k in tjob_data_dict:
+            if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
+                assert tjob_data_dict[k] == test_job_dict[k]
+            else:
+                continue
         assert tjob_data.running is True
         assert test_job.running is False
         assert tjob_data.running != test_job.running
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.simulation_traces[0].attacker_actions == \
-            test_job.simulation_traces[0].attacker_actions
-        assert tjob_data.simulation_traces[0].attacker_observations == \
-            test_job.simulation_traces[0].attacker_observations
-        assert tjob_data.simulation_traces[0].attacker_rewards == \
-            test_job.simulation_traces[0].attacker_rewards
-        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
-        assert tjob_data.simulation_traces[0].defender_actions == \
-            test_job.simulation_traces[0].defender_actions
-        assert tjob_data.simulation_traces[0].defender_observations == \
-            test_job.simulation_traces[0].defender_observations
-        assert tjob_data.simulation_traces[0].defender_rewards == \
-            test_job.simulation_traces[0].defender_rewards
-        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
-        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
-        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
-        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
-            test_job.simulation_traces[0].infrastructure_metrics
-        assert tjob_data.simulation_traces[0].simulation_env == \
-            test_job.simulation_traces[0].simulation_env
-        assert tjob_data.num_cached_traces == test_job.num_cached_traces
-        assert tjob_data.log_file_path == test_job.log_file_path
-        assert tjob_data.descr == test_job.descr
-        assert tjob_data.physical_host_ip == test_job.physical_host_ip
-        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
                      side_effect=pid_false)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         tjob_data = TrainingJobConfig.from_dict(response_data_list)
+        tjob_data_dict = tjob_data.to_dict()
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.emulation_env_name == test_job.emulation_env_name
-        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
-        assert tjob_data.experiment_config.title == test_job.experiment_config.title
-        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
-        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
-        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
-        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
-        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
-        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
-        assert tjob_data.progress_percentage == test_job.progress_percentage
-        assert tjob_data.pid == test_job.pid
-        assert tjob_data.id == test_job.id
-        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
-        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
-        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
-        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        for k in tjob_data_dict:
+            if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
+                assert tjob_data_dict[k] == test_job_dict[k]
+            else:
+                continue
         assert tjob_data.running is False
         assert test_job.running is False
         assert tjob_data.running == test_job.running
-        assert tjob_data.running == test_job.running
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.simulation_traces[0].attacker_actions == \
-            test_job.simulation_traces[0].attacker_actions
-        assert tjob_data.simulation_traces[0].attacker_observations == \
-            test_job.simulation_traces[0].attacker_observations
-        assert tjob_data.simulation_traces[0].attacker_rewards == \
-            test_job.simulation_traces[0].attacker_rewards
-        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
-        assert tjob_data.simulation_traces[0].defender_actions == \
-            test_job.simulation_traces[0].defender_actions
-        assert tjob_data.simulation_traces[0].defender_observations == \
-            test_job.simulation_traces[0].defender_observations
-        assert tjob_data.simulation_traces[0].defender_rewards == \
-            test_job.simulation_traces[0].defender_rewards
-        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
-        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
-        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
-        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
-            test_job.simulation_traces[0].infrastructure_metrics
-        assert tjob_data.simulation_traces[0].simulation_env == \
-            test_job.simulation_traces[0].simulation_env
-        assert tjob_data.num_cached_traces == test_job.num_cached_traces
-        assert tjob_data.log_file_path == test_job.log_file_path
-        assert tjob_data.descr == test_job.descr
-        assert tjob_data.physical_host_ip == test_job.physical_host_ip
-        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in_as_admin)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
@@ -663,119 +361,32 @@ class TestResourcesTrainingjobsSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         tjob_data = TrainingJobConfig.from_dict(response_data_list)
+        tjob_data_dict = tjob_data.to_dict()
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.emulation_env_name == test_job.emulation_env_name
-        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
-        assert tjob_data.experiment_config.title == test_job.experiment_config.title
-        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
-        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
-        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
-        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
-        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
-        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
-        assert tjob_data.progress_percentage == test_job.progress_percentage
-        assert tjob_data.pid == test_job.pid
-        assert tjob_data.id == test_job.id
-        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
-        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
-        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
-        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        for k in tjob_data_dict:
+            if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
+                assert tjob_data_dict[k] == test_job_dict[k]
+            else:
+                continue
         assert tjob_data.running is True
         assert test_job.running is False
         assert tjob_data.running != test_job.running
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.simulation_traces[0].attacker_actions == \
-            test_job.simulation_traces[0].attacker_actions
-        assert tjob_data.simulation_traces[0].attacker_observations == \
-            test_job.simulation_traces[0].attacker_observations
-        assert tjob_data.simulation_traces[0].attacker_rewards == \
-            test_job.simulation_traces[0].attacker_rewards
-        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
-        assert tjob_data.simulation_traces[0].defender_actions == \
-            test_job.simulation_traces[0].defender_actions
-        assert tjob_data.simulation_traces[0].defender_observations == \
-            test_job.simulation_traces[0].defender_observations
-        assert tjob_data.simulation_traces[0].defender_rewards == \
-            test_job.simulation_traces[0].defender_rewards
-        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
-        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
-        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
-        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
-            test_job.simulation_traces[0].infrastructure_metrics
-        assert tjob_data.simulation_traces[0].simulation_env == \
-            test_job.simulation_traces[0].simulation_env
-        assert tjob_data.num_cached_traces == test_job.num_cached_traces
-        assert tjob_data.log_file_path == test_job.log_file_path
-        assert tjob_data.descr == test_job.descr
-        assert tjob_data.physical_host_ip == test_job.physical_host_ip
-        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
                      side_effect=pid_false)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         tjob_data = TrainingJobConfig.from_dict(response_data_list)
+        tjob_data_dict = tjob_data.to_dict()
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.emulation_env_name == test_job.emulation_env_name
-        assert tjob_data.experiment_config.output_dir == test_job.experiment_config.output_dir
-        assert tjob_data.experiment_config.title == test_job.experiment_config.title
-        assert tjob_data.experiment_config.random_seeds == test_job.experiment_config.random_seeds
-        assert tjob_data.experiment_config.agent_type == test_job.experiment_config.agent_type
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
-        assert tjob_data.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
-            test_job.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
-        assert tjob_data.experiment_config.log_every == test_job.experiment_config.log_every
-        assert tjob_data.experiment_config.player_type == test_job.experiment_config.player_type
-        assert tjob_data.experiment_config.player_idx == test_job.experiment_config.player_idx
-        assert tjob_data.experiment_config.br_log_every == test_job.experiment_config.br_log_every
-        assert tjob_data.progress_percentage == test_job.progress_percentage
-        assert tjob_data.pid == test_job.pid
-        assert tjob_data.id == test_job.id
-        assert tjob_data.experiment_result.all_metrics == test_job.experiment_result.all_metrics
-        assert tjob_data.experiment_result.policies == test_job.experiment_result.policies
-        assert tjob_data.experiment_result.plot_metrics == test_job.experiment_result.plot_metrics
-        assert tjob_data.experiment_result.avg_metrics == test_job.experiment_result.avg_metrics
+        for k in tjob_data_dict:
+            if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
+                assert tjob_data_dict[k] == test_job_dict[k]
+            else:
+                continue
         assert tjob_data.running is False
         assert test_job.running is False
         assert tjob_data.running == test_job.running
-        assert tjob_data.running == test_job.running
-        assert tjob_data.simulation_env_name == test_job.simulation_env_name
-        assert tjob_data.simulation_traces[0].attacker_actions == \
-            test_job.simulation_traces[0].attacker_actions
-        assert tjob_data.simulation_traces[0].attacker_observations == \
-            test_job.simulation_traces[0].attacker_observations
-        assert tjob_data.simulation_traces[0].attacker_rewards == \
-            test_job.simulation_traces[0].attacker_rewards
-        assert tjob_data.simulation_traces[0].beliefs == test_job.simulation_traces[0].beliefs
-        assert tjob_data.simulation_traces[0].defender_actions == \
-            test_job.simulation_traces[0].defender_actions
-        assert tjob_data.simulation_traces[0].defender_observations == \
-            test_job.simulation_traces[0].defender_observations
-        assert tjob_data.simulation_traces[0].defender_rewards == \
-            test_job.simulation_traces[0].defender_rewards
-        assert tjob_data.simulation_traces[0].dones == test_job.simulation_traces[0].dones
-        assert tjob_data.simulation_traces[0].id == test_job.simulation_traces[0].id
-        assert tjob_data.simulation_traces[0].infos == test_job.simulation_traces[0].infos
-        assert tjob_data.simulation_traces[0].infrastructure_metrics == \
-            test_job.simulation_traces[0].infrastructure_metrics
-        assert tjob_data.simulation_traces[0].simulation_env == \
-            test_job.simulation_traces[0].simulation_env
-        assert tjob_data.num_cached_traces == test_job.num_cached_traces
-        assert tjob_data.log_file_path == test_job.log_file_path
-        assert tjob_data.descr == test_job.descr
-        assert tjob_data.physical_host_ip == test_job.physical_host_ip
-        assert tjob_data.simulation_traces[0].states == test_job.simulation_traces[0].states
 
     def test_training_jobs_id_delete(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in,
                                      get_job_config, remove, stop) -> None:

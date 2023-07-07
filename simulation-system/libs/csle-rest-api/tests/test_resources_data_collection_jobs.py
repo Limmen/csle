@@ -4,7 +4,6 @@ from typing import List
 
 import csle_common.constants.constants as constants
 import pytest
-from csle_cluster.cluster_manager.cluster_manager_pb2 import OperationOutcomeDTO
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import (
     EmulationAttackerAction,
 )
@@ -71,34 +70,6 @@ class TestResourcesDataCollectionSuite:
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def pid_true(self, mocker):
-        """
-        Pytest fixture for mocking the check_pid function
-        :param mocker: The pytest mocker object
-        :return: a mocker object with the mocked function
-        """
-        def check_pid(ip: str, port: int, pid: int) -> OperationOutcomeDTO:
-            op_outcome = OperationOutcomeDTO(outcome=True)
-            return op_outcome
-        check_pid_mocker = mocker.MagicMock(side_effect=check_pid)
-
-        return check_pid_mocker
-
-    @pytest.fixture
-    def pid_false(self, mocker):
-        """
-        Pytest fixture for mocking the check_pid function
-        :param mocker: The pytest mocker object
-        :return: A mocker object with the mocked function
-        """
-        def check_pid(ip: str, port: int, pid: int) -> OperationOutcomeDTO:
-            op_outcome = OperationOutcomeDTO(outcome=False)
-            return op_outcome
-        check_pid_mocker = mocker.MagicMock(side_effect=check_pid)
-
-        return check_pid_mocker
-
-    @pytest.fixture
     def list_jobs(self, mocker):
         """
         Pytest fixture for mocking the list_data_collection_jobs function
@@ -124,20 +95,6 @@ class TestResourcesDataCollectionSuite:
             return None
         remove_data_collection_job_mocker = mocker.MagicMock(side_effect=remove_data_collection_job)
         return remove_data_collection_job_mocker
-
-    @pytest.fixture
-    def stop(self, mocker) -> None:
-        """
-        Pytest fixture mocking the stop_pid functio
-
-        :param mocker: the pytest mocker object
-        :return: a mock object with the mocked function
-
-        """
-        def stop_pid(ip: str, port: int, pid: int):
-            return None
-        stop_pid_mocker = mocker.MagicMock(side_effect=stop_pid)
-        return stop_pid_mocker
 
     @pytest.fixture
     def start(self, mocker):
@@ -281,15 +238,14 @@ class TestResourcesDataCollectionSuite:
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-        response_data_class = DataCollectionJobConfig.from_dict(response_data_list[0])
-        d_c_job_data_dict = response_data_class.to_dict()
+        d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list[0])
+        d_c_job_data_dict = d_c_job_data.to_dict()
         test_job_dict = test_job.to_dict()
         for k in d_c_job_data_dict:
             if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
                 assert d_c_job_data_dict[k] == test_job_dict[k]
             else:
                 continue
-        d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list[0])
         assert d_c_job_data.running is True
         assert test_job.running is False
         assert d_c_job_data != test_job.running
@@ -308,9 +264,8 @@ class TestResourcesDataCollectionSuite:
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.DATA_COLLECTION_JOBS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-        response_data_class = DataCollectionJobConfig.from_dict(response_data_list[0])
         d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list[0])
-        d_c_job_data_dict = response_data_class.to_dict()
+        d_c_job_data_dict = d_c_job_data.to_dict()
         test_job_dict = test_job.to_dict()
         for k in d_c_job_data_dict:
             if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
@@ -338,8 +293,7 @@ class TestResourcesDataCollectionSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list[0])
-        response_data_class = DataCollectionJobConfig.from_dict(response_data_list[0])
-        d_c_job_data_dict = response_data_class.to_dict()
+        d_c_job_data_dict = d_c_job_data.to_dict()
         test_job_dict = test_job.to_dict()
         for k in d_c_job_data_dict:
             if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
@@ -355,8 +309,7 @@ class TestResourcesDataCollectionSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list[0])
-        response_data_class = DataCollectionJobConfig.from_dict(response_data_list[0])
-        d_c_job_data_dict = response_data_class.to_dict()
+        d_c_job_data_dict = d_c_job_data.to_dict()
         test_job_dict = test_job.to_dict()
         for k in d_c_job_data_dict:
             if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
@@ -454,15 +407,13 @@ class TestResourcesDataCollectionSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list)
-        response_data_class = DataCollectionJobConfig.from_dict(response_data_list)
-        d_c_job_data_dict = response_data_class.to_dict()
+        d_c_job_data_dict = d_c_job_data.to_dict()
         test_job_dict = test_job.to_dict()
         for k in d_c_job_data_dict:
             if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
                 assert d_c_job_data_dict[k] == test_job_dict[k]
             else:
                 continue
-        d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list)
         assert d_c_job_data.running is True
         assert test_job.running is False
         assert d_c_job_data != test_job.running
@@ -473,8 +424,7 @@ class TestResourcesDataCollectionSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list)
-        response_data_class = DataCollectionJobConfig.from_dict(response_data_list)
-        d_c_job_data_dict = response_data_class.to_dict()
+        d_c_job_data_dict = d_c_job_data.to_dict()
         test_job_dict = test_job.to_dict()
         for k in d_c_job_data_dict:
             if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
@@ -493,15 +443,13 @@ class TestResourcesDataCollectionSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list)
-        response_data_class = DataCollectionJobConfig.from_dict(response_data_list)
-        d_c_job_data_dict = response_data_class.to_dict()
+        d_c_job_data_dict = d_c_job_data.to_dict()
         test_job_dict = test_job.to_dict()
         for k in d_c_job_data_dict:
             if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
                 assert d_c_job_data_dict[k] == test_job_dict[k]
             else:
                 continue
-        d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list)
         assert d_c_job_data.running is True
         assert test_job.running is False
         assert d_c_job_data.running != test_job.running
@@ -512,15 +460,13 @@ class TestResourcesDataCollectionSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list)
-        response_data_class = DataCollectionJobConfig.from_dict(response_data_list)
-        d_c_job_data_dict = response_data_class.to_dict()
+        d_c_job_data_dict = d_c_job_data.to_dict()
         test_job_dict = test_job.to_dict()
         for k in d_c_job_data_dict:
             if k != api_constants.MGMT_WEBAPP.RUNNING_PROPERTY:
                 assert d_c_job_data_dict[k] == test_job_dict[k]
             else:
                 continue
-        d_c_job_data = DataCollectionJobConfig.from_dict(response_data_list)
         assert d_c_job_data.running is False
         assert test_job.running is False
         assert d_c_job_data.running == test_job.running
