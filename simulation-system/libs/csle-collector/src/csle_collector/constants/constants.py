@@ -6,12 +6,14 @@ import re
 LATEST_VERSION = "latest"
 INSTALL = "sudo /root/miniconda3/bin/pip install -U --no-cache-dir csle-collector "
 
+
 class DICT_PROPERTIES:
     """
     String constants representing dict properties
     """
     RUNNING = "running"
     TOPICS = "topics"
+
 
 class HTTP:
     """
