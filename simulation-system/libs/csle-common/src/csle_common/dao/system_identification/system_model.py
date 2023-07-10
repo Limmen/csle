@@ -1,4 +1,5 @@
 from typing import Dict, Any
+from abc import abstractmethod
 from csle_common.dao.system_identification.system_model_type import SystemModelType
 from csle_base.json_serializable import JSONSerializable
 
@@ -31,14 +32,15 @@ class SystemModel(JSONSerializable):
         """
         pass
 
-    '''@abstractmethod
+    @abstractmethod
     def copy(self) -> "SystemModel":
         """
         :return: a copy of the object
         """
-        pass'''
+        pass
 
     @staticmethod
+    @abstractmethod
     def from_json_file(json_file_path: str) -> "SystemModel":
         """
         Reads a json file and converts it to a DTO
@@ -46,8 +48,4 @@ class SystemModel(JSONSerializable):
         :param json_file_path: the json file path
         :return: the converted DTO
         """
-        import io
-        import json
-        with io.open(json_file_path, 'r') as f:
-            json_str = f.read()
-        return SystemModel(json.loads(json_str))
+        pass
