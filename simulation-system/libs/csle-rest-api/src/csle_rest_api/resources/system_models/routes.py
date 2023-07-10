@@ -22,7 +22,6 @@ def system_models():
     :return: A list of system-models or a list of ids of the models or deletes the models
     """
 
-    # requires_admin = False
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
     if authorized is not None:
         return authorized

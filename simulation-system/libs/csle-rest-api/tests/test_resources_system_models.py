@@ -118,7 +118,7 @@ class TestResourcesSystemModelsSuite:
         test_dicts = TestResourcesSystemModelsSuite.example_returner()
 
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in,)
+                     side_effect=not_logged_in)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
                      "list_gaussian_mixture_system_models_ids",
                      side_effect=list_g_m_m_ids)
