@@ -38,7 +38,7 @@ class CONFIG_FILE:
     Constants related to the config file
     """
     CSLE_HOME_ENV_PARAM = "CSLE_HOME"
-    CONFIG_FILE_NAME = "L"
+    CONFIG_FILE_NAME = "config.json"
     PARSED_CONFIG = None
 
 
