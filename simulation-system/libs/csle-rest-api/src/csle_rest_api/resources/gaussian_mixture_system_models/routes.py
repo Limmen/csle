@@ -2,7 +2,6 @@
 Routes and sub-resources for the /gaussian-mixture-system-models resource
 """
 import csle_common.constants.constants as constants
-import pytest
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from flask import Blueprint, jsonify, request
 
