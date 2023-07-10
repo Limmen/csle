@@ -69,10 +69,12 @@ class GaussianMixtureSystemModel(SystemModel):
         :return: the converted instance
         """
         dto = GaussianMixtureSystemModel(
-            conditional_metric_distributions=list(map(
-                lambda x: list(map(lambda y: GaussianMixtureConditional.from_dict(y), x)),
-                d["conditional_metric_distributions"])),
-            emulation_env_name=d["emulation_env_name"], emulation_statistic_id=d["emulation_statistic_id"],
+            emulation_env_name=d["emulation_env_name"],
+            emulation_statistic_id=d["emulation_statistic_id"],
+            conditional_metric_distributions=list(map(lambda x:
+                                                      list(map(lambda y:
+                                                               GaussianMixtureConditional.from_dict(y), x)),
+                                                      d["conditional_metric_distributions"])),
             descr=d["descr"]
         )
         if "id" in d:

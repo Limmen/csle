@@ -1,6 +1,10 @@
 from typing import Dict, Any
 from csle_common.dao.system_identification.system_model import SystemModel
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
+from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
+from csle_common.dao.system_identification.empirical_system_model import EmpiricalSystemModel
+from csle_common.dao.system_identification.gp_system_model import GPSystemModel
+from csle_common.dao.system_identification.mcmc_system_model import MCMCSystemModel
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -68,7 +72,16 @@ class SystemIdentificationJobConfig(JSONSerializable):
         :return: the created instance
         """
         system_model = None
-        system_model = SystemModel.from_dict(d["system_model"])
+        parse_models = [GaussianMixtureSystemModel, EmpiricalSystemModel,
+                        GPSystemModel, MCMCSystemModel]
+        for parse_model in parse_models:
+            try:
+                system_model = parse_model.from_dict(d['system_model'])
+                break
+            except Exception:
+                pass
+        if system_model is None:
+            raise ValueError("could not parse system model")
         obj = SystemIdentificationJobConfig(
             emulation_env_name=d["emulation_env_name"], pid=d["pid"],
             progress_percentage=d["progress_percentage"], emulation_statistics_id=d["emulation_statistics_id"],

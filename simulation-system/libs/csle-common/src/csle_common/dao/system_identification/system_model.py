@@ -22,22 +22,14 @@ class SystemModel(JSONSerializable):
         """
         :return: a dict representation of the object
         """
-        d = {}
-        # d_h = {}
-        d["descr"] = self.descr
-        d["model_type"] = self.model_type
-        return d
+        pass
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "SystemModel":
         """
         Converts a dict representation of the object to an instance
-
-        :param d: the dict to convert
-        :return: the converted instance
         """
-        obj = SystemModel(d["descr"], d["model_type"])
-        return obj
+        pass
 
     '''@abstractmethod
     def copy(self) -> "SystemModel":
