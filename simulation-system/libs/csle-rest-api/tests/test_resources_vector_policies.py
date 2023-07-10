@@ -1,8 +1,9 @@
 from typing import List, Tuple
 import json
 import logging
-import csle_common.constants.constants as constants
 import pytest
+import pytest_mock
+import csle_common.constants.constants as constants
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.vector_policy import VectorPolicy
@@ -26,7 +27,7 @@ class TestResourcesVectorPoliciesSuite:
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def list_vector_ids(self, mocker):
+    def list_vector_ids(self, mocker: pytest_mock.MockFixture):
         """
         Fixture for mocking the list_vector_policies_ids function
 
@@ -40,7 +41,7 @@ class TestResourcesVectorPoliciesSuite:
         return list_vector_ids_mocker
 
     @pytest.fixture
-    def list_vector(self, mocker):
+    def list_vector(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_vector_policies function
 
@@ -54,7 +55,7 @@ class TestResourcesVectorPoliciesSuite:
         return list_vector_policies_mocker
 
     @pytest.fixture
-    def remove(self, mocker):
+    def remove(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the remove_vector_policy function
 
@@ -67,7 +68,7 @@ class TestResourcesVectorPoliciesSuite:
         return remove_vector_policy_mocker
 
     @pytest.fixture
-    def get_policy(self, mocker):
+    def get_policy(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the get_vector_policy function
 
@@ -92,8 +93,8 @@ class TestResourcesVectorPoliciesSuite:
                            avg_R=1.1)
         return obj
 
-    def test_vector_policies_get(self, flask_app, mocker, list_vector, logged_in, not_logged_in, logged_in_as_admin,
-                                 list_vector_ids) -> None:
+    def test_vector_policies_get(self, flask_app, mocker: pytest_mock.MockFixture, list_vector, logged_in,
+                                 not_logged_in, logged_in_as_admin, list_vector_ids) -> None:
         """
         Tests the GET HTTP method for the /vector-policies resource
 
@@ -113,10 +114,7 @@ class TestResourcesVectorPoliciesSuite:
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_vector_policies",
                      side_effect=list_vector)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_vector_policies_ids",
@@ -125,10 +123,9 @@ class TestResourcesVectorPoliciesSuite:
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-
         vector_dict = response_data_list[0]
-        assert vector_dict["id"] == 111
-        assert vector_dict["simulation"] == "some_simulation"
+        assert vector_dict[api_constants.MGMT_WEBAPP.ID_PROPERTY] == 111
+        assert vector_dict[api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == "some_simulation"
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -153,8 +150,8 @@ class TestResourcesVectorPoliciesSuite:
         assert vector.id == test_policy.id
         assert vector.policy_type == test_policy.policy_type
 
-    def test_vector_policies_delete(self, flask_app, mocker, list_vector, logged_in, not_logged_in, logged_in_as_admin,
-                                    list_vector_ids, remove) -> None:
+    def test_vector_policies_delete(self, flask_app, mocker: pytest_mock.MockFixture, list_vector, logged_in,
+                                    not_logged_in, logged_in_as_admin, list_vector_ids, remove) -> None:
         """
         Tests the DELETE HTTP method for the /vector-policies resource
 
@@ -192,8 +189,8 @@ class TestResourcesVectorPoliciesSuite:
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_vector_policies_id_get(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
-                                    get_policy) -> None:
+    def test_vector_policies_id_get(self, flask_app, mocker: pytest_mock.MockFixture, logged_in, not_logged_in,
+                                    logged_in_as_admin, get_policy) -> None:
         """
         Tests the GET HTTP method for /policies?ids=true
 
@@ -208,13 +205,13 @@ class TestResourcesVectorPoliciesSuite:
         test_policy = TestResourcesVectorPoliciesSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_vector_policy", side_effect=get_policy)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}"f"/10")
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}"f"/10")
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         vector = VectorPolicy.from_dict(response_data_list)
@@ -226,7 +223,7 @@ class TestResourcesVectorPoliciesSuite:
         assert vector.id == test_policy.id
         assert vector.policy_type == test_policy.policy_type
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}"f"/10")
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         vector = VectorPolicy.from_dict(response_data_list)
@@ -238,8 +235,8 @@ class TestResourcesVectorPoliciesSuite:
         assert vector.id == test_policy.id
         assert vector.policy_type == test_policy.policy_type
 
-    def test_vector_policies_id_delete(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
-                                       get_policy, remove) -> None:
+    def test_vector_policies_id_delete(self, flask_app, mocker: pytest_mock.MockFixture, logged_in, not_logged_in,
+                                       logged_in_as_admin, get_policy, remove) -> None:
         """
         Tests the HTTP DELETE method for the /vector-policies/id resource
 
@@ -255,19 +252,19 @@ class TestResourcesVectorPoliciesSuite:
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_vector_policy", side_effect=get_policy)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_vector_policy", side_effect=remove)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}"f"/10")
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}"f"/10")
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}"f"/10")
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.VECTOR_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response_data_list == {}

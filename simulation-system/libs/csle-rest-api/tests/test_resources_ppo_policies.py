@@ -1,8 +1,9 @@
 from typing import List, Tuple
 import json
 import logging
-import csle_common.constants.constants as constants
 import pytest
+import pytest_mock
+import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_type import StateType
@@ -11,7 +12,6 @@ from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.ppo_policy import PPOPolicy
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
@@ -31,7 +31,7 @@ class TestResourcesPPOPoliciesSuite:
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def list_ppo_ids(self, mocker):
+    def list_ppo_ids(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_ppo_policies_ids function
 
@@ -45,7 +45,7 @@ class TestResourcesPPOPoliciesSuite:
         return list_ppo_plicies_ids_mocker
 
     @pytest.fixture
-    def list_ppo(self, mocker):
+    def list_ppo(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_ppo_policies function
 
@@ -59,7 +59,7 @@ class TestResourcesPPOPoliciesSuite:
         return list_ppo_policies_mocker
 
     @pytest.fixture
-    def remove(self, mocker):
+    def remove(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the remove_ppo_policy function
 
@@ -72,7 +72,7 @@ class TestResourcesPPOPoliciesSuite:
         return remove_ppo_policy_mocker
 
     @pytest.fixture
-    def get_policy(self, mocker):
+    def get_policy(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the get_ppo_policy function
 
@@ -105,8 +105,8 @@ class TestResourcesPPOPoliciesSuite:
                         experiment_config=e_config_class, avg_R=1.1)
         return obj
 
-    def test_ppo_policies_get(self, flask_app, mocker, list_ppo, logged_in, not_logged_in, logged_in_as_admin,
-                              list_ppo_ids) -> None:
+    def test_ppo_policies_get(self, flask_app, mocker: pytest_mock.MockFixture, list_ppo, logged_in, not_logged_in,
+                              logged_in_as_admin, list_ppo_ids) -> None:
         """
         Testing for the GET HTTPS method in the /ppo-policies resource
 
@@ -162,10 +162,7 @@ class TestResourcesPPOPoliciesSuite:
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list[0][api_constants.MGMT_WEBAPP.ID_PROPERTY] == 111
         assert response_data_list[0][api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == "some_simulation"
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -196,15 +193,14 @@ class TestResourcesPPOPoliciesSuite:
         assert ppo_data.experiment_config.player_idx == test_policy.experiment_config.player_idx
         assert ppo_data.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
         assert ppo_data.policy_type == test_policy.policy_type
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
 
-    def test_ppo_policies_delete(self, flask_app, mocker, list_ppo, logged_in, not_logged_in,
+    def test_ppo_policies_delete(self, flask_app, mocker: pytest_mock.MockFixture, list_ppo, logged_in, not_logged_in,
                                  logged_in_as_admin, remove) -> None:
         """
         Tests the HTTP DELETE method on the /ppo-policies resource
@@ -239,8 +235,8 @@ class TestResourcesPPOPoliciesSuite:
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_ppo_policies_id_get(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
-                                 get_policy,) -> None:
+    def test_ppo_policies_id_get(self, flask_app, mocker: pytest_mock.MockFixture, logged_in, not_logged_in,
+                                 logged_in_as_admin, get_policy,) -> None:
         """
         Tests the HTTPS GET method for the /ppo-policies-id resource
 
@@ -255,13 +251,13 @@ class TestResourcesPPOPoliciesSuite:
         test_policy = TestResourcesPPOPoliciesSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_ppo_policy", side_effect=get_policy)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}"f"/10")
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}"f"/10")
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         ppo_data = PPOPolicy.from_dict(response_data_list)
@@ -292,7 +288,7 @@ class TestResourcesPPOPoliciesSuite:
         assert ppo_data.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
         assert ppo_data.policy_type == test_policy.policy_type
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}"f"/10")
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.PPO_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         ppo_data = PPOPolicy.from_dict(response_data_list)
@@ -323,7 +319,8 @@ class TestResourcesPPOPoliciesSuite:
         assert ppo_data.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
         assert ppo_data.policy_type == test_policy.policy_type
 
-    def test_ppo_policies_id_delete(self, flask_app, mocker, logged_in, not_logged_in, get_policy) -> None:
+    def test_ppo_policies_id_delete(self, flask_app, mocker: pytest_mock.MockFixture, logged_in, not_logged_in,
+                                    get_policy) -> None:
         """
         Tests the HTTPS DELETE method for the /ppo-policies-id resource
 

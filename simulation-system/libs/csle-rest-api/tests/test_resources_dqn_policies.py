@@ -1,8 +1,8 @@
 import json
 import logging
-
-import csle_common.constants.constants as constants
 import pytest
+import pytest_mock
+import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_type import StateType
@@ -11,7 +11,6 @@ from csle_common.dao.training.dqn_policy import DQNPolicy
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
@@ -28,12 +27,10 @@ class TestRecourcesDQNPoliciesSuite:
         """
         :return: the flask app fixture representing the webserver
         """
-        return create_app(
-            static_folder="../../../../../management-system/csle-mgmt-webapp/build"
-        )
+        return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def list_dqn_ids(self, mocker):
+    def list_dqn_ids(self, mocker: pytest_mock.MockFixture):
         """
         pytest fixture for mocking list_dqn_policies_ids
 
@@ -49,7 +46,7 @@ class TestRecourcesDQNPoliciesSuite:
         return list_ppo_plicies_ids_mocker
 
     @pytest.fixture
-    def list_dqn(self, mocker):
+    def list_dqn(self, mocker: pytest_mock.MockFixture):
         """
         pytest fixture for mocking the list_dqn_policies
 
@@ -66,7 +63,7 @@ class TestRecourcesDQNPoliciesSuite:
         return list_dqn_policies_mocker
 
     @pytest.fixture
-    def remove(self, mocker):
+    def remove(self, mocker: pytest_mock.MockFixture):
         """
         pytest fixture for mocking the remove_dqn_policy
 
@@ -74,7 +71,7 @@ class TestRecourcesDQNPoliciesSuite:
         :return: a mock object with the mocked function
         """
 
-        def remove_dqn_policy(dqn_policy):
+        def remove_dqn_policy(dqn_policy: DQNPolicy):
             return None
 
         remove_dqn_policy_mocker = mocker.MagicMock(
@@ -82,7 +79,7 @@ class TestRecourcesDQNPoliciesSuite:
         return remove_dqn_policy_mocker
 
     @pytest.fixture
-    def get_policy(self, mocker):
+    def get_policy(self, mocker: pytest_mock.MockFixture):
         """
         pytest fixture for the get mocking the get_dqn_policy
 
@@ -90,7 +87,7 @@ class TestRecourcesDQNPoliciesSuite:
         :return: a mock object with the mocked function
         """
 
-        def get_dqn_policy(id):
+        def get_dqn_policy(id: int):
             policy = TestRecourcesDQNPoliciesSuite.get_example_policy()
             return policy
 
@@ -113,7 +110,7 @@ class TestRecourcesDQNPoliciesSuite:
                         experiment_config=e_config_class, avg_R=1.1)
         return obj
 
-    def test_dqn_policies_get(self, flask_app, mocker, list_dqn, logged_in,
+    def test_dqn_policies_get(self, flask_app, mocker: pytest_mock.MockFixture, list_dqn, logged_in,
                               not_logged_in, logged_in_as_admin, list_dqn_ids) -> None:
         """
         testing the GET HTTPS method  for the /dqn-policies resource
@@ -128,21 +125,16 @@ class TestRecourcesDQNPoliciesSuite:
         :return: None
         """
         test_policy = TestRecourcesDQNPoliciesSuite.get_example_policy()
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_dqn_policies",
-                     side_effect=list_dqn)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
-                     "list_dqn_policies_ids", side_effect=list_dqn_ids)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in, )
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_dqn_policies", side_effect=list_dqn)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_dqn_policies_ids",
+                     side_effect=list_dqn_ids)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -218,7 +210,7 @@ class TestRecourcesDQNPoliciesSuite:
         assert dqn.states[0].name == test_policy.states[0].name
         assert dqn.states[0].state_type == test_policy.states[0].state_type
 
-    def test_dqn_policies_delete(self, flask_app, mocker, list_dqn, logged_in, not_logged_in,
+    def test_dqn_policies_delete(self, flask_app, mocker: pytest_mock.MockFixture, list_dqn, logged_in, not_logged_in,
                                  logged_in_as_admin, remove) -> None:
         """
         testing  the DELETE HTTPS method for the /dqn-policies resource
@@ -232,41 +224,29 @@ class TestRecourcesDQNPoliciesSuite:
         :param remove: the remove fixture
         :return: None
         """
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_dqn_policy",
-                     side_effect=remove)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_dqn_policies",
-                     side_effect=list_dqn)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_dqn_policy", side_effect=remove)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_dqn_policies", side_effect=list_dqn)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_dqn_policies_id_get(self, flask_app, mocker, logged_in,
-                                 not_logged_in, logged_in_as_admin,
-                                 get_policy) -> None:
+    def test_dqn_policies_id_get(self, flask_app, mocker: pytest_mock.MockFixture, logged_in,
+                                 not_logged_in, logged_in_as_admin, get_policy) -> None:
         """
         testing the HTTPS GET method for the /dqn-policies/id resource
 
@@ -279,22 +259,15 @@ class TestRecourcesDQNPoliciesSuite:
         :return: None
         """
         test_policy = TestRecourcesDQNPoliciesSuite.get_example_policy()
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_dqn_policy",
-                     side_effect=get_policy)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}"f"/10")
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_dqn_policy", side_effect=get_policy)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}"f"/10")
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         dqn = DQNPolicy.from_dict(response_data_list)
@@ -305,12 +278,12 @@ class TestRecourcesDQNPoliciesSuite:
         assert dqn.avg_R == test_policy.avg_R
         assert dqn.experiment_config.agent_type == test_policy.experiment_config.agent_type
         assert dqn.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
-        assert dqn.experiment_config.hparams["element"].descr == \
-            test_policy.experiment_config.hparams["element"].descr
-        assert dqn.experiment_config.hparams["element"].name == \
-            test_policy.experiment_config.hparams["element"].name
-        assert dqn.experiment_config.hparams["element"].value == \
-            test_policy.experiment_config.hparams["element"].value
+        assert dqn.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
+        assert dqn.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert dqn.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
         assert dqn.experiment_config.log_every == test_policy.experiment_config.log_every
         assert dqn.experiment_config.output_dir == test_policy.experiment_config.output_dir
         assert dqn.experiment_config.player_idx == test_policy.experiment_config.player_idx
@@ -326,10 +299,8 @@ class TestRecourcesDQNPoliciesSuite:
         assert dqn.states[0].id == test_policy.states[0].id
         assert dqn.states[0].name == test_policy.states[0].name
         assert dqn.states[0].state_type == test_policy.states[0].state_type
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin, )
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}"f"/10")
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         dqn = DQNPolicy.from_dict(response_data_list)
@@ -340,12 +311,12 @@ class TestRecourcesDQNPoliciesSuite:
         assert dqn.avg_R == test_policy.avg_R
         assert dqn.experiment_config.agent_type == test_policy.experiment_config.agent_type
         assert dqn.experiment_config.br_log_every == test_policy.experiment_config.br_log_every
-        assert dqn.experiment_config.hparams["element"].descr == \
-            test_policy.experiment_config.hparams["element"].descr
-        assert dqn.experiment_config.hparams["element"].name == \
-            test_policy.experiment_config.hparams["element"].name
-        assert dqn.experiment_config.hparams["element"].value == \
-            test_policy.experiment_config.hparams["element"].value
+        assert dqn.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].descr
+        assert dqn.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
+        assert dqn.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
+               test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
         assert dqn.experiment_config.log_every == test_policy.experiment_config.log_every
         assert dqn.experiment_config.output_dir == test_policy.experiment_config.output_dir
         assert dqn.experiment_config.player_idx == test_policy.experiment_config.player_idx
@@ -362,9 +333,8 @@ class TestRecourcesDQNPoliciesSuite:
         assert dqn.states[0].name == test_policy.states[0].name
         assert dqn.states[0].state_type == test_policy.states[0].state_type
 
-    def test_dqn_policies_id_delete(self, flask_app, mocker, logged_in,
-                                    not_logged_in, logged_in_as_admin,
-                                    get_policy, remove) -> None:
+    def test_dqn_policies_id_delete(self, flask_app, mocker: pytest_mock.MockFixture, logged_in, not_logged_in,
+                                    logged_in_as_admin, get_policy, remove) -> None:
         """
         testing the HTTPS DELETE method for the /dqn-policies/id resource
 
@@ -377,35 +347,22 @@ class TestRecourcesDQNPoliciesSuite:
         :param remove: the remove fixture
         :return: None
         """
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_dqn_policy",
-                     side_effect=get_policy)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_dqn_policy",
-                     side_effect=remove)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}"
-                                                  f"/10")
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_dqn_policy", side_effect=get_policy)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_dqn_policy", side_effect=remove)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in, )
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}"
-                                                  f"/10")
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}"
-                                                  f"/10")
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.DQN_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response_data_list == {}

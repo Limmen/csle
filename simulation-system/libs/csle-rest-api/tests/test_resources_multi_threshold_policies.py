@@ -1,8 +1,9 @@
 from typing import List, Tuple
 import json
 import logging
-import csle_common.constants.constants as constants
 import pytest
+import pytest_mock
+import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_type import StateType
@@ -15,9 +16,9 @@ import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
 
-class TestRecourcesMultiThresholdPoliciesSuite(object):
+class TestResourcesMultiThresholdPoliciesSuite:
     """
-    Test suite for /muti-threshold-policies resource
+    Test suite for /multi-threshold-policies resource
     """
 
     pytest.logger = logging.getLogger("resources_mult_threshold_policies_tests")
@@ -30,7 +31,7 @@ class TestRecourcesMultiThresholdPoliciesSuite(object):
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def list_multi_threshold_ids(self, mocker):
+    def list_multi_threshold_ids(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_multi_threshold_stopping_policies_ids
 
@@ -45,7 +46,7 @@ class TestRecourcesMultiThresholdPoliciesSuite(object):
         return list_multi_threshold_policies_ids_mocker
 
     @pytest.fixture
-    def list_multi_threshold(self, mocker):
+    def list_multi_threshold(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_multi_threshold_stopping_policies function
 
@@ -53,28 +54,29 @@ class TestRecourcesMultiThresholdPoliciesSuite(object):
         :return: a mock object with the mocked function
         """
         def list_multi_threshold_stopping_policies() -> List[MultiThresholdStoppingPolicy]:
-            policy = TestRecourcesMultiThresholdPoliciesSuite.get_example_policy()
+            policy = TestResourcesMultiThresholdPoliciesSuite.get_example_policy()
             return [policy]
         list_multi_threshold_stopping_policies_mocker = mocker.MagicMock(
             side_effect=list_multi_threshold_stopping_policies)
         return list_multi_threshold_stopping_policies_mocker
 
     @pytest.fixture
-    def remove(self, mocker):
+    def remove(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the remove_multi_threshold_stopping_policy function
 
         :param mocker: the pytest mocking object
         :return: a mock object with the mocked function
         """
-        def remove_multi_threshold_stopping_policy(multi_threshold_stopping_policy: MultiThresholdStoppingPolicy):
+        def remove_multi_threshold_stopping_policy(multi_threshold_stopping_policy: MultiThresholdStoppingPolicy) \
+                -> None:
             return None
         remove_multi_threshold_stopping_policy = mocker.MagicMock(
             side_effect=remove_multi_threshold_stopping_policy)
         return remove_multi_threshold_stopping_policy
 
     @pytest.fixture
-    def get_policy(self, mocker):
+    def get_policy(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the get_multi_threshold_stopping_policy function
 
@@ -82,7 +84,7 @@ class TestRecourcesMultiThresholdPoliciesSuite(object):
         :return: a mock object with the mocked function
         """
         def get_multi_threshold_stopping_policy(id: int) -> MultiThresholdStoppingPolicy:
-            policy = TestRecourcesMultiThresholdPoliciesSuite.get_example_policy()
+            policy = TestResourcesMultiThresholdPoliciesSuite.get_example_policy()
             return policy
         get_multi_threshold_stopping_policy_mocker = mocker.MagicMock(side_effect=get_multi_threshold_stopping_policy)
         return get_multi_threshold_stopping_policy_mocker
@@ -108,8 +110,9 @@ class TestRecourcesMultiThresholdPoliciesSuite(object):
                                            opponent_strategy=None)
         return obj
 
-    def test_multi_threshold_policies_get(self, flask_app, mocker, list_multi_threshold, logged_in, not_logged_in,
-                                          logged_in_as_admin, list_multi_threshold_ids) -> None:
+    def test_multi_threshold_policies_get(self, flask_app, mocker: pytest_mock.MockFixture, list_multi_threshold,
+                                          logged_in, not_logged_in, logged_in_as_admin,
+                                          list_multi_threshold_ids) -> None:
         """
         Tests the GET HTTPS method  for the /multi-threshold-policies resource
 
@@ -122,12 +125,11 @@ class TestRecourcesMultiThresholdPoliciesSuite(object):
         :param list_multi_threshold_ids: the list_multi_threhsold_ids fixture
         :return: None
         """
-        test_policy = TestRecourcesMultiThresholdPoliciesSuite.get_example_policy()
+        test_policy = TestResourcesMultiThresholdPoliciesSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_multi_threshold_stopping_policies",
                      side_effect=list_multi_threshold)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
-                     "list_multi_threshold_stopping_policies_ids",
-                     side_effect=list_multi_threshold_ids)
+                     "list_multi_threshold_stopping_policies_ids", side_effect=list_multi_threshold_ids)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
@@ -175,9 +177,7 @@ class TestRecourcesMultiThresholdPoliciesSuite(object):
         assert mul_thresh.states[0].name == test_policy.states[0].name
         assert mul_thresh.states[0].state_type == test_policy.states[0].state_type
         assert mul_thresh.theta == test_policy.theta
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -212,8 +212,8 @@ class TestRecourcesMultiThresholdPoliciesSuite(object):
         assert mul_thresh.states[0].state_type == test_policy.states[0].state_type
         assert mul_thresh.theta == test_policy.theta
 
-    def test_multi_threshold_policies_delete(self, flask_app, mocker, list_multi_threshold, logged_in,
-                                             not_logged_in, logged_in_as_admin, remove) -> None:
+    def test_multi_threshold_policies_delete(self, flask_app, mocker: pytest_mock.MockFixture, list_multi_threshold,
+                                             logged_in, not_logged_in, logged_in_as_admin, remove) -> None:
         """
         Tests the DELETE HTTPS method for the /multi-threshold-policies resource
 
@@ -249,8 +249,8 @@ class TestRecourcesMultiThresholdPoliciesSuite(object):
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_multi_threshold_policies_id_get(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
-                                             get_policy) -> None:
+    def test_multi_threshold_policies_id_get(self, flask_app, mocker: pytest_mock.MockFixture, logged_in,
+                                             not_logged_in, logged_in_as_admin, get_policy) -> None:
         """
         Testing the HTTPS GET method for the /multi-threshold-policies/id resource
 
@@ -262,7 +262,7 @@ class TestRecourcesMultiThresholdPoliciesSuite(object):
         :param get_policy: the get_policy fixture
         :return: None
         """
-        test_policy = TestRecourcesMultiThresholdPoliciesSuite.get_example_policy()
+        test_policy = TestResourcesMultiThresholdPoliciesSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_multi_threshold_stopping_policy",
                      side_effect=get_policy)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
@@ -306,7 +306,7 @@ class TestRecourcesMultiThresholdPoliciesSuite(object):
         assert mul_thresh.states[0].state_type == test_policy.states[0].state_type
         assert mul_thresh.theta == test_policy.theta
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin,)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}"f"/10")
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.MULTI_THRESHOLD_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         mul_thresh = MultiThresholdStoppingPolicy.from_dict(response_data_list)
@@ -340,8 +340,8 @@ class TestRecourcesMultiThresholdPoliciesSuite(object):
         assert mul_thresh.states[0].state_type == test_policy.states[0].state_type
         assert mul_thresh.theta == test_policy.theta
 
-    def test_multi_threshold_policies_id_delete(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
-                                                get_policy, remove) -> None:
+    def test_multi_threshold_policies_id_delete(self, flask_app, mocker: pytest_mock.MockFixture, logged_in,
+                                                not_logged_in, logged_in_as_admin, get_policy, remove) -> None:
         """
         Testing the HTTPS DELETE method for the /multi-threshold-policies/id resource
 

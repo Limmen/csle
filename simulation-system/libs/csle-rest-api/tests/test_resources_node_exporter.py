@@ -1,12 +1,12 @@
 import json
 import logging
-
-import csle_common.constants.constants as constants
 import pytest
+import pytest_mock
+import csle_common.constants.constants as constants
 from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
+from csle_common.dao.emulation_config.config import Config
 
 
 class TestResourcesNodeExporterSuite:
@@ -20,38 +20,44 @@ class TestResourcesNodeExporterSuite:
         """
         :return: the flask app fixture representing the webserver
         """
-        return create_app(
-            static_folder="../../../../../management-system/csle-mgmt-webapp/build"
-        )
+        return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def stop(self, mocker):
+    def stop(self, mocker: pytest_mock.MockFixture):
         """
-        Fixture for mocking the stop side-effect
-        """
+        Fixture for mocking the stop_node_exporter function
 
-        def stop_node_exporter(ip, port):
+        :param mocker: the pytest mocker object
+        :return: a mock with the mocked function
+        """
+        def stop_node_exporter(ip: str, port: int) -> None:
             return None
         stop_node_exporter_mocker = mocker.MagicMock(side_effect=stop_node_exporter)
         return stop_node_exporter_mocker
 
     @pytest.fixture
-    def start(self, mocker):
+    def start(self, mocker: pytest_mock.MockFixture):
         """
-        Fixture for mocking the start side-effect
-        """
+        Pytest fixture for mocking the start_node_exporter function
 
-        def start_node_exporter(ip, port):
+        :param mocker: the pytest mocker object
+        :return: a mock with the mocked function
+        """
+        def start_node_exporter(ip: str, port: int) -> None:
             return None
         start_node_exporter_mocker = mocker.MagicMock(side_effect=start_node_exporter)
         return start_node_exporter_mocker
 
     @pytest.fixture
-    def config(self, mocker, example_config):
+    def config(self, mocker: pytest_mock.MockFixture, example_config: Config):
         """
-        Fixture for mocking the config side-effect
+        Fixture for mocking the get_config function
+
+        :param mocker: the pytest mocker object
+        :param example_config: the example config for mocking
+        :return: a mock with the mocked function
         """
-        def get_config(id):
+        def get_config(id: int) -> Config:
             config = example_config
             return config
 
@@ -59,7 +65,7 @@ class TestResourcesNodeExporterSuite:
         return get_config_mock
 
     @pytest.fixture
-    def node_status_node_exporter_running(self, mocker, example_node_status):
+    def node_status_node_exporter_running(self, mocker: pytest_mock.MockFixture, example_node_status):
         """
         Fixture for mocking the get_node_status function where flask is running
 
@@ -74,7 +80,7 @@ class TestResourcesNodeExporterSuite:
         return get_node_status_mock
 
     @pytest.fixture
-    def node_status_node_exporter_not_running(self, mocker, example_node_status):
+    def node_status_node_exporter_not_running(self, mocker: pytest_mock.MockFixture, example_node_status):
         """
         Fixture for mocking the get_node_status function where flask is not running
 
@@ -88,9 +94,9 @@ class TestResourcesNodeExporterSuite:
         get_node_status_mock = mocker.MagicMock(side_effect=get_node_status)
         return get_node_status_mock
 
-    def test_node_exporter_get(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in, config,
-                               node_status_node_exporter_running, node_status_node_exporter_not_running, start, stop,
-                               example_config) -> None:
+    def test_node_exporter_get(self, flask_app, mocker: pytest_mock.MockFixture, logged_in_as_admin, logged_in,
+                               not_logged_in, config, node_status_node_exporter_running,
+                               node_status_node_exporter_not_running, start, stop, example_config) -> None:
         """
         Tests the GET HTTPS method for the /node-exporter url
 
@@ -105,45 +111,26 @@ class TestResourcesNodeExporterSuite:
         :param stop: the stop fixture
         :return: None
         """
-
-        mocker.patch(
-            "csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-            side_effect=config,
-        )
-        mocker.patch(
-            "csle_cluster.cluster_manager.cluster_controller.ClusterController.start_node_exporter",
-            side_effect=start,
-        )
-        mocker.patch(
-            "csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_node_exporter",
-            side_effect=stop,
-        )
-
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_node_exporter",
+                     side_effect=start)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_node_exporter",
+                     side_effect=stop)
         config = example_config
         ip_adress = config.cluster_config.cluster_nodes[0].ip
         RAM = config.cluster_config.cluster_nodes[0].RAM
         cpus = config.cluster_config.cluster_nodes[0].cpus
         leader = config.cluster_config.cluster_nodes[0].leader
         gpus = config.cluster_config.cluster_nodes[0].gpus
-
-        mocker.patch(
-            "csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
-            side_effect=node_status_node_exporter_running,
-        )
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
+                     side_effect=node_status_node_exporter_running)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
@@ -183,10 +170,7 @@ class TestResourcesNodeExporterSuite:
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY] \
             == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
@@ -225,23 +209,15 @@ class TestResourcesNodeExporterSuite:
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY] \
             == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
-        mocker.patch(
-            "csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
-            side_effect=node_status_node_exporter_not_running,
-        )
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
+                     side_effect=node_status_node_exporter_not_running)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
@@ -282,10 +258,7 @@ class TestResourcesNodeExporterSuite:
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY] \
             == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
@@ -325,9 +298,9 @@ class TestResourcesNodeExporterSuite:
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY] \
             == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
 
-    def test_node_exporter_post(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in, config,
-                                node_status_node_exporter_running, node_status_node_exporter_not_running, start, stop,
-                                example_config):
+    def test_node_exporter_post(self, flask_app, mocker: pytest_mock.MockFixture, logged_in_as_admin, logged_in,
+                                not_logged_in, config, node_status_node_exporter_running,
+                                node_status_node_exporter_not_running, start, stop, example_config) -> None:
         """
         Tests the POST HTTPS method for the /node-exporter url
 
@@ -342,60 +315,37 @@ class TestResourcesNodeExporterSuite:
         :param stop: the stop fixture
         :return: None
         """
-        mocker.patch(
-            "csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-            side_effect=config,
-        )
-        mocker.patch(
-            "csle_cluster.cluster_manager.cluster_controller.ClusterController.start_node_exporter",
-            side_effect=start,
-        )
-        mocker.patch(
-            "csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_node_exporter",
-            side_effect=stop,
-        )
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_node_exporter",
+                     side_effect=start)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_node_exporter",
+                     side_effect=stop)
         config = example_config
         ip_adress = config.cluster_config.cluster_nodes[0].ip
         RAM = config.cluster_config.cluster_nodes[0].RAM
         cpus = config.cluster_config.cluster_nodes[0].cpus
         leader = config.cluster_config.cluster_nodes[0].leader
         gpus = config.cluster_config.cluster_nodes[0].gpus
-
-        mocker.patch(
-            "csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
-            side_effect=node_status_node_exporter_running,
-        )
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
-        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE,
-                                                data=json.dumps({}))
-
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
+                     side_effect=node_status_node_exporter_running)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE, data=json.dumps({}))
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
-        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE,
-                                                data=json.dumps({}))
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
+        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE, data=json.dumps({}))
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         config_cluster_dict = config.cluster_config.to_dict()['cluster_nodes'][0]
         response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE,
                                                 data=json.dumps(config_cluster_dict))
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
-
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         config_node = response_data_list[0]
         assert config_node[api_constants.MGMT_WEBAPP.RAM_PROPERTY] == RAM
@@ -431,32 +381,20 @@ class TestResourcesNodeExporterSuite:
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY] is True
         assert config_node[api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY] \
             == f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{ip_adress}:{constants.COMMANDS.PROMETHEUS_PORT}/"
-        mocker.patch(
-            "csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
-            side_effect=node_status_node_exporter_not_running,
-        )
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
-        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE,
-                                                data=json.dumps({}))
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
+                     side_effect=node_status_node_exporter_not_running)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE, data=json.dumps({}))
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         config = example_config
         config_cluster_dict = config.cluster_config.to_dict()['cluster_nodes'][0]
         response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE,

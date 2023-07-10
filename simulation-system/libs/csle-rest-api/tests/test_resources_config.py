@@ -1,10 +1,9 @@
 import json
 import logging
-
-import csle_common.constants.constants as constants
 import pytest
+import pytest_mock
+import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.config import Config
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
@@ -20,12 +19,10 @@ class TestResourcesConfigSuite:
         """
         :return: the flask app fixture representing the webserver
         """
-        return create_app(
-            static_folder="../../../../../management-system/csle-mgmt-webapp/build"
-        )
+        return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def save(self, mocker):
+    def save(self, mocker: pytest_mock.MockFixture):
         """
         Fixture for mocking the save side effect
 
@@ -33,7 +30,7 @@ class TestResourcesConfigSuite:
         return: the mock
         """
 
-        def save_config_file(config) -> None:
+        def save_config_file(config: Config) -> None:
             return None
 
         save_config_file_mocker = mocker.MagicMock(
@@ -42,7 +39,7 @@ class TestResourcesConfigSuite:
         return save_config_file_mocker
 
     @pytest.fixture
-    def from_config_file(self, mocker):
+    def from_config_file(self, mocker: pytest_mock.MockFixture):
         """
         Fixture for mocking the from_config_file side effect
 
@@ -57,7 +54,7 @@ class TestResourcesConfigSuite:
         return set_config_parameters_from_config_file_mocker
 
     @pytest.fixture
-    def config_read(self, mocker, example_config):
+    def config_read(self, mocker: pytest_mock.MockFixture, example_config):
         """
         Fixture for mocking the config_read side effect.
 
@@ -74,7 +71,7 @@ class TestResourcesConfigSuite:
         return read_config_file_mock
 
     @pytest.fixture
-    def failed_config_read(self, mocker):
+    def failed_config_read(self, mocker: pytest_mock.MockFixture):
         """
         Fixture for mocking the config_read side effect when generating error.
 
@@ -90,8 +87,8 @@ class TestResourcesConfigSuite:
         )
         return read_failed_config_file_mock
 
-    def test_config_get(self, flask_app, mocker, logged_in, logged_in_as_admin, not_logged_in, config_read,
-                        failed_config_read, save, from_config_file, example_config):
+    def test_config_get(self, flask_app, mocker: pytest_mock.MockFixture, logged_in, logged_in_as_admin,
+                        not_logged_in, config_read, failed_config_read, save, from_config_file, example_config):
         """
         Tests the GET HTTPS method for the /config resource for listing management user accounts
 
@@ -108,23 +105,14 @@ class TestResourcesConfigSuite:
         :return : None
         """
         example_c: Config = example_config
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
-        mocker.patch(
-            "csle_common.dao.emulation_config.config.Config.read_config_file",
-            side_effect=failed_config_read,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
+        mocker.patch("csle_common.dao.emulation_config.config.Config.read_config_file", side_effect=failed_config_read)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.CONFIG_RESOURCE)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.INTERNAL_SERVER_ERROR_STATUS_CODE
-        mocker.patch(
-            "csle_common.dao.emulation_config.config.Config.read_config_file",
-            side_effect=config_read,
-        )
+        mocker.patch("csle_common.dao.emulation_config.config.Config.read_config_file", side_effect=config_read)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.CONFIG_RESOURCE)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
@@ -180,39 +168,25 @@ class TestResourcesConfigSuite:
         assert config.nginx_log_dir == example_c.nginx_log_dir
         assert config.flask_log_file == example_c.flask_log_file
         assert config.cluster_manager_log_file == example_c.cluster_manager_log_file
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.CONFIG_RESOURCE)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.CONFIG_RESOURCE)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
-        mocker.patch(
-            "csle_common.dao.emulation_config.config.Config.save_config_file",
-            side_effect=save,
-        )
-        mocker.patch(
-            "csle_common.util.cluster_util.ClusterUtil.set_config_parameters_from_config_file",
-            side_effect=from_config_file,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
+        mocker.patch("csle_common.dao.emulation_config.config.Config.save_config_file", side_effect=save)
+        mocker.patch("csle_common.util.cluster_util.ClusterUtil.set_config_parameters_from_config_file",
+                     side_effect=from_config_file)
 
-    def test_config_put(self, flask_app, mocker, logged_in_as_admin, config_read, failed_config_read,
-                        save, from_config_file, example_config) -> None:
+    def test_config_put(self, flask_app, mocker: pytest_mock.MockFixture, logged_in_as_admin, config_read,
+                        failed_config_read, save, from_config_file, example_config) -> None:
         """
         Tests the PUT HTTPS method for the /config resource for listing management user accounts
 
@@ -228,22 +202,11 @@ class TestResourcesConfigSuite:
         :param example_config: the example_config fixture
         :return None
         """
-        mocker.patch(
-            "csle_common.dao.emulation_config.config.Config.read_config_file",
-            side_effect=config_read,
-        )
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
-        mocker.patch(
-            "csle_common.dao.emulation_config.config.Config.save_config_file",
-            side_effect=save,
-        )
-        mocker.patch(
-            "csle_common.util.cluster_util.ClusterUtil.set_config_parameters_from_config_file",
-            side_effect=from_config_file,
-        )
+        mocker.patch("csle_common.dao.emulation_config.config.Config.read_config_file", side_effect=config_read)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
+        mocker.patch("csle_common.dao.emulation_config.config.Config.save_config_file", side_effect=save)
+        mocker.patch("csle_common.util.cluster_util.ClusterUtil.set_config_parameters_from_config_file",
+                     side_effect=from_config_file)
         response = flask_app.test_client().put(api_constants.MGMT_WEBAPP.CONFIG_RESOURCE,
                                                data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode('utf-8')
@@ -316,7 +279,7 @@ class TestResourcesConfigSuite:
                                                    {api_constants.MGMT_WEBAPP.CONFIG_PROPERTY: config_dict}))
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
-    def test_registration_allowed(self, flask_app, example_config):
+    def test_registration_allowed(self, flask_app, example_config) -> None:
         """
         Testing the config/registration-allowed resource
 

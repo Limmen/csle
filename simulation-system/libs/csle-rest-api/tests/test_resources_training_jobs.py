@@ -1,9 +1,9 @@
+from typing import List
 import json
 import logging
-from typing import List
-
-import csle_common.constants.constants as constants
 import pytest
+import pytest_mock
+import csle_common.constants.constants as constants
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from csle_common.dao.training.agent_type import AgentType
@@ -11,7 +11,6 @@ from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.experiment_result import ExperimentResult
 from csle_common.dao.training.hparam import HParam
 from csle_common.dao.training.player_type import PlayerType
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
@@ -31,7 +30,7 @@ class TestResourcesTrainingjobsSuite:
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def list_jobs(self, mocker):
+    def list_jobs(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_training_jobs function
 
@@ -45,7 +44,7 @@ class TestResourcesTrainingjobsSuite:
         return list_training_jobs_mocker
 
     @pytest.fixture
-    def remove(self, mocker):
+    def remove(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the remove_training_job function
 
@@ -58,7 +57,7 @@ class TestResourcesTrainingjobsSuite:
         return remove_training_job_mocker
 
     @pytest.fixture
-    def start(self, mocker):
+    def start(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for the start_training_job_in_background function
 
@@ -72,7 +71,7 @@ class TestResourcesTrainingjobsSuite:
         return start_training_job_in_background_mocker
 
     @pytest.fixture
-    def get_job_config(self, mocker) -> TrainingJobConfig:
+    def get_job_config(self, mocker: pytest_mock.MockFixture) -> TrainingJobConfig:
         """
         Pytest fixture for mocking the get_training_job_config function
 
@@ -106,9 +105,8 @@ class TestResourcesTrainingjobsSuite:
                                 physical_host_ip="123.456.78.99")
         return obj
 
-    def test_training_jobs_get(self, flask_app, mocker, list_jobs,
-                               logged_in, not_logged_in, logged_in_as_admin,
-                               pid_true, pid_false,) -> None:
+    def test_training_jobs_get(self, flask_app, mocker, list_jobs, logged_in, not_logged_in, logged_in_as_admin,
+                               pid_true, pid_false) -> None:
         """
         Testing for the GET HTTPS method in the /training-jobs resource
 
@@ -123,19 +121,16 @@ class TestResourcesTrainingjobsSuite:
         """
         test_job = TestResourcesTrainingjobsSuite.get_example_job()
         test_job_dict = test_job.to_dict()
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_training_jobs",
-                     side_effect=list_jobs)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_training_jobs", side_effect=list_jobs)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
                      side_effect=pid_true)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in,)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in,)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -189,8 +184,7 @@ class TestResourcesTrainingjobsSuite:
         assert test_job.running is False
         assert tjob_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] == test_job.running
         assert tjob_dict[api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == test_job.simulation_env_name
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin,)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
                      side_effect=pid_true)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
@@ -250,7 +244,7 @@ class TestResourcesTrainingjobsSuite:
         assert tjob_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] == test_job.running
         assert tjob_dict[api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == test_job.simulation_env_name
 
-    def test_training_jobs_delete(self, flask_app, mocker, list_jobs, logged_in,
+    def test_training_jobs_delete(self, flask_app, mocker: pytest_mock.MockFixture, list_jobs, logged_in,
                                   not_logged_in, logged_in_as_admin, remove, stop) -> None:
         """
         Tests the HTTP DELETE method on the /training-jobs resource
@@ -264,36 +258,31 @@ class TestResourcesTrainingjobsSuite:
         :param remove: the remove fixture
         :return: None
         """
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_training_jobs",
-                     side_effect=list_jobs)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_training_job",
-                     side_effect=remove)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid",
-                     side_effect=stop)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_training_jobs", side_effect=list_jobs)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_training_job", side_effect=remove)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid", side_effect=stop)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_training_jobs_id_get(self, flask_app, mocker, logged_in, not_logged_in, logged_in_as_admin,
-                                  get_job_config, pid_true, pid_false,) -> None:
+    def test_training_jobs_id_get(self, flask_app, mocker: pytest_mock.MockFixture,
+                                  logged_in, not_logged_in, logged_in_as_admin,
+                                  get_job_config, pid_true, pid_false) -> None:
         """
         Tests the HTTPS GET method for the /trianing-jobs/id resource
 
@@ -313,16 +302,13 @@ class TestResourcesTrainingjobsSuite:
                      side_effect=get_job_config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
                      side_effect=pid_true)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
-
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -353,8 +339,7 @@ class TestResourcesTrainingjobsSuite:
         assert tjob_data.running is False
         assert test_job.running is False
         assert tjob_data.running == test_job.running
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.check_pid",
                      side_effect=pid_true)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
@@ -388,8 +373,9 @@ class TestResourcesTrainingjobsSuite:
         assert test_job.running is False
         assert tjob_data.running == test_job.running
 
-    def test_training_jobs_id_delete(self, flask_app, mocker, logged_in_as_admin, logged_in, not_logged_in,
-                                     get_job_config, remove, stop) -> None:
+    def test_training_jobs_id_delete(self, flask_app, mocker: pytest_mock.MockFixture,
+                                     logged_in_as_admin, logged_in, not_logged_in, get_job_config,
+                                     remove, stop) -> None:
         """
         Tests the HTTPS DELETE method for the /training-jobs-id resource
 
@@ -405,33 +391,28 @@ class TestResourcesTrainingjobsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_training_job_config",
                      side_effect=get_job_config)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid",
-                     side_effect=stop)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_training_job",
-                     side_effect=remove)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid", side_effect=stop)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_training_job", side_effect=remove)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}/10")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
-        response_data = response.data.decode("utf-8")
-        response_data_list = json.loads(response_data)
-        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_training_jobs_id_post(self, flask_app, mocker, logged_in_as_admin, logged_in,
+    def test_training_jobs_id_post(self, flask_app, mocker: pytest_mock.MockFixture, logged_in_as_admin, logged_in,
                                    not_logged_in, get_job_config, stop, start) -> None:
         """
         Tests the HTTPS POST method for the /training-jobs-id resource
@@ -447,22 +428,18 @@ class TestResourcesTrainingjobsSuite:
         :return: None
         """
         mocker.patch("csle_agents.job_controllers.training_job_manager.TrainingJobManager."
-                     "start_training_job_in_background",
-                     side_effect=start)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid",
-                     side_effect=stop)
+                     "start_training_job_in_background", side_effect=start)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid", side_effect=stop)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_training_job_config",
                      side_effect=get_job_config)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
-        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10"
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}/10"
                                                 f"?{api_constants.MGMT_WEBAPP.STOP_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10"
                                                 f"?{api_constants.MGMT_WEBAPP.STOP_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -475,8 +452,7 @@ class TestResourcesTrainingjobsSuite:
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.TRAINING_JOBS_RESOURCE}"f"/10"
                                                 f"?{api_constants.MGMT_WEBAPP.STOP_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")

@@ -1,26 +1,24 @@
+from typing import List, Tuple
 import json
 import logging
-
-import csle_common.constants.constants as constants
 import pytest
+import pytest_mock
+import csle_common.constants.constants as constants
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.simulation_config.state import State
 from csle_common.dao.simulation_config.state_type import StateType
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.hparam import HParam
-from csle_common.dao.training.linear_threshold_stopping_policy import (
-    LinearThresholdStoppingPolicy,
-)
+from csle_common.dao.training.linear_threshold_stopping_policy import LinearThresholdStoppingPolicy
 from csle_common.dao.training.player_type import PlayerType
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
 
 class TestRecourcesLinearThresholdPoliciesSuite:
     """
-    Test suite for /linaer-threshold-policies resource
+    Test suite for /linear-threshold-policies resource
     """
 
     pytest.logger = logging.getLogger("resources_linear_threshold_tests")
@@ -30,12 +28,10 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         """
         :return: the flask app fixture representing the webserver
         """
-        return create_app(
-            static_folder="../../../../../management-system/csle-mgmt-webapp/build"
-        )
+        return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def list_linear_threshold_ids(self, mocker):
+    def list_linear_threshold_ids(self, mocker: pytest_mock.MockFixture):
         """
         pytest fixture for mocking list_linear_threshold_policies_ids
 
@@ -43,7 +39,7 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         :return: a mock object with the mocked function
         """
 
-        def list_linear_threshold_stopping_policies_ids():
+        def list_linear_threshold_stopping_policies_ids() -> List[Tuple[int, str]]:
             policy_id = (111, "some_simulation")
             return [policy_id]
 
@@ -51,7 +47,7 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         return list_ppo_plicies_ids_mocker
 
     @pytest.fixture
-    def list_linear_theshold(self, mocker):
+    def list_linear_threshold(self, mocker: pytest_mock.MockFixture):
         """
         pytest fixture for mocking the list_linear_threshold_policies
 
@@ -59,7 +55,7 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         :return: a mock object with the mocked function
         """
 
-        def list_linear_threshold_stopping_policies():
+        def list_linear_threshold_stopping_policies() -> List[LinearThresholdStoppingPolicy]:
             policy = TestRecourcesLinearThresholdPoliciesSuite.get_example_policy()
             return [policy]
 
@@ -68,7 +64,7 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         return list_linear_threshold_stopping_policies_mocker
 
     @pytest.fixture
-    def remove(self, mocker):
+    def remove(self, mocker: pytest_mock.MockFixture):
         """
         pytest fixture for mocking the remove_linear_threshold_stopping_policy function
 
@@ -76,7 +72,8 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         :return: a mock object with the mocked function
         """
 
-        def remove_linear_threshold_stopping_policy(linear_threshold_stopping_policy):
+        def remove_linear_threshold_stopping_policy(linear_threshold_stopping_policy: LinearThresholdStoppingPolicy) \
+                -> None:
             return None
 
         remove_linear_threshold_stopping_policy_mocker = mocker.MagicMock(
@@ -84,7 +81,7 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         return remove_linear_threshold_stopping_policy_mocker
 
     @pytest.fixture
-    def get_policy(self, mocker):
+    def get_policy(self, mocker: pytest_mock.MockFixture):
         """
         pytest fixture for the get mocking the get_linear_threshold_stopping_policy
 
@@ -92,7 +89,7 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         :return: a mock object with the mocked function
         """
 
-        def get_linear_threshold_stopping_policy(id):
+        def get_linear_threshold_stopping_policy(id: int) -> LinearThresholdStoppingPolicy:
             policy = TestRecourcesLinearThresholdPoliciesSuite.get_example_policy()
             return policy
 
@@ -118,8 +115,9 @@ class TestRecourcesLinearThresholdPoliciesSuite:
                                             opponent_strategy=None)
         return obj
 
-    def test_linear_threshold_policies_get(self, flask_app, mocker, list_linear_theshold, logged_in,
-                                           not_logged_in, logged_in_as_admin, list_linear_threshold_ids) -> None:
+    def test_linear_threshold_policies_get(self, flask_app, mocker: pytest_mock.MockFixture,
+                                           list_linear_threshold, logged_in, not_logged_in, logged_in_as_admin,
+                                           list_linear_threshold_ids) -> None:
         """
         testing the GET HTTPS method  for the /linear-threshold-policies resource
 
@@ -134,27 +132,23 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         """
         test_policy = TestRecourcesLinearThresholdPoliciesSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_linear_threshold_stopping_policies",
-                     side_effect=list_linear_theshold)
+                     side_effect=list_linear_threshold)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
                      "list_linear_threshold_stopping_policies_ids", side_effect=list_linear_threshold_ids)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in, )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         lin_thresh_dict = response_data_list[0]
-        assert lin_thresh_dict["id"] == 111
-        assert lin_thresh_dict["simulation"] == "some_simulation"
+        assert lin_thresh_dict[api_constants.MGMT_WEBAPP.ID_PROPERTY] == 111
+        assert lin_thresh_dict[api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == "some_simulation"
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -173,16 +167,11 @@ class TestRecourcesLinearThresholdPoliciesSuite:
                test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
         assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
                test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
-        assert l_thresh.experiment_config.log_every == \
-               test_policy.experiment_config.log_every
-        assert l_thresh.experiment_config.output_dir == \
-               test_policy.experiment_config.output_dir
-        assert l_thresh.experiment_config.player_idx == \
-               test_policy.experiment_config.player_idx
-        assert l_thresh.experiment_config.player_type == \
-               test_policy.experiment_config.player_type
-        assert l_thresh.experiment_config.random_seeds == \
-               test_policy.experiment_config.random_seeds
+        assert l_thresh.experiment_config.log_every == test_policy.experiment_config.log_every
+        assert l_thresh.experiment_config.output_dir == test_policy.experiment_config.output_dir
+        assert l_thresh.experiment_config.player_idx == test_policy.experiment_config.player_idx
+        assert l_thresh.experiment_config.player_type == test_policy.experiment_config.player_type
+        assert l_thresh.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
         assert l_thresh.experiment_config.title == test_policy.experiment_config.title
         assert l_thresh.id == test_policy.id
         assert l_thresh.player_type == test_policy.player_type
@@ -193,9 +182,7 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         assert l_thresh.states[0].name == test_policy.states[0].name
         assert l_thresh.states[0].state_type == test_policy.states[0].state_type
         assert l_thresh.theta == test_policy.theta
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin, )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -214,16 +201,11 @@ class TestRecourcesLinearThresholdPoliciesSuite:
                test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
         assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
                test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
-        assert l_thresh.experiment_config.log_every == \
-               test_policy.experiment_config.log_every
-        assert l_thresh.experiment_config.output_dir == \
-               test_policy.experiment_config.output_dir
-        assert l_thresh.experiment_config.player_idx == \
-               test_policy.experiment_config.player_idx
-        assert l_thresh.experiment_config.player_type == \
-               test_policy.experiment_config.player_type
-        assert l_thresh.experiment_config.random_seeds == \
-               test_policy.experiment_config.random_seeds
+        assert l_thresh.experiment_config.log_every == test_policy.experiment_config.log_every
+        assert l_thresh.experiment_config.output_dir == test_policy.experiment_config.output_dir
+        assert l_thresh.experiment_config.player_idx == test_policy.experiment_config.player_idx
+        assert l_thresh.experiment_config.player_type == test_policy.experiment_config.player_type
+        assert l_thresh.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
         assert l_thresh.experiment_config.title == test_policy.experiment_config.title
         assert l_thresh.id == test_policy.id
         assert l_thresh.player_type == test_policy.player_type
@@ -235,8 +217,8 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         assert l_thresh.states[0].state_type == test_policy.states[0].state_type
         assert l_thresh.theta == test_policy.theta
 
-    def test_linear_threshold_policies_delete(self, flask_app, mocker, list_linear_theshold, logged_in, not_logged_in,
-                                              logged_in_as_admin, remove) -> None:
+    def test_linear_threshold_policies_delete(self, flask_app, mocker: pytest_mock.MockFixture, list_linear_threshold,
+                                              logged_in, not_logged_in, logged_in_as_admin, remove) -> None:
         """
         testing  the DELETE HTTPS method for the /linear-threshold-policies resource
 
@@ -252,38 +234,28 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_linear_threshold_stopping_policy",
                      side_effect=remove)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_linear_threshold_stopping_policies",
-                     side_effect=list_linear_theshold)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
+                     side_effect=list_linear_threshold)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_linear_threshold_policies_id_get(self, flask_app, mocker, logged_in,
-                                              not_logged_in, logged_in_as_admin,
-                                              get_policy) -> None:
+    def test_linear_threshold_policies_id_get(self, flask_app, mocker: pytest_mock.MockFixture, logged_in,
+                                              not_logged_in, logged_in_as_admin, get_policy) -> None:
         """
         testing the HTTPS GET method for the /linear-threshold-policies/id resource
 
@@ -298,20 +270,14 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         test_policy = TestRecourcesLinearThresholdPoliciesSuite.get_example_policy()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_linear_threshold_stopping_policy",
                      side_effect=get_policy)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}"f"/10")
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in,
-        )
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}"f"/10")
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         l_thresh = LinearThresholdStoppingPolicy.from_dict(response_data_list)
@@ -329,16 +295,11 @@ class TestRecourcesLinearThresholdPoliciesSuite:
                test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
         assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
                test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
-        assert l_thresh.experiment_config.log_every == \
-               test_policy.experiment_config.log_every
-        assert l_thresh.experiment_config.output_dir == \
-               test_policy.experiment_config.output_dir
-        assert l_thresh.experiment_config.player_idx == \
-               test_policy.experiment_config.player_idx
-        assert l_thresh.experiment_config.player_type == \
-               test_policy.experiment_config.player_type
-        assert l_thresh.experiment_config.random_seeds == \
-               test_policy.experiment_config.random_seeds
+        assert l_thresh.experiment_config.log_every == test_policy.experiment_config.log_every
+        assert l_thresh.experiment_config.output_dir == test_policy.experiment_config.output_dir
+        assert l_thresh.experiment_config.player_idx == test_policy.experiment_config.player_idx
+        assert l_thresh.experiment_config.player_type == test_policy.experiment_config.player_type
+        assert l_thresh.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
         assert l_thresh.experiment_config.title == test_policy.experiment_config.title
         assert l_thresh.id == test_policy.id
         assert l_thresh.player_type == test_policy.player_type
@@ -349,10 +310,8 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         assert l_thresh.states[0].name == test_policy.states[0].name
         assert l_thresh.states[0].state_type == test_policy.states[0].state_type
         assert l_thresh.theta == test_policy.theta
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin, )
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}"f"/10")
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         l_thresh = LinearThresholdStoppingPolicy.from_dict(response_data_list)
@@ -370,16 +329,11 @@ class TestRecourcesLinearThresholdPoliciesSuite:
                test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].name
         assert l_thresh.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value == \
                test_policy.experiment_config.hparams[api_constants.MGMT_WEBAPP.ELEMENT_PROPERTY].value
-        assert l_thresh.experiment_config.log_every == \
-               test_policy.experiment_config.log_every
-        assert l_thresh.experiment_config.output_dir == \
-               test_policy.experiment_config.output_dir
-        assert l_thresh.experiment_config.player_idx == \
-               test_policy.experiment_config.player_idx
-        assert l_thresh.experiment_config.player_type == \
-               test_policy.experiment_config.player_type
-        assert l_thresh.experiment_config.random_seeds == \
-               test_policy.experiment_config.random_seeds
+        assert l_thresh.experiment_config.log_every == test_policy.experiment_config.log_every
+        assert l_thresh.experiment_config.output_dir == test_policy.experiment_config.output_dir
+        assert l_thresh.experiment_config.player_idx == test_policy.experiment_config.player_idx
+        assert l_thresh.experiment_config.player_type == test_policy.experiment_config.player_type
+        assert l_thresh.experiment_config.random_seeds == test_policy.experiment_config.random_seeds
         assert l_thresh.experiment_config.title == test_policy.experiment_config.title
         assert l_thresh.id == test_policy.id
         assert l_thresh.player_type == test_policy.player_type
@@ -391,9 +345,8 @@ class TestRecourcesLinearThresholdPoliciesSuite:
         assert l_thresh.states[0].state_type == test_policy.states[0].state_type
         assert l_thresh.theta == test_policy.theta
 
-    def test_linear_threshold_policies_id_delete(self, flask_app, mocker, logged_in,
-                                                 not_logged_in, logged_in_as_admin,
-                                                 get_policy, remove) -> None:
+    def test_linear_threshold_policies_id_delete(self, flask_app, mocker: pytest_mock.MockFixture, logged_in,
+                                                 not_logged_in, logged_in_as_admin, get_policy, remove) -> None:
         """
         testing the HTTPS DELETE method for the /linear-threshold-policies/id resource
 
@@ -410,31 +363,20 @@ class TestRecourcesLinearThresholdPoliciesSuite:
                      side_effect=get_policy)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_linear_threshold_stopping_policy",
                      side_effect=remove)
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=not_logged_in,
-        )
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}"
-                                                  f"/10")
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in, )
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}"
-                                                  f"/10")
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch(
-            "csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-            side_effect=logged_in_as_admin,
-        )
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}"
-                                                  f"/10")
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.LINEAR_THRESHOLD_POLICIES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
