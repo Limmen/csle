@@ -18,6 +18,7 @@ from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.policy_type import PolicyType
 from csle_agents.agents.differential_evolution.differential_evolution_agent import DifferentialEvolutionAgent
 from csle_agents.agents.vi.vi_agent import VIAgent
+from csle_common.dao.training.policy import Policy
 
 
 def is_node_reachable(node: int, gw_reachable: List, adjacency_matrix: List, num_nodes: int, local_envs: List) -> bool:
@@ -42,6 +43,14 @@ def is_node_reachable(node: int, gw_reachable: List, adjacency_matrix: List, num
 
 
 def get_descendants(node, adjacency_matrix: List, num_nodes: int) -> List[int]:
+    """
+    Utility function to get the descendants of a node
+
+    :param node: the node to get descendants of
+    :param adjacency_matrix: the adjacency matrix
+    :param num_nodes: the total number of nodes
+    :return: a list with the descendants (node ids)
+    """
     reachable = []
     A = adjacency_matrix.copy()
     A = np.array(A)
@@ -52,7 +61,14 @@ def get_descendants(node, adjacency_matrix: List, num_nodes: int) -> List[int]:
     return reachable
 
 
-def reduce_T(T, strategy):
+def reduce_T(T, strategy) -> np.ndarray:
+    """
+    Utility function for reducing the T tensor based on a given strategy
+
+    :param T: the tensor to reduce
+    :param strategy: the strategy for the reduction
+    :return: the reduced tensor
+    """
     attacker_state = 2
     reduced_T = np.zeros((T.shape[0], T.shape[2], T.shape[3]))
     for i in range(T.shape[0]):
@@ -65,7 +81,14 @@ def reduce_T(T, strategy):
     return reduced_T
 
 
-def reduce_R(R, strategy):
+def reduce_R(R, strategy: Policy) -> np.ndarray:
+    """
+    Utility function for reducing a reward tensor based on a given strategy
+
+    :param R: the reward tensor to reduce
+    :param strategy: the strategy to use for the reduction
+    :return: the reduced tensor
+    """
     attacker_state = 2
     reduced_R = np.zeros((R.shape[0], R.shape[2]))
     for i in range(R.shape[0]):
@@ -268,6 +291,16 @@ if __name__ == '__main__':
 
     # Training
     def optimize_stopping_policy(node, agent, zone, action, return_dict):
+        """
+        Optimizes the stopping policy for a given node
+
+        :param node: the node to use for the optimization
+        :param agent: the agent to use for the optimization
+        :param zone: the zone of the node
+        :param action: the stopping action
+        :param return_dict: the dict to accumulate results
+        :return: None
+        """
         experiment_execution = agent.train()
         stopping_policy = list(experiment_execution.result.policies.values())[0]
         for zone in zones:
@@ -275,6 +308,14 @@ if __name__ == '__main__':
                 return_dict[f"{node}_{zone}_{zone2}_stopping_policy"] = stopping_policy
 
     def optimize_defense_policy(node, agent, return_dict):
+        """
+        Optimizes the defense policy for a given node
+
+        :param node: the node to optimize for
+        :param agent: the agent to optimize
+        :param return_dict: the return dict to accumulate the results
+        :return: None
+        """
         experiment_execution = agent.train()
         defense_policy = list(experiment_execution.result.policies.values())[0]
         return_dict[f"{node}_defense_policy"] = defense_policy

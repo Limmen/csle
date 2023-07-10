@@ -11,6 +11,8 @@ import csle_agents.constants.constants as agents_constants
 
 def game_matrix() -> np.ndarray:
     """
+    Gets the game matrix
+
     :return: the game matrix for a 2-player matrix game
     """
     return np.array([

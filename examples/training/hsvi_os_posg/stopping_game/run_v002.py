@@ -12,6 +12,8 @@ import csle_agents.constants.constants as agents_constants
 
 def states() -> Tuple[np.ndarray, dict]:
     """
+    Returns the state space
+
     :return: the set of states and a lookup dict
     """
     return np.array([0, 1]), {0: "NO_INTRUSION", 1: "INTRUSION", 2: "TERMINAL"}
@@ -19,6 +21,8 @@ def states() -> Tuple[np.ndarray, dict]:
 
 def player_1_actions() -> Tuple[np.ndarray, dict]:
     """
+    Returns the action space of player 1
+
     :return: the set of actions of player 1 and a lookup dict
     """
     return np.array([0, 1]), {0: "CONTINUE", 1: "STOP"}
@@ -26,6 +30,8 @@ def player_1_actions() -> Tuple[np.ndarray, dict]:
 
 def player_2_actions() -> Tuple[np.ndarray, dict]:
     """
+    Returns the action space of player 2
+
     :return: the set of actions of player 2 and a lookup dict
     """
     return np.array([0, 1]), {0: "CONTINUE", 1: "STOP"}
@@ -33,6 +39,8 @@ def player_2_actions() -> Tuple[np.ndarray, dict]:
 
 def observations() -> Tuple[np.ndarray, dict]:
     """
+    Returns the observation space
+
     :return: the set of observations and a lookup dict
     """
     return np.array([0, 1, 2]), {0: "NO ALERT", 1: "ONE ALERT", 2: "TERMINAL"}
@@ -40,6 +48,8 @@ def observations() -> Tuple[np.ndarray, dict]:
 
 def observation_tensor() -> np.ndarray:
     """
+    Returns the observation tensor
+
     :return:  a |A1|x|A2|x|S|x|O| tensor
     """
     O = np.array(
@@ -72,6 +82,8 @@ def observation_tensor() -> np.ndarray:
 
 def reward_tensor() -> np.ndarray:
     """
+    Returns the reward tensor
+
     :return: return a |A1|x|A2|x|S| tensor
     """
     R_ST = 20.0
@@ -95,6 +107,8 @@ def reward_tensor() -> np.ndarray:
 
 def transition_tensor() -> np.ndarray:
     """
+    Returns the transition tensor
+
     :return: a |A1|x|A2||S|^2 tensor
     """
     p = 0.01
@@ -126,6 +140,8 @@ def transition_tensor() -> np.ndarray:
 
 def initial_belief() -> np.ndarray:
     """
+    Returns the initial belief
+
     :return: the initial belief point
     """
     return np.array([1, 0])

@@ -8,6 +8,16 @@ from sklearn.mixture import GaussianMixture
 
 
 def plot_hist(statistic: EmulationStatistics, attack_counts: Dict, ips: List[str], condition: str, metric: str) -> None:
+    """
+    Histogram plots of infrastructure metrics
+
+    :param statistic: the statistics to plot
+    :param attack_counts: counts of statistics during attack
+    :param ips: ips of nodes to plot
+    :param condition: condition for the conditional to plot
+    :param metric: the metric to plot
+    :return: None
+    """
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts,amsmath}')
     plt.rcParams['font.family'] = ['serif']

@@ -5,7 +5,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def plot(time_series: EmulationMetricsTimeSeries, time_step_len_seconds: int = 30):
+def plot(time_series: EmulationMetricsTimeSeries, time_step_len_seconds: int = 30) -> None:
+    """
+    Plots time series with infrastructure metrics
+
+    :param time_series: the time series to plot
+    :param time_step_len_seconds: the time-step length of the series
+    :return: None
+    """
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts,amsmath}')
     plt.rcParams['font.family'] = ['serif']

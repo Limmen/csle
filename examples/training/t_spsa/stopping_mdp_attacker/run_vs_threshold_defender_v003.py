@@ -15,6 +15,11 @@ from scipy.stats import norm
 
 
 def get_obs_tensor():
+    """
+    Utility function to get the observation tensor from a given emulation statistic
+
+    :return: the emulation statistic
+    """
     model = MetastoreFacade.get_emulation_statistic(id=1)
     model.compute_descriptive_statistics_and_distributions()
     intrusion_counts = model.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL][

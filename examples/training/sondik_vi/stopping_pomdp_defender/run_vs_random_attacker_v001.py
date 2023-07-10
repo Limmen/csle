@@ -11,7 +11,16 @@ import csle_agents.constants.constants as agents_constants
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 
 
-def reduce_T(T, strategy, intrusion_start_prob: float = 0.1, intrusion_stop_prob: float = 0.05):
+def reduce_T(T, strategy, intrusion_start_prob: float = 0.1, intrusion_stop_prob: float = 0.05) -> np.ndarray:
+    """
+    Reduces the transition tensor based on a given strategy
+
+    :param T: the transition tensor to reduce
+    :param strategy: the strategy to use for the reduction
+    :param intrusion_start_prob: the intrusion start probability
+    :param intrusion_stop_prob: the intrusion stop probability
+    :return: the reduced tensor
+    """
     reduced_T = np.zeros((T.shape[0], T.shape[2], T.shape[3]))
     for i in range(T.shape[0]):
         for j in range(T.shape[2]):
@@ -25,6 +34,15 @@ def reduce_T(T, strategy, intrusion_start_prob: float = 0.1, intrusion_stop_prob
 
 
 def reduce_R(R, strategy, intrusion_start_prob: float = 0.1, intrusion_stop_prob: float = 0.05):
+    """
+    Reduces the reward tensor based on a given strategy
+
+    :param R: the reward tensor to reduce
+    :param strategy: the strategy to use for the reduction
+    :param intrusion_start_prob: the intrusion start probability
+    :param intrusion_stop_prob: the intrusion stop probability
+    :return: the reduced tensor.
+    """
     reduced_R = np.zeros((R.shape[0], R.shape[2]))
     for i in range(R.shape[0]):
         for j in range(R.shape[2]):
@@ -36,6 +54,13 @@ def reduce_R(R, strategy, intrusion_start_prob: float = 0.1, intrusion_stop_prob
 
 
 def reduce_Z(Z, strategy):
+    """
+    Reduces the observation tensor based on a given strategy
+
+    :param Z: the tensor to reduce
+    :param strategy: the strategy to use for the reduction
+    :return: the reduced tensor
+    """
     reduced_Z = np.zeros((Z.shape[0], Z.shape[2], Z.shape[3]))
     for i in range(Z.shape[0]):
         for j in range(Z.shape[2]):

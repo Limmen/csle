@@ -7,7 +7,12 @@ from csle_common.dao.training.player_type import PlayerType
 from csle_common.dao.training.agent_type import AgentType
 
 
-def test_env():
+def test_env() -> None:
+    """
+    Runs a test environment
+
+    :return: None
+    """
     emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-002")
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
     config = simulation_env_config.simulation_env_input_config

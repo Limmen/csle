@@ -15,6 +15,13 @@ from csle_common.dao.training.policy_type import PolicyType
 
 
 def reduce_T(T, strategy):
+    """
+    Reduces the transition tensor based on a given strategy
+
+    :param T: the tensor to reduce
+    :param strategy: the strategy to use for the reduction
+    :return: the reduced tensor
+    """
     attacker_state = 2
     reduced_T = np.zeros((T.shape[0], T.shape[2], T.shape[3]))
     for i in range(T.shape[0]):
@@ -28,6 +35,13 @@ def reduce_T(T, strategy):
 
 
 def reduce_R(R, strategy):
+    """
+    Reduces the reward tensor based on a given strategy
+
+    :param R: the reward tensor to reduce
+    :param strategy: the strategy to use for the reduction
+    :return: the reduced reward tensor
+    """
     attacker_state = 2
     reduced_R = np.zeros((R.shape[0], R.shape[2]))
     for i in range(R.shape[0]):

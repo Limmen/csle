@@ -3,15 +3,7 @@ import numpy as np
 import math
 
 points = []
-# for i in np.linspace(0,1, 0.1)
-# coefficients = [0.6, 1.1]
-# coefficients = [-5.4, -4.3]
-coefficients = [-5.7, -4.5]
-coefficients = [-5.7, -4.7]
-coefficients = [-4.13, -2.71]
-coefficients = [2.1, -2]
 coefficients = [-3.24, -4.41]
-# coefficients = [14, -7]
 coefficients[0] = 1 + math.pow(coefficients[0], 2)
 coefficients[1] = math.pow(coefficients[1], 2)
 x = [0, 1, coefficients[-2], coefficients[-1]]

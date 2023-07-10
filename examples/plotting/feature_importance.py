@@ -1,3 +1,4 @@
+from typing import List, Union
 import numpy as np
 import matplotlib.pyplot as plt
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -10,6 +11,43 @@ def plot(f1_values, f1_0, f1_1, f1_kl, f1_total_KL,
          f5_values, f5_0, f5_1, f5_kl, f5_total_KL,
          f6_values, f6_0, f6_1, f6_kl, f6_total_KL,
          file_name: str, fontsize: int = 18) -> None:
+    """
+    Plots KL divergence of feature distributions during intrusion and during normal operation
+
+    :param f1_values: values of feature 1
+    :param f1_0: distribution of feature 1 during normal operation
+    :param f1_1: distribution of feature 1 during intrusion
+    :param f1_kl: KL divergence of feature 1 during normal operation and intrusion for each value
+    :param f1_total_KL: Total KL divergence of feature 1 during normal operation and intrusion
+    :param f2_values: values of feature 2
+    :param f2_0: distribution of feature 2 during normal operation
+    :param f2_1: distribution of feature 2 during intrusion
+    :param f2_kl: KL divergence of feature 2 during normal operation and intrusion for each value
+    :param f2_total_KL: Total KL divergence of feature 2 during normal operation and intrusion
+    :param f3_values: values of feature 3
+    :param f3_0: distribution of feature 3 during normal operation
+    :param f3_1: distribution of feature 3 during intrusion
+    :param f3_kl: KL divergence of feature 3 during normal operation and intrusion for each value
+    :param f3_total_KL: Total KL divergence of feature 3 during normal operation and intrusion
+    :param f4_values: values of feature 4
+    :param f4_0: distribution of feature 4 during normal operation
+    :param f4_1: distribution of feature 4 during intrusion
+    :param f4_kl: KL divergence of feature 4 during normal operation and intrusion for each value
+    :param f4_total_KL: Total KL divergence of feature 4 during normal operation and intrusion
+    :param f5_values: values of feature 5
+    :param f5_0: distribution of feature 5 during normal operation
+    :param f5_1: distribution of feature 5 during intrusion
+    :param f5_kl: KL divergence of feature 5 during normal operation and intrusion for each value
+    :param f5_total_KL: Total KL divergence of feature 5 during normal operation and intrusion
+    :param f6_values: values of feature 6
+    :param f6_0: distribution of feature 6 during normal operation
+    :param f6_1: distribution of feature 6 during intrusion
+    :param f6_kl: KL divergence of feature 6 during normal operation and intrusion for each value
+    :param f6_total_KL: Total KL divergence of feature 6 during normal operation and intrusion
+    :param file_name: filename to save the plot
+    :param fontsize: fontsize for plotting
+    :return: None
+    """
     markevery = 10
     plt.rc('text', usetex=True)
     plt.rc('text.latex', preamble=r'\usepackage{amsfonts,amsmath}')
@@ -125,16 +163,15 @@ def plot(f1_values, f1_0, f1_1, f1_kl, f1_total_KL,
     plt.show()
 
 
-def KL(P, Q, list=False):
+def KL(P, Q, list=False) -> Union[float, List[float]]:
     """
     Computes the KL divergence between two probability distributions
 
     :param P: the first probability distribution
     :param Q: the second probability distribution
     :param list: whether the result should be a list of Kls or just the sum
-    :return:
+    :return: the KL divergence
     """
-
     if not list:
         return np.sum(P * np.log(P / Q))
     else:
