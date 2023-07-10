@@ -34,7 +34,15 @@ class DQNAgent(BaseAgent):
     """
     def __init__(self, simulation_env_config: SimulationEnvConfig,
                  emulation_env_config: Union[None, EmulationEnvConfig], experiment_config: ExperimentConfig,
-                 training_job: Optional[TrainingJobConfig] = None):
+                 training_job: Optional[TrainingJobConfig] = None) -> None:
+        """
+        Initializes the agent
+
+        :param simulation_env_config: the simulation environment configuration
+        :param emulation_env_config: the emulation environment configuration
+        :param experiment_config: the experiment configuration
+        :param training_job: the training job configuration
+        """
         super(DQNAgent, self).__init__(simulation_env_config=simulation_env_config,
                                        emulation_env_config=emulation_env_config,
                                        experiment_config=experiment_config)
@@ -42,6 +50,11 @@ class DQNAgent(BaseAgent):
         self.training_job = training_job
 
     def train(self) -> ExperimentExecution:
+        """
+        Implements the training logic of the DQN algorithm
+
+        :return: the experiment result
+        """
         pid = os.getpid()
 
         # Setup experiment metrics
@@ -194,6 +207,8 @@ class DQNAgent(BaseAgent):
 
     def hparam_names(self) -> List[str]:
         """
+        Gets the hyperparameters
+
         :return: a list with the hyperparameter names
         """
         return [constants.NEURAL_NETWORKS.NUM_NEURONS_PER_HIDDEN_LAYER,

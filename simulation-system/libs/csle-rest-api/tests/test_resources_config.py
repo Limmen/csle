@@ -10,13 +10,15 @@ from csle_rest_api.rest_api import create_app
 
 class TestResourcesConfigSuite:
     """
-        Test suite for /config resource
+    Test suite for /config resource
     """
     pytest.logger = logging.getLogger("resources_config_tests")
 
     @pytest.fixture
     def flask_app(self):
         """
+        Gets the Flask app
+
         :return: the flask app fixture representing the webserver
         """
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")

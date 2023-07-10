@@ -9,8 +9,13 @@ class CustomFormatter(logging.Formatter):
     1. Overrides 'funcName' with the value of 'func_name_override', if it exists.
     2. Overrides 'filename' with the value of 'file_name_override', if it exists.
     """
+    def format(self, record) -> str:
+        """
+        Formats a given record
 
-    def format(self, record):
+        :param record: the record to format
+        :return: the formatted string
+        """
         if hasattr(record, 'func_name_override'):
             record.funcName = record.func_name_override
         if hasattr(record, 'file_name_override'):

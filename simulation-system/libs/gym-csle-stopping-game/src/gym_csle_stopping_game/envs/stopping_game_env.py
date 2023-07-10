@@ -32,6 +32,11 @@ class StoppingGameEnv(BaseEnv):
     """
 
     def __init__(self, config: StoppingGameConfig):
+        """
+        Initializes the environment
+
+        :param config: the environment configuration
+        """
         self.config = config
 
         # Initialize environment state
@@ -198,6 +203,14 @@ class StoppingGameEnv(BaseEnv):
 
     def step_trace(self, trace: EmulationTrace, a1: int, pi2: np.ndarray) \
             -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
+        """
+        Utility function for stepping a given trace
+
+        :param trace: the trace to step
+        :param a1: the action to step with
+        :param pi2: the policy of the attacker
+        :return: the result of the step
+        """
         done = False
         info = {}
         if (self.state.t - 1) < len(trace.attacker_actions):
@@ -259,13 +272,16 @@ class StoppingGameEnv(BaseEnv):
         if not done:
             self.trace.attacker_observations.append(attacker_obs)
             self.trace.defender_observations.append(defender_obs)
-
-        # Populate info
         info = self._info(info)
-
         return (defender_obs, attacker_obs), (r, -r), done, info
 
     def mean(self, prob_vector):
+        """
+        Utility function for getting the mean of a vector
+
+        :param prob_vector: the vector to take the mean of
+        :return: the mean
+        """
         m = 0
         for i in range(len(prob_vector)):
             m += prob_vector[i] * i
@@ -287,6 +303,7 @@ class StoppingGameEnv(BaseEnv):
     def _info(self, info) -> Dict[str, Union[float, int]]:
         """
         Adds the cumulative reward and episode length to the info dict
+
         :param info: the info dict to update
         :return: the updated info dict
         """
@@ -371,6 +388,18 @@ class StoppingGameEnv(BaseEnv):
                              emulation_env_config: EmulationEnvConfig,
                              simulation_env_config: SimulationEnvConfig
                              ) -> List[EmulationSimulationTrace]:
+        """
+        Utility function for evaluating a strategy profile in the emulation environment
+
+        :param env: the environment to use for evaluation
+        :param n_episodes: the number of evaluation episodes
+        :param intrusion_seq: the intrusion sequence for the evaluation (sequence of attacker actions)
+        :param defender_policy: the defender policy for the evaluation
+        :param attacker_policy: the attacker policy for the evaluation
+        :param emulation_env_config: configuration of the emulation environment for the evaluation
+        :param simulation_env_config: configuration of the simulation environment for the evaluation
+        :return: traces with the evaluation results
+        """
         logger = Logger.__call__().get_logger()
         traces = []
         s = EmulationEnvState(emulation_env_config=emulation_env_config)

@@ -11,13 +11,15 @@ from csle_common.dao.emulation_config.config import Config
 
 class TestResourcesGrafanaSuite:
     """
-        Test suite for /grafana resource
+    Test suite for /grafana resource
     """
     pytest.logger = logging.getLogger("resources_grafana_tests")
 
     @pytest.fixture
     def flask_app(self):
         """
+        Gets the Flask app
+
         :return: the flask app fixture representing the webserver
         """
         return create_app(

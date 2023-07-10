@@ -933,6 +933,14 @@ def trainingjob(id: int) -> None:
 
 
 def systemidentificationjob_shell_complete(ctx, param, incomplete):
+    """
+    Gets the ids for the shell completion of the system identification jobs
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     sys_id_jobs = MetastoreFacade.list_system_identification_jobs()
     sys_id_jobs_ids = list(map(lambda x: x.id, sys_id_jobs))
@@ -957,6 +965,14 @@ def systemidentificationjob(id: int) -> None:
 
 
 def datacollectionjob_shell_complete(ctx, param, incomplete):
+    """
+    Gets the ids for the completion of the data collection jobs
+
+    :param ctx: the command context
+    :param param: the command parameter
+    :param incomplete: the command incomplete flag
+    :return: a list of completion suggestions
+    """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     data_collection_jobs = MetastoreFacade.list_data_collection_jobs()
     data_collection_jobs_ids = list(map(lambda x: x.id, data_collection_jobs))

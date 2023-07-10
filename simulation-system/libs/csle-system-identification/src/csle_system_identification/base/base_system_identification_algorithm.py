@@ -38,8 +38,18 @@ class BaseSystemIdentificationAlgorithm(ABC):
 
     @abstractmethod
     def fit(self) -> SystemModel:
+        """
+        Abstract method to be implemented by subclasses. Fits the system model
+
+        :return: the fitted system model
+        """
         pass
 
     @abstractmethod
     def hparam_names(self) -> List[str]:
+        """
+        Abstract method to be implemented by subclasses. Gives the hyperparameters of the algorithm
+
+        :return: the hyperparameters of the algorithm
+        """
         pass

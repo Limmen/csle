@@ -40,6 +40,8 @@ class AggFlowStatistic(JSONSerializable):
 
     def to_dict(self) -> Dict[str, Any]:
         """
+        Converts the object to a dict representation
+
         :return: a dict representation of the object
         """
         d = {}
@@ -74,6 +76,8 @@ class AggFlowStatistic(JSONSerializable):
 
     def copy(self) -> "AggFlowStatistic":
         """
+        Copies the object
+
         :return: a copy of the DTO
         """
         return AggFlowStatistic.from_dict(self.to_dict())

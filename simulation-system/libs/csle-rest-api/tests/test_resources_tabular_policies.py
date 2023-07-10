@@ -22,6 +22,8 @@ class TestRecourcesTabularSuite:
     @pytest.fixture
     def flask_app(self):
         """
+        Gets the Flask app
+
         :return: the flask app fixture representing the webserver
         """
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
@@ -246,9 +248,9 @@ class TestRecourcesTabularSuite:
 
     def test_tabular_policies_id_delete(self, flask_app, mocker: pytest_mock.MockFixture, logged_in,
                                         not_logged_in, logged_in_as_admin, get_policy, remove) -> None:
-
         """
         Testing the HTTPS DELETE method for the /tabular-policies/id resource
+
         :param flask_app: The flaskk app representing te web server
         :param mocker: The pytest mocker object
         :param logged_in: The logged_in fixture

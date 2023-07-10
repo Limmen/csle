@@ -163,7 +163,17 @@ class DFSPLocalPPOAgent(BaseAgent):
         return exp_execution
 
     def local_dfsp(self, exp_result: ExperimentResult, seed: int, env: gym.Env,
-                   training_job: TrainingJobConfig, random_seeds: List[int]):
+                   training_job: TrainingJobConfig, random_seeds: List[int]) -> None:
+        """
+        Implements the local DFSP training logic
+
+        :param exp_result: the experiment result
+        :param seed: the seed for the experiments
+        :param env: the environment for the experiment
+        :param training_job: the training job
+        :param random_seeds: the random seeds for the experiment
+        :return: None
+        """
 
         # Initialize policies
         defender_strategy = MixedPPOPolicy(

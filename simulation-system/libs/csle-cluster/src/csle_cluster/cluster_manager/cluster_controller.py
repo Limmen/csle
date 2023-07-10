@@ -3619,8 +3619,17 @@ class ClusterController:
             return operation_outcome_dto
 
     @staticmethod
-    def run_emulation(execution: EmulationExecution, physical_servers: List[str],
-                      no_traffic: bool = False, no_clients: bool = False):
+    def run_emulation(execution: EmulationExecution, physical_servers: List[str], no_traffic: bool = False,
+                      no_clients: bool = False) -> None:
+        """
+        Runs a given emulation execution
+
+        :param execution: details about the execution to start
+        :param physical_servers: the list of physical servers the emulation will be run on
+        :param no_traffic: boolean flag indicating whether internal traffic generators should be started or not
+        :param no_clients: boolean flag indicating whether clients should be started or not
+        :return: None
+        """
         ip = physical_servers[0]
         steps = 41
         if no_traffic:

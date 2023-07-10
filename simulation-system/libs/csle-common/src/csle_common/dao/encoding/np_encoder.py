@@ -7,6 +7,12 @@ class NpEncoder(json.JSONEncoder):
     Encoder for Numpy arrays to JSON
     """
     def default(self, obj):
+        """
+        The default encoding of numpy datatypes for JSON
+
+        :param obj: the object to encoded
+        :return: the encoded object
+        """
         if isinstance(obj, np.integer):
             return int(obj)
         if isinstance(obj, np.floating):

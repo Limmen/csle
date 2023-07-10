@@ -26,6 +26,8 @@ class TestResourcesPPOPoliciesSuite:
     @pytest.fixture
     def flask_app(self):
         """
+        Gets the Flask app
+
         :return: the flask app fixture representing the webserver
         """
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")

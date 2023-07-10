@@ -184,6 +184,16 @@ class TFPAgent(BaseAgent):
 
     def t_fp(self, exp_result: ExperimentResult, seed: int, env: gym.Env,
              training_job: TrainingJobConfig, random_seeds: List[int]):
+        """
+        Runs the T-FP algorithm (Hammar, Stadler 2023)
+
+        :param exp_result: the experiment result
+        :param seed: the seed for the experiment
+        :param env: environment for evaluation
+        :param training_job: the training job for the evaluation
+        :param random_seeds: the random seeds for the evaluation
+        :return: the experiment result
+        """
 
         # Initialize policies
         defender_policy = MixedMultiThresholdStoppingPolicy(

@@ -147,6 +147,8 @@ class EmulationEnvConfig(JSONSerializable):
 
     def to_dict(self) -> Dict[str, Any]:
         """
+        Converts the object to a dict representation
+        
         :return: a dict representation of the object
         """
         d = {}
@@ -247,7 +249,12 @@ class EmulationEnvConfig(JSONSerializable):
             self.connect(ip=hacker_ip, username=constants.AGENT.USER, pw=constants.AGENT.PW, create_producer=False)
         return self.connections[hacker_ip]
 
-    def cleanup(self):
+    def cleanup(self) -> None:
+        """
+        Cleans up old connections
+
+        :return: None
+        """
         for ip, conn in self.connections.items():
             conn.close()
         self.connections = {}

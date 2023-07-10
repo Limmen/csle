@@ -106,6 +106,13 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         raise NotImplementedError("Rendering is not implemented for this environment")
 
     def step_trace(self, trace: EmulationTrace, a1: int) -> Tuple[np.ndarray, int, bool, dict]:
+        """
+        Utility method for stopping a pre-recorded trace
+
+        :param trace: the trace to step
+        :param a1: the action to step with
+        :return: the result of the step according to the trace
+        """
         pi2 = np.array(self.static_attacker_strategy.stage_policy(self.latest_attacker_obs))
         o, r, d, info = self.stopping_game_env.step_trace(trace=trace, a1=a1, pi2=pi2)
         self.latest_attacker_obs = o[1]
@@ -118,6 +125,17 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
                              defender_policy: Policy,
                              emulation_env_config: EmulationEnvConfig, simulation_env_config: SimulationEnvConfig) \
             -> List[EmulationSimulationTrace]:
+        """
+        Utility function for evaluating policies in the emulation environment
+
+        :param env: the environment to use for evaluation
+        :param n_episodes: the number of episodes to use for evaluation
+        :param intrusion_seq: the sequence of intrusion actions to use for evaluation
+        :param defender_policy: the defender policy to use for evaluation
+        :param emulation_env_config: the configuration of the emulation environment to use for evaluation
+        :param simulation_env_config: the configuration of the simulation environment to use for evaluation
+        :return: traces with the evaluation results
+        """
         return StoppingGameEnv.emulation_evaluation(
             env=env.stopping_game_env, n_episodes=n_episodes, intrusion_seq=intrusion_seq,
             defender_policy=defender_policy, attacker_policy=env.static_attacker_strategy,

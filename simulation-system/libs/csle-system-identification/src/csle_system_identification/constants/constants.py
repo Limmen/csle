@@ -9,6 +9,9 @@ class EMULATOR:
 
 
 class SYSTEM_IDENTIFICATION:
+    """
+    Constants related to system identification
+    """
     CONDITIONAL_DISTRIBUTIONS = "conditional_distributions"
     CONDITIONAL_DISTRIBUTION = "conditional_distribution"
     METRICS = "metrics"

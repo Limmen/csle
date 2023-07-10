@@ -686,9 +686,19 @@ class NmapUtil:
 
 
 class PivotNMAPScanThread(threading.Thread):
+    """
+    Thread for asynchronous nmap scanning
+    """
 
     def __init__(self, machine: EmulationAttackerMachineObservationState, a: EmulationAttackerAction,
                  s: EmulationEnvState):
+        """
+        Initializes the thread
+
+        :param machine: the machine to do the details on
+        :param a: the scanning action
+        :param s: the current environment state
+        """
         threading.Thread.__init__(self)
         self.machine = machine
         self.a = a
@@ -697,6 +707,11 @@ class PivotNMAPScanThread(threading.Thread):
         self.scan_result = None
 
     def run(self) -> None:
+        """
+        Main loop of the thread; performs the scanning
+
+        :return: None
+        """
         ssh_connections_alive = []
         for c in self.machine.ssh_connections:
             try:

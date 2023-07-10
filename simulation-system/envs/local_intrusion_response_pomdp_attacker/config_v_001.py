@@ -265,6 +265,13 @@ def default_transition_operator_config(num_zones: int, attack_success_probabilit
 def default_observation_function_config(
         attacker_obs_space: ObservationSpaceConfig,
         number_of_zones: int) -> ObservationFunctionConfig:
+    """
+    Defauly observation function config of the POMDP
+
+    :param attacker_obs_space: the attacker's observation space
+    :param number_of_zones: the number of zones
+    :return: the default observation function config
+    """
     state_space = IntrusionResponseGameUtil.local_state_space(number_of_zones=number_of_zones)
     A1 = IntrusionResponseGameUtil.local_defender_actions(number_of_zones=number_of_zones)
     A2 = IntrusionResponseGameUtil.local_attacker_actions()

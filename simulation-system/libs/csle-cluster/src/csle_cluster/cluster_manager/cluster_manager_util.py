@@ -88,6 +88,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_traffic_manager_info_dto() -> cluster_manager_pb2.TrafficManagerInfoDTO:
         """
+        Gets an empty TrafficManagersInfoDTO
+
         :return: an empty TrafficManagersInfoDTO
         """
         return cluster_manager_pb2.TrafficManagerInfoDTO(running=False, script="")
@@ -95,6 +97,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_traffic_managers_info_dto() -> cluster_manager_pb2.TrafficManagersInfoDTO:
         """
+        Gets an empty TrafficManagersInfoDTO
+
         :return: an empty TrafficManagersInfoDTO
         """
         return cluster_manager_pb2.TrafficManagersInfoDTO(ips=[], ports=[], emulationName="", executionId=-1,
@@ -103,6 +107,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_client_managers_info_dto() -> cluster_manager_pb2.ClientManagersInfoDTO:
         """
+        Gets an empty ClientManagersInfoDTO
+
         :return: an empty ClientManagersInfoDTO
         """
         return cluster_manager_pb2.ClientManagersInfoDTO(
@@ -112,6 +118,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_get_num_clients_dto() -> cluster_manager_pb2.GetNumActiveClientsMsg:
         """
+        Gets an empty GetNumClientsDTO
+
         :return: an empty GetNumClientsDTO
         """
         return cluster_manager_pb2.GetNumClientsDTO(num_clients=0, client_process_active=False, producer_active=False,
@@ -1349,6 +1357,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_kafka_dto() -> cluster_manager_pb2.KafkaStatusDTO:
         """
+        Gets an empty KafkaStatusDTO
+
         :return: an empty KafkaStatusDTO
         """
         return cluster_manager_pb2.KafkaStatusDTO(
@@ -1358,6 +1368,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_ryu_manager_status_dto() -> cluster_manager_pb2.RyuManagerStatusDTO:
         """
+        Gets an empty RyuManagerStatusDTO
+
         :return: an empty RyuManagerStatusDTO
         """
         return cluster_manager_pb2.RyuManagerStatusDTO(
@@ -1368,6 +1380,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_docker_stats_monitor_status_dto() -> cluster_manager_pb2.DockerStatsMonitorStatusDTO:
         """
+        Gets an empty DockerStatsMonitorStatusDTO
+
         :return: an empty DockerStatsMonitorStatusDTO
         """
         return cluster_manager_pb2.DockerStatsMonitorStatusDTO(num_monitors=0, emulations=[], emulation_executions=[])
@@ -1375,6 +1389,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_num_clients_dto() -> cluster_manager_pb2.GetNumClientsDTO:
         """
+        Gets an empty GetNumClientsDTO
+
         :return: an empty GetNumClientsDTO
         """
         return cluster_manager_pb2.GetNumClientsDTO(
@@ -1384,6 +1400,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_elk_status_dto() -> cluster_manager_pb2.ElkStatusDTO:
         """
+        Gets an empty ElkStatusDTO
+
         :return: an empty ElkStatusDTO
         """
         return cluster_manager_pb2.ElkStatusDTO(elasticRunning=False, kibanaRunning=False, logstashRunning=False)
@@ -1391,6 +1409,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_snort_ids_status_dto() -> cluster_manager_pb2.SnortIdsStatusDTO:
         """
+        Gets an empty SnortIdsStatusDTO
+
         :return: an empty SnortIdsStatusDTO
         """
         return cluster_manager_pb2.SnortIdsStatusDTO(monitor_running=False, snort_ids_running=False)
@@ -1398,6 +1418,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_ossec_ids_status_dto() -> cluster_manager_pb2.OSSECIdsStatusDTO:
         """
+        Gets an empty OSSECIdsStatusDTO
+
         :return: an empty OSSECIdsStatusDTO
         """
         return cluster_manager_pb2.OSSECIdsStatusDTO(monitor_running=False, snort_ids_running=False)
@@ -1405,6 +1427,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_ossec_ids_monitor_dto() -> cluster_manager_pb2.OSSECIdsStatusDTO:
         """
+        Gets an empty OSSECIdsMonitorDTO
+
         :return: an empty OSSECIdsMonitorDTO
         """
         return cluster_manager_pb2.OSSECIdsStatusDTO(monitor_running=False, ossec_ids_running=False)
@@ -1412,6 +1436,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_host_manager_status_dto() -> cluster_manager_pb2.HostManagerStatusDTO:
         """
+        Gets an empty HostManagerStatusDTO
+
         :return: an empty HostManagerStatusDTO
         """
         return cluster_manager_pb2.HostManagerStatusDTO(
@@ -1421,6 +1447,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_snort_managers_info_dto() -> cluster_manager_pb2.SnortIdsManagersInfoDTO:
         """
+        Gets an empty SnortIdsManagersInfoDTO
+
         :return: an empty SnortIdsManagersInfoDTO
         """
         return cluster_manager_pb2.SnortIdsManagersInfoDTO(
@@ -1430,6 +1458,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_ossec_managers_info_dto() -> cluster_manager_pb2.OSSECIdsManagersInfoDTO:
         """
+        Gets an empty OSSECIdsManagersInfoDTO
+
         :return: an empty OSSECIdsManagersInfoDTO
         """
         return cluster_manager_pb2.OSSECIdsManagersInfoDTO(
@@ -1439,6 +1469,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_elk_managers_info_dto() -> cluster_manager_pb2.ElkManagersInfoDTO:
         """
+        Gets an empty ElkManagersInfoDTO
+
         :return: an empty ElkManagersInfoDTO
         """
         return cluster_manager_pb2.ElkManagersInfoDTO(
@@ -1449,6 +1481,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_ryu_managers_info_dto() -> cluster_manager_pb2.RyuManagersInfoDTO:
         """
+        Gets an empty RyuManagersInfoDTO
+
         :return: an empty RyuManagersInfoDTO
         """
         return cluster_manager_pb2.RyuManagersInfoDTO(
@@ -1459,6 +1493,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_host_managers_info_dto() -> cluster_manager_pb2.HostManagersInfoDTO:
         """
+        Gets an empty HostManagersInfoDTO
+
         :return: an empty HostManagersInfoDTO
         """
         return cluster_manager_pb2.HostManagersInfoDTO(
@@ -1468,6 +1504,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_kafka_managers_info_dto() -> cluster_manager_pb2.KafkaManagersInfoDTO:
         """
+        Gets an empty KafkaManagersInfoDTO
+
         :return: an empty KafkaManagersInfoDTO
         """
         return cluster_manager_pb2.KafkaManagersInfoDTO(
@@ -1477,6 +1515,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_docker_managers_info_dto() -> cluster_manager_pb2.DockerStatsManagersInfoDTO:
         """
+        Gets an empty DockerStatsManagersInfoDTO
+
         :return: an empty DockerStatsManagersInfoDTO
         """
         return cluster_manager_pb2.DockerStatsManagersInfoDTO(
@@ -1487,6 +1527,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_execution_info_dto() -> cluster_manager_pb2.ExecutionInfoDTO:
         """
+        Gets an empty ExecutionInfoDTO
+
         :return: an empty ExecutionInfoDTO
         """
         return cluster_manager_pb2.ExecutionInfoDTO(
@@ -1499,6 +1541,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_kibana_tunnel_dto() -> cluster_manager_pb2.KibanaTunnelDTO:
         """
+        Gets an empty KibanaTunnelDTO
+
         :return: an empty KibanaTunnelDTO
         """
         return cluster_manager_pb2.KibanaTunnelDTO(port=1, ip="", emulation="", ipFirstOctet=-1)
@@ -1506,6 +1550,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_kibana_tunnels_dto() -> cluster_manager_pb2.KibanaTunnelsDTO:
         """
+        Gets an empty KibanaTunnelsDTO
+
         :return: an empty KibanaTunnelsDTO
         """
         return cluster_manager_pb2.KibanaTunnelsDTO(tunnels=[])
@@ -1541,6 +1587,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_ryu_tunnel_dto() -> cluster_manager_pb2.RyuTunnelDTO:
         """
+        Gets an empty RyuTunnelDTO
+
         :return: an empty RyuTunnelDTO
         """
         return cluster_manager_pb2.RyuTunnelDTO(port=1, ip="", emulation="", ipFirstOctet=-1)
@@ -2103,6 +2151,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_client_population_metrics_dto() -> cluster_manager_pb2.ClientPopulationMetricsDTO:
         """
+        Gets an empty ClientPopulationMetricsDTO
+
         :return: an empty ClientPopulationMetricsDTO
         """
         return cluster_manager_pb2.ClientPopulationMetricsDTO(ip="", ts=-1., num_clients=0, rate=0., service_time=0.)
@@ -2235,6 +2285,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_host_metrics_dto() -> cluster_manager_pb2.HostMetricsDataDTO:
         """
+        Gets an empty HostMetricsDataDTO
+
         :return: an empty HostMetricsDataDTO
         """
         return cluster_manager_pb2.HostMetricsDataDTO(num_logged_in_users=0, num_failed_login_attempts=0,
@@ -2305,6 +2357,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_emulation_defender_action_dto() -> cluster_manager_pb2.EmulationDefenderActionDTO:
         """
+        Gets an empty EmulationDefenderActionDTO
+
         :return: an empty EmulationDefenderActionDTO
         """
         return cluster_manager_pb2.EmulationDefenderActionDTO(id=-1, name="", cmds=[], type=-1, descr="", ips=[],
@@ -2382,6 +2436,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_emulation_attacker_action_dto() -> cluster_manager_pb2.EmulationAttackerActionDTO:
         """
+        Gets an empty EmulationAttackerActionDTO
+
         :return: an empty EmulationAttackerActionDTO
         """
         return cluster_manager_pb2.EmulationAttackerActionDTO(id=-1, name="", cmds=[], type=-1, descr="", ips=[],
@@ -2459,6 +2515,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_snort_ids_alert_counters_dto() -> cluster_manager_pb2.SnortIdsAlertCountersDTO:
         """
+        Gets an empty SnortIdsAlertCountersDTO
+
         :return: an empty SnortIdsAlertCountersDTO
         """
         return cluster_manager_pb2.SnortIdsAlertCountersDTO(
@@ -2528,6 +2586,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_snort_ids_rule_counters_dto() -> cluster_manager_pb2.SnortIdsRuleCountersDTO:
         """
+        Gets an empty SnortIdsAlertCountersDTO
+
         :return: an empty SnortIdsAlertCountersDTO
         """
         return cluster_manager_pb2.SnortIdsRuleCountersDTO(ip="", ts=0.0, rule_ids=[], rule_alert_counts=[])
@@ -2597,6 +2657,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_snort_ids_ip_alert_counters_dto() -> cluster_manager_pb2.SnortIdsIpAlertCountersDTO:
         """
+        Gets an empty SnortIdsAlertCountersDTO
+
         :return: an empty SnortIdsAlertCountersDTO
         """
         return cluster_manager_pb2.SnortIdsIpAlertCountersDTO(
@@ -2673,6 +2735,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_ossec_ids_alert_counters_dto() -> cluster_manager_pb2.OSSECIdsAlertCountersDTO:
         """
+        Gets an empty OSSECIdsAlertCountersDTO
+
         :return: an empty OSSECIdsAlertCountersDTO
         """
         return cluster_manager_pb2.OSSECIdsAlertCountersDTO(
@@ -2744,6 +2808,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_flow_statistic_dto() -> cluster_manager_pb2.FlowStatisticDTO:
         """
+        Gets an empty FlowStatisticDTO
+
         :return: an empty FlowStatisticDTO
         """
         return cluster_manager_pb2.FlowStatisticDTO(
@@ -2836,6 +2902,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_port_statistic_dto() -> cluster_manager_pb2.PortStatisticDTO:
         """
+        Gets an empty PortStatisticDTO
+
         :return: an empty PortStatisticDTO
         """
         return cluster_manager_pb2.PortStatisticDTO(
@@ -2913,6 +2981,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_agg_flow_statistic_dto() -> cluster_manager_pb2.AggFlowStatisticDTO:
         """
+        Gets an empty AggFlowStatisticDTO
+
         :return: an empty AggFlowStatisticDTO
         """
         return cluster_manager_pb2.AggFlowStatisticDTO(
@@ -2985,6 +3055,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_avg_flow_statistic_dto() -> cluster_manager_pb2.AvgFlowStatisticDTO:
         """
+        Gets an empty AvgFlowStatisticDTO
+
         :return: an empty AvgFlowStatisticDTO
         """
         return cluster_manager_pb2.AvgFlowStatisticDTO(
@@ -3075,6 +3147,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_avg_port_statistic_dto() -> cluster_manager_pb2.AvgPortStatisticDTO:
         """
+        Gets an empty AvgPortStatisticDTO
+
         :return: an empty AvgPortStatisticDTO
         """
         return cluster_manager_pb2.AvgPortStatisticDTO(
@@ -3152,7 +3226,9 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_docker_stats_dict() -> List[cluster_manager_pb2.DockerStatsDict]:
         """
-        :return: an empty DockerStatsDict
+        Gets an empty list of DockerStatsDict
+
+        :return: an empty list of DockerStatsDict
         """
         return []
 
@@ -3215,7 +3291,9 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_snort_ids_ip_alert_counters_dict() -> List[cluster_manager_pb2.SnortIdsIpAlertCountersDict]:
         """
-        :return: an empty SnortIdsIpAlertCountersDict
+        Gets an empty list of SnortIdsIpAlertCountersDict
+
+        :return: an empty list of SnortIdsIpAlertCountersDict
         """
         return []
 
@@ -3278,7 +3356,9 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_snort_ids_alert_counters_dict() -> List[cluster_manager_pb2.SnortIdsAlertCountersDict]:
         """
-        :return: an empty SnortIdsAlertCountersDict
+        Gets an empty list of SnortIdsAlertCountersDict
+
+        :return: an empty list of SnortIdsAlertCountersDict
         """
         return []
 
@@ -3341,7 +3421,9 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_snort_ids_rule_counters_dict() -> List[cluster_manager_pb2.SnortIdsRuleCountersDict]:
         """
-        :return: an empty SnortIdsRuleCountersDict
+        Gets an empty list of SnortIdsRuleCountersDict
+
+        :return: an empty list of SnortIdsRuleCountersDict
         """
         return []
 
@@ -3401,6 +3483,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_host_metrics_dict() -> List[cluster_manager_pb2.HostMetricsDict]:
         """
+        Gets an empty list of HostMetricsDict
+
         :return: an empty HostMetricsDict
         """
         return []
@@ -3463,6 +3547,7 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_ossec_ids_alert_counters_dict() -> List[cluster_manager_pb2.OSSECIdsAlertCountersDict]:
         """
+        Gets an empty list of OSSECIdsAlertCountersDict
         :return: an empty OSSECIdsAlertCountersDict
         """
         return []
@@ -3524,7 +3609,9 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_flow_statistic_dict() -> List[cluster_manager_pb2.FlowStatisticDict]:
         """
-        :return: an empty FlowStatisticDict
+        Gets an empty list of FlowStatisticDict
+
+        :return: an empty list of FlowStatisticDict
         """
         return []
 
@@ -3583,7 +3670,9 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_port_statistic_dict() -> List[cluster_manager_pb2.PortStatisticDict]:
         """
-        :return: an empty PortStatisticDict
+        Gets an list of PortStatisticDict
+
+        :return: an empty list of PortStatisticDict
         """
         return []
 
@@ -3644,7 +3733,9 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_avg_flow_statistic_dict() -> List[cluster_manager_pb2.AvgFlowStatisticDict]:
         """
-        :return: an empty AvgFlowStatisticDict
+        Gets an empty list of AvgFlowStatisticDict
+
+        :return: an empty list of AvgFlowStatisticDict
         """
         return []
 
@@ -3705,7 +3796,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_agg_flow_statistic_dict() -> List[cluster_manager_pb2.AggFlowStatisticDict]:
         """
-        :return: an empty AggFlowStatisticDict
+        Gets an empty list of AggFlowStatisticDict
+        :return: an empty list of AggFlowStatisticDict
         """
         return []
 
@@ -3766,7 +3858,9 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_avg_port_statistic_dict() -> List[cluster_manager_pb2.AvgPortStatisticDict]:
         """
-        :return: an empty AvgPortStatisticDict
+        Gets an empty list of AvgPortStatisticDict
+
+        :return: an empty list of AvgPortStatisticDict
         """
         return []
 
@@ -3790,6 +3884,8 @@ class ClusterManagerUtil:
     @staticmethod
     def get_empty_emulation_metrics_time_series_dto() -> cluster_manager_pb2.EmulationMetricsTimeSeriesDTO:
         """
+        Gets an empty emulation metric series dto
+
         :return: an empty EmulationMetricsTimeSeriesDTO
         """
         return cluster_manager_pb2.EmulationMetricsTimeSeriesDTO(

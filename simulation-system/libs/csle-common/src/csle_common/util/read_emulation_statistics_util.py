@@ -24,6 +24,9 @@ from csle_common.dao.emulation_config.emulation_metrics_time_series import Emula
 
 
 class ReadEmulationStatisticsUtil:
+    """
+    Utility class for reading emulation statistics
+    """
 
     @staticmethod
     def read_all(emulation_env_config: EmulationEnvConfig, logger: logging.Logger, time_window_minutes: int = 100) \

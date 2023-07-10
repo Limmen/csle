@@ -34,14 +34,10 @@ import csle_cluster.constants.constants as cluster_constants
 
 
 class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerServicer):
-    """
-    gRPC server for managing a node in the CSLE management system cluster
-    """
+    """gRPC server for managing a node in the CSLE management system cluster"""
 
     def __init__(self) -> None:
-        """
-        Initializes the server
-        """
+        """Initializes the server"""
 
         file_name = collector_constants.LOG_FILES.CLUSTER_MANAGER_LOG_FILE
         dir = collector_constants.LOG_FILES.CLUSTER_MANAGER_LOG_DIR

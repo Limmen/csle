@@ -11,6 +11,9 @@ import csle_collector.host_manager.host_manager_pb2
 
 
 class HostManagerUtil:
+    """
+    Utility class for the host manager
+    """
 
     @staticmethod
     def read_latest_ts_auth() -> float:

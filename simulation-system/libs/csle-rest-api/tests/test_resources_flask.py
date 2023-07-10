@@ -11,13 +11,15 @@ from csle_common.dao.emulation_config.config import Config
 
 class TestResourcesFlaskSuite:
     """
-        Test suite for /config resource
+    Test suite for /config resource
     """
     pytest.logger = logging.getLogger("resources_flask_tests")
 
     @pytest.fixture
     def flask_app(self):
         """
+        Gets the Flask app
+
         :return: the flask app fixture representing the webserver
         """
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")

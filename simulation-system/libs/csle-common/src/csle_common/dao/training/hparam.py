@@ -21,6 +21,8 @@ class HParam(JSONSerializable):
 
     def to_dict(self) -> Dict[str, Any]:
         """
+        Converts the object to a dict representation
+
         :return: a dict representation of the object
         """
         d = {}
@@ -31,6 +33,12 @@ class HParam(JSONSerializable):
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "HParam":
+        """
+        Creates an instance from a dict representation
+
+        :param d: the dict reppresentation
+        :return: the instance
+        """
         obj = HParam(value=d["value"], name=d["name"], descr=d["descr"])
         return obj
 

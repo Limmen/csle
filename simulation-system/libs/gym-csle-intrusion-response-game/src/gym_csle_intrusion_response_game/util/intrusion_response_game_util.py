@@ -428,6 +428,16 @@ class IntrusionResponseGameUtil:
     @staticmethod
     def local_stopping_mdp_reward_tensor(S: np.ndarray, A1: np.ndarray, A2: np.ndarray,
                                          R: np.ndarray, S_D: np.ndarray) -> np.ndarray:
+        """
+        Gets the local stopping MDP reward tensor for the attacker
+
+        :param S: the state space of the local game
+        :param A1: the action space of the defender in the local game
+        :param A2: the action space of the attacker in the local game
+        :param R: the reward tensor of the local game
+        :param S_D: the state space of the defender in the local game
+        :return: the reward tensor of the attacker in the stopping MDP
+        """
         R_1 = []
         S_D = np.append([-1], S_D)
         for a1 in A1:
@@ -452,6 +462,17 @@ class IntrusionResponseGameUtil:
     def local_stopping_pomdp_reward_tensor(S: np.ndarray, A2: np.ndarray,
                                            R: np.ndarray, S_A: np.ndarray,
                                            a1: int, zone: int) -> np.ndarray:
+        """
+        Gets the local reward tensor of the stopping POMDP
+
+        :param S: the state space of the local game
+        :param A2: the action space of the attacker
+        :param R: the reward tensor of the local game
+        :param S_A: the state space of the attacker in the local game
+        :param a1: the stopping action of the defender
+        :param zone: the zone of the local game
+        :return: the reward tensor
+        """
         R_1 = []
         S_A = np.append([-1], S_A)
         for stop in [0, 1]:
@@ -478,6 +499,18 @@ class IntrusionResponseGameUtil:
     def local_stopping_pomdp_observation_tensor(S: np.ndarray, A2: np.ndarray, S_A: np.ndarray,
                                                 Z: np.ndarray, a1: int, zone: int,
                                                 O: np.ndarray) -> np.ndarray:
+        """
+        Gets the local observation tensor for a stopping POMDP
+
+        :param S: the state space of the local game
+        :param A2: the action space of the attacker
+        :param S_A: the state space of the attacker
+        :param Z: the observation tensor of the game
+        :param a1: the defender stop action
+        :param zone: the zone of the local game
+        :param O: the observation space
+        :return: the observation tensor
+        """
         Z_1 = []
         S_A = np.append([-1], S_A)
         for stop in [0, 1]:

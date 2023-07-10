@@ -36,6 +36,8 @@ class User(JSONSerializable):
 
     def to_dict(self) -> Dict[str, Any]:
         """
+        Converts the object to a dict representation
+
         :return: a dict representation of the object
         """
         d = {}

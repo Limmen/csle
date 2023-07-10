@@ -16,6 +16,13 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 
 
 def reduce_T(T, strategy):
+    """
+    Reduces the transition tensor based on a given strategy
+
+    :param T: the transition tensor to reduce
+    :param strategy: the strategy to use for the reduction
+    :return: the reduced transition tensor
+    """
     reduced_T = np.zeros((T.shape[1], T.shape[2], T.shape[3]))
     for i in range(T.shape[1]):
         for j in range(T.shape[2]):
@@ -26,6 +33,13 @@ def reduce_T(T, strategy):
 
 
 def reduce_R(R, strategy):
+    """
+    Reduces the reward tensor based on a given strategy
+
+    :param R: the reward tensor
+    :param strategy: the strategy to use for the reduction
+    :return: the reduced tensor
+    """
     reduced_R = np.zeros((R.shape[1], R.shape[2]))
     for i in range(R.shape[1]):
         for j in range(R.shape[2]):

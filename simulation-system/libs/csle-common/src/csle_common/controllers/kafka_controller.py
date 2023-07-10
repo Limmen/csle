@@ -15,6 +15,9 @@ from csle_common.logging.log import Logger
 
 
 class KafkaController:
+    """
+    Controller for kafka, implements logic for managing kafka instances.
+    """
 
     @staticmethod
     def start_kafka_manager(emulation_env_config: EmulationEnvConfig) -> None:

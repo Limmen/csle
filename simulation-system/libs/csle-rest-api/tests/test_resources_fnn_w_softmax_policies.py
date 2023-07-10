@@ -26,11 +26,11 @@ class TestResourcesFnnWSoftmaxPoliciesSuite:
     @pytest.fixture
     def flask_app(self):
         """
+        Gets the Flask app
+
         :return: the flask app fixture representing the webserver
         """
-        return create_app(
-            static_folder="../../../../../management-system/csle-mgmt-webapp/build"
-        )
+        return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
     def list_fnn_w_softmax_ids(self, mocker: pytest_mock.MockFixture):

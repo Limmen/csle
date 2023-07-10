@@ -16,17 +16,26 @@ class StoppingGameUtil:
     @staticmethod
     def b1() -> np.ndarray:
         """
+        Gets the initial belief
+
         :return: the initial belief
         """
         return np.array([1, 0, 0])
 
     @staticmethod
     def state_space():
+        """
+        Gets the state space
+
+        :return: the state space of the game
+        """
         return np.array([0, 1, 2])
 
     @staticmethod
     def defender_actions() -> np.ndarray:
         """
+        Gets the action space of the defender
+
         :return: the action space of the defender
         """
         return np.array([0, 1])
@@ -34,6 +43,8 @@ class StoppingGameUtil:
     @staticmethod
     def attacker_actions() -> np.ndarray:
         """
+        Gets the action space of the attacker
+
         :return: the action space of the attacker
         """
         return np.array([0, 1])
@@ -44,13 +55,15 @@ class StoppingGameUtil:
         Returns the observation space of size n
 
         :param n: the maximum observation
-        :return: O
+        :return: the observation space
         """
         return np.array(list(range(n + 1)))
 
     @staticmethod
     def reward_tensor(R_SLA: int, R_INT: int, R_COST: int, L: int, R_ST: int) -> np.ndarray:
         """
+        Gets the reward tensor
+
         :param R_SLA: the R_SLA constant
         :param R_INT: the R_INT constant
         :param R_COST: the R_COST constant
@@ -82,6 +95,8 @@ class StoppingGameUtil:
     @staticmethod
     def transition_tensor(L: int, p: float) -> np.ndarray:
         """
+        Gets the transition tensor
+
         :param L: the maximum number of stop actions
         :return: a |L|x|A1|x|A2||S|^2 tensor
         """

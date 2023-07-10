@@ -1265,15 +1265,24 @@ class TRAFFIC_COMMANDS:
 
 
 class AGENT:
+    """
+    String constants related to the agent
+    """
     USER = "agent"
     PW = "agent"
 
 
 class CITUS:
+    """
+    Constants related to CITUS
+    """
     COORDINATOR_PORT = 5432
 
 
 class CLUSTER_CONFIG:
+    """
+    Constants related to the cluster configuration
+    """
     LEADER = False
     IP = "127.0.0.1"
 
@@ -1412,6 +1421,9 @@ class INFO_DICT:
 
 
 class DOCKER:
+    """
+    Constants related to Docker
+    """
     CONTAINER_EXIT_STATUS = "exited"
     CONTAINER_CREATED_STATUS = "created"
     IMAGE_CREATED = "Created"
@@ -1493,6 +1505,9 @@ class DOCKER:
 
 
 class CSLE:
+    """
+    Constants related to general CSLE
+    """
     NAME = "csle"
     LEVEL = "level"
     BRIDGE = "br"
@@ -1509,6 +1524,9 @@ class CSLE:
 
 
 class MANAGEMENT:
+    """
+    Constants related to the management system
+    """
     LIST_STOPPED = "list_stopped"
     LIST_RUNNING = "list_running"
     LIST_IMAGES = "list_images"
@@ -1536,6 +1554,9 @@ class MANAGEMENT:
 
 
 class MAKEFILE:
+    """
+    Constants related to Makefiles
+    """
     PROJECT = "PROJECT"
     INTERNAL_NETWORK = "INTERNAL_NETWORK"
     EXTERNAL_NETWORK = "EXTERNAL_NETWORK"
@@ -1556,12 +1577,18 @@ class MAKEFILE:
 
 
 class VULNERABILITY_GENERATOR:
+    """
+    Constants related to the vulnerability generator
+    """
     NAMES_SHORTLIST = ["admin", "test", "guest", "info", "adm", "mysql", "user", "administrator",
                        "oracle", "ftp", "pi", "puppet", "ansible", "ec2-user", "vagrant", "azureuser",
                        "donald", "alan"]
 
 
 class EXPERIMENT:
+    """
+    Constants related to experiments folder structure
+    """
     RESULTS_DIR = "results"
     DATA_DIR = "data"
     VIDEOS_DIR = "videos"
@@ -1620,6 +1647,9 @@ class METADATA_STORE:
 
 
 class CONTAINER_POOLS:
+    """
+    Constants related to container pools
+    """
     CONTAINER_POOL = [(f"{CONTAINER_IMAGES.FTP_1}", "0.0.1"),
                       (f"{CONTAINER_IMAGES.FTP_2}", "0.0.1"),
                       (f"{CONTAINER_IMAGES.HONEYPOT_1}", "0.0.1"),
@@ -1751,6 +1781,9 @@ class OPENFLOW:
 
 
 class DATASETS:
+    """
+    Constants related to datasets
+    """
     METADATA_FILE_NAME = "readme.json"
     JSON_FILE_FORMAT = "json"
     FILE_FORMAT_PROPERTY = "file_format"

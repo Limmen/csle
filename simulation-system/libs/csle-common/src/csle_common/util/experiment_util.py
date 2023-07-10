@@ -321,9 +321,13 @@ class ExperimentUtil:
 
     @staticmethod
     def running_average(x, N):
-        ''' Function used to compute the running average
-            of the last N elements of a vector x
-        '''
+        """
+        Function used to compute the running average of the last N elements of a vector x
+
+        :param x: the vector to take the running average
+        :param N: the lenght of the running average
+        :return: the averaged vector
+        """
         if len(x) < N:
             N = len(x)
         if len(x) >= N:
@@ -335,9 +339,13 @@ class ExperimentUtil:
 
     @staticmethod
     def running_average_list(x, N):
-        ''' Function used to compute the running average
-            of the last N elements of a vector x
-        '''
+        """
+        Function used to compute the running average of the last N elements of a vector x
+
+        :param x: the vector to take the running average of
+        :param N: the running average length
+        :return: a list with running averages
+        """
         if len(x) < N:
             N = len(x)
         if len(x) >= N:

@@ -77,6 +77,8 @@ class EmulationTrace(JSONSerializable):
 
     def to_dict(self) -> Dict[str, Any]:
         """
+        Converts the object to a dict representation
+        
         :return: a dict representation of the object
         """
         d = {}
@@ -756,6 +758,12 @@ class NpEncoder(json.JSONEncoder):
     Encoder for Numpy arrays to JSON
     """
     def default(self, obj):
+        """
+        Encodes a numpy type for JSON in the default way
+
+        :param obj: the numpy object to encode
+        :return: the encoded object
+        """
         if isinstance(obj, np.integer):
             return int(obj)
         if isinstance(obj, np.floating):

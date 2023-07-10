@@ -3,9 +3,7 @@ import pytest
 
 
 class TestClusterManagerSuite(object):
-    """
-    Test suite for cluster_manager.py
-    """
+    """Test suite for cluster_manager.py"""
 
     pytest.logger = logging.getLogger("cluster_manager_tests")
 

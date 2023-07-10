@@ -235,6 +235,14 @@ class NorthBoundRestAPIController(ControllerBase):
     """
 
     def __init__(self, req, link, data, **config):
+        """
+        Initializes the controller
+
+        :param req: the request for the initialization
+        :param link: the link on which the controller was started
+        :param data: the data
+        :param config: configuration parameters
+        """
         super(NorthBoundRestAPIController, self).__init__(req, link, data, **config)
         self.controller_app = data[constants.RYU.CONTROLLER_APP]  # These names have to match!
         self.hostname = socket.gethostname()

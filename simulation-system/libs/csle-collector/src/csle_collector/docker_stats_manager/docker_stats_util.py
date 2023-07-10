@@ -5,6 +5,9 @@ from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerS
 
 
 class DockerStatsUtil:
+    """
+    Utility class for managing docker container statistics
+    """
 
     @staticmethod
     def calculate_cpu_percent(stats_dict: dict) -> float:

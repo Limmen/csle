@@ -7,9 +7,19 @@ from csle_common.logging.custom_formatter import CustomFormatter
 
 
 class SingletonType(type):
+    """
+    Singleton type class
+    """
     _instances = {}
 
     def __call__(cls, *args, **kwargs):
+        """
+        Creates the singleton
+
+        :param args: argument
+        :param kwargs: keyword arguments
+        :return: the instance
+        """
         if cls not in cls._instances:
             cls._instances[cls] = super(SingletonType, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
@@ -47,7 +57,14 @@ class Logger(metaclass=SingletonType):
             log_path = os.path.join(".", (str(log_file_name)))
             self.setup_logfile(log_path=log_path, logger=logger)
 
-    def setup_logfile(self, log_path, logger):
+    def setup_logfile(self, log_path, logger) -> None:
+        """
+        Sets up the log file
+
+        :param log_path: the path to the log file
+        :param logger: the logger object
+        :return: None
+        """
         handler = logging.FileHandler(log_path, 'a+')
         os.chmod(log_path, 0o777)
         handler.setFormatter(
@@ -76,7 +93,15 @@ class Logger(metaclass=SingletonType):
         return self._log_path
 
 
-def handle_exception(exc_type, exc_value, exc_traceback):
+def handle_exception(exc_type, exc_value, exc_traceback) -> None:
+    """
+    Utility function for handling a given exception
+
+    :param exc_type: the type of the exception
+    :param exc_value: the value of the exception
+    :param exc_traceback: the traceback of the exception
+    :return: None
+    """
     if issubclass(exc_type, KeyboardInterrupt):
         sys.__excepthook__(exc_type, exc_value, exc_traceback)
         return

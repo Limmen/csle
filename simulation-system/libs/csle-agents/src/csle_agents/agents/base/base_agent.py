@@ -38,8 +38,18 @@ class BaseAgent(ABC):
 
     @abstractmethod
     def train(self) -> ExperimentExecution:
+        """
+        Abstract method to be implemented by subclasses. Should contain the training logic
+
+        :return: the training result
+        """
         pass
 
     @abstractmethod
     def hparam_names(self) -> List[str]:
+        """
+        Abstract method to be implemented by subclasses. Gets the list of hyperparameters.
+
+        :return: the list of hyperparameters
+        """
         pass

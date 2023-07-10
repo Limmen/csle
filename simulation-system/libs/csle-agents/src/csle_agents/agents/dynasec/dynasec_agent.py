@@ -426,7 +426,17 @@ class PolicyEvaluationThread(threading.Thread):
         self.env = env
 
     def record_metrics(self, exp_result: ExperimentResult, seed: int, metrics_dict: Dict,
-                       eval: bool = False, baseline: bool = False):
+                       eval: bool = False, baseline: bool = False) -> ExperimentResult:
+        """
+        Recors metrics from the emulation
+
+        :param exp_result: the current experiment result
+        :param seed: the seed of the experiment
+        :param metrics_dict: the dict with metrics
+        :param eval: boolean flag indiciating whether the metrics are for evaluation or not
+        :param baseline: boolean flag indicating whether the metrics are for a baseline
+        :return: the experiment result with the recorded metrics
+        """
         if not eval and baseline:
             exp_result.all_metrics[seed][agents_constants.COMMON.BASELINE_PREFIX +
                                          agents_constants.COMMON.AVERAGE_RETURN].append(
@@ -536,7 +546,17 @@ class PolicyEvaluationThread(threading.Thread):
         return exp_result
 
     def eval_traces(self, traces: List[EmulationTrace], defender_policy: Policy, max_steps: int,
-                    system_model: GaussianMixtureSystemModel, baseline: bool = False):
+                    system_model: GaussianMixtureSystemModel, baseline: bool = False) -> Dict:
+        """
+        Utility method for evaluating with given traces
+
+        :param traces: the traces to use for evaluation
+        :param defender_policy: the defender policy to use for evaluation
+        :param max_steps: the maximum number of steps for the evaluation
+        :param system_model: the system model for the evaluation
+        :param baseline: boolean flag indicating whether the baseline is being evaluated
+        :return: the evaluation result
+        """
         sample_space = self.simulation_env_config.simulation_env_input_config.stopping_game_config.O.tolist()
         old_Z = self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z.copy()
         self.simulation_env_config.simulation_env_input_config.stopping_game_config.Z, int_mean, no_int_mean = \
@@ -611,7 +631,7 @@ class PolicyEvaluationThread(threading.Thread):
 
 class DynaSecAgent(BaseAgent):
     """
-    DynaSec
+    The DynaSec Agent
     """
 
     def __init__(self, simulation_env_config: SimulationEnvConfig,
@@ -1165,6 +1185,13 @@ class DynaSecAgent(BaseAgent):
     @staticmethod
     def get_Z_from_system_model(system_model: GaussianMixtureSystemModel, sample_space: List) -> Tuple[np.ndarray,
                                                                                                        float, float]:
+        """
+        Gets the observation tensor from a given system model
+
+        :param system_model: the system model
+        :param sample_space: the sample space
+        :return: the observation tensor
+        """
         intrusion_dist = np.zeros(len(sample_space))
         no_intrusion_dist = np.zeros(len(sample_space))
         terminal_dist = np.zeros(len(sample_space))
@@ -1216,7 +1243,13 @@ class DynaSecAgent(BaseAgent):
         return Z, int_mean, no_int_mean
 
     @staticmethod
-    def mean(prob_vector):
+    def mean(prob_vector) -> float:
+        """
+        Utility function for getting the mean of a probability vector
+
+        :param prob_vector: the vector to take the mean of
+        :return: the mean
+        """
         m = 0
         for i in range(len(prob_vector)):
             m += prob_vector[i] * i
@@ -1224,6 +1257,7 @@ class DynaSecAgent(BaseAgent):
 
     def hparam_names(self) -> List[str]:
         """
+        Gets the hyperparameter names
         :return: a list with the hyperparameter names
         """
         return [constants.T_SPSA.a, constants.T_SPSA.c, constants.T_SPSA.LAMBDA,

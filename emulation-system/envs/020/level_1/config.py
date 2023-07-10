@@ -1293,6 +1293,8 @@ def default_users_config(network_id: int) -> UsersConfig:
 
 def default_vulns_config(network_id: int) -> VulnerabilitiesConfig:
     """
+    Gets the default vulnerability configuration
+
     :param network_id: the network id
     :return: the vulnerability config
     """
