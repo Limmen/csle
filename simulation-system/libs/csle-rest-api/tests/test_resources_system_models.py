@@ -1,8 +1,9 @@
 from typing import Dict, List, Tuple, Union
 import json
 import logging
-import csle_common.constants.constants as constants
 import pytest
+import pytest_mock
+import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
@@ -24,7 +25,7 @@ class TestResourcesSystemModelsSuite:
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def list_g_m_m_ids(self, mocker):
+    def list_g_m_m_ids(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_system_identification_jobs function
 
@@ -40,7 +41,7 @@ class TestResourcesSystemModelsSuite:
         return list_gaussian_mixture_system_models_ids_mocker
 
     @pytest.fixture
-    def list_e_s_m_ids(self, mocker):
+    def list_e_s_m_ids(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_empirical_system_models_ids function
 
@@ -55,7 +56,7 @@ class TestResourcesSystemModelsSuite:
         return list_empirical_system_models_ids_mocker
 
     @pytest.fixture
-    def list_gp_s_m_ids(self, mocker):
+    def list_gp_s_m_ids(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_gp_s_m_ids function
 
@@ -70,7 +71,7 @@ class TestResourcesSystemModelsSuite:
         return list_gp_system_models_ids_mocker
 
     @pytest.fixture
-    def list_mcmc_s_m_ids(self, mocker):
+    def list_mcmc_s_m_ids(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_mcmc_s_m_ids function
 
@@ -113,12 +114,23 @@ class TestResourcesSystemModelsSuite:
                            api_constants.MGMT_WEBAPP.MCMC_SYSTEM_MODEL_TYPE}]
         return response_dicts
 
-    def test_s_m_get(self, flask_app, mocker,
+    def test_s_m_get(self, flask_app, mocker: pytest_mock.MockFixture,
                      logged_in, not_logged_in, logged_in_as_admin,
                      list_mcmc_s_m_ids, list_gp_s_m_ids, list_e_s_m_ids,
                      list_g_m_m_ids) -> None:
         """
         Testing for the GET HTTPS method in the /system-models resource
+
+        :param flask_app: the flask app for making test requests
+        :param mocker: the pytest mocker object
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param list_mcmc_s_m_ids: the list_mcmc_s_m_ids fixture
+        :param list_gp_s_m_ids: the list_gp_s_m_ids fixture
+        :param list_e_s_m_ids: the list_e_s_m_ids fixture
+        :param list_g_m_m_ids: the list_g_m_m_ids fixture
+        :return: None
         """
         test_dicts = TestResourcesSystemModelsSuite.example_returner()
 
