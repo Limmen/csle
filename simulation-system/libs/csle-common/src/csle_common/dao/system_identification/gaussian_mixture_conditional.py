@@ -37,7 +37,12 @@ class GaussianMixtureConditional(JSONSerializable):
         self.generate_distributions()
         self.combined_distribution = []
 
-    def generate_distributions(self):
+    def generate_distributions(self) -> None:
+        """
+        Generates the combined mixture distribution by taking a convex combination of the Gaussians.
+
+        :return: None
+        """
         self.sample_space.sort()
         dists = []
         for weight, mean, covar in zip(self.mixture_weights, self.mixtures_means, self.mixtures_covariance_matrix):
@@ -49,7 +54,14 @@ class GaussianMixtureConditional(JSONSerializable):
             combined_dist = combined_dist + d_arr
         self.combined_distribution = list(combined_dist)
 
-    def generate_distributions_for_samples(self, samples, normalize: bool = False):
+    def generate_distributions_for_samples(self, samples: List[float], normalize: bool = False):
+        """
+        Generates a distribution over a given list of samples
+
+        :param samples: the samples to generate the distribution for
+        :param normalize: a boolean flag indicating whether the density distribution should be normalized or not
+        :return: the mixture distribution over the given samples.
+        """
         samples.sort()
         dists = []
         for weight, mean, covar in zip(self.mixture_weights, self.mixtures_means, self.mixtures_covariance_matrix):

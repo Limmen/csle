@@ -19,6 +19,7 @@ class SystemModel(JSONSerializable):
         self.descr = descr
         self.model_type = model_type
 
+    @abstractmethod
     def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the object
@@ -26,6 +27,7 @@ class SystemModel(JSONSerializable):
         pass
 
     @staticmethod
+    @abstractmethod
     def from_dict(d: Dict[str, Any]) -> "SystemModel":
         """
         Converts a dict representation of the object to an instance
