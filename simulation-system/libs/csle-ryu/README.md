@@ -18,6 +18,7 @@ A library with SDN controllers used in CSLE for emulating software-defined netwo
 
 - Python 3.8+
 - `flake8` (for linting)
+- `flake8-rst-docstrings` (for linting docstrings)
 - `tox` (for automated testing)
 - `pytest` (for unit tests)
 - `pytest-cov` (for unit test coverage)

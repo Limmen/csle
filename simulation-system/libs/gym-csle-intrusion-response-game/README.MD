@@ -19,6 +19,7 @@ An OpenAI gym reinforcement learning environment that represents an intrusion re
 
 - Python 3.8+
 - `flake8` (for linting)
+- `flake8-rst-docstrings` (for linting docstrings)
 - `tox` (for automated testing)
 - `pytest` (for unit tests)
 - `pytest-cov` (for unit test coverage)

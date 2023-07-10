@@ -2,3 +2,7 @@
 max-line-length = 120
 exclude = .git,__pycache__,docs/source/conf.py,old,build,dist,*_pb2*,*init__*,.tox
 ignore = E741, W503, W504, F821, W605
+rst-roles = class, func, ref
+rst-directives = envvar, exception
+rst-substitutions = version
+extend-ignore = D401, D400

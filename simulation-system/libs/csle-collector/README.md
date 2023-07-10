@@ -40,6 +40,7 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --gr
 
 - Python 3.8+
 - `flake8` (for linting)
+- `flake8-rst-docstrings` (for linting docstrings)
 - `tox` (for automated testing)
 - `pytest` (for unit tests)
 - `pytest-cov` (for unit test coverage)

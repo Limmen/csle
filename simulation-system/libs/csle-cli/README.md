@@ -23,6 +23,7 @@ The command-line-interface (CLI) tool for CSLE.
 
 - Python 3.8+
 - `flake8` (for linting)
+- `flake8-rst-docstrings` (for linting docstrings)
 - `tox` (for automated testing)
 - `mypy` (for static typing)
 - `sphinx` (for API documentation)
