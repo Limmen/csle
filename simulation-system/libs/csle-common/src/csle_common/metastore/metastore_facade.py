@@ -1749,7 +1749,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_gaussian_mixture_system_models_ids() -> List[Dict]:
+    def list_gaussian_mixture_system_models_ids() -> List[Tuple]:
         """
         :return: A list of gaussian mixture system model ids in the metastore
         """
