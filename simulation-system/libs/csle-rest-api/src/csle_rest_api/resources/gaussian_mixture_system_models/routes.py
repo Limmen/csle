@@ -1,12 +1,12 @@
 """
 Routes and sub-resources for the /gaussian-mixture-system-models resource
 """
-from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-import csle_rest_api.util.rest_api_util as rest_api_util
+from flask import Blueprint, jsonify, request
 
+import csle_rest_api.constants.constants as api_constants
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 gaussian_mixture_system_models_bp = Blueprint(
@@ -34,7 +34,6 @@ def gaussian_mixture_system_models():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
             return gaussian_mixture_system_models_ids()
-
         models = MetastoreFacade.list_gaussian_mixture_system_models()
         models_dicts = list(map(lambda x: x.to_dict(), models))
         response = jsonify(models_dicts)
