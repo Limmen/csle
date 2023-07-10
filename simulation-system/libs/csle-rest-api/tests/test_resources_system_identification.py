@@ -7,10 +7,15 @@ import pytest
 from csle_common.dao.jobs.system_identification_job_config import (
     SystemIdentificationJobConfig,
 )
+from csle_common.dao.system_identification.gaussian_mixture_conditional import (
+    GaussianMixtureConditional,
+)
+from csle_common.dao.system_identification.gaussian_mixture_system_model import (
+    GaussianMixtureSystemModel,
+)
 from csle_common.dao.system_identification.system_identification_config import (
     SystemIdentificationConfig,
 )
-from csle_common.dao.system_identification.system_model import SystemModel
 from csle_common.dao.system_identification.system_model_type import SystemModelType
 from csle_common.dao.training.hparam import HParam
 
@@ -83,8 +88,8 @@ class TestResourcesSystemIdentificationSuite:
         :return: a mock object with the mocked function
         """
         def get_system_identification_job_config(id: int) -> SystemIdentificationJobConfig:
-            policy = TestResourcesSystemIdentificationSuite.get_example_job()
-            return policy
+            s_i_job = TestResourcesSystemIdentificationSuite.get_example_job()
+            return s_i_job
         get_system_identification_job_config_mocker = mocker.MagicMock(side_effect=get_system_identification_job_config)
         return get_system_identification_job_config_mocker
 
@@ -95,7 +100,12 @@ class TestResourcesSystemIdentificationSuite:
 
         :return: an example isntance of a system-identification-job cofiguration
         """
-        sys_mod = SystemModel(descr="descr", model_type=SystemModelType.GAUSSIAN_MIXTURE.value)
+        gauss_cond = GaussianMixtureConditional(conditional_name="JohnDoeCond", metric_name="JohnDoeMetric",
+                                                num_mixture_components=1, dim=1, mixtures_means=[[1.1]],
+                                                mixtures_covariance_matrix=[[[1.1]]], mixture_weights=[1.1],
+                                                sample_space=[10])
+        sys_mod = GaussianMixtureSystemModel(emulation_env_name="JohnDoeEmulation", emulation_statistic_id=10,
+                                             conditional_metric_distributions=[[gauss_cond]], descr="descr",)
         s_i_config = SystemIdentificationConfig(model_type=SystemModelType.GAUSSIAN_MIXTURE.value,
                                                 hparams={"params": HParam(value=10, name="JohnDoe", descr="descr")},
                                                 output_dir="null", title="JDoeTitle", log_every=10)
