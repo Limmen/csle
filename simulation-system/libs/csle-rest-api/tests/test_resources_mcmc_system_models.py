@@ -83,7 +83,7 @@ class TestResourcesMCMCSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
-        def remove_mcmc_system_model(mcmc_system_model: MCMCSystemModel):
+        def remove_mcmc_system_model(mcmc_system_model: MCMCSystemModel) -> None:
             return None
         remove_mcmc_system_model_mocker = mocker.MagicMock(
             side_effect=remove_mcmc_system_model)
