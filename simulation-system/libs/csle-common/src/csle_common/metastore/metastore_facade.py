@@ -990,7 +990,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_experiment_executions_ids() -> List[Dict]:
+    def list_experiment_executions_ids() -> List[tuple]:
         """
         :return: A list of experiment execution ids in the metastore
         """
