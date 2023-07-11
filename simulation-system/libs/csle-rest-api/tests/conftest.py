@@ -1,4 +1,6 @@
 
+from typing import List
+
 import csle_common.constants.constants as constants
 import pytest
 from csle_cluster.cluster_manager.cluster_manager_pb2 import (
@@ -254,3 +256,52 @@ def not_logged_in(mocker):
         side_effect=check_if_user_is_authorized
     )
     return check_if_user_is_authorized_mock
+
+
+@pytest.fixture
+def cluster_node_status(example_config: Config,
+                        example_node_status: NodeStatusDTO) -> List[dict]:
+    """
+    Staticmethod that reurns an example cluster node status, that is
+    to be tested against the mocking ofthe API
+    :param example_config: an example Config class
+    :param exmaple_node_status: an example node status class
+    :return: a list of a dict containing an example cluster node status
+    """
+    config = example_config
+    cluster_statuses = []
+    for node in config.cluster_config.cluster_nodes:
+        node_status = example_node_status
+        cluster_status_dict = {
+            api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY: node_status.cAdvisorRunning,
+            api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY: node_status.grafanaRunning,
+            api_constants.MGMT_WEBAPP.POSTGRESQL_RUNNING_PROPERTY: node_status.postgreSQLRunning,
+            api_constants.MGMT_WEBAPP.NODE_EXPORTER_RUNNING_PROPERTY: node_status.nodeExporterRunning,
+            api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY: node_status.dockerEngineRunning,
+            api_constants.MGMT_WEBAPP.NGINX_RUNNING_PROPERTY: node_status.nginxRunning,
+            api_constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY: node_status.flaskRunning,
+            api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY: node_status.prometheusRunning,
+            api_constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY: node_status.pgAdminRunning,
+            api_constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY:
+            f"http://{node.ip}:{constants.COMMANDS.CADVISOR_PORT}/",
+            api_constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.GRAFANA_PORT}/",
+            api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY: f"http://{node.ip}:"
+            f"{constants.COMMANDS.NODE_EXPORTER_PORT}/",
+            api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.FLASK_PORT}/",
+            api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY: f"http://{node.ip}:"
+                                                            f"{constants.COMMANDS.PROMETHEUS_PORT}/",
+            api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.PGADMIN_PORT}/",
+            api_constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY: constants.COMMANDS.CADVISOR_PORT,
+            api_constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY: constants.COMMANDS.GRAFANA_PORT,
+            api_constants.MGMT_WEBAPP.NODE_EXPORTER_PORT_PROPERTY: constants.COMMANDS.NODE_EXPORTER_PORT,
+            api_constants.MGMT_WEBAPP.FLASK_PORT_PROPERTY: constants.COMMANDS.FLASK_PORT,
+            api_constants.MGMT_WEBAPP.PROMETHEUS_PORT_PROPERTY: constants.COMMANDS.PROMETHEUS_PORT,
+            api_constants.MGMT_WEBAPP.PGADMIN_PORT_PROPERTY: constants.COMMANDS.PGADMIN_PORT,
+            api_constants.MGMT_WEBAPP.IP_PROPERTY: node.ip,
+            api_constants.MGMT_WEBAPP.CPUS_PROPERTY: node.cpus,
+            api_constants.MGMT_WEBAPP.GPUS_PROPERTY: node.gpus,
+            api_constants.MGMT_WEBAPP.RAM_PROPERTY: node.RAM,
+            api_constants.MGMT_WEBAPP.LEADER_PROPERTY: node.leader
+        }
+        cluster_statuses.append(cluster_status_dict)
+    return cluster_statuses

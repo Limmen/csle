@@ -39,13 +39,15 @@ def docker():
         node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
             if node.ip == ip:
-                # what about node.ip != ip?
                 if node_status.dockerEngineRunning:
                     ClusterController.stop_docker_engine(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
                     node_status.dockerEngineRunning = False
                 else:
                     ClusterController.start_docker_engine(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
                     node_status.dockerEngineRunning = True
+            else:
+                response = jsonify({"reason": f"node with ip {ip} does not exist"})
+                return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
         cluster_status_dict = {
             api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY: node_status.cAdvisorRunning,
             api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY: node_status.grafanaRunning,
