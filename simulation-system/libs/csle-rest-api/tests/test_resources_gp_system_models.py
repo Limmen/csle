@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Dict, List
+from typing import Dict, List, Union
 
 import csle_common.constants.constants as constants
 import pytest
@@ -127,9 +127,10 @@ class TestResourcesGPSystemModelsSuite:
         return remove_gp_system_model_mocker
 
     @staticmethod
-    def example_sys_mod():
+    def example_sys_mod() -> List[Dict[str, Union[int, str]]]:
         """
         Static method for returning an example list of response dicts
+        :return: An example list of a System model dictionary
         """
         response_dicts = [{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM: 1,
                            api_constants.MGMT_WEBAPP.ID_PROPERTY: 'csle-level-10',
@@ -154,9 +155,10 @@ class TestResourcesGPSystemModelsSuite:
         return response_dicts
 
     @staticmethod
-    def example_returner():
+    def example_returner() -> GPSystemModel:
         """
         Static help method for returning an example GP System Model
+        :return: an example GPSystemModel
         """
         gp_cond = GPConditional(conditional_name="JohndoeConditional", metric_name="JohnDoeMetric",
                                 sample_space=[5], observed_x=[10.0],
