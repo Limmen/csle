@@ -64,7 +64,8 @@ class TestResourcesClusterStatusSuite:
         return get_node_status_mock
 
     @staticmethod
-    def cluster_node_status(example_config, example_node_status) -> List[dict]:
+    def cluster_node_status(example_config: Config,
+                            example_node_status: NodeStatusDTO) -> List[dict]:
         config = example_config
         cluster_statuses = []
         for node in config.cluster_config.cluster_nodes:
@@ -118,8 +119,6 @@ class TestResourcesClusterStatusSuite:
         :param not_logged_in: the not_logged_in fixture
         :param get_: the config fixture
         :param node_status: the node_status fixture
-        :param start: the start fixture
-        :param stop: the stop fixture
         :return: None
         """
         test_ns = TestResourcesClusterStatusSuite.cluster_node_status(example_config,
