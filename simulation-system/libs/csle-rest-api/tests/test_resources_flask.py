@@ -1,12 +1,14 @@
 import json
 import logging
+
+import csle_common.constants.constants as constants
 import pytest
 import pytest_mock
-import csle_common.constants.constants as constants
 from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
+from csle_common.dao.emulation_config.config import Config
+
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
-from csle_common.dao.emulation_config.config import Config
 
 
 class TestResourcesFlaskSuite:

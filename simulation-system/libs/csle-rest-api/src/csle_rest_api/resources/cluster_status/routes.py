@@ -2,12 +2,13 @@
 Routes and sub-resources for the /clusterstatus resource
 """
 
-from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, jsonify, request
+
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
-from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
 # Creates a blueprint "sub application" of the main REST app
 cluster_status_bp = Blueprint(api_constants.MGMT_WEBAPP.CLUSTER_STATUS_RESOURCE, __name__,
@@ -21,8 +22,8 @@ def cluster_status():
     :return: static resources for the /cluster_status url
     """
     requires_admin = False
-    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
-        requires_admin = True
+    # if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+    #     requires_admin = True
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
