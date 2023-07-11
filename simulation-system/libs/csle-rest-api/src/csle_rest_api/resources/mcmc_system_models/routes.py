@@ -1,10 +1,11 @@
 """
 Routes and sub-resources for the /mcmc-system-models resource
 """
-from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, jsonify, request
+
+import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
