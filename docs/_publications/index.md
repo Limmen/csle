@@ -8,8 +8,25 @@ permalink: /publications/
 
 The following publications are based on CSLE:
 
+##### **Learning Near-Optimal Intrusion Responses Against Dynamic Attackers**
+**Journal**: IEEE Transactions on Network and Service Management (IEEE TNSM).
+[Proceedings.](Learning Near-Optimal Intrusion Responses Against Dynamic Attackers), [Preprint.](https://arxiv.org/abs/2301.06085)
+
+**Bibtex**:
+```bash
+@ARTICLE{10175554,
+  author={Hammar, Kim and Stadler, Rolf},
+  journal={IEEE Transactions on Network and Service Management}, 
+  title={Learning Near-Optimal Intrusion Responses Against Dynamic Attackers}, 
+  year={2023},
+  volume={},
+  number={},
+  pages={1-1},
+  doi={10.1109/TNSM.2023.3293413}}
+```
+
 ##### **Digital Twins for Security Automation**
-**Journal**: NOMS 2023 IEEE/IFIP Network Operations and Management Symposium
+**Conference**: NOMS 2023 IEEE/IFIP Network Operations and Management Symposium
 [Proceedings.](https://ieeexplore.ieee.org/document/10154288)
 
 **Bibtex**:
