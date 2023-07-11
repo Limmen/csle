@@ -37,7 +37,6 @@ def docker():
     cluster_statuses = []
     ip_found = False
     for node in config.cluster_config.cluster_nodes:
-        ip_found = False
         node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
             if node.ip == ip:
