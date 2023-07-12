@@ -1,6 +1,7 @@
 from typing import Callable
 import logging
 import pytest
+import pytest_mock
 from csle_collector.kafka_manager.kafka_manager_pb2 import KafkaDTO
 from csle_collector.kafka_manager.kafka_manager import KafkaManagerServicer
 from csle_collector.kafka_manager.kafka_manager_util import KafkaManagerUtil
@@ -45,7 +46,7 @@ class TestKafkaManagerSuite(object):
         from csle_collector.kafka_manager.kafka_manager_pb2_grpc import KafkaManagerStub
         return KafkaManagerStub
 
-    def test_getKafkaStatus(self, grpc_stub, mocker) -> None:
+    def test_getKafkaStatus(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
         """
         Tests the getKafkaStatus grpc
 
@@ -61,7 +62,7 @@ class TestKafkaManagerSuite(object):
         assert response.running == running
         assert response.topics == topics
 
-    def test_stopKafka(self, grpc_stub, mocker) -> None:
+    def test_stopKafka(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
         """
         Tests the stopKafka grpc
 
@@ -76,7 +77,7 @@ class TestKafkaManagerSuite(object):
         assert response.running == running
         assert response.topics == topics
 
-    def test_startKafka(self, grpc_stub, mocker) -> None:
+    def test_startKafka(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
         """
         Tests the startKafka grpc
 

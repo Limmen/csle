@@ -1,6 +1,7 @@
 from typing import Callable
 import logging
 import pytest
+import pytest_mock
 from subprocess import CompletedProcess
 from csle_collector.ossec_ids_manager.ossec_ids_manager_pb2 import OSSECIdsMonitorDTO, OSSECIdsLogDTO
 from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
@@ -45,7 +46,7 @@ class TestOSSECIDSManagerSuite(object):
         from csle_collector.ossec_ids_manager.ossec_ids_manager_pb2_grpc import OSSECIdsManagerStub
         return OSSECIdsManagerStub
 
-    def test_getOSSECIdsAlerts(self, grpc_stub, mocker) -> None:
+    def test_getOSSECIdsAlerts(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
         """
         Tests the getOSSECIdsAlerts grpc
 
@@ -112,7 +113,7 @@ class TestOSSECIDSManagerSuite(object):
         assert response.severe_alerts == 100
         assert response.alerts_weighted_by_level == 400
 
-    def test_startOSSECIdsMonitor(self, grpc_stub, mocker) -> None:
+    def test_startOSSECIdsMonitor(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
         """
         Tests the startOSSECIdsMonitor grpc
 
@@ -141,7 +142,7 @@ class TestOSSECIDSManagerSuite(object):
         assert response.monitor_running
         assert not response.ossec_ids_running
 
-    def test_stopOSSECIdsMonitor(self, grpc_stub, mocker) -> None:
+    def test_stopOSSECIdsMonitor(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
         """
         Tests the stopOSSECIdsMonitor grpc
 
@@ -162,7 +163,7 @@ class TestOSSECIDSManagerSuite(object):
         assert not response.monitor_running
         assert not response.ossec_ids_running
 
-    def test_stopOSSECIds(self, grpc_stub, mocker) -> None:
+    def test_stopOSSECIds(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
         """
         Tests the stopOSSECIdsMonitor grpc
 
@@ -185,7 +186,7 @@ class TestOSSECIDSManagerSuite(object):
         assert response.monitor_running
         assert not response.ossec_ids_running
 
-    def test_startOSSECIds(self, grpc_stub, mocker) -> None:
+    def test_startOSSECIds(self, grpc_stub, mocker: pytest_mock.MockFixture) -> None:
         """
         Tests the startOSSECIdsMonitor grpc
 
