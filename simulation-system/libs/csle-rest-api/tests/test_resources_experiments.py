@@ -17,7 +17,7 @@ from csle_rest_api.rest_api import create_app
 
 class TestResourcesExperimentsSuite:
     """
-    Test suite for /cluster_status url
+    Test suite for /experiments url
     """
 
     pytest.logger = logging.getLogger("resources_experiments_tests")
@@ -53,7 +53,7 @@ class TestResourcesExperimentsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked bersion ofthe function
         """
-        def get_experiment_execution(id: int):
+        def get_experiment_execution(id: int) -> ExperimentExecution:
             exp_ex = TestResourcesExperimentsSuite.get_example_exp()
             return exp_ex
         get_experiment_execution_mocker = mocker.MagicMock(
@@ -61,7 +61,7 @@ class TestResourcesExperimentsSuite:
         return get_experiment_execution_mocker
     
     @staticmethod
-    def get_example_exp():
+    def get_example_exp() -> ExperimentExecution:
         """
         Static help method the returns an example experiment execution
         :return: ExperimentExecution class
@@ -116,7 +116,7 @@ class TestResourcesExperimentsSuite:
     def test_exp_get(self, mocker, flask_app,
                      executions, executions_ids,
                      logged_in, not_logged_in,
-                     logged_in_as_admin):
+                     logged_in_as_admin) -> None:
         """
         test function for the /experiments resource
         :param flask_app: the pytest flask app for making requests
@@ -182,7 +182,7 @@ class TestResourcesExperimentsSuite:
                         executions, executions_ids,
                         logged_in, not_logged_in,
                         logged_in_as_admin,
-                        remove):
+                        remove) -> None:
         """
         test function for the /experiments resource
         :param flask_app: the pytest flask app for making requests
@@ -225,7 +225,7 @@ class TestResourcesExperimentsSuite:
     def test_exp_ids_get(self, mocker, flask_app,
                          get_execution,
                          logged_in, not_logged_in,
-                         logged_in_as_admin):
+                         logged_in_as_admin) -> None:
         """
         test function for the /experiments resource
         :param flask_app: the pytest flask app for making requests
@@ -269,7 +269,7 @@ class TestResourcesExperimentsSuite:
     def test_exp_ids_delete(self, mocker, flask_app,
                             get_execution,
                             logged_in, not_logged_in,
-                            logged_in_as_admin, remove):
+                            logged_in_as_admin, remove) -> None:
         """
         test function for the /experiments resource
         :param flask_app: the pytest flask app for making requests
