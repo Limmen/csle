@@ -4,6 +4,7 @@ Routes and sub-resources for the /logs resource
 import json
 
 import csle_common.constants.constants as constants
+import pytest
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from flask import Blueprint, jsonify, request
@@ -299,6 +300,7 @@ def container_logs():
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized
+    # pytest.logger.info(json.loads(request.data)))
     if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json.loads(request.data):
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
@@ -397,6 +399,7 @@ def kafka_logs():
     :return: The logs of the kafka server
     """
     # Check that token is valid
+    # pytest.logger.info(request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM))
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
     if authorized is not None:
         return authorized

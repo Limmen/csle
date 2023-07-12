@@ -126,6 +126,8 @@ class ContainersConfig(JSONSerializable):
         :param name: the full name of the container
         :return: the container with the given ip or None
         """
+        #should tihs always return None? with respect to the if -statement in container_logs.
+
         for c in self.containers:
             if name == c.full_name_str:
                 return c

@@ -2,6 +2,7 @@
 Routes and sub-resources for the /gaussian-mixture-system-models resource
 """
 import csle_common.constants.constants as constants
+import pytest
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from flask import Blueprint, jsonify, request
 
@@ -33,6 +34,7 @@ def gaussian_mixture_system_models():
         # Check if ids query parameter is True, then only return the ids and not the whole list of mixture models
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
+            pytest.logger.info(ids)
             return gaussian_mixture_system_models_ids()
         models = MetastoreFacade.list_gaussian_mixture_system_models()
         models_dicts = list(map(lambda x: x.to_dict(), models))
