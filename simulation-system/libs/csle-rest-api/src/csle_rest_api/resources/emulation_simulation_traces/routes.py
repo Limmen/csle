@@ -1,7 +1,8 @@
 """
 Routes and sub-resources for the /emulation-simulation-traces resource
 """
-from flask import Blueprint, jsonify, request
+from typing import Tuple
+from flask import Blueprint, jsonify, request, Response
 import json
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
@@ -16,7 +17,7 @@ emulation_simulation_traces_bp = Blueprint(
 
 @emulation_simulation_traces_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def emulation_simulation_traces():
+def emulation_simulation_traces() -> Tuple[Response, int]:
     """
     The /emulation-traces resource.
 
@@ -34,13 +35,9 @@ def emulation_simulation_traces():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
             return emulation_simulation_traces_ids()
-
         f = open('/var/log/csle/one_tau.json')
         d = json.load(f)
         response = jsonify(d[api_constants.MGMT_WEBAPP.TRAJECTORIES_PROPERTY])
-        # emulation_trcs = MetastoreFacade.list_emulation_simulation_traces()
-        # traces_dicts = list(map(lambda x: x.to_dict(), emulation_trcs))
-        # response = jsonify(traces_dicts)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
@@ -50,9 +47,10 @@ def emulation_simulation_traces():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def emulation_simulation_traces_ids():
+def emulation_simulation_traces_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all emulation ids
     """
@@ -69,7 +67,7 @@ def emulation_simulation_traces_ids():
 
 @emulation_simulation_traces_bp.route("/<trace_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                               api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def emulation_trace(trace_id: int):
+def emulation_trace(trace_id: int) -> Tuple[Response, int]:
     """
     The /emulation-traces/id resource.
 

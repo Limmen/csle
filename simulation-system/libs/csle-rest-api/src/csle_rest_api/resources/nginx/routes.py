@@ -1,8 +1,9 @@
 """
 Routes and sub-resources for the /nginx resource
 """
+from typing import Tuple
 import json
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
@@ -14,9 +15,8 @@ nginx_bp = Blueprint(api_constants.MGMT_WEBAPP.NGINX_RESOURCE, __name__,
                      url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.NGINX_RESOURCE}")
 
 
-@nginx_bp.route("",
-                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def nginx():
+@nginx_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def nginx() -> Tuple[Response, int]:
     """
     :return: static resources for the /nginx url
     """

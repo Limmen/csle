@@ -1,7 +1,8 @@
 """
 Routes and sub-resources for the /server-cluster resource
 """
-from flask import Blueprint, jsonify, request
+from typing import Tuple
+from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
@@ -16,7 +17,7 @@ server_cluster_bp = Blueprint(
 
 
 @server_cluster_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-def server_cluster():
+def server_cluster() -> Tuple[Response, int]:
     """
     The /server-cluster resource.
 

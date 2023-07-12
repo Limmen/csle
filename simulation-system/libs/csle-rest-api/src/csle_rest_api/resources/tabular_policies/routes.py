@@ -1,12 +1,12 @@
 """
 Routes and sub-resources for the /tabular-policies resource
 """
-from flask import Blueprint, jsonify, request
+from typing import Tuple
+from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 import csle_rest_api.util.rest_api_util as rest_api_util
-
 
 # Creates a blueprint "sub application" of the main REST app
 tabular_policies_bp = Blueprint(
@@ -16,7 +16,7 @@ tabular_policies_bp = Blueprint(
 
 @tabular_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                         api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def tabular_policies():
+def tabular_policies() -> Tuple[Response, int]:
     """
     The /tabular-policies resource.
 
@@ -47,9 +47,10 @@ def tabular_policies():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def tabular_policies_ids():
+def tabular_policies_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all tabular policies ids
     """
@@ -67,7 +68,7 @@ def tabular_policies_ids():
 
 @tabular_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                     api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def tabular_policy(policy_id: int):
+def tabular_policy(policy_id: int) -> Tuple[Response, int]:
     """
     The /tabular-policies/id resource.
 

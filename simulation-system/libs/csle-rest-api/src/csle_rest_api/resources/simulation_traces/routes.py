@@ -1,7 +1,8 @@
 """
 Routes and sub-resources for the /simulation-traces resource
 """
-from flask import Blueprint, jsonify, request
+from typing import Tuple
+from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -16,7 +17,7 @@ simulation_traces_bp = Blueprint(
 
 @simulation_traces_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                          api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def simulation_traces():
+def simulation_traces() -> Tuple[Response, int]:
     """
     The /simulation-traces resource.
 
@@ -47,9 +48,10 @@ def simulation_traces():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def simulation_traces_ids():
+def simulation_traces_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all simulation ids
     """
@@ -67,7 +69,7 @@ def simulation_traces_ids():
 
 @simulation_traces_bp.route("/<trace_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                     api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def simulation_trace(trace_id: int):
+def simulation_trace(trace_id: int) -> Tuple[Response, int]:
     """
     The /simulation-traces/id resource.
 

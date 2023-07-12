@@ -1,7 +1,8 @@
 """
 Routes and sub-resources for the /version resource
 """
-from flask import Blueprint, jsonify
+from typing import Tuple
+from flask import Blueprint, jsonify, Response
 from importlib.metadata import version as meta_version
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
@@ -14,7 +15,7 @@ version_bp = Blueprint(
 
 
 @version_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-def version():
+def version() -> Tuple[Response, int]:
     """
     The /version resource.
 

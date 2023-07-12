@@ -1,14 +1,13 @@
 """
 Routes and sub-resources for the /training-jobs resource
 """
+from typing import Tuple
 import time
-
 import csle_common.constants.constants as constants
 from csle_agents.job_controllers.training_job_manager import TrainingJobManager
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -20,7 +19,7 @@ training_jobs_bp = Blueprint(
 
 @training_jobs_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                      api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def training_jobs():
+def training_jobs() -> Tuple[Response, int]:
     """
     The /training-jobs resource.
 
@@ -60,9 +59,10 @@ def training_jobs():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def training_jobs_ids():
+def training_jobs_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all training jobs ids
     """
@@ -84,7 +84,7 @@ def training_jobs_ids():
 @training_jobs_bp.route("/<job_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                               api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
                                               api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def training_policy(job_id: int):
+def training_policy(job_id: int) -> Tuple[Response, int]:
     """
     The /training-jobs/id resource.
 

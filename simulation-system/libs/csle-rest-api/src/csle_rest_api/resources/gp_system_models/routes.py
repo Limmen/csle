@@ -1,7 +1,8 @@
 """
 Routes and sub-resources for the /gp-system-models resource
 """
-from flask import Blueprint, jsonify, request
+from typing import Tuple
+from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -16,7 +17,7 @@ gp_system_models_bp = Blueprint(
 
 @gp_system_models_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                         api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def gp_system_models():
+def gp_system_models() -> Tuple[Response, int]:
     """
     The /gp-system-models resource.
 
@@ -47,9 +48,10 @@ def gp_system_models():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def gp_system_models_ids():
+def gp_system_models_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all system models ids
     """
@@ -68,7 +70,7 @@ def gp_system_models_ids():
 
 @gp_system_models_bp.route("/<model_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def gp_system_model(model_id: int):
+def gp_system_model(model_id: int) -> Tuple[Response, int]:
     """
     The /system-models/id resource.
 

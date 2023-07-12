@@ -1,10 +1,10 @@
 """
 Routes and sub-resources for the /linear-threshold-policies resource
 """
+from typing import Tuple
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -16,7 +16,7 @@ linear_threshold_policies_bp = Blueprint(
 
 @linear_threshold_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                  api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def linear_threshold_policies():
+def linear_threshold_policies() -> Tuple[Response, int]:
     """
     The /linear-threshold-policies resource.
 
@@ -48,9 +48,10 @@ def linear_threshold_policies():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def linear_threshold_policies_ids():
+def linear_threshold_policies_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all linear theshold policies ids
     """
@@ -68,12 +69,11 @@ def linear_threshold_policies_ids():
 
 @linear_threshold_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                              api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def linear_threshold_policy(policy_id: int):
+def linear_threshold_policy(policy_id: int) -> Tuple[Response, int]:
     """
     The /linear-threshold-policies/id resource.
 
     :param policy_id: the id of the policy
-
     :return: The given policy or deletes the policy
     """
     requires_admin = False

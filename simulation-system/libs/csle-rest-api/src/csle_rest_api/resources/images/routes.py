@@ -1,8 +1,8 @@
 """
 Routes and sub-resources for the /images resource
 """
-from typing import List
-from flask import Blueprint, jsonify, request
+from typing import List, Tuple
+from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
@@ -17,7 +17,7 @@ images_bp = Blueprint(
 
 
 @images_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-def images():
+def images() -> Tuple[Response, int]:
     """
     The /images resource
 

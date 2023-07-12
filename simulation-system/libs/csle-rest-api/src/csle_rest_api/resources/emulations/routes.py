@@ -1,9 +1,9 @@
 """
 Routes and sub-resources for the /emulations resource
 """
-from typing import List
+from typing import List, Tuple
 import base64
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.emulation_env_controller import EmulationEnvController
@@ -19,7 +19,7 @@ emulations_bp = Blueprint(
 
 
 @emulations_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def emulations():
+def emulations() -> Tuple[Response, int]:
     """
     The /emulations resource
 
@@ -74,7 +74,7 @@ def emulations():
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-def emulation_ids():
+def emulation_ids() -> Tuple[Response, int]:
     """
     Utility method for returning the list of emulation ids from the metastore to an HTTP client
 
@@ -106,7 +106,7 @@ def emulation_ids():
                      methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                               api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
                               api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def emulation_by_id(emulation_id: int):
+def emulation_by_id(emulation_id: int) -> Tuple[Response, int]:
     """
     The /emulations/id resource. Gets an emulation by its id.
 
@@ -162,13 +162,13 @@ def emulation_by_id(emulation_id: int):
             em_dict = {}
     response = jsonify(em_dict)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @emulations_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<emulation_id>{constants.COMMANDS.SLASH_DELIM}'
                      f'{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}',
                      methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-def get_executions_of_emulation(emulation_id: int):
+def get_executions_of_emulation(emulation_id: int) -> Tuple[Response, int]:
     """
     The /emulations/id/executions resource. Gets all executions of a given emulation.
 
@@ -194,13 +194,12 @@ def get_executions_of_emulation(emulation_id: int):
                      f'<execution_id>',
                      methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                               api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def get_execution_of_emulation(emulation_id: int, execution_id: int):
+def get_execution_of_emulation(emulation_id: int, execution_id: int) -> Tuple[Response, int]:
     """
     The /emulations/ids/executions/id resource. Gets a given execution of a given emulation.
 
     :param emulation_id: the id of the emulation
     :param execution_id: the id of the execution
-
     :return: The sought for execution if it exist
     """
     authorized = rest_api_util.check_if_user_is_authorized(request=request)
@@ -230,7 +229,7 @@ def get_execution_of_emulation(emulation_id: int, execution_id: int):
                      f'{constants.COMMANDS.SLASH_DELIM}<execution_id>'
                      f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.MONITOR_SUBRESOURCE}'
                      f'{constants.COMMANDS.SLASH_DELIM}<minutes>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-def monitor_emulation(emulation_id: int, execution_id: int, minutes: int):
+def monitor_emulation(emulation_id: int, execution_id: int, minutes: int) -> Tuple[Response, int]:
     """
     The /emulations/id/executions/id/monitor/minutes resource. Fetches monitoring data from Kafka.
 

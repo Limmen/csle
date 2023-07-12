@@ -1,33 +1,23 @@
 """
 Routes and sub-resources for the /users resource
 """
+from typing import Tuple
 import json
-
 import bcrypt
 import csle_common.constants.constants as constants
 from csle_common.dao.management.management_user import ManagementUser
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
-users_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.USERS_RESOURCE,
-    __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.USERS_RESOURCE}",
-)
+users_bp = Blueprint(api_constants.MGMT_WEBAPP.USERS_RESOURCE, __name__,
+    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.USERS_RESOURCE}")
 
 
-@users_bp.route(
-    "",
-    methods=[
-        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
-    ],
-)
-def users():
+@users_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
+def users() -> Tuple[Response, int]:
     """
     The /users resource.
 
@@ -65,10 +55,13 @@ def users():
             api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
         )
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def users_ids():
+def users_ids() -> Tuple[Response, int]:
     """
+    Gets the user ids
+
     :return: An HTTP response with all user ids
     """
     user_ids = MetastoreFacade.list_management_users_ids()
@@ -76,33 +69,23 @@ def users_ids():
     for tup in user_ids:
         response_dicts.append({api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0]})
     response = jsonify(response_dicts)
-    response.headers.add(
-        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
-    )
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@users_bp.route(
-    f"{constants.COMMANDS.SLASH_DELIM}<user_id>",
-    methods=[
-        api_constants.MGMT_WEBAPP.HTTP_REST_GET,
-        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
-        api_constants.MGMT_WEBAPP.HTTP_REST_PUT,
-    ],
-)
-def user(user_id: int):
+@users_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<user_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
+                                                                       api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
+                                                                       api_constants.MGMT_WEBAPP.HTTP_REST_PUT])
+def user(user_id: int) -> Tuple[Response, int]:
     """
     The /users/id resource.
 
     :param user_id: the id of the user
-
     :return: The given user or deletes the user
     """
 
     # Check that token is valid
-    authorized = rest_api_util.check_if_user_is_authorized(
-        request=request, requires_admin=False
-    )
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
 
     if authorized is not None:
         return authorized
@@ -111,16 +94,15 @@ def user(user_id: int):
 
     if user is None:
         response = jsonify({})
-        response.headers.add(
-            api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
-        )
+        response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.NOT_FOUND_STATUS_CODE
 
-    request_user = rest_api_util.check_if_user_edit_is_authorized(
-        request=request, user=user
-    )
+    request_user = rest_api_util.check_if_user_edit_is_authorized(request=request, user=user)
     if not isinstance(request_user, ManagementUser):
-        return request_user
+        if request_user is not None:
+            return request_user
+        else:
+            return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
     response = jsonify({})
 
@@ -164,11 +146,7 @@ def user(user_id: int):
                 new_user.admin = False
 
             # An admin user cannot remove its own admin rights
-            if (
-                request_user.admin
-                and user.admin
-                and request_user.username == user.username
-            ):
+            if request_user.admin and user.admin and request_user.username == user.username:
                 new_user.admin = True
             MetastoreFacade.update_management_user(management_user=new_user, id=user_id)
             new_user.salt = ""
@@ -184,11 +162,9 @@ def user(user_id: int):
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-@users_bp.route(
-    f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
-    methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST],
-)
-def create_user():
+@users_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CREATE_SUBRESOURCE}",
+                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def create_user() -> Tuple[Response, int]:
     """
     The /users/create resource.
 
@@ -232,9 +208,7 @@ def create_user():
                 user.salt = ""
                 user.password = ""
                 response = jsonify(user.to_dict())
-            response.headers.add(
-                api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
-            )
+            response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
             return response, constants.HTTPS.OK_STATUS_CODE
         else:
             return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE

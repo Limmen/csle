@@ -1,7 +1,8 @@
 """
 Routes and sub-resources for the /emulation-statistics resource
 """
-from flask import Blueprint, jsonify, request
+from typing import Tuple
+from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -15,7 +16,7 @@ emulation_statistics_bp = Blueprint(
 
 @emulation_statistics_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                             api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def emulation_statistics():
+def emulation_statistics() -> Tuple[Response, int]:
     """
     The /emulation-statistics resource.
 
@@ -46,9 +47,10 @@ def emulation_statistics():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def emulation_statistics_ids():
+def emulation_statistics_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all emulation statistics ids
     """
@@ -66,7 +68,7 @@ def emulation_statistics_ids():
 
 @emulation_statistics_bp.route("/<statistics_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                             api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def emulation_statistic(statistics_id: int):
+def emulation_statistic(statistics_id: int) -> Tuple[Response, int]:
     """
     The /emulation-statistics/id resource.
 

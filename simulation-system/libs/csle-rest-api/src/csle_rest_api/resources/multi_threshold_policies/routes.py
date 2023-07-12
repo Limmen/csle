@@ -1,7 +1,8 @@
 """
 Routes and sub-resources for the /multi-threshold-policies resource
 """
-from flask import Blueprint, jsonify, request
+from typing import Tuple
+from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -16,7 +17,7 @@ multi_threshold_policies_bp = Blueprint(
 
 @multi_threshold_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                 api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def multi_threshold_policies():
+def multi_threshold_policies() -> Tuple[Response, int]:
     """
     The /multi-threshold-policies resource.
 
@@ -48,9 +49,10 @@ def multi_threshold_policies():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def multi_threshold_policies_ids():
+def multi_threshold_policies_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all multi theshold policies ids
     """
@@ -68,7 +70,7 @@ def multi_threshold_policies_ids():
 
 @multi_threshold_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                             api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def multi_threshold_policy(policy_id: int):
+def multi_threshold_policy(policy_id: int) -> Tuple[Response, int]:
     """
     The /multi-threshold-policies/id resource.
 

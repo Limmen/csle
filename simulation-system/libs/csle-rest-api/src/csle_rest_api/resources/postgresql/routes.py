@@ -1,13 +1,12 @@
 """
 Routes and sub-resources for the /postgresql resource
 """
+from typing import Tuple
 import json
-
 import csle_common.constants.constants as constants
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -18,7 +17,7 @@ postgresql_bp = Blueprint(api_constants.MGMT_WEBAPP.POSTGRESQL_RESOURCE, __name_
 
 @postgresql_bp.route("",
                      methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def postgresql():
+def postgresql() -> Tuple[Response, int]:
     """
     :return: static resources for the /postgresql url
     """

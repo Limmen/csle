@@ -1,10 +1,10 @@
 """
 Routes and sub-resources for the /vector-policies resource
 """
+from typing import Tuple
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -16,7 +16,7 @@ vector_policies_bp = Blueprint(
 
 @vector_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def vector_policies():
+def vector_policies() -> Tuple[Response, int]:
     """
     The /vector-policies resource.
 
@@ -46,9 +46,10 @@ def vector_policies():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def vector_policies_ids():
+def vector_policies_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all vector policies ids
     """
@@ -66,7 +67,7 @@ def vector_policies_ids():
 
 @vector_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def vector_policy(policy_id: int):
+def vector_policy(policy_id: int) -> Tuple[Response, int]:
     """
     The /vector-policies/id resource.
 

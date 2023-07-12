@@ -1,9 +1,9 @@
 """
 Routes and sub-resources for the /emulation-executions resource
 """
-from typing import List, Dict, Any, Union
+from typing import List, Dict, Any, Union, Tuple
 import time
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response
 import requests
 import json
 from csle_common.logging.log import Logger
@@ -21,7 +21,7 @@ emulation_executions_bp = Blueprint(
 
 
 @emulation_executions_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-def emulation_executions():
+def emulation_executions() -> Tuple[Response, int]:
     """
     The /emulation-executions resource.
 
@@ -45,7 +45,7 @@ def emulation_executions():
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-def emulation_execution_ids():
+def emulation_execution_ids() -> Tuple[Response, int]:
     """
     Utiltiy method for returning the ids of emulation executions to an HTTP client
 
@@ -106,7 +106,7 @@ def emulation_execution(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-def emulation_execution_info(execution_id: int):
+def emulation_execution_info(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/info resource.
 
@@ -148,7 +148,7 @@ def emulation_execution_info(execution_id: int):
                     execution_info.ryu_managers_info.local_controller_web_port = ryu_tunnel_dto.port
         response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-        return response
+        return response, constants.HTTPS.OK_STATUS_CODE
     else:
         response = jsonify({})
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -158,7 +158,7 @@ def emulation_execution_info(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_client_manager(execution_id: int):
+def start_stop_client_manager(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/client-manager resource.
 
@@ -213,7 +213,7 @@ def start_stop_client_manager(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_client_population(execution_id: int):
+def start_stop_client_population(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/client-population resource.
 
@@ -268,7 +268,7 @@ def start_stop_client_population(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.CLIENT_PRODUCER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_client_producer(execution_id: int):
+def start_stop_client_producer(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/client-producer resource.
 
@@ -323,7 +323,7 @@ def start_stop_client_producer(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_docker_stats_manager(execution_id: int):
+def start_stop_docker_stats_manager(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/docker-stats-manager resource.
 
@@ -376,7 +376,7 @@ def start_stop_docker_stats_manager(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MONITOR_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_docker_stats_monitor(execution_id: int):
+def start_stop_docker_stats_monitor(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/docker-stats-monitor resource.
 
@@ -431,7 +431,7 @@ def start_stop_docker_stats_monitor(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_kafka_manager(execution_id: int):
+def start_stop_kafka_manager(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/kafka-manager resource.
 
@@ -485,7 +485,7 @@ def start_stop_kafka_manager(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_kafka(execution_id: int):
+def start_stop_kafka(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/kafka resource.
 
@@ -541,7 +541,7 @@ def start_stop_kafka(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_snort_manager(execution_id: int):
+def start_stop_snort_manager(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/snort-ids-manager resource.
 
@@ -596,7 +596,7 @@ def start_stop_snort_manager(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_snort_ids(execution_id: int):
+def start_stop_snort_ids(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/snort-ids resource.
 
@@ -652,7 +652,7 @@ def start_stop_snort_ids(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_snort_ids_monitor(execution_id: int):
+def start_stop_snort_ids_monitor(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/snort-ids-monitor resource.
 
@@ -707,7 +707,7 @@ def start_stop_snort_ids_monitor(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_ossec_manager(execution_id: int):
+def start_stop_ossec_manager(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/ossec-ids-manager resource.
 
@@ -786,7 +786,7 @@ def start_stop_ossec_manager(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_ossec_ids(execution_id: int):
+def start_stop_ossec_ids(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/ossec-ids resource.
 
@@ -866,7 +866,7 @@ def start_stop_ossec_ids(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_ossec_ids_monitor(execution_id: int):
+def start_stop_ossec_ids_monitor(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/ossec-ids-monitor resource.
 
@@ -945,7 +945,7 @@ def start_stop_ossec_ids_monitor(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_host_manager(execution_id: int):
+def start_stop_host_manager(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/host-manager resource.
 
@@ -1024,7 +1024,7 @@ def start_stop_host_manager(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_host_monitor_thread(execution_id: int):
+def start_stop_host_monitor_thread(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/host-manager resource.
 
@@ -1103,7 +1103,7 @@ def start_stop_host_monitor_thread(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_container(execution_id: int):
+def start_stop_container(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/container resource.
 
@@ -1177,7 +1177,7 @@ def start_stop_container(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_elk_manager(execution_id: int):
+def start_stop_elk_manager(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/elk-manager resource.
 
@@ -1245,7 +1245,7 @@ def start_stop_elk_manager(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_elk_stack(execution_id: int):
+def start_stop_elk_stack(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/elk-stack resource.
 
@@ -1315,7 +1315,7 @@ def start_stop_elk_stack(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_elastic(execution_id: int):
+def start_stop_elastic(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/elastic resource.
 
@@ -1383,7 +1383,7 @@ def start_stop_elastic(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_logstash(execution_id: int):
+def start_stop_logstash(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/logstash resource.
 
@@ -1451,7 +1451,7 @@ def start_stop_logstash(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_kibana(execution_id: int):
+def start_stop_kibana(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/kibana resource.
 
@@ -1523,7 +1523,7 @@ def start_stop_kibana(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_traffic_manager(execution_id: int):
+def start_stop_traffic_manager(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/traffic-manager resource.
 
@@ -1602,7 +1602,7 @@ def start_stop_traffic_manager(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_traffic_generator(execution_id: int):
+def start_stop_traffic_generator(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/traffic-generator resource.
 
@@ -1681,7 +1681,7 @@ def start_stop_traffic_generator(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_filebeat(execution_id: int):
+def start_stop_filebeat(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/filebeat resource.
 
@@ -1761,7 +1761,7 @@ def start_stop_filebeat(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_packetbeat(execution_id: int):
+def start_stop_packetbeat(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/packetbeat resource.
 
@@ -1841,7 +1841,7 @@ def start_stop_packetbeat(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_metricbeat(execution_id: int):
+def start_stop_metricbeat(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/metricbeat resource.
 
@@ -1921,7 +1921,7 @@ def start_stop_metricbeat(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_heartbeat(execution_id: int):
+def start_stop_heartbeat(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/heartbeat resource.
 
@@ -2001,7 +2001,7 @@ def start_stop_heartbeat(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_ryu_manager(execution_id: int):
+def start_stop_ryu_manager(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/ryu-manager resource.
 
@@ -2072,7 +2072,7 @@ def start_stop_ryu_manager(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_ryu_controller(execution_id: int):
+def start_stop_ryu_controller(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/ryu-controller resource.
 
@@ -2149,7 +2149,7 @@ def start_stop_ryu_controller(execution_id: int):
 @emulation_executions_bp.route(f"{constants.COMMANDS.SLASH_DELIM}<execution_id>{constants.COMMANDS.SLASH_DELIM}"
                                f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}",
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def start_stop_ryu_monitor(execution_id: int):
+def start_stop_ryu_monitor(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/ryu-monitor resource.
 
@@ -2218,7 +2218,7 @@ def start_stop_ryu_monitor(execution_id: int):
 @emulation_executions_bp.route(f'{constants.COMMANDS.SLASH_DELIM}<execution_id>'
                                f'{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}',
                                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-def get_sdn_switches_of_execution(execution_id: int):
+def get_sdn_switches_of_execution(execution_id: int) -> Tuple[Response, int]:
     """
     The /emulation-executions/id/switches resource. Gets SDN switches of a given execution of a given emulation.
 

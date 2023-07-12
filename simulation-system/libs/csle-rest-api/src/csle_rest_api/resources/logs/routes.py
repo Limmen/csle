@@ -1,7 +1,8 @@
 """
 Routes and sub-resources for the /logs resource
 """
-from flask import Blueprint, jsonify, request
+from typing import Tuple
+from flask import Blueprint, jsonify, request, Response
 import json
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
@@ -16,7 +17,7 @@ logs_bp = Blueprint(
 
 
 @logs_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def logs():
+def logs() -> Tuple[Response, int]:
     """
     The /logs resource.
 
@@ -39,7 +40,7 @@ def logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def docker_stats_manager_logs():
+def docker_stats_manager_logs() -> Tuple[Response, int]:
     """
     The /logs/docker-stats-manager resource.
 
@@ -62,7 +63,7 @@ def docker_stats_manager_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def prometheus_logs():
+def prometheus_logs() -> Tuple[Response, int]:
     """
     The /logs/prometheus resource.
 
@@ -85,7 +86,7 @@ def prometheus_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.NGINX_RESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def nginx_logs():
+def nginx_logs() -> Tuple[Response, int]:
     """
     The /logs/nginx resource.
 
@@ -108,7 +109,7 @@ def nginx_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.POSTGRESQL_RESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def postgresql_logs():
+def postgresql_logs() -> Tuple[Response, int]:
     """
     The /logs/postgresql resource.
 
@@ -130,7 +131,7 @@ def postgresql_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.FLASK_RESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def flask_logs():
+def flask_logs() -> Tuple[Response, int]:
     """
     The /logs/flask resource.
 
@@ -152,7 +153,7 @@ def flask_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CLUSTERMANAGER_RESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def cluster_manager_logs():
+def cluster_manager_logs() -> Tuple[Response, int]:
     """
     The /logs/clustermanager resource.
 
@@ -174,7 +175,7 @@ def cluster_manager_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.DOCKER_RESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def docker_logs():
+def docker_logs() -> Tuple[Response, int]:
     """
     The /logs/docker resource.
 
@@ -196,7 +197,7 @@ def docker_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def node_exporter_logs():
+def node_exporter_logs() -> Tuple[Response, int]:
     """
     The /logs/node-exporter resource.
 
@@ -219,7 +220,7 @@ def node_exporter_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def cadvisor_logs():
+def cadvisor_logs() -> Tuple[Response, int]:
     """
     The /logs/cadvisor resource.
 
@@ -242,7 +243,7 @@ def cadvisor_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.PGADMIN_RESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def pgadmin_logs():
+def pgadmin_logs() -> Tuple[Response, int]:
     """
     The /logs/pgadmin resource.
 
@@ -265,7 +266,7 @@ def pgadmin_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def grafana_logs():
+def grafana_logs() -> Tuple[Response, int]:
     """
     The /lofgs/grafana resource.
 
@@ -287,7 +288,7 @@ def grafana_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def container_logs():
+def container_logs() -> Tuple[Response, int]:
     """
     The /logs/container resource.
 
@@ -328,7 +329,7 @@ def container_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def client_manager_logs():
+def client_manager_logs() -> Tuple[Response, int]:
     """
     The /logs/client-manager resource.
 
@@ -360,7 +361,7 @@ def client_manager_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def kafka_manager_logs():
+def kafka_manager_logs() -> Tuple[Response, int]:
     """
     The /logs/kafka-manager resource.
 
@@ -392,7 +393,7 @@ def kafka_manager_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def kafka_logs():
+def kafka_logs() -> Tuple[Response, int]:
     """
     The /logs/kafka resource.
 
@@ -424,7 +425,7 @@ def kafka_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def snort_ids_manager_logs():
+def snort_ids_manager_logs() -> Tuple[Response, int]:
     """
     The /logs/snort-ids-manager resource.
 
@@ -462,7 +463,7 @@ def snort_ids_manager_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def snort_ids_logs():
+def snort_ids_logs() -> Tuple[Response, int]:
     """
     The /logs/snort-ids-logs resource.
 
@@ -499,7 +500,7 @@ def snort_ids_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def ossec_ids_manager_logs():
+def ossec_ids_manager_logs() -> Tuple[Response, int]:
     """
     The /logs/ossec-ids-manager resource.
 
@@ -537,7 +538,7 @@ def ossec_ids_manager_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def ossec_ids_logs():
+def ossec_ids_logs() -> Tuple[Response, int]:
     """
     The /logs/ossec-ids resource.
 
@@ -575,7 +576,7 @@ def ossec_ids_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def host_manager_logs():
+def host_manager_logs() -> Tuple[Response, int]:
     """
     The /logs/host-manager resource.
 
@@ -612,7 +613,7 @@ def host_manager_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def traffic_manager_logs():
+def traffic_manager_logs() -> Tuple[Response, int]:
     """
     The /logs/traffic-manager resource.
 
@@ -650,7 +651,7 @@ def traffic_manager_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def elk_manager_logs():
+def elk_manager_logs() -> Tuple[Response, int]:
     """
     The /logs/elk-manager resource.
 
@@ -684,7 +685,7 @@ def elk_manager_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def elk_logs():
+def elk_logs() -> Tuple[Response, int]:
     """
     The /logs/elk-stack resource.
 
@@ -717,7 +718,7 @@ def elk_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def ryu_manager_logs():
+def ryu_manager_logs() -> Tuple[Response, int]:
     """
     The /logs/ryu-manager resource.
 
@@ -754,7 +755,7 @@ def ryu_manager_logs():
 
 @logs_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}",
                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def ryu_controller_logs():
+def ryu_controller_logs() -> Tuple[Response, int]:
     """
     The /logs/ryu-controller resource.
 

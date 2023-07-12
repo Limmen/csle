@@ -1,10 +1,10 @@
 """
 Routes and sub-resources for the /fnn-w-softmax-policies resource
 """
+from typing import Tuple
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -16,7 +16,7 @@ fnn_w_softmax_policies_bp = Blueprint(
 
 @fnn_w_softmax_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                               api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def fnn_w_softmax_policies():
+def fnn_w_softmax_policies() -> Tuple[Response, int]:
     """
     The /fnn-w-softmax-policies resource.
 
@@ -48,9 +48,10 @@ def fnn_w_softmax_policies():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def fnn_w_softmax_policies_ids():
+def fnn_w_softmax_policies_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all fnn-w-softmax policies ids
     """
@@ -68,7 +69,7 @@ def fnn_w_softmax_policies_ids():
 
 @fnn_w_softmax_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                           api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def fnn_w_softmax_policy(policy_id: int):
+def fnn_w_softmax_policy(policy_id: int) -> Tuple[Response, int]:
     """
     The /fnn-w-softmax-policies/id resource.
 

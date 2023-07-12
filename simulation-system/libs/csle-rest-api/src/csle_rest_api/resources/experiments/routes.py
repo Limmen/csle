@@ -1,10 +1,10 @@
 """
 Routes and sub-resources for the /experiments resource
 """
+from typing import Tuple
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -15,7 +15,7 @@ experiments_bp = Blueprint(
 
 
 @experiments_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def experiments():
+def experiments() -> Tuple[Response, int]:
     """
     The /experiments resource.
 
@@ -46,9 +46,10 @@ def experiments():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def experiments_ids():
+def experiments_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all experiments ids
     """
@@ -67,7 +68,7 @@ def experiments_ids():
 
 @experiments_bp.route("/<experiment_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def experiment(experiment_id: int):
+def experiment(experiment_id: int) -> Tuple[Response, int]:
     """
     The /experiments/id resource.
 

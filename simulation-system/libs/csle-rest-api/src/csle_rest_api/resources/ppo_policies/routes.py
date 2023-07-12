@@ -1,11 +1,10 @@
 """
 Routes and sub-resources for the /ppo-policies resource
 """
-
+from typing import Tuple
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -17,7 +16,7 @@ ppo_policies_bp = Blueprint(
 
 @ppo_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                     api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def ppo_policies():
+def ppo_policies() -> Tuple[Response, int]:
     """
     The /ppo-policies resource.
 
@@ -49,9 +48,10 @@ def ppo_policies():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def ppo_policies_ids():
+def ppo_policies_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all ppo policies ids
     """
@@ -69,7 +69,7 @@ def ppo_policies_ids():
 
 @ppo_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                 api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def ppo_policy(policy_id: int):
+def ppo_policy(policy_id: int) -> Tuple[Response, int]:
     """
     The /ppo-policies/id resource.
 

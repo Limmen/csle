@@ -1,8 +1,9 @@
 """
 Routes and sub-resources for the /simulations resource
 """
+from typing import Tuple
 import base64
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -17,7 +18,7 @@ simulations_bp = Blueprint(
 
 
 @simulations_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def simulations():
+def simulations() -> Tuple[Response, int]:
     """
     The /simulations resource
 
@@ -55,7 +56,7 @@ def simulations():
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-def simulation_ids():
+def simulation_ids() -> Tuple[Response, int]:
     """
     :return: the list of simulation ids as an HTTP response
     """
@@ -63,8 +64,8 @@ def simulation_ids():
     response_dicts = []
     for tup in simulation_ids:
         response_dicts.append({
-            "id": tup[0],
-            "simulation": tup[1]
+            api_constants.MGMT_WEBAPP.ID_PROPERTY: tup[0],
+            api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY: tup[1]
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
@@ -73,7 +74,7 @@ def simulation_ids():
 
 @simulations_bp.route('/<simulation_id>', methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def get_simulation(simulation_id: int):
+def get_simulation(simulation_id: int) -> Tuple[Response, int]:
     """
     The /simulations/id resource. Gets or delets a simulation with a given id.
 

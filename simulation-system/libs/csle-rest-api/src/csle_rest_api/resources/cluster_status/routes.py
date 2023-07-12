@@ -18,7 +18,9 @@ cluster_status_bp = Blueprint(api_constants.MGMT_WEBAPP.CLUSTER_STATUS_RESOURCE,
 @cluster_status_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
 def cluster_status() -> Tuple[Response, int]:
     """
-    :return: static resources for the /cluster_status url
+    The /cluster_status resource
+
+    :return: the cluster status in JSON format
     """
     requires_admin = False
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)

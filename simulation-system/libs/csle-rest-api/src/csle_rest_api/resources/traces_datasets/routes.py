@@ -1,8 +1,9 @@
 """
 Routes and sub-resources for the /traces-datasets resource
 """
+from typing import Tuple
 import os
-from flask import Blueprint, jsonify, request, send_from_directory
+from flask import Blueprint, jsonify, request, send_from_directory, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -18,7 +19,7 @@ traces_datasets_bp = Blueprint(
 
 @traces_datasets_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                        api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def traces_datasets():
+def traces_datasets() -> Tuple[Response, int]:
     """
     The /traces-datasets resource.
 
@@ -48,9 +49,10 @@ def traces_datasets():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def traces_datasets_ids():
+def traces_datasets_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all traces datasets ids
     """
@@ -68,7 +70,7 @@ def traces_datasets_ids():
 
 @traces_datasets_bp.route("/<traces_dataset_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                            api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def traces_dataset(traces_dataset_id: int):
+def traces_dataset(traces_dataset_id: int) -> Tuple[Response, int]:
     """
     The /traces-datasets/id resource.
 
@@ -97,7 +99,7 @@ def traces_dataset(traces_dataset_id: int):
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-def download_dataset_file(traces_dataset: TracesDataset):
+def download_dataset_file(traces_dataset: TracesDataset) -> Tuple[Response, int]:
     """
     Downloads a dataset file
 
@@ -111,7 +113,7 @@ def download_dataset_file(traces_dataset: TracesDataset):
         traces_dataset.download_count = traces_dataset.download_count + 1
         MetastoreFacade.update_traces_dataset(traces_dataset=traces_dataset, id=traces_dataset.id)
         try:
-            return send_from_directory(dir, filename, as_attachment=True)
+            return send_from_directory(dir, filename, as_attachment=True), constants.HTTPS.OK_STATUS_CODE
         except FileNotFoundError:
             response = jsonify({})
             return response, constants.HTTPS.NOT_FOUND_STATUS_CODE

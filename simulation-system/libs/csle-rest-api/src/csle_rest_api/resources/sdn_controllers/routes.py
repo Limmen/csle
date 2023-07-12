@@ -1,8 +1,8 @@
 """
 Routes and sub-resources for the /sdn-controllers resource
 """
-from typing import List
-from flask import Blueprint, jsonify, request
+from typing import List, Tuple
+from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -17,7 +17,7 @@ sdn_controllers_bp = Blueprint(
 
 
 @sdn_controllers_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-def sdn_controllers():
+def sdn_controllers() -> Tuple[Response, int]:
     """
     The /sdn-controllers resource.
 
@@ -44,7 +44,7 @@ def sdn_controllers():
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-def sdn_controllers_ids():
+def sdn_controllers_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all sdn controllers ids
     """

@@ -1,8 +1,9 @@
 """
 Routes and sub-resources for the /statistics-datasets resource
 """
+from typing import Tuple
 import os
-from flask import Blueprint, jsonify, request, send_from_directory
+from flask import Blueprint, jsonify, request, send_from_directory, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -18,7 +19,7 @@ statistics_datasets_bp = Blueprint(
 
 @statistics_datasets_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                            api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def statistics_datasets():
+def statistics_datasets() -> Tuple[Response, int]:
     """
     The /statistics-datasets resource.
 
@@ -48,9 +49,10 @@ def statistics_datasets():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def statistics_datasets_ids():
+def statistics_datasets_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all statistics datasets ids
     """
@@ -68,7 +70,7 @@ def statistics_datasets_ids():
 
 @statistics_datasets_bp.route("/<statistics_dataset_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def statistics_dataset(statistics_dataset_id: int):
+def statistics_dataset(statistics_dataset_id: int) -> Tuple[Response, int]:
     """
     The /statistics-datasets/id resource.
 
@@ -97,7 +99,7 @@ def statistics_dataset(statistics_dataset_id: int):
     return response, constants.HTTPS.OK_STATUS_CODE
 
 
-def download_dataset_file(statistics_dataset: StatisticsDataset):
+def download_dataset_file(statistics_dataset: StatisticsDataset) -> Tuple[Response, int]:
     """
     Downloads a dataset file
 
@@ -111,7 +113,7 @@ def download_dataset_file(statistics_dataset: StatisticsDataset):
         statistics_dataset.download_count = statistics_dataset.download_count + 1
         MetastoreFacade.update_statistics_dataset(statistics_dataset=statistics_dataset, id=statistics_dataset.id)
         try:
-            return send_from_directory(dir, filename, as_attachment=True)
+            return send_from_directory(dir, filename, as_attachment=True), constants.HTTPS.OK_STATUS_CODE
         except FileNotFoundError:
             response = jsonify({})
             return response, constants.HTTPS.NOT_FOUND_STATUS_CODE

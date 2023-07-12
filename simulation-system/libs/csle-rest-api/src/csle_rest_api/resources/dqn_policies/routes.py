@@ -1,7 +1,8 @@
 """
 Routes and sub-resources for the /dqn-policies resource
 """
-from flask import Blueprint, jsonify, request
+from typing import Tuple
+from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -16,7 +17,7 @@ dqn_policies_bp = Blueprint(
 
 @dqn_policies_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                     api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def dqn_policies():
+def dqn_policies() -> Tuple[Response, int]:
     """
     The /dqn-policies resource.
 
@@ -47,9 +48,10 @@ def dqn_policies():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def dqn_policies_ids():
+def dqn_policies_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all dqn policies ids
     """
@@ -62,12 +64,12 @@ def dqn_policies_ids():
         })
     response = jsonify(response_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE
 
 
 @dqn_policies_bp.route("/<policy_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                 api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def dqn_policy(policy_id: int):
+def dqn_policy(policy_id: int) -> Tuple[Response, int]:
     """
     The /dqn-policies/id resource.
 
@@ -90,4 +92,4 @@ def dqn_policy(policy_id: int):
         else:
             MetastoreFacade.remove_dqn_policy(dqn_policy=policy)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response
+    return response, constants.HTTPS.OK_STATUS_CODE

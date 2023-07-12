@@ -1,13 +1,12 @@
 """
 Routes and sub-resources for the /flask resource
 """
+from typing import Tuple
 import json
-
 import csle_common.constants.constants as constants
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -16,11 +15,12 @@ flask_bp = Blueprint(api_constants.MGMT_WEBAPP.FLASK_RESOURCE, __name__,
                      url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.FLASK_RESOURCE}")
 
 
-@flask_bp.route("",
-                methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def flask():
+@flask_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_POST])
+def flask() -> Tuple[Response, int]:
     """
-    :return: static resources for the /flask url
+    The /flask resource
+
+    :return: resources for the /flask url
     """
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
@@ -57,14 +57,18 @@ def flask():
             api_constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY: node_status.flaskRunning,
             api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY: node_status.prometheusRunning,
             api_constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY: node_status.pgAdminRunning,
-            api_constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.CADVISOR_PORT}/",
-            api_constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.GRAFANA_PORT}/",
-            api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY: f"http://{node.ip}:"
+            api_constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY: f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{node.ip}:"
+                                                             f"{constants.COMMANDS.CADVISOR_PORT}/",
+            api_constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY: f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{node.ip}:"
+                                                            f"{constants.COMMANDS.GRAFANA_PORT}/",
+            api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY: f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{node.ip}:"
                                                                   f"{constants.COMMANDS.NODE_EXPORTER_PORT}/",
-            api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.FLASK_PORT}/",
-            api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY: f"http://{node.ip}:"
+            api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY: f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{node.ip}:"
+                                                          f"{constants.COMMANDS.FLASK_PORT}/",
+            api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY: f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{node.ip}:"
                                                                f"{constants.COMMANDS.PROMETHEUS_PORT}/",
-            api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.PGADMIN_PORT}/",
+            api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY: f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{node.ip}:"
+                                                            f"{constants.COMMANDS.PGADMIN_PORT}/",
             api_constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY: constants.COMMANDS.CADVISOR_PORT,
             api_constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY: constants.COMMANDS.GRAFANA_PORT,
             api_constants.MGMT_WEBAPP.NODE_EXPORTER_PORT_PROPERTY: constants.COMMANDS.NODE_EXPORTER_PORT,

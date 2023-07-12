@@ -1,6 +1,7 @@
 """
 Routes and sub-resources for the /login resource
 """
+from typing import Tuple
 import json
 import secrets
 import time
@@ -8,20 +9,16 @@ import bcrypt
 import csle_common.constants.constants as constants
 from csle_common.dao.management.session_token import SessionToken
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 
 # Creates a blueprint "sub application" of the main REST app
-login_bp = Blueprint(
-    api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
-    __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.LOGIN_RESOURCE}",
-)
+login_bp = Blueprint(api_constants.MGMT_WEBAPP.LOGIN_RESOURCE, __name__,
+                     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.LOGIN_RESOURCE}")
 
 
 @login_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def read_login():
+def read_login() -> Tuple[Response, int]:
     """
     The /login resource
 
@@ -40,9 +37,7 @@ def read_login():
             return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
         password = json_data[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
         byte_pwd = password.encode("utf-8")
-        pw_hash = bcrypt.hashpw(byte_pwd, user_account.salt.encode("utf-8")).decode(
-            "utf-8"
-        )
+        pw_hash = bcrypt.hashpw(byte_pwd, user_account.salt.encode("utf-8")).decode("utf-8")
         if user_account.password == pw_hash:
             response_code = constants.HTTPS.OK_STATUS_CODE
             new_token = MetastoreFacade.get_session_token_by_username(username=username)
