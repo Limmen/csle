@@ -13,7 +13,7 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 users_bp = Blueprint(api_constants.MGMT_WEBAPP.USERS_RESOURCE, __name__,
-    url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.USERS_RESOURCE}")
+                     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.USERS_RESOURCE}")
 
 
 @users_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -114,14 +114,14 @@ def user(user_id: int) -> Tuple[Response, int]:
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_PUT:
             new_user = json.loads(request.data)
             if not (
-                api_constants.MGMT_WEBAPP.USERNAME_PROPERTY in new_user
-                and api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY in new_user
-                and api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY in new_user
-                and api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY in new_user
-                and api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY in new_user
-                and api_constants.MGMT_WEBAPP.ID_PROPERTY in new_user
-                and api_constants.MGMT_WEBAPP.EMAIL_PROPERTY in new_user
-                and api_constants.MGMT_WEBAPP.ADMIN_PROPERTY in new_user
+                    api_constants.MGMT_WEBAPP.USERNAME_PROPERTY in new_user
+                    and api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY in new_user
+                    and api_constants.MGMT_WEBAPP.FIRST_NAME_PROPERTY in new_user
+                    and api_constants.MGMT_WEBAPP.LAST_NAME_PROPERTY in new_user
+                    and api_constants.MGMT_WEBAPP.ORGANIZATION_PROPERTY in new_user
+                    and api_constants.MGMT_WEBAPP.ID_PROPERTY in new_user
+                    and api_constants.MGMT_WEBAPP.EMAIL_PROPERTY in new_user
+                    and api_constants.MGMT_WEBAPP.ADMIN_PROPERTY in new_user
             ):
                 if api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY in new_user:
                     new_user[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY] = ""
