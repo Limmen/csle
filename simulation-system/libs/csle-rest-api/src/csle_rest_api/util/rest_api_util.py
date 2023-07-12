@@ -1,11 +1,12 @@
-from flask import jsonify
+from typing import Union, Tuple
+from flask import jsonify, Response
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 import csle_rest_api.constants.constants as api_constants
 from csle_common.dao.management.management_user import ManagementUser
 
 
-def check_if_user_is_authorized(request, requires_admin: bool = False):
+def check_if_user_is_authorized(request, requires_admin: bool = False) -> Union[None, Tuple[Response, int]]:
     """
     Checks if a user request is authorized
 
@@ -35,7 +36,8 @@ def check_if_user_is_authorized(request, requires_admin: bool = False):
         return None
 
 
-def check_if_user_edit_is_authorized(request, user: ManagementUser):
+def check_if_user_edit_is_authorized(request, user: ManagementUser) -> Union[None, ManagementUser,
+                                                                             Tuple[Response, int]]:
     """
     Check if a user is authorized to edit another user
 

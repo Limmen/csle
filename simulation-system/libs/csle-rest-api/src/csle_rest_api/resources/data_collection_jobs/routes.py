@@ -1,16 +1,13 @@
 """
 Routes and sub-resources for the /data-collection-jobs resource
 """
+from typing import Tuple
 import time
-
 import csle_common.constants.constants as constants
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_system_identification.job_controllers.data_collection_job_manager import (
-    DataCollectionJobManager,
-)
-from flask import Blueprint, jsonify, request
-
+from csle_system_identification.job_controllers.data_collection_job_manager import DataCollectionJobManager
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -22,7 +19,7 @@ data_collection_jobs_bp = Blueprint(
 
 @data_collection_jobs_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                             api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def data_collection_jobs():
+def data_collection_jobs() -> Tuple[Response, int]:
     """
     The /data-collection-jobs resource.
 
@@ -62,9 +59,10 @@ def data_collection_jobs():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
-def data_collection_jobs_ids():
+def data_collection_jobs_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all data-collection jobs ids
     """
@@ -85,7 +83,7 @@ def data_collection_jobs_ids():
 @data_collection_jobs_bp.route("/<job_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                      api_constants.MGMT_WEBAPP.HTTP_REST_DELETE,
                                                      api_constants.MGMT_WEBAPP.HTTP_REST_POST])
-def data_collection_job(job_id: int):
+def data_collection_job(job_id: int) -> Tuple[Response, int]:
     """
     The /data-collection-jobs/id resource.
 

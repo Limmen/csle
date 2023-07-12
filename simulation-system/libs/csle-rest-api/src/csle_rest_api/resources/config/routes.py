@@ -1,14 +1,13 @@
 """
 Routes and sub-resources for the /config resource
 """
+from typing import Tuple
 import json
-
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.config import Config
 from csle_common.logging.log import Logger
 from csle_common.util.cluster_util import ClusterUtil
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -19,7 +18,7 @@ config_bp = Blueprint(
 
 
 @config_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_PUT])
-def config():
+def config() -> Tuple[Response, int]:
     """
     The /config resource.
 
@@ -64,11 +63,12 @@ def config():
         response = jsonify(config.to_param_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
 
 @config_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_SUBRESOURCE}",
                  methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-def registration_allowed():
+def registration_allowed() -> Tuple[Response, int]:
     """
     The /config/registration-allowed resource.
 
