@@ -1,6 +1,7 @@
 import numpy as np
 import logging
 import pytest
+import pytest_mock
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.agent_type import AgentType
@@ -115,7 +116,7 @@ class TestKieferWolfowitzSuite(object):
             env_name="csle-stopping-game-pomdp-defender-v1")
         return pomdp_config
 
-    def test_create_agent(self, mocker, experiment_config: ExperimentConfig) -> None:
+    def test_create_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig) -> None:
         """
         Tests creation of the KieferWolfowitzAgent
 
@@ -128,7 +129,7 @@ class TestKieferWolfowitzSuite(object):
                              experiment_config=experiment_config)
         pytest.logger.info("Agent created successfully")
 
-    def test_run_agent(self, mocker, experiment_config: ExperimentConfig,
+    def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        pomdp_config: StoppingGameDefenderPomdpConfig) -> None:
         """
         Tests running the agent
@@ -153,30 +154,15 @@ class TestKieferWolfowitzSuite(object):
         })
 
         # Mock metastore facade
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_training_job',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_experiment_execution',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.update_training_job',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.update_experiment_execution',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_simulation_trace',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
-            return_value=True
-        )
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_training_job', return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_experiment_execution',
+                     return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.update_training_job', return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.update_experiment_execution',
+                     return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_simulation_trace', return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
+                     return_value=True)
         agent = KieferWolfowitzAgent(emulation_env_config=emulation_env_config,
                                      simulation_env_config=simulation_env_config,
                                      experiment_config=experiment_config)

@@ -1,6 +1,7 @@
 import numpy as np
 import logging
 import pytest
+import pytest_mock
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.agent_type import AgentType
@@ -47,7 +48,7 @@ def reduce_R(R, strategy):
     return reduced_R
 
 
-class TestVISuite(object):
+class TestVISuite:
     """
     Test suite for the VIAgent
     """
@@ -164,7 +165,7 @@ class TestVISuite(object):
             env_name="csle-stopping-game-mdp-attacker-v1")
         return mdp_config
 
-    def test_create_agent(self, mocker, experiment_config: ExperimentConfig) -> None:
+    def test_create_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig) -> None:
         """
         Tests creation of the VIAgent
 
@@ -175,7 +176,7 @@ class TestVISuite(object):
         VIAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
         pytest.logger.info("Agent created successfully")
 
-    def test_run_agent(self, mocker, experiment_config: ExperimentConfig,
+    def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        mdp_config: StoppingGameAttackerMdpConfig) -> None:
         """
         Tests running the agent
@@ -200,30 +201,16 @@ class TestVISuite(object):
         })
 
         # Mock metastore facade
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_training_job',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_experiment_execution',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.update_training_job',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.update_experiment_execution',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_simulation_trace',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
-            return_value=True
-        )
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_training_job', return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_experiment_execution',
+                     return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.update_training_job', return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.update_experiment_execution',
+                     return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_simulation_trace',
+                     return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
+                     return_value=True)
         agent = VIAgent(simulation_env_config=simulation_env_config, experiment_config=experiment_config)
         pytest.logger.info("Starting training of the VI Agent")
         experiment_execution = agent.train()

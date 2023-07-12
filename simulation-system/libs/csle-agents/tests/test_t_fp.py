@@ -1,5 +1,6 @@
 import logging
 import pytest
+import pytest_mock
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.agent_type import AgentType
@@ -12,7 +13,7 @@ from csle_common.dao.simulation_config.simulation_env_config import SimulationEn
 from csle_common.dao.jobs.training_job_config import TrainingJobConfig
 
 
-class TestTFPSuite(object):
+class TestTFPSuite:
     """
     Test suite for the TFPAgent
     """
@@ -92,7 +93,7 @@ class TestTFPSuite(object):
         )
         return experiment_config
 
-    def test_create_agent(self, mocker, experiment_config: ExperimentConfig,
+    def test_create_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                           example_attacker_simulation_config: SimulationEnvConfig,
                           example_defender_simulation_config: SimulationEnvConfig) -> None:
         """
@@ -111,7 +112,7 @@ class TestTFPSuite(object):
                  defender_simulation_env_config=example_defender_simulation_config, experiment_config=experiment_config)
         pytest.logger.info("Agent created successfully")
 
-    def test_run_agent(self, mocker, experiment_config: ExperimentConfig,
+    def test_run_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig,
                        example_attacker_simulation_config: SimulationEnvConfig,
                        example_defender_simulation_config: SimulationEnvConfig) -> None:
         """
@@ -132,10 +133,7 @@ class TestTFPSuite(object):
             "name": "emulation-test-env"
         })
         # Mock metastore facade
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_training_job',
-            return_value=True
-        )
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_training_job', return_value=True)
         mocker.patch(
             'csle_common.metastore.metastore_facade.MetastoreFacade.get_training_job_config',
             return_value=TrainingJobConfig(simulation_env_name="", experiment_config=experiment_config,
@@ -143,30 +141,15 @@ class TestTFPSuite(object):
                                            emulation_env_name="", simulation_traces=[], num_cached_traces=0,
                                            log_file_path="", descr="", physical_host_ip="")
         )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_experiment_execution',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.update_training_job',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.remove_training_job',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.update_experiment_execution',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_simulation_trace',
-            return_value=True
-        )
-        mocker.patch(
-            'csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
-            return_value=True
-        )
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_experiment_execution',
+                     return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.update_training_job', return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.remove_training_job', return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.update_experiment_execution',
+                     return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_simulation_trace', return_value=True)
+        mocker.patch('csle_common.metastore.metastore_facade.MetastoreFacade.save_multi_threshold_stopping_policy',
+                     return_value=True)
         agent = TFPAgent(emulation_env_config=emulation_env_config,
                          attacker_simulation_env_config=example_attacker_simulation_config,
                          defender_simulation_env_config=example_defender_simulation_config,

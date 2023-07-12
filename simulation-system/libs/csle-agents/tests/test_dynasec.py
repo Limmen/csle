@@ -1,17 +1,18 @@
 import logging
 import pytest
+import pytest_mock
 from csle_common.dao.training.agent_type import AgentType
 from csle_agents.agents.dynasec.dynasec_agent import DynaSecAgent
 
 
-class TestDynaSecSuite(object):
+class TestDynaSecSuite:
     """
     Test suite for the DynaSecAgent
     """
 
     pytest.logger = logging.getLogger("dynasec_tests")
 
-    def test_create_agent(self, mocker) -> None:
+    def test_create_agent(self, mocker: pytest_mock.MockFixture) -> None:
         """
         Tests creation of the FPAgent
 

@@ -1,6 +1,7 @@
 import numpy as np
 import logging
 import pytest
+import pytest_mock
 import csle_common.constants.constants as constants
 from csle_common.dao.training.experiment_config import ExperimentConfig
 from csle_common.dao.training.agent_type import AgentType
@@ -16,7 +17,7 @@ from csle_common.dao.training.random_policy import RandomPolicy
 import gym_csle_stopping_game.constants.constants as env_constants
 
 
-class TestCrossEntropySuite(object):
+class TestCrossEntropySuite:
     """
     Test suite for the CrossEntropyAgent
     """
@@ -113,7 +114,7 @@ class TestCrossEntropySuite(object):
             env_name="csle-stopping-game-pomdp-defender-v1")
         return pomdp_config
 
-    def test_create_agent(self, mocker, experiment_config: ExperimentConfig) -> None:
+    def test_create_agent(self, mocker: pytest_mock.MockFixture, experiment_config: ExperimentConfig) -> None:
         """
         Tests creation of the CrossEntropyAgent
 
