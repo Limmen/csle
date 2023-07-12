@@ -1,6 +1,7 @@
 """
 Routes and sub-resources for the /emulations resource
 """
+from typing import List
 import base64
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
@@ -36,7 +37,7 @@ def emulations():
     all_emulations = MetastoreFacade.list_emulations()
     all_images = MetastoreFacade.list_emulation_images()
 
-    running_emulation_names = []
+    running_emulation_names: List[str] = []
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(
@@ -80,7 +81,7 @@ def emulation_ids():
     :return: HTTP response with list of emulation ids
     """
     emulation_ids = MetastoreFacade.list_emulations_ids()
-    running_emulation_names = []
+    running_emulation_names: List[str] = []
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(
@@ -117,7 +118,7 @@ def emulation_by_id(emulation_id: int):
         return authorized
 
     em = MetastoreFacade.get_emulation(id=emulation_id)
-    running_emulation_names = []
+    running_emulation_names: List[str] = []
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(

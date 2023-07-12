@@ -34,7 +34,6 @@ def vector_policies():
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
             return vector_policies_ids()
-
         vector_policies = MetastoreFacade.list_vector_policies()
         vector_policies_dicts = list(map(lambda x: x.to_dict(), vector_policies))
         response = jsonify(vector_policies_dicts)

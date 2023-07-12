@@ -1,4 +1,4 @@
-from typing import Union, List, Dict
+from typing import Union, List, Dict, Any
 import numpy as np
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
@@ -50,7 +50,7 @@ class VectorPolicy(Policy):
         return self.policy_vector[a]
 
     @staticmethod
-    def from_dict(d: Dict) -> "VectorPolicy":
+    def from_dict(d: Dict[str, Any]) -> "VectorPolicy":
         """
         Converts a dict representation to an instance
 
@@ -65,9 +65,11 @@ class VectorPolicy(Policy):
             dto.id = d["id"]
         return dto
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> Dict[str, Union[int, List[int], List[float], str, float]]:
         """
-        :return: A dict representation of the function
+        Gets a dict representation of the object
+
+        :return: A dict representation of the object
         """
         d = {}
         d["agent_type"] = self.agent_type

@@ -1,6 +1,5 @@
 from typing import List, Tuple
 import json
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -20,8 +19,6 @@ class TestResourcesFnnWSoftmaxPoliciesSuite:
     """
     Test suite for /fnn-w-softmax-policies resource
     """
-
-    pytest.logger = logging.getLogger("resources_fnn_w_softmax_policies_tests")
 
     @pytest.fixture
     def flask_app(self):

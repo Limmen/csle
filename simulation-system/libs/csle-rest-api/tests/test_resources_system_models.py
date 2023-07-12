@@ -1,6 +1,5 @@
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple
 import json
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -12,8 +11,6 @@ class TestResourcesSystemModelsSuite:
     """
     Test suite for /system-identification-jobs resource
     """
-
-    pytest.logger = logging.getLogger("resources_systemmodels_tests")
 
     @pytest.fixture
     def flask_app(self):
@@ -32,10 +29,12 @@ class TestResourcesSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
+
         def list_gaussian_mixture_system_models_ids() -> List[Tuple[str, int, int, str]]:
             t = ("csle-level-10", 1, 10, "JDoe_gauss_mix")
             l = [t]
             return l
+
         list_gaussian_mixture_system_models_ids_mocker = mocker.MagicMock(
             side_effect=list_gaussian_mixture_system_models_ids)
         return list_gaussian_mixture_system_models_ids_mocker
@@ -48,10 +47,12 @@ class TestResourcesSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
+
         def list_empirical_system_models_ids() -> List[Tuple[str, int, int, str]]:
             t = ("csle-level-10", 1, 10, "JDoe_empirical_systems")
             l = [t]
             return l
+
         list_empirical_system_models_ids_mocker = mocker.MagicMock(side_effect=list_empirical_system_models_ids)
         return list_empirical_system_models_ids_mocker
 
@@ -63,10 +64,12 @@ class TestResourcesSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
+
         def list_gp_system_models_ids() -> List[Tuple[str, int, int, str]]:
             t = ("csle-level-10", 1, 10, "JDoe_gp_system")
             l = [t]
             return l
+
         list_gp_system_models_ids_mocker = mocker.MagicMock(side_effect=list_gp_system_models_ids)
         return list_gp_system_models_ids_mocker
 
@@ -78,15 +81,17 @@ class TestResourcesSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
+
         def list_mcmc_system_models_ids() -> List[Tuple[str, int, int, str]]:
             t = ("csle-level-10", 1, 10, "JDoe_mcmc")
             l = [t]
             return l
+
         list_mcmc_system_models_ids_mocker = mocker.MagicMock(side_effect=list_mcmc_system_models_ids)
         return list_mcmc_system_models_ids_mocker
 
     @staticmethod
-    def example_returner() -> List[Dict[str, Union[str, int]]]:
+    def example_returner() -> List[Dict[str, object]]:
         """
         Utility function that gives an eaxmple of the return value from the system models resource
 
@@ -96,22 +101,22 @@ class TestResourcesSystemModelsSuite:
                            api_constants.MGMT_WEBAPP.ID_PROPERTY: 'csle-level-10',
                            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: 10,
                            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE:
-                           api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE},
+                               api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE},
                           {api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM: 1,
                            api_constants.MGMT_WEBAPP.ID_PROPERTY: 'csle-level-10',
                            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: 10,
                            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE:
-                           api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODEL_TYPE},
+                               api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODEL_TYPE},
                           {api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM: 1,
                            api_constants.MGMT_WEBAPP.ID_PROPERTY: 'csle-level-10',
                            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: 10,
                            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE:
-                           api_constants.MGMT_WEBAPP.GP_SYSTEM_MODEL_TYPE},
+                               api_constants.MGMT_WEBAPP.GP_SYSTEM_MODEL_TYPE},
                           {api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM: 1,
                            api_constants.MGMT_WEBAPP.ID_PROPERTY: 'csle-level-10',
                            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: 10,
                            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE:
-                           api_constants.MGMT_WEBAPP.MCMC_SYSTEM_MODEL_TYPE}]
+                               api_constants.MGMT_WEBAPP.MCMC_SYSTEM_MODEL_TYPE}]
         return response_dicts
 
     def test_s_m_get(self, flask_app, mocker: pytest_mock.MockFixture,

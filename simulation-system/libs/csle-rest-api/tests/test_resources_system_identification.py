@@ -1,6 +1,5 @@
 from typing import List
 import json
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -18,8 +17,6 @@ class TestResourcesSystemIdentificationSuite:
     """
     Test suite for /system-identification-jobs resource
     """
-
-    pytest.logger = logging.getLogger("resources_system_identification_jobs_tests")
 
     @pytest.fixture
     def flask_app(self):

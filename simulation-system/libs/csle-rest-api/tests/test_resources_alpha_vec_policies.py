@@ -1,5 +1,4 @@
 import json
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -17,8 +16,6 @@ class TestResourcesAlphaVecsSuite():
     """
     Test suite for /alpha-vec-policies resource
     """
-
-    pytest.logger = logging.getLogger("resources_alpha_vec_policies_tests")
 
     @pytest.fixture
     def flask_app(self):

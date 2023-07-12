@@ -1,7 +1,5 @@
+from typing import List, Tuple
 import json
-import logging
-from typing import List
-
 import csle_common.constants.constants as constants
 import pytest
 from csle_common.dao.training.agent_type import AgentType
@@ -19,8 +17,6 @@ class TestResourcesExperimentsSuite:
     """
     Test suite for /experiments url
     """
-
-    pytest.logger = logging.getLogger("resources_experiments_tests")
 
     @pytest.fixture
     def flask_app(self):
@@ -93,7 +89,7 @@ class TestResourcesExperimentsSuite:
         :param mocker: the pytest mocker object
         :return: mocked version of the function
         """
-        def list_experiment_executions_ids() -> List[tuple]:
+        def list_experiment_executions_ids() -> List[Tuple[int, str, str]]:
             lustle = [(4242, 'csle-level0-000', "csle-JDoe-Defender")]
             return lustle
         list_experiment_executions_ids_mocker = mocker.MagicMock(

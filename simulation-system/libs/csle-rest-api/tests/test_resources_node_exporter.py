@@ -1,5 +1,4 @@
 import json
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -13,7 +12,6 @@ class TestResourcesNodeExporterSuite:
     """
     Test suite for /node-exporter resource
     """
-    pytest.logger = logging.getLogger("resources_node_exporter_tests")
 
     @pytest.fixture
     def flask_app(self):

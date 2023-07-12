@@ -1,25 +1,21 @@
-
-from typing import List
-
+from typing import List, Dict, Union
+import pytest_mock
 import csle_common.constants.constants as constants
 import pytest
-from csle_cluster.cluster_manager.cluster_manager_pb2 import (
-    NodeStatusDTO,
-    OperationOutcomeDTO,
-)
+from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO, OperationOutcomeDTO
 from csle_common.dao.emulation_config.cluster_config import ClusterConfig
 from csle_common.dao.emulation_config.cluster_node import ClusterNode
 from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.management.management_user import ManagementUser
 from flask import jsonify
-
 import csle_rest_api.constants.constants as api_constants
 
 
 @pytest.fixture
-def pid_false(mocker):
+def pid_false(mocker: pytest_mock.MockerFixture):
     """
     Pytest fixture for mocking the check_pid function
+
     :param mocker: The pytest mocker object
     :return: A mocker object with the mocked function
     """
@@ -32,9 +28,10 @@ def pid_false(mocker):
 
 
 @pytest.fixture
-def pid_true(mocker):
+def pid_true(mocker: pytest_mock.MockerFixture):
     """
     Pytest fixture for mocking the check_pid function
+
     :param mocker: The pytest mocker object
     :return: a mocker object with the mocked function
     """
@@ -47,13 +44,12 @@ def pid_true(mocker):
 
 
 @pytest.fixture
-def stop(mocker) -> None:
+def stop(mocker: pytest_mock.MockerFixture):
     """
     Pytest fixture mocking the stop_pid functio
 
     :param mocker: the pytest mocker object
     :return: a mock object with the mocked function
-
     """
     def stop_pid(ip: str, port: int, pid: int) -> None:
         return None
@@ -62,10 +58,10 @@ def stop(mocker) -> None:
 
 
 @pytest.fixture
-def example_config():
+def example_config() -> Config:
     """
-    Help function that returns a config class when making
-    fixtures and testing
+    Help function that returns a config class when making fixtures and testing
+
     :return: Config class
     """
     c_node = ClusterNode(ip="123.456.78.99", leader=True, cpus=1, gpus=2, RAM=3)
@@ -148,7 +144,7 @@ def example_node_status() -> NodeStatusDTO:
 
 
 @pytest.fixture
-def authorized(mocker):
+def authorized(mocker: pytest_mock.MockerFixture):
     """
     Fixture for mocking the check_if_user_edit_is_authorized function
 
@@ -166,14 +162,12 @@ def authorized(mocker):
         )
         return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
 
-    check_if_user_edit_is_authorized_mock = mocker.MagicMock(
-        side_effect=check_if_user_edit_is_authorized
-    )
+    check_if_user_edit_is_authorized_mock = mocker.MagicMock(side_effect=check_if_user_edit_is_authorized)
     return check_if_user_edit_is_authorized_mock
 
 
 @pytest.fixture
-def unauthorized(mocker):
+def unauthorized(mocker: pytest_mock.MockerFixture):
     """
     Fixture for mocking the check_if_user_edit_is_authorized function
 
@@ -191,32 +185,27 @@ def unauthorized(mocker):
             return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         return user
 
-    check_if_user_edit_is_authorized_mock = mocker.MagicMock(
-        side_effect=check_if_user_edit_is_authorized
-    )
+    check_if_user_edit_is_authorized_mock = mocker.MagicMock(side_effect=check_if_user_edit_is_authorized)
     return check_if_user_edit_is_authorized_mock
 
 
 @pytest.fixture
-def logged_in_as_admin(mocker):
+def logged_in_as_admin(mocker: pytest_mock.MockerFixture):
     """
     Fixture for mocking the logged-in-as-admin side effect
 
     :param mocker: the pytest mocker object
     :return: the logged in as admin fixture for mocking the logged in check
     """
-
-    def check_if_user_is_authorized(request, requires_admin):
+    def check_if_user_is_authorized(request, requires_admin) -> None:
         return None
 
-    check_if_user_is_authorized_mock = mocker.MagicMock(
-        side_effect=check_if_user_is_authorized
-    )
+    check_if_user_is_authorized_mock = mocker.MagicMock(side_effect=check_if_user_is_authorized)
     return check_if_user_is_authorized_mock
 
 
 @pytest.fixture
-def logged_in(mocker):
+def logged_in(mocker: pytest_mock.MockerFixture):
     """
     Fixture for mocking the logged-in side effect
 
@@ -233,14 +222,12 @@ def logged_in(mocker):
             return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         return None
 
-    check_if_user_is_authorized_mock = mocker.MagicMock(
-        side_effect=check_if_user_is_authorized
-    )
+    check_if_user_is_authorized_mock = mocker.MagicMock(side_effect=check_if_user_is_authorized)
     return check_if_user_is_authorized_mock
 
 
 @pytest.fixture
-def not_logged_in(mocker):
+def not_logged_in(mocker: pytest_mock.MockerFixture):
     """
     Fixture for mocking the not-logged-in side effect
 
@@ -252,18 +239,16 @@ def not_logged_in(mocker):
         response = jsonify({})
         return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
 
-    check_if_user_is_authorized_mock = mocker.MagicMock(
-        side_effect=check_if_user_is_authorized
-    )
+    check_if_user_is_authorized_mock = mocker.MagicMock(side_effect=check_if_user_is_authorized)
     return check_if_user_is_authorized_mock
 
 
 @pytest.fixture
-def cluster_node_status(example_config: Config,
-                        example_node_status: NodeStatusDTO) -> List[dict]:
+def cluster_node_status(example_config: Config, example_node_status: NodeStatusDTO) \
+        -> List[Dict[str, Union[str, bool, int]]]:
     """
-    Staticmethod that reurns an example cluster node status, that is
-    to be tested against the mocking ofthe API
+    Staticmethod that reurns an example cluster node status, that is to be tested against the mocking ofthe API
+
     :param example_config: an example Config class
     :param exmaple_node_status: an example node status class
     :return: a list of a dict containing an example cluster node status

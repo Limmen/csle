@@ -1,13 +1,10 @@
+from typing import Dict, List, Tuple
 import json
-import logging
-from typing import Dict, List, Tuple, Union
-
 import csle_common.constants.constants as constants
 import pytest
 import pytest_mock
 from csle_common.dao.system_identification.mcmc_posterior import MCMCPosterior
 from csle_common.dao.system_identification.mcmc_system_model import MCMCSystemModel
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
@@ -16,8 +13,6 @@ class TestResourcesMCMCSystemModelsSuite:
     """
     Test suite for /system-identification-jobs resource
     """
-
-    pytest.logger = logging.getLogger("resources_mcmc_system_models_tests")
 
     @pytest.fixture
     def flask_app(self):
@@ -34,9 +29,11 @@ class TestResourcesMCMCSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
+
         def list_mcmc_system_models() -> List[MCMCSystemModel]:
             mcmc_sys_mod = TestResourcesMCMCSystemModelsSuite.example_returner()
             return [mcmc_sys_mod]
+
         list_mcmc_system_models_mocker = mocker.MagicMock(
             side_effect=list_mcmc_system_models)
         return list_mcmc_system_models_mocker
@@ -49,11 +46,13 @@ class TestResourcesMCMCSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
+
         def list_mcmc_system_models_ids() -> List[Tuple[str, int, int, str]]:
             t = ("csle-level-10", 1, 10,
                  api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE)
             l = [t]
             return l
+
         list_mcmc_system_models_ids_mocker = mocker.MagicMock(
             side_effect=list_mcmc_system_models_ids)
         return list_mcmc_system_models_ids_mocker
@@ -66,6 +65,7 @@ class TestResourcesMCMCSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
+
         def get_mcmc_system_model_config(id: int) -> MCMCSystemModel:
             g_m_sys_mod = TestResourcesMCMCSystemModelsSuite.example_returner()
             return g_m_sys_mod
@@ -83,14 +83,16 @@ class TestResourcesMCMCSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
+
         def remove_mcmc_system_model(mcmc_system_model: MCMCSystemModel) -> None:
             return None
+
         remove_mcmc_system_model_mocker = mocker.MagicMock(
             side_effect=remove_mcmc_system_model)
         return remove_mcmc_system_model_mocker
 
     @staticmethod
-    def example_sys_mod() -> List[Dict[str, Union[str, int]]]:
+    def example_sys_mod() -> List[Dict[str, object]]:
         """
         Static method for returning an example list of response dicts
 
@@ -100,7 +102,7 @@ class TestResourcesMCMCSystemModelsSuite:
                            api_constants.MGMT_WEBAPP.ID_PROPERTY: 'csle-level-10',
                            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: 10,
                            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE:
-                           api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE}]
+                               api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE}]
         return response_dicts
 
     @staticmethod
@@ -244,7 +246,7 @@ class TestResourcesMCMCSystemModelsSuite:
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in,)
+                     side_effect=logged_in, )
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.MCMC_SYSTEM_MODELS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
@@ -253,7 +255,7 @@ class TestResourcesMCMCSystemModelsSuite:
         for i in (g_m_data_dict):
             assert g_m_data_dict[i] == test_obj_dict[i]
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin,)
+                     side_effect=logged_in_as_admin, )
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.MCMC_SYSTEM_MODELS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")

@@ -1,6 +1,4 @@
 import json
-import logging
-
 import csle_common.constants.constants as constants
 import pytest
 import pytest_mock
@@ -15,8 +13,6 @@ class TestResourcesClusterStatusSuite:
     """
     Test suite for /cluster_status url
     """
-
-    pytest.logger = logging.getLogger("resources_cluster_status_tests")
 
     @pytest.fixture
     def flask_app(self):

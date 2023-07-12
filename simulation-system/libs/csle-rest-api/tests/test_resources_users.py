@@ -1,5 +1,4 @@
 import json
-import logging
 from typing import List, Tuple, Union
 import pytest
 import pytest_mock
@@ -17,8 +16,6 @@ class TestResourcesUsersSuite:
     """
     Test suite for /users resource
     """
-
-    pytest.logger = logging.getLogger("resources_users_tests")
 
     @pytest.fixture
     def flask_app(self):
@@ -57,12 +54,10 @@ class TestResourcesUsersSuite:
         :return: fixture for mocking the management user ids
         """
 
-        def list_management_users_ids() -> List[Tuple]:
+        def list_management_users_ids() -> List[Tuple[int]]:
             return [(1,), (2,)]
 
-        list_management_users_ids_mock = mocker.MagicMock(
-            side_effect=list_management_users_ids
-        )
+        list_management_users_ids_mock = mocker.MagicMock(side_effect=list_management_users_ids)
         return list_management_users_ids_mock
 
     @staticmethod

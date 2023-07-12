@@ -1,6 +1,7 @@
 """
 Routes and sub-resources for the /emulation-executions resource
 """
+from typing import List, Dict, Any, Union
 import time
 from flask import Blueprint, jsonify, request
 import requests
@@ -51,7 +52,7 @@ def emulation_execution_ids():
     :return: a list of emulation execution ids
     """
     ex_ids = MetastoreFacade.list_emulation_execution_ids()
-    running_emulation_names = []
+    running_emulation_names: List[str] = []
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(
@@ -2232,7 +2233,7 @@ def get_sdn_switches_of_execution(execution_id: int):
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
 
-    response_data = {}
+    response_data: Dict[str, Union[List[Dict[str, Any]], int]] = {}
     if execution is not None and execution.emulation_env_config.sdn_controller_config is not None:
         ClusterController.create_ryu_tunnel(
             ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
@@ -2385,6 +2386,6 @@ def get_sdn_switches_of_execution(execution_id: int):
             response_data = {}
             response_data[api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE] = switches_dicts
             response_data[api_constants.MGMT_WEBAPP.SDN_CONTROLLER_LOCAL_PORT] = local_ryu_port
-    response = jsonify(response_data)
-    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
-    return response, constants.HTTPS.OK_STATUS_CODE
+    complete_response = jsonify(response_data)
+    complete_response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+    return complete_response, constants.HTTPS.OK_STATUS_CODE

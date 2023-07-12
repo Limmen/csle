@@ -206,6 +206,10 @@ A REST API for the CSLE management platform.
 - `pyopenssl` (for encrypting user credentials)
 - `eventlet` (for HTTP server)
 - `gevent` (for HTTP server)
+- `paramiko` (for terminal emulation)
+- `types-paramiko` (for terminal emulation)
+- `requests` (for making HTTP requests)
+- `types-requests` (for making HTTP requests)
 
 ## Development Requirements
 

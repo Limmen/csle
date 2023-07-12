@@ -301,8 +301,12 @@ def container_logs():
         response = jsonify({})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
     container_name = json.loads(request.data)[api_constants.MGMT_WEBAPP.NAME_PROPERTY]
-    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
-    execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM)
+    emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM, default="")
+    execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM, default=-1)
+    if emulation == "" or execution_id == 1:
+        response = jsonify(
+            {api_constants.MGMT_WEBAPP.REASON_PROPERTY: "emulation or execution id query parameters were not provided"})
+        return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
     execution = MetastoreFacade.get_emulation_execution(ip_first_octet=int(execution_id), emulation_name=emulation)
     container_config = execution.emulation_env_config.containers_config.get_container_from_full_name(
         name=container_name)

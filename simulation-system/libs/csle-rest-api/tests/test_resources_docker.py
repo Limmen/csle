@@ -1,15 +1,9 @@
 import json
-import logging
-
 import csle_common.constants.constants as constants
 import pytest
 import pytest_mock
-from csle_cluster.cluster_manager.cluster_manager_pb2 import (
-    NodeStatusDTO,
-    ServiceStatusDTO,
-)
+from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO, ServiceStatusDTO
 from csle_common.dao.emulation_config.config import Config
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
@@ -18,8 +12,6 @@ class TestResourcesDockerStatusSuite:
     """
     Test suite for /cluster_status url
     """
-
-    pytest.logger = logging.getLogger("resources_docker_tests")
 
     @pytest.fixture
     def flask_app(self):
@@ -44,8 +36,7 @@ class TestResourcesDockerStatusSuite:
             conf = example_config
             return conf
         
-        get_config_mocker = mocker.MagicMock(
-            side_effect=get_config)
+        get_config_mocker = mocker.MagicMock(side_effect=get_config)
         return get_config_mocker
 
     @pytest.fixture
@@ -58,8 +49,7 @@ class TestResourcesDockerStatusSuite:
         def stop_docker_engine(ip: str, port: int) -> ServiceStatusDTO:
             status = ServiceStatusDTO(running=False)
             return status
-        stop_docker_engine_mocker = mocker.MagicMock(
-            side_effect=stop_docker_engine)
+        stop_docker_engine_mocker = mocker.MagicMock(side_effect=stop_docker_engine)
         return stop_docker_engine_mocker
 
     @pytest.fixture
@@ -72,8 +62,7 @@ class TestResourcesDockerStatusSuite:
         def start_docker_engine(ip: str, port: int) -> ServiceStatusDTO:
             status = ServiceStatusDTO(running=True)
             return status
-        start_docker_engine_mocker = mocker.MagicMock(
-            side_effect=start_docker_engine)
+        start_docker_engine_mocker = mocker.MagicMock(side_effect=start_docker_engine)
         return start_docker_engine_mocker
 
     @pytest.fixture
@@ -92,8 +81,7 @@ class TestResourcesDockerStatusSuite:
             node_status = example_node_status
             node_status.dockerEngineRunning = True
             return node_status
-        get_node_status_mock = mocker.MagicMock(
-            side_effect=get_node_status)
+        get_node_status_mock = mocker.MagicMock(side_effect=get_node_status)
         return get_node_status_mock
 
     @pytest.fixture
@@ -136,10 +124,8 @@ class TestResourcesDockerStatusSuite:
         """
         test_ns = cluster_node_status
         test_ns_dict = test_ns[0]
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
                      side_effect=node_status_docker_running)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE)
@@ -147,8 +133,7 @@ class TestResourcesDockerStatusSuite:
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
@@ -156,8 +141,7 @@ class TestResourcesDockerStatusSuite:
         response_data_dict = response_data_list[0]
         for k in response_data_dict:
             assert response_data_dict[k] == test_ns_dict[k]
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE)
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
@@ -166,14 +150,9 @@ class TestResourcesDockerStatusSuite:
         for k in response_data_dict:
             assert response_data_dict[k] == test_ns_dict[k]
 
-    def test_docker_post(self, flask_app, mocker,
-                         node_status_docker_running,
-                         node_status_docker_not_running,
-                         config, not_logged_in,
-                         logged_in, logged_in_as_admin,
-                         example_config, example_node_status,
-                         stop_docker, start_docker,
-                         cluster_node_status):
+    def test_docker_post(self, flask_app, mocker, node_status_docker_running, node_status_docker_not_running,
+                         config, not_logged_in, logged_in, logged_in_as_admin, example_config, stop_docker,
+                         start_docker, cluster_node_status) -> None:
         """
         Tests the POST HTTPS method for the /docker url
 
@@ -206,23 +185,17 @@ class TestResourcesDockerStatusSuite:
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE,
                                                 data=json.dumps({}))
         response_data = response.data.decode('utf-8')
-        response_data_list = json.loads(response_data)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
-        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE,
-                                                data=json.dumps({}))
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE, data=json.dumps({}))
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
-        assert response.status_code == \
-            constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         config = example_config
         config_cluster_dict = config.cluster_config.to_dict()['cluster_nodes'][0]
         response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE,
@@ -269,5 +242,4 @@ class TestResourcesDockerStatusSuite:
         assert response_data_list == \
             {'reason': f'node with ip {config_cluster_dict[api_constants.MGMT_WEBAPP.IP_PROPERTY]}'
              ' does not exist'}
-        assert response.status_code == \
-            constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE

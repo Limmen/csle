@@ -1,8 +1,8 @@
 from flask import request
-import csle_rest_api.util.rest_api_util as rest_api_util
 from flask_socketio import ConnectionRefusedError
 from flask import Blueprint
 import paramiko
+import csle_rest_api.util.rest_api_util as rest_api_util
 import csle_rest_api.constants.constants as api_constants
 import csle_common.constants.constants as constants
 from csle_rest_api import socketio
@@ -39,7 +39,11 @@ def get_container_terminal_bp(app):
         conn = paramiko.SSHClient()
         conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         conn.connect(ip, username=constants.CSLE_ADMIN.SSH_USER, password=constants.CSLE_ADMIN.SSH_PW)
-        conn.get_transport().set_keepalive(5)
+        transport = conn.get_transport()
+        if transport is not None:
+            transport.set_keepalive(5)
+        else:
+            raise ValueError("Could not connect with SSH")
         return conn
 
     def read_and_forward_container_terminal_output() -> None:

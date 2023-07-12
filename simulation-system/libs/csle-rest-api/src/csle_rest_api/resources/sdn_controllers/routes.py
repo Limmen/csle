@@ -1,6 +1,7 @@
 """
 Routes and sub-resources for the /sdn-controllers resource
 """
+from typing import List
 from flask import Blueprint, jsonify, request
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
@@ -48,7 +49,7 @@ def sdn_controllers_ids():
     :return: An HTTP response with all sdn controllers ids
     """
     ex_ids = MetastoreFacade.list_emulation_execution_ids()
-    running_emulation_names = []
+    running_emulation_names: List[str] = []
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(

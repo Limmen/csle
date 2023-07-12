@@ -1,6 +1,5 @@
 from typing import List, Tuple
 import json
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -16,8 +15,6 @@ class TestRecourcesTabularSuite:
     """
     Test suite for /muti-threshold-policies resource
     """
-
-    pytest.logger = logging.getLogger("resources_users_tests")
 
     @pytest.fixture
     def flask_app(self):

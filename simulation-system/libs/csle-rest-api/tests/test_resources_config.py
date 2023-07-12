@@ -1,5 +1,4 @@
 import json
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -12,7 +11,6 @@ class TestResourcesConfigSuite:
     """
     Test suite for /config resource
     """
-    pytest.logger = logging.getLogger("resources_config_tests")
 
     @pytest.fixture
     def flask_app(self):

@@ -1,12 +1,9 @@
+from typing import Dict, List, Tuple
 import json
-import logging
-from typing import Dict, List, Union
-
 import csle_common.constants.constants as constants
 import pytest
 from csle_common.dao.system_identification.gp_conditional import GPConditional
 from csle_common.dao.system_identification.gp_system_model import GPSystemModel
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
@@ -15,8 +12,6 @@ class TestResourcesGPSystemModelsSuite:
     """
     Test suite for /system-identification-jobs resource
     """
-
-    pytest.logger = logging.getLogger("resources_GP_system_models_tests")
 
     @pytest.fixture
     def flask_app(self):
@@ -36,6 +31,7 @@ class TestResourcesGPSystemModelsSuite:
         def list_gp_system_models() -> List[GPSystemModel]:
             g_m_sys_mod = TestResourcesGPSystemModelsSuite.example_returner()
             return [g_m_sys_mod]
+
         list_gp_system_models_mocker = mocker.MagicMock(
             side_effect=list_gp_system_models)
         return list_gp_system_models_mocker
@@ -47,10 +43,12 @@ class TestResourcesGPSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
-        def list_gaussian_mixture_system_models_ids() -> List[Dict]:
+
+        def list_gaussian_mixture_system_models_ids() -> List[Tuple[str, int, int, str]]:
             t = ("csle-level-10", 1, 10, "JDoe_gauss_mix")
             l = [t]
             return l
+
         list_gaussian_mixture_system_models_ids_mocker = mocker.MagicMock(
             side_effect=list_gaussian_mixture_system_models_ids)
         return list_gaussian_mixture_system_models_ids_mocker
@@ -62,10 +60,12 @@ class TestResourcesGPSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
-        def list_empirical_system_models_ids() -> List[Dict]:
+
+        def list_empirical_system_models_ids() -> List[Tuple[str, int, int, str]]:
             t = ("csle-level-10", 1, 10, "JDoe_empirical_systems")
             l = [t]
             return l
+
         list_empirical_system_models_ids_mocker = mocker.MagicMock(side_effect=list_empirical_system_models_ids)
         return list_empirical_system_models_ids_mocker
 
@@ -76,6 +76,7 @@ class TestResourcesGPSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
+
         def get_gp_system_model_config(id: int) -> GPSystemModel:
             g_p_sys_mod = TestResourcesGPSystemModelsSuite.example_returner()
             return g_p_sys_mod
@@ -92,10 +93,12 @@ class TestResourcesGPSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
-        def list_gp_system_models_ids() -> List[Dict]:
+
+        def list_gp_system_models_ids() -> List[Tuple[str, int, int, str]]:
             t = ("csle-level-10", 1, 10, "JDoe_gp_system")
             l = [t]
             return l
+
         list_gp_system_models_ids_mocker = mocker.MagicMock(side_effect=list_gp_system_models_ids)
         return list_gp_system_models_ids_mocker
 
@@ -106,10 +109,12 @@ class TestResourcesGPSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
-        def list_mcmc_system_models_ids() -> List[Dict]:
+
+        def list_mcmc_system_models_ids() -> List[Tuple[str, int, int, str]]:
             t = ("csle-level-10", 1, 10, "JDoe_mcmc")
             l = [t]
             return l
+
         list_mcmc_system_models_ids_mocker = mocker.MagicMock(side_effect=list_mcmc_system_models_ids)
         return list_mcmc_system_models_ids_mocker
 
@@ -120,44 +125,48 @@ class TestResourcesGPSystemModelsSuite:
         :param mocker: the pytest mocker object
         :return: a mock object with the mocked function
         """
-        def remove_gp_system_model(gp_system_model: GPSystemModel):
+
+        def remove_gp_system_model(gp_system_model: GPSystemModel) -> None:
             return None
+
         remove_gp_system_model_mocker = mocker.MagicMock(
             side_effect=remove_gp_system_model)
         return remove_gp_system_model_mocker
 
     @staticmethod
-    def example_sys_mod() -> List[Dict[str, Union[int, str]]]:
+    def example_sys_mod() -> List[Dict[str, object]]:
         """
         Static method for returning an example list of response dicts
+
         :return: An example list of a System model dictionary
         """
         response_dicts = [{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM: 1,
                            api_constants.MGMT_WEBAPP.ID_PROPERTY: 'csle-level-10',
                            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: 10,
                            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE:
-                           api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE},
+                               api_constants.MGMT_WEBAPP.GAUSSIAN_MIXTURE_SYSTEM_MODEL_TYPE},
                           {api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM: 1,
                            api_constants.MGMT_WEBAPP.ID_PROPERTY: 'csle-level-10',
                            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: 10,
                            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE:
-                           api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODEL_TYPE},
+                               api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODEL_TYPE},
                           {api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM: 1,
                            api_constants.MGMT_WEBAPP.ID_PROPERTY: 'csle-level-10',
                            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: 10,
                            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE:
-                           api_constants.MGMT_WEBAPP.GP_SYSTEM_MODEL_TYPE},
+                               api_constants.MGMT_WEBAPP.GP_SYSTEM_MODEL_TYPE},
                           {api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM: 1,
                            api_constants.MGMT_WEBAPP.ID_PROPERTY: 'csle-level-10',
                            api_constants.MGMT_WEBAPP.STATISTIC_ID_PROPERTY: 10,
                            api_constants.MGMT_WEBAPP.SYSTEM_MODEL_TYPE:
-                           api_constants.MGMT_WEBAPP.MCMC_SYSTEM_MODEL_TYPE}]
+                               api_constants.MGMT_WEBAPP.MCMC_SYSTEM_MODEL_TYPE}]
         return response_dicts
 
     @staticmethod
     def example_returner() -> GPSystemModel:
         """
         Static help method for returning an example GP System Model
+
         :return: an example GPSystemModel
         """
         gp_cond = GPConditional(conditional_name="JohndoeConditional", metric_name="JohnDoeMetric",
@@ -192,7 +201,7 @@ class TestResourcesGPSystemModelsSuite:
         test_obj = TestResourcesGPSystemModelsSuite.example_returner()
         test_obj_dict = test_obj.to_dict()
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in,)
+                     side_effect=not_logged_in, )
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
                      "list_gp_system_models",
                      side_effect=list_gp_s_m)
@@ -214,7 +223,7 @@ class TestResourcesGPSystemModelsSuite:
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in,)
+                     side_effect=logged_in, )
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -232,7 +241,7 @@ class TestResourcesGPSystemModelsSuite:
         for i in (gp_data_dict):
             assert gp_data_dict[i] == test_obj_dict[i]
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin,)
+                     side_effect=logged_in_as_admin, )
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -264,7 +273,7 @@ class TestResourcesGPSystemModelsSuite:
         :return: None
         """
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in,)
+                     side_effect=not_logged_in, )
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
                      "list_gp_system_models",
                      side_effect=list_gp_s_m)
@@ -277,7 +286,7 @@ class TestResourcesGPSystemModelsSuite:
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in,)
+                     side_effect=logged_in, )
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -285,7 +294,7 @@ class TestResourcesGPSystemModelsSuite:
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
 
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin,)
+                     side_effect=logged_in_as_admin, )
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -308,7 +317,7 @@ class TestResourcesGPSystemModelsSuite:
         test_obj = TestResourcesGPSystemModelsSuite.example_returner()
         test_obj_dict = test_obj.to_dict()
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in,)
+                     side_effect=not_logged_in, )
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
                      "get_gp_system_model_config",
                      side_effect=get_gp_sys_mod_config)
@@ -319,7 +328,7 @@ class TestResourcesGPSystemModelsSuite:
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in,)
+                     side_effect=logged_in, )
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}"
                                                "/10")
         response_data = response.data.decode("utf-8")
@@ -328,7 +337,7 @@ class TestResourcesGPSystemModelsSuite:
         for i in (gp_data_dict):
             assert gp_data_dict[i] == test_obj_dict[i]
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin,)
+                     side_effect=logged_in_as_admin, )
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}"
                                                "/10")
         response_data = response.data.decode("utf-8")
@@ -352,7 +361,7 @@ class TestResourcesGPSystemModelsSuite:
         :return: None
         """
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in,)
+                     side_effect=not_logged_in, )
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
                      "get_gp_system_model_config",
                      side_effect=get_gp_sys_mod_config)
@@ -366,7 +375,7 @@ class TestResourcesGPSystemModelsSuite:
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in,)
+                     side_effect=logged_in, )
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}"
                                                   "/10")
         response_data = response.data.decode("utf-8")
@@ -374,7 +383,7 @@ class TestResourcesGPSystemModelsSuite:
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin,)
+                     side_effect=logged_in_as_admin, )
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.GP_SYSTEM_MODELS_RESOURCE}"
                                                   "/10")
         response_data = response.data.decode("utf-8")

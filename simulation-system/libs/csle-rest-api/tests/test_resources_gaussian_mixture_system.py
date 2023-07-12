@@ -1,6 +1,5 @@
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple
 import json
-import logging
 import pytest
 import pytest_mock
 import csle_common.constants.constants as constants
@@ -14,8 +13,6 @@ class TestResourcesGMSystemModelsSuite:
     """
     Test suite for /system-identification-jobs resource
     """
-
-    pytest.logger = logging.getLogger("resources_gaussian_mixture_system_models_tests")
 
     @pytest.fixture
     def flask_app(self):
@@ -133,7 +130,7 @@ class TestResourcesGMSystemModelsSuite:
         return remove_gaussian_mixture_system_model_mocker
 
     @staticmethod
-    def example_sys_mod() -> List[Dict[str, Union[str, int]]]:
+    def example_sys_mod() -> List[Dict[str, object]]:
         """
         Static method for returning an example list of response dicts
 

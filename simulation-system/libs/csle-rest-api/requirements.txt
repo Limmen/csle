@@ -11,3 +11,7 @@ bcrypt==4.0.1
 pyopenssl==22.1.0
 eventlet==0.33.2
 gevent==22.10.2
+paramiko==3.2.0
+types-paramiko==3.2.0.0
+requests==2.31.0
+types-requests==2.31.0.1

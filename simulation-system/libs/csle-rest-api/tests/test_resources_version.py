@@ -1,4 +1,3 @@
-import logging
 import pytest
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
@@ -8,8 +7,6 @@ class TestResourcesVersionSuite:
     """
     Test suite for /version resource
     """
-
-    pytest.logger = logging.getLogger("resources_version_tests")
 
     @pytest.fixture
     def flask_app(self):
