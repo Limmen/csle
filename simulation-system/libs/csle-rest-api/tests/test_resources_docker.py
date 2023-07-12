@@ -181,19 +181,15 @@ class TestResourcesDockerStatusSuite:
                      side_effect=start_docker)
         response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE,
                                                 data=json.dumps({}))
-        response_data = response.data.decode('utf-8')
-        response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        assert response_data_list == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE,
                                                 data=json.dumps({}))
-        response_data = response.data.decode('utf-8')
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE, data=json.dumps({}))
         response_data = response.data.decode('utf-8')
-        response_data_list = json.loads(response_data)
-        assert response_data_list == {}
+        response_data_dict = json.loads(response_data)
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         config = example_config
@@ -201,18 +197,16 @@ class TestResourcesDockerStatusSuite:
         response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE,
                                                 data=json.dumps(config_cluster_dict))
         response_data = response.data.decode('utf-8')
-        response_data_list = json.loads(response_data)
+        response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        response_data_dict = response_data_list[0]
+        response_data_dict = response_data_dict[0]
         for k in response_data_dict:
             if k == api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY:
                 continue
             else:
                 assert response_data_dict[k] == test_ns_dict[k]
-        assert response_data_dict[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] \
-            is False
-        assert test_ns_dict[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] \
-            is True
+        assert response_data_dict[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] is False
+        assert test_ns_dict[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] is True
         assert response_data_dict[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] != \
             test_ns_dict[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY]
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
@@ -220,26 +214,22 @@ class TestResourcesDockerStatusSuite:
         response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE,
                                                 data=json.dumps(config_cluster_dict))
         response_data = response.data.decode('utf-8')
-        response_data_list = json.loads(response_data)
+        response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        response_data_dict = response_data_list[0]
+        response_data_dict = response_data_dict[0]
         for k in response_data_dict:
             if k == api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY:
                 continue
             else:
                 assert response_data_dict[k] == test_ns_dict[k]
-        assert response_data_dict[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] \
-            is True
-        assert test_ns_dict[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] \
-            is True
+        assert response_data_dict[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] is True
+        assert test_ns_dict[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] is True
         assert response_data_dict[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY] == \
             test_ns_dict[api_constants.MGMT_WEBAPP.DOCKER_ENGINE_RUNNING_PROPERTY]
         config_cluster_dict[api_constants.MGMT_WEBAPP.IP_PROPERTY] = "000.000.00.00"
         response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.DOCKER_RESOURCE,
                                                 data=json.dumps(config_cluster_dict))
         response_data = response.data.decode('utf-8')
-        response_data_list = json.loads(response_data)
-        assert response_data_list == \
-            {'reason': f'node with ip {config_cluster_dict[api_constants.MGMT_WEBAPP.IP_PROPERTY]}'
-             ' does not exist'}
+        response_data_dict = json.loads(response_data)
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE

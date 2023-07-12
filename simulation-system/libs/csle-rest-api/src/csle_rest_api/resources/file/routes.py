@@ -9,7 +9,6 @@ import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
-
 # Creates a blueprint "sub application" of the main REST app
 file_bp = Blueprint(
     api_constants.MGMT_WEBAPP.FILE_RESOURCE, __name__,

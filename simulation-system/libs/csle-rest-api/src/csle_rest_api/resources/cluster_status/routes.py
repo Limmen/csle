@@ -41,14 +41,18 @@ def cluster_status() -> Tuple[Response, int]:
             api_constants.MGMT_WEBAPP.FLASK_RUNNING_PROPERTY: node_status.flaskRunning,
             api_constants.MGMT_WEBAPP.PROMETHEUS_RUNNING_PROPERTY: node_status.prometheusRunning,
             api_constants.MGMT_WEBAPP.PGADMIN_RUNNING_PROPERTY: node_status.pgAdminRunning,
-            api_constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.CADVISOR_PORT}/",
-            api_constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.GRAFANA_PORT}/",
-            api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY: f"http://{node.ip}:"
+            api_constants.MGMT_WEBAPP.CADVISOR_URL_PROPERTY: f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{node.ip}:"
+                                                             f"{constants.COMMANDS.CADVISOR_PORT}/",
+            api_constants.MGMT_WEBAPP.GRAFANA_URL_PROPERTY: f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{node.ip}:"
+                                                            f"{constants.COMMANDS.GRAFANA_PORT}/",
+            api_constants.MGMT_WEBAPP.NODE_EXPORTER_URL_PROPERTY: f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{node.ip}:"
                                                                   f"{constants.COMMANDS.NODE_EXPORTER_PORT}/",
-            api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.FLASK_PORT}/",
-            api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY: f"http://{node.ip}:"
+            api_constants.MGMT_WEBAPP.FLASK_URL_PROPERTY: f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{node.ip}:"
+                                                          f"{constants.COMMANDS.FLASK_PORT}/",
+            api_constants.MGMT_WEBAPP.PROMETHEUS_URL_PROPERTY: f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{node.ip}:"
                                                                f"{constants.COMMANDS.PROMETHEUS_PORT}/",
-            api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY: f"http://{node.ip}:{constants.COMMANDS.PGADMIN_PORT}/",
+            api_constants.MGMT_WEBAPP.PGADMIN_URL_PROPERTY: f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{node.ip}:"
+                                                            f"{constants.COMMANDS.PGADMIN_PORT}/",
             api_constants.MGMT_WEBAPP.CADVISOR_PORT_PROPERTY: constants.COMMANDS.CADVISOR_PORT,
             api_constants.MGMT_WEBAPP.GRAFANA_PORT_PROPERTY: constants.COMMANDS.GRAFANA_PORT,
             api_constants.MGMT_WEBAPP.NODE_EXPORTER_PORT_PROPERTY: constants.COMMANDS.NODE_EXPORTER_PORT,

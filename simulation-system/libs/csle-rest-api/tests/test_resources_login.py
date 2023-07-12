@@ -167,8 +167,7 @@ class TestResourcesLoginSuite:
                      side_effect=database)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_by_username",
                      side_effect=token)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.save_session_token",
-                     side_effect=save)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.save_session_token", side_effect=save)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.update_session_token", side_effect=update)
         g_response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
                                                   data=json.dumps({"username": "guest", "password": "guest"}))
@@ -212,10 +211,7 @@ class TestResourcesLoginSuite:
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.update_session_token", side_effect=update)
         f_response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.LOGIN_RESOURCE,
                                                   data=json.dumps({"username": "asdf", "password": "asdf"}))
-        response_data = f_response.data.decode("utf-8")
-        response_dict = json.loads(response_data)
         assert f_response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        assert response_dict == {}
 
     def test_malformed_login_request(self, flask_app, mocker: pytest_mock.MockFixture, database, token, save,
                                      update) -> None:
@@ -241,4 +237,4 @@ class TestResourcesLoginSuite:
         response_data = m_response.data.decode("utf-8")
         response_dict = json.loads(response_data)
         assert m_response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        assert response_dict == {}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_dict

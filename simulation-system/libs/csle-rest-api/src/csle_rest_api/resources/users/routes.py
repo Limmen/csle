@@ -55,7 +55,8 @@ def users() -> Tuple[Response, int]:
             api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
         )
         return response, constants.HTTPS.OK_STATUS_CODE
-    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: "HTTP method not supported"}),
+            constants.HTTPS.BAD_REQUEST_STATUS_CODE)
 
 
 def users_ids() -> Tuple[Response, int]:
@@ -102,7 +103,8 @@ def user(user_id: int) -> Tuple[Response, int]:
         if request_user is not None:
             return request_user
         else:
-            return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+            return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: f"User: {user} not found"}),
+                    constants.HTTPS.BAD_REQUEST_STATUS_CODE)
 
     response = jsonify({})
 
@@ -156,9 +158,7 @@ def user(user_id: int) -> Tuple[Response, int]:
             response = jsonify(user.to_dict())
         else:
             MetastoreFacade.remove_management_user(management_user=user)
-    response.headers.add(
-        api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*"
-    )
+    response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
 
 

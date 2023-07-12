@@ -8,7 +8,6 @@ import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
 import csle_rest_api.util.rest_api_util as rest_api_util
 
-
 # Creates a blueprint "sub application" of the main REST app
 empirical_system_models_bp = Blueprint(
     api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE, __name__,
@@ -49,7 +48,8 @@ def empirical_system_models() -> Tuple[Response, int]:
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
-    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: "HTTP method not supported"}),
+            constants.HTTPS.BAD_REQUEST_STATUS_CODE)
 
 
 def empirical_system_models_ids() -> Tuple[Response, int]:

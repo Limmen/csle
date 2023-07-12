@@ -212,7 +212,7 @@ class TestResourcesConfigSuite:
         response_data = response.data.decode('utf-8')
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        assert response_data_list == {}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_list
         config = example_config
         config_dict = Config.to_param_dict(config)
         response = flask_app.test_client().put(

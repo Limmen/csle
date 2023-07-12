@@ -48,7 +48,8 @@ def gp_system_models() -> Tuple[Response, int]:
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
-    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: "HTTP method not supported"}),
+            constants.HTTPS.BAD_REQUEST_STATUS_CODE)
 
 
 def gp_system_models_ids() -> Tuple[Response, int]:

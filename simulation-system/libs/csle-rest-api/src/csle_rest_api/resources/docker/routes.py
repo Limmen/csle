@@ -32,7 +32,9 @@ def docker() -> Tuple[Response, int]:
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
         json_data = json.loads(request.data)
         if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-            return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+            response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+            return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                    constants.HTTPS.BAD_REQUEST_STATUS_CODE)
         ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
 
     config = MetastoreFacade.get_config(id=1)

@@ -43,7 +43,9 @@ def config() -> Tuple[Response, int]:
         json_data = json.loads(request.data)
         # Verify payload
         if api_constants.MGMT_WEBAPP.CONFIG_PROPERTY not in json_data:
-            return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+            response_str = f"{api_constants.MGMT_WEBAPP.CONFIG_PROPERTY} not provided"
+            return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                    constants.HTTPS.BAD_REQUEST_STATUS_CODE)
         config = json_data[api_constants.MGMT_WEBAPP.CONFIG_PROPERTY]
         if not (api_constants.MGMT_WEBAPP.PARAMETERS_PROPERTY in config and
                 api_constants.MGMT_WEBAPP.CLUSTER_CONFIG_PROPERTY in config):
@@ -63,7 +65,8 @@ def config() -> Tuple[Response, int]:
         response = jsonify(config.to_param_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
-    return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+    return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: "HTTP method not supported"}),
+            constants.HTTPS.BAD_REQUEST_STATUS_CODE)
 
 
 @config_bp.route(f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.REGISTRATION_ALLOWED_SUBRESOURCE}",

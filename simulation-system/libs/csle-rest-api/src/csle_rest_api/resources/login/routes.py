@@ -27,14 +27,18 @@ def read_login() -> Tuple[Response, int]:
     token = secrets.token_urlsafe(32)
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.USERNAME_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.USERNAME_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     username = json_data[api_constants.MGMT_WEBAPP.USERNAME_PROPERTY]
     user_account = MetastoreFacade.get_management_user_by_username(username=username)
     response_code = constants.HTTPS.UNAUTHORIZED_STATUS_CODE
     response = jsonify({})
     if user_account is not None:
         if api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY not in json_data:
-            return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+            response_str = f"{api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY} not provided"
+            return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                    constants.HTTPS.BAD_REQUEST_STATUS_CODE)
         password = json_data[api_constants.MGMT_WEBAPP.PASSWORD_PROPERTY]
         byte_pwd = password.encode("utf-8")
         pw_hash = bcrypt.hashpw(byte_pwd, user_account.salt.encode("utf-8")).decode("utf-8")

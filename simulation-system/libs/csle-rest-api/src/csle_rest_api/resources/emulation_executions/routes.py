@@ -179,7 +179,10 @@ def start_stop_client_manager(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -234,7 +237,10 @@ def start_stop_client_population(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -289,7 +295,10 @@ def start_stop_client_producer(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -343,7 +352,10 @@ def start_stop_docker_stats_manager(execution_id: int) -> Tuple[Response, int]:
     # Verify payload
     if api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     config = MetastoreFacade.get_config(id=1)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -396,7 +408,10 @@ def start_stop_docker_stats_monitor(execution_id: int) -> Tuple[Response, int]:
     # Verify payload
     if api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -451,7 +466,10 @@ def start_stop_kafka_manager(execution_id: int) -> Tuple[Response, int]:
     # Verify payload
     if api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -505,7 +523,10 @@ def start_stop_kafka(execution_id: int) -> Tuple[Response, int]:
     # Verify payload
     if api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -561,7 +582,10 @@ def start_stop_snort_manager(execution_id: int) -> Tuple[Response, int]:
     # Verify payload
     if api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -616,7 +640,10 @@ def start_stop_snort_ids(execution_id: int) -> Tuple[Response, int]:
     # Verify payload
     if api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -672,7 +699,10 @@ def start_stop_snort_ids_monitor(execution_id: int) -> Tuple[Response, int]:
     # Verify payload
     if api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -728,7 +758,10 @@ def start_stop_ossec_manager(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -807,7 +840,10 @@ def start_stop_ossec_ids(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -887,7 +923,10 @@ def start_stop_ossec_ids_monitor(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -966,7 +1005,10 @@ def start_stop_host_manager(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -1045,7 +1087,10 @@ def start_stop_host_monitor_thread(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -1125,7 +1170,10 @@ def start_stop_container(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.NAME_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -1199,7 +1247,10 @@ def start_stop_elk_manager(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -1267,7 +1318,10 @@ def start_stop_elk_stack(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -1336,7 +1390,10 @@ def start_stop_elastic(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -1404,7 +1461,10 @@ def start_stop_logstash(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -1472,7 +1532,10 @@ def start_stop_kibana(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -1544,7 +1607,10 @@ def start_stop_traffic_manager(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -1623,7 +1689,10 @@ def start_stop_traffic_generator(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -1703,7 +1772,10 @@ def start_stop_filebeat(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -1783,7 +1855,10 @@ def start_stop_packetbeat(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -1863,7 +1938,10 @@ def start_stop_metricbeat(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -1943,7 +2021,10 @@ def start_stop_heartbeat(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         config = MetastoreFacade.get_config(id=1)
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
@@ -2023,7 +2104,10 @@ def start_stop_ryu_manager(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -2094,7 +2178,10 @@ def start_stop_ryu_controller(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -2171,7 +2258,10 @@ def start_stop_ryu_monitor(execution_id: int) -> Tuple[Response, int]:
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data \
             or api_constants.MGMT_WEBAPP.START_PROPERTY not in json_data or \
             api_constants.MGMT_WEBAPP.STOP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or {api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]

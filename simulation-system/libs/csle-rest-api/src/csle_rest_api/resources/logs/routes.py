@@ -30,7 +30,9 @@ def logs() -> Tuple[Response, int]:
         return authorized
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_csle_log_files(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
@@ -53,7 +55,9 @@ def docker_stats_manager_logs() -> Tuple[Response, int]:
         return authorized
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_docker_statsmanager_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
@@ -76,7 +80,9 @@ def prometheus_logs() -> Tuple[Response, int]:
         return authorized
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_prometheus_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
@@ -99,7 +105,9 @@ def nginx_logs() -> Tuple[Response, int]:
         return authorized
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_nginx_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
@@ -121,7 +129,9 @@ def postgresql_logs() -> Tuple[Response, int]:
         return authorized
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_postgresql_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
@@ -143,7 +153,9 @@ def flask_logs() -> Tuple[Response, int]:
         return authorized
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_flask_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
@@ -165,7 +177,9 @@ def cluster_manager_logs() -> Tuple[Response, int]:
         return authorized
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_cluster_manager_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
@@ -187,7 +201,9 @@ def docker_logs() -> Tuple[Response, int]:
         return authorized
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_docker_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
@@ -210,7 +226,9 @@ def node_exporter_logs() -> Tuple[Response, int]:
         return authorized
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_node_exporter_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
@@ -233,7 +251,9 @@ def cadvisor_logs() -> Tuple[Response, int]:
         return authorized
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_cadvisor_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
@@ -256,7 +276,9 @@ def pgadmin_logs() -> Tuple[Response, int]:
         return authorized
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_pgadmin_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
@@ -278,7 +300,9 @@ def grafana_logs() -> Tuple[Response, int]:
         return authorized
     json_data = json.loads(request.data)
     if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        return jsonify({}), constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
     ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
     data_dict = ClusterController.get_grafana_logs(ip=ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
     response = jsonify(data_dict)
@@ -305,8 +329,8 @@ def container_logs() -> Tuple[Response, int]:
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM, default="")
     execution_id = request.args.get(api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM, default=-1)
     if emulation == "" or execution_id == 1:
-        response = jsonify(
-            {api_constants.MGMT_WEBAPP.REASON_PROPERTY: "emulation or execution id query parameters were not provided"})
+        response_str = "emulation or execution id query parameters were not provided"
+        response = jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str})
         return response, constants.HTTPS.BAD_REQUEST_STATUS_CODE
     execution = MetastoreFacade.get_emulation_execution(ip_first_octet=int(execution_id), emulation_name=emulation)
     container_config = execution.emulation_env_config.containers_config.get_container_from_full_name(
