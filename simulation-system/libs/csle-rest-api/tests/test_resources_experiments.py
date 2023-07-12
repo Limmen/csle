@@ -1,5 +1,8 @@
 from typing import List, Tuple
 import json
+
+import pytest_mock
+
 import csle_common.constants.constants as constants
 import pytest
 from csle_common.dao.training.agent_type import AgentType
@@ -34,10 +37,12 @@ class TestResourcesExperimentsSuite:
         :param mocker: the pytest mocker object
         :return: mocked version of the function
         """
+
         def list_experiment_executions() -> List[ExperimentExecution]:
             exp_ex = TestResourcesExperimentsSuite.get_example_exp()
             list_e_e = [exp_ex]
             return list_e_e
+
         list_experiment_executions_mocker = mocker.MagicMock(
             side_effect=list_experiment_executions)
         return list_experiment_executions_mocker
@@ -49,13 +54,15 @@ class TestResourcesExperimentsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked bersion ofthe function
         """
+
         def get_experiment_execution(id: int) -> ExperimentExecution:
             exp_ex = TestResourcesExperimentsSuite.get_example_exp()
             return exp_ex
+
         get_experiment_execution_mocker = mocker.MagicMock(
             side_effect=get_experiment_execution)
         return get_experiment_execution_mocker
-    
+
     @staticmethod
     def get_example_exp() -> ExperimentExecution:
         """
@@ -81,7 +88,7 @@ class TestResourcesExperimentsSuite:
                                      descr="null",
                                      log_file_path="null")
         return exp_ex
-    
+
     @pytest.fixture
     def executions_ids(self, mocker):
         """
@@ -89,13 +96,15 @@ class TestResourcesExperimentsSuite:
         :param mocker: the pytest mocker object
         :return: mocked version of the function
         """
+
         def list_experiment_executions_ids() -> List[Tuple[int, str, str]]:
             lustle = [(4242, 'csle-level0-000', "csle-JDoe-Defender")]
             return lustle
+
         list_experiment_executions_ids_mocker = mocker.MagicMock(
             side_effect=list_experiment_executions_ids)
         return list_experiment_executions_ids_mocker
-    
+
     @pytest.fixture
     def remove(self, mocker):
         """
@@ -103,10 +112,11 @@ class TestResourcesExperimentsSuite:
         :param mocker: the pytest mocker object
         :return: Mocked function
         """
+
         def remove_experiment_execution(experiment_execution: ExperimentExecution) -> None:
             return None
-        remove_experiment_execution_mocker = mocker.MagicMock(
-            side_effect=remove_experiment_execution)
+
+        remove_experiment_execution_mocker = mocker.MagicMock(side_effect=remove_experiment_execution)
         return remove_experiment_execution_mocker
 
     def test_exp_get(self, mocker, flask_app,
@@ -124,49 +134,37 @@ class TestResourcesExperimentsSuite:
         test_e_e = TestResourcesExperimentsSuite.get_example_exp()
         test_e_e_dict = test_e_e.to_dict()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
-                     "list_experiment_executions",
-                     side_effect=executions)
+                     "list_experiment_executions", side_effect=executions)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
-                     "list_experiment_executions_ids",
-                     side_effect=executions_ids)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}"
-                                               )
+                     "list_experiment_executions_ids", side_effect=executions_ids)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-        assert response_data_list[0][api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == \
-            'csle-JDoe-Defender'
-        assert response_data_list[0][api_constants.MGMT_WEBAPP.ID_PROPERTY] == \
-            4242
-        assert response_data_list[0][api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == \
-            'csle-level0-000'
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == 'csle-JDoe-Defender'
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.ID_PROPERTY] == 4242
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == 'csle-level0-000'
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         response_data_dict = response_data_list[0]
         for k in response_data_dict:
             assert response_data_dict[k] == test_e_e_dict[k]
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-        assert response_data_list[0][api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == \
-            'csle-JDoe-Defender'
-        assert response_data_list[0][api_constants.MGMT_WEBAPP.ID_PROPERTY] == \
-            4242
-        assert response_data_list[0][api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == \
-            'csle-level0-000'
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == 'csle-JDoe-Defender'
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.ID_PROPERTY] == 4242
+        assert response_data_list[0][api_constants.MGMT_WEBAPP.SIMULATION_PROPERTY] == 'csle-level0-000'
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -174,11 +172,8 @@ class TestResourcesExperimentsSuite:
         for k in response_data_dict:
             assert response_data_dict[k] == test_e_e_dict[k]
 
-    def test_exp_delete(self, mocker, flask_app,
-                        executions, executions_ids,
-                        logged_in, not_logged_in,
-                        logged_in_as_admin,
-                        remove) -> None:
+    def test_exp_delete(self, mocker: pytest_mock.MockerFixture, flask_app, executions, executions_ids, logged_in,
+                        not_logged_in, logged_in_as_admin, remove) -> None:
         """
         test function for the /experiments resource
         :param flask_app: the pytest flask app for making requests
@@ -187,40 +182,30 @@ class TestResourcesExperimentsSuite:
         :param logged_in: the logged_in fixture
         :param not_logged_in: the not_logged_in fixture
         """
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
-                     "list_experiment_executions",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_experiment_executions",
                      side_effect=executions)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
-                     "remove_experiment_execution",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_experiment_execution",
                      side_effect=remove)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}"
-                                                  )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}"
-                                                  )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}"
-                                                  )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_list == {}
 
-    def test_exp_ids_get(self, mocker, flask_app,
-                         get_execution,
-                         logged_in, not_logged_in,
+    def test_exp_ids_get(self, mocker: pytest_mock.MockerFixture, flask_app, get_execution, logged_in, not_logged_in,
                          logged_in_as_admin) -> None:
         """
         test function for the /experiments resource
@@ -232,39 +217,31 @@ class TestResourcesExperimentsSuite:
         """
         test_e_e = TestResourcesExperimentsSuite.get_example_exp()
         test_e_e_dict = test_e_e.to_dict()
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
-                     "get_experiment_execution",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_experiment_execution",
                      side_effect=get_execution)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}/10"
-                                               )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}/10"
-                                               )
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         for k in response_data_dict:
             assert response_data_dict[k] == test_e_e_dict[k]
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}/10"
-                                               )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         for k in response_data_dict:
             assert response_data_dict[k] == test_e_e_dict[k]
 
-    def test_exp_ids_delete(self, mocker, flask_app,
-                            get_execution,
-                            logged_in, not_logged_in,
+    def test_exp_ids_delete(self, mocker: pytest_mock.MockerFixture, flask_app, get_execution, logged_in, not_logged_in,
                             logged_in_as_admin, remove) -> None:
         """
         test function for the /experiments resource
@@ -275,32 +252,26 @@ class TestResourcesExperimentsSuite:
         :param logged_in: the logged_in fixture
         :param not_logged_in: the not_logged_in fixture
         """
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
-                     "get_experiment_execution",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_experiment_execution",
                      side_effect=get_execution)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
-                     "remove_experiment_execution",
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_experiment_execution",
                      side_effect=remove)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}/10"
-                                                  )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in)
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}/10"
-                                                  )
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in_as_admin)
-        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}/10"
-                                                  )
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EXPERIMENTS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE

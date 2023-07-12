@@ -196,8 +196,7 @@ class TestResourcesMCMCSystemModelsSuite:
         :param list_mcmc_m: the list_mcmc_m fixture
         :return: None
         """
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_mcmc_system_models",
                      side_effect=list_mcmc_m)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_mcmc_system_model",
@@ -207,8 +206,7 @@ class TestResourcesMCMCSystemModelsSuite:
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().delete(api_constants.MGMT_WEBAPP.MCMC_SYSTEM_MODELS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
@@ -235,8 +233,7 @@ class TestResourcesMCMCSystemModelsSuite:
         """
         test_obj = TestResourcesMCMCSystemModelsSuite.example_returner()
         test_obj_dict = test_obj.to_dict()
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_mcmc_system_model_config",
                      side_effect=get_mcmc_config)
         response = flask_app.test_client().get(
@@ -245,8 +242,7 @@ class TestResourcesMCMCSystemModelsSuite:
         response_data_list = json.loads(response_data)
         assert response_data_list == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in, )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.MCMC_SYSTEM_MODELS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
@@ -254,8 +250,7 @@ class TestResourcesMCMCSystemModelsSuite:
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         for i in (g_m_data_dict):
             assert g_m_data_dict[i] == test_obj_dict[i]
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin, )
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(
             f"{api_constants.MGMT_WEBAPP.MCMC_SYSTEM_MODELS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")

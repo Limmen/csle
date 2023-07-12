@@ -1,8 +1,8 @@
 """
 Routes and resources for the /traces-page page
 """
-
-from flask import Blueprint
+from typing import Tuple
+from flask import Blueprint, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 
@@ -24,10 +24,11 @@ def get_traces_page_bp(static_folder: str) -> Blueprint:
                                static_folder=static_folder)
 
     @traces_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-    def traces_page():
+    def traces_page() -> Tuple[Response, int]:
         """
         :return: static resources for the /traces-page url
         """
-        return traces_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)
+        return (traces_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX),
+                constants.HTTPS.OK_STATUS_CODE)
 
     return traces_page_bp

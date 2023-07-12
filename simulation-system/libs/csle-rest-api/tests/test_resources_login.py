@@ -39,9 +39,7 @@ class TestResourcesLoginSuite:
             else:
                 return None
 
-        get_session_token_by_username_mock = mocker.MagicMock(
-            side_effect=get_session_token_by_username
-        )
+        get_session_token_by_username_mock = mocker.MagicMock(side_effect=get_session_token_by_username)
         return get_session_token_by_username_mock
 
     @pytest.fixture

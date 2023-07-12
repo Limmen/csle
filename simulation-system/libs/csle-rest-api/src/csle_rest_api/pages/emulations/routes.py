@@ -2,7 +2,8 @@
 Routes and resources for the /emulations-page page
 """
 
-from flask import Blueprint
+from typing import Tuple
+from flask import Blueprint, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 
@@ -25,10 +26,11 @@ def get_emulations_page_bp(static_folder: str) -> Blueprint:
         static_folder=static_folder)
 
     @emulations_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-    def emulations_page():
+    def emulations_page() -> Tuple[Response, int]:
         """
         :return: static resources for the /emulations-page url
         """
-        return emulations_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)
+        return (emulations_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX),
+                constants.HTTPS.OK_STATUS_CODE)
 
     return emulations_page_bp

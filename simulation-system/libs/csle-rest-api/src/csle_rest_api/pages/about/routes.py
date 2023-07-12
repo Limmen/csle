@@ -1,7 +1,8 @@
 """
 Routes and resources for the /about-page page
 """
-from flask import Blueprint
+from typing import Tuple
+from flask import Blueprint, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 
@@ -22,10 +23,11 @@ def get_about_page_bp(static_folder: str) -> Blueprint:
         static_folder=static_folder)
 
     @about_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-    def about_page():
+    def about_page() -> Tuple[Response, int]:
         """
         :return: static resources for the /about-page url
         """
-        return about_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)
+        return (about_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX),
+                constants.HTTPS.OK_STATUS_CODE)
 
     return about_page_bp

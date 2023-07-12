@@ -1,7 +1,8 @@
 """
 Routes and resources for the /control-plane-page page
 """
-from flask import Blueprint
+from typing import Tuple
+from flask import Blueprint, Response
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 
@@ -24,10 +25,11 @@ def get_control_plane_page_bp(static_folder: str) -> Blueprint:
                                       static_folder=static_folder)
 
     @control_plane_page_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET])
-    def control_plane_page():
+    def control_plane_page() -> Tuple[Response, int]:
         """
         :return: static resources for the /control-plane-page url
         """
-        return control_plane_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX)
+        return (control_plane_page_bp.send_static_file(api_constants.MGMT_WEBAPP.STATIC_RESOURCE_INDEX),
+                constants.HTTPS.OK_STATUS_CODE)
 
     return control_plane_page_bp
