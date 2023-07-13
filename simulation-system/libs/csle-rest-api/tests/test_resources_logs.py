@@ -84,8 +84,10 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: The mocked function
         """
+
         def get_csle_log_files(ip: str, port: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}": 654321}
+
         get_csle_log_files_mocker = mocker.MagicMock(side_effect=get_csle_log_files)
         return get_csle_log_files_mocker
 
@@ -97,8 +99,10 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: The mocked function
         """
+
         def get_docker_statsmanager_logs(ip: str, port: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}": 654321}
+
         get_docker_statsmanager_logs_mocker = mocker.MagicMock(side_effect=get_docker_statsmanager_logs)
         return get_docker_statsmanager_logs_mocker
 
@@ -110,8 +114,10 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: The mocked function
         """
+
         def get_prometheus_logs(ip: str, port: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE}": 654321}
+
         get_prometheus_logs_mocker = mocker.MagicMock(side_effect=get_prometheus_logs)
         return get_prometheus_logs_mocker
 
@@ -123,8 +129,10 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: The mocked function
         """
+
         def get_nginx_logs(ip: str, port: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.NGINX_RESOURCE}": 654321}
+
         get_nginx_logs_mocker = mocker.MagicMock(side_effect=get_nginx_logs)
         return get_nginx_logs_mocker
 
@@ -136,8 +144,10 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: The mocked function
         """
+
         def get_postgresql_logs(ip: str, port: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.POSTGRESQL_RESOURCE}": 654321}
+
         get_postgresql_logs_mocker = mocker.MagicMock(side_effect=get_postgresql_logs)
         return get_postgresql_logs_mocker
 
@@ -149,8 +159,10 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: The mocked function
         """
+
         def get_flask_logs(ip: str, port: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.FLASK_RESOURCE}": 654321}
+
         get_flask_logs_mocker = mocker.MagicMock(side_effect=get_flask_logs)
         return get_flask_logs_mocker
 
@@ -162,8 +174,10 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: The mocked function
         """
+
         def get_cluster_manager_logs(ip: str, port: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.CLUSTERMANAGER_RESOURCE}": 654321}
+
         get_cluster_manager_logs_mocker = mocker.MagicMock(side_effect=get_cluster_manager_logs)
         return get_cluster_manager_logs_mocker
 
@@ -175,8 +189,10 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: The mocked function
         """
+
         def get_docker_logs(ip: str, port: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.DOCKER_RESOURCE}": 654321}
+
         get_docker_logs_mocker = mocker.MagicMock(side_effect=get_docker_logs)
         return get_docker_logs_mocker
 
@@ -188,9 +204,11 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_ryu_controller_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
                 -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}": 654321}
+
         get_ryu_controller_logs_mocker = mocker.MagicMock(side_effect=get_ryu_controller_logs)
         return get_ryu_controller_logs_mocker
 
@@ -202,8 +220,10 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_client_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}": 654321}
+
         get_client_manager_logs_mocker = mocker.MagicMock(side_effect=get_client_manager_logs)
         return get_client_manager_logs_mocker
 
@@ -215,8 +235,10 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_kafka_manager_logs(ip: str, port: int, emulation, ip_first_octet: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}": 654321}
+
         get_kafka_manager_logs_mocker = mocker.MagicMock(side_effect=get_kafka_manager_logs)
         return get_kafka_manager_logs_mocker
 
@@ -228,8 +250,10 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_kafka_logs(ip: str, port: int, emulation: str, ip_first_octet: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE}": 654321}
+
         get_kafka_logs_mocker = mocker.MagicMock(side_effect=get_kafka_logs)
         return get_kafka_logs_mocker
 
@@ -241,9 +265,11 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_snort_ids_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: int) \
                 -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE}": 654321}
+
         get_snort_ids_manager_logs_mocker = mocker.MagicMock(side_effect=get_snort_ids_manager_logs)
         return get_snort_ids_manager_logs_mocker
 
@@ -255,9 +281,11 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_snort_ids_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
                 -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE}": 654321}
+
         get_snort_ids_logs_mocker = mocker.MagicMock(side_effect=get_snort_ids_logs)
         return get_snort_ids_logs_mocker
 
@@ -269,9 +297,11 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_ossec_ids_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
                 -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}": 654321}
+
         get_ossec_ids_manager_logs_mocker = mocker.MagicMock(side_effect=get_ossec_ids_manager_logs)
         return get_ossec_ids_manager_logs_mocker
 
@@ -283,9 +313,11 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_ossec_ids_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
                 -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}": 654321}
+
         get_ossec_ids_logs_mocker = mocker.MagicMock(side_effect=get_ossec_ids_logs)
         return get_ossec_ids_logs_mocker
 
@@ -297,9 +329,11 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_host_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
                 -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}": 654321}
+
         get_host_manager_logs_mocker = mocker.MagicMock(side_effect=get_host_manager_logs)
         return get_host_manager_logs_mocker
 
@@ -311,9 +345,11 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_traffic_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
                 -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}": 654321}
+
         get_traffic_manager_logs_mocker = mocker.MagicMock(side_effect=get_traffic_manager_logs)
         return get_traffic_manager_logs_mocker
 
@@ -325,8 +361,10 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_elk_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}": 654321}
+
         get_elk_manager_logs_mocker = mocker.MagicMock(side_effect=get_elk_manager_logs)
         return get_elk_manager_logs_mocker
 
@@ -338,8 +376,10 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_elk_logs(ip: str, port: int, emulation: str, ip_first_octet: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}": 654321}
+
         get_elk_logs_mocker = mocker.MagicMock(side_effect=get_elk_logs)
         return get_elk_logs_mocker
 
@@ -351,8 +391,10 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_ryu_manager_logs(ip: str, port: int, emulation: str, ip_first_octet: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}": 654321}
+
         get_ryu_manager_logs_mocker = mocker.MagicMock(side_effect=get_ryu_manager_logs)
         return get_ryu_manager_logs_mocker
 
@@ -364,8 +406,10 @@ class TestResourcesLogsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_ryu_controller_logs(ip: str, port: int, emulation: str, ip_first_octet: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}": 654321}
+
         get_ryu_controller_logs_mocker = mocker.MagicMock(side_effect=get_ryu_controller_logs)
         return get_ryu_controller_logs_mocker
 
@@ -377,6 +421,7 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: the mocked function
         """
+
         def get_emulation_execution(ip_first_octet: int, emulation_name: str) -> EmulationExecution:
             c_net = ContainerNetwork(name="Network1", subnet_mask="Subnet1", bitmask="null",
                                      subnet_prefix="null", interface="eth0")
@@ -542,6 +587,7 @@ class TestResourcesLogsSuite:
             em_ex = EmulationExecution(emulation_name=emulation_name, timestamp=1.5, ip_first_octet=ip_first_octet,
                                        emulation_env_config=em_env, physical_servers=["JohnDoeServer"])
             return em_ex
+
         get_emulation_execution_mocker = mocker.MagicMock(side_effect=get_emulation_execution)
         return get_emulation_execution_mocker
 
@@ -554,9 +600,11 @@ class TestResourcesLogsSuite:
         :param example_config: The example_config function fetched from conftest.py
         :return: the mocked function
         """
+
         def get_config(id: int) -> Config:
             config = example_config
             return config
+
         get_config_mocker = mocker.MagicMock(side_effect=get_config)
         return get_config_mocker
 
@@ -568,9 +616,11 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: The mocked function
         """
+
         def get_node_exporter_logs(ip: str, port: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.NODE_EXPORTER_RESOURCE}": 654321}
-        get_node_exporter_logs_mocker = mocker.MagicMock( side_effect=get_node_exporter_logs)
+
+        get_node_exporter_logs_mocker = mocker.MagicMock(side_effect=get_node_exporter_logs)
         return get_node_exporter_logs_mocker
 
     @pytest.fixture
@@ -581,8 +631,10 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: The mocked function
         """
+
         def get_cadvisor_logs(ip: str, port: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.CADVISOR_RESOURCE}": 654321}
+
         get_cadvisor_logs_mocker = mocker.MagicMock(side_effect=get_cadvisor_logs)
         return get_cadvisor_logs_mocker
 
@@ -594,8 +646,10 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: The mocked function
         """
+
         def get_pgadmin_logs(ip: str, port: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.PGADMIN_RESOURCE}": 654321}
+
         get_pgadmin_logs_mocker = mocker.MagicMock(side_effect=get_pgadmin_logs)
         return get_pgadmin_logs_mocker
 
@@ -607,8 +661,10 @@ class TestResourcesLogsSuite:
         :param mocker: The pytest mocker object
         :return: The mocked function
         """
+
         def get_grafana_logs(ip: str, port: int) -> Dict[str, Any]:
             return {f"{api_constants.MGMT_WEBAPP.GRAFANA_RESOURCE}": 654321}
+
         get_grafana_logs_mocker = mocker.MagicMock(side_effect=get_grafana_logs)
         return get_grafana_logs_mocker
 
@@ -818,4 +874,3 @@ class TestResourcesLogsSuite:
             response_data_dict = json.loads(response_data)
             assert response.status_code == constants.HTTPS.OK_STATUS_CODE
             assert response_data_dict == {constants_list[i]: 654321}
-        
