@@ -52,7 +52,7 @@ class ContainersConfig(JSONSerializable):
     def to_dict(self) -> Dict[str, Any]:
         """
         Converts the object to a dict representation
-        
+
         :return: a dict representation of the object
         """
         d = {}
@@ -126,8 +126,6 @@ class ContainersConfig(JSONSerializable):
         :param name: the full name of the container
         :return: the container with the given ip or None
         """
-        #should tihs always return None? with respect to the if -statement in container_logs.
-
         for c in self.containers:
             if name == c.full_name_str:
                 return c
