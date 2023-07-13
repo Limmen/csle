@@ -3,6 +3,7 @@ Routes and sub-resources for the /emulations resource
 """
 from typing import List, Tuple
 import base64
+import logging
 from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -17,6 +18,9 @@ emulations_bp = Blueprint(
     api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE, __name__,
     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}")
 
+logger = logging.getLogger("logger")
+
+
 
 @emulations_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def emulations() -> Tuple[Response, int]:
@@ -25,7 +29,10 @@ def emulations() -> Tuple[Response, int]:
 
     :return: Returns a list of emulations, a list of emulation ids, or deletes the list of emulations
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    requires_admin = False
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 
@@ -43,7 +50,7 @@ def emulations() -> Tuple[Response, int]:
         running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
         ).runningEmulations)
-
+    logger.info(running_emulation_names)
     emulations_dicts = []
     for em in all_emulations:
         executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
