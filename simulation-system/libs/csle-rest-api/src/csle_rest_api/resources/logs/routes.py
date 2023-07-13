@@ -335,6 +335,9 @@ def container_logs() -> Tuple[Response, int]:
     execution = MetastoreFacade.get_emulation_execution(ip_first_octet=int(execution_id), emulation_name=emulation)
     container_config = execution.emulation_env_config.containers_config.get_container_from_full_name(
         name=container_name)
+    import logging
+    logging.info(f"CONTAINER NAME: {container_name}")
+    logging.info(f"COnfig: {container_config}")
     if container_config is not None:
         config = MetastoreFacade.get_config(id=1)
         for node in config.cluster_config.cluster_nodes:

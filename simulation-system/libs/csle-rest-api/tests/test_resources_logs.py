@@ -772,18 +772,19 @@ class TestResourcesLogsSuite:
         :param tyu_controller_logs: the ryu_controller_logs fixture
         :return: None
         """
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "get_csle_log_files", side_effect=csle_logs)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_csle_log_files",
+                     side_effect=csle_logs)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker_list = [client_manager_logs, kafka_manager_logs, kafka_logs, snort_ids_manager_logs,
+        mocker_list = [container_logs, client_manager_logs, kafka_manager_logs, kafka_logs, snort_ids_manager_logs,
                        snort_ids_logs, ossec_ids_manager_logs, ossec_ids_logs, host_manager_logs,
                        traffic_manager_logs, elk_manager_logs, elk_logs, ryu_manager_logs, ryu_controller_logs]
-        corr_func_names = ["get_client_manager_logs", "get_kafka_manager_logs", "get_kafka_logs",
+        corr_func_names = ["get_container_logs", "get_client_manager_logs", "get_kafka_manager_logs", "get_kafka_logs",
                            "get_snort_ids_manager_logs", "get_snort_ids_logs", "get_ossec_ids_manager_logs",
                            "get_ossec_ids_logs", "get_host_manager_logs", "get_traffic_manager_logs",
                            "get_elk_manager_logs", "get_elk_logs", "get_ryu_manager_logs", "get_ryu_controller_logs"]
-        constants_list = [api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE,
+        constants_list = [api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE,
+                          api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE,
                           api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE,
                           api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE,
                           api_constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE,
@@ -796,34 +797,8 @@ class TestResourcesLogsSuite:
                           api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE,
                           api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE,
                           api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE]
-        config = example_config
-        config_cluster_dict = config.cluster_config.to_dict()['cluster_nodes'][0]
-
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_container_logs",
-                     side_effect=container_logs)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
-        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}"
-                                                f"{constants.COMMANDS.SLASH_DELIM}"
-                                                f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}"
-                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}=emulation1"
-                                                f"&{api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM}=10",
-                                                data=json.dumps(config_cluster_dict))
-        response_data = response.data.decode("utf-8")
-        response_data_dict = json.loads(response_data)
-        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        assert response_data_dict == {}
-        config_cluster_dict[api_constants.MGMT_WEBAPP.NAME_PROPERTY] = "Container1"
-        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}"
-                                                f"{constants.COMMANDS.SLASH_DELIM}"
-                                                f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}"
-                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}=emulation1"
-                                                f"&{api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM}=10",
-                                                data=json.dumps(config_cluster_dict))
-        response_data = response.data.decode("utf-8")
-        response_data_dict = json.loads(response_data)
-        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
-        assert response_data_dict == {}
         k = 0
         for i in range(len(mocker_list)):
             k += 1
@@ -836,7 +811,6 @@ class TestResourcesLogsSuite:
                                                     f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}=emulation1"
                                                     f"&{api_constants.MGMT_WEBAPP.EXECUTION_ID_QUERY_PARAM}=10",
                                                     data=json.dumps({}))
-
             response_data = response.data.decode("utf-8")
             response_data_dict = json.loads(response_data)
             assert response_data_dict == {}
@@ -864,6 +838,8 @@ class TestResourcesLogsSuite:
             assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
             assert response_data_dict == {}
             indata_dict = {api_constants.MGMT_WEBAPP.NAME_PROPERTY: "123.456.78.99"}
+            if corr_func_names[i] == "get_container_logs":
+                indata_dict[api_constants.MGMT_WEBAPP.NAME_PROPERTY] = "Container1null-levelnull-10"
             response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.LOGS_RESOURCE}"
                                                     f"{constants.COMMANDS.SLASH_DELIM}"
                                                     f"{constants_list[i]}"
