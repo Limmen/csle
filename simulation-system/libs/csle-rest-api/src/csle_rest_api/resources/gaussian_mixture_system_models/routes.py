@@ -1,11 +1,10 @@
 """
 Routes and sub-resources for the /gaussian-mixture-system-models resource
 """
+from typing import Tuple
 import csle_common.constants.constants as constants
-import pytest
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, jsonify, request
-
+from flask import Blueprint, jsonify, request, Response
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -17,7 +16,7 @@ gaussian_mixture_system_models_bp = Blueprint(
 
 @gaussian_mixture_system_models_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                       api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def gaussian_mixture_system_models():
+def gaussian_mixture_system_models() -> Tuple[Response, int]:
     """
     The /gaussian-mixture-system-models resource.
 
@@ -34,7 +33,6 @@ def gaussian_mixture_system_models():
         # Check if ids query parameter is True, then only return the ids and not the whole list of mixture models
         ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
         if ids is not None and ids:
-            pytest.logger.info(ids)
             return gaussian_mixture_system_models_ids()
         models = MetastoreFacade.list_gaussian_mixture_system_models()
         models_dicts = list(map(lambda x: x.to_dict(), models))
@@ -48,9 +46,11 @@ def gaussian_mixture_system_models():
         response = jsonify({})
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
+    return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: "HTTP method not supported"}),
+            constants.HTTPS.BAD_REQUEST_STATUS_CODE)
 
 
-def gaussian_mixture_system_models_ids():
+def gaussian_mixture_system_models_ids() -> Tuple[Response, int]:
     """
     :return: An HTTP response with all system models ids
     """
@@ -69,7 +69,7 @@ def gaussian_mixture_system_models_ids():
 
 @gaussian_mixture_system_models_bp.route("/<model_id>", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET,
                                                                  api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
-def gaussian_mixture_system_model(model_id: int):
+def gaussian_mixture_system_model(model_id: int) -> Tuple[Response, int]:
     """
     The /system-models/id resource.
 
