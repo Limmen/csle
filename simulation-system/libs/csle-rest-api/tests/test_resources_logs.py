@@ -744,7 +744,7 @@ class TestResourcesLogsSuite:
             assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
 
     def test_logs_post_metastore(self, flask_app, not_logged_in, logged_in, logged_in_as_admin,
-                                 mocker: pytest_mock.MockFixture, example_config, csle_logs,
+                                 mocker: pytest_mock.MockFixture, csle_logs,
                                  get_em_ex, container_logs, client_manager_logs, kafka_manager_logs, kafka_logs,
                                  snort_ids_manager_logs, snort_ids_logs, ossec_ids_manager_logs,
                                  ossec_ids_logs, host_manager_logs, traffic_manager_logs, elk_manager_logs,
@@ -754,7 +754,6 @@ class TestResourcesLogsSuite:
 
         :param flask_app: the flask app representing the web server
         :param mocker: the mocker object for mocking functions
-        :param example_conig: the example_config ficture from conftest
         :param csle_logs: the csle_logs fixture
         :param container_logs: the container_logs fixture
         :param client_manager_logs: the client_manager_logs fixture
