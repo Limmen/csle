@@ -1,5 +1,4 @@
 from typing import Callable
-import logging
 import pytest
 import pytest_mock
 from subprocess import CompletedProcess
@@ -13,8 +12,6 @@ class TestOSSECIDSManagerSuite(object):
     """
     Test suite for the OSSEC IDS manager
     """
-
-    pytest.logger = logging.getLogger("ossec_ids_manager_tests")
 
     @pytest.fixture(scope='module')
     def grpc_add_to_server(self) -> Callable:

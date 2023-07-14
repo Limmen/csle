@@ -1,5 +1,4 @@
 from typing import Callable
-import logging
 import pytest
 import pytest_mock
 from csle_collector.kafka_manager.kafka_manager_pb2 import KafkaDTO
@@ -13,8 +12,6 @@ class TestKafkaManagerSuite(object):
     """
     Test suite for kafka_manager.py
     """
-
-    pytest.logger = logging.getLogger("kafka_manager_tests")
 
     @pytest.fixture(scope='module')
     def grpc_add_to_server(self) -> Callable:
@@ -118,11 +115,9 @@ class TestKafkaManagerSuite(object):
 
         :return: None
         """
-        dicts = [
-            {constants.DICT_PROPERTIES.RUNNING: True, constants.DICT_PROPERTIES.TOPICS: ["topic1", "topic2"]},
-            {constants.DICT_PROPERTIES.RUNNING: False, constants.DICT_PROPERTIES.TOPICS: []},
-            {constants.DICT_PROPERTIES.RUNNING: False, constants.DICT_PROPERTIES.TOPICS: ["topic3"]},
-        ]
+        dicts = [{constants.DICT_PROPERTIES.RUNNING: True, constants.DICT_PROPERTIES.TOPICS: ["topic1", "topic2"]},
+                 {constants.DICT_PROPERTIES.RUNNING: False, constants.DICT_PROPERTIES.TOPICS: []},
+                 {constants.DICT_PROPERTIES.RUNNING: False, constants.DICT_PROPERTIES.TOPICS: ["topic3"]}]
         for d in dicts:
             dto: KafkaDTO = KafkaManagerUtil.kafka_dto_from_dict(d=d)
             assert dto.running == d[constants.DICT_PROPERTIES.RUNNING]
@@ -134,11 +129,8 @@ class TestKafkaManagerSuite(object):
 
         :return: None
         """
-        dtos = [
-            KafkaDTO(running=True, topics=["topic1", "topic2"]),
-            KafkaDTO(running=False, topics=[]),
-            KafkaDTO(running=True, topics=["topic3"])
-        ]
+        dtos = [KafkaDTO(running=True, topics=["topic1", "topic2"]), KafkaDTO(running=False, topics=[]),
+                KafkaDTO(running=True, topics=["topic3"])]
         for dto in dtos:
             d = KafkaManagerUtil.kafka_dto_to_dict(kafka_dto=dto)
             assert dto.running == d[constants.DICT_PROPERTIES.RUNNING]
