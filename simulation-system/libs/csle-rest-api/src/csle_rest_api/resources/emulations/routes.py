@@ -3,7 +3,6 @@ Routes and sub-resources for the /emulations resource
 """
 from typing import List, Tuple
 import base64
-import logging
 from flask import Blueprint, jsonify, request, Response
 import csle_common.constants.constants as constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -17,9 +16,6 @@ import csle_rest_api.util.rest_api_util as rest_api_util
 emulations_bp = Blueprint(
     api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE, __name__,
     url_prefix=f"{constants.COMMANDS.SLASH_DELIM}{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}")
-
-logger = logging.getLogger("logger")
-
 
 
 @emulations_bp.route("", methods=[api_constants.MGMT_WEBAPP.HTTP_REST_GET, api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
@@ -50,7 +46,6 @@ def emulations() -> Tuple[Response, int]:
         running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
         ).runningEmulations)
-    logger.info(running_emulation_names)
     emulations_dicts = []
     for em in all_emulations:
         executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(emulation_name=em.name)
@@ -120,13 +115,11 @@ def emulation_by_id(emulation_id: int) -> Tuple[Response, int]:
     :param emulation_id: the id of the emulation
     :return: the emulation with the given id if it exists
     """
+    requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE or \
-        api_constants.MGMT_WEBAPP.HTTP_REST_POST:
-        authorized = rest_api_util.check_if_user_is_authorized(request=request,
-                                                               requires_admin=True)
-    else:
-        authorized = rest_api_util.check_if_user_is_authorized(request=request,
-                                                               requires_admin=False)
+        request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        requires_admin = True
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
 
     if authorized is not None:
         return authorized
@@ -147,10 +140,17 @@ def emulation_by_id(emulation_id: int) -> Tuple[Response, int]:
                 em.running = True
                 for exec in executions:
                     exec.emulation_env_config.running = True
-            em_name, img = MetastoreFacade.get_emulation_image(emulation_name=em.name)
-            em.image = base64.b64encode(img).decode()
-            for exec in executions:
-                exec.emulation_env_config.image = base64.b64encode(img).decode()
+            if MetastoreFacade.get_emulation_image(emulation_name=em.name) is not None:
+                em_name, img = MetastoreFacade.get_emulation_image(emulation_name=em.name)
+                em.image = base64.b64encode(img).decode()
+                for exec in executions:
+                    exec.emulation_env_config.image = base64.b64encode(img).decode()
+            else:
+                img = img = MetastoreFacade.get_emulation_image(emulation_name=em.name)
+                em.image = img
+                for exec in executions:
+                    exec.emulation_env_config.image = img
+
             em_dict = em.to_dict()
             em_dict[api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE] = list(map(lambda x: x.to_dict(), executions))
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
@@ -189,7 +189,8 @@ def get_executions_of_emulation(emulation_id: int) -> Tuple[Response, int]:
     :param emulation_id: the id of the emulation
     :return: the list of executions of the emulation
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    authorized = rest_api_util.check_if_user_is_authorized(request=request,
+                                                           requires_admin=False)
     if authorized is not None:
         return authorized
 
@@ -216,7 +217,12 @@ def get_execution_of_emulation(emulation_id: int, execution_id: int) -> Tuple[Re
     :param execution_id: the id of the execution
     :return: The sought for execution if it exist
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
+        requires_admin = True
+    elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
+        requires_admin = False
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
 
@@ -252,7 +258,8 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int) -> Tup
     :param minutes: the number of minutes past to collect data from
     :return: the collected data
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    authorized = rest_api_util.check_if_user_is_authorized(request=request,
+                                                           requires_admin=False)
     if authorized is not None:
         return authorized
 

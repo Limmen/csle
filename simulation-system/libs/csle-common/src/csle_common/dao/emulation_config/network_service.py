@@ -57,12 +57,12 @@ class NetworkService(JSONSerializable):
 
         :return: a dto representation of the object
         """
-        if d["credentials"] != None:
+        if d["credentials"] is not None:
             dto = NetworkService(name=d["name"], port=d["port"], protocol=d["protocol"],
-                                credentials=list(map(lambda x: Credential.from_dict(x), d["credentials"])))
+                                 credentials=list(map(lambda x: Credential.from_dict(x), d["credentials"])))
         else:
             dto = NetworkService(name=d["name"], port=d["port"], protocol=d["protocol"],
-                                credentials=None)
+                                 credentials=None)
         return dto
 
     def copy(self) -> "NetworkService":

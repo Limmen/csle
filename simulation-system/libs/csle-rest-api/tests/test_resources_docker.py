@@ -238,4 +238,3 @@ class TestResourcesDockerStatusSuite:
         response_data_dict = json.loads(response_data)
         assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
-

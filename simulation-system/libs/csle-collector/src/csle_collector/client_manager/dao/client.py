@@ -1,7 +1,6 @@
 import random
 from typing import List, Dict, Any
 import numpy as np
-import logging
 from scipy.stats import expon
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 from csle_collector.client_manager.dao.eptmp_arrival_config import EPTMPArrivalConfig

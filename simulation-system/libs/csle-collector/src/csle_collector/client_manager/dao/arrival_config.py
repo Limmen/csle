@@ -1,5 +1,6 @@
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
-from typing import List, Dict, Any
+from typing import Dict, Any
+
 
 class ArrivalConfig():
     """
