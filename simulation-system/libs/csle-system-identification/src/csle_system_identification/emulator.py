@@ -34,9 +34,9 @@ class Emulator:
     def run_action_sequences(
             emulation_env_config: EmulationEnvConfig, attacker_sequence: List[EmulationAttackerAction],
             defender_sequence: List[EmulationDefenderAction],
-            repeat_times: int = 1, sleep_time: int = 1, save_dir: str = None,
+            repeat_times: int = 1, sleep_time: int = 1, save_dir: str = "",
             emulation_statistics: EmulationStatistics = None, descr: str = "", save: bool = True,
-            data_collection_job: Optional[DataCollectionJobConfig] = None,
+            data_collection_job: DataCollectionJobConfig = None,
             save_emulation_traces_every: int = 10,
             emulation_traces_to_save_with_data_collection_job: int = 3,
             intrusion_start_p: float = 0.1, intrusion_continue: float = 0.3, trace_len: int = 30,
@@ -67,7 +67,7 @@ class Emulator:
         logger = Logger.__call__().get_logger()
 
         # Setup save dir
-        if save_dir is None:
+        if save_dir == "":
             save_dir = ExperimentUtil.default_output_dir() + "/results"
         assert len(attacker_sequence) == len(defender_sequence)
 
@@ -108,7 +108,7 @@ class Emulator:
         s = EmulationEnvState(emulation_env_config=emulation_env_config)
         s.initialize_defender_machines()
         emulation_statistics.initialize_machines(s=s)
-        emulation_traces = []
+        emulation_traces: List[EmulationTrace] = []
         collected_steps = 0
         for i in range(repeat_times):
             intrusion_start_time = -1

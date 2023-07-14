@@ -42,6 +42,9 @@ class EmpiricalAlgorithm(BaseSystemIdentificationAlgorithm):
 
         :return: the fitted model
         """
+        if self.emulation_env_config is None:
+            raise ValueError("Emulation config cannot be None")
+
         # Setup system identification job
         pid = os.getpid()
         descr = f"System identification through empirical distributions, " \

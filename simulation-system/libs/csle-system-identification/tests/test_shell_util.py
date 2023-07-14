@@ -1,13 +1,8 @@
-import logging
-import pytest
 
-
-class TestEmpiricalAlgorithmSuite(object):
+class TestEmpiricalAlgorithmSuite:
     """
     Test suite for empirical_algorithm.py
     """
-
-    pytest.logger = logging.getLogger("empirical_algorithm_tests")
 
     def test_fit(self) -> None:
         """

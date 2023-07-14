@@ -48,6 +48,9 @@ class MCMCAlgorithm(BaseSystemIdentificationAlgorithm):
 
         :return: the fitted model
         """
+        if self.emulation_env_config is None:
+            raise ValueError("Emulation config cannot be None")
+
         # Setup system identification job
         pid = os.getpid()
         descr = f"System identification through Markov Chain Monte-Carlo, " \
@@ -93,9 +96,8 @@ class MCMCAlgorithm(BaseSystemIdentificationAlgorithm):
             trace = pm.sample(draws=draws, return_inferencedata=False, chains=chains)
             for param in parameters:
                 param_trace = trace.get_values(varname=param)
-                sample_space = list(set(param_trace))
-                sample_space.sort()
-                sample_space = np.array(sample_space)
+                sample_space = np.unique(param_trace)
+                sample_space = np.sort(sample_space)
                 kde = KernelDensity(kernel='gaussian', bandwidth=0.2).fit(param_trace.reshape(len(param_trace), -1))
                 densities = kde.score_samples(sample_space.reshape(len(sample_space), -1))
                 posterior = MCMCPosterior(posterior_name=param, samples=param_trace, densities=densities,
