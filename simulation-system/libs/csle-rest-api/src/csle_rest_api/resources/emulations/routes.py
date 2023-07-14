@@ -120,7 +120,14 @@ def emulation_by_id(emulation_id: int) -> Tuple[Response, int]:
     :param emulation_id: the id of the emulation
     :return: the emulation with the given id if it exists
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE or \
+        api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        authorized = rest_api_util.check_if_user_is_authorized(request=request,
+                                                               requires_admin=True)
+    else:
+        authorized = rest_api_util.check_if_user_is_authorized(request=request,
+                                                               requires_admin=False)
+
     if authorized is not None:
         return authorized
 

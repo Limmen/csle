@@ -45,8 +45,13 @@ class ConstantArrivalConfig(ArrivalConfig, JSONSerializable, GRPCSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = ConstantArrivalConfig(lamb=d["lamb"])
-        return obj
+        if "lamb" not in d:
+            obj = ConstantArrivalConfig(lamb=None)
+            return obj
+            # obj = ConstantArrivalConfig(lamb=1.0)
+        else:
+            obj = ConstantArrivalConfig(lamb=d["lamb"])
+            return obj
 
     def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.ConstantArrivalConfigDTO:
         """

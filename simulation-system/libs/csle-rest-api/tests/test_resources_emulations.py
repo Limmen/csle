@@ -13,9 +13,13 @@ from csle_cluster.cluster_manager.cluster_manager_pb2 import (
 from csle_collector.client_manager.dao.arrival_config import ArrivalConfig
 from csle_collector.client_manager.dao.client import Client
 from csle_collector.client_manager.dao.client_arrival_type import ClientArrivalType
+from csle_collector.client_manager.dao.constant_arrival_config import (
+    ConstantArrivalConfig,
+)
 from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMarkovChain
 from csle_collector.client_manager.dao.workflow_service import WorkflowService
 from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
+from csle_common.controllers.emulation_env_controller import EmulationEnvController
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import (
     EmulationAttackerAction,
 )
@@ -138,6 +142,19 @@ class TestResourcesEmulationsSuite:
         return list_emulations_mocker
 
     @pytest.fixture
+    def emulation_id(self, mocker):
+        """
+        Pytest fixture for mocking the get_emulation function
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def get_emulation(id: int) -> EmulationEnvConfig:
+            em_env = TestResourcesEmulationsSuite.get_ex_em_env()
+            return em_env
+        get_emulation_mocker = mocker.MagicMock(side_effect=get_emulation)
+        return get_emulation_mocker
+
+    @pytest.fixture
     def emulations_images(self, mocker):
         """
         Pytest fixture for mocking the list_emulation_images function
@@ -169,7 +186,7 @@ class TestResourcesEmulationsSuite:
             em_env = TestResourcesEmulationsSuite.get_ex_em_env()
             em_ex = EmulationExecution(emulation_name="JohbnDoeEmulation", timestamp=1.5, ip_first_octet=-1,
                                        emulation_env_config=em_env, physical_servers=["JohnDoeServer"])
-            return em_ex
+            return [em_ex]
         list_emulation_executions_for_a_given_emulation_mocker = \
             mocker.MagicMock(side_effect=list_emulation_executions_for_a_given_emulation)
         return list_emulation_executions_for_a_given_emulation_mocker
@@ -196,6 +213,19 @@ class TestResourcesEmulationsSuite:
             return OperationOutcomeDTO(outcome=False)
         clean_all_executions_of_emulation_mocker = mocker.MagicMock(side_effect=clean_all_executions_of_emulation)
         return clean_all_executions_of_emulation_mocker
+
+    @pytest.fixture
+    def get_em_im(self, mocker):
+        """
+        pytest fixture for mocking the get_emulation_image function
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def get_emulation_image(emulation_name: str):
+            em_im = ("Emulation1", bytes("Emulation1", "utf-8"))
+            return em_im
+        get_emulation_image_mocker = mocker.MagicMock(side_effect=get_emulation_image)
+        return get_emulation_image_mocker
 
     @pytest.fixture
     def emulations_ids_in_names(self, mocker):
@@ -255,8 +285,8 @@ class TestResourcesEmulationsSuite:
         nf_conf = NodeFlagsConfig(ip="123.456.78.99", flags=[flag], docker_gw_bridge_ip="null",
                                   physical_host_ip="123.456.78.99")
         cred = Credential(username="JDoe", pw="JDoe", port=None, protocol=None, service="null", root=False)
-        nv_conf = NodeVulnerabilityConfig(ip="123.456.78.99", vuln_type=VulnType(0), name="JohnDoe", port=1,
-                                          protocol=TransportProtocol(0), credentials=[cred], cvss=2.0,
+        nv_conf = NodeVulnerabilityConfig(ip="123.456.78.99", vuln_type=VulnType.WEAK_PW.value, name="JohnDoe", port=1,
+                                          protocol=TransportProtocol.TCP.value, credentials=[cred], cvss=2.0,
                                           cve=None, service="null", root=False, docker_gw_bridge_ip="123.456.78.99",
                                           physical_host_ip="123.456.78.99")
         dfn_conf = DefaultNetworkFirewallConfig(ip=None, default_gw="null", default_input="null",
@@ -281,8 +311,8 @@ class TestResourcesEmulationsSuite:
         nn_config = NodeNetworkConfig(interface=constants.NETWORKING.ETH0, limit_packets_queue=30000,
                                       packet_delay_ms=0.1, packet_delay_jitter_ms=0.025,
                                       packet_delay_correlation_percentage=25.5,
-                                      packet_delay_distribution=PacketDelayDistributionType.PARETO,
-                                      packet_loss_type=PacketLossType.GEMODEL,
+                                      packet_delay_distribution=PacketDelayDistributionType.PARETONORMAL.value,
+                                      packet_loss_type=PacketLossType.GEMODEL.value,
                                       packet_loss_rate_random_percentage=2.3,
                                       packet_loss_random_correlation_percentage=25.6,
                                       loss_state_markov_chain_p13=0.1,
@@ -310,7 +340,7 @@ class TestResourcesEmulationsSuite:
                                             docker_gw_bridge_ip="123.456.78.99",
                                             physical_host_ip="123.456.78.99")
         client = Client(id=1, workflow_distribution=[1.0],
-                        arrival_config=ArrivalConfig(client_arrival_type=ClientArrivalType(0)),
+                        arrival_config=ConstantArrivalConfig(lamb=1.0),
                         mu=4, exponential_service_time=False)
         wf_m_chain = WorkflowMarkovChain(transition_matrix=[[1.0]], initial_state=1, id=1)
         wf_service = WorkflowService(ips_and_commands=[("null", "null")], id=1)
@@ -336,14 +366,15 @@ class TestResourcesEmulationsSuite:
                                  topics=[kafka_top], kafka_manager_log_file="null", kafka_manager_log_dir="null",
                                  kafka_manager_max_workers=9, kafka_port=9092, kafka_port_external=9292,
                                  time_step_len_seconds=15, kafka_manager_port=50051, version="0.0.1")
-        network_service = NetworkService(protocol=TransportProtocol(0), port=1, name="JohnDoe", credentials=None)
+        network_service = NetworkService(protocol=TransportProtocol.TCP.value, port=1, name="JohnDoe", credentials=None)
         n_service_conf = NodeServicesConfig(ip="123.456.78.99", services=[network_service])
         service_conf = ServicesConfig(services_configs=[n_service_conf])
-        e_a_action = EmulationAttackerAction(id=EmulationAttackerActionId(0), name="JohnDoe",
+        e_a_action = EmulationAttackerAction(id=EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST.value,
+                                             name="JohnDoe",
                                              cmds=["JohnDoeCommands"],
-                                             type=EmulationAttackerActionType(0), descr="null",
+                                             type=EmulationAttackerActionType.RECON.value, descr="null",
                                              ips=["null"], index=10,
-                                             action_outcome=EmulationAttackerActionOutcome.INFORMATION_GATHERING,
+                                             action_outcome=EmulationAttackerActionOutcome.INFORMATION_GATHERING.value,
                                              vulnerability="null", alt_cmds=["null"], backdoor=False,
                                              execution_time=0.0, ts=1.1)
         ovs_switch = OvsSwitchConfig(container_name="JohnDoe", ip="123.456.78.99", openflow_protocols=["null"],
@@ -351,7 +382,7 @@ class TestResourcesEmulationsSuite:
                                      controller_transport_protocol="null",
                                      docker_gw_bridge_ip="null", physical_host_ip="123.456.78.99")
         sdc_ctrl = SDNControllerConfig(container=nc_config, resources=node_res_conf, firewall_config=n_fire_conf,
-                                       controller_port=4, controller_type=SDNControllerType(0),
+                                       controller_port=4, controller_type=SDNControllerType.RYU.value,
                                        controller_module_name="null", controller_web_api_port=5,
                                        manager_log_file="null", manager_log_dir="null", manager_max_workers=10,
                                        time_step_len_seconds=15, version="0.0.1", manager_port=50042)
@@ -383,7 +414,7 @@ class TestResourcesEmulationsSuite:
                                     vuln_config=VulnerabilitiesConfig(node_vulnerability_configs=[nv_conf]),
                                     topology_config=top_conf, traffic_config=traf_conf, resources_config=res_conf,
                                     kafka_config=kafka_conf, services_config=service_conf, descr="null",
-                                    static_attacker_sequences={str: [e_a_action]},
+                                    static_attacker_sequences={"E_A_action": [e_a_action]},
                                     ovs_config=OVSConfig(switch_configs=[ovs_switch]),
                                     sdn_controller_config=sdc_ctrl, host_manager_config=host_mng,
                                     snort_ids_manager_config=snort_mng, ossec_ids_manager_config=ossec_mng,
@@ -396,8 +427,8 @@ class TestResourcesEmulationsSuite:
     def test_emulations_get(self, mocker, flask_app, not_logged_in, logged_in,
                             logged_in_as_admin, config, emulations,
                             emulations_images, running_emulations,
-                            given_emulation, uninstall,
-                            clean, emulations_ids_not_in_names,
+                            given_emulation,
+                            emulations_ids_not_in_names,
                             emulations_ids_in_names):
         """
         Testing the HTTPS GET method for the /emulations resource
@@ -426,13 +457,19 @@ class TestResourcesEmulationsSuite:
                      side_effect=running_emulations)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
-        # logger.info(response.status_code)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulations",
+                     side_effect=emulations)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_images",
+                     side_effect=emulations_images)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "list_emulation_executions_for_a_given_emulation",
+                     side_effect=given_emulation)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -453,6 +490,23 @@ class TestResourcesEmulationsSuite:
         assert repsonse_data_dict[api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == "a"
         assert repsonse_data_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] is True
         assert repsonse_data_dict[api_constants.MGMT_WEBAPP.ID_PROPERTY] == 10
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        response_data_dict = response_data_list[0]
+        e_e_data = EmulationEnvConfig.from_dict(response_data_dict)
+
+        test_em_env = TestResourcesEmulationsSuite.get_ex_em_env()
+        test_em_env_dict = test_em_env.to_dict()
+        problematic_ipc_type = e_e_data.traffic_config.client_population_config.workflows_config. \
+            workflow_services[0].ips_and_commands[0]
+        if type(problematic_ipc_type) == list:
+            e_e_data.traffic_config.client_population_config.workflows_config. \
+                workflow_services[0].ips_and_commands[0] = \
+                    (problematic_ipc_type[0], problematic_ipc_type[1])
+        e_e_data_dict = e_e_data.to_dict()
+        for k in e_e_data_dict:
+            assert e_e_data_dict[k] == test_em_env_dict[k]
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in_as_admin)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulations_ids",
@@ -479,14 +533,168 @@ class TestResourcesEmulationsSuite:
         assert repsonse_data_dict[api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == "a"
         assert repsonse_data_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] is True
         assert repsonse_data_dict[api_constants.MGMT_WEBAPP.ID_PROPERTY] == 10
+
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        response_data_dict = response_data_list[0]
+        e_e_data = EmulationEnvConfig.from_dict(response_data_dict)
+
+        test_em_env = TestResourcesEmulationsSuite.get_ex_em_env()
+        test_em_env_dict = test_em_env.to_dict()
+        problematic_ipc_type = e_e_data.traffic_config.client_population_config.workflows_config. \
+            workflow_services[0].ips_and_commands[0]
+        if type(problematic_ipc_type) == list:
+            e_e_data.traffic_config.client_population_config.workflows_config. \
+                workflow_services[0].ips_and_commands[0] = \
+                    (problematic_ipc_type[0], problematic_ipc_type[1])
+        e_e_data_dict = e_e_data.to_dict()
+        for k in e_e_data_dict:
+            assert e_e_data_dict[k] == test_em_env_dict[k]
+
+    def test_emulations_delete(self, mocker, flask_app, not_logged_in, logged_in,
+                               logged_in_as_admin, config, emulations,
+                               emulations_images, running_emulations,
+                               given_emulation, uninstall,
+                               clean, emulations_ids_not_in_names,
+                               emulations_ids_in_names):
+        """
+        Testing the HTTPS GET method for the /emulations resource
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param cofig: the config fixture
+        :param emulations: the emulations fixture
+        :param emulation_images: the emulations_images fixture
+        :param running_emulation: the running_emulations fixture
+        :param given_emulation: the given_emulation fixture¨
+        :param uninstall: the uninstall fixture¨
+        :param clean: the clean fixturefvf
+        :param emulations_ids: the emulations_ids
+        :param get_ex_em_env: the get_ex_em_env fixture
+
+        """
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulations_ids",
+                     side_effect=emulations_ids_not_in_names)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_all_running_emulations",
+                     side_effect=running_emulations)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulations",
                      side_effect=emulations)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_images",
                      side_effect=emulations_images)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_executions_for_a_given_emulation",
+        mocker.patch("csle_common.controllers.emulation_env_controller.EmulationEnvController.uninstall_emulation",
+                     side_effect=uninstall)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "clean_all_executions_of_emulation", side_effect=clean)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "list_emulation_executions_for_a_given_emulation",
                      side_effect=given_emulation)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}")
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}"
+                                               f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-        logger.info(response_data_list)
-        # TODO: Kolla varför arrival config inte har någon funktion to_dict().
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}"
+                                                  f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}"
+                                                  f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        repsonse_data_dict = response_data_list[0]
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert repsonse_data_dict[api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == "q"
+        assert repsonse_data_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] is False
+        assert repsonse_data_dict[api_constants.MGMT_WEBAPP.ID_PROPERTY] == 10
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulations_ids",
+                     side_effect=emulations_ids_in_names)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}"
+                                                  f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        repsonse_data_dict = response_data_list[0]
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert repsonse_data_dict[api_constants.MGMT_WEBAPP.EMULATION_PROPERTY] == "a"
+        assert repsonse_data_dict[api_constants.MGMT_WEBAPP.RUNNING_PROPERTY] is True
+        assert repsonse_data_dict[api_constants.MGMT_WEBAPP.ID_PROPERTY] == 10
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response_data_list == []
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+
+    def test_emulations_ids_get(self, mocker, emulation_id, flask_app, not_logged_in, logged_in,
+                                logged_in_as_admin, config, emulations,
+                                emulations_images, running_emulations,
+                                given_emulation,
+                                emulations_ids_not_in_names,
+                                emulations_ids_in_names, get_em_im):
+        """
+        Testing the HTTPS GET method for the /emulations/id resource
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param logged_in: the logged_in fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param cofig: the config fixture 
+        :param emulations: the emulations fixture
+        :param emulation_images: the emulations_images fixture
+        :param running_emulation: the running_emulations fixture
+        :param given_emulation: the given_emulation fixture¨
+        :param uninstall: the uninstall fixture¨
+        :param clean: the clean fixturefvf
+        :param emulations_ids: the emulations_ids
+        :param get_ex_em_env: the get_ex_em_env fixture
+        TODO : glöm inte id!!
+        """
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation",
+                     side_effect=emulation_id)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_all_running_emulations",
+                     side_effect=running_emulations)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade."
+                     "list_emulation_executions_for_a_given_emulation",
+                     side_effect=given_emulation)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_image",
+                     side_effect=get_em_im)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}/10")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {}
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}/10")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        logger.info(response_data_dict)
+        e_e_data = EmulationEnvConfig.from_dict(response_data_dict)
+        test_em_env = TestResourcesEmulationsSuite.get_ex_em_env()
+        test_em_env_dict = test_em_env.to_dict()
+        problematic_ipc_type = e_e_data.traffic_config.client_population_config.workflows_config. \
+            workflow_services[0].ips_and_commands[0]
+        if type(problematic_ipc_type) == list:
+            e_e_data.traffic_config.client_population_config.workflows_config. \
+                workflow_services[0].ips_and_commands[0] = \
+                    (problematic_ipc_type[0], problematic_ipc_type[1])
+        e_e_data_dict = e_e_data.to_dict()
+        for k in e_e_data_dict:
+            logger.info(k)
+            assert e_e_data_dict[k] == test_em_env_dict[k]
