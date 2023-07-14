@@ -1,13 +1,9 @@
-import logging
-import pytest
 
 
-class TestDefenderUpdateStateMiddlewareSuite(object):
+class TestDefenderUpdateStateMiddlewareSuite:
     """
     Test suite for defender_update_state_middleware.py
     """
-
-    pytest.logger = logging.getLogger("defender_update_state_middleware_tests")
 
     def test_update_state(self) -> None:
         """
