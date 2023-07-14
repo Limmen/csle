@@ -11,6 +11,14 @@ from csle_common.util.cluster_util import ClusterUtil
 from csle_common.util.general_util import GeneralUtil
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 from csle_cluster.cluster_manager.cluster_manager_pb2 import DockerContainerDTO, ContainerImageDTO
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
+    from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+    from csle_common.dao.emulation_config.container_network import ContainerNetwork
+    from csle_cluster.cluster_manager.cluster_manager_pb2 import SnortIdsStatusDTO
+    from csle_cluster.cluster_manager.cluster_manager_pb2 import DockerContainerDTO
+    from csle_cluster.cluster_manager.cluster_manager_pb2 import ContainerImageDTO
 
 ClusterUtil.set_config_parameters_from_config_file()
 
@@ -89,12 +97,9 @@ def attacker_shell(s: "EmulationEnvState") -> None:
             print("Resetting the state")
             s.reset()
         else:
-            # try:
             attacker_action_idx = int(raw_input)
             attacker_action = s.attacker_action_config.actions[attacker_action_idx]
             s = Attacker.attacker_transition(s=s, attacker_action=attacker_action)
-            # except Exception as e:
-            #     print("There was an error parsing the input, please enter an integer representing an attacker action")
 
 
 def attacker_shell_complete(ctx, param, incomplete) -> List[str]:
@@ -142,7 +147,7 @@ def list_csle_gym_envs() -> None:
     import csle_common.constants.constants as constants
 
     click.secho("Registered OpenAI gym environments:", fg="magenta", bold=True)
-    for env_name, env_obj in gym.envs.registry.items():
+    for env_name, env_obj in gym.registry.items():
         if constants.CSLE.NAME in env_name:
             click.secho(f"{env_name}", bold=False)
 
@@ -186,15 +191,15 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
     import csle_common.constants.constants as constants
 
     emulation_env_config = MetastoreFacade.get_emulation_by_name(name=emulation)
-    executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
+    execs = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
         emulation_name=emulation_env_config.name)
     config = MetastoreFacade.get_config(id=1)
     if emulation_env_config is not None:
         click.secho(f"Executions of: {emulation}", fg="magenta", bold=True)
-        for exec in executions:
+        for exec in execs:
             click.secho(f"IP ID: {exec.ip_first_octet}, emulation name: {exec.emulation_name}")
         if clients:
-            for exec in executions:
+            for exec in execs:
                 for node in config.cluster_config.cluster_nodes:
                     if node.ip == exec.emulation_env_config.traffic_config.client_population_config.physical_host_ip:
                         clients_dto = ClusterController.get_num_active_clients(
@@ -216,8 +221,8 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
                         click.secho(f"Producer time-step length: "
                                     f"{clients_dto.producer_time_step_len_seconds} seconds", bold=False)
         if snortids:
-            for exec in executions:
-                statuses = []
+            for exec in execs:
+                statuses: List["SnortIdsStatusDTO"] = []
                 for node in config.cluster_config.cluster_nodes:
                     snort_ids_monitors_statuses_dto = ClusterController.get_snort_ids_monitor_thread_statuses(
                         ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
@@ -239,7 +244,7 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
                         click.secho("Snort IDS status: "
                                     + f" {click.style('[stopped]', fg='red')}", bold=False)
         if kafka:
-            for exec in executions:
+            for exec in execs:
                 for node in config.cluster_config.cluster_nodes:
                     if node.ip == exec.emulation_env_config.kafka_config.container.physical_host_ip:
                         kafka_dto = ClusterController.get_kafka_status(
@@ -256,7 +261,7 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
                         for topic in kafka_dto.topics:
                             click.secho(f"{topic}", bold=False)
         if stats:
-            for exec in executions:
+            for exec in execs:
                 for node in config.cluster_config.cluster_nodes:
                     stats_manager_dto = ClusterController.get_docker_stats_manager_status(
                         ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
@@ -265,7 +270,7 @@ def em(emulation: str, clients: bool, snortids: bool, kafka: bool, stats: bool, 
                                 fg="magenta", bold=True)
                     click.secho(f"Number of active monitors: {stats_manager_dto.num_monitors}", bold=False)
         if host:
-            for exec in executions:
+            for exec in execs:
                 click.secho(f"Host manager statuses for execution {exec.ip_first_octet} of {emulation}",
                             fg="magenta", bold=True)
                 for node in config.cluster_config.cluster_nodes:
@@ -381,11 +386,11 @@ def shell_shell_complete(ctx, param, incomplete) -> List[str]:
     :return: a list of completion suggestions
     """
     from csle_common.controllers.container_controller import ContainerController
-    running_containers = ContainerController.list_all_running_containers()
-    stopped_containers = ContainerController.list_all_stopped_containers()
-    containers = running_containers + stopped_containers
-    containers = list(map(lambda x: x[0], containers))
-    return containers
+    running_containers: List[Tuple[str, str, str]] = ContainerController.list_all_running_containers()
+    stopped_containers: List[Tuple[str, str, str]] = ContainerController.list_all_stopped_containers()
+    containers: List[Tuple[str, str, str]] = running_containers + stopped_containers
+    container_names: List[str] = list(map(lambda x: x[0], containers))
+    return container_names
 
 
 @click.argument('container', default="", shell_complete=shell_shell_complete)
@@ -441,12 +446,11 @@ def separate_running_and_stopped_emulations(emulations: List["EmulationEnvConfig
     """
     import csle_common.constants.constants as constants
     from csle_common.metastore.metastore_facade import MetastoreFacade
-    running_emulation_names = []
+    running_emulation_names: List[str] = []
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(
-            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
-        ).runningEmulations)
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT).runningEmulations)
     stopped_emulations = []
     running_emulations = []
     for em in emulations:
@@ -577,10 +581,11 @@ def clean_all_emulation_executions(emulation_env_config: "EmulationEnvConfig") -
                 ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name)
         else:
             leader = node
-    # Clean the leader last since it will remove the overlay networks
-    click.secho(f"Cleaning containers of emulation {emulation_env_config.name} on server {leader.ip}", bold=False)
-    ClusterController.clean_all_executions_of_emulation(
-        ip=leader.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name)
+    if leader is not None:
+        # Clean the leader last since it will remove the overlay networks
+        click.secho(f"Cleaning containers of emulation {emulation_env_config.name} on server {leader.ip}", bold=False)
+        ClusterController.clean_all_executions_of_emulation(
+            ip=leader.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name)
 
     executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
         emulation_name=emulation_env_config.name)
@@ -610,12 +615,13 @@ def clean_emulation_execution(emulation_env_config: "EmulationEnvConfig", execut
                 ip_first_octet=execution_id)
         else:
             leader = node
-    # Clean the leader last since it will remove the overlay networks
-    click.secho(f"Cleaning containers of emulation {emulation_env_config.name} and execution id:{execution_id} "
-                f"on server {leader.ip}", bold=False)
-    ClusterController.clean_execution(
-        ip=leader.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name,
-        ip_first_octet=execution_id)
+    if leader is not None:
+        # Clean the leader last since it will remove the overlay networks
+        click.secho(f"Cleaning containers of emulation {emulation_env_config.name} and execution id:{execution_id} "
+                    f"on server {leader.ip}", bold=False)
+        ClusterController.clean_execution(
+            ip=leader.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=emulation_env_config.name,
+            ip_first_octet=execution_id)
     execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                         emulation_name=emulation_env_config.name)
     if execution is not None:
@@ -635,12 +641,12 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
     from csle_common.controllers.container_controller import ContainerController
     running_emulations, stopped_emulations = separate_running_and_stopped_emulations(
         emulations=MetastoreFacade.list_emulations())
-    emulations = running_emulations
+    emulations: List[str] = running_emulations
     running_containers = ContainerController.list_all_running_containers()
-    containers = running_containers
-    containers = list(map(lambda x: x[0], containers))
+    containers: List[Tuple[str, str ,str]] = running_containers
+    container_names: List[str] = list(map(lambda x: x[0], containers))
     return ["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "flask",
-            "statsmanager", "all", "emulation_executions"] + emulations + containers
+            "statsmanager", "all", "emulation_executions"] + emulations + container_names
 
 
 @click.option('--ip', default="", type=str)
@@ -1033,13 +1039,13 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
         emulations=MetastoreFacade.list_emulations())
     emulations = stopped_emulations
     stopped_containers = ContainerController.list_all_stopped_containers()
-    containers = stopped_containers
-    containers = list(map(lambda x: x[0], containers))
-    image_names = ContainerController.list_all_images()
-    image_names = list(map(lambda x: x[0], image_names))
+    containers: List[Tuple[str, str ,str]] = stopped_containers
+    container_names: List[str] = list(map(lambda x: x[0], containers))
+    images: List[Tuple[str, str, str, str, str]] = ContainerController.list_all_images()
+    image_names: List[str] = list(map(lambda x: x[0], images))
     return (["prometheus", "node_exporter", "grafana", "cadvisor", "pgadmin", "flask", "all",
              "statsmanager", "training_job", "system_id_job", "--id", "--no_traffic"]
-            + emulations + containers + image_names)
+            + emulations + container_names + image_names)
 
 
 @click.option('--ip', default="", type=str)
@@ -1307,12 +1313,12 @@ def rm_shell_complete(ctx, param, incomplete) -> List[str]:
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     running_containers = ContainerController.list_all_running_containers()
     stopped_containers = ContainerController.list_all_stopped_containers()
-    containers = running_containers + stopped_containers
-    containers = list(map(lambda x: x[0], containers))
-    image_names = ContainerController.list_all_images()
-    image_names = list(map(lambda x: x[0], image_names))
+    containers: List[Tuple[str, str ,str]] = running_containers + stopped_containers
+    container_names: List[str] = list(map(lambda x: x[0], containers))
+    images: List[Tuple[str, str, str, str, str]] = ContainerController.list_all_images()
+    image_names: List[str] = list(map(lambda x: x[0], images))
     return (["network-name", "container-name", "image-name", "networks", "images", "containers"] +
-            emulations + containers + image_names)
+            emulations + container_names + image_names)
 
 
 @click.argument('entity', default="", shell_complete=rm_shell_complete)
@@ -1356,12 +1362,12 @@ def clean_shell_complete(ctx, param, incomplete) -> List[str]:
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_controller import ContainerController
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
-    running_containers = ContainerController.list_all_running_containers()
-    stopped_containers = ContainerController.list_all_stopped_containers()
-    containers = running_containers + stopped_containers
-    containers = list(map(lambda x: x[0], containers))
+    running_containers: List[Tuple[str, str, str]] = ContainerController.list_all_running_containers()
+    stopped_containers: List[Tuple[str, str, str]] = ContainerController.list_all_stopped_containers()
+    containers: List[Tuple[str, str, str]] = running_containers + stopped_containers
+    container_names: List[str] = list(map(lambda x: x[0], containers))
     return ["all", "containers", "emulations", "emulation_traces", "simulation_traces", "emulation_statistics",
-            "name", "emulation_executions"] + emulations + containers
+            "name", "emulation_executions"] + emulations + container_names
 
 
 @click.argument('id', default=-1)
@@ -1419,8 +1425,8 @@ def install_shell_complete(ctx, param, incomplete) -> List[str]:
     from csle_common.controllers.container_controller import ContainerController
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     simulations = list(map(lambda x: x.name, MetastoreFacade.list_simulations()))
-    image_names = ContainerController.list_all_images()
-    image_names = list(map(lambda x: x[0], image_names))
+    images: List[Tuple[str, str, str, str, str]] = ContainerController.list_all_images()
+    image_names: List[str] = list(map(lambda x: x[0], images))
     return ["emulations", "simulations", "derived_images",
             "base_images", "metastore", "all"] + emulations + image_names + simulations
 
@@ -1482,8 +1488,8 @@ def uninstall_shell_complete(ctx, param, incomplete) -> List[str]:
     from csle_common.controllers.container_controller import ContainerController
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     simulations = list(map(lambda x: x.name, MetastoreFacade.list_simulations()))
-    image_names = ContainerController.list_all_images()
-    image_names = list(map(lambda x: x[0], image_names))
+    images: List[Tuple[str, str, str, str, str]] = ContainerController.list_all_images()
+    image_names: List[str] = list(map(lambda x: x[0], images))
     return ["emulations", "simulations", "derived_images", "base_images",
             "metastore", "all"] + emulations + image_names + simulations
 
@@ -1545,18 +1551,18 @@ def ls_shell_complete(ctx, param, incomplete) -> List[str]:
     """
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_common.controllers.container_controller import ContainerController
-    emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
-    simulations = list(map(lambda x: x.name, MetastoreFacade.list_simulations()))
+    emulations: List[str] = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
+    simulations: List[str] = list(map(lambda x: x.name, MetastoreFacade.list_simulations()))
     running_containers = ContainerController.list_all_running_containers()
     stopped_containers = ContainerController.list_all_stopped_containers()
-    containers = running_containers + stopped_containers
-    containers = list(map(lambda x: x[0], containers))
-    image_names = ContainerController.list_all_images()
-    image_names = list(map(lambda x: x[0], image_names))
-    active_networks_names = ContainerController.list_all_networks()
+    containers: List[Tuple[str, str, str]] = running_containers + stopped_containers
+    container_names: List[str] = list(map(lambda x: x[0], containers))
+    images: List[Tuple[str, str, str, str, str]] = ContainerController.list_all_images()
+    image_names: List[str] = list(map(lambda x: x[0], images))
+    active_networks_names: List[str] = ContainerController.list_all_networks()
     return (["containers", "networks", "images", "emulations", "all", "environments", "prometheus", "node_exporter",
              "cadvisor", "pgadmin", "flask", "statsmanager", "--all", "--running", "--stopped"] + emulations
-            + containers + image_names + active_networks_names + simulations)
+            + container_names + image_names + active_networks_names + simulations)
 
 
 @click.command("ls", help="containers | networks | images | emulations | all | environments | prometheus "
@@ -1638,7 +1644,7 @@ def ls(entity: str, all: bool, running: bool, stopped: bool) -> None:
                 else:
                     net = get_network(name=entity)
                     if net is not None:
-                        active_networks_names = []
+                        active_networks_names: List[str] = []
                         for node in config.cluster_config.cluster_nodes:
                             docker_networks_dto = ClusterController.list_all_docker_networks(
                                 ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
@@ -2057,7 +2063,7 @@ def list_networks() -> None:
     config = MetastoreFacade.get_config(id=1)
 
     click.secho("CSLE networks:", fg="magenta", bold=True)
-    active_networks_names = []
+    active_networks_names: List[str] = []
     for node in config.cluster_config.cluster_nodes:
         docker_networks_dto = ClusterController.list_all_docker_networks(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
@@ -2097,7 +2103,7 @@ def get_network(name: str) -> Union[None, "ContainerNetwork"]:
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
-    active_networks_names = []
+    active_networks_names: List[str] = []
     for node in config.cluster_config.cluster_nodes:
         docker_networks_dto = ClusterController.list_all_docker_networks(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
@@ -2121,7 +2127,7 @@ def get_running_container(name: str) -> Union[None, DockerContainerDTO]:
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
-    running_containers = []
+    running_containers: List[DockerContainerDTO] = []
     for node in config.cluster_config.cluster_nodes:
         running_containers_dto = ClusterController.list_all_running_containers(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
@@ -2144,7 +2150,7 @@ def get_stopped_container(name: str) -> Union[None, DockerContainerDTO]:
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
-    stopped_containers = []
+    stopped_containers: List[DockerContainerDTO] = []
     for node in config.cluster_config.cluster_nodes:
         stopped_containers_dto = ClusterController.list_all_stopped_containers(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
@@ -2168,8 +2174,8 @@ def list_all_containers() -> None:
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
-    running_containers = []
-    stopped_containers = []
+    running_containers: List[DockerContainerDTO] = []
+    stopped_containers: List[DockerContainerDTO] = []
     for node in config.cluster_config.cluster_nodes:
         stopped_containers_dto = ClusterController.list_all_stopped_containers(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
@@ -2197,7 +2203,7 @@ def list_running_containers() -> None:
     config = MetastoreFacade.get_config(id=1)
 
     click.secho("CSLE running Docker containers:", fg="magenta", bold=True)
-    running_containers = []
+    running_containers: List[DockerContainerDTO] = []
     for node in config.cluster_config.cluster_nodes:
         running_containers_dto = ClusterController.list_all_running_containers(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
@@ -2218,7 +2224,7 @@ def list_stopped_containers() -> None:
     from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
     click.secho("CSLE stopped Docker containers:", fg="magenta", bold=True)
-    stopped_containers = []
+    stopped_containers: List[DockerContainerDTO] = []
     for node in config.cluster_config.cluster_nodes:
         stopped_containers_dto = ClusterController.list_all_stopped_containers(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
@@ -2240,7 +2246,7 @@ def list_images() -> None:
     config = MetastoreFacade.get_config(id=1)
 
     click.secho("CSLE Docker images:", fg="magenta", bold=True)
-    images = []
+    images: List[ContainerImageDTO] = []
     for node in config.cluster_config.cluster_nodes:
         images_dto = ClusterController.list_all_container_images(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
@@ -2260,7 +2266,7 @@ def get_image(name: str) -> Union[None, ContainerImageDTO]:
     from csle_common.metastore.metastore_facade import MetastoreFacade
     from csle_cluster.cluster_manager.cluster_controller import ClusterController
     config = MetastoreFacade.get_config(id=1)
-    images = []
+    images: List[ContainerImageDTO] = []
     for node in config.cluster_config.cluster_nodes:
         images_dto = ClusterController.list_all_container_images(
             ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
