@@ -1,13 +1,9 @@
-import logging
-import pytest
 
 
-class TestLearningSwitchControllerSuite(object):
+class TestLearningSwitchControllerSuite:
     """
     Test suite for learning_switch_controller.py
     """
-
-    pytest.logger = logging.getLogger("learning_switch_controller_tests")
 
     def test_add_flow(self) -> None:
         """

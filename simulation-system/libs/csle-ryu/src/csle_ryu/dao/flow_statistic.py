@@ -63,7 +63,7 @@ class FlowStatistic(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["timestamp"] = self.timestamp
         d["datapath_id"] = self.datapath_id
         d["in_port"] = self.in_port
@@ -145,10 +145,10 @@ class FlowStatistic(JSONSerializable):
         """
         parts = record.split(",")
         self.timestamp = float(parts[0])
-        self.datapath_id = parts[1]
-        self.in_port = parts[2]
-        self.out_port = parts[3]
-        self.dst_mac_address = int(parts[4])
+        self.datapath_id = str(parts[1])
+        self.in_port = str(parts[2])
+        self.out_port = str(parts[3])
+        self.dst_mac_address = str(parts[4])
         self.num_packets = int(parts[5])
         self.num_bytes = int(parts[6])
         self.duration_nanoseconds = int(parts[7])

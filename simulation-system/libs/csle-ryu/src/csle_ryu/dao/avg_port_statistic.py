@@ -83,7 +83,7 @@ class AvgPortStatistic(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["timestamp"] = self.timestamp
         d["datapath_id"] = self.datapath_id
         d["total_num_received_packets"] = self.total_num_received_packets

@@ -102,11 +102,11 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                                                 f"{constants.RYU.STATS_AGGREGATE_FLOW_RESOURCE}/{dp.id}",
                                                 timeout=constants.RYU.TIMEOUT)
                         aggflows = json.loads(response.content)[str(dp.id)][0]
-                        agg_flow_stat = AggFlowStatistic(timestamp=time.time(), datapath_id=dp.id,
+                        agg_flow_stat = AggFlowStatistic(timestamp=time.time(), datapath_id=str(dp.id),
                                                          total_num_bytes=aggflows[constants.RYU.BYTE_COUNT],
                                                          total_num_packets=aggflows[constants.RYU.PACKET_COUNT],
                                                          total_num_flows=aggflows[constants.RYU.FLOW_COUNT])
-                        if self.producer_running:
+                        if self.producer is not None and self.producer_running:
                             self.producer.produce(collector_constants.KAFKA_CONFIG.OPENFLOW_AGG_FLOW_STATS_TOPIC_NAME,
                                                   agg_flow_stat.to_kafka_record())
                             self.producer.poll(0)
@@ -153,14 +153,14 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         # Log the statistics
         flow_stats = []
         for flow in body:
-            in_port = -1
-            eth_dst = -1
+            in_port = ""
+            eth_dst = ""
             if constants.RYU.IN_PORT in flow.match:
                 in_port = flow.match[constants.RYU.IN_PORT]
             if constants.RYU.ETH_DST in flow.match:
                 eth_dst = flow.match[constants.RYU.ETH_DST]
             flow_statistic_dto = FlowStatistic(
-                timestamp=ts, datapath_id=ev.msg.datapath.id, in_port=in_port,
+                timestamp=ts, datapath_id=str(ev.msg.datapath.id), in_port=in_port,
                 out_port=flow.instructions[0].actions[0].port, dst_mac_address=eth_dst,
                 num_packets=flow.packet_count,
                 num_bytes=flow.byte_count, duration_nanoseconds=flow.duration_nsec,
@@ -168,15 +168,15 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                 hard_timeout=flow.hard_timeout, idle_timeout=flow.idle_timeout, priority=flow.priority,
                 cookie=flow.cookie
             )
-            if self.producer_running:
+            if self.producer is not None and self.producer_running:
                 self.producer.produce(collector_constants.KAFKA_CONFIG.OPENFLOW_FLOW_STATS_TOPIC_NAME,
                                       flow_statistic_dto.to_kafka_record())
                 self.producer.poll(0)
                 flow_stats.append(flow_statistic_dto)
 
-        if self.producer_running and len(flow_stats) > 0:
+        if self.producer is not None and self.producer_running and len(flow_stats) > 0:
             avg_flow_stats = AvgFlowStatistic.average_flow_statistics(
-                timestamp=ts, datapath_id=flow_stats[0].datapath_id, flow_statistics=flow_stats)
+                timestamp=ts, datapath_id=str(flow_stats[0].datapath_id), flow_statistics=flow_stats)
             self.producer.produce(collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_FLOW_STATS_PER_SWITCH_TOPIC_NAME,
                                   avg_flow_stats.to_kafka_record())
             self.producer.poll(0)
@@ -199,7 +199,8 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
         # Log the statistics
         for port in body:
             port_statistics_dto = PortStatistic(
-                timestamp=ts, datapath_id=ev.msg.datapath.id, port=port.port_no, num_received_packets=port.rx_packets,
+                timestamp=ts, datapath_id=str(ev.msg.datapath.id), port=port.port_no,
+                num_received_packets=port.rx_packets,
                 num_received_bytes=port.rx_bytes, num_received_errors=port.rx_errors,
                 num_transmitted_packets=port.tx_packets, num_transmitted_bytes=port.tx_bytes,
                 num_transmitted_errors=port.tx_errors, num_received_dropped=port.rx_dropped,
@@ -208,15 +209,15 @@ class FlowAndPortStatsMonitor(app_manager.RyuApp):
                 num_collisions=port.collisions, duration_nanoseconds=port.duration_nsec,
                 duration_seconds=port.duration_sec
             )
-            if self.producer_running:
+            if self.producer is not None and self.producer_running:
                 self.producer.produce(collector_constants.KAFKA_CONFIG.OPENFLOW_PORT_STATS_TOPIC_NAME,
                                       port_statistics_dto.to_kafka_record())
                 self.producer.poll(0)
                 port_stats.append(port_statistics_dto)
 
-        if self.producer_running and len(port_stats) > 0:
+        if self.producer is not None and self.producer_running and len(port_stats) > 0:
             avg_flow_stats = AvgPortStatistic.average_port_statistics(
-                timestamp=ts, datapath_id=port_stats[0].datapath_id, port_statistics=port_stats)
+                timestamp=ts, datapath_id=str(port_stats[0].datapath_id), port_statistics=port_stats)
             self.producer.produce(collector_constants.KAFKA_CONFIG.AVERAGE_OPENFLOW_PORT_STATS_PER_SWITCH_TOPIC_NAME,
                                   avg_flow_stats.to_kafka_record())
             self.producer.poll(0)

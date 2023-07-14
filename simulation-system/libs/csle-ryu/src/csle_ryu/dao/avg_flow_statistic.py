@@ -63,7 +63,7 @@ class AvgFlowStatistic(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["timestamp"] = self.timestamp
         d["datapath_id"] = self.datapath_id
         d["total_num_packets"] = self.total_num_packets

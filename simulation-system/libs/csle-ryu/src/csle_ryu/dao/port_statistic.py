@@ -76,9 +76,9 @@ class PortStatistic(JSONSerializable):
         """
         Converts the object to a dict representation
 
-                :return: a dict representation of the object
+        :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["timestamp"] = self.timestamp
         d["datapath_id"] = self.datapath_id
         d["port"] = self.port
@@ -100,6 +100,8 @@ class PortStatistic(JSONSerializable):
 
     def __str__(self) -> str:
         """
+        Gets a string representation of the DTO
+
         :return: a string representation of the object
         """
         return f"timestamp: {self.timestamp}, datapath_id: {self.datapath_id}, " \
