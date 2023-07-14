@@ -1,6 +1,6 @@
+from typing import Tuple, List, Union, Any
 import time
 import threading
-from typing import Tuple, List, Union
 import xml.etree.ElementTree as ET
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
@@ -36,12 +36,14 @@ class NmapUtil:
     """
 
     @staticmethod
-    def parse_nmap_scan(file_name: str, emulation_env_config: EmulationEnvConfig, conn=None, dir: str = None) \
+    def parse_nmap_scan(file_name: str, emulation_env_config: EmulationEnvConfig, conn=None, dir: str = "") \
             -> ET.Element:
         """
         Parses an XML file containing the result of an nmap scan
 
         :param file_name: name of the file to parse
+        :param conn: the SSH connection to use for parsing
+        :param dir: the directory to parse the XML file
         :param emulation_env_config: environment config
         :return: the parsed xml file
         """
@@ -70,7 +72,7 @@ class NmapUtil:
         :param action: the action of the scan
         :return: parsed nmap scan result
         """
-        hosts = []
+        hosts: List[NmapHostResult] = []
         for child in xml_data:
             if child.tag == constants.NMAP_XML.HOST:
                 host = NmapUtil._parse_nmap_host_xml(child, action=action)
@@ -90,9 +92,9 @@ class NmapUtil:
         ip_addr = None
         mac_addr = None
         hostnames = []
-        ports = []
-        vulnerabilities = []
-        credentials = []
+        ports: List[NmapPort] = []
+        vulnerabilities: List[NmapVuln] = []
+        credentials: List[NmapBruteCredentials] = []
         os = None
         os_matches = []
         status = NmapHostStatus.UP
@@ -219,7 +221,7 @@ class NmapUtil:
         return ports, vulnerabilities, credentials
 
     @staticmethod
-    def _parse_nmap_service_name_xml(xml_data) -> str:
+    def _parse_nmap_service_name_xml(xml_data) -> Union[str, Any]:
         """
         Parses a XML service name element
 
@@ -639,7 +641,7 @@ class NmapUtil:
         :return: the new state
         """
         merged_scan_result = partial_result
-        total_results = []
+        total_results: List[NmapScanResult] = []
         threads = []
         for machine in s.attacker_obs_state.machines:
             if machine.logged_in and machine.tools_installed and machine.backdoor_installed:
@@ -704,7 +706,7 @@ class PivotNMAPScanThread(threading.Thread):
         self.a = a
         self.s = s
         self.total_time = 0
-        self.scan_result = None
+        self.scan_result: NmapScanResult = NmapScanResult(hosts=[], ips=[])
 
     def run(self) -> None:
         """

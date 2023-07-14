@@ -88,16 +88,19 @@ class NiktoUtil:
             if m.ips == scan_result.ip:
                 m_obs = EmulationAttackerMachineObservationState(ips=m.ips)
 
-        for vuln in scan_result.vulnerabilities:
-            vuln_obs = vuln.to_obs()
-            m_obs.osvdb_vulns.append(vuln_obs)
+        if m_obs is None:
+            raise ValueError(f"Unknown IP: {scan_result.ip}")
+        else:
+            for vuln in scan_result.vulnerabilities:
+                vuln_obs = vuln.to_obs()
+                m_obs.osvdb_vulns.append(vuln_obs)
 
-        attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(
-            s.attacker_obs_state.machines, [m_obs], emulation_env_config=s.emulation_env_config, action=a)
-        s_prime = s
-        s_prime.attacker_obs_state.machines = attacker_machine_observations
+            attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(
+                s.attacker_obs_state.machines, [m_obs], emulation_env_config=s.emulation_env_config, action=a)
+            s_prime = s
+            s_prime.attacker_obs_state.machines = attacker_machine_observations
 
-        return s_prime
+            return s_prime
 
     @staticmethod
     def parse_nikto_scan_xml(xml_data) -> NiktoScanResult:
@@ -150,7 +153,7 @@ class NiktoUtil:
         :param xml_data: the item element
         :return: parsed nikto vuln
         """
-        id = "",
+        id = ""
         osvdb_id = None
         method = ""
         iplink = ""
@@ -161,7 +164,7 @@ class NiktoUtil:
         if constants.NIKTO_XML.METHOD in xml_data.keys():
             method = xml_data.attrib[constants.NIKTO_XML.METHOD]
         if constants.NIKTO_XML.OSVDB_ID in xml_data.keys():
-            method = int(xml_data.attrib[constants.NIKTO_XML.OSVDB_ID])
+            osvdb_id = int(xml_data.attrib[constants.NIKTO_XML.OSVDB_ID])
         if constants.NIKTO_XML.ITEM_ID in xml_data.keys():
             id = str(int(xml_data.attrib[constants.NIKTO_XML.ITEM_ID]))
 

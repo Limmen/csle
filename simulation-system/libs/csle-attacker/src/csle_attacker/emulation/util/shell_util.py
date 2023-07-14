@@ -265,8 +265,8 @@ class ShellUtil:
         :return: s_prime
         """
         new_machines_obs = []
-        total_cost = 0
-        total_time = 0
+        total_cost = 0.0
+        total_time = 0.0
         for machine in s.attacker_obs_state.machines:
             new_m_obs = EmulationAttackerMachineObservationState(ips=machine.ips)
             if machine.logged_in and machine.root:
@@ -274,9 +274,9 @@ class ShellUtil:
             installed = False
             if machine.logged_in and machine.root and not machine.tools_installed:
                 # Start with ssh connections
-                ssh_root_connections = filter(lambda x: x.root, machine.ssh_connections)
-                ssh_root_connections = sorted(ssh_root_connections, key=lambda x: x.credential.username)
-                ssh_cost = 0
+                ssh_root_connections = list(filter(lambda x: x.root, machine.ssh_connections))
+                ssh_root_connections = list(sorted(ssh_root_connections, key=lambda x: x.credential.username))
+                ssh_cost = 0.0
                 for c in ssh_root_connections:
                     cmd = a.cmds[0]
                     for i in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_INSTALL_TOOLS):
@@ -311,11 +311,11 @@ class ShellUtil:
                 total_cost += ssh_cost
 
                 # Telnet connections
-                telnet_cost = 0
+                telnet_cost = 0.0
                 if installed:
                     continue
-                telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
-                telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.credential.username)
+                telnet_root_connections = list(filter(lambda x: x.root, machine.telnet_connections))
+                telnet_root_connections = list(sorted(telnet_root_connections, key=lambda x: x.credential.username))
                 for c in telnet_root_connections:
                     # Install packages
                     cmd = a.cmds[0] + "\n"
@@ -409,7 +409,7 @@ class ShellUtil:
         username = constants.SSH_BACKDOOR.BACKDOOR_PREFIX + "_" + str(random.randint(0, 100000))
         pw = constants.SSH_BACKDOOR.DEFAULT_PW
         new_machines_obs = []
-        total_cost = 0
+        total_cost = 0.0
         for machine in s.attacker_obs_state.machines:
             new_m_obs = EmulationAttackerMachineObservationState(ips=machine.ips)
             backdoor_created = False
@@ -438,7 +438,7 @@ class ShellUtil:
                 # Try first to setup new ssh connections
                 ssh_root_connections = list(filter(lambda x: x.root, machine.ssh_connections))
                 ssh_root_connections = sorted(ssh_root_connections, key=lambda x: x.credential.username)
-                ssh_cost = 0
+                ssh_cost = 0.0
                 for c in ssh_root_connections:
                     users = EmulationUtil._list_all_users(c, emulation_env_config=s.emulation_env_config)
                     users = sorted(users, key=lambda x: x)
@@ -476,30 +476,33 @@ class ShellUtil:
                             break
                         else:
                             time.sleep(5)
+                    if setup_connection_dto is None:
+                        Logger.__call__().get_logger().warning(f"Cannot connect to {a.ips}")
+                    else:
+                        if len(setup_connection_dto.target_connections) == 0:
+                            Logger.__call__().get_logger().warning(f"cannot install backdoor, machine:{machine.ips}, "
+                                                                   f"credentials:{credential}")
+                        connection_dto = EmulationConnectionObservationState(
+                            conn=setup_connection_dto.target_connections[0], credential=credential, root=machine.root,
+                            service=constants.SSH.SERVICE_NAME, port=credential.port,
+                            proxy=setup_connection_dto.proxies[0],
+                            ip=setup_connection_dto.ip)
+                        new_m_obs.ssh_connections.append(connection_dto)
+                        new_m_obs.backdoor_installed = True
+                        new_machines_obs.append(new_m_obs)
+                        backdoor_created = True
 
-                    if len(setup_connection_dto.target_connections) == 0:
-                        Logger.__call__().get_logger().warning(
-                            "cannot install backdoor, machine:{}, credentials:{}".format(machine.ips, credential))
-                    connection_dto = EmulationConnectionObservationState(
-                        conn=setup_connection_dto.target_connections[0], credential=credential, root=machine.root,
-                        service=constants.SSH.SERVICE_NAME, port=credential.port, proxy=setup_connection_dto.proxies[0],
-                        ip=setup_connection_dto.ip)
-                    new_m_obs.ssh_connections.append(connection_dto)
-                    new_m_obs.backdoor_installed = True
-                    new_machines_obs.append(new_m_obs)
-                    backdoor_created = True
-
-                    if backdoor_created:
-                        break
+                        if backdoor_created:
+                            break
 
                 total_cost += ssh_cost
 
                 # Telnet connections
-                telnet_cost = 0
+                telnet_cost = 0.0
                 if backdoor_created:
                     continue
-                telnet_root_connections = filter(lambda x: x.root, machine.telnet_connections)
-                telnet_root_connections = sorted(telnet_root_connections, key=lambda x: x.credential.username)
+                telnet_root_connections = list(filter(lambda x: x.root, machine.telnet_connections))
+                telnet_root_connections = list(sorted(telnet_root_connections, key=lambda x: x.credential.username))
                 for c in telnet_root_connections:
                     try:
                         users = EmulationUtil._list_all_users(c,
