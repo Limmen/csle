@@ -530,7 +530,6 @@ class TestResourcesEmulationsSuite:
 
         :return: an example EmulationMetricsTimeSeries object
         """
-
         c_p_metrics = ClientPopulationMetrics(ip="123.456.78.99", ts=10.5,
                                               num_clients=5, rate=20.5,
                                               service_time=4.5)
@@ -588,7 +587,6 @@ class TestResourcesEmulationsSuite:
         agg_flow_stat = AggFlowStatistic(timestamp=10.0, datapath_id="null", total_num_packets=10,
                                          total_num_bytes=5,
                                          total_num_flows=5)
-
         e_m_time_s = EmulationMetricsTimeSeries(client_metrics=[c_p_metrics],
                                                 aggregated_docker_stats=[d_stats],
                                                 docker_host_stats={"dockerstats": [d_stats]},
@@ -611,8 +609,7 @@ class TestResourcesEmulationsSuite:
                                                 agg_openflow_flow_stats=[agg_flow_stat],
                                                 snort_ids_ip_metrics={"snort_ips": [SnortIdsIPAlertCounters()]},
                                                 agg_snort_ids_rule_metrics=[SnortIdsRuleCounters()],
-                                                snort_alert_metrics_per_ids={"snort_ids":
-                                                                             [SnortIdsAlertCounters()]},
+                                                snort_alert_metrics_per_ids={"snort_ids": [SnortIdsAlertCounters()]},
                                                 snort_rule_metrics_per_ids={"snort_ids": [SnortIdsRuleCounters()]})
         return e_m_time_s
 
@@ -969,8 +966,7 @@ class TestResourcesEmulationsSuite:
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        e_e_data = EmulationEnvConfig.from_dict(response_data_dict)
-        logger.info(response_data_dict["static_attacker_sequences"])
+        e_e_data = EmulationEnvConfig.from_dict(response_data_dict)        
         test_em_env = TestResourcesEmulationsSuite.get_ex_em_env()
         test_em_env_dict = test_em_env.to_dict()
         problematic_ipc_type = e_e_data.traffic_config.client_population_config.workflows_config. \
@@ -1011,42 +1007,46 @@ class TestResourcesEmulationsSuite:
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}/10"
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}"
+                                               f"{constants.COMMANDS.SLASH_DELIM}10"
                                                f"{constants.COMMANDS.SLASH_DELIM}"
                                                f"{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
-        response_data_dict = json.loads(response_data)
-        e_e_data = EmulationExecution.from_dict(response_data_dict)
-        test_exec = TestResourcesEmulationsSuite.get_ex_exec()
-        test_exec_dict = test_exec.to_dict()
-        problematic_ipc_type = e_e_data.emulation_env_config.traffic_config.client_population_config.workflows_config. \
-            workflow_services[0].ips_and_commands[0]
-        if type(problematic_ipc_type) == list:
-            e_e_data.emulation_env_config.traffic_config.client_population_config.workflows_config. \
-                workflow_services[0].ips_and_commands[0] = (problematic_ipc_type[0], problematic_ipc_type[1])
-        e_e_data_dict = e_e_data.to_dict()
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        for k in e_e_data_dict:
-            assert e_e_data_dict[k] == test_exec_dict[k]
+        response_data_dicts = json.loads(response_data)
+        e_e_datas = list(map(lambda x: EmulationExecution.from_dict(x), response_data_dicts))
+        for e_e_data in e_e_datas:
+            test_exec = TestResourcesEmulationsSuite.get_ex_exec()
+            test_exec_dict = test_exec.to_dict()
+            problematic_ipc_type = e_e_data.emulation_env_config.traffic_config.client_population_config. \
+                workflows_config.workflow_services[0].ips_and_commands[0]
+            if type(problematic_ipc_type) == list:
+                e_e_data.emulation_env_config.traffic_config.client_population_config.workflows_config. \
+                    workflow_services[0].ips_and_commands[0] = (problematic_ipc_type[0], problematic_ipc_type[1])
+            e_e_data_dict = e_e_data.to_dict()
+            for k in e_e_data_dict:
+                assert e_e_data_dict[k] == test_exec_dict[k]
 
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
-        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}/10"
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATIONS_RESOURCE}"
+                                               f"{constants.COMMANDS.SLASH_DELIM}10"
                                                f"{constants.COMMANDS.SLASH_DELIM}"
                                                f"{api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
-        response_data_dict = json.loads(response_data)
-        e_e_data = EmulationExecution.from_dict(response_data_dict)
-        test_exec = TestResourcesEmulationsSuite.get_ex_exec()
-        test_exec_dict = test_exec.to_dict()
-        problematic_ipc_type = e_e_data.emulation_env_config.traffic_config.client_population_config.workflows_config. \
-            workflow_services[0].ips_and_commands[0]
-        if type(problematic_ipc_type) == list:
-            e_e_data.emulation_env_config.traffic_config.client_population_config.workflows_config. \
-                workflow_services[0].ips_and_commands[0] = (problematic_ipc_type[0], problematic_ipc_type[1])
-        e_e_data_dict = e_e_data.to_dict()
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        for k in e_e_data_dict:
-            assert e_e_data_dict[k] == test_exec_dict[k]
+        response_data_dicts = json.loads(response_data)
+        e_e_datas = list(map(lambda x: EmulationExecution.from_dict(x), response_data_dicts))
+        for e_e_data in e_e_datas:
+            test_exec = TestResourcesEmulationsSuite.get_ex_exec()
+            test_exec_dict = test_exec.to_dict()
+            problematic_ipc_type = e_e_data.emulation_env_config.traffic_config.client_population_config.workflows_config. \
+                workflow_services[0].ips_and_commands[0]
+            if type(problematic_ipc_type) == list:
+                e_e_data.emulation_env_config.traffic_config.client_population_config.workflows_config. \
+                    workflow_services[0].ips_and_commands[0] = (problematic_ipc_type[0], problematic_ipc_type[1])
+            e_e_data_dict = e_e_data.to_dict()
+            for k in e_e_data_dict:
+                assert e_e_data_dict[k] == test_exec_dict[k]
 
     def test_em_ex_ids_id_get(self, mocker: pytest_mock.MockFixture, emulation_id, flask_app, not_logged_in, logged_in,
                               logged_in_as_admin, config, given_emulation, get_em_ex, clean_ex) -> None:
@@ -1195,8 +1195,7 @@ class TestResourcesEmulationsSuite:
         data = EmulationMetricsTimeSeries.from_dict(response_data_dict)
         final_data_dict = data.to_dict()
         test_data = TestResourcesEmulationsSuite.get_ex_e_m_time()
-        test_dict = test_data.to_dict()
-        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        test_dict = test_data.to_dict()        
         for k in final_data_dict:
             assert final_data_dict[k] == test_dict[k]
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)

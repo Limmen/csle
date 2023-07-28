@@ -157,7 +157,8 @@ class EmulationMetricsTimeSeries(JSONSerializable):
             aggregated_host_metrics=list(map(lambda x: HostMetrics.from_dict(x), d["aggregated_host_metrics"])),
             emulation_env_config=EmulationEnvConfig.from_dict(d["emulation_env_config"]),
             ossec_host_alert_counters=ossec_host_alerts,
-            aggregated_ossec_host_alert_counters=d["aggregated_ossec_host_alert_counters"],
+            aggregated_ossec_host_alert_counters=list(map(lambda x: OSSECIdsAlertCounters.from_dict(x),
+                                                          d["aggregated_ossec_host_alert_counters"])),
             openflow_flow_stats=list(map(lambda x: FlowStatistic.from_dict(x), d["openflow_flow_stats"])),
             openflow_port_stats=list(map(lambda x: PortStatistic.from_dict(x), d["openflow_port_stats"])),
             avg_openflow_flow_stats=list(map(lambda x: AvgFlowStatistic.from_dict(x), d["avg_openflow_flow_stats"])),
@@ -210,7 +211,7 @@ class EmulationMetricsTimeSeries(JSONSerializable):
             d["openflow_flow_metrics_per_switch"][k] = list(map(lambda x: x.to_dict(), v))
 
         d["openflow_port_metrics_per_switch"] = {}
-        for k, v in self.openflow_flow_metrics_per_switch.items():
+        for k, v in self.openflow_port_metrics_per_switch.items():
             d["openflow_port_metrics_per_switch"][k] = list(map(lambda x: x.to_dict(), v))
 
         d["openflow_flow_avg_metrics_per_switch"] = {}

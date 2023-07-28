@@ -146,9 +146,9 @@ def emulation_by_id(emulation_id: int) -> Tuple[Response, int]:
                 for exec in executions:
                     exec.emulation_env_config.image = base64.b64encode(img).decode()
             else:
-                em.image = ""
+                em.image = None
                 for exec in executions:
-                    exec.emulation_env_config.image = ""
+                    exec.emulation_env_config.image = None
             em_dict = em.to_dict()
             em_dict[api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE] = list(map(lambda x: x.to_dict(), executions))
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
@@ -273,8 +273,8 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int) -> Tup
         time_series = ClusterController.get_execution_time_series_data(
             ip=execution.emulation_env_config.kafka_config.container.physical_host_ip,
             port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, minutes=minutes,
-            ip_first_octet=execution.ip_first_octet, emulation=execution.emulation_env_config.name)
-        time_series = time_series.to_dict()
+            ip_first_octet=execution.ip_first_octet, emulation=execution.emulation_env_config.name)        
+        time_series = time_series.to_dict()        
     response = jsonify(time_series)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
