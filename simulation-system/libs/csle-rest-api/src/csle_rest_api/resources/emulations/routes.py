@@ -215,7 +215,7 @@ def get_execution_of_emulation(emulation_id: int, execution_id: int) -> Tuple[Re
     :param execution_id: the id of the execution
     :return: The sought for execution if it exist
     """
-    
+
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
@@ -273,8 +273,8 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int) -> Tup
         time_series = ClusterController.get_execution_time_series_data(
             ip=execution.emulation_env_config.kafka_config.container.physical_host_ip,
             port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, minutes=minutes,
-            ip_first_octet=execution.ip_first_octet, emulation=execution.emulation_env_config.name)        
-        time_series = time_series.to_dict()        
+            ip_first_octet=execution.ip_first_octet, emulation=execution.emulation_env_config.name)
+        time_series = time_series.to_dict()
     response = jsonify(time_series)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
