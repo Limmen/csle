@@ -1,21 +1,16 @@
 import json
-
 import csle_common.constants.constants as constants
 import pytest
 import pytest_mock
-from csle_cluster.cluster_manager.cluster_manager_pb2 import (
-    NodeStatusDTO,
-    ServiceStatusDTO,
-)
+from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO, ServiceStatusDTO
 from csle_common.dao.emulation_config.config import Config
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
 
 class TestResourcesDockerStatusSuite:
     """
-    Test suite for /cluster_status url
+    Test suite for /docker url
     """
 
     @pytest.fixture
@@ -28,7 +23,7 @@ class TestResourcesDockerStatusSuite:
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def config(self, mocker, example_config: Config):
+    def config(self, mocker: pytest_mock.MockFixture, example_config: Config):
         """
         Pytest fixture for mocking the get_config function
 

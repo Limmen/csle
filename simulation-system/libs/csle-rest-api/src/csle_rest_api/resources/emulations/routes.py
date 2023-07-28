@@ -117,7 +117,7 @@ def emulation_by_id(emulation_id: int) -> Tuple[Response, int]:
     """
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE or \
-        request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+            request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
         requires_admin = True
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
 
@@ -129,8 +129,7 @@ def emulation_by_id(emulation_id: int) -> Tuple[Response, int]:
     config = MetastoreFacade.get_config(id=1)
     for node in config.cluster_config.cluster_nodes:
         running_emulation_names = running_emulation_names + list(ClusterController.list_all_running_emulations(
-            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT
-        ).runningEmulations)
+            ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT).runningEmulations)
     em_dict = {}
     if em is not None:
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET or \
@@ -140,17 +139,16 @@ def emulation_by_id(emulation_id: int) -> Tuple[Response, int]:
                 em.running = True
                 for exec in executions:
                     exec.emulation_env_config.running = True
-            if MetastoreFacade.get_emulation_image(emulation_name=em.name) is not None:
-                em_name, img = MetastoreFacade.get_emulation_image(emulation_name=em.name)
+            em_img = MetastoreFacade.get_emulation_image(emulation_name=em.name)
+            if em_img is not None:
+                em_name, img = em_img
                 em.image = base64.b64encode(img).decode()
                 for exec in executions:
                     exec.emulation_env_config.image = base64.b64encode(img).decode()
             else:
-                img = img = MetastoreFacade.get_emulation_image(emulation_name=em.name)
-                em.image = img
+                em.image = ""
                 for exec in executions:
-                    exec.emulation_env_config.image = img
-
+                    exec.emulation_env_config.image = ""
             em_dict = em.to_dict()
             em_dict[api_constants.MGMT_WEBAPP.EXECUTIONS_SUBRESOURCE] = list(map(lambda x: x.to_dict(), executions))
             if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
@@ -222,6 +220,8 @@ def get_execution_of_emulation(emulation_id: int, execution_id: int) -> Tuple[Re
         requires_admin = True
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
         requires_admin = False
+    else:
+        raise ValueError(f"HTTP method: {request.method} not supported")
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
@@ -258,8 +258,7 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int) -> Tup
     :param minutes: the number of minutes past to collect data from
     :return: the collected data
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request,
-                                                           requires_admin=False)
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
     if authorized is not None:
         return authorized
 
@@ -274,8 +273,7 @@ def monitor_emulation(emulation_id: int, execution_id: int, minutes: int) -> Tup
         time_series = ClusterController.get_execution_time_series_data(
             ip=execution.emulation_env_config.kafka_config.container.physical_host_ip,
             port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, minutes=minutes,
-            ip_first_octet=execution.ip_first_octet, emulation=execution.emulation_env_config.name
-        )
+            ip_first_octet=execution.ip_first_octet, emulation=execution.emulation_env_config.name)
         time_series = time_series.to_dict()
     response = jsonify(time_series)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")

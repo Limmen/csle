@@ -230,9 +230,9 @@ class TestResourcesEmulationsSuite:
         :param mocker: the pytest mocker object
         :return: The mocked function
         """
-        def list_emulations_ids() -> List[Tuple]:
-            list_dict = [(10, "a")]
-            return list_dict
+        def list_emulations_ids() -> List[Tuple[int, str]]:
+            list_tuple = [(10, "a")]
+            return list_tuple
         list_emulations_ids_mocker = mocker.MagicMock(side_effect=list_emulations_ids
                                                       )
         return list_emulations_ids_mocker
@@ -333,9 +333,9 @@ class TestResourcesEmulationsSuite:
         :param mocker: the pytest mocker object
         :return: The mocked function
         """
-        def list_emulations_ids() -> List[Tuple]:
-            list_dict = [(10, "q")]
-            return list_dict
+        def list_emulations_ids() -> List[Tuple[int, str]]:
+            list_tuple = [(10, "q")]
+            return list_tuple
         list_emulations_ids_mocker = mocker.MagicMock(side_effect=list_emulations_ids
                                                       )
         return list_emulations_ids_mocker
