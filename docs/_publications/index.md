@@ -10,7 +10,7 @@ The following publications are based on CSLE:
 
 ##### **Learning Near-Optimal Intrusion Responses Against Dynamic Attackers**
 **Journal**: IEEE Transactions on Network and Service Management (IEEE TNSM).
-[Proceedings.](Learning Near-Optimal Intrusion Responses Against Dynamic Attackers), [Preprint.](https://arxiv.org/abs/2301.06085)
+[Proceedings.](https://ieeexplore.ieee.org/document/10175554), [Preprint.](https://arxiv.org/abs/2301.06085)
 
 **Bibtex**:
 ```bash
