@@ -29,7 +29,7 @@ class WorkflowService(JSONSerializable, GRPCSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = WorkflowService(ips_and_commands=d["ips_and_commands"], id=d["id"])
+        obj = WorkflowService(ips_and_commands=list(map(lambda x: tuple(x), d["ips_and_commands"])), id=d["id"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:

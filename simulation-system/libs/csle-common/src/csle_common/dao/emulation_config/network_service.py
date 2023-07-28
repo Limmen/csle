@@ -31,8 +31,7 @@ class NetworkService(JSONSerializable):
         cr = []
         if self.credentials is not None:
             cr = list(map(lambda x: str(x), self.credentials))
-        return "protocol:{}, port:{}, name:{}, credentials: {}".format(self.protocol, self.port, self.name,
-                                                                       cr)
+        return f"protocol: {self.protocol}, port: {self.port}, name: {self.name}, cr: {cr}"
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -44,7 +43,10 @@ class NetworkService(JSONSerializable):
         d["protocol"] = self.protocol
         d["port"] = self.port
         d["name"] = self.name
-        d["credentials"] = list(map(lambda x: x.to_dict(), self.credentials))
+        if self.credentials is not None:
+            d["credentials"] = list(map(lambda x: x.to_dict(), self.credentials))
+        else:
+            d["credentials"] = self.credentials
         return d
 
     @staticmethod
@@ -54,17 +56,17 @@ class NetworkService(JSONSerializable):
 
         :return: a dto representation of the object
         """
-        dto = NetworkService(name=d["name"], port=d["port"], protocol=d["protocol"],
-                             credentials=list(map(lambda x: Credential.from_dict(x), d["credentials"])))
+        credentials = None
+        if d["credentials"] is not None:
+            credentials = list(map(lambda x: Credential.from_dict(x), d["credentials"]))
+        dto = NetworkService(name=d["name"], port=d["port"], protocol=d["protocol"], credentials=credentials)
         return dto
 
     def copy(self) -> "NetworkService":
         """
         :return: a copy of the DTO
         """
-        return NetworkService(
-            protocol=self.protocol, port=self.port, name=self.name, credentials=self.credentials
-        )
+        return NetworkService(protocol=self.protocol, port=self.port, name=self.name, credentials=self.credentials)
 
     @staticmethod
     def pw_vuln_services():

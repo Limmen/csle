@@ -52,9 +52,7 @@ class ConstantArrivalConfig(ArrivalConfig, JSONSerializable, GRPCSerializable):
         """
         :return: a GRPC serializable version of the object
         """
-        return csle_collector.client_manager.client_manager_pb2.ConstantArrivalConfigDTO(
-            lamb=self.lamb
-        )
+        return csle_collector.client_manager.client_manager_pb2.ConstantArrivalConfigDTO(lamb=self.lamb)
 
     @staticmethod
     def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.ConstantArrivalConfigDTO) \

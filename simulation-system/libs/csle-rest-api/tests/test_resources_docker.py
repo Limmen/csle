@@ -10,7 +10,7 @@ from csle_rest_api.rest_api import create_app
 
 class TestResourcesDockerStatusSuite:
     """
-    Test suite for /cluster_status url
+    Test suite for /docker url
     """
 
     @pytest.fixture
@@ -23,7 +23,7 @@ class TestResourcesDockerStatusSuite:
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def config(self, mocker, example_config: Config):
+    def config(self, mocker: pytest_mock.MockFixture, example_config: Config):
         """
         Pytest fixture for mocking the get_config function
 
