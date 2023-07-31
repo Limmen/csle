@@ -115,7 +115,8 @@ def emulation_execution_info(execution_id: int) -> Tuple[Response, int]:
     :param execution_id: the id of the execution
     :return: Runtime information about the given execution
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin = False)
+    logger.info("kommer jag hit tro")
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
     if authorized is not None:
         return authorized
 

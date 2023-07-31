@@ -6,9 +6,35 @@ import csle_common.constants.constants as constants
 import pytest
 import pytest_mock
 from csle_cluster.cluster_manager.cluster_manager_pb2 import (
+    ClientManagersInfoDTO,
+    DockerContainerDTO,
+    DockerNetworksDTO,
+    DockerStatsManagersInfoDTO,
+    DockerStatsMonitorStatusDTO,
+    ElkManagersInfoDTO,
+    ElkStatusDTO,
+    ExecutionInfoDTO,
+    GetNumClientsDTO,
+    HostManagersInfoDTO,
+    HostManagerStatusDTO,
+    KafkaManagersInfoDTO,
+    KafkaStatusDTO,
+    KibanaTunnelDTO,
     KibanaTunnelsDTO,
     OperationOutcomeDTO,
+    OSSECIdsManagersInfoDTO,
+    OSSECIdsStatusDTO,
+    RunningContainersDTO,
     RunningEmulationsDTO,
+    RyuManagersInfoDTO,
+    RyuManagerStatusDTO,
+    RyuTunnelDTO,
+    RyuTunnelsDTO,
+    SnortIdsManagersInfoDTO,
+    SnortIdsStatusDTO,
+    StoppedContainersDTO,
+    TrafficManagerInfoDTO,
+    TrafficManagersInfoDTO,
 )
 from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
@@ -27,7 +53,6 @@ class TestResourcesEmulationExecutionsSuite:
     """
     Test suite for /emulations resource
     """
-
 
     @pytest.fixture
     def flask_app(self):
@@ -126,9 +151,137 @@ class TestResourcesEmulationExecutionsSuite:
         :return: the mocked function
         """
         def list_kibana_tunnels(ip: str, port: int):
-            return KibanaTunnelsDTO(tunnels="abcdef")
+            kibana_tunnel = KibanaTunnelDTO(port=5, ip="123.456.78.99",
+                                            emulation="null",
+                                            ipFirstOctet=-1)
+            return KibanaTunnelsDTO(tunnels=[kibana_tunnel])
+
         list_kibana_tunnels_mocker = mocker.MagicMock(side_effect=list_kibana_tunnels)
         return list_kibana_tunnels_mocker
+
+    @pytest.fixture
+    def merged_info(self, mocker):
+        """
+        Pytest fixture for mocking the get_merged_execution_info method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def get_merged_execution_info(execution: EmulationExecution) -> ExecutionInfoDTO:
+            snort_ids = SnortIdsManagersInfoDTO(ips="abcdef", ports=2, emulationName="abcdef",
+                                                executionId=[2], snortIdsManagersRunning=False,
+                                                snortIdsManagersStatuses=[SnortIdsStatusDTO(monitor_running=False,
+                                                                                            snort_ids_running=True)])
+            ossec_ids = OSSECIdsManagersInfoDTO(ips="123.456.78.99", ports=5,
+                                                emulationName="JohnDoe", executionId=4,
+                                                ossecIdsManagersRunning=True,
+                                                ossecIdsManagersStatuses=OSSECIdsStatusDTO(monitor_running=True,
+                                                                                           ossec_ids_running=False))
+            kafka_mng = KafkaManagersInfoDTO(ips="123.456.78.99", ports=5,
+                                             emulationName="JohnDoe",
+                                             executionId=1, kafkaManagersRunning=True,
+                                             kafkaManagersStatuses=KafkaStatusDTO(running=True, topics="abcdef"))
+            host_mng = HostManagersInfoDTO(ips="123.456.78.99", ports=5,
+                                           emulationName="JohnDoe",
+                                           executionId=5,
+                                           hostManagersRunning=True,
+                                           hostManagersStatuses=HostManagerStatusDTO(monitor_running=True,
+                                                                                     filebeat_running=True,
+                                                                                     packetbeat_running=True,
+                                                                                     metricbeat_running=True,
+                                                                                     heartbeat_running=True,
+                                                                                     ip="123.456.78.99"))
+            client_mng = ClientManagersInfoDTO(ips="123.456.78.99",
+                                               ports=5,
+                                               emulationName="JohnDoe",
+                                               executionId=5,
+                                               clientManagersRunning=True,
+                                               clientManagersStatuses=GetNumClientsDTO(num_clients=1,
+                                                                                       client_process_active=True,
+                                                                                       producer_active=True,
+                                                                                       clients_time_step_len_seconds=15,
+                                                                                       producer_time_step_len_seconds=10))
+            docker_mng = DockerStatsManagersInfoDTO(ips="123.456.78.99", ports=5,
+                                                    emulationName="JohnDoe",
+                                                    executionId=5,
+                                                    dockerStatsManagersRunning=True,
+                                                    dockerStatsManagersStatuses=DockerStatsMonitorStatusDTO(num_monitors=1,
+                                                                                                            emulations="null",
+                                                                                                            emulation_executions=15))
+            running_cont = RunningContainersDTO(DockerContainerDTO(name="JohnDoe",
+                                                                   image="null",
+                                                                   ip="123.456.78.99"))
+            stopped_cont = StoppedContainersDTO(stoppedContainers=DockerContainerDTO(name="JohnDoe",
+                                                                                   image="null",
+                                                                                   ip="123.456.78.99"))
+            traffic_info = TrafficManagersInfoDTO(ips="123..456.78.99",
+                                                  ports=5,
+                                                  emulationName="JohnDoe",
+                                                  executionId=5,
+                                                  trafficManagersRunning=True,
+                                                  trafficManagersStatuses=TrafficManagerInfoDTO(runnning=True,
+                                                                                                script="null"))
+            docker_net = DockerNetworksDTO(networks="abcdef", network_ids=5)
+            elk_mng = ElkManagersInfoDTO(ips="123.456.78.99", ports=5,
+                                         emulationName="JohnDoe", executionId=5,
+                                         elkManagersRunning=True,
+                                         elkManagersStatuses=ElkStatusDTO(elasticRunning=True,
+                                                                          kibanaRunning=True,
+                                                                          logstashRunning=True))
+            ryu_mng = RyuManagersInfoDTO(ips="123.456.78.99", ports=5,
+                                         emulationName="JohnDoe", executionId=5,
+                                         ryuManagersRunning=True,
+                                         ryuManagersStatuses=RyuManagerStatusDTO(ryu_running=True,
+                                                                                 monitor_running=True,
+                                                                                 port=5,
+                                                                                 web_port=4,
+                                                                                 controller="null",
+                                                                                 kafka_ip="123.456.78.99",
+                                                                                 kafka_port=5,
+                                                                                 time_step_len=10))
+            return ExecutionInfoDTO(emulationName="JohnDoe", executionId=-1,
+                                    snortIdsManagersInfo=snort_ids,
+                                    ossecIdsManagersInfo=ossec_ids,
+                                    kafkaManagersInfo=kafka_mng,
+                                    hostManagersInfo=host_mng, clientManagersInfo=client_mng,
+                                    dockerStatsManagersInfo=docker_mng,
+                                    runningContainers=running_cont,
+                                    stoppedContainers=stopped_cont,
+                                    trafficManagersInfoDTO=traffic_info,
+                                    activeNetworks=docker_net, elkManagersInfoDTO=elk_mng,
+                                    ryuManagersInfoDTO=ryu_mng)
+        get_merged_execution_info_mocker = mocker.MagicMock(side_effect=get_merged_execution_info)
+        return get_merged_execution_info_mocker
+
+    @pytest.fixture
+    def create_ryu(self, mocker):
+        """
+        Pytest fixture for mocking the create_ryu_tunnel method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def create_ryu_tunnel(ip: str, port: int, emulation: str, ip_first_octet: int) \
+                -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        create_ryu_tunnel_mocker = mocker.MagicMock(side_effect=create_ryu_tunnel)
+        return create_ryu_tunnel_mocker
+
+    @pytest.fixture
+    def list_ryu(self, mocker):
+        """
+        Pytest fixture for mocking the list_ryu_tunnels method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def list_ryu_tunnels(ip: str, port: int) -> RyuTunnelsDTO:
+            return RyuTunnelsDTO(tunnels=RyuTunnelDTO(port=1,
+                                                      ip="123.456.78.99",
+                                                      emulation="null",
+                                                      ipFirstOctet=-1))
+        list_ryu_tunnels_mocker = mocker.MagicMock(side_effect=list_ryu_tunnels)
+        return list_ryu_tunnels_mocker
 
     @pytest.fixture
     def emulation_exec_ids(self, mocker: pytest_mock.MockFixture, get_ex_exec: EmulationExecution):
@@ -308,10 +461,11 @@ class TestResourcesEmulationExecutionsSuite:
         for k in e_e_data_dict:
             assert e_e_data_dict[k] == ex_exec_dict[k]
 
-    def test_emulation_execution_ids_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
-                                         logged_in_as_admin, get_em_ex, emulation_exec, get_ex_exec):
+    def test_emulation_execution_ids_info_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
+                                              logged_in_as_admin, get_em_ex, emulation_exec, get_ex_exec, merged_info,
+                                              kibana_list, kibana, create_ryu, list_ryu, ):
         """
-        Testing the HTTPS GET method for the /emulation_executions/id resource
+        Testing the HTTPS GET method for the /emulation_executions/id/info resource
         
         :param mocker: the pytest mocker object
         :param flask_app: the flask_app fixture
@@ -330,7 +484,38 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=not_logged_in)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_executions",
-                     side_effect=emulation_exec)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_kibana_tunnels",
+                     side_effect=kibana_list)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.create_kibana_tunnel",
+                     side_effect=kibana)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.create_ryu_tunnel",
+                     side_effect=create_ryu)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_ryu_tunnels",
+                     side_effect=list_ryu)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                               f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_list == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                               f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                               f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}"
+                                               f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_list = json.loads(response_data)
+        logger.info(response.status_code)
+        logger.info(response_data_list)
