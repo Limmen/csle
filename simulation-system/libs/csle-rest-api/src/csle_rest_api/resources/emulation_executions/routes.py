@@ -6,6 +6,7 @@ import time
 from flask import Blueprint, jsonify, request, Response
 import requests
 import json
+import logging
 from csle_common.logging.log import Logger
 import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
@@ -14,6 +15,7 @@ from csle_cluster.cluster_manager.cluster_controller import ClusterController
 import csle_ryu.constants.constants as ryu_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
+logger = logging.getLogger()
 # Creates a blueprint "sub application" of the main REST app
 emulation_executions_bp = Blueprint(
     api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE, __name__,
@@ -27,12 +29,14 @@ def emulation_executions() -> Tuple[Response, int]:
 
     :return: A list of emulation executions or a list of ids of the executions
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
     if authorized is not None:
         return authorized
 
     # Check if ids query parameter is True, then only return the ids and not the whole list of emulation executions
+    # logger.info(request.args)
     ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
+    logger.info(ids)
     if ids is not None and ids:
         return emulation_execution_ids()
 
@@ -80,10 +84,9 @@ def emulation_execution(execution_id: int):
     :param execution_id: the id of the execution
     :return: The given execution
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin = False)
     if authorized is not None:
         return authorized
-
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     if emulation is not None:
@@ -95,9 +98,8 @@ def emulation_execution(execution_id: int):
         all_executions_with_the_given_id_dicts = []
         all_executions = MetastoreFacade.list_emulation_executions()
         for exec in all_executions:
-            if exec.ip_first_octet == execution_id:
+            if exec.ip_first_octet == int(execution_id):
                 all_executions_with_the_given_id_dicts.append(exec.to_dict())
-
         response = jsonify(all_executions_with_the_given_id_dicts)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
     return response, constants.HTTPS.OK_STATUS_CODE
@@ -113,7 +115,7 @@ def emulation_execution_info(execution_id: int) -> Tuple[Response, int]:
     :param execution_id: the id of the execution
     :return: Runtime information about the given execution
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin = False)
     if authorized is not None:
         return authorized
 

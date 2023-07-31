@@ -1,34 +1,51 @@
-from typing import List, Dict, Union
-import pytest_mock
-import pytest
-from flask import jsonify
-import csle_common.constants.constants as constants
+from typing import Dict, List, Union
+
 import csle_collector.constants.constants as collector_constants
-import csle_rest_api.constants.constants as api_constants
-from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
-from csle_common.dao.emulation_config.cluster_config import ClusterConfig
-from csle_common.dao.emulation_config.cluster_node import ClusterNode
-from csle_common.dao.management.management_user import ManagementUser
-from csle_cluster.cluster_manager.cluster_manager_pb2 import OperationOutcomeDTO
+import csle_common.constants.constants as constants
+import pytest
+import pytest_mock
+from csle_cluster.cluster_manager.cluster_manager_pb2 import (
+    NodeStatusDTO,
+    OperationOutcomeDTO,
+)
 from csle_collector.client_manager.dao.client import Client
-from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
+from csle_collector.client_manager.dao.constant_arrival_config import (
+    ConstantArrivalConfig,
+)
 from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMarkovChain
 from csle_collector.client_manager.dao.workflow_service import WorkflowService
 from csle_collector.client_manager.dao.workflows_config import WorkflowsConfig
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import EmulationAttackerActionOutcome
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import (
+    EmulationAttackerAction,
+)
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import (
+    EmulationAttackerActionId,
+)
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import (
+    EmulationAttackerActionOutcome,
+)
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import (
+    EmulationAttackerActionType,
+)
 from csle_common.dao.emulation_config.beats_config import BeatsConfig
-from csle_common.dao.emulation_config.client_population_config import ClientPopulationConfig
+from csle_common.dao.emulation_config.client_population_config import (
+    ClientPopulationConfig,
+)
+from csle_common.dao.emulation_config.cluster_config import ClusterConfig
+from csle_common.dao.emulation_config.cluster_node import ClusterNode
 from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
 from csle_common.dao.emulation_config.credential import Credential
-from csle_common.dao.emulation_config.default_network_firewall_config import DefaultNetworkFirewallConfig
-from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
+from csle_common.dao.emulation_config.default_network_firewall_config import (
+    DefaultNetworkFirewallConfig,
+)
+from csle_common.dao.emulation_config.docker_stats_manager_config import (
+    DockerStatsManagerConfig,
+)
 from csle_common.dao.emulation_config.elk_config import ElkConfig
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 from csle_common.dao.emulation_config.flag import Flag
 from csle_common.dao.emulation_config.flags_config import FlagsConfig
 from csle_common.dao.emulation_config.host_manager_config import HostManagerConfig
@@ -44,25 +61,38 @@ from csle_common.dao.emulation_config.node_resources_config import NodeResources
 from csle_common.dao.emulation_config.node_services_config import NodeServicesConfig
 from csle_common.dao.emulation_config.node_traffic_config import NodeTrafficConfig
 from csle_common.dao.emulation_config.node_users_config import NodeUsersConfig
-from csle_common.dao.emulation_config.node_vulnerability_config import NodeVulnerabilityConfig
-from csle_common.dao.emulation_config.ossec_ids_manager_config import OSSECIDSManagerConfig
+from csle_common.dao.emulation_config.node_vulnerability_config import (
+    NodeVulnerabilityConfig,
+)
+from csle_common.dao.emulation_config.ossec_ids_manager_config import (
+    OSSECIDSManagerConfig,
+)
 from csle_common.dao.emulation_config.ovs_config import OVSConfig
 from csle_common.dao.emulation_config.ovs_switch_config import OvsSwitchConfig
-from csle_common.dao.emulation_config.packet_delay_distribution_type import PacketDelayDistributionType
+from csle_common.dao.emulation_config.packet_delay_distribution_type import (
+    PacketDelayDistributionType,
+)
 from csle_common.dao.emulation_config.packet_loss_type import PacketLossType
 from csle_common.dao.emulation_config.resources_config import ResourcesConfig
 from csle_common.dao.emulation_config.sdn_controller_config import SDNControllerConfig
 from csle_common.dao.emulation_config.sdn_controller_type import SDNControllerType
 from csle_common.dao.emulation_config.services_config import ServicesConfig
-from csle_common.dao.emulation_config.snort_ids_manager_config import SnortIDSManagerConfig
+from csle_common.dao.emulation_config.snort_ids_manager_config import (
+    SnortIDSManagerConfig,
+)
 from csle_common.dao.emulation_config.topology_config import TopologyConfig
 from csle_common.dao.emulation_config.traffic_config import TrafficConfig
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_config.user import User
 from csle_common.dao.emulation_config.users_config import UsersConfig
-from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
+from csle_common.dao.emulation_config.vulnerabilities_config import (
+    VulnerabilitiesConfig,
+)
 from csle_common.dao.emulation_config.vulnerability_type import VulnType
-from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
+from csle_common.dao.management.management_user import ManagementUser
+from flask import jsonify
+
+import csle_rest_api.constants.constants as api_constants
 
 
 @pytest.fixture
@@ -378,8 +408,8 @@ def get_ex_em_env() -> EmulationEnvConfig:
     nf_conf = NodeFlagsConfig(ip="123.456.78.99", flags=[flag], docker_gw_bridge_ip="null",
                               physical_host_ip="123.456.78.99")
     cred = Credential(username="JDoe", pw="JDoe", port=None, protocol=None, service="null", root=False)
-    nv_conf = NodeVulnerabilityConfig(ip="123.456.78.99", vuln_type=VulnType.WEAK_PW, name="JohnDoe", port=1,
-                                      protocol=TransportProtocol.TCP, credentials=[cred], cvss=2.0,
+    nv_conf = NodeVulnerabilityConfig(ip="123.456.78.99", vuln_type=VulnType.WEAK_PW.value, name="JohnDoe", port=1,
+                                      protocol=TransportProtocol.TCP.value, credentials=[cred], cvss=2.0,
                                       cve=None, service="null", root=False, docker_gw_bridge_ip="123.456.78.99",
                                       physical_host_ip="123.456.78.99")
     dfn_conf = DefaultNetworkFirewallConfig(ip=None, default_gw="null", default_input="null",
@@ -404,8 +434,8 @@ def get_ex_em_env() -> EmulationEnvConfig:
     nn_config = NodeNetworkConfig(interface=constants.NETWORKING.ETH0, limit_packets_queue=30000,
                                   packet_delay_ms=0.1, packet_delay_jitter_ms=0.025,
                                   packet_delay_correlation_percentage=25.5,
-                                  packet_delay_distribution=PacketDelayDistributionType.PARETONORMAL,
-                                  packet_loss_type=PacketLossType.GEMODEL,
+                                  packet_delay_distribution=PacketDelayDistributionType.PARETONORMAL.value,
+                                  packet_loss_type=PacketLossType.GEMODEL.value,
                                   packet_loss_rate_random_percentage=2.3,
                                   packet_loss_random_correlation_percentage=25.6,
                                   loss_state_markov_chain_p13=0.1,
@@ -459,15 +489,15 @@ def get_ex_em_env() -> EmulationEnvConfig:
                              topics=[kafka_top], kafka_manager_log_file="null", kafka_manager_log_dir="null",
                              kafka_manager_max_workers=9, kafka_port=9092, kafka_port_external=9292,
                              time_step_len_seconds=15, kafka_manager_port=50051, version="0.0.1")
-    network_service = NetworkService(protocol=TransportProtocol.TCP, port=1, name="JohnDoe", credentials=None)
+    network_service = NetworkService(protocol=TransportProtocol.TCP.value, port=1, name="JohnDoe", credentials=None)
     n_service_conf = NodeServicesConfig(ip="123.456.78.99", services=[network_service])
     service_conf = ServicesConfig(services_configs=[n_service_conf])
-    e_a_action = EmulationAttackerAction(id=EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST,
+    e_a_action = EmulationAttackerAction(id=EmulationAttackerActionId.TCP_SYN_STEALTH_SCAN_HOST.value,
                                          name="JohnDoe",
                                          cmds=["JohnDoeCommands"],
-                                         type=EmulationAttackerActionType.RECON, descr="null",
+                                         type=EmulationAttackerActionType.RECON.value, descr="null",
                                          ips=["null"], index=10,
-                                         action_outcome=EmulationAttackerActionOutcome.INFORMATION_GATHERING,
+                                         action_outcome=EmulationAttackerActionOutcome.INFORMATION_GATHERING.value,
                                          vulnerability="null", alt_cmds=["null"], backdoor=False,
                                          execution_time=0.0, ts=1.1)
     ovs_switch = OvsSwitchConfig(container_name="JohnDoe", ip="123.456.78.99", openflow_protocols=["null"],
@@ -475,7 +505,7 @@ def get_ex_em_env() -> EmulationEnvConfig:
                                  controller_transport_protocol="null",
                                  docker_gw_bridge_ip="null", physical_host_ip="123.456.78.99")
     sdc_ctrl = SDNControllerConfig(container=nc_config, resources=node_res_conf, firewall_config=n_fire_conf,
-                                   controller_port=4, controller_type=SDNControllerType.RYU,
+                                   controller_port=4, controller_type=SDNControllerType.RYU.value,
                                    controller_module_name="null", controller_web_api_port=5,
                                    manager_log_file="null", manager_log_dir="null", manager_max_workers=10,
                                    time_step_len_seconds=15, version="0.0.1", manager_port=50042)

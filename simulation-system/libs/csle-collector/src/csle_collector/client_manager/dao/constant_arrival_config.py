@@ -18,7 +18,7 @@ class ConstantArrivalConfig(ArrivalConfig, JSONSerializable, GRPCSerializable):
         :param lamb: the static arrival rate
         """
         self.lamb = lamb
-        super(ConstantArrivalConfig, self).__init__(client_arrival_type=ClientArrivalType.CONSTANT)
+        super(ConstantArrivalConfig, self).__init__(client_arrival_type=ClientArrivalType.CONSTANT.value)
 
     def __str__(self) -> str:
         """
