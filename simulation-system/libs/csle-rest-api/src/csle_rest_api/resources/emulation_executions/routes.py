@@ -1,18 +1,21 @@
 """
 Routes and sub-resources for the /emulation-executions resource
 """
-from typing import List, Dict, Any, Union, Tuple
-import time
-from flask import Blueprint, jsonify, request, Response
-import requests
 import json
 import logging
-from csle_common.logging.log import Logger
+import time
+from typing import Any, Dict, List, Tuple, Union
+
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
-from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_cluster.cluster_manager.cluster_controller import ClusterController
 import csle_ryu.constants.constants as ryu_constants
+import protos
+import requests
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
+from csle_common.logging.log import Logger
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, Response, jsonify, request
+
+import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 logger = logging.getLogger()
@@ -34,9 +37,7 @@ def emulation_executions() -> Tuple[Response, int]:
         return authorized
 
     # Check if ids query parameter is True, then only return the ids and not the whole list of emulation executions
-    # logger.info(request.args)
     ids = request.args.get(api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM)
-    logger.info(ids)
     if ids is not None and ids:
         return emulation_execution_ids()
 
@@ -84,7 +85,7 @@ def emulation_execution(execution_id: int):
     :param execution_id: the id of the execution
     :return: The given execution
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin = False)
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
     if authorized is not None:
         return authorized
     # Extract emulation query parameter
@@ -115,7 +116,6 @@ def emulation_execution_info(execution_id: int) -> Tuple[Response, int]:
     :param execution_id: the id of the execution
     :return: Runtime information about the given execution
     """
-    logger.info("kommer jag hit tro")
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
     if authorized is not None:
         return authorized
@@ -134,9 +134,9 @@ def emulation_execution_info(execution_id: int) -> Tuple[Response, int]:
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
         for kibana_tunnel_dto in kibana_tunnels_dto.tunnels:
             if kibana_tunnel_dto.ip == execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip:
-                execution_info.elk_managers_info.local_kibana_port = kibana_tunnel_dto.port
+                execution_info.elkManagersInfoDTO.localKibanaPort = kibana_tunnel_dto.port
 
-        if execution_info.ryu_managers_info is not None \
+        if execution_info.ryuManagersInfoDTO is not None \
                 and execution.emulation_env_config.sdn_controller_config is not None:
             ClusterController.create_ryu_tunnel(
                 ip=execution.emulation_env_config.elk_config.container.physical_host_ip,
@@ -148,8 +148,8 @@ def emulation_execution_info(execution_id: int) -> Tuple[Response, int]:
             for ryu_tunnel_dto in ryu_tunnels_dto.tunnels:
                 if ryu_tunnel_dto.ip == \
                         execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip:
-                    execution_info.ryu_managers_info.local_controller_web_port = ryu_tunnel_dto.port
-        response = jsonify(execution_info.to_dict())
+                    execution_info.ryuManagersInfoDTO.localControllerWebPort = ryu_tunnel_dto.port
+        response = jsonify(execution.to_dict())        
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -174,7 +174,6 @@ def start_stop_client_manager(execution_id: int) -> Tuple[Response, int]:
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
-
     # Extract emulation query parameter
     emulation = request.args.get(api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM)
     json_data = json.loads(request.data)
@@ -207,7 +206,8 @@ def start_stop_client_manager(execution_id: int) -> Tuple[Response, int]:
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        response = jsonify(execution_info.to_dict())
+        response = jsonify(execution.to_dict())
+        # response = jsonify(execution_info.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -244,6 +244,7 @@ def start_stop_client_population(execution_id: int) -> Tuple[Response, int]:
                        f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
         return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
                 constants.HTTPS.BAD_REQUEST_STATUS_CODE)
+    logger.info("kommer jag hit nån gång?")
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -265,7 +266,10 @@ def start_stop_client_population(execution_id: int) -> Tuple[Response, int]:
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        response = jsonify(execution_info.to_dict())
+        logger.info(type(execution_info))
+        # response = jsonify(protos.Message.to_dixt(execution_info))
+        # response = jsonify(execution_info.to_dict())
+        response = jsonify(execution.to_dict())
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:

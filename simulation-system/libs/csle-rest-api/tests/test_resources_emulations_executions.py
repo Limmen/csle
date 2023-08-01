@@ -39,9 +39,6 @@ from csle_cluster.cluster_manager.cluster_manager_pb2 import (
 from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
-from csle_common.dao.emulation_config.packet_delay_distribution_type import (
-    PacketDelayDistributionType,
-)
 
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
@@ -115,6 +112,32 @@ class TestResourcesEmulationExecutionsSuite:
         return list_emulation_executions_mocker
 
     @pytest.fixture
+    def start_client(self, mocker):
+        """
+        Pytest fixture for mocking the start_client_manager method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_client_manager(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_client_manager_mocker = mocker.MagicMock(side_effect=start_client_manager)
+        return start_client_manager_mocker
+
+    @pytest.fixture
+    def stop_client(self, mocker):
+        """
+        Pytest fixture for mocking the stop_client_manager method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_client_manager(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_client_manager_mocker = mocker.MagicMock(side_effect=stop_client_manager)
+        return stop_client_manager_mocker
+
+    @pytest.fixture
     def running_emulations(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_all_running_emulations method
@@ -168,77 +191,80 @@ class TestResourcesEmulationExecutionsSuite:
         :return: the mocked function
         """
         def get_merged_execution_info(execution: EmulationExecution) -> ExecutionInfoDTO:
-            snort_ids = SnortIdsManagersInfoDTO(ips="abcdef", ports=2, emulationName="abcdef",
-                                                executionId=[2], snortIdsManagersRunning=False,
+            snort_ids = SnortIdsManagersInfoDTO(ips="abcdef", ports=[1, 2, 3, 4, 5], emulationName="abcdef",
+                                                executionId=1,
+                                                snortIdsManagersRunning=[False, True, False, True, False],
                                                 snortIdsManagersStatuses=[SnortIdsStatusDTO(monitor_running=False,
                                                                                             snort_ids_running=True)])
-            ossec_ids = OSSECIdsManagersInfoDTO(ips="123.456.78.99", ports=5,
+            ossec_ids = OSSECIdsManagersInfoDTO(ips="123.456.78.99", ports=[1, 2, 3, 4, 5],
                                                 emulationName="JohnDoe", executionId=4,
-                                                ossecIdsManagersRunning=True,
-                                                ossecIdsManagersStatuses=OSSECIdsStatusDTO(monitor_running=True,
-                                                                                           ossec_ids_running=False))
-            kafka_mng = KafkaManagersInfoDTO(ips="123.456.78.99", ports=5,
+                                                ossecIdsManagersRunning=[True, False, True, False, True],
+                                                ossecIdsManagersStatuses=[OSSECIdsStatusDTO(monitor_running=True,
+                                                                                            ossec_ids_running=False)])
+            kafka_mng = KafkaManagersInfoDTO(ips="123.456.78.99", ports=[1, 2, 3, 4, 5],
                                              emulationName="JohnDoe",
-                                             executionId=1, kafkaManagersRunning=True,
-                                             kafkaManagersStatuses=KafkaStatusDTO(running=True, topics="abcdef"))
-            host_mng = HostManagersInfoDTO(ips="123.456.78.99", ports=5,
+                                             executionId=1, kafkaManagersRunning=[True, False, True, False, True],
+                                             kafkaManagersStatuses=[KafkaStatusDTO(running=True, topics="abcdef")])
+            host_mng = HostManagersInfoDTO(ips="123.456.78.99", ports=[1, 2, 3, 4, 5],
                                            emulationName="JohnDoe",
                                            executionId=5,
-                                           hostManagersRunning=True,
-                                           hostManagersStatuses=HostManagerStatusDTO(monitor_running=True,
-                                                                                     filebeat_running=True,
-                                                                                     packetbeat_running=True,
-                                                                                     metricbeat_running=True,
-                                                                                     heartbeat_running=True,
-                                                                                     ip="123.456.78.99"))
+                                           hostManagersRunning=[True, False, True, False, True],
+                                           hostManagersStatuses=[HostManagerStatusDTO(monitor_running=True,
+                                                                                      filebeat_running=True,
+                                                                                      packetbeat_running=True,
+                                                                                      metricbeat_running=True,
+                                                                                      heartbeat_running=True,
+                                                                                      ip="123.456.78.99")])
             client_mng = ClientManagersInfoDTO(ips="123.456.78.99",
-                                               ports=5,
+                                               ports=[1, 2, 3, 4, 5],
                                                emulationName="JohnDoe",
                                                executionId=5,
-                                               clientManagersRunning=True,
-                                               clientManagersStatuses=GetNumClientsDTO(num_clients=1,
-                                                                                       client_process_active=True,
-                                                                                       producer_active=True,
-                                                                                       clients_time_step_len_seconds=15,
-                                                                                       producer_time_step_len_seconds=10))
-            docker_mng = DockerStatsManagersInfoDTO(ips="123.456.78.99", ports=5,
+                                               clientManagersRunning=[True, False, True, False, True],
+                                               clientManagersStatuses=[
+                                                   GetNumClientsDTO(num_clients=1,
+                                                                    client_process_active=True,
+                                                                    producer_active=True,
+                                                                    clients_time_step_len_seconds=15,
+                                                                    producer_time_step_len_seconds=10)])
+            docker_mng = DockerStatsManagersInfoDTO(ips="123.456.78.99", ports=[1, 2, 3, 4, 5],
                                                     emulationName="JohnDoe",
                                                     executionId=5,
-                                                    dockerStatsManagersRunning=True,
-                                                    dockerStatsManagersStatuses=DockerStatsMonitorStatusDTO(num_monitors=1,
-                                                                                                            emulations="null",
-                                                                                                            emulation_executions=15))
-            running_cont = RunningContainersDTO(DockerContainerDTO(name="JohnDoe",
-                                                                   image="null",
-                                                                   ip="123.456.78.99"))
-            stopped_cont = StoppedContainersDTO(stoppedContainers=DockerContainerDTO(name="JohnDoe",
-                                                                                   image="null",
-                                                                                   ip="123.456.78.99"))
+                                                    dockerStatsManagersRunning=[True, False, True, False, True],
+                                                    dockerStatsManagersStatuses=[
+                                                        DockerStatsMonitorStatusDTO(num_monitors=1,
+                                                                                    emulations="null",
+                                                                                    emulation_executions=[1, 2, 3, 4, 5])])
+            running_cont = RunningContainersDTO(runningContainers=[DockerContainerDTO(name="JohnDoe",
+                                                                                      image="null",
+                                                                                      ip="123.456.78.99")])
+            stopped_cont = StoppedContainersDTO(stoppedContainers=[DockerContainerDTO(name="JohnDoe",
+                                                                                      image="null",
+                                                                                      ip="123.456.78.99")])
             traffic_info = TrafficManagersInfoDTO(ips="123..456.78.99",
-                                                  ports=5,
+                                                  ports=[1, 2, 3, 4, 5],
                                                   emulationName="JohnDoe",
                                                   executionId=5,
-                                                  trafficManagersRunning=True,
-                                                  trafficManagersStatuses=TrafficManagerInfoDTO(runnning=True,
-                                                                                                script="null"))
-            docker_net = DockerNetworksDTO(networks="abcdef", network_ids=5)
-            elk_mng = ElkManagersInfoDTO(ips="123.456.78.99", ports=5,
+                                                  trafficManagersRunning=[True, False, True, False, True],
+                                                  trafficManagersStatuses=[TrafficManagerInfoDTO(running=True,
+                                                                                                 script="null")])
+            docker_net = DockerNetworksDTO(networks="abcdef", network_ids=[1, 2, 3, 4, 5])
+            elk_mng = ElkManagersInfoDTO(ips="123.456.78.99", ports=[1, 2, 3, 4, 5],
                                          emulationName="JohnDoe", executionId=5,
-                                         elkManagersRunning=True,
-                                         elkManagersStatuses=ElkStatusDTO(elasticRunning=True,
-                                                                          kibanaRunning=True,
-                                                                          logstashRunning=True))
-            ryu_mng = RyuManagersInfoDTO(ips="123.456.78.99", ports=5,
+                                         elkManagersRunning=[True, False, True, False, True],
+                                         elkManagersStatuses=[ElkStatusDTO(elasticRunning=True,
+                                                                           kibanaRunning=True,
+                                                                           logstashRunning=True)])
+            ryu_mng = RyuManagersInfoDTO(ips="123.456.78.99", ports=[1, 2, 3, 4, 5],
                                          emulationName="JohnDoe", executionId=5,
-                                         ryuManagersRunning=True,
-                                         ryuManagersStatuses=RyuManagerStatusDTO(ryu_running=True,
-                                                                                 monitor_running=True,
-                                                                                 port=5,
-                                                                                 web_port=4,
-                                                                                 controller="null",
-                                                                                 kafka_ip="123.456.78.99",
-                                                                                 kafka_port=5,
-                                                                                 time_step_len=10))
+                                         ryuManagersRunning=[True, False, True, False, True],
+                                         ryuManagersStatuses=[RyuManagerStatusDTO(ryu_running=True,
+                                                                                  monitor_running=True,
+                                                                                  port=5,
+                                                                                  web_port=4,
+                                                                                  controller="null",
+                                                                                  kafka_ip="123.456.78.99",
+                                                                                  kafka_port=5,
+                                                                                  time_step_len=10)])
             return ExecutionInfoDTO(emulationName="JohnDoe", executionId=-1,
                                     snortIdsManagersInfo=snort_ids,
                                     ossecIdsManagersInfo=ossec_ids,
@@ -276,10 +302,9 @@ class TestResourcesEmulationExecutionsSuite:
         :return: the mocked function
         """
         def list_ryu_tunnels(ip: str, port: int) -> RyuTunnelsDTO:
-            return RyuTunnelsDTO(tunnels=RyuTunnelDTO(port=1,
-                                                      ip="123.456.78.99",
-                                                      emulation="null",
-                                                      ipFirstOctet=-1))
+            return RyuTunnelsDTO(tunnels=[RyuTunnelDTO(port=1,
+                                                       ip="123.456.78.99",
+                                                       emulation="null", ipFirstOctet=-1)])
         list_ryu_tunnels_mocker = mocker.MagicMock(side_effect=list_ryu_tunnels)
         return list_ryu_tunnels_mocker
 
@@ -461,9 +486,9 @@ class TestResourcesEmulationExecutionsSuite:
         for k in e_e_data_dict:
             assert e_e_data_dict[k] == ex_exec_dict[k]
 
-    def test_emulation_execution_ids_info_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
-                                              logged_in_as_admin, get_em_ex, emulation_exec, get_ex_exec, merged_info,
-                                              kibana_list, kibana, create_ryu, list_ryu, ):
+    def test_emulation_execution_ids_info_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                              logged_in, logged_in_as_admin, get_em_ex, emulation_exec, get_ex_exec,
+                                              merged_info, kibana_list, kibana, create_ryu, list_ryu):
         """
         Testing the HTTPS GET method for the /emulation_executions/id/info resource
         
@@ -482,8 +507,6 @@ class TestResourcesEmulationExecutionsSuite:
         :param get_ex_em_env: the get_ex_em_env fixture
         :return: None
         """
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
@@ -516,6 +539,192 @@ class TestResourcesEmulationExecutionsSuite:
                                                f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        ex_exec = get_ex_exec
+        ex_exec_dict = ex_exec.to_dict()
+        e_e_data = EmulationExecution.from_dict(response_data_dict)
+        e_e_data_dict = e_e_data.to_dict()
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        for k in e_e_data_dict:
+            assert e_e_data_dict[k] == ex_exec_dict[k]
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                               f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                               f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}")
+        response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
-        logger.info(response.status_code)
-        logger.info(response_data_list)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_list == {}
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                               f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}"
+                                               f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}=true")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        ex_exec = get_ex_exec
+        ex_exec_dict = ex_exec.to_dict()
+        e_e_data = EmulationExecution.from_dict(response_data_dict)
+        e_e_data_dict = e_e_data.to_dict()
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        for k in e_e_data_dict:
+            assert e_e_data_dict[k] == ex_exec_dict[k]
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                               f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_cm_post(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                             logged_in, logged_in_as_admin, get_em_ex,
+                                             merged_info, get_ex_exec,
+                                             start_client, stop_client):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/client-manager resource
+        
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_client: the start_client fixture
+        :param stop_client: the stop_client fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_client_manager",
+                     side_effect=stop_client)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_client_manager",
+                     side_effect=start_client)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY: \
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or " \
+                                        f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                                            f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        ex_exec = get_ex_exec
+        ex_exec_dict = ex_exec.to_dict()
+        e_e_data = EmulationExecution.from_dict(response_data_dict)
+        e_e_data_dict = e_e_data.to_dict()
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        for k in e_e_data_dict:
+            assert e_e_data_dict[k] == ex_exec_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+
+    def test_emulation_execution_ids_cp_post(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                             logged_in, logged_in_as_admin, get_em_ex,
+                                             merged_info, get_ex_exec,
+                                             start_client, stop_client):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/client-population resource
+        
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_client: the start_client fixture
+        :param stop_client: the stop_client fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_client_manager",
+                     side_effect=stop_client)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_client_manager",
+                     side_effect=start_client)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY: \
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or " \
+                                        f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or " \
+                                            f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        # TODO: mocke start och stop i client populations
