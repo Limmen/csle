@@ -1814,7 +1814,7 @@ class ClusterController:
             return operation_outcome_dto
 
     @staticmethod
-    def stop_docker_stats_manager_thread(ip: str, port: int, emulation: str, ip_first_octet: int) \
+    def stop_docker_statsmanager_thread(ip: str, port: int, emulation: str, ip_first_octet: int) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Sends a request to stop the docker stats manager thread

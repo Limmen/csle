@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Tuple, Union
 
 import csle_common.constants.constants as constants
 import csle_ryu.constants.constants as ryu_constants
+import google
 import protos
 import requests
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
@@ -149,7 +150,12 @@ def emulation_execution_info(execution_id: int) -> Tuple[Response, int]:
                 if ryu_tunnel_dto.ip == \
                         execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip:
                     execution_info.ryuManagersInfoDTO.localControllerWebPort = ryu_tunnel_dto.port
-        response = jsonify(execution.to_dict())        
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)        
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -206,8 +212,12 @@ def start_stop_client_manager(execution_id: int) -> Tuple[Response, int]:
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        response = jsonify(execution.to_dict())
-        # response = jsonify(execution_info.to_dict())
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -244,7 +254,6 @@ def start_stop_client_population(execution_id: int) -> Tuple[Response, int]:
                        f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"
         return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
                 constants.HTTPS.BAD_REQUEST_STATUS_CODE)
-    logger.info("kommer jag hit nån gång?")
     if emulation is not None:
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id, emulation_name=emulation)
         start = json_data[api_constants.MGMT_WEBAPP.START_PROPERTY]
@@ -266,10 +275,12 @@ def start_stop_client_population(execution_id: int) -> Tuple[Response, int]:
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        logger.info(type(execution_info))
-        # response = jsonify(protos.Message.to_dixt(execution_info))
-        # response = jsonify(execution_info.to_dict())
-        response = jsonify(execution.to_dict())
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -327,7 +338,12 @@ def start_stop_client_producer(execution_id: int) -> Tuple[Response, int]:
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        response = jsonify(execution_info.to_dict())
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -383,7 +399,12 @@ def start_stop_docker_stats_manager(execution_id: int) -> Tuple[Response, int]:
                 ClusterController.start_docker_statsmanager(
                     ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        response = jsonify(execution_info.to_dict())
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -429,7 +450,7 @@ def start_stop_docker_stats_monitor(execution_id: int) -> Tuple[Response, int]:
                 f"Stopping docker stats monitor for emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             for node in config.cluster_config.cluster_nodes:
-                ClusterController.stop_docker_stats_manager_thread(
+                ClusterController.stop_docker_statsmanager_thread(
                     ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                     ip_first_octet=execution.ip_first_octet)
         if start:
@@ -441,7 +462,12 @@ def start_stop_docker_stats_monitor(execution_id: int) -> Tuple[Response, int]:
                     ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                     ip_first_octet=execution.ip_first_octet)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        response = jsonify(execution_info.to_dict())
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -498,7 +524,12 @@ def start_stop_kafka_manager(execution_id: int) -> Tuple[Response, int]:
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        response = jsonify(execution_info.to_dict())
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -557,7 +588,12 @@ def start_stop_kafka(execution_id: int) -> Tuple[Response, int]:
                 ip_first_octet=execution.ip_first_octet)
             time.sleep(35)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        response = jsonify(execution_info.to_dict())
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -615,8 +651,14 @@ def start_stop_snort_manager(execution_id: int) -> Tuple[Response, int]:
                     ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                     ip_first_octet=execution.ip_first_octet)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        response = jsonify(execution_info.to_dict())
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
+
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
         response = jsonify({})
@@ -674,7 +716,12 @@ def start_stop_snort_ids(execution_id: int) -> Tuple[Response, int]:
                     ip_first_octet=execution.ip_first_octet)
         time.sleep(10)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        response = jsonify(execution_info.to_dict())
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -732,7 +779,12 @@ def start_stop_snort_ids_monitor(execution_id: int) -> Tuple[Response, int]:
                     ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                     ip_first_octet=execution.ip_first_octet)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        response = jsonify(execution_info.to_dict())
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
