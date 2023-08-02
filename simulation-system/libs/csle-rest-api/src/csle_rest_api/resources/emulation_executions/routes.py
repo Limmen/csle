@@ -2277,8 +2277,8 @@ def start_stop_ryu_manager(execution_id: int) -> Tuple[Response, int]:
                 emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        if len(execution_info.ryu_managers_info.ryu_managers_statuses) > 0 and \
-                execution_info.ryu_managers_info.ryu_managers_statuses[0].ryu_running:
+        if len(execution_info.ryuManagersInfoDTO.ryuManagersStatuses) > 0 and \
+                execution_info.ryuManagersInfoDTO.ryuManagersStatuses[0].ryu_running:
             ClusterController.create_ryu_tunnel(
                 ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
@@ -2289,8 +2289,13 @@ def start_stop_ryu_manager(execution_id: int) -> Tuple[Response, int]:
             for ryu_tunnel_dto in ryu_tunnels_dto.tunnels:
                 if ryu_tunnel_dto.ip == \
                         execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip:
-                    execution_info.ryu_managers_info.local_controller_web_port = ryu_tunnel_dto.port
-        response = jsonify(execution_info.to_dict())
+                    execution_info.ryuManagersInfoDTO.localControllerWebPort = ryu_tunnel_dto.port
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -2354,11 +2359,11 @@ def start_stop_ryu_controller(execution_id: int) -> Tuple[Response, int]:
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT,
                 emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
-        time.sleep(5)
+        # time.sleep(5)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        if len(execution_info.ryu_managers_info.ryu_managers_statuses) > 0 and \
-                execution_info.ryu_managers_info.ryu_managers_statuses[0].ryu_running:
-            execution_info.ryu_managers_info.ryu_managers_statuses[0].monitor_running = False
+        if len(execution_info.ryuManagersInfoDTO.ryuManagersStatuses) > 0 and \
+                execution_info.ryuManagersInfoDTO.ryuManagersStatuses[0].ryu_running:
+            execution_info.ryuManagersInfoDTO.ryuManagersStatuses[0].monitor_running = False
             ClusterController.create_ryu_tunnel(
                 ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
@@ -2369,8 +2374,13 @@ def start_stop_ryu_controller(execution_id: int) -> Tuple[Response, int]:
             for ryu_tunnel_dto in ryu_tunnels_dto.tunnels:
                 if ryu_tunnel_dto.ip == \
                         execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip:
-                    execution_info.ryu_managers_info.local_controller_web_port = ryu_tunnel_dto.port
-        response = jsonify(execution_info.to_dict())
+                    execution_info.ryuManagersInfoDTO.localControllerWebPort = ryu_tunnel_dto.port
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=True,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -2429,8 +2439,8 @@ def start_stop_ryu_monitor(execution_id: int) -> Tuple[Response, int]:
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                 ip_first_octet=execution.ip_first_octet)
         execution_info = ClusterController.get_merged_execution_info(execution=execution)
-        if len(execution_info.ryu_managers_info.ryu_managers_statuses) > 0 and \
-                execution_info.ryu_managers_info.ryu_managers_statuses[0].ryu_running:
+        if len(execution_info.ryuManagersInfoDTO.ryuManagersStatuses) > 0 and \
+                execution_info.ryuManagersInfoDTO.ryuManagersStatuses[0].ryu_running:
             ClusterController.create_ryu_tunnel(
                 ip=execution.emulation_env_config.sdn_controller_config.container.physical_host_ip,
                 port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
@@ -2441,8 +2451,13 @@ def start_stop_ryu_monitor(execution_id: int) -> Tuple[Response, int]:
             for ryu_tunnel_dto in ryu_tunnels_dto.tunnels:
                 if ryu_tunnel_dto.ip == \
                         execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip:
-                    execution_info.ryu_managers_info.local_controller_web_port = ryu_tunnel_dto.port
-        response = jsonify(execution_info.to_dict())
+                    execution_info.ryuManagersInfoDTO.localControllerWebPort = ryu_tunnel_dto.port
+        exec_info_dict = google.protobuf.json_format.MessageToDict(execution_info,
+                                                                   including_default_value_fields=False,
+                                                                   preserving_proto_field_name=False,
+                                                                   use_integers_for_enums=False,
+                                                                   descriptor_pool=None, float_precision=None)
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:

@@ -1188,6 +1188,97 @@ class TestResourcesEmulationExecutionsSuite:
         return stop_heartbeat_mocker
 
     @pytest.fixture
+    def start_ryu_mng(self, mocker):
+        """
+        Pytest fixture for mocking the start_ryu_manager method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_ryu_manager(ip: str, port: int, emulation: str,
+                              ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_ryu_manager_mocker = mocker.MagicMock(side_effect=start_ryu_manager)
+        return start_ryu_manager_mocker
+
+    @pytest.fixture
+    def stop_ryu_mng(self, mocker):
+        """
+        Pytest fixture for mocking the stop_ryu_manager method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_ryu_manager(ip: str, port: int, emulation: str,
+                             ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_ryu_manager_mocker = mocker.MagicMock(side_effect=stop_ryu_manager)
+        return stop_ryu_manager_mocker
+
+    @pytest.fixture
+    def stop_ryu_ctr(self, mocker):
+        """
+        Pytest fixture for mocking the stop_ryu method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_ryu(ip: str, port: int, emulation: str,
+                     ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_ryu_mocker = mocker.MagicMock(side_effect=stop_ryu)
+        return stop_ryu_mocker
+
+    @pytest.fixture
+    def start_ryu_ctr(self, mocker):
+        """
+        Pytest fixture for mocking the start_ryu method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_ryu(ip: str, port: int, emulation: str,
+                      ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_ryu_mocker = mocker.MagicMock(side_effect=start_ryu)
+        return start_ryu_mocker
+
+    @pytest.fixture
+    def start_ryu_mon(self, mocker):
+        """
+        Pytest fixture for mocking the start_ryu_monitor method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_ryu_monitor(ip: str, port: int, emulation: str,
+                              ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_ryu_monitor_mocker = mocker.MagicMock(side_effect=start_ryu_monitor)
+        return start_ryu_monitor_mocker
+
+    @pytest.fixture
+    def stop_ryu_mon(self, mocker):
+        """
+        Pytest fixture for mocking the stop_ryu_monitor method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_ryu_monitor(ip: str, port: int, emulation: str,
+                             ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_ryu_monitor_mocker = mocker.MagicMock(side_effect=stop_ryu_monitor)
+        return stop_ryu_monitor_mocker
+
+    @pytest.fixture
+    def remove_ryu_ctr(self, mocker):
+        """
+        Pytest fixture for the remove_ryu_tunnel method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def remove_ryu_tunnel(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        remove_ryu_tunnel_mocker = mocker.MagicMock(side_effect=remove_ryu_tunnel)
+        return remove_ryu_tunnel_mocker
+
+    @pytest.fixture
     def running_emulations(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_all_running_emulations method
@@ -5225,3 +5316,557 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         assert response_data_dict == {}
+
+    def test_emulation_execution_ids_ryu_mng(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                             logged_in, logged_in_as_admin, get_em_ex,
+                                             merged_info, stop_ryu_mng, start_ryu_mng, list_ryu,
+                                             create_ryu, config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/ryu-manager resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param list_ryu: the list_ryu fixture
+        :param create_ryu: the create_ryu fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param stop_ryu_mng: the stop_ryu_mng fixture
+        :param start_ryu_mng: the start_ryu_mng fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "create_ryu_tunnel",
+                     side_effect=create_ryu)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "list_ryu_tunnels",
+                     side_effect=list_ryu)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_ryu_manager",
+                     side_effect=stop_ryu_mng)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_ryu_manager",
+                     side_effect=start_ryu_mng)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_ryu_ctr(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                             logged_in, logged_in_as_admin, get_em_ex,
+                                             merged_info, stop_ryu_ctr, start_ryu_ctr, list_ryu,
+                                             create_ryu, remove_ryu_ctr, config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/ryu-controller resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param list_ryu: the list_ryu fixture
+        :param create_ryu: the create_ryu fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param stop_ryu_ctr: the stop_ryu_ctr fixture
+        :param start_ryu_ctr: the start_ryu_ctr fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "create_ryu_tunnel",
+                     side_effect=create_ryu)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "list_ryu_tunnels",
+                     side_effect=list_ryu)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "remove_ryu_tunnel",
+                     side_effect=remove_ryu_ctr)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_ryu",
+                     side_effect=stop_ryu_ctr)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_ryu",
+                     side_effect=start_ryu_ctr)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=True,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            if k == "ryuManagersInfoDTO":
+                for i in response_data_dict[k]:
+                    if i == "ryuManagersStatuses":
+                        assert response_data_dict[k][i][0]["monitorRunning"] != \
+                            exp_exec_info_dict[k][i][0]["monitorRunning"]
+            else:
+                assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=True,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            if k == "ryuManagersInfoDTO":
+                for i in response_data_dict[k]:
+                    if i == "ryuManagersStatuses":
+                        assert response_data_dict[k][i][0]["monitorRunning"] != \
+                            exp_exec_info_dict[k][i][0]["monitorRunning"]
+            else:
+                assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=True,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            if k == "ryuManagersInfoDTO":
+                for i in response_data_dict[k]:
+                    if i == "ryuManagersStatuses":
+                        assert response_data_dict[k][i][0]["monitorRunning"] != \
+                            exp_exec_info_dict[k][i][0]["monitorRunning"]
+            else:
+                assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=True,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            if k == "ryuManagersInfoDTO":
+                for i in response_data_dict[k]:
+                    if i == "ryuManagersStatuses":
+                        assert response_data_dict[k][i][0]["monitorRunning"] != \
+                            exp_exec_info_dict[k][i][0]["monitorRunning"]
+            else:
+                assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_ryu_mon(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                             logged_in, logged_in_as_admin, get_em_ex,
+                                             merged_info, stop_ryu_mon, start_ryu_mon, list_ryu,
+                                             create_ryu, config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/ryu-monitor resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param list_ryu: the list_ryu fixture
+        :param create_ryu: the create_ryu fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param stop_ryu_mon: the stop_ryu_mng fixture
+        :param start_ryu_mon: the start_ryu_mng fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "create_ryu_tunnel",
+                     side_effect=create_ryu)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "list_ryu_tunnels",
+                     side_effect=list_ryu)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_ryu_monitor",
+                     side_effect=stop_ryu_mon)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_ryu_monitor",
+                     side_effect=start_ryu_mon)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_switches(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                              logged_in, logged_in_as_admin, get_em_ex,
+                                              merged_info, stop_ryu_mon, start_ryu_mon, list_ryu,
+                                              create_ryu, config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/switches resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param list_ryu: the list_ryu fixture
+        :param create_ryu: the create_ryu fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param stop_ryu_mon: the stop_ryu_mng fixture
+        :param start_ryu_mon: the start_ryu_mng fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "create_ryu_tunnel",
+                     side_effect=create_ryu)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "list_ryu_tunnels",
+                     side_effect=list_ryu)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_ryu_monitor",
+                     side_effect=stop_ryu_mon)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_ryu_monitor",
+                     side_effect=start_ryu_mon)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
