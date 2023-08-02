@@ -224,7 +224,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_docker_statsmanager_thread(ip: str, port: int, 
+        def start_docker_statsmanager_thread(ip: str, port: int,
                                              emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
         start_docker_statsmanager_thread_mocker = mocker.MagicMock(side_effect=start_docker_statsmanager_thread)
@@ -1273,10 +1273,39 @@ class TestResourcesEmulationExecutionsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def remove_ryu_tunnel(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+        def remove_ryu_tunnel(ip: str, port: int, emulation: str,
+                              ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
         remove_ryu_tunnel_mocker = mocker.MagicMock(side_effect=remove_ryu_tunnel)
         return remove_ryu_tunnel_mocker
+
+    @pytest.fixture
+    def get_mock(self, mocker):
+        """
+        pytest fixturefor mocking the request.get() method
+
+        :param mocker: the pytest mokcer object
+        :return: the mocked function
+        """
+        def get(http_adress: str, timeout: str) -> None:
+
+            response = TestResourcesEmulationExecutionsSuite.response_returner()
+            return response
+        get_mocker = mocker.MagicMock(side_effect=get)
+        return get_mocker
+
+    @staticmethod
+    def response_returner():
+        """
+        Static help method for returning a response class
+        :return: a Response class
+        """
+        class Response:
+            def __init__(self, content=json.dumps({"dpid":
+                                                   [{api_constants.MGMT_WEBAPP.ACTIVE_COUNT_PROPERTY: 1,
+                                                     api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY: 2}]})):
+                self.content = content
+        return Response()
 
     @pytest.fixture
     def running_emulations(self, mocker: pytest_mock.MockFixture):
@@ -1366,6 +1395,21 @@ class TestResourcesEmulationExecutionsSuite:
                                                        emulation="null", ipFirstOctet=-1)])
         list_ryu_tunnels_mocker = mocker.MagicMock(side_effect=list_ryu_tunnels)
         return list_ryu_tunnels_mocker
+
+    @pytest.fixture
+    def exec_none(self, mocker):
+        """
+        Pytest fixture for mocking the get_emulation_execution function
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def get_emulation_execution(ip_first_octet: int,
+                                    emulation_name: str) -> None:
+            return None
+
+        get_emulation_execution_mocker = mocker.MagicMock(side_effect=get_emulation_execution)
+        return get_emulation_execution_mocker
 
     @pytest.fixture
     def emulation_exec_ids(self, mocker: pytest_mock.MockFixture, get_ex_exec: EmulationExecution):
@@ -5801,9 +5845,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_switches(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                              logged_in, logged_in_as_admin, get_em_ex,
-                                              merged_info, stop_ryu_mon, start_ryu_mon, list_ryu,
-                                              create_ryu, config):
+                                              logged_in, logged_in_as_admin, get_em_ex, get_mock,
+                                              merged_info, list_ryu, create_ryu, config, exec_none):
         """
         Testing the HTTPS GET method for the /emulation-executions/id/switches resource
 
@@ -5828,45 +5871,131 @@ class TestResourcesEmulationExecutionsSuite:
                      side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
+        mocker.patch("requests.get", side_effect=get_mock)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
                      "create_ryu_tunnel",
                      side_effect=create_ryu)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
                      "list_ryu_tunnels",
                      side_effect=list_ryu)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_ryu_monitor",
-                     side_effect=stop_ryu_mon)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_ryu_monitor",
-                     side_effect=start_ryu_mon)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=not_logged_in)
-        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
-                                                f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}",
-                                                data=json.dumps({"bla": "bla"}))
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                               f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in)
-        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
-                                                f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}",
-                                                data=json.dumps({"bla": "bla"}))
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                               f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        ex_response = TestResourcesEmulationExecutionsSuite.response_returner()
+        ex_dict = json.loads(ex_response.content)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_dict[api_constants.MGMT_WEBAPP.SDN_CONTROLLER_LOCAL_PORT] == 1
+        response_switches = response_data_dict[api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE][0]
+        assert response_switches[api_constants.MGMT_WEBAPP.AGG_FLOWS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+        assert response_switches[api_constants.MGMT_WEBAPP.DESC_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.DPID_PROPERTY] == \
+            api_constants.MGMT_WEBAPP.DPID_PROPERTY
+        assert response_switches[api_constants.MGMT_WEBAPP.FLOWS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.GROUP_DESCS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.GROUP_FEATURES_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+        assert response_switches[api_constants.MGMT_WEBAPP.GROUPS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.METER_CONFIGS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.METER_FEATURES_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+        assert response_switches[api_constants.MGMT_WEBAPP.METERS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.PORT_DESCS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.PORT_STATS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.QUEUE_CONFIGS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+        assert response_switches[api_constants.MGMT_WEBAPP.QUEUES_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.ROLES_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+        assert response_switches[api_constants.MGMT_WEBAPP.TABLE_FEATURES_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.TABLES_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=exec_none)
+
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                               f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
         assert response_data_dict == {}
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in_as_admin)
-        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
-                                                f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}",
-                                                data=json.dumps({"bla": "bla"}))
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                               f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
-        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        ex_response = TestResourcesEmulationExecutionsSuite.response_returner()
+        ex_dict = json.loads(ex_response.content)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_dict[api_constants.MGMT_WEBAPP.SDN_CONTROLLER_LOCAL_PORT] == 1
+        response_switches = response_data_dict[api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE][0]
+        assert response_switches[api_constants.MGMT_WEBAPP.AGG_FLOWS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+        assert response_switches[api_constants.MGMT_WEBAPP.DESC_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.DPID_PROPERTY] == \
+            api_constants.MGMT_WEBAPP.DPID_PROPERTY
+        assert response_switches[api_constants.MGMT_WEBAPP.FLOWS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.GROUP_DESCS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.GROUP_FEATURES_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+        assert response_switches[api_constants.MGMT_WEBAPP.GROUPS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.METER_CONFIGS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.METER_FEATURES_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+        assert response_switches[api_constants.MGMT_WEBAPP.METERS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.PORT_DESCS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.PORT_STATS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.QUEUE_CONFIGS_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+        assert response_switches[api_constants.MGMT_WEBAPP.QUEUES_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.ROLES_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+        assert response_switches[api_constants.MGMT_WEBAPP.TABLE_FEATURES_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+        assert response_switches[api_constants.MGMT_WEBAPP.TABLES_PROPERTY] == \
+            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=exec_none)
+
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                               f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {}
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE

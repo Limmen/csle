@@ -9,7 +9,6 @@ from typing import Any, Dict, List, Tuple, Union
 import csle_common.constants.constants as constants
 import csle_ryu.constants.constants as ryu_constants
 import google
-import protos
 import requests
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 from csle_common.logging.log import Logger
@@ -155,7 +154,7 @@ def emulation_execution_info(execution_id: int) -> Tuple[Response, int]:
                                                                    preserving_proto_field_name=False,
                                                                    use_integers_for_enums=False,
                                                                    descriptor_pool=None, float_precision=None)
-        response = jsonify(exec_info_dict)        
+        response = jsonify(exec_info_dict)
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     else:
@@ -2476,7 +2475,8 @@ def get_sdn_switches_of_execution(execution_id: int) -> Tuple[Response, int]:
     :param execution_id: the id of the execution
     :return: The sought for switches if they exist
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
+
     if authorized is not None:
         return authorized
 
