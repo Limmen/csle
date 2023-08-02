@@ -385,6 +385,809 @@ class TestResourcesEmulationExecutionsSuite:
         return start_snort_ids_monitor_threads_mocker
 
     @pytest.fixture
+    def start_ossec_mng(self, mocker):
+        """
+        Pytest fixture for mocking the start_ossec_ids_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_ossec_ids_manager(ip: str, port: int,
+                                    emulation: str, ip_first_octet: int,
+                                    container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_ossec_ids_manager_mocker = mocker.MagicMock(side_effect=start_ossec_ids_manager)
+        return start_ossec_ids_manager_mocker
+
+    @pytest.fixture
+    def stop_ossec_mng(self, mocker):
+        """
+        Pytest fixture for mocking the stop_ossec_ids_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_ossec_ids_manager(ip: str, port: int,
+                                   emulation: str, ip_first_octet: int,
+                                   container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        stop_ossec_ids_manager_mocker = mocker.MagicMock(side_effect=stop_ossec_ids_manager)
+        return stop_ossec_ids_manager_mocker
+
+    @pytest.fixture
+    def stop_ossec_mng_plural(self, mocker):
+        """
+        Pytest fixture for mocking the stop_ossec_ids_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_ossec_ids_managers(ip: str, port: int,
+                                    emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        stop_ossec_ids_managers_mocker = mocker.MagicMock(side_effect=stop_ossec_ids_managers)
+        return stop_ossec_ids_managers_mocker
+
+    @pytest.fixture
+    def start_ossec_mng_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_ossec_ids_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_ossec_ids_managers(ip: str, port: int,
+                                     emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_ossec_ids_managers_mocker = mocker.MagicMock(side_effect=start_ossec_ids_managers)
+        return start_ossec_ids_managers_mocker
+
+    @pytest.fixture
+    def start_ossec_id_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_ossec_ids_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_ossec_idses(ip: str, port: int,
+                              emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_ossec_idses_mocker = mocker.MagicMock(side_effect=start_ossec_idses)
+        return start_ossec_idses_mocker
+
+    @pytest.fixture
+    def start_ossec_id(self, mocker):
+        """
+        Pytest fixture for mocking the start_ossec_ids_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_ossec_ids(ip: str, port: int,
+                            emulation: str, ip_first_octet: int,
+                            container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_ossec_ids_mocker = mocker.MagicMock(side_effect=start_ossec_ids)
+        return start_ossec_ids_mocker
+
+    @pytest.fixture
+    def stop_ossec_id_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_ossec_ids_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_ossec_idses(ip: str, port: int,
+                             emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_ossec_idses_mocker = mocker.MagicMock(side_effect=stop_ossec_idses)
+        return stop_ossec_idses_mocker
+
+    @pytest.fixture
+    def stop_ossec_id(self, mocker):
+        """
+        Pytest fixture for mocking the start_ossec_ids_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_ossec_ids(ip: str, port: int,
+                           emulation: str, ip_first_octet: int,
+                           container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_ossec_ids_mocker = mocker.MagicMock(side_effect=stop_ossec_ids)
+        return stop_ossec_ids_mocker
+
+    @pytest.fixture
+    def stop_ossec_id_mon_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_ossec_ids_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_ossec_ids_monitor_threads(ip: str, port: int,
+                                           emulation: str, ip_first_octet: int,
+                                           ) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_ossec_ids_monitor_threads_mocker = mocker.MagicMock(
+            side_effect=stop_ossec_ids_monitor_threads)
+        return stop_ossec_ids_monitor_threads_mocker
+
+    @pytest.fixture
+    def stop_ossec_id_mon(self, mocker):
+        """
+        Pytest fixture for mocking the start_ossec_ids_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_ossec_ids_monitor_thread(ip: str, port: int,
+                                          emulation: str, ip_first_octet: int,
+                                          container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_ossec_ids_monitor_thread_mocker = mocker.MagicMock(
+            side_effect=stop_ossec_ids_monitor_thread)
+        return stop_ossec_ids_monitor_thread_mocker
+
+    @pytest.fixture
+    def start_ossec_id_mon_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_ossec_ids_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_ossec_ids_monitor_threads(ip: str, port: int,
+                                            emulation: str, ip_first_octet: int,
+                                            ) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_ossec_ids_monitor_threads_mocker = mocker.MagicMock(
+            side_effect=start_ossec_ids_monitor_threads)
+        return start_ossec_ids_monitor_threads_mocker
+
+    @pytest.fixture
+    def start_ossec_id_mon(self, mocker):
+        """
+        Pytest fixture for mocking the start_ossec_ids_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_ossec_ids_monitor_thread(ip: str, port: int,
+                                           emulation: str, ip_first_octet: int,
+                                           container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        start_ossec_ids_monitor_thread_mocker = mocker.MagicMock(
+            side_effect=start_ossec_ids_monitor_thread)
+        return start_ossec_ids_monitor_thread_mocker
+
+    @pytest.fixture
+    def start_host_mng_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_host_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_host_managers(ip: str, port: int, emulation: str,
+                                ip_first_octet: int,) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_host_managers_mocker = mocker.MagicMock(side_effect=start_host_managers)
+        return start_host_managers_mocker
+
+    @pytest.fixture
+    def stop_host_mng_plural(self, mocker):
+        """
+        Pytest fixture for mocking the stop_host_managers method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_host_managers(ip: str, port: int, emulation: str,
+                               ip_first_octet: int,) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_host_managers_mocker = mocker.MagicMock(side_effect=stop_host_managers)
+        return stop_host_managers_mocker
+
+    @pytest.fixture
+    def start_host_mng(self, mocker):
+        """
+        Pytest fixture for mocking the start_host_manager method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_host_manager(ip: str, port: int, emulation: str,
+                               ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_host_manager_mocker = mocker.MagicMock(side_effect=start_host_manager)
+        return start_host_manager_mocker
+
+    @pytest.fixture
+    def stop_host_mng(self, mocker):
+        """
+        Pytest fixture for mocking the stop_host_manager method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_host_manager(ip: str, port: int, emulation: str,
+                              ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        stop_host_manager_mocker = mocker.MagicMock(side_effect=stop_host_manager)
+        return stop_host_manager_mocker
+
+    @pytest.fixture
+    def stop_host_mon_plural(self, mocker):
+        """
+        Pytest fixture for mocking the stop_host_monitor_threads method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_host_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_host_monitor_threads_mocker = mocker.MagicMock(side_effect=stop_host_monitor_threads)
+        return stop_host_monitor_threads_mocker
+
+    @pytest.fixture
+    def start_host_mon_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_host_monitor_threads method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_host_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_host_monitor_threads_mocker = mocker.MagicMock(side_effect=start_host_monitor_threads)
+        return start_host_monitor_threads_mocker
+
+    @pytest.fixture
+    def start_host_mon(self, mocker):
+        """
+        Pytest fixture for mocking the start_host_monitor_thread method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_host_monitor_thread(ip: str, port: int, emulation: str, ip_first_octet: int,
+                                      container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_host_monitor_thread_mocker = mocker.MagicMock(side_effect=start_host_monitor_thread)
+        return start_host_monitor_thread_mocker
+
+    @pytest.fixture
+    def stop_host_mon(self, mocker):
+        """
+        Pytest fixture for mocking the stop_host_monitor_thread method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_host_monitor_thread(ip: str, port: int, emulation: str, ip_first_octet: int,
+                                     container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_host_monitor_thread_mocker = mocker.MagicMock(side_effect=stop_host_monitor_thread)
+        return stop_host_monitor_thread_mocker
+
+    @pytest.fixture
+    def start_cont(self, mocker):
+        """
+        Pytest fixture for mocking the start_container method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_container(ip: str, port: int, container_name: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_container_mocker = mocker.MagicMock(side_effect=start_container)
+        return start_container_mocker
+
+    @pytest.fixture
+    def stop_cont(self, mocker):
+        """
+        Pytest fixture for mocking the stop_container method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_container(ip: str, port: int, container_name: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_container_mocker = mocker.MagicMock(side_effect=stop_container)
+        return stop_container_mocker
+
+    @pytest.fixture
+    def start_container_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_containers_of_execution method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_containers_of_execution(ip: str, port: int, emulation: str,
+                                          ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_containers_of_execution_mocker = mocker.MagicMock(side_effect=start_containers_of_execution)
+        return start_containers_of_execution_mocker
+
+    @pytest.fixture
+    def stop_container_plural(self, mocker):
+        """
+        Pytest fixture for mocking the stop_containers_of_execution method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_containers_of_execution(ip: str, port: int, emulation: str,
+                                         ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_containers_of_execution_mocker = mocker.MagicMock(side_effect=stop_containers_of_execution)
+        return stop_containers_of_execution_mocker
+
+    @pytest.fixture
+    def start_elk_mng(self, mocker):
+        """
+        Pytest fixture for mockingthe start_elk_manager method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_elk_manager(ip: str, port: int, emulation: str,
+                              ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_elk_manager_mocker = mocker.MagicMock(side_effect=start_elk_manager)
+        return start_elk_manager_mocker
+
+    @pytest.fixture
+    def stop_elk_mng(self, mocker):
+        """
+        Pytest fixture for mockingthe stop_elk_manager method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_elk_manager(ip: str, port: int, emulation: str,
+                             ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_elk_manager_mocker = mocker.MagicMock(side_effect=stop_elk_manager)
+        return stop_elk_manager_mocker
+
+    @pytest.fixture
+    def stop_elk_stk(self, mocker):
+        """
+        Pytest fixture for mockingthe stop_elk_stack method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_elk_stack(ip: str, port: int, emulation: str,
+                           ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_elk_stack_mocker = mocker.MagicMock(side_effect=stop_elk_stack)
+        return stop_elk_stack_mocker
+
+    @pytest.fixture
+    def start_elk_stk(self, mocker):
+        """
+        Pytest fixture for mockingthe start_elk_stack method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_elk_stack(ip: str, port: int, emulation: str,
+                            ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_elk_stack_mocker = mocker.MagicMock(side_effect=start_elk_stack)
+        return start_elk_stack_mocker
+
+    @pytest.fixture
+    def start_els(self, mocker):
+        """
+        Pytest fixture for mockingthe start_elastic method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_elastic(ip: str, port: int, emulation: str,
+                          ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_elastic_mocker = mocker.MagicMock(side_effect=start_elastic)
+        return start_elastic_mocker
+
+    @pytest.fixture
+    def stop_els(self, mocker):
+        """
+        Pytest fixture for mockingthe stop_elastic method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_elastic(ip: str, port: int, emulation: str,
+                         ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_elastic_mocker = mocker.MagicMock(side_effect=stop_elastic)
+        return stop_elastic_mocker
+
+    @pytest.fixture
+    def stop_lgst(self, mocker):
+        """
+        Pytest fixture for mockingthe stop_logstash method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_logstash(ip: str, port: int, emulation: str,
+                          ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_logstash_mocker = mocker.MagicMock(side_effect=stop_logstash)
+        return stop_logstash_mocker
+
+    @pytest.fixture
+    def start_lgst(self, mocker):
+        """
+        Pytest fixture for mockingthe start_logstash method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_logstash(ip: str, port: int, emulation: str,
+                           ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_logstash_mocker = mocker.MagicMock(side_effect=start_logstash)
+        return start_logstash_mocker
+
+    @pytest.fixture
+    def start_kb(self, mocker):
+        """
+        Pytest fixture for mockingthe start_kibana method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_kibana(ip: str, port: int, emulation: str,
+                         ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_kibana_mocker = mocker.MagicMock(side_effect=start_kibana)
+        return start_kibana_mocker
+
+    @pytest.fixture
+    def stop_kb(self, mocker):
+        """
+        Pytest fixture for mockingthe stop_kibana method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_kibana(ip: str, port: int, emulation: str,
+                        ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_kibana_mocker = mocker.MagicMock(side_effect=stop_kibana)
+        return stop_kibana_mocker
+
+    @pytest.fixture
+    def remove_kb(self, mocker):
+        """
+        Pytest fixture for mocking the remove_kiban_tunnel method
+        
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def remove_kibana_tunnel(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        remove_kibana_tunnel_mocker = mocker.MagicMock(side_effect=remove_kibana_tunnel)
+        return remove_kibana_tunnel_mocker
+
+    @pytest.fixture
+    def stop_tr_mng_plural(self, mocker):
+        """
+        Pytest fixture for mocking the stop_traffic_managers method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_traffic_managers(ip: str, port: int, emulation: str,
+                                  ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_traffic_managers_mocker = mocker.MagicMock(side_effect=stop_traffic_managers)
+        return stop_traffic_managers_mocker
+
+    @pytest.fixture
+    def start_tr_mng_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_traffic_managers method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_traffic_managers(ip: str, port: int, emulation: str,
+                                   ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_traffic_managers_mocker = mocker.MagicMock(side_effect=start_traffic_managers)
+        return start_traffic_managers_mocker
+
+    @pytest.fixture
+    def stop_tr_mng(self, mocker):
+        """
+        Pytest fixture for mocking the stop_traffic_manager method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_traffic_manager(ip: str, port: int, emulation: str,
+                                 ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_traffic_manager_mocker = mocker.MagicMock(side_effect=stop_traffic_manager)
+        return stop_traffic_manager_mocker
+
+    @pytest.fixture
+    def start_tr_mng(self, mocker):
+        """
+        Pytest fixture for mocking the start_traffic_manager method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_traffic_manager(ip: str, port: int, emulation: str,
+                                  ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        start_traffic_manager_mocker = mocker.MagicMock(side_effect=start_traffic_manager)
+        return start_traffic_manager_mocker
+
+    @pytest.fixture
+    def stop_tr_gen(self, mocker):
+        """
+        Pytest fixture for mocking the stop_traffic_generator method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_traffic_generator(ip: str, port: int, emulation: str,
+                                   ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_traffic_generator_mocker = mocker.MagicMock(side_effect=stop_traffic_generator)
+        return stop_traffic_generator_mocker
+
+    @pytest.fixture
+    def start_tr_gen(self, mocker):
+        """
+        Pytest fixture for mocking the stort_traffic_generator method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_traffic_generator(ip: str, port: int, emulation: str,
+                                    ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_traffic_generator_mocker = mocker.MagicMock(side_effect=start_traffic_generator)
+        return start_traffic_generator_mocker
+
+    @pytest.fixture
+    def stop_tr_gen_plural(self, mocker):
+        """
+        Pytest fixture for mocking the stop_traffic_generators method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_traffic_generators(ip: str, port: int, emulation: str,
+                                    ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_traffic_generators_mocker = mocker.MagicMock(side_effect=stop_traffic_generators)
+        return stop_traffic_generators_mocker
+
+    @pytest.fixture
+    def start_tr_gen_plural(self, mocker):
+        """
+        Pytest fixture for mocking the stort_traffic_generators method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_traffic_generators(ip: str, port: int, emulation: str,
+                                     ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_traffic_generators_mocker = mocker.MagicMock(side_effect=start_traffic_generators)
+        return start_traffic_generators_mocker
+
+    @pytest.fixture
+    def start_f_beat_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_filebeats method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_filebeats(ip: str, port: int, emulation: str,
+                            ip_first_octet: int, initial_start: bool) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_filebeats_mocker = mocker.MagicMock(side_effect=start_filebeats)
+        return start_filebeats_mocker
+
+    @pytest.fixture
+    def stop_f_beat_plural(self, mocker):
+        """
+        Pytest fixture for mocking the stop_filebeats method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_filebeats(ip: str, port: int, emulation: str,
+                           ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_filebeats_mocker = mocker.MagicMock(side_effect=stop_filebeats)
+        return stop_filebeats_mocker
+
+    @pytest.fixture
+    def start_f_beat(self, mocker):
+        """
+        Pytest fixture for mocking the start_filebeat method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_filebeat(ip: str, port: int, emulation: str,
+                           ip_first_octet: int, container_ip: str,
+                           initial_start: bool) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_filebeat_mocker = mocker.MagicMock(side_effect=start_filebeat)
+        return start_filebeat_mocker
+
+    @pytest.fixture
+    def stop_f_beat(self, mocker):
+        """
+        Pytest fixture for mocking the stop_filebeat method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_filebeat(ip: str, port: int, emulation: str,
+                          ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_filebeat_mocker = mocker.MagicMock(side_effect=stop_filebeat)
+        return stop_filebeat_mocker
+
+    @pytest.fixture
+    def start_p_beat_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_packetbeats method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_packetbeats(ip: str, port: int, emulation: str,
+                              ip_first_octet: int, initial_start: bool) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_packetbeats_mocker = mocker.MagicMock(side_effect=start_packetbeats)
+        return start_packetbeats_mocker
+
+    @pytest.fixture
+    def stop_p_beat_plural(self, mocker):
+        """
+        Pytest fixture for mocking the stop_packetbeats method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_packetbeats(ip: str, port: int, emulation: str,
+                             ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_packetbeats_mocker = mocker.MagicMock(side_effect=stop_packetbeats)
+        return stop_packetbeats_mocker
+
+    @pytest.fixture
+    def start_p_beat(self, mocker):
+        """
+        Pytest fixture for mocking the start_packetbeat method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_packetbeat(ip: str, port: int, emulation: str,
+                             ip_first_octet: int, container_ip: str,
+                             initial_start: bool) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_packetbeat_mocker = mocker.MagicMock(side_effect=start_packetbeat)
+        return start_packetbeat_mocker
+
+    @pytest.fixture
+    def stop_p_beat(self, mocker):
+        """
+        Pytest fixture for mocking the stop_packetbeat method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_packetbeat(ip: str, port: int, emulation: str,
+                            ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_packetbeat_mocker = mocker.MagicMock(side_effect=stop_packetbeat)
+        return stop_packetbeat_mocker
+
+    @pytest.fixture
+    def start_m_beat_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_metricbeats method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_metricbeats(ip: str, port: int, emulation: str,
+                              ip_first_octet: int, initial_start: bool) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_metricbeats_mocker = mocker.MagicMock(side_effect=start_metricbeats)
+        return start_metricbeats_mocker
+
+    @pytest.fixture
+    def stop_m_beat_plural(self, mocker):
+        """
+        Pytest fixture for mocking the stop_metricbeats method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_metricbeats(ip: str, port: int, emulation: str,
+                             ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_metricbeats_mocker = mocker.MagicMock(side_effect=stop_metricbeats)
+        return stop_metricbeats_mocker
+
+    @pytest.fixture
+    def start_m_beat(self, mocker):
+        """
+        Pytest fixture for mocking the start_metricbeat method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_metricbeat(ip: str, port: int, emulation: str,
+                             ip_first_octet: int, container_ip: str,
+                             initial_start: bool) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_metricbeat_mocker = mocker.MagicMock(side_effect=start_metricbeat)
+        return start_metricbeat_mocker
+
+    @pytest.fixture
+    def stop_m_beat(self, mocker):
+        """
+        Pytest fixture for mocking the stop_metricbeat method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_metricbeat(ip: str, port: int, emulation: str,
+                            ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_metricbeat_mocker = mocker.MagicMock(side_effect=stop_metricbeat)
+        return stop_metricbeat_mocker
+
+    @pytest.fixture
+    def start_h_beat_plural(self, mocker):
+        """
+        Pytest fixture for mocking the start_heartbeats method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_heartbeats(ip: str, port: int, emulation: str,
+                             ip_first_octet: int, initial_start: bool) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_heartbeats_mocker = mocker.MagicMock(side_effect=start_heartbeats)
+        return start_heartbeats_mocker
+
+    @pytest.fixture
+    def stop_h_beat_plural(self, mocker):
+        """
+        Pytest fixture for mocking the stop_heartbeats method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_heartbeats(ip: str, port: int, emulation: str,
+                            ip_first_octet: int) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_heartbeats_mocker = mocker.MagicMock(side_effect=stop_heartbeats)
+        return stop_heartbeats_mocker
+
+    @pytest.fixture
+    def start_h_beat(self, mocker):
+        """
+        Pytest fixture for mocking the start_heartbeat method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def start_heartbeat(ip: str, port: int, emulation: str,
+                            ip_first_octet: int, container_ip: str,
+                            initial_start: bool) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=True)
+        start_heartbeat_mocker = mocker.MagicMock(side_effect=start_heartbeat)
+        return start_heartbeat_mocker
+
+    @pytest.fixture
+    def stop_h_beat(self, mocker):
+        """
+        Pytest fixture for mocking the stop_heartbeat method
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def stop_heartbeat(ip: str, port: int, emulation: str,
+                           ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+            return OperationOutcomeDTO(outcome=False)
+        stop_heartbeat_mocker = mocker.MagicMock(side_effect=stop_heartbeat)
+        return stop_heartbeat_mocker
+
+    @pytest.fixture
     def running_emulations(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_all_running_emulations method
@@ -1828,11 +2631,12 @@ class TestResourcesEmulationExecutionsSuite:
 
     def test_emulation_execution_ids_ossec_mng(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
                                                logged_in, logged_in_as_admin, get_em_ex,
-                                               merged_info, start_snort_mon,
-                                               stop_snort_mon, config):
+                                               merged_info, start_ossec_mng,
+                                               stop_ossec_mng, stop_ossec_mng_plural,
+                                               start_ossec_mng_plural, config):
         """
         Testing the HTTPS GET method for the /emulation-executions/id/ossec-ids-manager resource
-        
+
         :param mocker: the pytest mocker object
         :param flask_app: the flask_app fixture
         :param not_logged_in: the not_logged_in fixture
@@ -1841,8 +2645,10 @@ class TestResourcesEmulationExecutionsSuite:
         :param get_em_ex: the get_em_ex fixture
         :param merged_info: the merged_info fixture
         :param get_ex_exec: the get_ex_exec fixture
-        :param start_snort: the start_snort fixture
-        :param stop_snort: the stop_snort fixture
+        :param start_ossec_mng: the start_ossec_mng fixture
+        :param start_ossec_mng_plural: the start_ossec_mng_plural fixture
+        :param stop_ossec_mng: the stop_ossec_mng fixture
+        :param stop_ossec_mng_plural: the stop_ossec_mng_plural fixture
         :param config: the config fixture
         :return: None
         """
@@ -1853,15 +2659,21 @@ class TestResourcesEmulationExecutionsSuite:
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_snort_ids_monitor_threads",
-                     side_effect=stop_snort_mon)
+                     "stop_ossec_ids_manager",
+                     side_effect=stop_ossec_mng)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_snort_ids_monitor_threads",
-                     side_effect=start_snort_mon)
+                     "start_ossec_ids_manager",
+                     side_effect=start_ossec_mng)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_ossec_ids_managers",
+                     side_effect=start_ossec_mng_plural)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_ossec_ids_managers",
+                     side_effect=stop_ossec_mng_plural)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
-                                                f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}",
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -1870,7 +2682,7 @@ class TestResourcesEmulationExecutionsSuite:
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
-                                                f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}",
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -1879,7 +2691,7 @@ class TestResourcesEmulationExecutionsSuite:
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
                      side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
-                                                f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}",
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -1889,7 +2701,7 @@ class TestResourcesEmulationExecutionsSuite:
                                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
-                                                f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
@@ -1906,7 +2718,7 @@ class TestResourcesEmulationExecutionsSuite:
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
-                                                f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
@@ -1922,8 +2734,2489 @@ class TestResourcesEmulationExecutionsSuite:
                                                                        descriptor_pool=None, float_precision=None)
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
+
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
-                                                f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}",
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_ossec(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                           logged_in, logged_in_as_admin, get_em_ex,
+                                           merged_info, start_ossec_id,
+                                           stop_ossec_id, stop_ossec_id_plural,
+                                           start_ossec_id_plural, config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/ossec-ids resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_ossec_mng: the start_ossec_mng fixture
+        :param start_ossec_mng_plural: the start_ossec_mng_plural fixture
+        :param stop_ossec_mng: the stop_ossec_mng fixture
+        :param stop_ossec_mng_plural: the stop_ossec_mng_plural fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_ossec_ids",
+                     side_effect=stop_ossec_id)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_ossec_ids",
+                     side_effect=start_ossec_id)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_ossec_idses",
+                     side_effect=start_ossec_id_plural)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_ossec_idses",
+                     side_effect=stop_ossec_id_plural)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_ossec_mon(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                               logged_in, logged_in_as_admin, get_em_ex,
+                                               merged_info, start_ossec_id_mon,
+                                               stop_ossec_id_mon, stop_ossec_id_mon_plural,
+                                               start_ossec_id_mon_plural, config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/ossec-ids-monitor resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param stop_ossec_id_mon: the start_ossec_mng fixture
+        :param start_ossec_id_mon_plural: the start_ossec_mng_plural fixture
+        :param stop_ossec_id_mon: the stop_ossec_mng fixture
+        :param stop_ossec_id_mon_plural: the stop_ossec_mng_plural fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_ossec_ids_monitor_thread",
+                     side_effect=stop_ossec_id_mon)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_ossec_ids_monitor_thread",
+                     side_effect=start_ossec_id_mon)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_ossec_idses_monitor_threads",
+                     side_effect=start_ossec_id_mon_plural)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_ossec_ids_monitor_threads",
+                     side_effect=stop_ossec_id_mon_plural)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_host_mng(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                              logged_in, logged_in_as_admin, get_em_ex,
+                                              merged_info, start_host_mng,
+                                              stop_host_mng, stop_host_mng_plural,
+                                              start_host_mng_plural, config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/host-manager resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param stop_ossec_id_mon: the start_ossec_mng fixture
+        :param start_ossec_id_mon_plural: the start_ossec_mng_plural fixture
+        :param stop_ossec_id_mon: the stop_ossec_mng fixture
+        :param stop_ossec_id_mon_plural: the stop_ossec_mng_plural fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_host_manager",
+                     side_effect=stop_host_mng)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_host_manager",
+                     side_effect=start_host_mng)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_host_managers",
+                     side_effect=start_host_mng_plural)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_host_managers",
+                     side_effect=stop_host_mng_plural)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_host_mon(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                              logged_in, logged_in_as_admin, get_em_ex,
+                                              merged_info, start_host_mon,
+                                              stop_host_mon, stop_host_mon_plural,
+                                              start_host_mon_plural, config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/host-monitor resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param stop_ossec_id_mon: the start_ossec_mng fixture
+        :param start_ossec_id_mon_plural: the start_ossec_mng_plural fixture
+        :param stop_ossec_id_mon: the stop_ossec_mng fixture
+        :param stop_ossec_id_mon_plural: the stop_ossec_mng_plural fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_host_monitor_thread",
+                     side_effect=stop_host_mon)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_host_monitor_thread",
+                     side_effect=start_host_mon)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_host_monitor_threads",
+                     side_effect=start_host_mon_plural)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_host_monitor_threads",
+                     side_effect=stop_host_mon_plural)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_container(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                               logged_in, logged_in_as_admin, get_em_ex,
+                                               merged_info, start_cont,
+                                               stop_cont, stop_container_plural,
+                                               start_container_plural, config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/container resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_cont: the start_cont fixture
+        :param stop_container_plural: the stop_container_plural fixture
+        :param stop_cont: the stop_cont fixture
+        :param start_container_plural: the start_container_plural fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_container",
+                     side_effect=stop_cont)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_container",
+                     side_effect=start_cont)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_containers_of_execution",
+                     side_effect=start_container_plural)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_containers_of_execution",
+                     side_effect=stop_container_plural)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.NAME_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.NAME_PROPERTY:
+                                                                 "JohnDoe"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.NAME_PROPERTY: "JohnDoe"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.NAME_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.NAME_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.NAME_PROPERTY: "JohnDoe"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_elk_mng(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                             logged_in, logged_in_as_admin, get_em_ex,
+                                             merged_info, start_elk_mng,
+                                             stop_elk_mng, config, kibana, kibana_list):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/elk-manager resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_elk_mng: the start_elk_mng fixture
+        :param stop_elk_mng: the stop_elk_mng fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_elk_manager",
+                     side_effect=stop_elk_mng)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "create_kibana_tunnel",
+                     side_effect=kibana)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "list_kibana_tunnels",
+                     side_effect=kibana_list)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_elk_manager",
+                     side_effect=start_elk_mng)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_elk_stack(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                               logged_in, logged_in_as_admin, get_em_ex,
+                                               merged_info, start_elk_stk,
+                                               stop_elk_stk, config, kibana, kibana_list):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/elk-stack resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_elk_mng: the start_elk_stk fixture
+        :param stop_elk_stk: the stop_elk_stk fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_elk_stack",
+                     side_effect=stop_elk_stk)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "create_kibana_tunnel",
+                     side_effect=kibana)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "list_kibana_tunnels",
+                     side_effect=kibana_list)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_elk_stack",
+                     side_effect=start_elk_stk)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_elastic(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                             logged_in, logged_in_as_admin, get_em_ex,
+                                             merged_info, start_els,
+                                             stop_els, config, kibana, kibana_list):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/elastic resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_els: the start_els fixture
+        :param stop_els: the stop_els fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_elastic",
+                     side_effect=stop_els)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "create_kibana_tunnel",
+                     side_effect=kibana)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "list_kibana_tunnels",
+                     side_effect=kibana_list)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_elastic",
+                     side_effect=start_els)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_logstash(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                              logged_in, logged_in_as_admin, get_em_ex,
+                                              merged_info, start_lgst,
+                                              stop_lgst, config, kibana, kibana_list):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/logstash resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_els: the start_els fixture
+        :param stop_els: the stop_els fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_logstash",
+                     side_effect=stop_lgst)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "create_kibana_tunnel",
+                     side_effect=kibana)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "list_kibana_tunnels",
+                     side_effect=kibana_list)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_logstash",
+                     side_effect=start_lgst)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_kibana(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                            logged_in, logged_in_as_admin, get_em_ex,
+                                            merged_info, start_kb,
+                                            stop_kb, config, kibana, kibana_list, remove_kb):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/kibana resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_els: the start_els fixture
+        :param stop_els: the stop_els fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_kibana",
+                     side_effect=stop_kb)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "create_kibana_tunnel",
+                     side_effect=kibana)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "list_kibana_tunnels",
+                     side_effect=kibana_list)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "remove_kibana_tunnel",
+                     side_effect=remove_kb)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_kibana",
+                     side_effect=start_kb)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_traffic_mng(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                                 logged_in, logged_in_as_admin, get_em_ex,
+                                                 merged_info, start_tr_mng, start_tr_mng_plural,
+                                                 stop_tr_mng, stop_tr_mng_plural,
+                                                 config, kibana, kibana_list, remove_kb):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/traffic-manager resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_els: the start_els fixture
+        :param stop_els: the stop_els fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_traffic_manager",
+                     side_effect=stop_tr_mng)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_traffic_managers",
+                     side_effect=stop_tr_mng_plural)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "create_kibana_tunnel",
+                     side_effect=kibana)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "list_kibana_tunnels",
+                     side_effect=kibana_list)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "remove_kibana_tunnel",
+                     side_effect=remove_kb)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_traffic_manager",
+                     side_effect=start_tr_mng)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_traffic_managers",
+                     side_effect=start_tr_mng_plural)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_traffic_gen(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                                 logged_in, logged_in_as_admin, get_em_ex,
+                                                 merged_info, start_tr_gen, start_tr_gen_plural,
+                                                 stop_tr_gen, stop_tr_gen_plural,
+                                                 config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/traffic-generator resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_tr_gen: the start_tr_gen fixture
+        :param start_tr_gen_plural: the start_tr_gen_plural fixture
+        :param stop_tr_gen_plural: the stop_tr_gen_plural fixture
+        :param stop_tr_gen: the stop_tr_gen fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_traffic_generator",
+                     side_effect=stop_tr_gen)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_traffic_generators",
+                     side_effect=stop_tr_gen_plural)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_traffic_generator",
+                     side_effect=start_tr_gen)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_traffic_generators",
+                     side_effect=start_tr_gen_plural)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_filebeat(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                              logged_in, logged_in_as_admin, get_em_ex,
+                                              merged_info, start_f_beat, start_f_beat_plural,
+                                              stop_f_beat_plural, stop_f_beat,
+                                              config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/filebeat resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_tr_gen: the start_tr_gen fixture
+        :param start_tr_gen_plural: the start_tr_gen_plural fixture
+        :param stop_tr_gen_plural: the stop_tr_gen_plural fixture
+        :param stop_tr_gen: the stop_tr_gen fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_filebeat",
+                     side_effect=stop_f_beat)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_filebeats",
+                     side_effect=stop_f_beat_plural)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_filebeat",
+                     side_effect=start_f_beat)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_filebeats",
+                     side_effect=start_f_beat_plural)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_packetbeat(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                                logged_in, logged_in_as_admin, get_em_ex,
+                                                merged_info, start_p_beat, start_p_beat_plural,
+                                                stop_p_beat_plural, stop_p_beat,
+                                                config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/packetbeat resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_tr_gen: the start_p_beat fixture
+        :param start_tr_gen_plural: the start_p_beat_plural fixture
+        :param stop_tr_gen_plural: the stop_p_beat_plural fixture
+        :param stop_p_beat: the stop_p_beat fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_packetbeat",
+                     side_effect=stop_p_beat)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_packetbeats",
+                     side_effect=stop_p_beat_plural)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_packetbeat",
+                     side_effect=start_p_beat)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_packetbeats",
+                     side_effect=start_p_beat_plural)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_metricbeat(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                                logged_in, logged_in_as_admin, get_em_ex,
+                                                merged_info, start_m_beat, start_m_beat_plural,
+                                                stop_m_beat_plural, stop_m_beat,
+                                                config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/metricbeat resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_m_beat: the start_m_beat fixture
+        :param start_m_beat_plural: the start_m_beat_plural fixture
+        :param stop_m_breat_plural: the stop_m_beat_plural fixture
+        :param stop_m_beat: the stop_m_beat fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_metricbeat",
+                     side_effect=stop_m_beat)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_metricbeats",
+                     side_effect=stop_m_beat_plural)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_metricbeat",
+                     side_effect=start_m_beat)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_metricbeats",
+                     side_effect=start_m_beat_plural)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        assert response_data_dict == {}
+
+    def test_emulation_execution_ids_heartbeat(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                               logged_in, logged_in_as_admin, get_em_ex,
+                                               merged_info, start_h_beat, start_h_beat_plural,
+                                               stop_h_beat_plural, stop_h_beat,
+                                               config):
+        """
+        Testing the HTTPS GET method for the /emulation-executions/id/heartbeat resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param not_logged_in: the not_logged_in fixture
+        :param logged_in: the logged_in fixture
+        :param logged_in_as_admin: the logged_in_as_admin fixture
+        :param get_em_ex: the get_em_ex fixture
+        :param merged_info: the merged_info fixture
+        :param get_ex_exec: the get_ex_exec fixture
+        :param start_h_beat: the start_h_beat fixture
+        :param start_h_beat_plural: the start_h_beat_plural fixture
+        :param stop_h_breat_plural: the stop_h_beat_plural fixture
+        :param stop_h_beat: the stop_h_beat fixture
+        :param config: the config fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
+                     side_effect=get_em_ex)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
+                     side_effect=config)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
+                     side_effect=merged_info)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_heartbeat",
+                     side_effect=stop_h_beat)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "stop_heartbeats",
+                     side_effect=stop_h_beat_plural)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_heartbeat",
+                     side_effect=start_h_beat)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
+                     "start_heartbeats",
+                     side_effect=start_h_beat_plural)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}",
+                                                data=json.dumps({"bla": "bla"}))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}"
+                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
+                                                data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
+                                                                 api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
+                                                                 api_constants.MGMT_WEBAPP.IP_PROPERTY:
+                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                 }))
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
+        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
+                                                                       including_default_value_fields=False,
+                                                                       preserving_proto_field_name=False,
+                                                                       use_integers_for_enums=False,
+                                                                       descriptor_pool=None, float_precision=None)
+        for k in response_data_dict:
+            assert response_data_dict[k] == exp_exec_info_dict[k]
+        response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
+                                                f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"
