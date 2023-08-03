@@ -71,7 +71,7 @@ class OSSECIDSManagersInfo(JSONSerializable):
             ossec_ids_managers_running=d["ossec_ids_managers_running"], ips=d["ips"],
             emulation_name=d["emulation_name"], ports=d["ports"], execution_id=d["execution_id"],
             ossec_ids_managers_statuses=list(
-                map(lambda x: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO.from_dict(x),
+                map(lambda x: ossec_ids_manager_util.OSSecManagerUtil.ossec_ids_monitor_dto_from_dict(x),
                     d["ossec_ids_managers_statuses"])))
         return dto
 

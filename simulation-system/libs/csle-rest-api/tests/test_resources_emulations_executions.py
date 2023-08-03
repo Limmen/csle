@@ -37,9 +37,37 @@ from csle_cluster.cluster_manager.cluster_manager_pb2 import (
     TrafficManagerInfoDTO,
     TrafficManagersInfoDTO,
 )
+from csle_collector.client_manager.client_manager_pb2 import ClientsDTO
+from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import (
+    DockerStatsMonitorDTO,
+)
+from csle_collector.elk_manager.elk_manager_pb2 import ElkDTO
+from csle_collector.host_manager.host_manager_pb2 import HostStatusDTO
+from csle_collector.kafka_manager.kafka_manager_pb2 import KafkaDTO
+from csle_collector.ossec_ids_manager.ossec_ids_manager_pb2 import OSSECIdsMonitorDTO
+from csle_collector.ryu_manager.ryu_manager_pb2 import RyuDTO
+from csle_collector.snort_ids_manager.snort_ids_manager_pb2 import SnortIdsMonitorDTO
+from csle_collector.traffic_manager.traffic_manager_pb2 import TrafficDTO
+from csle_common.dao.emulation_config.client_managers_info import ClientManagersInfo
 from csle_common.dao.emulation_config.config import Config
+from csle_common.dao.emulation_config.container_network import ContainerNetwork
+from csle_common.dao.emulation_config.docker_stats_managers_info import (
+    DockerStatsManagersInfo,
+)
+from csle_common.dao.emulation_config.elk_managers_info import ELKManagersInfo
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
+from csle_common.dao.emulation_config.emulation_execution_info import (
+    EmulationExecutionInfo,
+)
+from csle_common.dao.emulation_config.host_managers_info import HostManagersInfo
+from csle_common.dao.emulation_config.kafka_managers_info import KafkaManagersInfo
+from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
+from csle_common.dao.emulation_config.ossec_managers_info import OSSECIDSManagersInfo
+from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
+from csle_common.dao.emulation_config.snort_managers_info import SnortIdsManagersInfo
+from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
+from flask import jsonify
 
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
@@ -1433,91 +1461,93 @@ class TestResourcesEmulationExecutionsSuite:
         Static help method for returning an ExecutionInfoDTO
         :return: ExecutionInfoDTO
         """
-        snort_ids = SnortIdsManagersInfoDTO(ips="abcdef", ports=[1, 2, 3, 4, 5], emulationName="abcdef",
-                                            executionId=1,
-                                            snortIdsManagersRunning=[False, True, False, True, False],
-                                            snortIdsManagersStatuses=[SnortIdsStatusDTO(monitor_running=False,
-                                                                                        snort_ids_running=True)])
-        ossec_ids = OSSECIdsManagersInfoDTO(ips="123.456.78.99", ports=[1, 2, 3, 4, 5],
-                                            emulationName="JohnDoe", executionId=4,
-                                            ossecIdsManagersRunning=[True, False, True, False, True],
-                                            ossecIdsManagersStatuses=[OSSECIdsStatusDTO(monitor_running=True,
-                                                                                        ossec_ids_running=False)])
-        kafka_mng = KafkaManagersInfoDTO(ips="123.456.78.99", ports=[1, 2, 3, 4, 5],
-                                         emulationName="JohnDoe",
-                                         executionId=1, kafkaManagersRunning=[True, False, True, False, True],
-                                         kafkaManagersStatuses=[KafkaStatusDTO(running=True, topics="abcdef")])
-        host_mng = HostManagersInfoDTO(ips="123.456.78.99", ports=[1, 2, 3, 4, 5],
-                                       emulationName="JohnDoe",
-                                       executionId=5,
-                                       hostManagersRunning=[True, False, True, False, True],
-                                       hostManagersStatuses=[HostManagerStatusDTO(monitor_running=True,
-                                                                                  filebeat_running=True,
-                                                                                  packetbeat_running=True,
-                                                                                  metricbeat_running=True,
-                                                                                  heartbeat_running=True,
-                                                                                  ip="123.456.78.99")])
-        client_mng = ClientManagersInfoDTO(ips="123.456.78.99",
-                                           ports=[1, 2, 3, 4, 5],
-                                           emulationName="JohnDoe",
-                                           executionId=5,
-                                           clientManagersRunning=[True, False, True, False, True],
-                                           clientManagersStatuses=[
-                                               GetNumClientsDTO(num_clients=1,
-                                                                client_process_active=True,
-                                                                producer_active=True,
-                                                                clients_time_step_len_seconds=15,
-                                                                producer_time_step_len_seconds=10)])
-        docker_mng = DockerStatsManagersInfoDTO(ips="123.456.78.99", ports=[1, 2, 3, 4, 5],
-                                                emulationName="JohnDoe",
-                                                executionId=5,
-                                                dockerStatsManagersRunning=[True, False, True, False, True],
-                                                dockerStatsManagersStatuses=[
-                                                    DockerStatsMonitorStatusDTO(num_monitors=1,
-                                                                                emulations="null",
-                                                                                emulation_executions=[1, 2, 3, 4, 5])])
-        running_cont = RunningContainersDTO(runningContainers=[DockerContainerDTO(name="JohnDoe",
-                                                                                  image="null",
-                                                                                  ip="123.456.78.99")])
-        stopped_cont = StoppedContainersDTO(stoppedContainers=[DockerContainerDTO(name="JohnDoe",
-                                                                                  image="null",
-                                                                                  ip="123.456.78.99")])
-        traffic_info = TrafficManagersInfoDTO(ips="123..456.78.99",
-                                              ports=[1, 2, 3, 4, 5],
-                                              emulationName="JohnDoe",
-                                              executionId=5,
-                                              trafficManagersRunning=[True, False, True, False, True],
-                                              trafficManagersStatuses=[TrafficManagerInfoDTO(running=True,
-                                                                                             script="null")])
-        docker_net = DockerNetworksDTO(networks="abcdef", network_ids=[1, 2, 3, 4, 5])
-        elk_mng = ElkManagersInfoDTO(ips="123.456.78.99", ports=[1, 2, 3, 4, 5],
-                                     emulationName="JohnDoe", executionId=5,
-                                     elkManagersRunning=[True, False, True, False, True],
-                                     elkManagersStatuses=[ElkStatusDTO(elasticRunning=True, kibanaRunning=True,
-                                                                       logstashRunning=True)],
-                                     localKibanaPort=5,
-                                     physicalServerIp="123.456.78.99")
-        ryu_mng = RyuManagersInfoDTO(ips="123.456.78.99", ports=[1, 2, 3, 4, 5],
-                                     emulationName="JohnDoe", executionId=5,
-                                     ryuManagersRunning=[True, False, True, False, True],
-                                     ryuManagersStatuses=[RyuManagerStatusDTO(ryu_running=True,
-                                                                              monitor_running=True,
-                                                                              port=5, web_port=4,
-                                                                              controller="null",
-                                                                              kafka_ip="123.456.78.99",
-                                                                              kafka_port=5, time_step_len=10)],
-                                     localControllerWebPort=1, physicalServerIp="123.456.78.99")
-        return ExecutionInfoDTO(emulationName="JohnDoe", executionId=-1,
-                                snortIdsManagersInfo=snort_ids,
-                                ossecIdsManagersInfo=ossec_ids,
-                                kafkaManagersInfo=kafka_mng,
-                                hostManagersInfo=host_mng, clientManagersInfo=client_mng,
-                                dockerStatsManagersInfo=docker_mng,
-                                runningContainers=running_cont,
-                                stoppedContainers=stopped_cont,
-                                trafficManagersInfoDTO=traffic_info,
-                                activeNetworks=docker_net, elkManagersInfoDTO=elk_mng,
-                                ryuManagersInfoDTO=ryu_mng)
+        snort_ids = SnortIdsManagersInfo(ips=["123.456.78.99"],
+                                         ports=[10], emulation_name="JDoeEmulation",
+                                         execution_id=10,
+                                         snort_ids_managers_statuses=[SnortIdsMonitorDTO(monitor_running=True,
+                                                                                         snort_ids_running=True)],
+                                         snort_ids_managers_running=[True])
+        ossec_ids = OSSECIDSManagersInfo(ips=["123.456.78.99"],
+                                         ports=[10], emulation_name="JohnDoeEmulation",
+                                         execution_id=10,
+                                         ossec_ids_managers_statuses=[OSSECIdsMonitorDTO(monitor_running=True,
+                                                                                         ossec_ids_running=True)],
+                                         ossec_ids_managers_running=[True])
+        kafka_mng = KafkaManagersInfo(ips=["123.456.78.99"], ports=[10],
+                                      emulation_name="JohnDoeEmulation", execution_id=10,
+                                      kafka_managers_statuses=[KafkaDTO(running=True,
+                                                                        topics="abcdef")],
+                                      kafka_managers_running=[True])
+        host_mng = HostManagersInfo(ips=["123.456.78.99"],
+                                    ports=[10], emulation_name="JDoeEmulation",
+                                    execution_id=10,
+                                    host_managers_statuses=[HostStatusDTO(monitor_running=True,
+                                                                          filebeat_running=True,
+                                                                          packetbeat_running=True,
+                                                                          metricbeat_running=True,
+                                                                          heartbeat_running=True)],
+                                    host_managers_running=[True])
+        clinet_mng = ClientManagersInfo(ips=["123.456.78.99"], ports=[10],
+                                        emulation_name="JDoeEmulation", execution_id=10,
+                                        client_managers_statuses=[ClientsDTO(num_clients=4, client_process_active=True,
+                                                                             producer_active=True,
+                                                                             clients_time_step_len_seconds=4,
+                                                                             producer_time_step_len_seconds=4)],
+                                        client_managers_running=[True])
+        docker_mng = DockerStatsManagersInfo(ips=["123.456.78.99"], ports=[10],
+                                             emulation_name="JDoeEmulation", execution_id=10,
+                                             docker_stats_managers_statuses=[
+                                                 DockerStatsMonitorDTO(num_monitors=4, emulations="abcdef",
+                                                                       emulation_executions=[1, 2, 3, 4, 5]
+                                                                       )],
+                                             docker_stats_managers_running=[True])
+        c_network = ContainerNetwork(name="JohnDoe",
+                                     subnet_mask="null",
+                                     bitmask="null",
+                                     subnet_prefix="null",
+                                     interface="eth0")
+        node_cc = NodeContainerConfig(name="JohnDoe",
+                                      ips_and_networks=[("null", c_network)],
+                                      version="null", level="null", restart_policy="null",
+                                      suffix="null", os="null", execution_ip_first_octet=-1,
+                                      docker_gw_bridge_ip="123.456.78.99",
+                                      physical_host_ip="123.456.78.99")
+        traffic_mng = TrafficManagersInfo(ips=["123.456.78.99"], ports=[10],
+                                          emulation_name="JohnDoeEmulatin", execution_id=10,
+                                          traffic_managers_statuses=[TrafficDTO(running=True, script="null")],
+                                          traffic_managers_running=[True])
+
+        elk_mng = ELKManagersInfo(ips=["123.456.78.99"], ports=[10],
+                                  emulation_name="JDoeEmulation", execution_id=10,
+                                  elk_managers_statuses=[ElkDTO(elasticRunning=True,
+                                                                kibanaRunning=True,
+                                                                logstashRunning=True)],
+                                  elk_managers_running=[True], local_kibana_port=5,
+                                  physical_server_ip="123.456.78.99")
+        ryu_mng = RyuManagersInfo(ips=["123.456.78.99"], ports=[10],
+                                  emulation_name="JohnDoeEmulation", execution_id=10,
+                                  ryu_managers_statuses=[RyuDTO(ryu_running=True,
+                                                                monitor_running=True,
+                                                                port=4, web_port=4,
+                                                                controller="null",
+                                                                kafka_ip="123.456.78.99",
+                                                                kafka_port=4, time_step_len=4)],
+                                  ryu_managers_running=[True], local_controller_web_port=1,
+                                  physical_server_ip="123.456.78.99")
+        em_exec_info = EmulationExecutionInfo(emulation_name="JohnDoe", execution_id=10,
+                                              snort_ids_managers_info=snort_ids,
+                                              ossec_ids_managers_info=ossec_ids,
+                                              kafka_managers_info=kafka_mng,
+                                              host_managers_info=host_mng,
+                                              client_managers_info=clinet_mng,
+                                              docker_stats_managers_info=docker_mng,
+                                              running_containers=[node_cc],
+                                              stopped_containers=[node_cc],
+                                              traffic_managers_info=traffic_mng,
+                                              active_networks=[c_network],
+                                              inactive_networks=[c_network], elk_managers_info=elk_mng,
+                                              ryu_managers_info=ryu_mng)
+        return em_exec_info
 
     def test_emulation_executions_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
                                       logged_in_as_admin, config, emulation_exec, emulation_exec_ids,
@@ -1572,6 +1602,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         response_data_dict = response_data_list[0]
+        
         e_e_data = EmulationExecution.from_dict(response_data_dict)
         e_e_data_dict = e_e_data.to_dict()
         ex_exec_dict = ex_exec.to_dict()
@@ -1735,14 +1766,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
@@ -1762,14 +1791,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
@@ -1844,11 +1871,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -1929,11 +1952,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2013,11 +2032,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2097,11 +2112,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2114,11 +2125,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2202,11 +2209,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2219,11 +2222,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2305,11 +2304,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2322,11 +2317,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2408,11 +2399,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2425,11 +2412,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2515,11 +2498,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2532,11 +2511,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2622,11 +2597,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2639,11 +2610,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2729,11 +2696,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2746,11 +2709,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2845,11 +2804,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2862,11 +2817,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -2881,11 +2832,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2899,11 +2846,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -2998,11 +2941,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3015,11 +2954,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -3034,11 +2969,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3052,11 +2983,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3151,11 +3078,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3168,11 +3091,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -3187,11 +3106,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3205,11 +3120,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3304,11 +3215,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3321,11 +3228,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -3340,11 +3243,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3358,13 +3257,8 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
-        for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+        exp_exec_info_dict = exp_ex_info.to_dict()
+        assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -3457,11 +3351,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3474,11 +3364,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -3493,11 +3379,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3511,11 +3393,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3611,11 +3489,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3628,11 +3502,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -3647,11 +3517,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3665,11 +3531,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3761,11 +3623,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3778,11 +3636,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -3797,11 +3651,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3815,11 +3665,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3911,11 +3757,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3928,11 +3770,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -3947,11 +3785,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -3965,11 +3799,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4061,11 +3891,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4078,11 +3904,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -4097,11 +3919,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4115,11 +3933,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4211,11 +4025,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4228,11 +4038,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -4247,11 +4053,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4265,11 +4067,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4364,11 +4162,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4381,11 +4175,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -4400,11 +4190,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4418,11 +4204,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4524,11 +4306,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4541,11 +4319,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -4560,11 +4334,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4578,11 +4348,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4677,11 +4443,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4694,11 +4456,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -4713,11 +4471,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4731,11 +4485,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4830,11 +4580,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4847,11 +4593,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -4866,11 +4608,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4884,11 +4622,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -4983,11 +4717,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5000,11 +4730,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -5019,11 +4745,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5037,11 +4759,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5136,11 +4854,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5153,11 +4867,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -5172,13 +4882,8 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
-        for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+        exp_exec_info_dict = exp_ex_info.to_dict()
+        assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -5190,11 +4895,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5289,11 +4990,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5306,11 +5003,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -5325,11 +5018,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5343,11 +5032,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5441,11 +5126,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5458,11 +5139,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -5477,11 +5154,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5495,11 +5168,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5596,11 +5265,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=True,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             if k == "ryuManagersInfoDTO":
                 for i in response_data_dict[k]:
@@ -5619,11 +5284,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=True,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             if k == "ryuManagersInfoDTO":
                 for i in response_data_dict[k]:
@@ -5644,11 +5305,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=True,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             if k == "ryuManagersInfoDTO":
                 for i in response_data_dict[k]:
@@ -5668,11 +5325,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=True,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             if k == "ryuManagersInfoDTO":
                 for i in response_data_dict[k]:
@@ -5772,11 +5425,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5789,11 +5438,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
 
@@ -5808,11 +5453,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5826,11 +5467,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
-        exp_exec_info_dict = google.protobuf.json_format.MessageToDict(exp_ex_info,
-                                                                       including_default_value_fields=False,
-                                                                       preserving_proto_field_name=False,
-                                                                       use_integers_for_enums=False,
-                                                                       descriptor_pool=None, float_precision=None)
+        exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5999,3 +5636,4 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+

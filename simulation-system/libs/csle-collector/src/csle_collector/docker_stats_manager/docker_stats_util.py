@@ -3,7 +3,6 @@ import csle_collector.constants.constants as constants
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
 from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
 
-
 class DockerStatsUtil:
     """
     Utility class for managing docker container statistics
@@ -184,8 +183,8 @@ class DockerStatsUtil:
         """
         docker_stats_monitor_dto = DockerStatsMonitorDTO()
         docker_stats_monitor_dto.num_monitors = d["num_monitors"]
-        docker_stats_monitor_dto.emulations = d["emulations"]
-        docker_stats_monitor_dto.emulation_executions = d["emulation_executions"]
+        docker_stats_monitor_dto.emulations.extend(d["emulations"])
+        docker_stats_monitor_dto.emulation_executions.extend(d["emulation_executions"])
         return docker_stats_monitor_dto
 
     @staticmethod

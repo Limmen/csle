@@ -11,7 +11,9 @@ import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
 import csle_cluster.cluster_manager.query_cluster_manager
 from csle_cluster.cluster_manager.cluster_manager_util import ClusterManagerUtil
-
+from csle_common.dao.emulation_config.emulation_execution_info import (
+    EmulationExecutionInfo,
+)
 
 class ClusterController:
     """
@@ -3486,7 +3488,7 @@ class ClusterController:
 
     @staticmethod
     def get_merged_execution_info(execution: EmulationExecution) \
-            -> csle_cluster.cluster_manager.cluster_manager_pb2.ExecutionInfoDTO:
+            -> EmulationExecutionInfo:
         """
         Gets the runtime info of a specific execution
 

@@ -73,7 +73,7 @@ class DockerStatsManagersInfo(JSONSerializable):
             emulation_name=d["emulation_name"], execution_id=d["execution_id"],
             docker_stats_managers_statuses=list(map(
                 lambda x: docker_stats_util.DockerStatsUtil.docker_stats_monitor_dto_from_dict(x),
-                d["host_managers_statuses"])))
+                d["docker_stats_managers_statuses"])))
         return dto
 
     @staticmethod

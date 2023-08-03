@@ -76,7 +76,7 @@ class RyuManagersInfo(JSONSerializable):
         dto = RyuManagersInfo(ryu_managers_running=d["ryu_managers_running"], ips=d["ips"], ports=d["ports"],
                               emulation_name=d["emulation_name"], execution_id=d["execution_id"],
                               ryu_managers_statuses=list(map(
-                                  lambda x: ryu_manager_util.RyuManagerUtil.ryu_dto_to_dict(x),
+                                  lambda x: ryu_manager_util.RyuManagerUtil.ryu_dto_from_dict(x),
                                   d["ryu_managers_statuses"])),
                               local_controller_web_port=d["local_controller_web_port"],
                               physical_server_ip=d["physical_server_ip"])
