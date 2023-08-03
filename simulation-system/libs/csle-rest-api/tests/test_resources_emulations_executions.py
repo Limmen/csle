@@ -1287,7 +1287,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param mocker: the pytest mokcer object
         :return: the mocked function
         """
-        def get(http_adress: str, timeout: str) -> None:
+        def get(http_adress: str, timeout: str):
 
             response = TestResourcesEmulationExecutionsSuite.response_returner()
             return response

@@ -643,7 +643,7 @@ def stop_shell_complete(ctx, param, incomplete) -> List[str]:
         emulations=MetastoreFacade.list_emulations())
     emulations: List[str] = running_emulations
     running_containers = ContainerController.list_all_running_containers()
-    containers: List[Tuple[str, str ,str]] = running_containers
+    containers: List[Tuple[str, str, str]] = running_containers
     container_names: List[str] = list(map(lambda x: x[0], containers))
     return ["prometheus", "node_exporter", "cadvisor", "pgadmin", "grafana", "flask",
             "statsmanager", "all", "emulation_executions"] + emulations + container_names
@@ -1039,7 +1039,7 @@ def start_shell_complete(ctx, param, incomplete) -> List[str]:
         emulations=MetastoreFacade.list_emulations())
     emulations = stopped_emulations
     stopped_containers = ContainerController.list_all_stopped_containers()
-    containers: List[Tuple[str, str ,str]] = stopped_containers
+    containers: List[Tuple[str, str, str]] = stopped_containers
     container_names: List[str] = list(map(lambda x: x[0], containers))
     images: List[Tuple[str, str, str, str, str]] = ContainerController.list_all_images()
     image_names: List[str] = list(map(lambda x: x[0], images))
@@ -1313,7 +1313,7 @@ def rm_shell_complete(ctx, param, incomplete) -> List[str]:
     emulations = list(map(lambda x: x.name, MetastoreFacade.list_emulations()))
     running_containers = ContainerController.list_all_running_containers()
     stopped_containers = ContainerController.list_all_stopped_containers()
-    containers: List[Tuple[str, str ,str]] = running_containers + stopped_containers
+    containers: List[Tuple[str, str, str]] = running_containers + stopped_containers
     container_names: List[str] = list(map(lambda x: x[0], containers))
     images: List[Tuple[str, str, str, str, str]] = ContainerController.list_all_images()
     image_names: List[str] = list(map(lambda x: x[0], images))
