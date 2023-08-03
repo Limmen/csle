@@ -3,6 +3,7 @@ import csle_collector.constants.constants as constants
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
 from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
 
+
 class DockerStatsUtil:
     """
     Utility class for managing docker container statistics

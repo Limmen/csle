@@ -14,6 +14,7 @@ from csle_base.json_serializable import JSONSerializable
 import logging
 logger = logging.getLogger()
 
+
 class EmulationExecutionInfo(JSONSerializable):
     """
     DTO containing the runtime status of an emulation execution

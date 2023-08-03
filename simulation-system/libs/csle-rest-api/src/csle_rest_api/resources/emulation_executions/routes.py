@@ -86,7 +86,7 @@ def emulation_execution(execution_id: int):
     :param execution_id: the id of the execution
     :return: The given execution
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin = False)
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
     if authorized is not None:
         return authorized
     # Extract emulation query parameter
@@ -426,7 +426,7 @@ def start_stop_docker_stats_monitor(execution_id: int) -> Tuple[Response, int]:
                 f"Stopping docker stats monitor for emulation: {execution.emulation_env_config.name}, "
                 f"execution id: {execution.ip_first_octet}")
             for node in config.cluster_config.cluster_nodes:
-                ClusterController.stop_docker_stats_manager_thread(
+                ClusterController.stop_docker_statsmanager_thread(
                     ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT, emulation=execution.emulation_name,
                     ip_first_octet=execution.ip_first_octet)
         if start:
@@ -2319,7 +2319,7 @@ def get_sdn_switches_of_execution(execution_id: int) -> Tuple[Response, int]:
     :param execution_id: the id of the execution
     :return: The sought for switches if they exist
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
     if authorized is not None:
         return authorized
 

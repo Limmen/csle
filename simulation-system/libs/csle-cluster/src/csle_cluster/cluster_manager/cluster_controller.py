@@ -15,6 +15,7 @@ from csle_common.dao.emulation_config.emulation_execution_info import (
     EmulationExecutionInfo,
 )
 
+
 class ClusterController:
     """
     Controller managing API calls to cluster managers
@@ -1830,7 +1831,7 @@ class ClusterController:
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
-            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_stats_manager_thread(
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_statsmanager_thread(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet)
             return operation_outcome_dto
 

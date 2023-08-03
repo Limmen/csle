@@ -3,39 +3,16 @@ import logging
 from typing import List, Tuple
 
 import csle_common.constants.constants as constants
-import google
 import pytest
 import pytest_mock
 from csle_cluster.cluster_manager.cluster_manager_pb2 import (
-    ClientManagersInfoDTO,
-    DockerContainerDTO,
-    DockerNetworksDTO,
-    DockerStatsManagersInfoDTO,
-    DockerStatsMonitorStatusDTO,
-    ElkManagersInfoDTO,
-    ElkStatusDTO,
     ExecutionInfoDTO,
-    GetNumClientsDTO,
-    HostManagersInfoDTO,
-    HostManagerStatusDTO,
-    KafkaManagersInfoDTO,
-    KafkaStatusDTO,
     KibanaTunnelDTO,
     KibanaTunnelsDTO,
     OperationOutcomeDTO,
-    OSSECIdsManagersInfoDTO,
-    OSSECIdsStatusDTO,
-    RunningContainersDTO,
     RunningEmulationsDTO,
-    RyuManagersInfoDTO,
-    RyuManagerStatusDTO,
     RyuTunnelDTO,
     RyuTunnelsDTO,
-    SnortIdsManagersInfoDTO,
-    SnortIdsStatusDTO,
-    StoppedContainersDTO,
-    TrafficManagerInfoDTO,
-    TrafficManagersInfoDTO,
 )
 from csle_collector.client_manager.client_manager_pb2 import ClientsDTO
 from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import (
@@ -67,7 +44,6 @@ from csle_common.dao.emulation_config.ossec_managers_info import OSSECIDSManager
 from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
 from csle_common.dao.emulation_config.snort_managers_info import SnortIdsManagersInfo
 from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
-from flask import jsonify
 
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
@@ -1870,10 +1846,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -1951,10 +1929,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -2031,10 +2011,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_PRODUCER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -2111,10 +2093,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -2124,10 +2108,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -2208,10 +2194,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MONITOR_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -2221,10 +2209,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -2303,10 +2293,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -2316,10 +2308,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -2398,10 +2392,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -2411,10 +2407,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -2497,10 +2495,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -2510,10 +2510,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -2596,10 +2598,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -2609,10 +2613,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -2695,10 +2701,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -2708,10 +2716,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -2803,10 +2813,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -2816,10 +2828,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}"
@@ -2831,10 +2845,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -2845,10 +2861,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -2940,10 +2958,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -2953,10 +2973,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}"
@@ -2968,10 +2990,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -2982,10 +3006,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -3077,10 +3103,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3090,10 +3118,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}"
@@ -3105,10 +3135,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3119,10 +3151,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -3214,10 +3248,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3227,10 +3263,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}"
@@ -3242,10 +3280,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3256,9 +3296,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
-        assert response_data_dict[k] == exp_exec_info_dict[k]
+        for k in response_data_dict:
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -3350,10 +3393,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3363,10 +3408,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}"
@@ -3378,10 +3425,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3392,10 +3441,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -3474,7 +3525,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.NAME_PROPERTY} or "
+                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
                                       f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
                                       f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
@@ -3488,10 +3539,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3501,10 +3554,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}"
@@ -3516,10 +3571,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3530,10 +3587,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -3622,10 +3681,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3635,10 +3696,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}"
@@ -3650,10 +3713,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3664,10 +3729,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -3756,10 +3823,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3769,10 +3838,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}"
@@ -3784,10 +3855,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3798,10 +3871,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -3890,10 +3965,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3903,10 +3980,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}"
@@ -3918,10 +3997,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -3932,10 +4013,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -4024,10 +4107,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4037,10 +4122,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}"
@@ -4052,10 +4139,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4066,10 +4155,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -4161,10 +4252,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4174,10 +4267,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}"
@@ -4189,10 +4284,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4203,10 +4300,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -4305,10 +4404,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4318,10 +4419,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}"
@@ -4333,10 +4436,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4347,10 +4452,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -4442,10 +4549,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4455,10 +4564,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}"
@@ -4470,10 +4581,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4484,10 +4597,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -4579,10 +4694,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4592,10 +4709,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}"
@@ -4607,10 +4726,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4621,10 +4742,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -4716,10 +4839,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4729,10 +4854,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}"
@@ -4744,10 +4871,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4758,10 +4887,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -4853,10 +4984,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4866,10 +4999,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}"
@@ -4881,9 +5016,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
-        assert response_data_dict[k] == exp_exec_info_dict[k]
+        for k in response_data_dict:
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -4894,10 +5032,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -4989,10 +5129,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -5002,10 +5144,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}"
@@ -5017,10 +5161,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -5031,10 +5177,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -5125,10 +5273,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -5138,10 +5288,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}"
@@ -5153,10 +5305,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -5167,10 +5321,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -5264,16 +5420,18 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            if k == "ryuManagersInfoDTO":
-                for i in response_data_dict[k]:
-                    if i == "ryuManagersStatuses":
-                        assert response_data_dict[k][i][0]["monitorRunning"] != \
-                            exp_exec_info_dict[k][i][0]["monitorRunning"]
+            if k == "ryu_managers_info":
+                for i in data_dict[k]:
+                    if i == "ryu_managers_statuses":
+                        assert data_dict[k][i][0]["monitor_running"] != \
+                            exp_exec_info_dict[k][i][0]["monitor_running"]
             else:
-                assert response_data_dict[k] == exp_exec_info_dict[k]
+                assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -5283,16 +5441,18 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            if k == "ryuManagersInfoDTO":
-                for i in response_data_dict[k]:
-                    if i == "ryuManagersStatuses":
-                        assert response_data_dict[k][i][0]["monitorRunning"] != \
-                            exp_exec_info_dict[k][i][0]["monitorRunning"]
+            if k == "ryu_managers_info":
+                for i in data_dict[k]:
+                    if i == "ryu_managers_statuses":
+                        assert data_dict[k][i][0]["monitor_running"] != \
+                            exp_exec_info_dict[k][i][0]["monitor_running"]
             else:
-                assert response_data_dict[k] == exp_exec_info_dict[k]
+                assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}"
@@ -5304,16 +5464,18 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            if k == "ryuManagersInfoDTO":
-                for i in response_data_dict[k]:
-                    if i == "ryuManagersStatuses":
-                        assert response_data_dict[k][i][0]["monitorRunning"] != \
-                            exp_exec_info_dict[k][i][0]["monitorRunning"]
+            if k == "ryu_managers_info":
+                for i in data_dict[k]:
+                    if i == "ryu_managers_statuses":
+                        assert data_dict[k][i][0]["monitor_running"] != \
+                            exp_exec_info_dict[k][i][0]["monitor_running"]
             else:
-                assert response_data_dict[k] == exp_exec_info_dict[k]
+                assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -5324,16 +5486,18 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            if k == "ryuManagersInfoDTO":
-                for i in response_data_dict[k]:
-                    if i == "ryuManagersStatuses":
-                        assert response_data_dict[k][i][0]["monitorRunning"] != \
-                            exp_exec_info_dict[k][i][0]["monitorRunning"]
+            if k == "ryu_managers_info":
+                for i in data_dict[k]:
+                    if i == "ryu_managers_statuses":
+                        assert data_dict[k][i][0]["monitor_running"] != \
+                            exp_exec_info_dict[k][i][0]["monitor_running"]
             else:
-                assert response_data_dict[k] == exp_exec_info_dict[k]
+                assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -5424,10 +5588,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -5437,10 +5603,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
 
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}"
@@ -5452,10 +5620,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}"
                                                 f"?{api_constants.MGMT_WEBAPP.EMULATION_QUERY_PARAM}",
@@ -5466,10 +5636,12 @@ class TestResourcesEmulationExecutionsSuite:
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        format_data = EmulationExecutionInfo.from_dict(response_data_dict)
+        data_dict = format_data.to_dict()
         exp_ex_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
         exp_exec_info_dict = exp_ex_info.to_dict()
         for k in response_data_dict:
-            assert response_data_dict[k] == exp_exec_info_dict[k]
+            assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
@@ -5636,4 +5808,3 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-

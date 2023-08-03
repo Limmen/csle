@@ -4,6 +4,7 @@ import csle_collector.elk_manager.elk_manager_pb2
 import csle_collector.elk_manager.elk_manager_util as elk_manager_util
 from csle_base.json_serializable import JSONSerializable
 
+
 class ELKManagersInfo(JSONSerializable):
     """
     DTO containing the status of the ELK managers for a given emulation execution

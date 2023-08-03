@@ -69,7 +69,8 @@ class TrafficManagersInfo(JSONSerializable):
         dto = TrafficManagersInfo(
             traffic_managers_running=d["traffic_managers_running"], ips=d["ips"], ports=d["ports"],
             emulation_name=d["emulation_name"], execution_id=d["execution_id"],
-            traffic_managers_statuses=list(map(lambda x: traffic_manager_util.TrafficManagerUtil.traffic_dto_from_dict(x),
+            traffic_managers_statuses=list(map(lambda x:
+                                               traffic_manager_util.TrafficManagerUtil.traffic_dto_from_dict(x),
                                                d["traffic_managers_statuses"])))
         return dto
 
