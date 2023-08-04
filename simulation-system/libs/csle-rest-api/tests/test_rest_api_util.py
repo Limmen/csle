@@ -39,19 +39,6 @@ class TestUtilSuite:
             return SessionToken(token="null", timestamp=1.5, username="JDoe")
         get_session_token_metadata_mocker = mocker.MagicMock(side_effect=get_session_token_metadata)
         return get_session_token_metadata_mocker
-
-    @pytest.fixture
-    def session_token_none(self, mocker):
-        """
-        Pytest fixture for mocking the get_session_token_metadata method
-
-        :param mocker: the pytest mocker object
-        :return: the mocked function
-        """
-        def get_session_token_metadata(token: str) -> None:
-            return None
-        get_session_token_metadata_mocker = mocker.MagicMock(side_effect=get_session_token_metadata)
-        return get_session_token_metadata_mocker
     
     @pytest.fixture
     def session_token_exp(self, mocker):
@@ -63,7 +50,7 @@ class TestUtilSuite:
         """
         def get_session_token_metadata(token: str) -> SessionToken:
             ses_tok = SessionToken(token="null", timestamp=1.5, username="JDoe")
-            api_constants.SESSION_TOKENS.EXPIRE_TIME_HOURS = np.inf
+            api_constants.SESSION_TOKENS.EXPIRE_TIME_HOURS = np.iinfo(np.int32).max
             return ses_tok
         get_session_token_metadata_mocker = mocker.MagicMock(side_effect=get_session_token_metadata)
         return get_session_token_metadata_mocker
@@ -77,9 +64,23 @@ class TestUtilSuite:
         :return: the mocked function
         """
         def get_management_user_by_username(username: str) -> ManagementUser:
-            return ManagementUser(username="JDoe", password="JDoe", email="jdoe@csle.com",
-                                  first_name="John", last_name="Doe", organization="CSLE",
-                                  admin=False, salt="null")
+            mng_user = TestUtilSuite.get_synthetic_mng_user()
+            return mng_user
+
+        get_management_user_by_username_mocker = mocker.MagicMock(side_effect=get_management_user_by_username)
+        return get_management_user_by_username_mocker
+
+    @pytest.fixture
+    def management_user_none(self, mocker):
+        """
+        Pytest fixture for mocking the get_management_user_by_username method
+
+        :param mocker: the pytest mocker object
+        :return: the mocked function
+        """
+        def get_management_user_by_username(username: str) -> None:
+            return None
+
         get_management_user_by_username_mocker = mocker.MagicMock(side_effect=get_management_user_by_username)
         return get_management_user_by_username_mocker
 
@@ -109,7 +110,7 @@ class TestUtilSuite:
     @staticmethod
     def get_synthetic_request(args):
         """
-        Static help method for returning a synthetic request, customized to work for testing without the use
+        Static help method for returning a synthetic/mocked request, customized to work for testing without the use
         of blueprint or flask app
         """
         class SyntReq():
@@ -117,9 +118,19 @@ class TestUtilSuite:
                 self.args = args
         return SyntReq(args)
 
+    @staticmethod
+    def get_synthetic_mng_user():
+        """
+        static help method for returning a synthetic/mocked management user
+        """
+        mng_user = ManagementUser(username="JDoe", password="JDoe", email="jdoe@csle.com",
+                                  first_name="John", last_name="Doe", organization="CSLE",
+                                  admin=False, salt="null")
+        return mng_user
+
     def test_util(self, flask_app, mocker: pytest_mock.MockFixture,
-                  session_token, session_token_none, session_token_exp,
-                  management_user, remove):
+                  session_token, session_token_exp,
+                  management_user, management_user_none, remove):
         """
         Test method for the rest-api util
         
@@ -135,25 +146,40 @@ class TestUtilSuite:
                      side_effect=management_user)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_session_token",
                      side_effect=remove)
-        # args = TestUtilSuite.get_args()
-        # response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.PROMETHEUS_RESOURCE)
-        # bp = Blueprint("bla", __name__, url_prefix="/bla")
         app = Flask(__name__)
+        mng_user = TestUtilSuite.get_synthetic_mng_user()
+        args = TestUtilSuite.get_args()
+        req = TestUtilSuite.get_synthetic_request(args)
         with app.app_context():
-            args = TestUtilSuite.get_args()
-            req = TestUtilSuite.get_synthetic_request(args)
             response = rest_api_util.check_if_user_is_authorized(request=req)
+            response1 = rest_api_util.check_if_user_edit_is_authorized(request=req,
+                                                                       user=mng_user)
         response_data = response[0].data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         response_status_code = response[1]
         assert response_data_dict == {}
         assert response_status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_metadata",
-                     side_effect=session_token_none)
+        response_data1 = response1[0].data.decode("utf-8")
+        response_data_dict1 = json.loads(response_data1)
+        response_status_code1 = response1[1]
+        assert response_data_dict1 == {}
+        assert response_status_code1 == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_by_username",
+                     side_effect=management_user_none)
         with app.app_context():
-            args = TestUtilSuite.get_args()
-            req = TestUtilSuite.get_synthetic_request(args)
+            response1 = rest_api_util.check_if_user_edit_is_authorized(request=req,
+                                                                       user=mng_user)
+        response_data1 = response1[0].data.decode("utf-8")
+        response_data_dict1 = json.loads(response_data1)
+        response_status_code1 = response1[1]
+        assert response_data_dict1 == {}
+        assert response_status_code1 == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_management_user_by_username",
+                     side_effect=management_user)
+        with app.app_context():
             response = rest_api_util.check_if_user_is_authorized(request=req)
+            response1 = rest_api_util.check_if_user_edit_is_authorized(request=req,
+                                                                       user=mng_user)
         response_data = response[0].data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         response_status_code = response[1]
@@ -162,14 +188,22 @@ class TestUtilSuite:
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_session_token_metadata",
                      side_effect=session_token_exp)
         with app.app_context():
-            args = TestUtilSuite.get_args()
-            req = TestUtilSuite.get_synthetic_request(args)
             response = rest_api_util.check_if_user_is_authorized(request=req)
+            response1 = rest_api_util.check_if_user_edit_is_authorized(request=req,
+                                                                       user=mng_user)
         assert response is None
-
+        ex_mng_user = TestUtilSuite.get_synthetic_mng_user()
+        assert response1.username == ex_mng_user.username
+        assert response1.password == ex_mng_user.password
+        assert response1.admin == ex_mng_user.admin
+        assert response1.id == ex_mng_user.id
+        assert response1.salt == ex_mng_user.salt
+        assert response1.email == ex_mng_user.email
+        assert response1.first_name == ex_mng_user.first_name
+        assert response1.last_name == ex_mng_user.last_name
+        assert response1.organization == ex_mng_user.organization
+        assert response_status_code1 == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         with app.app_context():
-            args = TestUtilSuite.get_args()
-            req = TestUtilSuite.get_synthetic_request(args)
             response = rest_api_util.check_if_user_is_authorized(request=req,
                                                                  requires_admin=True)
         response_data = response[0].data.decode("utf-8")
