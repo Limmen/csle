@@ -1,5 +1,5 @@
 import logging
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union
 import time
 import subprocess
 import random
@@ -345,7 +345,7 @@ class EmulationEnvController:
                 for ip_net_resources in r.ips_and_network_configs:
                     ip, net_resources = ip_net_resources
                     if ip in ips:
-                        container_resources: NodeResourcesConfig = r
+                        container_resources = r
                         break
             if container_resources is None:
                 raise ValueError(f"Container resources not found for container with ips:{ips}, "
@@ -365,7 +365,7 @@ class EmulationEnvController:
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_host_ip:
             # Start the kafka container
             c = emulation_env_config.kafka_config.container
-            container_resources: NodeResourcesConfig = emulation_env_config.kafka_config.resources
+            container_resources= emulation_env_config.kafka_config.resources
             name = c.get_full_name()
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
@@ -381,7 +381,7 @@ class EmulationEnvController:
         if emulation_env_config.elk_config.container.physical_host_ip == physical_host_ip:
             # Start the ELK container
             c = emulation_env_config.elk_config.container
-            container_resources: NodeResourcesConfig = emulation_env_config.elk_config.resources
+            container_resources = emulation_env_config.elk_config.resources
             name = c.get_full_name()
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
@@ -398,7 +398,7 @@ class EmulationEnvController:
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_host_ip:
             # Start the SDN controller container
             c = emulation_env_config.sdn_controller_config.container
-            container_resources: NodeResourcesConfig = emulation_env_config.sdn_controller_config.resources
+            container_resources = emulation_env_config.sdn_controller_config.resources
             name = c.get_full_name()
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
@@ -485,7 +485,7 @@ class EmulationEnvController:
         subprocess.call(cmd, shell=True)
 
     @staticmethod
-    def stop_containers(execution: EmulationExecution, physical_server_ip: str, logger: logging.Logger) -> None:
+    def stop_containers(execution: Union[EmulationExecution, None], physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Stop containers in the emulation env config
 
@@ -494,8 +494,10 @@ class EmulationEnvController:
         :param logger: the logger to use for logging
         :return: None
         """
-        emulation_env_config = execution.emulation_env_config
-
+        if execution is not None:
+            emulation_env_config = execution.emulation_env_config
+        else:
+            emulation_env_config = None
         # Stop regular containers
         for c in emulation_env_config.containers_config.containers:
             if c.physical_host_ip != physical_server_ip:
@@ -610,7 +612,7 @@ class EmulationEnvController:
             MetastoreFacade.remove_emulation_execution(emulation_execution=exec)
 
     @staticmethod
-    def rm_containers(execution: EmulationExecution, physical_server_ip: str, logger: logging.Logger) -> None:
+    def rm_containers(execution: Union[EmulationExecution, None], physical_server_ip: str, logger: logging.Logger) -> None:
         """
         Remove containers in the emulation env config for a given execution
 

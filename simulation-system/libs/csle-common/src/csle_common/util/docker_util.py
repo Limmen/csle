@@ -166,7 +166,7 @@ class DockerUtil:
         return parsed_containers
 
     @staticmethod
-    def get_docker_gw_bridge_ip(container_id: str) -> str:
+    def get_docker_gw_bridge_ip(container_id: Union[str, None]) -> str:
         """
         Gets the docker gw bridge ip of a container
 

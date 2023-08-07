@@ -1,5 +1,5 @@
 import logging
-from typing import List, Tuple
+from typing import List, Tuple, Union, Any
 import subprocess
 import time
 import docker
@@ -162,7 +162,7 @@ class ContainerController:
         return False
 
     @staticmethod
-    def list_all_images() -> List[Tuple[str, str, str, str, str]]:
+    def list_all_images() -> List[Tuple[Any, Any, Any, Any, Any]]:
         """
         A utility function for listing all csle images
 
@@ -178,7 +178,7 @@ class ContainerController:
         return images_names_created_os_architecture_size
 
     @staticmethod
-    def list_docker_networks() -> Tuple[List[str], List[int]]:
+    def list_docker_networks():# -> Tuple[List[str], List[int]]:
         """
         Lists the csle docker networks
 
@@ -249,7 +249,7 @@ class ContainerController:
         :return: a list of the names of the running containers
         """
         parsed_envs = DockerUtil.parse_runnning_emulation_infos()
-        container_name_image_ip = []
+        container_name_image_ip: List[Any] = []
         for env in parsed_envs:
             container_name_image_ip = (container_name_image_ip +
                                        list(map(lambda x: (x.name, x.image_name, x.ip), env.containers)))
@@ -422,7 +422,10 @@ class ContainerController:
             # Update IPs of OVS switches
             for ovs_sw in emulation_env_config.ovs_config.switch_configs:
                 node_container_config = emulation_env_config.containers_config.get_container_from_ip(ovs_sw.ip)
-                ovs_sw.docker_gw_bridge_ip = node_container_config.docker_gw_bridge_ip
+                if node_container_config is not None:
+                    ovs_sw.docker_gw_bridge_ip = node_container_config.docker_gw_bridge_ip
+                else:
+                    ovs_sw.docker_gw_bridge_ip = ""
 
     @staticmethod
     def connect_container_to_network(container: NodeContainerConfig, logger: logging.Logger) -> None:
@@ -586,7 +589,7 @@ class ContainerController:
 
     @staticmethod
     def create_network(name: str, subnetmask: str, logger: logging.Logger,
-                       driver: str = "bridge", existing_network_names: List = None) -> None:
+                       driver: str = "bridge", existing_network_names: Union[List[Any], None] = None) -> None:
         """
         Creates a network
 

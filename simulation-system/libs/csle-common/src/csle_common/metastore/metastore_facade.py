@@ -2419,7 +2419,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_emulation_executions_for_a_given_emulation(emulation_name: str) -> List[EmulationExecution]:
+    def list_emulation_executions_for_a_given_emulation(emulation_name: str) -> List[Union[None, EmulationExecution]]:
         """
         :param emulation_name: the name of the emulation
         :return: A list of emulation executions in the metastore for a given emulation

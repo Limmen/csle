@@ -762,7 +762,7 @@ class Config(JSONSerializable):
             f.write(json_str)
 
     @staticmethod
-    def get_current_config() -> Union["Config", None]:
+    def get_current_config() -> "Config":
         """
         :return: The currently parsed config
         """
