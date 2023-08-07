@@ -517,22 +517,24 @@ class ContainerController:
         :return: None
         """
         if not ManagementSystemController.is_statsmanager_running():
-            ManagementSystemController.start_docker_stats_manager(
-                logger=logger,
-                port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
-                log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
-                log_dir=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir,
-                max_workers=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_max_workers
-            )
+            if execution is not None:
+                ManagementSystemController.start_docker_stats_manager(
+                    logger=logger,
+                    port=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port,
+                    log_file=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_file,
+                    log_dir=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_log_dir,
+                    max_workers=execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_max_workers
+                )
             time.sleep(5)
-        ip = physical_server_ip
-        with grpc.insecure_channel(
-                f'{ip}:'
-                f'{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}',
-                options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
-            stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
-            csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor(
-                stub=stub, emulation=execution.emulation_name, execution_first_ip_octet=execution.ip_first_octet)
+        if execution is not None:
+            ip = physical_server_ip
+            with grpc.insecure_channel(
+                    f'{ip}:'
+                    f'{execution.emulation_env_config.docker_stats_manager_config.docker_stats_manager_port}',
+                    options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
+                stub = csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc.DockerStatsManagerStub(channel)
+                csle_collector.docker_stats_manager.query_docker_stats_manager.stop_docker_stats_monitor(
+                    stub=stub, emulation=execution.emulation_name, execution_first_ip_octet=execution.ip_first_octet)
 
     @staticmethod
     def get_docker_stats_manager_status(docker_stats_manager_config: DockerStatsManagerConfig) \

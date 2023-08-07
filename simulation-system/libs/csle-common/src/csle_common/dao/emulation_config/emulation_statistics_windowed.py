@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
@@ -21,8 +21,8 @@ class EmulationStatisticsWindowed(JSONSerializable):
         :param descr: the description
         """
         self.window_size = window_size
-        self.initial_states = []
-        self.state_transitions = []
+        self.initial_states: List[Any] = []
+        self.state_transitions: List[Any] = []
         self.emulation_name = emulation_name
         self.descr = descr
         self.emulation_statistics = EmulationStatistics(emulation_name=self.emulation_name, descr=self.descr)
@@ -93,7 +93,7 @@ class EmulationStatisticsWindowed(JSONSerializable):
         obj.statistics_id = d["statistics_id"]
         return obj
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self):# -> Dict[str, Any]:
         """
         Converts the object to a dict representation
 
