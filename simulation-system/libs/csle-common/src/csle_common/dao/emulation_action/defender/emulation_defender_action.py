@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union, Iterable
 import time
 from csle_common.dao.emulation_action.defender.emulation_defender_action_type import EmulationDefenderActionType
 from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
@@ -11,11 +11,11 @@ class EmulationDefenderAction(JSONSerializable):
     Class representing an action of the defender in the environment
     """
 
-    def __init__(self, id: EmulationDefenderActionId, name: str, cmds: List[str],
+    def __init__(self, id: EmulationDefenderActionId, name: str, cmds: Iterable[str],
                  type: EmulationDefenderActionType, descr: str,
-                 ips: List[str], index: int,
+                 ips: Iterable[str], index: int,
                  action_outcome: EmulationDefenderActionOutcome = EmulationDefenderActionOutcome.GAME_END,
-                 alt_cmds: List[str] = None, execution_time: float = 0.0, ts: float = 0.0):
+                 alt_cmds: Iterable[str] = None, execution_time: float = 0.0, ts: float = 0.0):
         """
         Class constructor
 
@@ -37,7 +37,7 @@ class EmulationDefenderAction(JSONSerializable):
         if self.cmds is None:
             self.cmds = []
         self.type = type
-        self.descr = descr
+        self.descr : str = descr
         self.ips = ips
         if self.ips is None:
             self.ips = []
@@ -70,9 +70,9 @@ class EmulationDefenderAction(JSONSerializable):
             ts=d["ts"], execution_time=d["execution_time"])
         return obj
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self): # -> Dict[str, Any]:
         """
-        :return: a dicr representation of the object
+        :return: a dict representation of the object
         """
         d = {}
         d["id"] = self.id
@@ -95,9 +95,10 @@ class EmulationDefenderAction(JSONSerializable):
         :param ips: the list of ips to check
         :return:  True if they match, False otherwise
         """
-        for ip in self.ips:
-            if ip in ips:
-                return True
+        if self.ips is not None:
+            for ip in self.ips:
+                if ip in ips:
+                    return True
         return False
 
     def to_kafka_record(self) -> str:

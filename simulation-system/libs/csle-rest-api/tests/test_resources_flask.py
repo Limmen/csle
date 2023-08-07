@@ -1,11 +1,16 @@
 import json
+import logging
+
 import csle_common.constants.constants as constants
 import pytest
 import pytest_mock
 from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
 from csle_common.dao.emulation_config.config import Config
+
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
+
+logger = logging.getLogger()
 
 
 class TestResourcesFlaskSuite:
@@ -126,6 +131,7 @@ class TestResourcesFlaskSuite:
         gpus = config.cluster_config.cluster_nodes[0].gpus
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
                      side_effect=node_status_flask_running)
+        logger.info("hej")
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.FLASK_RESOURCE)
         response_data = response.data.decode('utf-8')

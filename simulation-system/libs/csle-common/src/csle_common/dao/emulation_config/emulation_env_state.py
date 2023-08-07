@@ -1,4 +1,4 @@
-from typing import Union, Dict, Any
+from typing import Union, Dict, Any, Optional
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state \
@@ -43,7 +43,7 @@ class EmulationEnvState(JSONSerializable):
         self.os_lookup = constants.OS.os_lookup
         self.os_lookup_inv = {v: k for k, v in self.os_lookup.items()}
         self.attacker_obs_state: Union[EmulationAttackerObservationState, None] = None
-        self.defender_obs_state: Union[EmulationDefenderObservationState, None] = None
+        self.defender_obs_state: Optional[EmulationDefenderObservationState] = None
         self.attacker_cached_ssh_connections = {}
         self.attacker_cached_telnet_connections = {}
         self.attacker_cached_ftp_connections = {}

@@ -1,11 +1,15 @@
-from flask import request
-from flask_socketio import ConnectionRefusedError
-from flask import Blueprint
-import paramiko
-import csle_rest_api.util.rest_api_util as rest_api_util
-import csle_rest_api.constants.constants as api_constants
+import logging
+
 import csle_common.constants.constants as constants
+import paramiko
+from flask import Blueprint, request
+from flask_socketio import ConnectionRefusedError
+
+import csle_rest_api.constants.constants as api_constants
+import csle_rest_api.util.rest_api_util as rest_api_util
 from csle_rest_api import socketio
+
+logger = logging.getLogger()
 
 
 def get_container_terminal_bp(app):
@@ -15,7 +19,9 @@ def get_container_terminal_bp(app):
     :param app: the Flask app
     :return: the blue print
     """
-
+    logger.info(dir(app.test_client()))
+    logger.info(dir(app))
+    # logger.info(request)
     def set_container_terminal_winsize(ssh_channel, row: int, col: int, xpix: int = 0, ypix: int = 0) -> None:
         """
         Set shell window size of the host terminal
@@ -27,6 +33,7 @@ def get_container_terminal_bp(app):
         :param ypix: the number of y pixels of the new size
         :return:
         """
+        logger.info("kommer jag hit?")
         ssh_channel.resize_pty(width=col, height=row, width_pixels=xpix, height_pixels=ypix)
 
     def ssh_connect(ip: str) -> paramiko.SSHClient:
@@ -36,6 +43,7 @@ def get_container_terminal_bp(app):
         :param ip: the IP to connect to
         :return: the created ssh connection
         """
+        logger.info("kommer jag hit?")
         conn = paramiko.SSHClient()
         conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         conn.connect(ip, username=constants.CSLE_ADMIN.SSH_USER, password=constants.CSLE_ADMIN.SSH_PW)
@@ -52,6 +60,7 @@ def get_container_terminal_bp(app):
 
         :return: None
         """
+        logger.info("kommer jag hit?")
         max_read_bytes = 1024 * 20
         while True:
             socketio.sleep(0.01)
@@ -76,6 +85,7 @@ def get_container_terminal_bp(app):
         :param data: the input data to write
         :return: None
         """
+        logger.info("kommer jag hit?")
         cmd = data[api_constants.MGMT_WEBAPP.INPUT_PROPERTY].encode()
         ssh_channel = app.config[api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_SHELL]
         ssh_channel.send(cmd)
@@ -106,6 +116,7 @@ def get_container_terminal_bp(app):
 
         :return: None
         """
+        logger.info("kommer jag hit?")
         authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
         if authorized is not None or (constants.CONFIG_FILE.PARSED_CONFIG is None):
             raise ConnectionRefusedError()
@@ -122,6 +133,6 @@ def get_container_terminal_bp(app):
             socketio.start_background_task(target=read_and_forward_container_terminal_output)
         else:
             ConnectionRefusedError()
-
+    logger.info("vad returneras här?")
     container_terminal_bp = Blueprint(api_constants.MGMT_WEBAPP.WS_CONTAINER_TERMINAL_NAMESPACE, __name__)
     return container_terminal_bp

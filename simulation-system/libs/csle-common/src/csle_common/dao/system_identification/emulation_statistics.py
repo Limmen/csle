@@ -35,22 +35,22 @@ class EmulationStatistics(JSONSerializable):
             EmulationStatistics.initialize_counters(d={},
                                                     agg_labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_AGG_LABELS)
         self.id = -1
-        self.means = {}
-        self.stds = {}
-        self.mins = {}
-        self.maxs = {}
-        self.conditionals_probs = {}
-        self.initial_distributions_probs = {}
-        self.initial_means = {}
-        self.initial_stds = {}
-        self.initial_mins = {}
-        self.initial_maxs = {}
-        self.conditionals_kl_divergences = {}
-        self.num_metrics = 0
-        self.num_measurements = 0
-        self.num_conditions = 0
-        self.conditions = []
-        self.metrics = []
+        means: Dict[Any, Any] = {}
+        self.stds: Dict[Any, Any] = {}
+        self.mins: Dict[Any, Any] = {}
+        self.maxs: Dict[Any, Any] = {}
+        self.conditionals_probs: Dict[Any, Any] = {}
+        self.initial_distributions_probs: Dict[Any, Any] = {}
+        self.initial_means: Dict[Any, Any] = {}
+        self.initial_stds: Dict[Any, Any] = {}
+        self.initial_mins: Dict[Any, Any] = {}
+        self.initial_maxs: Dict[Any, Any]= {}
+        self.conditionals_kl_divergences: Dict[Any, Any] = {}
+        self.num_metrics: int = 0
+        self.num_measurements: int = 0
+        self.num_conditions: int = 0
+        self.conditions: List[Any] = []
+        self.metrics: List[Any] = []
 
     @staticmethod
     def initialize_counters(d: Dict[str, Dict[int, int]], agg_labels: List[str]) \
@@ -465,7 +465,7 @@ class EmulationStatistics(JSONSerializable):
         obj.conditionals_kl_divergences = d["conditionals_kl_divergences"]
         return obj
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self):
         """
         Converts the object to a dict representation
 
