@@ -100,7 +100,7 @@ class EmulationDefenderObservationState(JSONSerializable):
         """
         self.aggregated_host_metrics_thread = AggregatedHostMetricsThread(
             host_metrics=self.aggregated_host_metrics,
-            sleep_time=self.kafka_config.time_step_len_seconds,
+            sleep_time=self.kafka_config.time_step_len_seconds if self.kafka_config is not None else -1,
             machines=self.machines
         )
         self.docker_stats_consumer_thread = DockerStatsConsumerThread(
@@ -137,14 +137,22 @@ class EmulationDefenderObservationState(JSONSerializable):
             kafka_port=self.kafka_config.kafka_port_external,
             defender_actions=self.defender_actions
         )
-        self.aggregated_host_metrics_thread.start()
-        self.docker_stats_consumer_thread.start()
-        self.client_population_consumer_thread.start()
-        self.aggregated_snort_ids_log_consumer_thread.start()
-        self.aggregated_snort_ids_rule_log_consumer_thread.start()
-        self.aggregated_ossec_ids_log_consumer_thread.start()
-        self.attacker_actions_consumer_thread.start()
-        self.defender_actions_consumer_thread.start()
+        if self.aggregated_host_metrics is not None:
+            self.aggregated_host_metrics.start()
+        if self.docker_stats_consumer_thread is not None:
+            self.docker_stats_consumer_thread.start()
+        if self.client_population_consumer_thread is not None:
+            self.client_population_consumer_thread.start()
+        if self.aggregated_snort_ids_log_consumer_thread is not None:
+            self.aggregated_snort_ids_log_consumer_thread.start()
+        if self.aggregated_snort_ids_rule_log_consumer_thread is not None:
+            self.aggregated_snort_ids_rule_log_consumer_thread.start()
+        if self.aggregated_ossec_ids_log_consumer_thread is not None:
+            self.aggregated_ossec_ids_log_consumer_thread.start()
+        if self.attacker_actions_consumer_thread is not None:
+            self.attacker_actions_consumer_thread.start()
+        if self.defender_actions_consumer_thread is not None:
+            self.defender_actions_consumer_thread.start()
         for m in self.machines:
             m.start_monitor_threads()
 
@@ -253,12 +261,18 @@ class EmulationDefenderObservationState(JSONSerializable):
 
         :return: None
         """
-        self.aggregated_snort_ids_log_consumer_thread.snort_ids_alert_counters_list = []
-        self.aggregated_snort_ids_rule_log_consumer_thread.snort_ids_rule_counters_list = []
-        self.aggregated_ossec_ids_log_consumer_thread.ossec_ids_alert_counters_list = []
-        self.docker_stats_consumer_thread.docker_stats_list = []
-        self.client_population_consumer_thread.client_population_metrics_list = []
-        self.aggregated_host_metrics_thread.host_metrics_list = []
+        if self.aggregated_snort_ids_log_consumer_thread is not None:
+            self.aggregated_snort_ids_log_consumer_thread.snort_ids_alert_counters_list = []
+        if self.aggregated_snort_ids_rule_log_consumer_thread is not None:
+            self.aggregated_snort_ids_rule_log_consumer_thread.snort_ids_rule_counters_list = []
+        if self.aggregated_ossec_ids_log_consumer_thread is not None:
+            self.aggregated_ossec_ids_log_consumer_thread.ossec_ids_alert_counters_list = []
+        if self.docker_stats_consumer_thread is not None:
+            self.docker_stats_consumer_thread.docker_stats_list = []
+        if self.client_population_consumer_thread is not None:
+            self.client_population_consumer_thread.client_population_metrics_list = []
+        if self.aggregated_host_metrics_thread is not None:
+            self.aggregated_host_metrics_thread.host_metrics_list = []
 
     def average_metric_lists(self):
         """
