@@ -37,7 +37,7 @@ class EmpiricalConditional(JSONSerializable):
             sample_space=d["sample_space"], probabilities=d["probabilities"]
         )
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self):# -> Dict[str, Any]:
         """
         :return: a dict representation of the DTO
         """

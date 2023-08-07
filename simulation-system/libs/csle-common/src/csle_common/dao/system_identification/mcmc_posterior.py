@@ -33,7 +33,7 @@ class MCMCPosterior(JSONSerializable):
         return MCMCPosterior(posterior_name=d["posterior_name"], samples=d["samples"], densities=d["densities"],
                              sample_space=d["sample_space"])
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self):# -> Dict[Any, Any]:
         """
         :return: a dict representation of the DTO
         """

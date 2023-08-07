@@ -1,4 +1,4 @@
-from typing import Union, List, Dict
+from typing import Union, List, Dict, Any
 from abc import abstractmethod
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
@@ -31,7 +31,7 @@ class Policy(JSONSerializable):
         pass
 
     @abstractmethod
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> Dict[Any, Any]:
         """
         Converts the object to a dict representation
 
@@ -51,7 +51,7 @@ class Policy(JSONSerializable):
 
     @staticmethod
     @abstractmethod
-    def from_dict(d: Dict) -> "Policy":
+    def from_dict(d: Dict[Any, Any]) -> "Policy":
         """
         Converts a dict representation of the object to an instance
 

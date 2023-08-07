@@ -35,7 +35,7 @@ class State(JSONSerializable):
         )
         return obj
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self):# -> Dict[str, Any]:
         """
         Converts the object to a dict representation
 

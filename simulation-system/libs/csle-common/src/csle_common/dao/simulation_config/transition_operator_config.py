@@ -7,7 +7,7 @@ class TransitionOperatorConfig(JSONSerializable):
     DTO representing the transition operator definition of a simulation
     """
 
-    def __init__(self, transition_tensor: List):
+    def __init__(self, transition_tensor: List[Any]):
         """
         Initializes the DTO
 
