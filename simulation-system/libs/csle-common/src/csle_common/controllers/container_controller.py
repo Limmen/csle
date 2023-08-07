@@ -506,7 +506,7 @@ class ContainerController:
                 containers=container_ip_dtos, execution_first_ip_octet=execution.ip_first_octet)
 
     @staticmethod
-    def stop_docker_stats_thread(execution: EmulationExecution, physical_server_ip: str,
+    def stop_docker_stats_thread(execution: Union[None, EmulationExecution], physical_server_ip: str,
                                  logger: logging.Logger) -> None:
         """
         Sends a request to the docker stats manager on the docker host for stopping a docker stats monitor thread

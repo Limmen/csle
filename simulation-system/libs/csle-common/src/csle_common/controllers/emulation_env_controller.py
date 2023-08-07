@@ -274,7 +274,7 @@ class EmulationEnvController:
                                                 logger=Logger.__call__().get_logger())
 
     @staticmethod
-    def delete_networks_of_emulation_env_config(emulation_env_config: EmulationEnvConfig,
+    def delete_networks_of_emulation_env_config(emulation_env_config: Union[None, EmulationEnvConfig],
                                                 physical_server_ip: str, logger: logging.Logger,
                                                 leader: bool = False) -> None:
         """
@@ -286,17 +286,18 @@ class EmulationEnvController:
         :param logger: the logger to use for logging
         :return: None
         """
-        for c in emulation_env_config.containers_config.containers:
-            if c.physical_host_ip == physical_server_ip or leader:
-                for ip_net in c.ips_and_networks:
+        if emulation_env_config is not None:
+            for c in emulation_env_config.containers_config.containers:
+                if c.physical_host_ip == physical_server_ip or leader:
+                    for ip_net in c.ips_and_networks:
+                        ip, net = ip_net
+                        ContainerController.remove_network(name=net.name, logger=logger)
+
+            c = emulation_env_config.kafka_config.container
+            if c.physical_host_ip == physical_server_ip:
+                if ip_net in c.ips_and_networks or leader:
                     ip, net = ip_net
                     ContainerController.remove_network(name=net.name, logger=logger)
-
-        c = emulation_env_config.kafka_config.container
-        if c.physical_host_ip == physical_server_ip:
-            for ip_net in c.ips_and_networks or leader:
-                ip, net = ip_net
-                ContainerController.remove_network(name=net.name, logger=logger)
 
     @staticmethod
     def create_execution(emulation_env_config: EmulationEnvConfig, physical_servers: List[str]) -> EmulationExecution:
@@ -309,7 +310,7 @@ class EmulationEnvController:
         """
         timestamp = float(time.time())
         total_subnets = constants.CSLE.LIST_OF_IP_SUBNETS
-        used_subnets = list(map(lambda x: x.ip_first_octet,
+        used_subnets = list(map(lambda x: x.ip_first_octet if x is not None else None,
                                 MetastoreFacade.list_emulation_executions_for_a_given_emulation(
                                     emulation_name=emulation_env_config.name)))
         available_subnets = list(filter(lambda x: x not in used_subnets, total_subnets))
@@ -340,7 +341,7 @@ class EmulationEnvController:
             if c.physical_host_ip != physical_host_ip:
                 continue
             ips = c.get_ips()
-            container_resources: NodeResourcesConfig = None
+            container_resources: Union[None, NodeResourcesConfig] = None
             for r in emulation_env_config.resources_config.node_resources_configurations:
                 for ip_net_resources in r.ips_and_network_configs:
                     ip, net_resources = ip_net_resources
@@ -496,41 +497,41 @@ class EmulationEnvController:
         """
         if execution is not None:
             emulation_env_config = execution.emulation_env_config
-        else:
-            emulation_env_config = None
         # Stop regular containers
-        for c in emulation_env_config.containers_config.containers:
-            if c.physical_host_ip != physical_server_ip:
-                continue
-            name = c.get_full_name()
-            logger.info(f"Stopping container:{name}")
-            cmd = f"docker stop {name}"
-            subprocess.call(cmd, shell=True)
+            for c in emulation_env_config.containers_config.containers:
+                if c.physical_host_ip != physical_server_ip:
+                    continue
+                name = c.get_full_name()
+                logger.info(f"Stopping container:{name}")
+                cmd = f"docker stop {name}"
+                subprocess.call(cmd, shell=True)
 
-        # Stop the Kafka container
-        c = emulation_env_config.kafka_config.container
-        if c.physical_host_ip == physical_server_ip:
-            name = c.get_full_name()
-            logger.info(f"Stopping container:{name}")
-            cmd = f"docker stop {name}"
-            subprocess.call(cmd, shell=True)
-
-        # Stop the ELK container
-        c = emulation_env_config.elk_config.container
-        if c.physical_host_ip == physical_server_ip:
-            name = c.get_full_name()
-            logger.info(f"Stopping container:{name}")
-            cmd = f"docker stop {name}"
-            subprocess.call(cmd, shell=True)
-
-        if emulation_env_config.sdn_controller_config is not None:
-            # Stop the SDN controller container
-            c = emulation_env_config.sdn_controller_config.container
+            # Stop the Kafka container
+            c = emulation_env_config.kafka_config.container
             if c.physical_host_ip == physical_server_ip:
                 name = c.get_full_name()
                 logger.info(f"Stopping container:{name}")
                 cmd = f"docker stop {name}"
                 subprocess.call(cmd, shell=True)
+
+            # Stop the ELK container
+            c = emulation_env_config.elk_config.container
+            if c.physical_host_ip == physical_server_ip:
+                name = c.get_full_name()
+                logger.info(f"Stopping container:{name}")
+                cmd = f"docker stop {name}"
+                subprocess.call(cmd, shell=True)
+
+            if emulation_env_config.sdn_controller_config is not None:
+                # Stop the SDN controller container
+                c = emulation_env_config.sdn_controller_config.container
+                if c.physical_host_ip == physical_server_ip:
+                    name = c.get_full_name()
+                    logger.info(f"Stopping container:{name}")
+                    cmd = f"docker stop {name}"
+                    subprocess.call(cmd, shell=True)
+        else:
+            emulation_env_config = None
 
     @staticmethod
     def clean_all_emulation_executions(emulation_env_config: EmulationEnvConfig, physical_server_ip: str,
@@ -555,9 +556,14 @@ class EmulationEnvController:
                                                              logger=logger)
             except Exception:
                 pass
-            EmulationEnvController.delete_networks_of_emulation_env_config(
-                emulation_env_config=exec.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger,
-                leader=leader)
+            if exec is not None:
+                EmulationEnvController.delete_networks_of_emulation_env_config(
+                    emulation_env_config=exec.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger,
+                    leader=leader)
+            else:
+                EmulationEnvController.delete_networks_of_emulation_env_config(
+                    emulation_env_config=None, physical_server_ip=physical_server_ip, logger=logger,
+                    leader=leader)
 
     @staticmethod
     def clean_emulation_execution(emulation_env_config: EmulationEnvConfig, execution_id: int,
@@ -582,9 +588,14 @@ class EmulationEnvController:
                                                          logger=logger)
         except Exception:
             pass
-        EmulationEnvController.delete_networks_of_emulation_env_config(
-            emulation_env_config=execution.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger,
-            leader=leader)
+        if execution is not None:
+            EmulationEnvController.delete_networks_of_emulation_env_config(
+                emulation_env_config=execution.emulation_env_config, physical_server_ip=physical_server_ip, logger=logger,
+                leader=leader)
+        else:
+            EmulationEnvController.delete_networks_of_emulation_env_config(
+                emulation_env_config=None, physical_server_ip=physical_server_ip, logger=logger,
+                leader=leader)
 
     @staticmethod
     def clean_all_executions(physical_server_ip: str, logger: logging.Logger, leader: bool = False) -> None:
@@ -623,38 +634,41 @@ class EmulationEnvController:
         """
 
         # Remove regular containers
-        for c in execution.emulation_env_config.containers_config.containers:
-            if c.physical_host_ip != physical_server_ip:
-                continue
-            name = c.get_full_name()
-            logger.info(f"Removing container:{name}")
-            cmd = f"docker rm {name}"
-            subprocess.call(cmd, shell=True)
+        if execution is not None:
+            for c in execution.emulation_env_config.containers_config.containers:
+                if c.physical_host_ip != physical_server_ip:
+                    continue
+                name = c.get_full_name()
+                logger.info(f"Removing container:{name}")
+                cmd = f"docker rm {name}"
+                subprocess.call(cmd, shell=True)
 
-        # Remove the kafka container
-        c = execution.emulation_env_config.kafka_config.container
-        if c.physical_host_ip == physical_server_ip:
-            name = c.get_full_name()
-            logger.info(f"Removing container:{name}")
-            cmd = f"docker rm {name}"
-            subprocess.call(cmd, shell=True)
-
-        # Remove the elk container
-        c = execution.emulation_env_config.elk_config.container
-        if c.physical_host_ip == physical_server_ip:
-            name = c.get_full_name()
-            logger.info(f"Removing container:{name}")
-            cmd = f"docker rm {name}"
-            subprocess.call(cmd, shell=True)
-
-        if execution.emulation_env_config.sdn_controller_config is not None:
-            # Remove the SDN controller container
-            c = execution.emulation_env_config.sdn_controller_config.container
+            # Remove the kafka container
+            c = execution.emulation_env_config.kafka_config.container
             if c.physical_host_ip == physical_server_ip:
                 name = c.get_full_name()
                 logger.info(f"Removing container:{name}")
                 cmd = f"docker rm {name}"
                 subprocess.call(cmd, shell=True)
+
+            # Remove the elk container
+            c = execution.emulation_env_config.elk_config.container
+            if c.physical_host_ip == physical_server_ip:
+                name = c.get_full_name()
+                logger.info(f"Removing container:{name}")
+                cmd = f"docker rm {name}"
+                subprocess.call(cmd, shell=True)
+
+            if execution.emulation_env_config.sdn_controller_config is not None:
+                # Remove the SDN controller container
+                c = execution.emulation_env_config.sdn_controller_config.container
+                if c.physical_host_ip == physical_server_ip:
+                    name = c.get_full_name()
+                    logger.info(f"Removing container:{name}")
+                    cmd = f"docker rm {name}"
+                    subprocess.call(cmd, shell=True)
+        else:
+            pass
 
     @staticmethod
     def install_emulation(config: EmulationEnvConfig) -> None:
@@ -738,7 +752,7 @@ class EmulationEnvController:
         """
         running_containers, stopped_containers = ContainerController.list_all_running_containers_in_emulation(
             emulation_env_config=execution.emulation_env_config)
-        active_ips = []
+        active_ips: List[Any] = []
         for container in running_containers:
             active_ips = active_ips + container.get_ips()
             active_ips.append(container.docker_gw_bridge_ip)
@@ -842,7 +856,7 @@ class EmulationEnvController:
             remote_port=remote_port, transport=agent_transport,
             tunnels_dict=tunnels_dict)
         tunnel_thread.start()
-        tunnel_thread_dict = {}
+        tunnel_thread_dict: Dict[Any, Any] = {}
         tunnel_thread_dict[constants.GENERAL.THREAD_PROPERTY] = tunnel_thread
         tunnel_thread_dict[constants.GENERAL.PORT_PROPERTY] = local_port
         tunnel_thread_dict[constants.GENERAL.EMULATION_PROPERTY] = emulation
