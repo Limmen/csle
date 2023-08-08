@@ -1,4 +1,5 @@
 from typing import List, Dict, Any
+import numpy as np
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -23,10 +24,8 @@ class ObservationFunctionConfig(JSONSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = ObservationFunctionConfig(
-            observation_tensor=d["observation_tensor"],
-            component_observation_tensors=d["component_observation_tensors"]
-        )
+        obj = ObservationFunctionConfig(observation_tensor=d["observation_tensor"],
+                                        component_observation_tensors=d["component_observation_tensors"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -36,8 +35,21 @@ class ObservationFunctionConfig(JSONSerializable):
         :return: a dict representation of the object
         """
         d = {}
-        d["observation_tensor"] = self.observation_tensor
+        if isinstance(self.observation_tensor, np.ndarray):
+            tensor = self.observation_tensor.tolist()
+        else:
+            tensor = self.observation_tensor
+        for i in range(len(tensor)):
+            if isinstance(tensor[i], np.ndarray):
+                tensor[i] = tensor[i].tolist()
+        d["observation_tensor"] = list(tensor)
         d["component_observation_tensors"] = self.component_observation_tensors
+        for k, v in d["component_observation_tensors"].items():
+            if isinstance(v, np.ndarray):
+                d["component_observation_tensors"][k] = v.tolist()
+            for i in range(len(d["component_observation_tensors"][k])):
+                if isinstance(d["component_observation_tensors"][k][i], np.ndarray):
+                    d["component_observation_tensors"][k][i] = d["component_observation_tensors"][k][i].tolist()
         return d
 
     def __str__(self) -> str:

@@ -1,4 +1,5 @@
 from typing import List, Dict, Any
+import numpy as np
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -23,9 +24,7 @@ class TransitionOperatorConfig(JSONSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = TransitionOperatorConfig(
-            transition_tensor=d["transition_tensor"]
-        )
+        obj = TransitionOperatorConfig(transition_tensor=d["transition_tensor"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -35,7 +34,14 @@ class TransitionOperatorConfig(JSONSerializable):
         :return: a dict representation of the object
         """
         d = {}
-        d["transition_tensor"] = self.transition_tensor
+        if isinstance(self.transition_tensor, np.ndarray):
+            tensor = self.transition_tensor.tolist()
+        else:
+            tensor = self.transition_tensor
+        for i in range(len(tensor)):
+            if isinstance(tensor[i], np.ndarray):
+                tensor[i] = tensor[i].tolist()
+        d["transition_tensor"] = list(tensor)
         return d
 
     def __str__(self):

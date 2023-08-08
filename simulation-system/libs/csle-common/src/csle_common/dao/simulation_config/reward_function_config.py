@@ -1,4 +1,7 @@
 from typing import Dict, Any, List
+
+import numpy as np
+
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -23,9 +26,7 @@ class RewardFunctionConfig(JSONSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = RewardFunctionConfig(
-            reward_tensor=d["reward_tensor"]
-        )
+        obj = RewardFunctionConfig(reward_tensor=d["reward_tensor"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -33,7 +34,14 @@ class RewardFunctionConfig(JSONSerializable):
         :return: a dict representation  of the object
         """
         d = {}
-        d["reward_tensor"] = self.reward_tensor
+        if isinstance(self.reward_tensor, np.ndarray):
+            tensor = self.reward_tensor.tolist()
+        else:
+            tensor = self.reward_tensor
+        for i in range(len(tensor)):
+            if isinstance(tensor[i], np.ndarray):
+                tensor[i] = tensor[i].tolist()
+        d["reward_tensor"] = list(tensor)
         return d
 
     def __str__(self):

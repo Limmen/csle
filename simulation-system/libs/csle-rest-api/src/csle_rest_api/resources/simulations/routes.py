@@ -1,15 +1,16 @@
 """
 Routes and sub-resources for the /simulations resource
 """
-from typing import Tuple
 import base64
-from flask import Blueprint, jsonify, request, Response
+from typing import Tuple
+from flask import Blueprint, Response, jsonify, request
+import json
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
-from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.simulation_env_controller import SimulationEnvController
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from csle_common.dao.encoding.np_encoder import NpEncoder
+import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
-
 
 # Creates a blueprint "sub application" of the main REST app
 simulations_bp = Blueprint(
@@ -48,7 +49,8 @@ def simulations() -> Tuple[Response, int]:
             SimulationEnvController.uninstall_simulation(sim)
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-        simulations_dicts = list(map(lambda x: x.to_dict(), all_simulations))
+        simulations_dicts = list(map(lambda x: json.loads(json.dumps(x.to_dict(), indent=4, sort_keys=True,
+                                                                     cls=NpEncoder)), all_simulations))
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         simulations_dicts = []
     response = jsonify(simulations_dicts)
@@ -76,7 +78,7 @@ def simulation_ids() -> Tuple[Response, int]:
                                                    api_constants.MGMT_WEBAPP.HTTP_REST_DELETE])
 def get_simulation(simulation_id: int) -> Tuple[Response, int]:
     """
-    The /simulations/id resource. Gets or delets a simulation with a given id.
+    The /simulations/id resource. Gets or deletes a simulation with a given id.
 
     :param simulation_id: the id of the simulation
     :return: the simulation or deletes the simulation
@@ -84,18 +86,20 @@ def get_simulation(simulation_id: int) -> Tuple[Response, int]:
     requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
+
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
-
     simulation = MetastoreFacade.get_simulation(simulation_id)
     sim_name_img = MetastoreFacade.get_simulation_image(simulation_name=simulation.name)
     sim_name, img = sim_name_img
     simulation.image = base64.b64encode(img).decode()
     response = jsonify({})
+
     if simulation is not None:
+
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-            response = jsonify(simulation.to_dict())
+            response = jsonify(json.loads(json.dumps(simulation.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)))
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             SimulationEnvController.uninstall_simulation(simulation)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
