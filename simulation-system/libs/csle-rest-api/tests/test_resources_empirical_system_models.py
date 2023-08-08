@@ -1,21 +1,12 @@
-import json
-import logging
 from typing import List, Tuple
-
-import csle_common.constants.constants as constants
+import json
 import pytest
 import pytest_mock
-from csle_common.dao.system_identification.empirical_conditional import (
-    EmpiricalConditional,
-)
-from csle_common.dao.system_identification.empirical_system_model import (
-    EmpiricalSystemModel,
-)
-
+import csle_common.constants.constants as constants
+from csle_common.dao.system_identification.empirical_conditional import EmpiricalConditional
+from csle_common.dao.system_identification.empirical_system_model import EmpiricalSystemModel
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
-
-logger = logging.getLogger()
 
 
 class TestResourcesESMModelsSuite:
@@ -55,8 +46,7 @@ class TestResourcesESMModelsSuite:
         def list_empirical_system_models() -> List[EmpiricalSystemModel]:
             esm_model = TestResourcesESMModelsSuite.get_example_esm()
             return [esm_model]
-        list_empirical_system_models_mocker = mocker.MagicMock(
-            side_effect=list_empirical_system_models)
+        list_empirical_system_models_mocker = mocker.MagicMock(side_effect=list_empirical_system_models)
         return list_empirical_system_models_mocker
 
     @pytest.fixture
@@ -69,8 +59,7 @@ class TestResourcesESMModelsSuite:
         """
         def remove_empirical_system_model(empirical_system_model: EmpiricalSystemModel) -> None:
             return None
-        remove_empirical_system_model_mocker = mocker.MagicMock(
-            side_effect=remove_empirical_system_model)
+        remove_empirical_system_model_mocker = mocker.MagicMock(side_effect=remove_empirical_system_model)
         return remove_empirical_system_model_mocker
 
     @pytest.fixture
@@ -84,8 +73,7 @@ class TestResourcesESMModelsSuite:
         def get_empirical_system_model_config(id: int) -> EmpiricalSystemModel:
             esm_model = TestResourcesESMModelsSuite.get_example_esm()
             return esm_model
-        get_empirical_system_model_config_mocker = mocker.MagicMock(
-            side_effect=get_empirical_system_model_config)
+        get_empirical_system_model_config_mocker = mocker.MagicMock(side_effect=get_empirical_system_model_config)
         return get_empirical_system_model_config_mocker
 
     @pytest.fixture
@@ -98,12 +86,16 @@ class TestResourcesESMModelsSuite:
         """
         def get_empirical_system_model_config(id: int) -> None:
             return None
-        get_empirical_system_model_config_mocker = mocker.MagicMock(
-            side_effect=get_empirical_system_model_config)
+        get_empirical_system_model_config_mocker = mocker.MagicMock(side_effect=get_empirical_system_model_config)
         return get_empirical_system_model_config_mocker
 
     @staticmethod
-    def get_example_esm():
+    def get_example_esm() -> EmpiricalSystemModel:
+        """
+        Helper function that creates an example empirical system model for mocking
+
+        :return: the example empirical system model
+        """
         e_cond = EmpiricalConditional(conditional_name="JohnDoe",
                                       metric_name="JDoeMetric",
                                       sample_space=[10],
@@ -114,9 +106,8 @@ class TestResourcesESMModelsSuite:
                                          descr="null")
         return esm_model
 
-    def test_empirical_system_models_get(self, mocker, flask_app, not_logged_in, logged_in,
-                                         logged_in_as_admin, list_esm_ids,
-                                         list_esm) -> None:
+    def test_empirical_system_models_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
+                                         logged_in_as_admin, list_esm_ids, list_esm) -> None:
         """
         Tests the GET HTTPS method for the /empirical-system-models resource
 
@@ -146,8 +137,7 @@ class TestResourcesESMModelsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode('utf-8')
@@ -185,7 +175,7 @@ class TestResourcesESMModelsSuite:
         for k in response_data_dict:
             assert response_data_dict[k] == ex_esm_data_dict[k]
 
-    def test_empirical_system_models_delete(self, mocker, flask_app, not_logged_in, logged_in,
+    def test_empirical_system_models_delete(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
                                             logged_in_as_admin, remove, list_esm) -> None:
         """
         Tests the DELETE HTTPS method for the /empirical-system-models resource
@@ -203,8 +193,7 @@ class TestResourcesESMModelsSuite:
                      side_effect=list_esm)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_empirical_system_model",
                      side_effect=remove)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}")
         response_data = response.data.decode('utf-8')
         response_data_dict = json.loads(response_data)
@@ -225,7 +214,7 @@ class TestResourcesESMModelsSuite:
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
 
-    def test_empirical_system_models_ids_get(self, mocker, flask_app, not_logged_in, logged_in,
+    def test_empirical_system_models_ids_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
                                              logged_in_as_admin, get_esm_config, get_esm_config_none) -> None:
         """
         Tests the GET HTTPS method for the /empirical-system-models/id resource
@@ -241,8 +230,7 @@ class TestResourcesESMModelsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_empirical_system_model_config",
                      side_effect=get_esm_config)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}/10")
         response_data = response.data.decode('utf-8')
         response_data_dict = json.loads(response_data)
@@ -283,8 +271,9 @@ class TestResourcesESMModelsSuite:
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_dict == {}
 
-    def test_empirical_system_models_ids_delete(self, mocker, flask_app, not_logged_in, logged_in,
-                                                logged_in_as_admin, get_esm_config, remove, get_esm_config_none):
+    def test_empirical_system_models_ids_delete(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                                logged_in, logged_in_as_admin, get_esm_config, remove,
+                                                get_esm_config_none):
         """
         Tests the DELETE HTTPS method for the /empirical-system-models/id resource
 
@@ -301,8 +290,7 @@ class TestResourcesESMModelsSuite:
                      side_effect=get_esm_config)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_empirical_system_model",
                      side_effect=remove)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EMPIRICAL_SYSTEM_MODELS_RESOURCE}/10")
         response_data = response.data.decode('utf-8')
         response_data_dict = json.loads(response_data)
