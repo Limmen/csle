@@ -1,23 +1,20 @@
 """
 Routes and sub-resources for the /emulation-executions resource
 """
+from typing import Any, Dict, List, Tuple, Union
 import json
 import logging
 import time
-from typing import Any, Dict, List, Tuple, Union
-
+import requests
+from flask import Blueprint, Response, jsonify, request
 import csle_common.constants.constants as constants
 import csle_ryu.constants.constants as ryu_constants
-import requests
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, Response, jsonify, request
-
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
-logger = logging.getLogger()
 # Creates a blueprint "sub application" of the main REST app
 emulation_executions_bp = Blueprint(
     api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE, __name__,

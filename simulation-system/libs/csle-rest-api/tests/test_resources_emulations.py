@@ -1,66 +1,33 @@
 import json
 from typing import List, Tuple
-
-import csle_common.constants.constants as constants
 import pytest
 import pytest_mock
-from csle_cluster.cluster_manager.cluster_manager_pb2 import (
-    OperationOutcomeDTO,
-    RunningEmulationsDTO,
-)
-from csle_collector.client_manager.client_population_metrics import (
-    ClientPopulationMetrics,
-)
+import csle_common.constants.constants as constants
+from csle_cluster.cluster_manager.cluster_manager_pb2 import OperationOutcomeDTO, RunningEmulationsDTO
+from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
 from csle_collector.host_manager.host_metrics import HostMetrics
-from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import (
-    OSSECIdsAlertCounters,
-)
-from csle_collector.snort_ids_manager.snort_ids_alert_counters import (
-    SnortIdsAlertCounters,
-)
-from csle_collector.snort_ids_manager.snort_ids_ip_alert_counters import (
-    SnortIdsIPAlertCounters,
-)
-from csle_collector.snort_ids_manager.snort_ids_rule_counters import (
-    SnortIdsRuleCounters,
-)
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action import (
-    EmulationAttackerAction,
-)
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import (
-    EmulationAttackerActionId,
-)
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import (
-    EmulationAttackerActionOutcome,
-)
-from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import (
-    EmulationAttackerActionType,
-)
-from csle_common.dao.emulation_action.defender.emulation_defender_action import (
-    EmulationDefenderAction,
-)
-from csle_common.dao.emulation_action.defender.emulation_defender_action_id import (
-    EmulationDefenderActionId,
-)
-from csle_common.dao.emulation_action.defender.emulation_defender_action_outcome import (
-    EmulationDefenderActionOutcome,
-)
-from csle_common.dao.emulation_action.defender.emulation_defender_action_type import (
-    EmulationDefenderActionType,
-)
+from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
+from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.snort_ids_manager.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
+from csle_collector.snort_ids_manager.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome import EmulationAttackerActionOutcome
+from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
+from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
+from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
+from csle_common.dao.emulation_action.defender.emulation_defender_action_outcome import EmulationDefenderActionOutcome
+from csle_common.dao.emulation_action.defender.emulation_defender_action_type import EmulationDefenderActionType
 from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
-from csle_common.dao.emulation_config.emulation_metrics_time_series import (
-    EmulationMetricsTimeSeries,
-)
+from csle_common.dao.emulation_config.emulation_metrics_time_series import EmulationMetricsTimeSeries
 from csle_ryu.dao.agg_flow_statistic import AggFlowStatistic
 from csle_ryu.dao.avg_flow_statistic import AvgFlowStatistic
 from csle_ryu.dao.avg_port_statistic import AvgPortStatistic
 from csle_ryu.dao.flow_statistic import FlowStatistic
 from csle_ryu.dao.port_statistic import PortStatistic
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 

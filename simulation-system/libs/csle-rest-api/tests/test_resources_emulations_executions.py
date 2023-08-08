@@ -38,6 +38,14 @@ class TestResourcesEmulationExecutionsSuite:
     Test suite for /emulation-executions resource
     """
 
+    class Response:
+        def __init__(self, content=json.dumps({
+            api_constants.MGMT_WEBAPP.DPID_PROPERTY:
+                [{api_constants.MGMT_WEBAPP.ACTIVE_COUNT_PROPERTY: 1,
+                  api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY: 2}]
+        })):
+            self.content = content
+
     @pytest.fixture
     def flask_app(self):
         """
@@ -1436,22 +1444,13 @@ class TestResourcesEmulationExecutionsSuite:
         return get_mocker
 
     @staticmethod
-    def response_returner() -> "Response":
+    def response_returner() -> "TestResourcesEmulationExecutionsSuite.Response":
         """
         Static help method for returning a response class
 
         :return: a Response object
         """
-
-        class Response:
-            def __init__(self, content=json.dumps({
-                api_constants.MGMT_WEBAPP.DPID_PROPERTY:
-                    [{api_constants.MGMT_WEBAPP.ACTIVE_COUNT_PROPERTY: 1,
-                      api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY: 2}]
-            })):
-                self.content = content
-
-        return Response()
+        return TestResourcesEmulationExecutionsSuite.Response()
 
     @pytest.fixture
     def running_emulations(self, mocker: pytest_mock.MockFixture):

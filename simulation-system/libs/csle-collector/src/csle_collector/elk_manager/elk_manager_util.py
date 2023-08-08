@@ -1,7 +1,5 @@
 from typing import Dict, Any
 import csle_collector.elk_manager.elk_manager_pb2
-import logging
-logger = logging.getLogger()
 
 
 class ElkManagerUtil:

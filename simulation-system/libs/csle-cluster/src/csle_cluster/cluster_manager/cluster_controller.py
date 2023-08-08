@@ -3491,8 +3491,7 @@ class ClusterController:
             return operation_outcome_dto
 
     @staticmethod
-    def get_merged_execution_info(execution: EmulationExecution) \
-            -> EmulationExecutionInfo:
+    def get_merged_execution_info(execution: EmulationExecution) -> EmulationExecutionInfo:
         """
         Gets the runtime info of a specific execution
 

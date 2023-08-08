@@ -11,8 +11,6 @@ from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_base.json_serializable import JSONSerializable
-import logging
-logger = logging.getLogger()
 
 
 class EmulationExecutionInfo(JSONSerializable):

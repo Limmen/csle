@@ -182,10 +182,11 @@ class DockerStatsUtil:
         :param d: the dict to convert
         :return: the converted DTO
         """
-        docker_stats_monitor_dto = DockerStatsMonitorDTO()
-        docker_stats_monitor_dto.num_monitors = d["num_monitors"]
-        docker_stats_monitor_dto.emulations.extend(d["emulations"])
-        docker_stats_monitor_dto.emulation_executions.extend(d["emulation_executions"])
+        docker_stats_monitor_dto = DockerStatsMonitorDTO(
+            num_monitors = d["num_monitors"],
+            emulations = d["emulations"],
+            emulation_executions = d["emulation_executions"]
+        )
         return docker_stats_monitor_dto
 
     @staticmethod
