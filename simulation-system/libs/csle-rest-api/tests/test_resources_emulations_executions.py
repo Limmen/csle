@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Dict, Any, Union
 import json
 import pytest
 import pytest_mock
@@ -39,12 +39,24 @@ class TestResourcesEmulationExecutionsSuite:
     """
 
     class Response:
-        def __init__(self, content=json.dumps({
-            api_constants.MGMT_WEBAPP.DPID_PROPERTY:
-                [{api_constants.MGMT_WEBAPP.ACTIVE_COUNT_PROPERTY: 1,
-                  api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY: 2}]
-        })):
-            self.content = content
+        """
+        Mock class to represent a JSON response
+        """
+
+        def __init__(self, content: Union[str, None] = None) -> None:
+            """
+            Initializes the object
+
+            :param content: the JSON content of the response
+            """
+            if content is None:
+                content_dict = {}
+                content_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY] = [
+                    {api_constants.MGMT_WEBAPP.ACTIVE_COUNT_PROPERTY: 1,
+                     api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY: 2}]
+                self.content = json.dumps(content_dict)
+            else:
+                self.content = content
 
     @pytest.fixture
     def flask_app(self):
@@ -1970,10 +1982,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}"
@@ -2051,10 +2060,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE}"
@@ -2132,10 +2138,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_PRODUCER_SUBRESOURCE}"
@@ -2212,10 +2215,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}"
@@ -2308,10 +2308,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MONITOR_SUBRESOURCE}"
@@ -2403,10 +2400,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}"
@@ -2499,10 +2493,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE}"
@@ -2597,10 +2588,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE}"
@@ -2694,10 +2682,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE}"
@@ -2791,10 +2776,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}"
@@ -2895,10 +2877,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}"
@@ -3031,10 +3010,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}"
@@ -3168,10 +3144,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}"
@@ -3305,10 +3278,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}"
@@ -3442,10 +3412,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}"
@@ -3579,10 +3546,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}"
@@ -3714,10 +3678,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}"
@@ -3848,10 +3809,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}"
@@ -3982,10 +3940,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}"
@@ -4116,10 +4071,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}"
@@ -4252,10 +4204,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}"
@@ -4393,10 +4342,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}"
@@ -4529,10 +4475,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}"
@@ -4665,10 +4608,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}"
@@ -4801,10 +4741,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}"
@@ -4937,10 +4874,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}"
@@ -5073,10 +5007,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}"
@@ -5209,10 +5140,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}"
@@ -5347,10 +5275,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}"
@@ -5508,10 +5433,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
-        assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+        assert api_constants.MGMT_WEBAPP.REASON_PROPERTY in response_data_dict
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}"

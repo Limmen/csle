@@ -3,7 +3,6 @@ Routes and sub-resources for the /emulation-executions resource
 """
 from typing import Any, Dict, List, Tuple, Union
 import json
-import logging
 import time
 import requests
 from flask import Blueprint, Response, jsonify, request

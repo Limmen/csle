@@ -183,9 +183,9 @@ class DockerStatsUtil:
         :return: the converted DTO
         """
         docker_stats_monitor_dto = DockerStatsMonitorDTO(
-            num_monitors = d["num_monitors"],
-            emulations = d["emulations"],
-            emulation_executions = d["emulation_executions"]
+            num_monitors=d["num_monitors"],
+            emulations=d["emulations"],
+            emulation_executions=d["emulation_executions"]
         )
         return docker_stats_monitor_dto
 
