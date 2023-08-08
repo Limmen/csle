@@ -1,12 +1,8 @@
-
-
 from typing import Tuple, Union
-
+from flask import Response, jsonify
 import csle_common.constants.constants as constants
 from csle_common.dao.management.management_user import ManagementUser
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Response, jsonify
-
 import csle_rest_api.constants.constants as api_constants
 
 
@@ -40,7 +36,7 @@ def check_if_user_is_authorized(request, requires_admin: bool = False) -> Union[
         return None
 
 
-def check_if_user_edit_is_authorized(request, user: ManagementUser) -> Union[ManagementUser,
+def check_if_user_edit_is_authorized(request, user: ManagementUser) -> Union[None, ManagementUser,
                                                                              Tuple[Response, int]]:
     """
     Check if a user is authorized to edit another user
@@ -52,10 +48,9 @@ def check_if_user_edit_is_authorized(request, user: ManagementUser) -> Union[Man
     # Extract token and check if user is authorized
     token = request.args.get(api_constants.MGMT_WEBAPP.TOKEN_QUERY_PARAM)
     token_obj = MetastoreFacade.get_session_token_metadata(token=token)
+    request_user = None
     if token_obj is not None:
         request_user = MetastoreFacade.get_management_user_by_username(username=token_obj.username)
-    else:
-        request_user = MetastoreFacade.get_management_user_by_username(username=None)
     if token_obj is None or token_obj.expired(valid_length_hours=api_constants.SESSION_TOKENS.EXPIRE_TIME_HOURS) \
             or request_user is None or (not request_user.admin and request_user.username != user.username):
         if token_obj is not None:
