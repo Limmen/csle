@@ -10,7 +10,7 @@ A library with SDN controllers used in CSLE for emulating software-defined netwo
 - Python 3.8+
 - `csle-base`
 - `csle-collector`
-- `ryu` (for HTTP server)
+- `csle-ryu-fork` (for SDN controller)
 - `eventlet` (for HTTP server)
 - `confluent-kafka` (for interacting with Kafka)
 
