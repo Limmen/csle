@@ -376,8 +376,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         return csle_cluster.cluster_manager.cluster_manager_pb2.ServiceStatusDTO(running=False)
 
     def getLogFile(self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetLogFileMsg,
-                   context: grpc.ServicerContext) \
-            -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
+                   context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO:
         """
         Gets a specific log file
 
@@ -386,7 +385,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a DTO with logs
         """
         logging.info("Getting log file: {request.name}")
-        data = ""
+        data = []
         if os.path.exists(request.name):
             with open(request.name, 'r') as fp:
                 data = ClusterManagerUtil.tail(fp, window=100).split("\n")
@@ -449,16 +448,16 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logging.info("Getting the Docker logs")
         cmd = constants.COMMANDS.DOCKER_ENGINE_LOGS
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        output = output.decode("utf-8")
-        output = output.split("\n")[-100:]
+        (output_bytes, err) = p.communicate()
+        output_str = output_bytes.decode("utf-8")
+        output = output_str.split("\n")[-100:]
         logs = output
         if len(logs) == 0:
             alt_cmd = constants.COMMANDS.DOCKER_ENGINE_LOGS_ALTERNATIVE
             p = subprocess.Popen(alt_cmd, stdout=subprocess.PIPE, shell=True)
-            (output, err) = p.communicate()
-            output = output.decode("utf-8")
-            output = output.split("\n")[-100:]
+            (output_bytes, err) = p.communicate()
+            output_str = output_bytes.decode("utf-8")
+            output = output_str.split("\n")[-100:]
             logs = output
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
@@ -498,9 +497,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logging.info("Getting the Grafana logs")
         cmd = constants.COMMANDS.GRAFANA_LOGS
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        output = output.decode("utf-8")
-        output = output.split("\n")[-100:]
+        (output_bytes, err) = p.communicate()
+        output_str = output_bytes.decode("utf-8")
+        output = output_str.split("\n")[-100:]
         logs = output
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
@@ -517,9 +516,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logging.info("Getting the pgAdmin logs")
         cmd = constants.COMMANDS.PGADMIN_LOGS
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        output = output.decode("utf-8")
-        output = output.split("\n")[-100:]
+        (output_bytes, err) = p.communicate()
+        output_str = output_bytes.decode("utf-8")
+        output = output_str.split("\n")[-100:]
         logs = output
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
@@ -536,9 +535,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         logging.info("Getting the cAdvisor logs")
         cmd = constants.COMMANDS.CADVISOR_LOGS
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (output, err) = p.communicate()
-        output = output.decode("utf-8")
-        output = output.split("\n")[-100:]
+        (output_bytes, err) = p.communicate()
+        output_str = output_bytes.decode("utf-8")
+        output = output_str.split("\n")[-100:]
         logs = output
         return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=logs)
 
@@ -2841,7 +2840,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
-        if container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        if container_config is not None and container_config.physical_host_ip == GeneralUtil.get_host_ip():
             HostController.config_metricbeat(emulation_env_config=execution.emulation_env_config,
                                              container=container_config, logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
@@ -2865,7 +2864,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         if execution is None:
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=False)
         container_config = ClusterManagerUtil.get_container_config(execution=execution, ip=request.containerIp)
-        if container_config.physical_host_ip == GeneralUtil.get_host_ip():
+        if container_config is not None and container_config.physical_host_ip == GeneralUtil.get_host_ip():
             HostController.config_heartbeat(emulation_env_config=execution.emulation_env_config,
                                             container=container_config, logger=logging.getLogger())
             return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
@@ -3888,8 +3887,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         :return: a RyuTunnelsDTO
         """
         logging.info("Getting the Ryu tunnels")
-        return ClusterManagerUtil.create_ryu_tunnels_dto_from_dict(
-            dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT)
+        return ClusterManagerUtil.create_ryu_tunnels_dto_from_dict(dict=cluster_constants.RYU_TUNNELS.RYU_TUNNELS_DICT)
 
     def createKibanaTunnel(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.CreateKibanaTunnelMsg,
@@ -4411,9 +4409,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         else:
             cmd = constants.COMMANDS.CONTAINER_LOGS.format(container_config.full_name_str)
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-            (output, err) = p.communicate()
-            output = output.decode("utf-8")
-            output = output.split("\n")[-100:]
+            (output_bytes, err) = p.communicate()
+            output_str = output_bytes.decode("utf-8")
+            output = output_str.split("\n")[-100:]
             data = output
             return csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO(logs=data)
 

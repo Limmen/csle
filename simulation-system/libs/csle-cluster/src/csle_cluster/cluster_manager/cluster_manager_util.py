@@ -239,7 +239,7 @@ class ClusterManagerUtil:
         """
         running_containers, stopped_containers = ContainerController.list_all_running_containers_in_emulation(
             emulation_env_config=emulation_env_config)
-        active_ips = []
+        active_ips: List[str] = []
         for container in running_containers:
             active_ips = active_ips + container.get_ips()
             active_ips.append(container.docker_gw_bridge_ip)
@@ -379,7 +379,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def running_containers_dto_to_dict(running_containers_dto_to_dict: cluster_manager_pb2.RunningContainersDTO) \
-            -> Dict[str, Any]:
+            -> Dict[str, List[Dict[str, Any]]]:
         """
         Converts a RunningContainersDTO to a dict
 
@@ -1687,7 +1687,7 @@ class ClusterManagerUtil:
                         local_port=local_kibana_port, remote_port=execution.emulation_env_config.elk_config.kibana_port,
                         remote_ip=execution.emulation_env_config.elk_config.container.docker_gw_bridge_ip,
                         emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
-            return local_kibana_port
+            return int(local_kibana_port)
         except Exception as e:
             logger.warning(f"There was an exception creating the Kibana tunnel: {str(e)}, {repr(e)}")
             return -1
@@ -1771,7 +1771,7 @@ class ClusterManagerUtil:
                             remote_ip=(
                                 execution.emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip),
                             emulation=execution.emulation_name, execution_id=execution.ip_first_octet)
-            return local_ryu_port
+            return int(local_ryu_port)
         except Exception as e:
             logger.warning(
                 f"There was an exception creating the Ryu tunnel: {str(e)}, {repr(e)}")
@@ -2075,12 +2075,14 @@ class ClusterManagerUtil:
         EmulationUtil.connect_admin(emulation_env_config=execution.emulation_env_config, ip=ip)
         sftp_client = execution.emulation_env_config.get_connection(ip=ip).open_sftp()
         remote_file = sftp_client.open(path)
-        data = []
         try:
             data = remote_file.read(constants.SSH.MAX_FILE_READ_BYTES)
-            data = data.decode()
-            data = data.split("\n")
-            data = data[-100:]
+            if isinstance(data, bytes):
+                data = data.decode()
+                data = data.split("\n")
+                data = data[-100:]
+            else:
+                raise Exception("Could not read remote file")
         finally:
             remote_file.close()
         return cluster_manager_pb2.LogsDTO(logs=data)
@@ -3188,7 +3190,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_docker_stats_dict(docker_stats_d: Dict[str, List[DockerStats]]) \
+    def convert_docker_stats_dict(docker_stats_d: Union[Dict[str, List[DockerStats]], None]) \
             -> List[cluster_manager_pb2.DockerStatsDict]:
         """
         Converts a dict to list of DockerStatsDict
@@ -3206,7 +3208,7 @@ class ClusterManagerUtil:
             return docker_stats_dict_list
 
     @staticmethod
-    def convert_docker_stats_dict_reverse(docker_stats_dict: List[cluster_manager_pb2.DockerStatsDict]) \
+    def convert_docker_stats_dict_reverse(docker_stats_dict: Union[List[cluster_manager_pb2.DockerStatsDict], None]) \
             -> Dict[str, List[DockerStats]]:
         """
         Converts a list of DockerStatsDict to a dict
@@ -3251,7 +3253,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_snort_ids_ip_alert_counters_dict(
-            snort_ids_ip_alert_counters_d: Dict[str, List[SnortIdsIPAlertCounters]]) \
+            snort_ids_ip_alert_counters_d: Union[Dict[str, List[SnortIdsIPAlertCounters]], None]) \
             -> List[cluster_manager_pb2.SnortIdsIpAlertCountersDict]:
         """
         Converts a dict to list of SnortIdsIpAlertCountersDict
@@ -3270,7 +3272,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_snort_ids_ip_alert_counters_dict_reverse(
-            snort_ids_ip_alerts_counters_dict: List[cluster_manager_pb2.SnortIdsIpAlertCountersDict]) \
+            snort_ids_ip_alerts_counters_dict: Union[List[cluster_manager_pb2.SnortIdsIpAlertCountersDict], None]) \
             -> Dict[str, List[SnortIdsIPAlertCounters]]:
         """
         Converts a list of SnortIdsIpAlertCountersDict to a dict
@@ -3316,7 +3318,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_snort_ids_alert_counters_dict(
-            snort_ids_alert_counters_d: Dict[str, List[SnortIdsAlertCounters]]) \
+            snort_ids_alert_counters_d: Union[Dict[str, List[SnortIdsAlertCounters]], None]) \
             -> List[cluster_manager_pb2.SnortIdsAlertCountersDict]:
         """
         Converts a dict to list of SnortIdsAlertCountersDict
@@ -3335,7 +3337,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_snort_ids_alert_counters_dict_reverse(
-            snort_ids_alerts_counters_dict: List[cluster_manager_pb2.SnortIdsAlertCountersDict]) \
+            snort_ids_alerts_counters_dict: Union[List[cluster_manager_pb2.SnortIdsAlertCountersDict], None]) \
             -> Dict[str, List[SnortIdsAlertCounters]]:
         """
         Converts a list of SnortIdsIpAlertCountersDict to a dict
@@ -3381,7 +3383,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_snort_ids_rule_counters_dict(
-            snort_ids_rule_counters_d: Dict[str, List[SnortIdsRuleCounters]]) \
+            snort_ids_rule_counters_d: Union[None, Dict[str, List[SnortIdsRuleCounters]]]) \
             -> List[cluster_manager_pb2.SnortIdsRuleCountersDict]:
         """
         Converts a dict to list of SnortIdsRuleCountersDict
@@ -3400,7 +3402,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_snort_ids_rule_counters_dict_reverse(
-            snort_ids_rule_counters_dict: List[cluster_manager_pb2.SnortIdsRuleCountersDict]) \
+            snort_ids_rule_counters_dict: Union[None, List[cluster_manager_pb2.SnortIdsRuleCountersDict]]) \
             -> Dict[str, List[SnortIdsRuleCounters]]:
         """
         Converts a list of SnortIdsRuleCountersDict to a dict
@@ -3445,7 +3447,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_host_metrics_dict(host_metrics_dict: Dict[str, List[HostMetrics]]) \
+    def convert_host_metrics_dict(host_metrics_dict: Union[Dict[str, List[HostMetrics]], None]) \
             -> List[cluster_manager_pb2.HostMetricsDict]:
         """
         Converts a dict to list of HostMetricsDict
@@ -3463,7 +3465,7 @@ class ClusterManagerUtil:
             return host_metrics_dict_list
 
     @staticmethod
-    def convert_host_metrics_dict_reverse(host_metrics_dict: List[cluster_manager_pb2.HostMetricsDict]) \
+    def convert_host_metrics_dict_reverse(host_metrics_dict: Union[List[cluster_manager_pb2.HostMetricsDict], None]) \
             -> Dict[str, List[HostMetrics]]:
         """
         Converts a list of HostMetricsDict to a dict
@@ -3507,7 +3509,8 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_ossec_ids_alert_counters_dict(ossec_ids_alert_counters_dict: Dict[str, List[OSSECIdsAlertCounters]]) \
+    def convert_ossec_ids_alert_counters_dict(
+            ossec_ids_alert_counters_dict: Union[Dict[str, List[OSSECIdsAlertCounters]], None]) \
             -> List[cluster_manager_pb2.OSSECIdsAlertCountersDict]:
         """
         Converts a dict to list of OSSECIdsAlertCountersDict
@@ -3526,7 +3529,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_ossec_ids_alert_counters_dict_reverse(
-            ossec_ids_alert_counters_dict: List[cluster_manager_pb2.OSSECIdsAlertCountersDict]) \
+            ossec_ids_alert_counters_dict: Union[List[cluster_manager_pb2.OSSECIdsAlertCountersDict], None]) \
             -> Dict[str, List[OSSECIdsAlertCounters]]:
         """
         Converts a list of OSSECIdsAlertCountersDict to a dict
@@ -3554,8 +3557,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def ossec_ids_alert_counters_dict_to_dict(
-            ossec_ids_alert_counters_dict: cluster_manager_pb2.OSSECIdsAlertCountersDict) \
-            -> Dict[str, Any]:
+            ossec_ids_alert_counters_dict: cluster_manager_pb2.OSSECIdsAlertCountersDict) -> Dict[str, Any]:
         """
         Converts a DTO to a dict
 
@@ -3571,7 +3573,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_flow_statistic_dict(flow_statistic_dict: Dict[str, List[FlowStatistic]]) \
+    def convert_flow_statistic_dict(flow_statistic_dict: Union[None, Dict[str, List[FlowStatistic]]]) \
             -> List[cluster_manager_pb2.FlowStatisticDict]:
         """
         Converts a dict to list of FlowStatisticDict
@@ -3589,7 +3591,8 @@ class ClusterManagerUtil:
             return flow_statistic_dict_list
 
     @staticmethod
-    def convert_flow_statistic_dict_reverse(flow_statistics_dict: List[cluster_manager_pb2.FlowStatisticDict]) \
+    def convert_flow_statistic_dict_reverse(
+            flow_statistics_dict: Union[List[cluster_manager_pb2.FlowStatisticDict], None]) \
             -> Dict[str, List[FlowStatistic]]:
         """
         Converts a list of FlowStatisticDict to a dict
@@ -3632,7 +3635,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_port_statistic_dict(port_statistic_dict: Dict[str, List[PortStatistic]]) \
+    def convert_port_statistic_dict(port_statistic_dict: Union[None, Dict[str, List[PortStatistic]]]) \
             -> List[cluster_manager_pb2.PortStatisticDict]:
         """
         Converts a dict to list of PortStatisticDict
@@ -3650,7 +3653,8 @@ class ClusterManagerUtil:
             return port_statistic_dict_list
 
     @staticmethod
-    def convert_port_statistic_dict_reverse(port_statistics_dict: List[cluster_manager_pb2.PortStatisticDict]) \
+    def convert_port_statistic_dict_reverse(
+            port_statistics_dict: Union[None, List[cluster_manager_pb2.PortStatisticDict]]) \
             -> Dict[str, List[PortStatistic]]:
         """
         Converts a list of PortStatisticDict to a dict
@@ -3677,8 +3681,7 @@ class ClusterManagerUtil:
         return []
 
     @staticmethod
-    def port_statistics_dict_to_dict(
-            port_statistics_dict: cluster_manager_pb2.PortStatisticDict) -> Dict[str, Any]:
+    def port_statistics_dict_to_dict(port_statistics_dict: cluster_manager_pb2.PortStatisticDict) -> Dict[str, Any]:
         """
         Converts a DTO to a dict
 
@@ -3694,7 +3697,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_avg_flow_statistic_dict(avg_flow_statistic_dict: Dict[str, List[AvgFlowStatistic]]) \
+    def convert_avg_flow_statistic_dict(avg_flow_statistic_dict: Union[None, Dict[str, List[AvgFlowStatistic]]]) \
             -> List[cluster_manager_pb2.AvgFlowStatisticDict]:
         """
         Converts a dict to list of AvgFlowStatisticDict
@@ -3713,7 +3716,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_avg_flow_statistic_dict_reverse(
-            avg_flow_statistics_dict: List[cluster_manager_pb2.AvgFlowStatisticDict]) \
+            avg_flow_statistics_dict: Union[None, List[cluster_manager_pb2.AvgFlowStatisticDict]]) \
             -> Dict[str, List[AvgFlowStatistic]]:
         """
         Converts a list of AvgFlowStatisticDict to a dict
@@ -3757,7 +3760,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_agg_flow_statistic_dict(agg_flow_statistic_dict: Dict[str, List[AggFlowStatistic]]) \
+    def convert_agg_flow_statistic_dict(agg_flow_statistic_dict: Union[None, Dict[str, List[AggFlowStatistic]]]) \
             -> List[cluster_manager_pb2.AggFlowStatisticDict]:
         """
         Converts a dict to list of AggFlowStatisticDict
@@ -3776,7 +3779,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_agg_flow_statistic_dict_reverse(
-            agg_flow_statistics_dict: List[cluster_manager_pb2.AggFlowStatisticDict]) \
+            agg_flow_statistics_dict: Union[None, List[cluster_manager_pb2.AggFlowStatisticDict]]) \
             -> Dict[str, List[AggFlowStatistic]]:
         """
         Converts a list of AggFlowStatisticDict to a dict
@@ -3819,7 +3822,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_avg_port_statistic_dict(avg_port_statistic_dict: Dict[str, List[AvgPortStatistic]]) \
+    def convert_avg_port_statistic_dict(avg_port_statistic_dict: Union[None, Dict[str, List[AvgPortStatistic]]]) \
             -> List[cluster_manager_pb2.AvgPortStatisticDict]:
         """
         Converts a dict to list of AvgPortStatisticDict
@@ -3838,7 +3841,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_avg_port_statistic_dict_reverse(
-            avg_port_statistics_dict: List[cluster_manager_pb2.AvgPortStatisticDict]) \
+            avg_port_statistics_dict: Union[None, List[cluster_manager_pb2.AvgPortStatisticDict]]) \
             -> Dict[str, List[AvgPortStatistic]]:
         """
         Converts a list of AvgPortStatisticDict to a dict
