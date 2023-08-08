@@ -34,7 +34,7 @@ Below are a list of dependencies that will be installed with CSLE (unless they a
 
 - Docker 20.10.14+;
 - Python 3.9+;
-- Python libraries: `torch`, `numpy`, `gym`, `docker`, `paramiko`, `stable-baselines3`, `psycopg`, `pyglet`, `flask`, `click`, `waitress`, `scp`, `psutil`, `grpcio`, `grpcio-tools`, `scipy`, `confluent-kafka`, `requests`, `pyopenssl`, `sphinx`, `mypy`, `flake8`, `pytest`, `gevent`, `eventlet`, `ryu`, `gpytorch`, `pulp`, `Bayesian optimization`.
+- Python libraries: `torch`, `numpy`, `gym`, `docker`, `paramiko`, `stable-baselines3`, `psycopg`, `pyglet`, `flask`, `click`, `waitress`, `scp`, `psutil`, `grpcio`, `grpcio-tools`, `scipy`, `confluent-kafka`, `requests`, `pyopenssl`, `sphinx`, `mypy`, `types-protobuf`, `types-paramiko`, `types-requests`, `types-urllib3`, `flake8`, `pytest`, `gevent`, `eventlet`, `ryu`, `gpytorch`, `pulp`, `Bayesian optimization`.
 - PostgreSQL 12+;
 - `make`, `git`, `bzip2`;
 - Prometheus 2.23+;
