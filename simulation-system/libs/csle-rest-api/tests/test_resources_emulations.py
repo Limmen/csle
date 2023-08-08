@@ -1,8 +1,8 @@
 import json
 from typing import List, Tuple
-import csle_common.constants.constants as constants
 import pytest
 import pytest_mock
+import csle_common.constants.constants as constants
 from csle_cluster.cluster_manager.cluster_manager_pb2 import OperationOutcomeDTO, RunningEmulationsDTO
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats

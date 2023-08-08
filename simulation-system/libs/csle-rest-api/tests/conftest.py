@@ -1,15 +1,10 @@
-from typing import List, Dict, Union
-import pytest_mock
+from typing import Dict, List, Union
 import pytest
+import pytest_mock
 from flask import jsonify
-import csle_common.constants.constants as constants
 import csle_collector.constants.constants as collector_constants
-import csle_rest_api.constants.constants as api_constants
-from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
-from csle_common.dao.emulation_config.cluster_config import ClusterConfig
-from csle_common.dao.emulation_config.cluster_node import ClusterNode
-from csle_common.dao.management.management_user import ManagementUser
-from csle_cluster.cluster_manager.cluster_manager_pb2 import OperationOutcomeDTO
+import csle_common.constants.constants as constants
+from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO, OperationOutcomeDTO
 from csle_collector.client_manager.dao.client import Client
 from csle_collector.client_manager.dao.constant_arrival_config import ConstantArrivalConfig
 from csle_collector.client_manager.dao.workflow_markov_chain import WorkflowMarkovChain
@@ -21,6 +16,8 @@ from csle_common.dao.emulation_action.attacker.emulation_attacker_action_outcome
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
 from csle_common.dao.emulation_config.beats_config import BeatsConfig
 from csle_common.dao.emulation_config.client_population_config import ClientPopulationConfig
+from csle_common.dao.emulation_config.cluster_config import ClusterConfig
+from csle_common.dao.emulation_config.cluster_node import ClusterNode
 from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
 from csle_common.dao.emulation_config.containers_config import ContainersConfig
@@ -29,6 +26,7 @@ from csle_common.dao.emulation_config.default_network_firewall_config import Def
 from csle_common.dao.emulation_config.docker_stats_manager_config import DockerStatsManagerConfig
 from csle_common.dao.emulation_config.elk_config import ElkConfig
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
+from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
 from csle_common.dao.emulation_config.flag import Flag
 from csle_common.dao.emulation_config.flags_config import FlagsConfig
 from csle_common.dao.emulation_config.host_manager_config import HostManagerConfig
@@ -62,7 +60,8 @@ from csle_common.dao.emulation_config.user import User
 from csle_common.dao.emulation_config.users_config import UsersConfig
 from csle_common.dao.emulation_config.vulnerabilities_config import VulnerabilitiesConfig
 from csle_common.dao.emulation_config.vulnerability_type import VulnType
-from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
+from csle_common.dao.management.management_user import ManagementUser
+import csle_rest_api.constants.constants as api_constants
 
 
 @pytest.fixture

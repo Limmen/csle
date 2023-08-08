@@ -1,11 +1,9 @@
-import logging
-import pytest
 
 
-class TestClusterManagerSuite(object):
-    """Test suite for cluster_manager.py"""
-
-    pytest.logger = logging.getLogger("cluster_manager_tests")
+class TestClusterManagerSuite:
+    """
+    Test suite for cluster_manager.py
+    """
 
     def test_get_cluster_manager_status(self) -> None:
         """

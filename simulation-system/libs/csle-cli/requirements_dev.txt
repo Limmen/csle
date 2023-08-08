@@ -4,7 +4,11 @@ tox==3.24.3
 pytest==6.2.5
 pytest-cov==2.12.1
 pytest-mock==3.10.0
-mypy===1.4.1
+mypy==1.4.1
+types-paramiko==3.2.0.0
+types-protobuf==4.23.0.3
+types-requests==2.31.0.1
+types-urllib3==1.26.25.13
 pytest-grpc==0.8.0
 twine==4.0.2
 build==0.10.0

@@ -1,15 +1,11 @@
 from click.testing import CliRunner
-import logging
-import pytest
 from csle_cli.cli import ls
 
 
-class TestCSLECliSuite(object):
+class TestCSLECliSuite:
     """
     Test suite for cli.py
     """
-
-    pytest.logger = logging.getLogger("cli_tests")
 
     def test_ls(self) -> None:
         """

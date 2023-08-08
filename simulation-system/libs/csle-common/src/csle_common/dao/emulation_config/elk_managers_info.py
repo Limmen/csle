@@ -75,7 +75,7 @@ class ELKManagersInfo(JSONSerializable):
         dto = ELKManagersInfo(elk_managers_running=d["elk_managers_running"], ips=d["ips"], ports=d["ports"],
                               emulation_name=d["emulation_name"], execution_id=d["execution_id"],
                               elk_managers_statuses=list(map(
-                                  lambda x: elk_manager_util.ElkManagerUtil.elk_dto_to_dict(x),
+                                  lambda x: elk_manager_util.ElkManagerUtil.elk_dto_from_dict(x),
                                   d["elk_managers_statuses"])), local_kibana_port=d["local_kibana_port"],
                               physical_server_ip=d["physical_server_ip"])
         return dto

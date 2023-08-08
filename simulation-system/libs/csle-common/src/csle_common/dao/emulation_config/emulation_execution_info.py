@@ -112,6 +112,7 @@ class EmulationExecutionInfo(JSONSerializable):
 
         :return: a dto representation of the object
         """
+    
         dto = EmulationExecutionInfo(
             emulation_name=d["emulation_name"], execution_id=d["execution_id"],
             snort_ids_managers_info=SnortIdsManagersInfo.from_dict(d["snort_ids_managers_info"]),
@@ -122,11 +123,11 @@ class EmulationExecutionInfo(JSONSerializable):
             host_managers_info=HostManagersInfo.from_dict(d["host_managers_info"]),
             client_managers_info=ClientManagersInfo.from_dict(d["client_managers_info"]),
             docker_stats_managers_info=DockerStatsManagersInfo.from_dict(d["docker_stats_managers_info"]),
-            running_containers=list(map(lambda x: x.from_dict(), d["running_containers"])),
-            stopped_containers=list(map(lambda x: x.from_dict(), d["stopped_containers"])),
-            active_networks=list(map(lambda x: x.from_dict(), d["active_networks"])),
-            inactive_networks=list(map(lambda x: x.from_dict(), d["inactive_networks"])),
-            ryu_managers_info=d["ryu_managers_info"])
+            running_containers=list(map(lambda x: NodeContainerConfig.from_dict(x), d["running_containers"])),
+            stopped_containers=list(map(lambda x: NodeContainerConfig.from_dict(x), d["stopped_containers"])),
+            active_networks=list(map(lambda x: ContainerNetwork.from_dict(x), d["active_networks"])),
+            inactive_networks=list(map(lambda x: ContainerNetwork.from_dict(x), d["inactive_networks"])),
+            ryu_managers_info=RyuManagersInfo.from_dict(d["ryu_managers_info"]))
         return dto
 
     @staticmethod

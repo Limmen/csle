@@ -118,6 +118,7 @@ class TestResourcesTrainingjobsSuite:
         :param list_ppo_ids: the list_ppo_ids fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         test_job = TestResourcesTrainingjobsSuite.get_example_job()
         test_job_dict = test_job.to_dict()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_training_jobs", side_effect=list_jobs)
@@ -257,6 +258,7 @@ class TestResourcesTrainingjobsSuite:
         :param remove: the remove fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_training_jobs", side_effect=list_jobs)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_training_job", side_effect=remove)
@@ -295,6 +297,7 @@ class TestResourcesTrainingjobsSuite:
         :param pid_false: the pid_false fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         test_job = TestResourcesTrainingjobsSuite.get_example_job()
         test_job_dict = test_job.to_dict()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_training_job_config",
@@ -388,6 +391,7 @@ class TestResourcesTrainingjobsSuite:
         :param stop: the stop fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_training_job_config",
                      side_effect=get_job_config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid", side_effect=stop)
@@ -426,6 +430,7 @@ class TestResourcesTrainingjobsSuite:
         :param get_job_config: the get_job_config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_agents.job_controllers.training_job_manager.TrainingJobManager."
                      "start_training_job_in_background", side_effect=start)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid", side_effect=stop)

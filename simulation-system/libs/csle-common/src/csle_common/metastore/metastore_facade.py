@@ -2389,7 +2389,7 @@ class MetastoreFacade:
                 return id_of_new_row
 
     @staticmethod
-    def list_emulation_execution_ids() -> List[EmulationExecution]:
+    def list_emulation_execution_ids() -> List[Tuple]:
         """
         :return: A list of emulation executions in the metastore
         """

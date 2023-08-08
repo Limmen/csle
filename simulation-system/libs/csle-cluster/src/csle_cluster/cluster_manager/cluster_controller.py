@@ -11,6 +11,7 @@ import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
 import csle_cluster.cluster_manager.query_cluster_manager
 from csle_cluster.cluster_manager.cluster_manager_util import ClusterManagerUtil
+from csle_common.dao.emulation_config.emulation_execution_info import EmulationExecutionInfo
 
 
 class ClusterController:
@@ -565,6 +566,7 @@ class ClusterController:
 
         :param ip: the ip of the node where to get the log file
         :param port: the port of the cluster manager
+        :param log_file_name: the name of the log file
         :return: A DTO with the log files
         """
         # Open a gRPC session
@@ -1595,6 +1597,7 @@ class ClusterController:
 
         :param ip: the ip of the physical node
         :param port: the port of the cluster manager
+        :param container_name: the name of the container
         :return: The operation outcome
         """
         # Open a gRPC session
@@ -1814,7 +1817,7 @@ class ClusterController:
             return operation_outcome_dto
 
     @staticmethod
-    def stop_docker_stats_manager_thread(ip: str, port: int, emulation: str, ip_first_octet: int) \
+    def stop_docker_statsmanager_thread(ip: str, port: int, emulation: str, ip_first_octet: int) \
             -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Sends a request to stop the docker stats manager thread
@@ -1828,7 +1831,7 @@ class ClusterController:
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
-            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_stats_manager_thread(
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.stop_docker_statsmanager_thread(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet)
             return operation_outcome_dto
 
@@ -2826,6 +2829,7 @@ class ClusterController:
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
         :return: The operation outcome
         """
         # Open a gRPC session
@@ -3194,6 +3198,7 @@ class ClusterController:
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
         :return: The operation outcome
         """
         # Open a gRPC session
@@ -3233,6 +3238,7 @@ class ClusterController:
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the  container
         :return: The operation outcome
         """
         # Open a gRPC session
@@ -3485,8 +3491,7 @@ class ClusterController:
             return operation_outcome_dto
 
     @staticmethod
-    def get_merged_execution_info(execution: EmulationExecution) \
-            -> csle_cluster.cluster_manager.cluster_manager_pb2.ExecutionInfoDTO:
+    def get_merged_execution_info(execution: EmulationExecution) -> EmulationExecutionInfo:
         """
         Gets the runtime info of a specific execution
 
@@ -3630,7 +3635,6 @@ class ClusterController:
         :param no_clients: boolean flag indicating whether clients should be started or not
         :return: None
         """
-        ip = physical_servers[0]
         steps = 41
         if no_traffic:
             steps = steps - 1

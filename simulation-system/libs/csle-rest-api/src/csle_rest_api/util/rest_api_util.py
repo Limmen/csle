@@ -1,9 +1,9 @@
-from typing import Union, Tuple
-from flask import jsonify, Response
+from typing import Tuple, Union
+from flask import Response, jsonify
 import csle_common.constants.constants as constants
+from csle_common.dao.management.management_user import ManagementUser
 from csle_common.metastore.metastore_facade import MetastoreFacade
 import csle_rest_api.constants.constants as api_constants
-from csle_common.dao.management.management_user import ManagementUser
 
 
 def check_if_user_is_authorized(request, requires_admin: bool = False) -> Union[None, Tuple[Response, int]]:
