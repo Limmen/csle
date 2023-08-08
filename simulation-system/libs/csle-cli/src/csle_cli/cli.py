@@ -11,6 +11,7 @@ from csle_common.util.cluster_util import ClusterUtil
 from csle_common.util.general_util import GeneralUtil
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
     from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
