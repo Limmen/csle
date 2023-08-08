@@ -62,13 +62,13 @@ class TestResourcesSimulationsSuite:
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def list_sim(self, mocker: pytest_mock.MockFixture) -> List[SimulationEnvConfig]:
+    def list_sim(self, mocker: pytest_mock.MockFixture):
         """
         Pytst dixture for mocking the list_simulations method
         
         :param mocker: the pytest mocker object
         """
-        def list_simulations():
+        def list_simulations() -> List[SimulationEnvConfig]:
             list_obj = TestResourcesSimulationsSuite.get_ex_sim_env()
             return [list_obj]
         list_simulations_mocker = mocker.MagicMock(side_effect=list_simulations)
@@ -108,7 +108,7 @@ class TestResourcesSimulationsSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def list_simulation_ids() -> List[Tuple]:
+        def list_simulation_ids() -> List[Tuple[str, int]]:
             return [("null", 1)]
         list_simulation_ids_mocker = mocker.MagicMock(side_effect=list_simulation_ids)
         return list_simulation_ids_mocker
