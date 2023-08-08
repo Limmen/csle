@@ -1,5 +1,5 @@
 csle-base==0.2.18
 csle-collector==0.2.18
-ryu==4.34
+ryu @ git+https://github.com/Limmen/ryu@0c3c06f41d07037cee871d429bd92a4cb1679620
 eventlet==0.30.2
 confluent-kafka==1.9.2
