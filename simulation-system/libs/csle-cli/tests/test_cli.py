@@ -1,5 +1,4 @@
 from click.testing import CliRunner
-import pytest
 from csle_cli.cli import ls
 
 
