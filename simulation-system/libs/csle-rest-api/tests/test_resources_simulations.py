@@ -1,12 +1,10 @@
+import base64
 import json
-import logging
 from typing import List, Tuple
 
 import csle_common.constants.constants as constants
 import pytest
 import pytest_mock
-from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO
-from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.simulation_config.action import Action
 from csle_common.dao.simulation_config.action_space_config import ActionSpaceConfig
 from csle_common.dao.simulation_config.env_parameter import EnvParameter
@@ -48,7 +46,6 @@ from csle_common.dao.simulation_config.value_type import ValueType
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
-logger = logging.getLogger()
 
 class TestResourcesSimulationsSuite:
     """
@@ -138,7 +135,10 @@ class TestResourcesSimulationsSuite:
                                            player_id=1, observation_component_name_to_index={"JohnDoe": 1},
                                            observation_id_to_observation_id_vector={1: ["null"]},
                                            observation_id_to_observation_vector={1: ["null"]},
-                                           component_observations={"JohnDoe": [Observation(id=1, val=10, descr="null")]})
+                                           component_observations={"JohnDoe": [Observation(id=1, val=10, descr="null")
+                                                                               ]})
+        of_config = ObservationFunctionConfig(observation_tensor=[], component_observation_tensors={"null": []})
+        isd_config = InitialStateDistributionConfig(initial_state_distribution=[1.0])
         sim_env = SimulationEnvConfig(name="JohnDoe", descr="null", version="null",
                                       gym_env_name="null",
                                       simulation_env_input_config=SimulationEnvInputConfig,
@@ -156,14 +156,12 @@ class TestResourcesSimulationsSuite:
                                       time_step_type=TimeStepType.DISCRETE.value,
                                       reward_function_config=RewardFunctionConfig(reward_tensor=[]),
                                       transition_operator_config=TransitionOperatorConfig(transition_tensor=[]),
-                                      observation_function_config=ObservationFunctionConfig(observation_tensor=[],
-                                                                                            component_observation_tensors={
-                                                                                                "null": []}
-                                                                                            ),
-                                      initial_state_distribution_config=InitialStateDistributionConfig(initial_state_distribution=[1.0]),
+                                      observation_function_config=of_config,
+                                      initial_state_distribution_config=isd_config,
                                       env_parameters_config=EnvParametersConfig(parameters=[EnvParameter(id=1,
                                                                                                          name="JohnDoe",
-                                                                                                         descr="null")]),
+                                                                                                         descr="null")
+                                                                                            ]),
                                       plot_transition_probabilities=False,
                                       plot_observation_function=False, plot_reward_function=False)
         return sim_env
@@ -178,6 +176,8 @@ class TestResourcesSimulationsSuite:
         """
         def get_simulation_image(simulation_name: str) -> Tuple[str, bytes]:
             return ("null", b'null')
+        get_simulation_image_mocker = mocker.MagicMock(side_effect=get_simulation_image)
+        return get_simulation_image_mocker
 
     def test_simulations_get(self, mocker, flask_app, list_sim, list_sim_im,
                              uninstall, list_sim_id, get_sim, get_sim_im,
@@ -218,13 +218,19 @@ class TestResourcesSimulationsSuite:
         ex_data = TestResourcesSimulationsSuite.get_ex_sim_env()
         ex_data_dict = ex_data.to_dict()
 
-        response_data_dict["joint_observation_space_config"]["observation_spaces"][0]['observation_id_to_observation_id_vector'][1] = \
-            response_data_dict["joint_observation_space_config"]["observation_spaces"][0]['observation_id_to_observation_id_vector']['1']
-        del response_data_dict["joint_observation_space_config"]["observation_spaces"][0]['observation_id_to_observation_id_vector']['1']
+        response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_id_vector'][1] = \
+            response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+                'observation_id_to_observation_id_vector']['1']
+        del response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_id_vector']['1']
 
-        response_data_dict["joint_observation_space_config"]["observation_spaces"][0]['observation_id_to_observation_vector'][1] = \
-            response_data_dict["joint_observation_space_config"]["observation_spaces"][0]['observation_id_to_observation_vector']['1']
-        del response_data_dict["joint_observation_space_config"]["observation_spaces"][0]['observation_id_to_observation_vector']['1']
+        response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_vector'][1] = \
+            response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+                'observation_id_to_observation_vector']['1']
+        del response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_vector']['1']
         for k in response_data_dict:
             assert response_data_dict[k] == ex_data_dict[k]
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_simulation_ids",
@@ -244,13 +250,19 @@ class TestResourcesSimulationsSuite:
         response_data_list = json.loads(response_data)
         response_data_dict = response_data_list[0]
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        response_data_dict["joint_observation_space_config"]["observation_spaces"][0]['observation_id_to_observation_id_vector'][1] = \
-            response_data_dict["joint_observation_space_config"]["observation_spaces"][0]['observation_id_to_observation_id_vector']['1']
-        del response_data_dict["joint_observation_space_config"]["observation_spaces"][0]['observation_id_to_observation_id_vector']['1']
+        response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_id_vector'][1] = \
+            response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+                'observation_id_to_observation_id_vector']['1']
+        del response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_id_vector']['1']
 
-        response_data_dict["joint_observation_space_config"]["observation_spaces"][0]['observation_id_to_observation_vector'][1] = \
-            response_data_dict["joint_observation_space_config"]["observation_spaces"][0]['observation_id_to_observation_vector']['1']
-        del response_data_dict["joint_observation_space_config"]["observation_spaces"][0]['observation_id_to_observation_vector']['1']
+        response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_vector'][1] = \
+            response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+                'observation_id_to_observation_vector']['1']
+        del response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_vector']['1']
         for k in response_data_dict:
             assert response_data_dict[k] == ex_data_dict[k]
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}"
@@ -266,7 +278,7 @@ class TestResourcesSimulationsSuite:
                                 uninstall, list_sim_id, get_sim, get_sim_im,
                                 not_logged_in, logged_in, logged_in_as_admin) -> None:
         """
-        Testing the GET HTTPS method of the /simulations resource
+        Testing the DELETE HTTPS method of the /simulations resource
 
         :param mocker: the pytest mocker object
         :param flask_app: the flask_app fixture
@@ -320,3 +332,125 @@ class TestResourcesSimulationsSuite:
     def test_simulations_get_id(self, mocker, flask_app, list_sim, list_sim_im,
                                 uninstall, list_sim_id, get_sim, get_sim_im,
                                 not_logged_in, logged_in, logged_in_as_admin):
+        """
+        Testing the GET HTTPS method of the /simulations/id resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param list_sim: the list_sim fixture
+        :param list_sim_im: the list_sim_im fixture
+        :param uninstall: the uninstall fixture
+        :param list_sim_id: the list_sim_id fixture
+        :param get_sim: the get_sim fixture
+        :param get_sim_sim: the get_sim_im fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_simulation",
+                     side_effect=get_sim)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_simulation_image",
+                     side_effect=get_sim_im)
+        mocker.patch("csle_common.controllers.simulation_env_controller.SimulationEnvController.uninstall_simulation",
+                     side_effect=uninstall)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_simulation_ids",
+                     side_effect=list_sim_id)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}/-1)")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}/10")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        ex_data = TestResourcesSimulationsSuite.get_ex_sim_env()
+        ex_data.image = base64.b64encode(b'null').decode()
+        ex_data_dict = ex_data.to_dict()
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_id_vector'][1] = \
+            response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+                'observation_id_to_observation_id_vector']['1']
+        del response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_id_vector']['1']
+
+        response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_vector'][1] = \
+            response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+                'observation_id_to_observation_vector']['1']
+        del response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_vector']['1']
+        for k in response_data_dict:
+            assert response_data_dict[k] == ex_data_dict[k]
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}/10")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        ex_data = TestResourcesSimulationsSuite.get_ex_sim_env()
+        ex_data.image = base64.b64encode(b'null').decode()
+        ex_data_dict = ex_data.to_dict()
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_id_vector'][1] = \
+            response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+                'observation_id_to_observation_id_vector']['1']
+        del response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_id_vector']['1']
+
+        response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_vector'][1] = \
+            response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+                'observation_id_to_observation_vector']['1']
+        del response_data_dict["joint_observation_space_config"]["observation_spaces"][0][
+            'observation_id_to_observation_vector']['1']
+        for k in response_data_dict:
+            assert response_data_dict[k] == ex_data_dict[k]
+
+    def test_simulations_delete_id(self, mocker, flask_app, list_sim, list_sim_im,
+                                   uninstall, list_sim_id, get_sim, get_sim_im,
+                                   not_logged_in, logged_in, logged_in_as_admin):
+        """
+        Testing the DELETE HTTPS method of the /simulations/id resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param list_sim: the list_sim fixture
+        :param list_sim_im: the list_sim_im fixture
+        :param uninstall: the uninstall fixture
+        :param list_sim_id: the list_sim_id fixture
+        :param get_sim: the get_sim fixture
+        :param get_sim_sim: the get_sim_im fixture
+        :return: None
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_simulation",
+                     side_effect=get_sim)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_simulation_image",
+                     side_effect=get_sim_im)
+        mocker.patch("csle_common.controllers.simulation_env_controller.SimulationEnvController.uninstall_simulation",
+                     side_effect=uninstall)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_simulation_ids",
+                     side_effect=list_sim_id)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}/-1)")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}/-1)")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.SIMULATIONS_RESOURCE}/-1)")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_dict == {}
