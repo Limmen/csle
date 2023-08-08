@@ -1,15 +1,19 @@
 """
 Routes and sub-resources for the /simulations resource
 """
-from typing import Tuple
 import base64
-from flask import Blueprint, jsonify, request, Response
+import logging
+from typing import Tuple
+
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
-from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.controllers.simulation_env_controller import SimulationEnvController
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, Response, jsonify, request
+
+import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
+logger = logging.getLogger()
 
 # Creates a blueprint "sub application" of the main REST app
 simulations_bp = Blueprint(
