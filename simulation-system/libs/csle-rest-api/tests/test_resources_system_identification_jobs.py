@@ -121,6 +121,7 @@ class TestResourcesSystemIdentificationSuite:
         :param list_ppo_ids: the list_ppo_ids fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         test_job = TestResourcesSystemIdentificationSuite.get_example_job()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_system_identification_jobs",
                      side_effect=list_jobs)
@@ -239,6 +240,7 @@ class TestResourcesSystemIdentificationSuite:
         :param remove: the remove fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_system_identification_jobs",
                      side_effect=list_jobs)
@@ -278,6 +280,7 @@ class TestResourcesSystemIdentificationSuite:
         :param pid_false: the pid_false fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         test_job = TestResourcesSystemIdentificationSuite.get_example_job()
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_system_identification_job_config",
                      side_effect=get_job_config)
@@ -369,6 +372,7 @@ class TestResourcesSystemIdentificationSuite:
         :param stop: the stop fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_system_identification_job_config",
                      side_effect=get_job_config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid", side_effect=stop)
@@ -408,6 +412,7 @@ class TestResourcesSystemIdentificationSuite:
         :param stop: the stop fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_system_identification_job_config",
                      side_effect=get_job_config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_pid", side_effect=stop)
