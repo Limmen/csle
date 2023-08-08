@@ -1850,7 +1850,7 @@ def create_emulation_networks(
     return operation_outcome_dto
 
 
-def stop_docker_stats_manager_thread(
+def stop_docker_statsmanager_thread(
         stub: csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub,
         emulation: str, ip_first_octet: int,
         timeout=constants.GRPC.OPERATION_TIMEOUT_SECONDS) \

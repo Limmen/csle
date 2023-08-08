@@ -11,9 +11,7 @@ import csle_cluster.cluster_manager.cluster_manager_pb2_grpc
 import csle_cluster.cluster_manager.cluster_manager_pb2
 import csle_cluster.cluster_manager.query_cluster_manager
 from csle_cluster.cluster_manager.cluster_manager_util import ClusterManagerUtil
-from csle_common.dao.emulation_config.emulation_execution_info import (
-    EmulationExecutionInfo,
-)
+from csle_common.dao.emulation_config.emulation_execution_info import EmulationExecutionInfo
 
 
 class ClusterController:
@@ -568,6 +566,7 @@ class ClusterController:
 
         :param ip: the ip of the node where to get the log file
         :param port: the port of the cluster manager
+        :param log_file_name: the name of the log file
         :return: A DTO with the log files
         """
         # Open a gRPC session
@@ -1598,6 +1597,7 @@ class ClusterController:
 
         :param ip: the ip of the physical node
         :param port: the port of the cluster manager
+        :param container_name: the name of the container
         :return: The operation outcome
         """
         # Open a gRPC session
@@ -2829,6 +2829,7 @@ class ClusterController:
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
         :return: The operation outcome
         """
         # Open a gRPC session
@@ -3197,6 +3198,7 @@ class ClusterController:
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the container
         :return: The operation outcome
         """
         # Open a gRPC session
@@ -3236,6 +3238,7 @@ class ClusterController:
         :param port: the port of the cluster manager
         :param emulation: the emulation of the execution
         :param ip_first_octet: the ID of the execution
+        :param container_ip: the IP of the  container
         :return: The operation outcome
         """
         # Open a gRPC session
@@ -3633,7 +3636,6 @@ class ClusterController:
         :param no_clients: boolean flag indicating whether clients should be started or not
         :return: None
         """
-        ip = physical_servers[0]
         steps = 41
         if no_traffic:
             steps = steps - 1
