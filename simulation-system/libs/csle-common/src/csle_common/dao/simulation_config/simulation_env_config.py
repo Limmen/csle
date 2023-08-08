@@ -39,8 +39,7 @@ class SimulationEnvConfig(JSONSerializable):
                  observation_function_config: ObservationFunctionConfig,
                  initial_state_distribution_config: InitialStateDistributionConfig,
                  env_parameters_config: EnvParametersConfig, plot_transition_probabilities: bool = False,
-                 plot_observation_function: bool = False, plot_reward_function: bool = False
-                 ):
+                 plot_observation_function: bool = False, plot_reward_function: bool = False) -> None:
         """
         Initializes the DTO
 
@@ -145,7 +144,7 @@ class SimulationEnvConfig(JSONSerializable):
         d["state_space_config"] = self.state_space_config.to_dict()
         d["joint_action_space_config"] = self.joint_action_space_config.to_dict()
         d["joint_observation_space_config"] = self.joint_observation_space_config.to_dict()
-        d["time_step_type"] = self.time_step_type
+        d["time_step_type"] = self.time_step_type.value
         d["reward_function_config"] = self.reward_function_config.to_dict()
         d["transition_operator_config"] = self.transition_operator_config.to_dict()
         d["observation_function_config"] = self.observation_function_config.to_dict()

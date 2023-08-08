@@ -45,7 +45,7 @@ class State(JSONSerializable):
         d["id"] = self.id
         d["name"] = self.name
         d["descr"] = self.descr
-        d["state_type"] = self.state_type
+        d["state_type"] = self.state_type.value
         return d
 
     def __str__(self) -> str:

@@ -3,12 +3,12 @@ Routes and sub-resources for the /simulations resource
 """
 import base64
 from typing import Tuple
-
+from flask import Blueprint, Response, jsonify, request
+import json
 import csle_common.constants.constants as constants
 from csle_common.controllers.simulation_env_controller import SimulationEnvController
 from csle_common.metastore.metastore_facade import MetastoreFacade
-from flask import Blueprint, Response, jsonify, request
-
+from csle_common.dao.encoding.np_encoder import NpEncoder
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
@@ -49,7 +49,8 @@ def simulations() -> Tuple[Response, int]:
             SimulationEnvController.uninstall_simulation(sim)
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-        simulations_dicts = list(map(lambda x: x.to_dict(), all_simulations))
+        simulations_dicts = list(map(lambda x: json.loads(json.dumps(x.to_dict(), indent=4, sort_keys=True,
+                                                                     cls=NpEncoder)), all_simulations))
     elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         simulations_dicts = []
     response = jsonify(simulations_dicts)
@@ -98,7 +99,7 @@ def get_simulation(simulation_id: int) -> Tuple[Response, int]:
     if simulation is not None:
 
         if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
-            response = jsonify(simulation.to_dict())
+            response = jsonify(json.loads(json.dumps(simulation.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)))
         elif request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
             SimulationEnvController.uninstall_simulation(simulation)
     response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
