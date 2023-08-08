@@ -1,23 +1,12 @@
-import json
-import logging
 from typing import List, Tuple
-
-import csle_common.constants.constants as constants
+import json
 import pytest
 import pytest_mock
-from csle_cluster.cluster_manager.cluster_manager_pb2 import (
-    ExecutionInfoDTO,
-    KibanaTunnelDTO,
-    KibanaTunnelsDTO,
-    OperationOutcomeDTO,
-    RunningEmulationsDTO,
-    RyuTunnelDTO,
-    RyuTunnelsDTO,
-)
+import csle_common.constants.constants as constants
+from csle_cluster.cluster_manager.cluster_manager_pb2 import ExecutionInfoDTO, KibanaTunnelDTO, KibanaTunnelsDTO, \
+    OperationOutcomeDTO, RunningEmulationsDTO, RyuTunnelDTO, RyuTunnelsDTO
 from csle_collector.client_manager.client_manager_pb2 import ClientsDTO
-from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import (
-    DockerStatsMonitorDTO,
-)
+from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import DockerStatsMonitorDTO
 from csle_collector.elk_manager.elk_manager_pb2 import ElkDTO
 from csle_collector.host_manager.host_manager_pb2 import HostStatusDTO
 from csle_collector.kafka_manager.kafka_manager_pb2 import KafkaDTO
@@ -28,15 +17,11 @@ from csle_collector.traffic_manager.traffic_manager_pb2 import TrafficDTO
 from csle_common.dao.emulation_config.client_managers_info import ClientManagersInfo
 from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.emulation_config.container_network import ContainerNetwork
-from csle_common.dao.emulation_config.docker_stats_managers_info import (
-    DockerStatsManagersInfo,
-)
+from csle_common.dao.emulation_config.docker_stats_managers_info import DockerStatsManagersInfo
 from csle_common.dao.emulation_config.elk_managers_info import ELKManagersInfo
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
-from csle_common.dao.emulation_config.emulation_execution_info import (
-    EmulationExecutionInfo,
-)
+from csle_common.dao.emulation_config.emulation_execution_info import EmulationExecutionInfo
 from csle_common.dao.emulation_config.host_managers_info import HostManagersInfo
 from csle_common.dao.emulation_config.kafka_managers_info import KafkaManagersInfo
 from csle_common.dao.emulation_config.node_container_config import NodeContainerConfig
@@ -44,16 +29,13 @@ from csle_common.dao.emulation_config.ossec_managers_info import OSSECIDSManager
 from csle_common.dao.emulation_config.ryu_managers_info import RyuManagersInfo
 from csle_common.dao.emulation_config.snort_managers_info import SnortIdsManagersInfo
 from csle_common.dao.emulation_config.traffic_managers_info import TrafficManagersInfo
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
-
-logger = logging.getLogger()
 
 
 class TestResourcesEmulationExecutionsSuite:
     """
-    Test suite for /emulations resource
+    Test suite for /emulation-executions resource
     """
 
     @pytest.fixture
@@ -117,1198 +99,1358 @@ class TestResourcesEmulationExecutionsSuite:
         return list_emulation_executions_mocker
 
     @pytest.fixture
-    def start_client_mng(self, mocker):
+    def start_client_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_client_manager method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def start_client_manager(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_client_manager_mocker = mocker.MagicMock(side_effect=start_client_manager)
         return start_client_manager_mocker
 
     @pytest.fixture
-    def start_client_pop(self, mocker):
+    def start_client_pop(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_client_population method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def start_client_population(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_client_population_mocker = mocker.MagicMock(side_effect=start_client_population)
         return start_client_population_mocker
 
     @pytest.fixture
-    def stop_client_pop(self, mocker):
+    def stop_client_pop(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_client_population method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def stop_client_population(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_client_population_mocker = mocker.MagicMock(side_effect=stop_client_population)
         return stop_client_population_mocker
 
     @pytest.fixture
-    def stop_client_mng(self, mocker):
+    def stop_client_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_client_manager method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def stop_client_manager(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_client_manager_mocker = mocker.MagicMock(side_effect=stop_client_manager)
         return stop_client_manager_mocker
 
     @pytest.fixture
-    def stop_kafka(self, mocker):
+    def stop_kafka(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_kafka_client_producer method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def stop_kafka_client_producer(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_kafka_client_producer_mocker = mocker.MagicMock(side_effect=stop_kafka_client_producer)
         return stop_kafka_client_producer_mocker
-    
+
     @pytest.fixture
-    def start_kafka(self, mocker):
+    def start_kafka(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_kafka_client_producer method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def start_kafka_client_producer(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_kafka_client_producer_mocker = mocker.MagicMock(side_effect=start_kafka_client_producer)
         return start_kafka_client_producer_mocker
 
     @pytest.fixture
-    def start_dcm(self, mocker):
+    def start_dcm(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_docker_statsmanager method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def start_docker_statsmanager(ip: str, port: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_docker_statsmanager_mocker = mocker.MagicMock(side_effect=start_docker_statsmanager)
         return start_docker_statsmanager_mocker
 
     @pytest.fixture
-    def stop_dcm(self, mocker):
+    def stop_dcm(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_docker_statsmanager method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def stop_docker_statsmanager(ip: str, port: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_docker_statsmanager_mocker = mocker.MagicMock(side_effect=stop_docker_statsmanager)
         return stop_docker_statsmanager_mocker
 
     @pytest.fixture
-    def start_dcm_thread(self, mocker):
+    def start_dcm_thread(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_docker_statsmanager method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_docker_statsmanager_thread(ip: str, port: int,
-                                             emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_docker_statsmanager_thread(ip: str, port: int, emulation: str, ip_first_octet: int) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_docker_statsmanager_thread_mocker = mocker.MagicMock(side_effect=start_docker_statsmanager_thread)
         return start_docker_statsmanager_thread_mocker
 
     @pytest.fixture
-    def stop_dcm_thread(self, mocker):
+    def stop_dcm_thread(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_docker_statsmanager method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_docker_statsmanager_thread(ip: str, port: int,
-                                            emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_docker_statsmanager_thread(ip: str, port: int, emulation: str, ip_first_octet: int) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_docker_statsmanager_thread_mocker = mocker.MagicMock(side_effect=stop_docker_statsmanager_thread)
         return stop_docker_statsmanager_thread_mocker
 
     @pytest.fixture
-    def stop_kafka_mng(self, mocker):
+    def stop_kafka_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_kafka_manager method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_kafka_manager(ip: str, port: int,
-                               emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_kafka_manager(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_kafka_manager_mocker = mocker.MagicMock(side_effect=stop_kafka_manager)
         return stop_kafka_manager_mocker
 
     @pytest.fixture
-    def start_kafka_mng(self, mocker):
+    def start_kafka_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_kafka_manager method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_kafka_manager(ip: str, port: int,
-                                emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_kafka_manager(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_kafka_manager_mocker = mocker.MagicMock(side_effect=start_kafka_manager)
         return start_kafka_manager_mocker
 
     @pytest.fixture
-    def start_kafka_srv(self, mocker):
+    def start_kafka_srv(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_kafka_server method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_kafka_server(ip: str, port: int,
-                               emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_kafka_server(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_kafka_server_mocker = mocker.MagicMock(side_effect=start_kafka_server)
         return start_kafka_server_mocker
 
     @pytest.fixture
-    def stop_kafka_srv(self, mocker):
+    def stop_kafka_srv(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_kafka_server method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_kafka_server(ip: str, port: int,
-                              emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_kafka_server(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_kafka_server_mocker = mocker.MagicMock(side_effect=stop_kafka_server)
         return stop_kafka_server_mocker
 
     @pytest.fixture
-    def stop_snort_ids_mng(self, mocker):
+    def stop_snort_ids_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_snort_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_snort_ids_managers(ip: str, port: int,
-                                    emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_snort_ids_managers(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_snort_ids_managers_mocker = mocker.MagicMock(side_effect=stop_snort_ids_managers)
         return stop_snort_ids_managers_mocker
 
     @pytest.fixture
-    def start_snort_ids_mng(self, mocker):
+    def start_snort_ids_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_snort_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_snort_ids_managers(ip: str, port: int,
-                                     emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_snort_ids_managers(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_snort_ids_managers_mocker = mocker.MagicMock(side_effect=start_snort_ids_managers)
         return start_snort_ids_managers_mocker
 
     @pytest.fixture
-    def start_snort(self, mocker):
+    def start_snort(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_snort_idses method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_snort_idses(ip: str, port: int,
-                              emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_snort_idses(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_snort_idses_mocker = mocker.MagicMock(side_effect=start_snort_idses)
         return start_snort_idses_mocker
 
     @pytest.fixture
-    def stop_snort(self, mocker):
+    def stop_snort(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_snort_idses method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_snort_idses(ip: str, port: int,
-                             emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_snort_idses(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_snort_idses_mocker = mocker.MagicMock(side_effect=stop_snort_idses)
         return stop_snort_idses_mocker
 
     @pytest.fixture
-    def stop_snort_mon(self, mocker):
+    def stop_snort_mon(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_snort_ids_monitor_threads method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_snort_ids_monitor_threads(ip: str, port: int,
-                                           emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_snort_ids_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_snort_ids_monitor_threads_mocker = mocker.MagicMock(side_effect=stop_snort_ids_monitor_threads)
         return stop_snort_ids_monitor_threads_mocker
 
     @pytest.fixture
-    def start_snort_mon(self, mocker):
+    def start_snort_mon(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_snort_ids_monitor_threads method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_snort_ids_monitor_threads(ip: str, port: int,
-                                            emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_snort_ids_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_snort_ids_monitor_threads_mocker = mocker.MagicMock(side_effect=start_snort_ids_monitor_threads)
         return start_snort_ids_monitor_threads_mocker
 
     @pytest.fixture
-    def start_ossec_mng(self, mocker):
+    def start_ossec_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ossec_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_ossec_ids_manager(ip: str, port: int,
-                                    emulation: str, ip_first_octet: int,
-                                    container_ip: str) -> OperationOutcomeDTO:
+
+        def start_ossec_ids_manager(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_ossec_ids_manager_mocker = mocker.MagicMock(side_effect=start_ossec_ids_manager)
         return start_ossec_ids_manager_mocker
 
     @pytest.fixture
-    def stop_ossec_mng(self, mocker):
+    def stop_ossec_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_ossec_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_ossec_ids_manager(ip: str, port: int,
-                                   emulation: str, ip_first_octet: int,
-                                   container_ip: str) -> OperationOutcomeDTO:
+
+        def stop_ossec_ids_manager(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         stop_ossec_ids_manager_mocker = mocker.MagicMock(side_effect=stop_ossec_ids_manager)
         return stop_ossec_ids_manager_mocker
 
     @pytest.fixture
-    def stop_ossec_mng_plural(self, mocker):
+    def stop_ossec_mng_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_ossec_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_ossec_ids_managers(ip: str, port: int,
-                                    emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_ossec_ids_managers(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         stop_ossec_ids_managers_mocker = mocker.MagicMock(side_effect=stop_ossec_ids_managers)
         return stop_ossec_ids_managers_mocker
 
     @pytest.fixture
-    def start_ossec_mng_plural(self, mocker):
+    def start_ossec_mng_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ossec_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_ossec_ids_managers(ip: str, port: int,
-                                     emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_ossec_ids_managers(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_ossec_ids_managers_mocker = mocker.MagicMock(side_effect=start_ossec_ids_managers)
         return start_ossec_ids_managers_mocker
 
     @pytest.fixture
-    def start_ossec_id_plural(self, mocker):
+    def start_ossec_id_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ossec_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_ossec_idses(ip: str, port: int,
-                              emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_ossec_idses(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_ossec_idses_mocker = mocker.MagicMock(side_effect=start_ossec_idses)
         return start_ossec_idses_mocker
 
     @pytest.fixture
-    def start_ossec_id(self, mocker):
+    def start_ossec_id(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ossec_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_ossec_ids(ip: str, port: int,
-                            emulation: str, ip_first_octet: int,
-                            container_ip: str) -> OperationOutcomeDTO:
+
+        def start_ossec_ids(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_ossec_ids_mocker = mocker.MagicMock(side_effect=start_ossec_ids)
         return start_ossec_ids_mocker
 
     @pytest.fixture
-    def stop_ossec_id_plural(self, mocker):
+    def stop_ossec_id_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ossec_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_ossec_idses(ip: str, port: int,
-                             emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_ossec_idses(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_ossec_idses_mocker = mocker.MagicMock(side_effect=stop_ossec_idses)
         return stop_ossec_idses_mocker
 
     @pytest.fixture
-    def stop_ossec_id(self, mocker):
+    def stop_ossec_id(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ossec_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_ossec_ids(ip: str, port: int,
-                           emulation: str, ip_first_octet: int,
-                           container_ip: str) -> OperationOutcomeDTO:
+
+        def stop_ossec_ids(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_ossec_ids_mocker = mocker.MagicMock(side_effect=stop_ossec_ids)
         return stop_ossec_ids_mocker
 
     @pytest.fixture
-    def stop_ossec_id_mon_plural(self, mocker):
+    def stop_ossec_id_mon_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ossec_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_ossec_ids_monitor_threads(ip: str, port: int,
-                                           emulation: str, ip_first_octet: int,
-                                           ) -> OperationOutcomeDTO:
+
+        def stop_ossec_ids_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
-        stop_ossec_ids_monitor_threads_mocker = mocker.MagicMock(
-            side_effect=stop_ossec_ids_monitor_threads)
+
+        stop_ossec_ids_monitor_threads_mocker = mocker.MagicMock(side_effect=stop_ossec_ids_monitor_threads)
         return stop_ossec_ids_monitor_threads_mocker
 
     @pytest.fixture
-    def stop_ossec_id_mon(self, mocker):
+    def stop_ossec_id_mon(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ossec_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_ossec_ids_monitor_thread(ip: str, port: int,
-                                          emulation: str, ip_first_octet: int,
-                                          container_ip: str) -> OperationOutcomeDTO:
+
+        def stop_ossec_ids_monitor_thread(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
-        stop_ossec_ids_monitor_thread_mocker = mocker.MagicMock(
-            side_effect=stop_ossec_ids_monitor_thread)
+
+        stop_ossec_ids_monitor_thread_mocker = mocker.MagicMock(side_effect=stop_ossec_ids_monitor_thread)
         return stop_ossec_ids_monitor_thread_mocker
 
     @pytest.fixture
-    def start_ossec_id_mon_plural(self, mocker):
+    def start_ossec_id_mon_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ossec_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_ossec_ids_monitor_threads(ip: str, port: int,
-                                            emulation: str, ip_first_octet: int,
-                                            ) -> OperationOutcomeDTO:
+
+        def start_ossec_ids_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
-        start_ossec_ids_monitor_threads_mocker = mocker.MagicMock(
-            side_effect=start_ossec_ids_monitor_threads)
+
+        start_ossec_ids_monitor_threads_mocker = mocker.MagicMock(side_effect=start_ossec_ids_monitor_threads)
         return start_ossec_ids_monitor_threads_mocker
 
     @pytest.fixture
-    def start_ossec_id_mon(self, mocker):
+    def start_ossec_id_mon(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ossec_ids_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_ossec_ids_monitor_thread(ip: str, port: int,
-                                           emulation: str, ip_first_octet: int,
+
+        def start_ossec_ids_monitor_thread(ip: str, port: int, emulation: str, ip_first_octet: int,
                                            container_ip: str) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
-        start_ossec_ids_monitor_thread_mocker = mocker.MagicMock(
-            side_effect=start_ossec_ids_monitor_thread)
+
+        start_ossec_ids_monitor_thread_mocker = mocker.MagicMock(side_effect=start_ossec_ids_monitor_thread)
         return start_ossec_ids_monitor_thread_mocker
 
     @pytest.fixture
-    def start_host_mng_plural(self, mocker):
+    def start_host_mng_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_host_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_host_managers(ip: str, port: int, emulation: str,
-                                ip_first_octet: int,) -> OperationOutcomeDTO:
+
+        def start_host_managers(ip: str, port: int, emulation: str, ip_first_octet: int, ) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_host_managers_mocker = mocker.MagicMock(side_effect=start_host_managers)
         return start_host_managers_mocker
 
     @pytest.fixture
-    def stop_host_mng_plural(self, mocker):
+    def stop_host_mng_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_host_managers method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_host_managers(ip: str, port: int, emulation: str,
-                               ip_first_octet: int,) -> OperationOutcomeDTO:
+
+        def stop_host_managers(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_host_managers_mocker = mocker.MagicMock(side_effect=stop_host_managers)
         return stop_host_managers_mocker
 
     @pytest.fixture
-    def start_host_mng(self, mocker):
+    def start_host_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_host_manager method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_host_manager(ip: str, port: int, emulation: str,
-                               ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+
+        def start_host_manager(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_host_manager_mocker = mocker.MagicMock(side_effect=start_host_manager)
         return start_host_manager_mocker
 
     @pytest.fixture
-    def stop_host_mng(self, mocker):
+    def stop_host_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_host_manager method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_host_manager(ip: str, port: int, emulation: str,
-                              ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+
+        def stop_host_manager(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         stop_host_manager_mocker = mocker.MagicMock(side_effect=stop_host_manager)
         return stop_host_manager_mocker
 
     @pytest.fixture
-    def stop_host_mon_plural(self, mocker):
+    def stop_host_mon_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_host_monitor_threads method
         
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def stop_host_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_host_monitor_threads_mocker = mocker.MagicMock(side_effect=stop_host_monitor_threads)
         return stop_host_monitor_threads_mocker
 
     @pytest.fixture
-    def start_host_mon_plural(self, mocker):
+    def start_host_mon_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_host_monitor_threads method
         
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def start_host_monitor_threads(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_host_monitor_threads_mocker = mocker.MagicMock(side_effect=start_host_monitor_threads)
         return start_host_monitor_threads_mocker
 
     @pytest.fixture
-    def start_host_mon(self, mocker):
+    def start_host_mon(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_host_monitor_thread method
         
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def start_host_monitor_thread(ip: str, port: int, emulation: str, ip_first_octet: int,
                                       container_ip: str) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_host_monitor_thread_mocker = mocker.MagicMock(side_effect=start_host_monitor_thread)
         return start_host_monitor_thread_mocker
 
     @pytest.fixture
-    def stop_host_mon(self, mocker):
+    def stop_host_mon(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_host_monitor_thread method
         
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def stop_host_monitor_thread(ip: str, port: int, emulation: str, ip_first_octet: int,
                                      container_ip: str) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_host_monitor_thread_mocker = mocker.MagicMock(side_effect=stop_host_monitor_thread)
         return stop_host_monitor_thread_mocker
 
     @pytest.fixture
-    def start_cont(self, mocker):
+    def start_cont(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_container method
         
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def start_container(ip: str, port: int, container_name: str) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_container_mocker = mocker.MagicMock(side_effect=start_container)
         return start_container_mocker
 
     @pytest.fixture
-    def stop_cont(self, mocker):
+    def stop_cont(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_container method
         
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def stop_container(ip: str, port: int, container_name: str) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_container_mocker = mocker.MagicMock(side_effect=stop_container)
         return stop_container_mocker
 
     @pytest.fixture
-    def start_container_plural(self, mocker):
+    def start_container_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_containers_of_execution method
         
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_containers_of_execution(ip: str, port: int, emulation: str,
-                                          ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_containers_of_execution(ip: str, port: int, emulation: str, ip_first_octet: int) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_containers_of_execution_mocker = mocker.MagicMock(side_effect=start_containers_of_execution)
         return start_containers_of_execution_mocker
 
     @pytest.fixture
-    def stop_container_plural(self, mocker):
+    def stop_container_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_containers_of_execution method
         
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_containers_of_execution(ip: str, port: int, emulation: str,
-                                         ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_containers_of_execution(ip: str, port: int, emulation: str, ip_first_octet: int) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_containers_of_execution_mocker = mocker.MagicMock(side_effect=stop_containers_of_execution)
         return stop_containers_of_execution_mocker
 
     @pytest.fixture
-    def start_elk_mng(self, mocker):
+    def start_elk_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mockingthe start_elk_manager method
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_elk_manager(ip: str, port: int, emulation: str,
-                              ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_elk_manager(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_elk_manager_mocker = mocker.MagicMock(side_effect=start_elk_manager)
         return start_elk_manager_mocker
 
     @pytest.fixture
-    def stop_elk_mng(self, mocker):
+    def stop_elk_mng(self, mocker: pytest_mock.MockFixture):
         """
-        Pytest fixture for mockingthe stop_elk_manager method
+        Pytest fixture for mocking the stop_elk_manager method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_elk_manager(ip: str, port: int, emulation: str,
-                             ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_elk_manager(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_elk_manager_mocker = mocker.MagicMock(side_effect=stop_elk_manager)
         return stop_elk_manager_mocker
 
     @pytest.fixture
-    def stop_elk_stk(self, mocker):
+    def stop_elk_stk(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mockingthe stop_elk_stack method
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_elk_stack(ip: str, port: int, emulation: str,
-                           ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_elk_stack(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_elk_stack_mocker = mocker.MagicMock(side_effect=stop_elk_stack)
         return stop_elk_stack_mocker
 
     @pytest.fixture
-    def start_elk_stk(self, mocker):
+    def start_elk_stk(self, mocker: pytest_mock.MockFixture):
         """
-        Pytest fixture for mockingthe start_elk_stack method
+        Pytest fixture for mocking the start_elk_stack method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_elk_stack(ip: str, port: int, emulation: str,
-                            ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_elk_stack(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_elk_stack_mocker = mocker.MagicMock(side_effect=start_elk_stack)
         return start_elk_stack_mocker
 
     @pytest.fixture
-    def start_els(self, mocker):
+    def start_els(self, mocker: pytest_mock.MockFixture):
         """
-        Pytest fixture for mockingthe start_elastic method
+        Pytest fixture for mocking the start_elastic method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_elastic(ip: str, port: int, emulation: str,
-                          ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_elastic(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_elastic_mocker = mocker.MagicMock(side_effect=start_elastic)
         return start_elastic_mocker
 
     @pytest.fixture
-    def stop_els(self, mocker):
+    def stop_els(self, mocker: pytest_mock.MockFixture):
         """
-        Pytest fixture for mockingthe stop_elastic method
+        Pytest fixture for mocking the stop_elastic method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_elastic(ip: str, port: int, emulation: str,
-                         ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_elastic(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_elastic_mocker = mocker.MagicMock(side_effect=stop_elastic)
         return stop_elastic_mocker
 
     @pytest.fixture
-    def stop_lgst(self, mocker):
+    def stop_lgst(self, mocker: pytest_mock.MockFixture):
         """
-        Pytest fixture for mockingthe stop_logstash method
+        Pytest fixture for mocking the stop_logstash method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_logstash(ip: str, port: int, emulation: str,
-                          ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_logstash(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_logstash_mocker = mocker.MagicMock(side_effect=stop_logstash)
         return stop_logstash_mocker
 
     @pytest.fixture
-    def start_lgst(self, mocker):
+    def start_lgst(self, mocker: pytest_mock.MockFixture):
         """
-        Pytest fixture for mockingthe start_logstash method
+        Pytest fixture for mocking the start_logstash method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_logstash(ip: str, port: int, emulation: str,
-                           ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_logstash(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_logstash_mocker = mocker.MagicMock(side_effect=start_logstash)
         return start_logstash_mocker
 
     @pytest.fixture
-    def start_kb(self, mocker):
+    def start_kb(self, mocker: pytest_mock.MockFixture):
         """
-        Pytest fixture for mockingthe start_kibana method
+        Pytest fixture for mocking the start_kibana method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_kibana(ip: str, port: int, emulation: str,
-                         ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_kibana(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_kibana_mocker = mocker.MagicMock(side_effect=start_kibana)
         return start_kibana_mocker
 
     @pytest.fixture
-    def stop_kb(self, mocker):
+    def stop_kb(self, mocker: pytest_mock.MockFixture):
         """
-        Pytest fixture for mockingthe stop_kibana method
+        Pytest fixture for mocking the stop_kibana method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_kibana(ip: str, port: int, emulation: str,
-                        ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_kibana(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_kibana_mocker = mocker.MagicMock(side_effect=stop_kibana)
         return stop_kibana_mocker
 
     @pytest.fixture
-    def remove_kb(self, mocker):
+    def remove_kb(self, mocker: pytest_mock.MockFixture):
         """
-        Pytest fixture for mocking the remove_kiban_tunnel method
+        Pytest fixture for mocking the remove_kibana_tunnel method
         
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def remove_kibana_tunnel(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         remove_kibana_tunnel_mocker = mocker.MagicMock(side_effect=remove_kibana_tunnel)
         return remove_kibana_tunnel_mocker
 
     @pytest.fixture
-    def stop_tr_mng_plural(self, mocker):
+    def stop_tr_mng_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_traffic_managers method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_traffic_managers(ip: str, port: int, emulation: str,
-                                  ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_traffic_managers(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_traffic_managers_mocker = mocker.MagicMock(side_effect=stop_traffic_managers)
         return stop_traffic_managers_mocker
 
     @pytest.fixture
-    def start_tr_mng_plural(self, mocker):
+    def start_tr_mng_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_traffic_managers method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_traffic_managers(ip: str, port: int, emulation: str,
-                                   ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_traffic_managers(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_traffic_managers_mocker = mocker.MagicMock(side_effect=start_traffic_managers)
         return start_traffic_managers_mocker
 
     @pytest.fixture
-    def stop_tr_mng(self, mocker):
+    def stop_tr_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_traffic_manager method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_traffic_manager(ip: str, port: int, emulation: str,
-                                 ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+
+        def stop_traffic_manager(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_traffic_manager_mocker = mocker.MagicMock(side_effect=stop_traffic_manager)
         return stop_traffic_manager_mocker
 
     @pytest.fixture
-    def start_tr_mng(self, mocker):
+    def start_tr_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_traffic_manager method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_traffic_manager(ip: str, port: int, emulation: str,
-                                  ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+
+        def start_traffic_manager(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         start_traffic_manager_mocker = mocker.MagicMock(side_effect=start_traffic_manager)
         return start_traffic_manager_mocker
 
     @pytest.fixture
-    def stop_tr_gen(self, mocker):
+    def stop_tr_gen(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_traffic_generator method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_traffic_generator(ip: str, port: int, emulation: str,
-                                   ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+
+        def stop_traffic_generator(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_traffic_generator_mocker = mocker.MagicMock(side_effect=stop_traffic_generator)
         return stop_traffic_generator_mocker
 
     @pytest.fixture
-    def start_tr_gen(self, mocker):
+    def start_tr_gen(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stort_traffic_generator method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_traffic_generator(ip: str, port: int, emulation: str,
-                                    ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+
+        def start_traffic_generator(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_traffic_generator_mocker = mocker.MagicMock(side_effect=start_traffic_generator)
         return start_traffic_generator_mocker
 
     @pytest.fixture
-    def stop_tr_gen_plural(self, mocker):
+    def stop_tr_gen_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_traffic_generators method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_traffic_generators(ip: str, port: int, emulation: str,
-                                    ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_traffic_generators(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_traffic_generators_mocker = mocker.MagicMock(side_effect=stop_traffic_generators)
         return stop_traffic_generators_mocker
 
     @pytest.fixture
-    def start_tr_gen_plural(self, mocker):
+    def start_tr_gen_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stort_traffic_generators method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_traffic_generators(ip: str, port: int, emulation: str,
-                                     ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_traffic_generators(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_traffic_generators_mocker = mocker.MagicMock(side_effect=start_traffic_generators)
         return start_traffic_generators_mocker
 
     @pytest.fixture
-    def start_f_beat_plural(self, mocker):
+    def start_f_beat_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_filebeats method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_filebeats(ip: str, port: int, emulation: str,
-                            ip_first_octet: int, initial_start: bool) -> OperationOutcomeDTO:
+
+        def start_filebeats(ip: str, port: int, emulation: str, ip_first_octet: int, initial_start: bool) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_filebeats_mocker = mocker.MagicMock(side_effect=start_filebeats)
         return start_filebeats_mocker
 
     @pytest.fixture
-    def stop_f_beat_plural(self, mocker):
+    def stop_f_beat_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_filebeats method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_filebeats(ip: str, port: int, emulation: str,
-                           ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_filebeats(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_filebeats_mocker = mocker.MagicMock(side_effect=stop_filebeats)
         return stop_filebeats_mocker
 
     @pytest.fixture
-    def start_f_beat(self, mocker):
+    def start_f_beat(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_filebeat method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_filebeat(ip: str, port: int, emulation: str,
-                           ip_first_octet: int, container_ip: str,
+
+        def start_filebeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str,
                            initial_start: bool) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_filebeat_mocker = mocker.MagicMock(side_effect=start_filebeat)
         return start_filebeat_mocker
 
     @pytest.fixture
-    def stop_f_beat(self, mocker):
+    def stop_f_beat(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_filebeat method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_filebeat(ip: str, port: int, emulation: str,
-                          ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+
+        def stop_filebeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_filebeat_mocker = mocker.MagicMock(side_effect=stop_filebeat)
         return stop_filebeat_mocker
 
     @pytest.fixture
-    def start_p_beat_plural(self, mocker):
+    def start_p_beat_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_packetbeats method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_packetbeats(ip: str, port: int, emulation: str,
-                              ip_first_octet: int, initial_start: bool) -> OperationOutcomeDTO:
+
+        def start_packetbeats(ip: str, port: int, emulation: str, ip_first_octet: int, initial_start: bool) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_packetbeats_mocker = mocker.MagicMock(side_effect=start_packetbeats)
         return start_packetbeats_mocker
 
     @pytest.fixture
-    def stop_p_beat_plural(self, mocker):
+    def stop_p_beat_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_packetbeats method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_packetbeats(ip: str, port: int, emulation: str,
-                             ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_packetbeats(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_packetbeats_mocker = mocker.MagicMock(side_effect=stop_packetbeats)
         return stop_packetbeats_mocker
 
     @pytest.fixture
-    def start_p_beat(self, mocker):
+    def start_p_beat(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_packetbeat method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_packetbeat(ip: str, port: int, emulation: str,
-                             ip_first_octet: int, container_ip: str,
+
+        def start_packetbeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str,
                              initial_start: bool) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_packetbeat_mocker = mocker.MagicMock(side_effect=start_packetbeat)
         return start_packetbeat_mocker
 
     @pytest.fixture
-    def stop_p_beat(self, mocker):
+    def stop_p_beat(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_packetbeat method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_packetbeat(ip: str, port: int, emulation: str,
-                            ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+
+        def stop_packetbeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_packetbeat_mocker = mocker.MagicMock(side_effect=stop_packetbeat)
         return stop_packetbeat_mocker
 
     @pytest.fixture
-    def start_m_beat_plural(self, mocker):
+    def start_m_beat_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_metricbeats method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_metricbeats(ip: str, port: int, emulation: str,
-                              ip_first_octet: int, initial_start: bool) -> OperationOutcomeDTO:
+
+        def start_metricbeats(ip: str, port: int, emulation: str, ip_first_octet: int, initial_start: bool) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_metricbeats_mocker = mocker.MagicMock(side_effect=start_metricbeats)
         return start_metricbeats_mocker
 
     @pytest.fixture
-    def stop_m_beat_plural(self, mocker):
+    def stop_m_beat_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_metricbeats method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_metricbeats(ip: str, port: int, emulation: str,
-                             ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_metricbeats(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_metricbeats_mocker = mocker.MagicMock(side_effect=stop_metricbeats)
         return stop_metricbeats_mocker
 
     @pytest.fixture
-    def start_m_beat(self, mocker):
+    def start_m_beat(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_metricbeat method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_metricbeat(ip: str, port: int, emulation: str,
-                             ip_first_octet: int, container_ip: str,
+
+        def start_metricbeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str,
                              initial_start: bool) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_metricbeat_mocker = mocker.MagicMock(side_effect=start_metricbeat)
         return start_metricbeat_mocker
 
     @pytest.fixture
-    def stop_m_beat(self, mocker):
+    def stop_m_beat(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_metricbeat method
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_metricbeat(ip: str, port: int, emulation: str,
-                            ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+
+        def stop_metricbeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_metricbeat_mocker = mocker.MagicMock(side_effect=stop_metricbeat)
         return stop_metricbeat_mocker
 
     @pytest.fixture
-    def start_h_beat_plural(self, mocker):
+    def start_h_beat_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_heartbeats method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_heartbeats(ip: str, port: int, emulation: str,
-                             ip_first_octet: int, initial_start: bool) -> OperationOutcomeDTO:
+
+        def start_heartbeats(ip: str, port: int, emulation: str, ip_first_octet: int, initial_start: bool) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_heartbeats_mocker = mocker.MagicMock(side_effect=start_heartbeats)
         return start_heartbeats_mocker
 
     @pytest.fixture
-    def stop_h_beat_plural(self, mocker):
+    def stop_h_beat_plural(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_heartbeats method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_heartbeats(ip: str, port: int, emulation: str,
-                            ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_heartbeats(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_heartbeats_mocker = mocker.MagicMock(side_effect=stop_heartbeats)
         return stop_heartbeats_mocker
 
     @pytest.fixture
-    def start_h_beat(self, mocker):
+    def start_h_beat(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_heartbeat method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_heartbeat(ip: str, port: int, emulation: str,
-                            ip_first_octet: int, container_ip: str,
+
+        def start_heartbeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str,
                             initial_start: bool) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_heartbeat_mocker = mocker.MagicMock(side_effect=start_heartbeat)
         return start_heartbeat_mocker
 
     @pytest.fixture
-    def stop_h_beat(self, mocker):
+    def stop_h_beat(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_heartbeat method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_heartbeat(ip: str, port: int, emulation: str,
-                           ip_first_octet: int, container_ip: str) -> OperationOutcomeDTO:
+
+        def stop_heartbeat(ip: str, port: int, emulation: str, ip_first_octet: int, container_ip: str) \
+                -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_heartbeat_mocker = mocker.MagicMock(side_effect=stop_heartbeat)
         return stop_heartbeat_mocker
 
     @pytest.fixture
-    def start_ryu_mng(self, mocker):
+    def start_ryu_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ryu_manager method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_ryu_manager(ip: str, port: int, emulation: str,
-                              ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_ryu_manager(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_ryu_manager_mocker = mocker.MagicMock(side_effect=start_ryu_manager)
         return start_ryu_manager_mocker
 
     @pytest.fixture
-    def stop_ryu_mng(self, mocker):
+    def stop_ryu_mng(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_ryu_manager method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_ryu_manager(ip: str, port: int, emulation: str,
-                             ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_ryu_manager(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_ryu_manager_mocker = mocker.MagicMock(side_effect=stop_ryu_manager)
         return stop_ryu_manager_mocker
 
     @pytest.fixture
-    def stop_ryu_ctr(self, mocker):
+    def stop_ryu_ctr(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_ryu method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_ryu(ip: str, port: int, emulation: str,
-                     ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_ryu(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_ryu_mocker = mocker.MagicMock(side_effect=stop_ryu)
         return stop_ryu_mocker
 
     @pytest.fixture
-    def start_ryu_ctr(self, mocker):
+    def start_ryu_ctr(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ryu method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_ryu(ip: str, port: int, emulation: str,
-                      ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_ryu(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_ryu_mocker = mocker.MagicMock(side_effect=start_ryu)
         return start_ryu_mocker
 
     @pytest.fixture
-    def start_ryu_mon(self, mocker):
+    def start_ryu_mon(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the start_ryu_monitor method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def start_ryu_monitor(ip: str, port: int, emulation: str,
-                              ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def start_ryu_monitor(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         start_ryu_monitor_mocker = mocker.MagicMock(side_effect=start_ryu_monitor)
         return start_ryu_monitor_mocker
 
     @pytest.fixture
-    def stop_ryu_mon(self, mocker):
+    def stop_ryu_mon(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the stop_ryu_monitor method
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def stop_ryu_monitor(ip: str, port: int, emulation: str,
-                             ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def stop_ryu_monitor(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         stop_ryu_monitor_mocker = mocker.MagicMock(side_effect=stop_ryu_monitor)
         return stop_ryu_monitor_mocker
 
     @pytest.fixture
-    def remove_ryu_ctr(self, mocker):
+    def remove_ryu_ctr(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for the remove_ryu_tunnel method
         
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def remove_ryu_tunnel(ip: str, port: int, emulation: str,
-                              ip_first_octet: int) -> OperationOutcomeDTO:
+
+        def remove_ryu_tunnel(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=False)
+
         remove_ryu_tunnel_mocker = mocker.MagicMock(side_effect=remove_ryu_tunnel)
         return remove_ryu_tunnel_mocker
 
     @pytest.fixture
-    def get_mock(self, mocker):
+    def get_mock(self, mocker: pytest_mock.MockFixture):
         """
-        pytest fixturefor mocking the request.get() method
+        pytest fixture for mocking the request.get() method
 
         :param mocker: the pytest mokcer object
         :return: the mocked function
         """
-        def get(http_adress: str, timeout: str):
 
+        def get(http_adress: str, timeout: str):
             response = TestResourcesEmulationExecutionsSuite.response_returner()
             return response
+
         get_mocker = mocker.MagicMock(side_effect=get)
         return get_mocker
 
     @staticmethod
-    def response_returner():
+    def response_returner() -> "Response":
         """
         Static help method for returning a response class
-        :return: a Response class
+
+        :return: a Response object
         """
+
         class Response:
-            def __init__(self, content=json.dumps({"dpid":
-                                                   [{api_constants.MGMT_WEBAPP.ACTIVE_COUNT_PROPERTY: 1,
-                                                     api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY: 2}]})):
+            def __init__(self, content=json.dumps({
+                api_constants.MGMT_WEBAPP.DPID_PROPERTY:
+                    [{api_constants.MGMT_WEBAPP.ACTIVE_COUNT_PROPERTY: 1,
+                      api_constants.MGMT_WEBAPP.TABLE_ID_PROPERTY: 2}]
+            })):
                 self.content = content
+
         return Response()
 
     @pytest.fixture
@@ -1327,43 +1469,45 @@ class TestResourcesEmulationExecutionsSuite:
         return list_all_running_emulations_mocker
 
     @pytest.fixture
-    def kibana(self, mocker):
+    def kibana(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the create_kibana_tunnel method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def create_kibana_tunnel(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         create_kibana_tunnel_mocker = mocker.MagicMock(side_effect=create_kibana_tunnel)
         return create_kibana_tunnel_mocker
 
     @pytest.fixture
-    def kibana_list(self, mocker):
+    def kibana_list(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_kibana_tunnels method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def list_kibana_tunnels(ip: str, port: int):
-            kibana_tunnel = KibanaTunnelDTO(port=5, ip="123.456.78.99",
-                                            emulation="null",
-                                            ipFirstOctet=-1)
+            kibana_tunnel = KibanaTunnelDTO(port=5, ip="123.456.78.99", emulation="null", ipFirstOctet=-1)
             return KibanaTunnelsDTO(tunnels=[kibana_tunnel])
 
         list_kibana_tunnels_mocker = mocker.MagicMock(side_effect=list_kibana_tunnels)
         return list_kibana_tunnels_mocker
 
     @pytest.fixture
-    def merged_info(self, mocker):
+    def merged_info(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the get_merged_execution_info method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_merged_execution_info(execution: EmulationExecution) -> ExecutionInfoDTO:
             merged_exec_info = TestResourcesEmulationExecutionsSuite.get_exec_info()
             return merged_exec_info
@@ -1372,44 +1516,45 @@ class TestResourcesEmulationExecutionsSuite:
         return get_merged_execution_info_mocker
 
     @pytest.fixture
-    def create_ryu(self, mocker):
+    def create_ryu(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the create_ryu_tunnel method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def create_ryu_tunnel(ip: str, port: int, emulation: str, ip_first_octet: int) \
-                -> OperationOutcomeDTO:
+
+        def create_ryu_tunnel(ip: str, port: int, emulation: str, ip_first_octet: int) -> OperationOutcomeDTO:
             return OperationOutcomeDTO(outcome=True)
+
         create_ryu_tunnel_mocker = mocker.MagicMock(side_effect=create_ryu_tunnel)
         return create_ryu_tunnel_mocker
 
     @pytest.fixture
-    def list_ryu(self, mocker):
+    def list_ryu(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_ryu_tunnels method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def list_ryu_tunnels(ip: str, port: int) -> RyuTunnelsDTO:
-            return RyuTunnelsDTO(tunnels=[RyuTunnelDTO(port=1,
-                                                       ip="123.456.78.99",
-                                                       emulation="null", ipFirstOctet=-1)])
+            return RyuTunnelsDTO(tunnels=[RyuTunnelDTO(port=1, ip="123.456.78.99", emulation="null", ipFirstOctet=-1)])
+
         list_ryu_tunnels_mocker = mocker.MagicMock(side_effect=list_ryu_tunnels)
         return list_ryu_tunnels_mocker
 
     @pytest.fixture
-    def exec_none(self, mocker):
+    def exec_none(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the get_emulation_execution function
 
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
-        def get_emulation_execution(ip_first_octet: int,
-                                    emulation_name: str) -> None:
+
+        def get_emulation_execution(ip_first_octet: int, emulation_name: str) -> None:
             return None
 
         get_emulation_execution_mocker = mocker.MagicMock(side_effect=get_emulation_execution)
@@ -1424,6 +1569,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param get_ex_em_env: fixture returning an example EmulationEnvConfig
         :return: the mocked function
         """
+
         def list_emulation_execution_ids() -> List[Tuple[int, str]]:
             list_tuple = [(10, "a")]
             return list_tuple
@@ -1432,9 +1578,10 @@ class TestResourcesEmulationExecutionsSuite:
         return list_emulation_execution_ids_mocker
 
     @staticmethod
-    def get_exec_info():
+    def get_exec_info() -> EmulationExecutionInfo:
         """
         Static help method for returning an ExecutionInfoDTO
+
         :return: ExecutionInfoDTO
         """
         snort_ids = SnortIdsManagersInfo(ips=["123.456.78.99"],
@@ -1546,10 +1693,8 @@ class TestResourcesEmulationExecutionsSuite:
         :param get_ex_em_env: the get_ex_em_env fixture
         :return: None
         """
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_executions",
                      side_effect=emulation_exec)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_execution_ids",
@@ -1562,8 +1707,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -1578,15 +1722,14 @@ class TestResourcesEmulationExecutionsSuite:
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         response_data_dict = response_data_list[0]
-        
+
         e_e_data = EmulationExecution.from_dict(response_data_dict)
         e_e_data_dict = e_e_data.to_dict()
         ex_exec_dict = ex_exec.to_dict()
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         for k in response_data_dict:
             assert e_e_data_dict[k] == ex_exec_dict[k]
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -1609,7 +1752,7 @@ class TestResourcesEmulationExecutionsSuite:
             assert e_e_data_dict[k] == ex_exec_dict[k]
 
     def test_emulation_execution_ids_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
-                                         logged_in_as_admin, get_em_ex, emulation_exec, get_ex_exec):
+                                         logged_in_as_admin, get_em_ex, emulation_exec, get_ex_exec) -> None:
         """
         Testing the HTTPS GET method for the /emulation_executions/id resource
         
@@ -1628,8 +1771,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param get_ex_em_env: the get_ex_em_env fixture
         :return: None
         """
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_executions",
                      side_effect=emulation_exec)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
@@ -1647,8 +1789,7 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_list == {}
         ex_exec = get_ex_exec
         ex_exec_dict = ex_exec.to_dict()
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)[0]
@@ -1690,7 +1831,7 @@ class TestResourcesEmulationExecutionsSuite:
 
     def test_emulation_execution_ids_info_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
                                               logged_in, logged_in_as_admin, get_em_ex, emulation_exec, get_ex_exec,
-                                              merged_info, kibana_list, kibana, create_ryu, list_ryu):
+                                              merged_info, kibana_list, kibana, create_ryu, list_ryu) -> None:
         """
         Testing the HTTPS GET method for the /emulation_executions/id/info resource
         
@@ -1721,16 +1862,14 @@ class TestResourcesEmulationExecutionsSuite:
                      side_effect=create_ryu)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_ryu_tunnels",
                      side_effect=list_ryu)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_list == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
@@ -1754,8 +1893,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                f"{api_constants.MGMT_WEBAPP.INFO_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
@@ -1782,8 +1920,7 @@ class TestResourcesEmulationExecutionsSuite:
 
     def test_emulation_execution_ids_cm_post(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
                                              logged_in, logged_in_as_admin, get_em_ex,
-                                             merged_info, get_ex_exec,
-                                             start_client_mng, stop_client_mng):
+                                             merged_info, get_ex_exec, start_client_mng, stop_client_mng) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/client-manager resource
         
@@ -1807,8 +1944,7 @@ class TestResourcesEmulationExecutionsSuite:
                      side_effect=stop_client_mng)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_client_manager",
                      side_effect=start_client_mng)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -1825,17 +1961,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_MANAGER_SUBRESOURCE}"
@@ -1864,9 +1999,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
 
     def test_emulation_execution_ids_cp_post(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                             logged_in, logged_in_as_admin, get_em_ex,
-                                             merged_info, get_ex_exec,
-                                             start_client_pop, stop_client_pop):
+                                             logged_in, logged_in_as_admin, get_em_ex, merged_info, get_ex_exec,
+                                             start_client_pop, stop_client_pop) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/client-population resource
         
@@ -1899,8 +2033,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -1908,17 +2041,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_POPULATION_SUBRESOURCE}"
@@ -1947,8 +2079,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_c_prod_post(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                                 logged_in, logged_in_as_admin, get_em_ex,
-                                                 merged_info, start_kafka, stop_kafka):
+                                                 logged_in, logged_in_as_admin, get_em_ex, merged_info, start_kafka,
+                                                 stop_kafka) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/client-producer resource
         
@@ -1981,8 +2113,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_PRODUCER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -1990,17 +2121,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_PRODUCER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CLIENT_PRODUCER_SUBRESOURCE}"
@@ -2030,7 +2160,7 @@ class TestResourcesEmulationExecutionsSuite:
 
     def test_emulation_execution_ids_dcm_post(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
                                               logged_in, logged_in_as_admin, get_em_ex,
-                                              merged_info, start_dcm, stop_dcm):
+                                              merged_info, start_dcm, stop_dcm) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/docker-stats-manager resource
         
@@ -2054,8 +2184,7 @@ class TestResourcesEmulationExecutionsSuite:
                      side_effect=stop_dcm)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_docker_statsmanager",
                      side_effect=start_dcm)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2063,8 +2192,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2072,17 +2200,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MANAGER_SUBRESOURCE}"
@@ -2126,8 +2253,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_dc_mon_post(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                                 logged_in, logged_in_as_admin, get_em_ex,
-                                                 merged_info, start_dcm_thread, stop_dcm_thread, config):
+                                                 logged_in, logged_in_as_admin, get_em_ex, merged_info,
+                                                 start_dcm_thread, stop_dcm_thread, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/docker-stats-monitor resource
         
@@ -2145,18 +2272,14 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_docker_statsmanager_thread",
-                     side_effect=stop_dcm_thread)
+                     "stop_docker_statsmanager_thread", side_effect=stop_dcm_thread)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_docker_statsmanager_thread",
-                     side_effect=start_dcm_thread)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+                     "start_docker_statsmanager_thread", side_effect=start_dcm_thread)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2164,8 +2287,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2173,17 +2295,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.DOCKER_STATS_MONITOR_SUBRESOURCE}"
@@ -2227,8 +2348,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_kafka_mng_post(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                                    logged_in, logged_in_as_admin, get_em_ex,
-                                                    merged_info, start_kafka_mng, stop_kafka_mng):
+                                                    logged_in, logged_in_as_admin, get_em_ex, merged_info,
+                                                    start_kafka_mng, stop_kafka_mng) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/kafka-manager resource
         
@@ -2248,14 +2369,11 @@ class TestResourcesEmulationExecutionsSuite:
                      side_effect=get_em_ex)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_kafka_manager",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_kafka_manager",
                      side_effect=stop_kafka_mng)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_kafka_manager",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_kafka_manager",
                      side_effect=start_kafka_mng)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2263,8 +2381,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2272,17 +2389,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_MANAGER_SUBRESOURCE}"
@@ -2326,8 +2442,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_kafka_post(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                                logged_in, logged_in_as_admin, get_em_ex,
-                                                merged_info, start_kafka_srv, stop_kafka_srv):
+                                                logged_in, logged_in_as_admin, get_em_ex, merged_info, start_kafka_srv,
+                                                stop_kafka_srv) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/kafka resource
         
@@ -2347,14 +2463,11 @@ class TestResourcesEmulationExecutionsSuite:
                      side_effect=get_em_ex)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_kafka_server",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_kafka_server",
                      side_effect=stop_kafka_srv)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_kafka_server",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_kafka_server",
                      side_effect=start_kafka_srv)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2362,8 +2475,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2371,17 +2483,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KAFKA_SUBRESOURCE}"
@@ -2425,9 +2536,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_snort_mng(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                               logged_in, logged_in_as_admin, get_em_ex,
-                                               merged_info, start_snort_ids_mng,
-                                               stop_snort_ids_mng, config):
+                                               logged_in, logged_in_as_admin, get_em_ex, merged_info,
+                                               start_snort_ids_mng, stop_snort_ids_mng, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/snort-ids-manager resource
         
@@ -2446,18 +2556,14 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_snort_ids_managers",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_snort_ids_managers",
                      side_effect=stop_snort_ids_mng)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_snort_ids_managers",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_snort_ids_managers",
                      side_effect=start_snort_ids_mng)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2465,8 +2571,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2474,17 +2579,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MANAGER_SUBRESOURCE}"
@@ -2528,9 +2632,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_snort(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                           logged_in, logged_in_as_admin, get_em_ex,
-                                           merged_info, start_snort,
-                                           stop_snort, config):
+                                           logged_in, logged_in_as_admin, get_em_ex, merged_info, start_snort,
+                                           stop_snort, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/snort-ids resource
         
@@ -2549,18 +2652,14 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_snort_idses",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_snort_idses",
                      side_effect=stop_snort)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_snort_idses",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_snort_idses",
                      side_effect=start_snort)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2568,8 +2667,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2577,17 +2675,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_SUBRESOURCE}"
@@ -2631,9 +2728,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_snort_mon(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                               logged_in, logged_in_as_admin, get_em_ex,
-                                               merged_info, start_snort_mon,
-                                               stop_snort_mon, config):
+                                               logged_in, logged_in_as_admin, get_em_ex, merged_info, start_snort_mon,
+                                               stop_snort_mon, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/snort-ids-monitor resource
         
@@ -2652,18 +2748,14 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_snort_ids_monitor_threads",
-                     side_effect=stop_snort_mon)
+                     "stop_snort_ids_monitor_threads", side_effect=stop_snort_mon)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_snort_ids_monitor_threads",
-                     side_effect=start_snort_mon)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+                     "start_snort_ids_monitor_threads", side_effect=start_snort_mon)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2671,8 +2763,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2680,17 +2771,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.SNORT_IDS_MONITOR_SUBRESOURCE}"
@@ -2734,10 +2824,9 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_ossec_mng(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                               logged_in, logged_in_as_admin, get_em_ex,
-                                               merged_info, start_ossec_mng,
-                                               stop_ossec_mng, stop_ossec_mng_plural,
-                                               start_ossec_mng_plural, config):
+                                               logged_in, logged_in_as_admin, get_em_ex, merged_info, start_ossec_mng,
+                                               stop_ossec_mng, stop_ossec_mng_plural, start_ossec_mng_plural, config) \
+            -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/ossec-ids-manager resource
 
@@ -2758,24 +2847,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_ossec_ids_manager",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_ossec_ids_manager",
                      side_effect=stop_ossec_mng)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_ossec_ids_manager",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_ossec_ids_manager",
                      side_effect=start_ossec_mng)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_ossec_ids_managers",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_ossec_ids_managers",
                      side_effect=start_ossec_mng_plural)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_ossec_ids_managers",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_ossec_ids_managers",
                      side_effect=stop_ossec_mng_plural)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2783,8 +2866,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2792,17 +2874,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MANAGER_SUBRESOURCE}"
@@ -2841,7 +2922,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -2857,7 +2938,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -2879,10 +2960,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_ossec(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                           logged_in, logged_in_as_admin, get_em_ex,
-                                           merged_info, start_ossec_id,
-                                           stop_ossec_id, stop_ossec_id_plural,
-                                           start_ossec_id_plural, config):
+                                           logged_in, logged_in_as_admin, get_em_ex, merged_info, start_ossec_id,
+                                           stop_ossec_id, stop_ossec_id_plural, start_ossec_id_plural, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/ossec-ids resource
 
@@ -2903,24 +2982,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_ossec_ids",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_ossec_ids",
                      side_effect=stop_ossec_id)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_ossec_ids",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_ossec_ids",
                      side_effect=start_ossec_id)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_ossec_idses",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_ossec_idses",
                      side_effect=start_ossec_id_plural)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_ossec_idses",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_ossec_idses",
                      side_effect=stop_ossec_id_plural)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2928,8 +3001,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -2937,17 +3009,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_SUBRESOURCE}"
@@ -2986,7 +3057,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3002,7 +3073,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3024,10 +3095,9 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_ossec_mon(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                               logged_in, logged_in_as_admin, get_em_ex,
-                                               merged_info, start_ossec_id_mon,
-                                               stop_ossec_id_mon, stop_ossec_id_mon_plural,
-                                               start_ossec_id_mon_plural, config):
+                                               logged_in, logged_in_as_admin, get_em_ex, merged_info,
+                                               start_ossec_id_mon, stop_ossec_id_mon, stop_ossec_id_mon_plural,
+                                               start_ossec_id_mon_plural, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/ossec-ids-monitor resource
 
@@ -3048,24 +3118,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_ossec_ids_monitor_thread",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_ossec_ids_monitor_thread",
                      side_effect=stop_ossec_id_mon)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_ossec_ids_monitor_thread",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_ossec_ids_monitor_thread",
                      side_effect=start_ossec_id_mon)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_ossec_idses_monitor_threads",
-                     side_effect=start_ossec_id_mon_plural)
+                     "start_ossec_idses_monitor_threads", side_effect=start_ossec_id_mon_plural)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_ossec_ids_monitor_threads",
-                     side_effect=stop_ossec_id_mon_plural)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+                     "stop_ossec_ids_monitor_threads", side_effect=stop_ossec_id_mon_plural)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3073,8 +3137,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3082,17 +3145,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.OSSEC_IDS_MONITOR_SUBRESOURCE}"
@@ -3131,7 +3193,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3147,7 +3209,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3169,10 +3231,9 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_host_mng(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                              logged_in, logged_in_as_admin, get_em_ex,
-                                              merged_info, start_host_mng,
-                                              stop_host_mng, stop_host_mng_plural,
-                                              start_host_mng_plural, config):
+                                              logged_in, logged_in_as_admin, get_em_ex, merged_info, start_host_mng,
+                                              stop_host_mng, stop_host_mng_plural, start_host_mng_plural, config) \
+            -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/host-manager resource
 
@@ -3193,24 +3254,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_host_manager",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_host_manager",
                      side_effect=stop_host_mng)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_host_manager",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_host_manager",
                      side_effect=start_host_mng)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_host_managers",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_host_managers",
                      side_effect=start_host_mng_plural)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_host_managers",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_host_managers",
                      side_effect=stop_host_mng_plural)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3218,8 +3273,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3227,17 +3281,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MANAGER_SUBRESOURCE}"
@@ -3276,7 +3329,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3292,7 +3345,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3314,10 +3367,9 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_host_mon(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                              logged_in, logged_in_as_admin, get_em_ex,
-                                              merged_info, start_host_mon,
-                                              stop_host_mon, stop_host_mon_plural,
-                                              start_host_mon_plural, config):
+                                              logged_in, logged_in_as_admin, get_em_ex, merged_info, start_host_mon,
+                                              stop_host_mon, stop_host_mon_plural, start_host_mon_plural, config) \
+            -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/host-monitor resource
 
@@ -3338,24 +3390,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_host_monitor_thread",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_host_monitor_thread",
                      side_effect=stop_host_mon)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_host_monitor_thread",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_host_monitor_thread",
                      side_effect=start_host_mon)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_host_monitor_threads",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_host_monitor_threads",
                      side_effect=start_host_mon_plural)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_host_monitor_threads",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_host_monitor_threads",
                      side_effect=stop_host_mon_plural)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3363,8 +3409,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3372,17 +3417,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HOST_MONITOR_SUBRESOURCE}"
@@ -3421,7 +3465,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3437,7 +3481,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3459,10 +3503,9 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_container(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                               logged_in, logged_in_as_admin, get_em_ex,
-                                               merged_info, start_cont,
-                                               stop_cont, stop_container_plural,
-                                               start_container_plural, config):
+                                               logged_in, logged_in_as_admin, get_em_ex, merged_info, start_cont,
+                                               stop_cont, stop_container_plural, start_container_plural, config) \
+            -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/container resource
 
@@ -3483,24 +3526,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_container",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_container",
                      side_effect=stop_cont)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_container",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_container",
                      side_effect=start_cont)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_containers_of_execution",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_containers_of_execution",
                      side_effect=start_container_plural)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_containers_of_execution",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_containers_of_execution",
                      side_effect=stop_container_plural)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3508,8 +3545,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3517,17 +3553,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.CONTAINER_SUBRESOURCE}"
@@ -3535,7 +3570,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.NAME_PROPERTY:
-                                                                 "JohnDoe"
+                                                                     "JohnDoe"
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3567,7 +3602,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.NAME_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3583,7 +3618,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.NAME_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3605,9 +3640,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_elk_mng(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                             logged_in, logged_in_as_admin, get_em_ex,
-                                             merged_info, start_elk_mng,
-                                             stop_elk_mng, config, kibana, kibana_list):
+                                             logged_in, logged_in_as_admin, get_em_ex, merged_info, start_elk_mng,
+                                             stop_elk_mng, config, kibana, kibana_list) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/elk-manager resource
 
@@ -3626,24 +3660,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_elk_manager",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_elk_manager",
                      side_effect=stop_elk_mng)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "create_kibana_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.create_kibana_tunnel",
                      side_effect=kibana)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "list_kibana_tunnels",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_kibana_tunnels",
                      side_effect=kibana_list)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_elk_manager",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_elk_manager",
                      side_effect=start_elk_mng)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3651,8 +3679,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3660,17 +3687,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_MANAGER_SUBRESOURCE}"
@@ -3709,7 +3735,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3725,7 +3751,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3747,9 +3773,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_elk_stack(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                               logged_in, logged_in_as_admin, get_em_ex,
-                                               merged_info, start_elk_stk,
-                                               stop_elk_stk, config, kibana, kibana_list):
+                                               logged_in, logged_in_as_admin, get_em_ex, merged_info, start_elk_stk,
+                                               stop_elk_stk, config, kibana, kibana_list) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/elk-stack resource
 
@@ -3768,24 +3793,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_elk_stack",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_elk_stack",
                      side_effect=stop_elk_stk)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "create_kibana_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.create_kibana_tunnel",
                      side_effect=kibana)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "list_kibana_tunnels",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_kibana_tunnels",
                      side_effect=kibana_list)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_elk_stack",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_elk_stack",
                      side_effect=start_elk_stk)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3793,8 +3812,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3802,17 +3820,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELK_STACK_SUBRESOURCE}"
@@ -3851,7 +3868,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3867,7 +3884,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -3889,9 +3906,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_elastic(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                             logged_in, logged_in_as_admin, get_em_ex,
-                                             merged_info, start_els,
-                                             stop_els, config, kibana, kibana_list):
+                                             logged_in, logged_in_as_admin, get_em_ex, merged_info, start_els,
+                                             stop_els, config, kibana, kibana_list) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/elastic resource
 
@@ -3910,24 +3926,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_elastic",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_elastic",
                      side_effect=stop_els)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "create_kibana_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.create_kibana_tunnel",
                      side_effect=kibana)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "list_kibana_tunnels",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_kibana_tunnels",
                      side_effect=kibana_list)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_elastic",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_elastic",
                      side_effect=start_els)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3935,8 +3945,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -3944,17 +3953,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.ELASTIC_SUBRESOURCE}"
@@ -3993,7 +4001,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4009,7 +4017,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4031,9 +4039,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_logstash(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                              logged_in, logged_in_as_admin, get_em_ex,
-                                              merged_info, start_lgst,
-                                              stop_lgst, config, kibana, kibana_list):
+                                              logged_in, logged_in_as_admin, get_em_ex, merged_info, start_lgst,
+                                              stop_lgst, config, kibana, kibana_list) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/logstash resource
 
@@ -4052,24 +4059,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_logstash",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_logstash",
                      side_effect=stop_lgst)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "create_kibana_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.create_kibana_tunnel",
                      side_effect=kibana)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "list_kibana_tunnels",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_kibana_tunnels",
                      side_effect=kibana_list)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_logstash",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_logstash",
                      side_effect=start_lgst)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4077,8 +4078,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4086,17 +4086,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.LOGSTASH_SUBRESOURCE}"
@@ -4135,7 +4134,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4151,7 +4150,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4173,9 +4172,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_kibana(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                            logged_in, logged_in_as_admin, get_em_ex,
-                                            merged_info, start_kb,
-                                            stop_kb, config, kibana, kibana_list, remove_kb):
+                                            logged_in, logged_in_as_admin, get_em_ex, merged_info, start_kb, stop_kb,
+                                            config, kibana, kibana_list, remove_kb) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/kibana resource
 
@@ -4194,27 +4192,20 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_kibana",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_kibana",
                      side_effect=stop_kb)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "create_kibana_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.create_kibana_tunnel",
                      side_effect=kibana)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "list_kibana_tunnels",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_kibana_tunnels",
                      side_effect=kibana_list)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "remove_kibana_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.remove_kibana_tunnel",
                      side_effect=remove_kb)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_kibana",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_kibana",
                      side_effect=start_kb)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4222,8 +4213,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4231,17 +4221,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.KIBANA_SUBRESOURCE}"
@@ -4280,7 +4269,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4296,7 +4285,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4318,10 +4307,9 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_traffic_mng(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                                 logged_in, logged_in_as_admin, get_em_ex,
-                                                 merged_info, start_tr_mng, start_tr_mng_plural,
-                                                 stop_tr_mng, stop_tr_mng_plural,
-                                                 config, kibana, kibana_list, remove_kb):
+                                                 logged_in, logged_in_as_admin, get_em_ex, merged_info, start_tr_mng,
+                                                 start_tr_mng_plural, stop_tr_mng, stop_tr_mng_plural,
+                                                 config, kibana, kibana_list, remove_kb) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/traffic-manager resource
 
@@ -4340,33 +4328,24 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_traffic_manager",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_traffic_manager",
                      side_effect=stop_tr_mng)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_traffic_managers",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_traffic_managers",
                      side_effect=stop_tr_mng_plural)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "create_kibana_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.create_kibana_tunnel",
                      side_effect=kibana)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "list_kibana_tunnels",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_kibana_tunnels",
                      side_effect=kibana_list)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "remove_kibana_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.remove_kibana_tunnel",
                      side_effect=remove_kb)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_traffic_manager",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_traffic_manager",
                      side_effect=start_tr_mng)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_traffic_managers",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_traffic_managers",
                      side_effect=start_tr_mng_plural)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4374,8 +4353,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4383,17 +4361,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_MANAGER_SUBRESOURCE}"
@@ -4432,7 +4409,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4448,7 +4425,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4470,10 +4447,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_traffic_gen(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                                 logged_in, logged_in_as_admin, get_em_ex,
-                                                 merged_info, start_tr_gen, start_tr_gen_plural,
-                                                 stop_tr_gen, stop_tr_gen_plural,
-                                                 config):
+                                                 logged_in, logged_in_as_admin, get_em_ex, merged_info, start_tr_gen,
+                                                 start_tr_gen_plural, stop_tr_gen, stop_tr_gen_plural, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/traffic-generator resource
 
@@ -4494,24 +4469,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_traffic_generator",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_traffic_generator",
                      side_effect=stop_tr_gen)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_traffic_generators",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_traffic_generators",
                      side_effect=stop_tr_gen_plural)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_traffic_generator",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_traffic_generator",
                      side_effect=start_tr_gen)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_traffic_generators",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_traffic_generators",
                      side_effect=start_tr_gen_plural)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4519,8 +4488,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4528,17 +4496,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.TRAFFIC_GENERATOR_SUBRESOURCE}"
@@ -4577,7 +4544,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4593,7 +4560,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4615,10 +4582,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_filebeat(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                              logged_in, logged_in_as_admin, get_em_ex,
-                                              merged_info, start_f_beat, start_f_beat_plural,
-                                              stop_f_beat_plural, stop_f_beat,
-                                              config):
+                                              logged_in, logged_in_as_admin, get_em_ex, merged_info, start_f_beat,
+                                              start_f_beat_plural, stop_f_beat_plural, stop_f_beat, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/filebeat resource
 
@@ -4639,24 +4604,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_filebeat",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_filebeat",
                      side_effect=stop_f_beat)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_filebeats",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_filebeats",
                      side_effect=stop_f_beat_plural)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_filebeat",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_filebeat",
                      side_effect=start_f_beat)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_filebeats",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_filebeats",
                      side_effect=start_f_beat_plural)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4664,8 +4623,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4673,17 +4631,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.FILEBEAT_SUBRESOURCE}"
@@ -4722,7 +4679,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4738,7 +4695,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4760,10 +4717,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_packetbeat(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                                logged_in, logged_in_as_admin, get_em_ex,
-                                                merged_info, start_p_beat, start_p_beat_plural,
-                                                stop_p_beat_plural, stop_p_beat,
-                                                config):
+                                                logged_in, logged_in_as_admin, get_em_ex, merged_info, start_p_beat,
+                                                start_p_beat_plural, stop_p_beat_plural, stop_p_beat, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/packetbeat resource
 
@@ -4784,24 +4739,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_packetbeat",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_packetbeat",
                      side_effect=stop_p_beat)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_packetbeats",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_packetbeats",
                      side_effect=stop_p_beat_plural)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_packetbeat",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_packetbeat",
                      side_effect=start_p_beat)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_packetbeats",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_packetbeats",
                      side_effect=start_p_beat_plural)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4809,8 +4758,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4818,17 +4766,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.PACKETBEAT_SUBRESOURCE}"
@@ -4867,7 +4814,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4883,7 +4830,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -4905,10 +4852,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_metricbeat(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                                logged_in, logged_in_as_admin, get_em_ex,
-                                                merged_info, start_m_beat, start_m_beat_plural,
-                                                stop_m_beat_plural, stop_m_beat,
-                                                config):
+                                                logged_in, logged_in_as_admin, get_em_ex, merged_info, start_m_beat,
+                                                start_m_beat_plural, stop_m_beat_plural, stop_m_beat, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/metricbeat resource
 
@@ -4929,24 +4874,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_metricbeat",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_metricbeat",
                      side_effect=stop_m_beat)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_metricbeats",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_metricbeats",
                      side_effect=stop_m_beat_plural)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_metricbeat",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_metricbeat",
                      side_effect=start_m_beat)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_metricbeats",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_metricbeats",
                      side_effect=start_m_beat_plural)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4954,8 +4893,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -4963,17 +4901,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.METRICBEAT_SUBRESOURCE}"
@@ -5012,7 +4949,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -5028,7 +4965,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -5050,10 +4987,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_heartbeat(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                               logged_in, logged_in_as_admin, get_em_ex,
-                                               merged_info, start_h_beat, start_h_beat_plural,
-                                               stop_h_beat_plural, stop_h_beat,
-                                               config):
+                                               logged_in, logged_in_as_admin, get_em_ex, merged_info, start_h_beat,
+                                               start_h_beat_plural, stop_h_beat_plural, stop_h_beat, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/heartbeat resource
 
@@ -5074,24 +5009,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_heartbeat",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_heartbeat",
                      side_effect=stop_h_beat)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_heartbeats",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_heartbeats",
                      side_effect=stop_h_beat_plural)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_heartbeat",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_heartbeat",
                      side_effect=start_h_beat)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_heartbeats",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_heartbeats",
                      side_effect=start_h_beat_plural)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -5099,8 +5028,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -5108,17 +5036,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.HEARTBEAT_SUBRESOURCE}"
@@ -5157,7 +5084,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -5173,7 +5100,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -5195,9 +5122,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_ryu_mng(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                             logged_in, logged_in_as_admin, get_em_ex,
-                                             merged_info, stop_ryu_mng, start_ryu_mng, list_ryu,
-                                             create_ryu, config):
+                                             logged_in, logged_in_as_admin, get_em_ex, merged_info, stop_ryu_mng,
+                                             start_ryu_mng, list_ryu, create_ryu, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/ryu-manager resource
 
@@ -5218,24 +5144,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "create_ryu_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.create_ryu_tunnel",
                      side_effect=create_ryu)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "list_ryu_tunnels",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_ryu_tunnels",
                      side_effect=list_ryu)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_ryu_manager",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_ryu_manager",
                      side_effect=stop_ryu_mng)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_ryu_manager",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_ryu_manager",
                      side_effect=start_ryu_mng)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -5243,8 +5163,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -5252,17 +5171,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MANAGER_SUBRESOURCE}"
@@ -5301,7 +5219,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -5317,7 +5235,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -5339,9 +5257,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_ryu_ctr(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                             logged_in, logged_in_as_admin, get_em_ex,
-                                             merged_info, stop_ryu_ctr, start_ryu_ctr, list_ryu,
-                                             create_ryu, remove_ryu_ctr, config):
+                                             logged_in, logged_in_as_admin, get_em_ex, merged_info, stop_ryu_ctr,
+                                             start_ryu_ctr, list_ryu, create_ryu, remove_ryu_ctr, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/ryu-controller resource
 
@@ -5362,27 +5279,20 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "create_ryu_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.create_ryu_tunnel",
                      side_effect=create_ryu)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "list_ryu_tunnels",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_ryu_tunnels",
                      side_effect=list_ryu)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "remove_ryu_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.remove_ryu_tunnel",
                      side_effect=remove_ryu_ctr)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_ryu",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_ryu",
                      side_effect=stop_ryu_ctr)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_ryu",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_ryu",
                      side_effect=start_ryu_ctr)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -5390,8 +5300,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -5399,17 +5308,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_CONTROLLER_SUBRESOURCE}"
@@ -5429,7 +5337,7 @@ class TestResourcesEmulationExecutionsSuite:
                 for i in data_dict[k]:
                     if i == "ryu_managers_statuses":
                         assert data_dict[k][i][0]["monitor_running"] != \
-                            exp_exec_info_dict[k][i][0]["monitor_running"]
+                               exp_exec_info_dict[k][i][0]["monitor_running"]
             else:
                 assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5450,7 +5358,7 @@ class TestResourcesEmulationExecutionsSuite:
                 for i in data_dict[k]:
                     if i == "ryu_managers_statuses":
                         assert data_dict[k][i][0]["monitor_running"] != \
-                            exp_exec_info_dict[k][i][0]["monitor_running"]
+                               exp_exec_info_dict[k][i][0]["monitor_running"]
             else:
                 assert data_dict[k] == exp_exec_info_dict[k]
 
@@ -5460,7 +5368,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -5473,7 +5381,7 @@ class TestResourcesEmulationExecutionsSuite:
                 for i in data_dict[k]:
                     if i == "ryu_managers_statuses":
                         assert data_dict[k][i][0]["monitor_running"] != \
-                            exp_exec_info_dict[k][i][0]["monitor_running"]
+                               exp_exec_info_dict[k][i][0]["monitor_running"]
             else:
                 assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5482,7 +5390,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -5495,7 +5403,7 @@ class TestResourcesEmulationExecutionsSuite:
                 for i in data_dict[k]:
                     if i == "ryu_managers_statuses":
                         assert data_dict[k][i][0]["monitor_running"] != \
-                            exp_exec_info_dict[k][i][0]["monitor_running"]
+                               exp_exec_info_dict[k][i][0]["monitor_running"]
             else:
                 assert data_dict[k] == exp_exec_info_dict[k]
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
@@ -5512,7 +5420,7 @@ class TestResourcesEmulationExecutionsSuite:
     def test_emulation_execution_ids_ryu_mon(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
                                              logged_in, logged_in_as_admin, get_em_ex,
                                              merged_info, stop_ryu_mon, start_ryu_mon, list_ryu,
-                                             create_ryu, config):
+                                             create_ryu, config) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/ryu-monitor resource
 
@@ -5533,24 +5441,18 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "create_ryu_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.create_ryu_tunnel",
                      side_effect=create_ryu)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "list_ryu_tunnels",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_ryu_tunnels",
                      side_effect=list_ryu)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "stop_ryu_monitor",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_ryu_monitor",
                      side_effect=stop_ryu_mon)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "start_ryu_monitor",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_ryu_monitor",
                      side_effect=start_ryu_mon)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -5558,8 +5460,7 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
@@ -5567,17 +5468,16 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}",
                                                 data=json.dumps({"bla": "bla"}))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {api_constants.MGMT_WEBAPP.REASON_PROPERTY:
-                                      f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
-                                      f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
+                                          f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.START_PROPERTY} or "
+                                          f"{api_constants.MGMT_WEBAPP.STOP_PROPERTY} not provided"}
         assert response.status_code == constants.HTTPS.BAD_REQUEST_STATUS_CODE
         response = flask_app.test_client().post(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                 f"{api_constants.MGMT_WEBAPP.RYU_MONITOR_SUBRESOURCE}"
@@ -5616,7 +5516,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.STOP_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -5632,7 +5532,7 @@ class TestResourcesEmulationExecutionsSuite:
                                                 data=json.dumps({api_constants.MGMT_WEBAPP.START_PROPERTY: True,
                                                                  api_constants.MGMT_WEBAPP.STOP_PROPERTY: False,
                                                                  api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
+                                                                     api_constants.MGMT_WEBAPP.START_ALL_PROPERTY
                                                                  }))
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -5654,8 +5554,8 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict == {}
 
     def test_emulation_execution_ids_switches(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
-                                              logged_in, logged_in_as_admin, get_em_ex, get_mock,
-                                              merged_info, list_ryu, create_ryu, config, exec_none):
+                                              logged_in, logged_in_as_admin, get_em_ex, get_mock, merged_info, list_ryu,
+                                              create_ryu, config, exec_none) -> None:
         """
         Testing the HTTPS GET method for the /emulation-executions/id/switches resource
 
@@ -5676,27 +5576,22 @@ class TestResourcesEmulationExecutionsSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
                      side_effect=merged_info)
         mocker.patch("requests.get", side_effect=get_mock)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "create_ryu_tunnel",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.create_ryu_tunnel",
                      side_effect=create_ryu)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController."
-                     "list_ryu_tunnels",
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.list_ryu_tunnels",
                      side_effect=list_ryu)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
@@ -5707,39 +5602,39 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict[api_constants.MGMT_WEBAPP.SDN_CONTROLLER_LOCAL_PORT] == 1
         response_switches = response_data_dict[api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE][0]
         assert response_switches[api_constants.MGMT_WEBAPP.AGG_FLOWS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
         assert response_switches[api_constants.MGMT_WEBAPP.DESC_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.DPID_PROPERTY] == \
-            api_constants.MGMT_WEBAPP.DPID_PROPERTY
+               api_constants.MGMT_WEBAPP.DPID_PROPERTY
         assert response_switches[api_constants.MGMT_WEBAPP.FLOWS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.GROUP_DESCS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.GROUP_FEATURES_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
         assert response_switches[api_constants.MGMT_WEBAPP.GROUPS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.METER_CONFIGS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.METER_FEATURES_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
         assert response_switches[api_constants.MGMT_WEBAPP.METERS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.PORT_DESCS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.PORT_STATS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.QUEUE_CONFIGS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
         assert response_switches[api_constants.MGMT_WEBAPP.QUEUES_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.ROLES_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
         assert response_switches[api_constants.MGMT_WEBAPP.TABLE_FEATURES_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.TABLES_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=exec_none)
 
@@ -5749,12 +5644,10 @@ class TestResourcesEmulationExecutionsSuite:
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_EXECUTIONS_RESOURCE}/-1/"
                                                f"{api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE}")
         response_data = response.data.decode("utf-8")
@@ -5765,39 +5658,39 @@ class TestResourcesEmulationExecutionsSuite:
         assert response_data_dict[api_constants.MGMT_WEBAPP.SDN_CONTROLLER_LOCAL_PORT] == 1
         response_switches = response_data_dict[api_constants.MGMT_WEBAPP.SWITCHES_SUBRESOURCE][0]
         assert response_switches[api_constants.MGMT_WEBAPP.AGG_FLOWS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
         assert response_switches[api_constants.MGMT_WEBAPP.DESC_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.DPID_PROPERTY] == \
-            api_constants.MGMT_WEBAPP.DPID_PROPERTY
+               api_constants.MGMT_WEBAPP.DPID_PROPERTY
         assert response_switches[api_constants.MGMT_WEBAPP.FLOWS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.GROUP_DESCS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.GROUP_FEATURES_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
         assert response_switches[api_constants.MGMT_WEBAPP.GROUPS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.METER_CONFIGS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.METER_FEATURES_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
         assert response_switches[api_constants.MGMT_WEBAPP.METERS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.PORT_DESCS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.PORT_STATS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.QUEUE_CONFIGS_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
         assert response_switches[api_constants.MGMT_WEBAPP.QUEUES_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.ROLES_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY][0]
         assert response_switches[api_constants.MGMT_WEBAPP.TABLE_FEATURES_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
         assert response_switches[api_constants.MGMT_WEBAPP.TABLES_PROPERTY] == \
-            ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
+               ex_dict[api_constants.MGMT_WEBAPP.DPID_PROPERTY]
 
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=exec_none)
