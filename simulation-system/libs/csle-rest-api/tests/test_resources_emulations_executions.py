@@ -1693,6 +1693,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param get_ex_em_env: the get_ex_em_env fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_executions",
@@ -1771,6 +1772,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param get_ex_em_env: the get_ex_em_env fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_executions",
                      side_effect=emulation_exec)
@@ -1850,6 +1852,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param get_ex_em_env: the get_ex_em_env fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
@@ -1936,6 +1939,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param stop_client: the stop_client fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
@@ -2016,6 +2020,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param stop_client_pop: the stop_client_pop fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
@@ -2096,6 +2101,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param stop_client_pop: the stop_kafka fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
@@ -2176,6 +2182,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param stop_dcm: the stop_dcm fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
@@ -2270,6 +2277,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param stop_dcm_thread: the stop_dcm_thread fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -2365,6 +2373,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param stop_kafka_mng: the stop_kafka_mng fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
@@ -2459,6 +2468,8 @@ class TestResourcesEmulationExecutionsSuite:
         :param stop_kafka_mng: the stop_kafka_mng fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_merged_execution_info",
@@ -2554,6 +2565,8 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -2650,6 +2663,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -2746,6 +2760,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -2845,6 +2860,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -2980,6 +2996,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -3116,6 +3133,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -3252,6 +3270,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -3388,6 +3407,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -3524,6 +3544,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -3658,6 +3679,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -3791,6 +3813,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -3924,6 +3947,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -4057,6 +4081,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -4190,6 +4215,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -4326,6 +4352,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -4467,6 +4494,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -4602,6 +4630,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -4737,6 +4766,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -4872,6 +4902,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -5007,6 +5038,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -5142,6 +5174,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -5277,6 +5310,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -5439,6 +5473,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
@@ -5574,6 +5609,7 @@ class TestResourcesEmulationExecutionsSuite:
         :param config: the config fixture
         :return: None
         """
+        mocker.patch('time.sleep', return_value=None)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_execution",
                      side_effect=get_em_ex)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
