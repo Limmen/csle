@@ -1,5 +1,5 @@
-import json
 from typing import List, Tuple
+import json
 import pytest
 import pytest_mock
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
@@ -37,7 +37,7 @@ class TestResourcesEmulationsStatisticsSuite:
     def remove(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the remove_emulation_statistic method
-        
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
@@ -50,7 +50,7 @@ class TestResourcesEmulationsStatisticsSuite:
     def em_stat(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_emulation_statistics function
-        
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
@@ -64,7 +64,7 @@ class TestResourcesEmulationsStatisticsSuite:
     def get_em_stat(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the get_emulation_statistic method
-        
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
@@ -78,7 +78,7 @@ class TestResourcesEmulationsStatisticsSuite:
     def get_em_stat_none(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the get_emulation_statistic method
-        
+
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
