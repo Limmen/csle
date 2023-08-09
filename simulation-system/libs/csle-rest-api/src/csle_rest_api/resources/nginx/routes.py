@@ -1,14 +1,16 @@
 """
 Routes and sub-resources for the /nginx resource
 """
-from typing import Tuple
 import json
-from flask import Blueprint, jsonify, request, Response
+from typing import Tuple
+
 import csle_common.constants.constants as constants
+from csle_cluster.cluster_manager.cluster_controller import ClusterController
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, Response, jsonify, request
+
 import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
-from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_cluster.cluster_manager.cluster_controller import ClusterController
 
 # Creates a blueprint "sub application" of the main REST app
 nginx_bp = Blueprint(api_constants.MGMT_WEBAPP.NGINX_RESOURCE, __name__,
@@ -26,26 +28,25 @@ def nginx() -> Tuple[Response, int]:
     authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
     if authorized is not None:
         return authorized
-
-    json_data = json.loads(request.data)
-    if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
-        response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
-        return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
-                constants.HTTPS.BAD_REQUEST_STATUS_CODE)
-    ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
+    if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
+        json_data = json.loads(request.data)
+        if api_constants.MGMT_WEBAPP.IP_PROPERTY not in json_data:
+            response_str = f"{api_constants.MGMT_WEBAPP.IP_PROPERTY} not provided"
+            return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: response_str}),
+                    constants.HTTPS.BAD_REQUEST_STATUS_CODE)
+        ip = json_data[api_constants.MGMT_WEBAPP.IP_PROPERTY]
 
     config = MetastoreFacade.get_config(id=1)
     cluster_statuses = []
     for node in config.cluster_config.cluster_nodes:
         node_status = ClusterController.get_node_status(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
-        if node.ip == ip:
-            if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST:
-                if node_status.nginxRunning:
-                    ClusterController.stop_nginx(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
-                    node_status.nginxRunning = False
-                else:
-                    ClusterController.start_nginx(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
-                    node_status.nginxRunning = True
+        if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_POST and node.ip == ip:
+            if node_status.nginxRunning:
+                ClusterController.stop_nginx(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                node_status.nginxRunning = False
+            else:
+                ClusterController.start_nginx(ip=node.ip, port=constants.GRPC_SERVERS.CLUSTER_MANAGER_PORT)
+                node_status.nginxRunning = True
         cluster_status_dict = {
             api_constants.MGMT_WEBAPP.CADVISOR_RUNNING_PROPERTY: node_status.cAdvisorRunning,
             api_constants.MGMT_WEBAPP.GRAFANA_RUNNING_PROPERTY: node_status.grafanaRunning,
