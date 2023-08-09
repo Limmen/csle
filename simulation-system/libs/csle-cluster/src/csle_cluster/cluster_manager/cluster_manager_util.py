@@ -29,7 +29,7 @@ from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import Sno
 from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters
 from csle_collector.client_manager.client_population_metrics import ClientPopulationMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
-from csle_collector.host_manager.host_metrics import HostMetrics
+from csle_collector.host_manager.dao.host_metrics import HostMetrics
 import csle_collector.client_manager.client_manager_pb2
 import csle_collector.traffic_manager.traffic_manager_pb2
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2

@@ -4,9 +4,9 @@ import subprocess
 import yaml
 import logging
 import csle_collector.constants.constants as constants
-from csle_collector.host_manager.failed_login_attempt import FailedLoginAttempt
-from csle_collector.host_manager.successful_login import SuccessfulLogin
-from csle_collector.host_manager.host_metrics import HostMetrics
+from csle_collector.host_manager.dao.failed_login_attempt import FailedLoginAttempt
+from csle_collector.host_manager.dao.successful_login import SuccessfulLogin
+from csle_collector.host_manager.dao.host_metrics import HostMetrics
 import csle_collector.host_manager.host_manager_pb2
 
 

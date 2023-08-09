@@ -9,7 +9,7 @@ from csle_common.consumer_threads.docker_host_stats_consumer_thread import Docke
 from csle_common.consumer_threads.snort_ids_log_consumer_thread import SnortIdsLogConsumerThread
 from csle_common.consumer_threads.ossec_ids_log_consumer_thread import OSSECIdsLogConsumerThread
 from csle_common.dao.emulation_config.kafka_config import KafkaConfig
-from csle_collector.host_manager.host_metrics import HostMetrics
+from csle_collector.host_manager.dao.host_metrics import HostMetrics
 from csle_collector.docker_stats_manager.docker_stats import DockerStats
 from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
 from csle_collector.ossec_ids_manager.dao.ossec_ids_alert_counters import OSSECIdsAlertCounters

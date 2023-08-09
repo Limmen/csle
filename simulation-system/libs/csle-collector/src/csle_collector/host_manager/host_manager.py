@@ -5,69 +5,13 @@ import netifaces
 import time
 import grpc
 import os
-import threading
 from concurrent import futures
 import subprocess
-from confluent_kafka import Producer
 import csle_collector.host_manager.host_manager_pb2_grpc
 import csle_collector.host_manager.host_manager_pb2
 from csle_collector.host_manager.host_manager_util import HostManagerUtil
+from csle_collector.host_manager.threads.host_monitor_thread import HostMonitorThread
 import csle_collector.constants.constants as constants
-
-
-class HostMonitorThread(threading.Thread):
-    """
-    Thread that collects the Host statistics and pushes it to Kafka periodically
-    """
-
-    def __init__(self, kafka_ip: str, kafka_port: int, ip: str, hostname: str,
-                 time_step_len_seconds: int):
-        """
-        Initializes the thread
-
-        :param kafka_ip: IP of the Kafka server to push to
-        :param kafka_port: port of the Kafka server to push to
-        :param ip: ip of the server we are pushing from
-        :param hostname: hostname of the server we are pushing from
-        :param time_step_len_seconds: the length of a timestep
-        """
-        threading.Thread.__init__(self)
-        self.kafka_ip = kafka_ip
-        self.kafka_port = kafka_port
-        self.ip = ip
-        self.hostname = hostname
-        self.latest_ts = time.time()
-        self.failed_auth_last_ts = HostManagerUtil.read_latest_ts_auth()
-        self.login_last_ts = HostManagerUtil.read_latest_ts_login()
-        self.time_step_len_seconds = time_step_len_seconds
-        self.conf = {
-            constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_ip}:{self.kafka_port}",
-            constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
-        self.producer = Producer(**self.conf)
-        self.running = True
-        logging.info("HostMonitor thread started successfully")
-
-    def run(self) -> None:
-        """
-        Main loop of the thread. Parses log files and metrics on the host and pushes it to Kafka periodically
-
-        :return: None
-        """
-        logging.info("HostMonitor [Running]")
-        while self.running:
-            time.sleep(self.time_step_len_seconds)
-            try:
-                host_metrics = HostManagerUtil.read_host_metrics(failed_auth_last_ts=self.failed_auth_last_ts,
-                                                                 login_last_ts=self.login_last_ts)
-                record = host_metrics.to_kafka_record(ip=self.ip)
-                self.producer.produce(constants.KAFKA_CONFIG.HOST_METRICS_TOPIC_NAME, record)
-                self.producer.poll(0)
-                self.failed_auth_last_ts = HostManagerUtil.read_latest_ts_auth()
-                self.login_last_ts = HostManagerUtil.read_latest_ts_login()
-            except Exception as e:
-                logging.info(f"[Monitor thread], "
-                             f"There was an exception reading host metrics and producing to kafka: "
-                             f"{str(e)}, {repr(e)}")
 
 
 class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.HostManagerServicer):
@@ -91,8 +35,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         self.host_monitor_thread = None
         logging.info(f"Starting the HostManager hostname: {self.hostname} ip: {self.ip}")
 
-    def getIdsAlerts(self, request: csle_collector.host_manager.host_manager_pb2.GetHostMetricsMsg,
-                     context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostMetricsDTO:
+    def getHostMetrics(self, request: csle_collector.host_manager.host_manager_pb2.GetHostMetricsMsg,
+                       context: grpc.ServicerContext) -> csle_collector.host_manager.host_manager_pb2.HostMetricsDTO:
         """
         Gets the host metrics from given timestamps
 
@@ -169,9 +113,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info("Starting filebeat")
         HostManagerServicer._start_filebeat()
         logging.info("Started filebeat")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
         heartbeat_status = HostManagerServicer._get_heartbeat_status()
@@ -193,9 +135,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info("Stopping filebeat")
         HostManagerServicer._stop_filebeat()
         logging.info("Filebeat stopped")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
         heartbeat_status = HostManagerServicer._get_heartbeat_status()
@@ -228,9 +168,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
             kafka=request.kafka, kafka_ip=request.kafka_ip, kafka_port=request.kafka_port,
             kafka_topics=list(request.kafka_topics), filebeat_modules=list(request.filebeat_modules))
         logging.info("Filebeat configuration updated")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         filebeat_running = HostManagerServicer._get_filebeat_status()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
@@ -253,9 +191,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info("Starting metricbeat")
         HostManagerServicer._start_metricbeat()
         logging.info("Started metricbeat")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         filebeat_status = HostManagerServicer._get_filebeat_status()
         heartbeat_status = HostManagerServicer._get_heartbeat_status()
@@ -277,9 +213,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info("Stopping metricbeat")
         HostManagerServicer._stop_metricbeat()
         logging.info("Metricbeat stopped")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         filebeat_status = HostManagerServicer._get_filebeat_status()
         heartbeat_status = HostManagerServicer._get_heartbeat_status()
@@ -310,9 +244,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
             num_elastic_shards=request.num_elastic_shards, reload_enabled=request.reload_enabled,
             kafka_ip=request.kafka_ip, kafka_port=request.kafka_port, metricbeat_modules=request.metricbeat_modules)
         logging.info("Metricbeat configuration updated")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         filebeat_running = HostManagerServicer._get_filebeat_status()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
@@ -335,9 +267,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info("Starting packetbeat")
         HostManagerServicer._start_packetbeat()
         logging.info("Started packetbeat")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         filebeat_status = HostManagerServicer._get_filebeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
         heartbeat_status = HostManagerServicer._get_heartbeat_status()
@@ -359,9 +289,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info("Stopping packetbeat")
         HostManagerServicer._stop_packetbeat()
         logging.info("Packetbeat stopped")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         filebeat_status = HostManagerServicer._get_filebeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
         heartbeat_status = HostManagerServicer._get_heartbeat_status()
@@ -389,9 +317,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
             elastic_ip=request.elastic_ip, elastic_port=request.elastic_port,
             num_elastic_shards=request.num_elastic_shards)
         logging.info("Packetbeat configuration updated")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         filebeat_running = HostManagerServicer._get_filebeat_status()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
@@ -412,9 +338,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         :param context: the gRPC context
         :return: a DTO with the status of the host
         """
-        monitor_running = False
-        if self.host_monitor_thread is not None and self.host_monitor_thread.running is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         filebeat_running = HostManagerServicer._get_filebeat_status()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
@@ -437,9 +361,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info("Starting heartbeat")
         HostManagerServicer._start_heartbeat()
         logging.info("Started heartbeat")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         filebeat_status = HostManagerServicer._get_filebeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
@@ -461,9 +383,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info("Stopping heartbeat")
         HostManagerServicer._stop_heartbeat()
         logging.info("Heartbeat stopped")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         filebeat_status = HostManagerServicer._get_filebeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
@@ -491,9 +411,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
             elastic_ip=request.elastic_ip, elastic_port=request.elastic_port,
             num_elastic_shards=request.num_elastic_shards, hosts_to_monitor=list(request.hosts_to_monitor))
         logging.info("Heartbeat configuration updated")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         filebeat_running = HostManagerServicer._get_filebeat_status()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
@@ -516,9 +434,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info("Starting spark")
         HostManagerServicer._start_spark()
         logging.info("Started spark")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         filebeat_status = HostManagerServicer._get_filebeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
@@ -541,9 +457,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
         logging.info("Stopping spark")
         HostManagerServicer._stop_spark()
         logging.info("Stopped spark")
-        monitor_running = False
-        if self.host_monitor_thread is not None:
-            monitor_running = self.host_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         packetbeat_status = HostManagerServicer._get_packetbeat_status()
         filebeat_status = HostManagerServicer._get_filebeat_status()
         metricbeat_status = HostManagerServicer._get_metricbeat_status()
@@ -553,6 +467,16 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
                                                                           packetbeat_running=packetbeat_status,
                                                                           metricbeat_running=metricbeat_status,
                                                                           heartbeat_running=heartbeat_status)
+
+    def _is_monitor_running(self) -> bool:
+        """
+        Utility method to check if the monitor is running
+
+        :return: True if running else false
+        """
+        if self.host_monitor_thread is not None:
+            return self.host_monitor_thread.running
+        return False
 
     @staticmethod
     def _get_filebeat_status() -> bool:

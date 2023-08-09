@@ -1,7 +1,7 @@
 from typing import List
 import threading
 import time
-from csle_collector.host_manager.host_metrics import HostMetrics
+from csle_collector.host_manager.dao.host_metrics import HostMetrics
 from csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state import \
     EmulationDefenderMachineObservationState
 

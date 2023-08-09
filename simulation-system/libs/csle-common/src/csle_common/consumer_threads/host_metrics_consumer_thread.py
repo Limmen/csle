@@ -2,7 +2,7 @@ import threading
 import time
 from confluent_kafka import Consumer, KafkaError, KafkaException
 import csle_collector.constants.constants as collector_constants
-from csle_collector.host_manager.host_metrics import HostMetrics
+from csle_collector.host_manager.dao.host_metrics import HostMetrics
 from csle_common.logging.log import Logger
 
 
