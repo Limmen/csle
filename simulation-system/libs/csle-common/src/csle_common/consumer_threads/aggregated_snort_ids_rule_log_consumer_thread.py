@@ -3,7 +3,7 @@ import threading
 import time
 from confluent_kafka import Consumer, KafkaError, KafkaException
 import csle_collector.constants.constants as collector_constants
-from csle_collector.snort_ids_manager.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
 from csle_common.logging.log import Logger
 
 

@@ -1,14 +1,12 @@
-import json
 from typing import List, Tuple
-
-import csle_common.constants.constants as constants
+import json
 import pytest
 import pytest_mock
+import csle_common.constants.constants as constants
 from csle_cluster.cluster_manager.cluster_manager_pb2 import RunningEmulationsDTO
 from csle_common.dao.emulation_config.config import Config
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.emulation_execution import EmulationExecution
-
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
@@ -17,6 +15,7 @@ class TestResourcesSDNControllersSuite:
     """
     Test suite for /dsn-controllers resource
     """
+
     @pytest.fixture
     def flask_app(self):
         """
@@ -109,9 +108,9 @@ class TestResourcesSDNControllersSuite:
         get_emulation_execution_mocker = mocker.MagicMock(side_effect=get_emulation_execution)
         return get_emulation_execution_mocker
 
-    def test_sdn_controllers_get(self, mocker, flask_app, not_logged_in, logged_in, logged_in_as_admin,
-                                 emulation_exec, emulation_exec_ids, running_emulations, config, get_em_ex,
-                                 get_ex_exec):
+    def test_sdn_controllers_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in,
+                                 logged_in, emulation_exec, emulation_exec_ids, running_emulations, config, get_em_ex,
+                                 get_ex_exec) -> None:
         """
         Testing the GET HTTPS method for the /sdn-controllers resource
         
@@ -126,10 +125,8 @@ class TestResourcesSDNControllersSuite:
         :param config: the config fixture
         :param get_em_ex: the get_em_ex fixture
         """
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
-        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config",
-                     side_effect=config)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_executions",
                      side_effect=emulation_exec)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_emulation_execution_ids",
@@ -143,8 +140,7 @@ class TestResourcesSDNControllersSuite:
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.SDN_CONTROLLERS_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
