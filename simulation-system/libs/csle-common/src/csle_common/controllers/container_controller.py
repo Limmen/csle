@@ -1,5 +1,5 @@
+from typing import List, Tuple, Union
 import logging
-from typing import List, Tuple
 import subprocess
 import time
 import docker
@@ -186,15 +186,16 @@ class ContainerController:
         """
         cmd = constants.DOCKER.LIST_NETWORKS_CMD
         stream = os.popen(cmd)
-        networks = stream.read()
-        networks = networks.split("\n")
-        networks = list(map(lambda x: x.split(), networks))
-        networks = list(filter(lambda x: len(x) > 1, networks))
-        networks = list(map(lambda x: x[1], networks))
-        networks = list(filter(lambda x: re.match(r"{}\d".format(constants.CSLE.CSLE_NETWORK_PREFIX), x), networks))
-        network_ids = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_NETWORK_PREFIX, "")),
-                               networks))
-        return networks, network_ids
+        networks_str: str = stream.read()
+        networks: List[str] = networks_str.split("\n")
+        networks_list: List[List[str]] = list(map(lambda x: x.split(), networks))
+        networks_list = list(filter(lambda x: len(x) > 1, networks_list))
+        networks_ids_str: List[str] = list(map(lambda x: x[1], networks_list))
+        networks_ids_str = list(filter(lambda x: re.match(r"{}\d".format(constants.CSLE.CSLE_NETWORK_PREFIX),
+                                                                     x), networks_ids_str))
+        network_ids: List[int] = list(map(lambda x: int(x.replace(constants.CSLE.CSLE_NETWORK_PREFIX, "")),
+                                          networks_ids_str))
+        return networks_ids_str, network_ids
 
     @staticmethod
     def list_all_networks() -> List[str]:
@@ -249,7 +250,7 @@ class ContainerController:
         :return: a list of the names of the running containers
         """
         parsed_envs = DockerUtil.parse_runnning_emulation_infos()
-        container_name_image_ip = []
+        container_name_image_ip: List[Tuple[str, str, str]] = []
         for env in parsed_envs:
             container_name_image_ip = (container_name_image_ip +
                                        list(map(lambda x: (x.name, x.image_name, x.ip), env.containers)))
@@ -405,6 +406,8 @@ class ContainerController:
                     time.sleep(2)
                     # Extract the docker bridge gateway IP
                     container_id = DockerUtil.get_container_hex_id(name=container_name)
+                    if container_id is None:
+                        raise ValueError(f"Could not parse the container id with container name: {container_name}")
                     docker_gw_bridge_ip = DockerUtil.get_docker_gw_bridge_ip(container_id=container_id)
                     c.docker_gw_bridge_ip = docker_gw_bridge_ip
 
@@ -422,6 +425,8 @@ class ContainerController:
             # Update IPs of OVS switches
             for ovs_sw in emulation_env_config.ovs_config.switch_configs:
                 node_container_config = emulation_env_config.containers_config.get_container_from_ip(ovs_sw.ip)
+                if node_container_config is None:
+                    raise ValueError(f"Could not find node container config for IP: {ovs_sw.ip}")
                 ovs_sw.docker_gw_bridge_ip = node_container_config.docker_gw_bridge_ip
 
     @staticmethod
@@ -453,6 +458,8 @@ class ContainerController:
                 time.sleep(2)
                 # Extract the docker bridge gateway IP
                 container_id = DockerUtil.get_container_hex_id(name=container_name)
+                if container_id is None:
+                    raise ValueError(f"Could not parse the container id for container name: {container_name}")
                 docker_gw_bridge_ip = DockerUtil.get_docker_gw_bridge_ip(container_id=container_id)
                 container.docker_gw_bridge_ip = docker_gw_bridge_ip
 
@@ -577,6 +584,8 @@ class ContainerController:
         :return: None
         """
         config = Config.get_current_config()
+        if config is None:
+            raise ValueError("Could not parse the CSLE config")
         driver = constants.DOCKER.BRIDGE_NETWORK_DRIVER
         if len(config.cluster_config.cluster_nodes) > 0:
             driver = constants.DOCKER.OVERLAY_NETWORK_DRIVER
@@ -586,7 +595,7 @@ class ContainerController:
 
     @staticmethod
     def create_network(name: str, subnetmask: str, logger: logging.Logger,
-                       driver: str = "bridge", existing_network_names: List = None) -> None:
+                       driver: str = "bridge", existing_network_names: Union[None, List[str]] = None) -> None:
         """
         Creates a network
 
@@ -598,12 +607,8 @@ class ContainerController:
         :return: None
         """
         client_1 = docker.from_env()
-        ipam_pool = docker.types.IPAMPool(
-            subnet=subnetmask
-        )
-        ipam_config = docker.types.IPAMConfig(
-            pool_configs=[ipam_pool],
-        )
+        ipam_pool = docker.types.IPAMPool(subnet=subnetmask)
+        ipam_config = docker.types.IPAMConfig(pool_configs=[ipam_pool])
         network_names = []
         if existing_network_names is not None:
             network_names = existing_network_names
@@ -699,14 +704,14 @@ class ContainerController:
         :return: None
         """
         if cmd == constants.MANAGEMENT.LIST_STOPPED:
-            names = ContainerController.list_all_stopped_containers()
-            Logger.__call__().get_logger().info(names)
+            stopped_container_names = ContainerController.list_all_stopped_containers()
+            Logger.__call__().get_logger().info(stopped_container_names)
         elif cmd == constants.MANAGEMENT.LIST_RUNNING:
-            names = ContainerController.list_all_running_containers()
-            Logger.__call__().get_logger().info(names)
+            running_container_names = ContainerController.list_all_running_containers()
+            Logger.__call__().get_logger().info(running_container_names)
         elif cmd == constants.MANAGEMENT.LIST_IMAGES:
-            names = ContainerController.list_all_images()
-            Logger.__call__().get_logger().info(names)
+            images_names = ContainerController.list_all_images()
+            Logger.__call__().get_logger().info(images_names)
         elif cmd == constants.MANAGEMENT.STOP_RUNNING:
             ContainerController.stop_all_running_containers()
         elif cmd == constants.MANAGEMENT.RM_STOPPED:
