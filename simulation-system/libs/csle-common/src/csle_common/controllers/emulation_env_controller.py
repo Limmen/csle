@@ -1,5 +1,5 @@
+from typing import List, Dict, Any, Union
 import logging
-from typing import List, Dict, Any
 import time
 import subprocess
 import random
@@ -66,6 +66,9 @@ class EmulationEnvController:
         """
         execution = MetastoreFacade.get_emulation_execution(emulation_name=emulation_env_config.name,
                                                             ip_first_octet=execution_id)
+        if execution is None:
+            raise ValueError(f"Could not find any execution with id: {execution_id}, "
+                             f"emulation: {emulation_env_config.name}")
         EmulationEnvController.stop_containers(execution=execution, physical_server_ip=physical_server_ip,
                                                logger=logger)
         ContainerController.stop_docker_stats_thread(execution=execution, physical_server_ip=physical_server_ip,
@@ -293,8 +296,8 @@ class EmulationEnvController:
                     ContainerController.remove_network(name=net.name, logger=logger)
 
         c = emulation_env_config.kafka_config.container
-        if c.physical_host_ip == physical_server_ip:
-            for ip_net in c.ips_and_networks or leader:
+        if c.physical_host_ip == physical_server_ip or leader:
+            for ip_net in c.ips_and_networks:
                 ip, net = ip_net
                 ContainerController.remove_network(name=net.name, logger=logger)
 
@@ -340,12 +343,12 @@ class EmulationEnvController:
             if c.physical_host_ip != physical_host_ip:
                 continue
             ips = c.get_ips()
-            container_resources: NodeResourcesConfig = None
+            container_resources: Union[None, NodeResourcesConfig] = None
             for r in emulation_env_config.resources_config.node_resources_configurations:
                 for ip_net_resources in r.ips_and_network_configs:
                     ip, net_resources = ip_net_resources
                     if ip in ips:
-                        container_resources: NodeResourcesConfig = r
+                        container_resources = r
                         break
             if container_resources is None:
                 raise ValueError(f"Container resources not found for container with ips:{ips}, "
@@ -365,7 +368,7 @@ class EmulationEnvController:
         if emulation_env_config.kafka_config.container.physical_host_ip == physical_host_ip:
             # Start the kafka container
             c = emulation_env_config.kafka_config.container
-            container_resources: NodeResourcesConfig = emulation_env_config.kafka_config.resources
+            container_resources = emulation_env_config.kafka_config.resources
             name = c.get_full_name()
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
@@ -381,7 +384,7 @@ class EmulationEnvController:
         if emulation_env_config.elk_config.container.physical_host_ip == physical_host_ip:
             # Start the ELK container
             c = emulation_env_config.elk_config.container
-            container_resources: NodeResourcesConfig = emulation_env_config.elk_config.resources
+            container_resources = emulation_env_config.elk_config.resources
             name = c.get_full_name()
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
@@ -398,7 +401,7 @@ class EmulationEnvController:
                 and emulation_env_config.sdn_controller_config.container.physical_host_ip == physical_host_ip:
             # Start the SDN controller container
             c = emulation_env_config.sdn_controller_config.container
-            container_resources: NodeResourcesConfig = emulation_env_config.sdn_controller_config.resources
+            container_resources = emulation_env_config.sdn_controller_config.resources
             name = c.get_full_name()
             cmd = f"docker container run -dt --name {name} " \
                   f"--hostname={c.name}{c.suffix} --label dir={path} " \
@@ -572,6 +575,9 @@ class EmulationEnvController:
         """
         execution = MetastoreFacade.get_emulation_execution(ip_first_octet=execution_id,
                                                             emulation_name=emulation_env_config.name)
+        if execution is None:
+            raise ValueError(f"Could not find any execution with id: {execution_id}, "
+                             f"emulation: {emulation_env_config.name}")
         EmulationEnvController.stop_containers(execution=execution, physical_server_ip=physical_server_ip,
                                                logger=logger)
         EmulationEnvController.rm_containers(execution=execution, physical_server_ip=physical_server_ip, logger=logger)
@@ -736,7 +742,7 @@ class EmulationEnvController:
         """
         running_containers, stopped_containers = ContainerController.list_all_running_containers_in_emulation(
             emulation_env_config=execution.emulation_env_config)
-        active_ips = []
+        active_ips: List[str] = []
         for container in running_containers:
             active_ips = active_ips + container.get_ips()
             active_ips.append(container.docker_gw_bridge_ip)
@@ -744,6 +750,8 @@ class EmulationEnvController:
         active_ips.append(constants.COMMON.LOCALHOST_127_0_0_1)
         active_ips.append(constants.COMMON.LOCALHOST_127_0_1_1)
         config = Config.get_current_config()
+        if config is None:
+            raise ValueError("Could not cluster read configuration")
         for node in config.cluster_config.cluster_nodes:
             active_ips.append(node.ip)
         emulation_name = execution.emulation_name
@@ -828,19 +836,25 @@ class EmulationEnvController:
         config = Config.get_current_config()
         if config is None:
             ClusterUtil.set_config_parameters_from_config_file()
+        config = Config.get_current_config()
+        if config is None:
+            raise ValueError("Could not read the CSLE configuration")
         conn = paramiko.SSHClient()
+        if conn is None:
+            raise ValueError("Could not create paramiko SSH client")
         conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        conn.connect(remote_ip,
-                     username=config.ssh_admin_username, password=config.ssh_admin_password)
-        conn.get_transport().set_keepalive(5)
+        conn.connect(remote_ip, username=config.ssh_admin_username, password=config.ssh_admin_password)
         agent_transport = conn.get_transport()
+        if agent_transport is None:
+            raise ValueError(f"Error opening SSH connection to {remote_ip}")
+        agent_transport.set_keepalive(5)
         tunnel_thread = ForwardTunnelThread(
             local_port=local_port,
             remote_host=remote_ip,
             remote_port=remote_port, transport=agent_transport,
             tunnels_dict=tunnels_dict)
         tunnel_thread.start()
-        tunnel_thread_dict = {}
+        tunnel_thread_dict: Dict[str, Union[ForwardTunnelThread, int, str]] = {}
         tunnel_thread_dict[constants.GENERAL.THREAD_PROPERTY] = tunnel_thread
         tunnel_thread_dict[constants.GENERAL.PORT_PROPERTY] = local_port
         tunnel_thread_dict[constants.GENERAL.EMULATION_PROPERTY] = emulation
