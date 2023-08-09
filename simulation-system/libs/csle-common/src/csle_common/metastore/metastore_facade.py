@@ -505,7 +505,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_emulation_traces_ids() -> List[Dict]:
+    def list_emulation_traces_ids() -> List[Tuple]:
         """
         :return: A list of emulation traces ids in the metastore
         """

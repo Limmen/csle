@@ -2,10 +2,12 @@
 Routes and sub-resources for the /emulation-traces resource
 """
 from typing import Tuple
-from flask import Blueprint, jsonify, request, Response
+
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
 from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, Response, jsonify, request
+
+import csle_rest_api.constants.constants as api_constants
 import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
@@ -48,7 +50,7 @@ def emulation_traces() -> Tuple[Response, int]:
         response.headers.add(api_constants.MGMT_WEBAPP.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*")
         return response, constants.HTTPS.OK_STATUS_CODE
     return (jsonify({api_constants.MGMT_WEBAPP.REASON_PROPERTY: "HTTP method not supported"}),
-            constants.HTTPS.BAD_REQUEST_STATUS_CODE)
+            constants.HTTPS.METHOD_NOT_ALLOWED_CODE)
 
 
 def emulation_traces_ids() -> Tuple[Response, int]:
