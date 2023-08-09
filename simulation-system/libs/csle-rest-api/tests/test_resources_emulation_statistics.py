@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 import csle_common.constants.constants as constants
 import pytest
@@ -223,3 +223,75 @@ class TestResourcesEmulationsStatisticsSuite:
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}/10")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        ex_em_stat = TestResourcesEmulationsStatisticsSuite.get_ex_em_stat()
+        ex_em_stat_dict = ex_em_stat.to_dict()
+        for k in response_data_dict:
+            assert response_data_dict[k] == ex_em_stat_dict[k]
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_statistic",
+                     side_effect=get_em_stat_none)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}/10")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {}
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}/10")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        ex_em_stat = TestResourcesEmulationsStatisticsSuite.get_ex_em_stat()
+        ex_em_stat_dict = ex_em_stat.to_dict()
+        for k in response_data_dict:
+            assert response_data_dict[k] == ex_em_stat_dict[k]
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_statistic",
+                     side_effect=get_em_stat_none)
+        response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}/10")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response_data_dict == {}
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+
+    def test_emulation_statistics_ids_delete(self, mocker, flask_app, not_logged_in, logged_in,
+                                             logged_in_as_admin, get_em_stat, get_em_stat_none,
+                                             remove):
+        """
+        Testing the DELETE HTTPS method for the /emulation-statistics/id resource
+
+        :param mocker: the pytest mocker object
+        :param flask_app: the flask_app fixture
+        :param em_stat_ids: the em_stat_ids fixture
+        :param em_stat: the em_stat fixture
+        :param remove: the remove fixture
+        """
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_emulation_statistic",
+                     side_effect=get_em_stat)
+        mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_emulation_statistic",
+                     side_effect=remove)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=not_logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}/10")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}/10")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+        assert response_data_dict == {}
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
+                     side_effect=logged_in_as_admin)
+        response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.EMULATION_STATISTICS_RESOURCE}/10")
+        response_data = response.data.decode("utf-8")
+        response_data_dict = json.loads(response_data)
+        assert response.status_code == constants.HTTPS.OK_STATUS_CODE
+        assert response_data_dict == {}
