@@ -20,6 +20,7 @@ class TestRestAPIUtilSuite:
         """
         Mock class for synt reg
         """
+
         def __init__(self, args) -> None:
             """
             Initializes the object
@@ -32,6 +33,7 @@ class TestRestAPIUtilSuite:
         """
         Mock class for syntehtic arguments to a request
         """
+
         def __init__(self) -> None:
             """
             Initializes the object
@@ -64,11 +66,13 @@ class TestRestAPIUtilSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_session_token_metadata(token: str) -> SessionToken:
             return SessionToken(token="null", timestamp=1.5, username="JDoe")
+
         get_session_token_metadata_mocker = mocker.MagicMock(side_effect=get_session_token_metadata)
         return get_session_token_metadata_mocker
-    
+
     @pytest.fixture
     def session_token_exp(self, mocker: pytest_mock.MockFixture):
         """
@@ -77,10 +81,12 @@ class TestRestAPIUtilSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_session_token_metadata(token: str) -> SessionToken:
             ses_tok = SessionToken(token="null", timestamp=1.5, username="JDoe")
             api_constants.SESSION_TOKENS.EXPIRE_TIME_HOURS = np.iinfo(np.int32).max
             return ses_tok
+
         get_session_token_metadata_mocker = mocker.MagicMock(side_effect=get_session_token_metadata)
         return get_session_token_metadata_mocker
 
@@ -92,6 +98,7 @@ class TestRestAPIUtilSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_management_user_by_username(username: str) -> ManagementUser:
             mng_user = TestRestAPIUtilSuite.get_synthetic_mng_user()
             return mng_user
@@ -107,6 +114,7 @@ class TestRestAPIUtilSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def get_management_user_by_username(username: str) -> None:
             return None
 
@@ -121,8 +129,10 @@ class TestRestAPIUtilSuite:
         :param mocker: the pytest mocker object
         :return: the mocked function
         """
+
         def remove_session_token(session_token: SessionToken) -> None:
             return None
+
         remove_session_token_mocker = mocker.MagicMock(side_effect=remove_session_token)
         return remove_session_token_mocker
 
@@ -250,14 +260,13 @@ class TestRestAPIUtilSuite:
         """
         mock_channel = mocker.MagicMock()
         mock_channel.configure_mock(**{"resize_pty.return_value": None})
-        row=2
-        col=2
-        xpix=5
-        ypix=5
+        row = 2
+        col = 2
+        xpix = 5
+        ypix = 5
         rest_api_util.set_container_terminal_winsize(ssh_channel=mock_channel, row=row, col=col, xpix=xpix, ypix=ypix)
         mock_channel.resize_pty.assert_called_once()
         mock_channel.resize_pty.assert_called_once_with(width=col, height=row, width_pixels=xpix, height_pixels=ypix)
-
 
     def test_ssh_connect(self, mocker: pytest_mock.MockFixture) -> None:
         """
@@ -276,7 +285,7 @@ class TestRestAPIUtilSuite:
         rest_api_util.ssh_connect(ip=ip)
         mock_conn.set_missing_host_key_policy.assert_called_once()
         mock_conn.connect.assert_called_once()
-        mock_conn.connect.assert_called_once_with(ip, username = constants.CSLE_ADMIN.SSH_USER,
+        mock_conn.connect.assert_called_once_with(ip, username=constants.CSLE_ADMIN.SSH_USER,
                                                   password=constants.CSLE_ADMIN.SSH_PW)
         mock_conn.get_transport.assert_called_once()
         mock_transport.set_keepalive.assert_called_once()

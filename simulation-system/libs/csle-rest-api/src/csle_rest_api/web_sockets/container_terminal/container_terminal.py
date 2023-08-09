@@ -4,6 +4,7 @@ from flask import Blueprint
 import csle_rest_api.util.rest_api_util as rest_api_util
 import csle_rest_api.constants.constants as api_constants
 import csle_common.constants.constants as constants
+from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_rest_api import socketio
 
 
@@ -76,7 +77,8 @@ def get_container_terminal_bp(app):
         :return: None
         """
         authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=True)
-        if authorized is not None or (constants.CONFIG_FILE.PARSED_CONFIG is None):
+        config = MetastoreFacade.get_config(id=1)
+        if authorized is not None or config is None:
             raise ConnectionRefusedError()
         ip_str = request.args.get(api_constants.MGMT_WEBAPP.IP_QUERY_PARAM)
         if ip_str is not None:
