@@ -241,3 +241,42 @@ class TestRestAPIUtilSuite:
         response_status_code = response[1]
         assert response_data_dict == {}
         assert response_status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
+
+    def test_set_container_terminal_winsize(self, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the set_container_terminal_winsize utility function
+
+        :return: None
+        """
+        mock_channel = mocker.MagicMock()
+        mock_channel.configure_mock(**{"resize_pty.return_value": None})
+        row=2
+        col=2
+        xpix=5
+        ypix=5
+        rest_api_util.set_container_terminal_winsize(ssh_channel=mock_channel, row=row, col=col, xpix=xpix, ypix=ypix)
+        mock_channel.resize_pty.assert_called_once()
+        mock_channel.resize_pty.assert_called_once_with(width=col, height=row, width_pixels=xpix, height_pixels=ypix)
+
+
+    def test_ssh_connect(self, mocker: pytest_mock.MockFixture) -> None:
+        """
+        Tests the ssh_connect utility function
+
+        :return: None
+        """
+        mock_conn = mocker.MagicMock()
+        mock_transport = mocker.MagicMock()
+        mock_conn.configure_mock(**{"set_missing_host_key_policy.return_value": None})
+        mock_conn.configure_mock(**{"connect.return_value": None})
+        mock_conn.configure_mock(**{"get_transport.return_value": mock_transport})
+        mock_conn.configure_mock(**{"set_keepalive.return_value": None})
+        mocker.patch("paramiko.SSHClient", return_value=mock_conn)
+        ip = "test_ip"
+        rest_api_util.ssh_connect(ip=ip)
+        mock_conn.set_missing_host_key_policy.assert_called_once()
+        mock_conn.connect.assert_called_once()
+        mock_conn.connect.assert_called_once_with(ip, username = constants.CSLE_ADMIN.SSH_USER,
+                                                  password=constants.CSLE_ADMIN.SSH_PW)
+        mock_conn.get_transport.assert_called_once()
+        mock_transport.set_keepalive.assert_called_once()

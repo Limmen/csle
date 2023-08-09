@@ -1,7 +1,6 @@
 from flask import request
 from flask_socketio import ConnectionRefusedError
 from flask import Blueprint
-import paramiko
 import csle_rest_api.util.rest_api_util as rest_api_util
 import csle_rest_api.constants.constants as api_constants
 import csle_common.constants.constants as constants
@@ -15,36 +14,6 @@ def get_container_terminal_bp(app):
     :param app: the Flask app
     :return: the blue print
     """
-
-    def set_container_terminal_winsize(ssh_channel, row: int, col: int, xpix: int = 0, ypix: int = 0) -> None:
-        """
-        Set shell window size of the host terminal
-
-        :param ssh_channel: the ssh_channel of the shell
-        :param row: the number of rows of the new window size
-        :param col: the number of cols of the new window size
-        :param xpix: the number of x pixels of the new size
-        :param ypix: the number of y pixels of the new size
-        :return:
-        """
-        ssh_channel.resize_pty(width=col, height=row, width_pixels=xpix, height_pixels=ypix)
-
-    def ssh_connect(ip: str) -> paramiko.SSHClient:
-        """
-        Sets up an SSH connection to a given IP using the CSLE admin account
-
-        :param ip: the IP to connect to
-        :return: the created ssh connection
-        """
-        conn = paramiko.SSHClient()
-        conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        conn.connect(ip, username=constants.CSLE_ADMIN.SSH_USER, password=constants.CSLE_ADMIN.SSH_PW)
-        transport = conn.get_transport()
-        if transport is not None:
-            transport.set_keepalive(5)
-        else:
-            raise ValueError("Could not connect with SSH")
-        return conn
 
     def read_and_forward_container_terminal_output() -> None:
         """
@@ -91,9 +60,9 @@ def get_container_terminal_bp(app):
         :param data: data with information about the new PTY size
         :return: None
         """
-        set_container_terminal_winsize(ssh_channel=app.config[api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_SHELL],
-                                       row=data[api_constants.MGMT_WEBAPP.ROWS_PROPERTY],
-                                       col=data[api_constants.MGMT_WEBAPP.COLS_PROPERTY])
+        rest_api_util.set_container_terminal_winsize(
+            ssh_channel=app.config[api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_SHELL],
+            row=data[api_constants.MGMT_WEBAPP.ROWS_PROPERTY], col=data[api_constants.MGMT_WEBAPP.COLS_PROPERTY])
 
     @socketio.on(api_constants.MGMT_WEBAPP.WS_CONNECT_MSG,
                  namespace=f"{constants.COMMANDS.SLASH_DELIM}"
@@ -113,10 +82,10 @@ def get_container_terminal_bp(app):
         if ip_str is not None:
             ip = ip_str.replace("-", ".")
             term = u'xterm'
-            ssh_conn = ssh_connect(ip=ip)
+            ssh_conn = rest_api_util.ssh_connect(ip=ip)
             ssh_channel = ssh_conn.invoke_shell(term=term)
             ssh_channel.setblocking(0)
-            set_container_terminal_winsize(ssh_channel=ssh_channel, row=50, col=50)
+            rest_api_util.set_container_terminal_winsize(ssh_channel=ssh_channel, row=50, col=50)
             app.config[api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_SHELL] = ssh_channel
             app.config[api_constants.MGMT_WEBAPP.CONTAINER_TERMINAL_SSH_CONNECTION] = ssh_conn
             socketio.start_background_task(target=read_and_forward_container_terminal_output)

@@ -1,5 +1,6 @@
 from typing import Tuple, Union
 from flask import Response, jsonify
+import paramiko
 import csle_common.constants.constants as constants
 from csle_common.dao.management.management_user import ManagementUser
 from csle_common.metastore.metastore_facade import MetastoreFacade
@@ -60,3 +61,36 @@ def check_if_user_edit_is_authorized(request, user: ManagementUser) -> Union[Non
         return response, constants.HTTPS.UNAUTHORIZED_STATUS_CODE
     else:
         return request_user
+
+
+def set_container_terminal_winsize(ssh_channel: paramiko.Channel, row: int, col: int, xpix: int = 0, ypix: int = 0) \
+        -> None:
+    """
+    Set shell window size of the host terminal
+
+    :param ssh_channel: the ssh_channel of the shell
+    :param row: the number of rows of the new window size
+    :param col: the number of cols of the new window size
+    :param xpix: the number of x pixels of the new size
+    :param ypix: the number of y pixels of the new size
+    :return:
+    """
+    ssh_channel.resize_pty(width=col, height=row, width_pixels=xpix, height_pixels=ypix)
+
+
+def ssh_connect(ip: str) -> paramiko.SSHClient:
+    """
+    Sets up an SSH connection to a given IP using the CSLE admin account
+
+    :param ip: the IP to connect to
+    :return: the created ssh connection
+    """
+    conn = paramiko.SSHClient()
+    conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    conn.connect(ip, username=constants.CSLE_ADMIN.SSH_USER, password=constants.CSLE_ADMIN.SSH_PW)
+    transport = conn.get_transport()
+    if transport is not None:
+        transport.set_keepalive(5)
+    else:
+        raise ValueError("Could not connect with SSH")
+    return conn
