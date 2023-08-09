@@ -1,73 +1,14 @@
 import logging
 import socket
-import time
 import grpc
-import threading
 import subprocess
 import netifaces
 from concurrent import futures
-from confluent_kafka import Producer
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 from csle_collector.snort_ids_manager.snort_ids_manager_util import SnortIdsManagerUtil
 import csle_collector.constants.constants as constants
-
-
-class SnortIDSMonitorThread(threading.Thread):
-    """
-    Thread that collects the Snort IDS statistics and pushes it to Kafka periodically
-    """
-
-    def __init__(self, kafka_ip: str, kafka_port: int, ip: str, hostname: str, log_file_path: str,
-                 time_step_len_seconds: int):
-        """
-        Initializes the thread
-
-        :param kafka_ip: IP of the Kafka server to push to
-        :param kafka_port: port of the Kafka server to push to
-        :param ip: ip of the server we are pushing from
-        :param hostname: hostname of the server we are pushing from
-        :param log_file_path: path to the IDS log
-        :param time_step_len_seconds: the length of a timestep
-        """
-        threading.Thread.__init__(self)
-        self.kafka_ip = kafka_ip
-        self.kafka_port = kafka_port
-        self.ip = ip
-        self.hostname = hostname
-        self.log_file_path = log_file_path
-        self.latest_ts = time.time()
-        self.time_step_len_seconds = time_step_len_seconds
-        self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.kafka_ip}:{self.kafka_port}",
-                     constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
-        self.producer = Producer(**self.conf)
-        self.running = True
-        logging.info("SnortIDSMonitor thread started successfully")
-
-    def run(self) -> None:
-        """
-        Main loop of the thread. Parses the IDS log and pushes it to Kafka periodically
-
-        :return: None
-        """
-        while self.running:
-            time.sleep(self.time_step_len_seconds)
-            try:
-                agg_alert_counters, rule_alert_counters, ip_alert_counters = \
-                    SnortIdsManagerUtil.read_snort_ids_data(self.latest_ts)
-                record = agg_alert_counters.to_kafka_record(ip=self.ip)
-                self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_LOG_TOPIC_NAME, record)
-                self.producer.poll(0)
-                record = rule_alert_counters.to_kafka_record(ip=self.ip)
-                self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_RULE_LOG_TOPIC_NAME, record)
-                self.producer.poll(0)
-                for ip_alert_counter in ip_alert_counters:
-                    record = ip_alert_counter.to_kafka_record(ip=self.ip)
-                    self.producer.produce(constants.KAFKA_CONFIG.SNORT_IDS_IP_LOG_TOPIC_NAME, record)
-                    self.producer.poll(0)
-            except Exception as e:
-                logging.info(f"There was an exception parsing the Snort logs: {str(e)}, {repr(e)}")
-            self.latest_ts = time.time()
+from csle_collector.snort_ids_manager.threads.snort_ids_monitor_thread import SnortIDSMonitorThread
 
 
 class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager_pb2_grpc.SnortIdsManagerServicer):
@@ -107,6 +48,16 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         running = constants.SNORT_IDS_ROUTER.SEARCH_SNORT_RUNNING in status_output
         logging.info(f"Running status: {running}")
         return running
+
+    def _is_monitor_running(self) -> bool:
+        """
+        Utility method to check if the monitor is running
+
+        :return: True if running else false
+        """
+        if self.ids_monitor_thread is not None:
+            return self.ids_monitor_thread.running
+        return False
 
     def getSnortIdsAlerts(
             self, request: csle_collector.snort_ids_manager.snort_ids_manager_pb2.GetSnortIdsAlertsMsg,
@@ -160,9 +111,7 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         """
         logging.info(f"Starting the SnortIDS, ingress interface: {request.ingress_interface}, "
                      f"egress interface: {request.egress_interface}, subnetmask: {request.subnetmask}")
-        monitor_running = False
-        if self.ids_monitor_thread is not None:
-            monitor_running = self.ids_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         snort_running = self._is_snort_running()
         if snort_running:
             cmd = constants.SNORT_IDS_ROUTER.STOP_SNORT_IDS
@@ -193,9 +142,7 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         :return: a DTO with the status of the IDS and its monitor thread
         """
         logging.info("Stopping the SnortIDS")
-        monitor_running = False
-        if self.ids_monitor_thread is not None:
-            monitor_running = self.ids_monitor_thread.running
+        monitor_running = self._is_monitor_running()
         result = subprocess.run(constants.SNORT_IDS_ROUTER.STOP_SNORT_IDS.split(" "),
                                 capture_output=True, text=True)
         logging.info(f"Stopped the SnortIDS, stdout: {result.stdout}, stderr: {result.stderr}")
@@ -229,9 +176,7 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         :param context: the gRPC context
         :return: a DTO with the status of the IDS monitor
         """
-        running = False
-        if self.ids_monitor_thread is not None:
-            running = self.ids_monitor_thread.running
+        running = self._is_monitor_running()
         snort_running = self._is_snort_running()
         return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO(
             monitor_running=running, snort_ids_running=snort_running)

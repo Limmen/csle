@@ -2,7 +2,7 @@ from typing import List, Dict, Any, Tuple
 import time
 import numpy as np
 import csle_collector.constants.constants as constants
-from csle_collector.snort_ids_manager.snort_ids_alert import SnortIdsFastLogAlert
+from csle_collector.snort_ids_manager.dao.snort_ids_alert import SnortIdsFastLogAlert
 
 
 class SnortIdsIPAlertCounters:
@@ -14,8 +14,8 @@ class SnortIdsIPAlertCounters:
         """
         Initializes the DTO
         """
-        self.priority_alerts = list(np.zeros(4))
-        self.class_alerts = list(np.zeros(len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values()))))
+        self.priority_alerts = list(np.zeros(4).tolist())
+        self.class_alerts = list(np.zeros(len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values()))).tolist())
         self.severe_alerts = 0
         self.warning_alerts = 0
         self.total_alerts = 0

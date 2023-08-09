@@ -1,10 +1,10 @@
 from typing import List, Dict, Any, Tuple
 import datetime
 import subprocess
-from csle_collector.snort_ids_manager.snort_ids_alert import SnortIdsAlert, SnortIdsFastLogAlert
-from csle_collector.snort_ids_manager.snort_ids_alert_counters import SnortIdsAlertCounters
-from csle_collector.snort_ids_manager.snort_ids_rule_counters import SnortIdsRuleCounters
-from csle_collector.snort_ids_manager.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_alert import SnortIdsAlert, SnortIdsFastLogAlert
+from csle_collector.snort_ids_manager.dao.snort_ids_alert_counters import SnortIdsAlertCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_rule_counters import SnortIdsRuleCounters
+from csle_collector.snort_ids_manager.dao.snort_ids_ip_alert_counters import SnortIdsIPAlertCounters
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 import csle_collector.constants.constants as constants
 

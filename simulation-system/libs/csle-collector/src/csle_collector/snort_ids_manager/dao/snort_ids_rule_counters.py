@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
 import time
-from csle_collector.snort_ids_manager.snort_ids_alert import SnortIdsFastLogAlert
+from csle_collector.snort_ids_manager.dao.snort_ids_alert import SnortIdsFastLogAlert
 
 
 class SnortIdsRuleCounters:

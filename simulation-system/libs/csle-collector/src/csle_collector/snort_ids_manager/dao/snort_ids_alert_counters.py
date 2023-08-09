@@ -2,7 +2,7 @@ from typing import List, Dict, Any, Tuple
 import time
 import numpy as np
 import csle_collector.constants.constants as constants
-from csle_collector.snort_ids_manager.snort_ids_alert import SnortIdsFastLogAlert
+from csle_collector.snort_ids_manager.dao.snort_ids_alert import SnortIdsFastLogAlert
 import csle_collector.snort_ids_manager.snort_ids_manager_pb2
 
 
@@ -15,8 +15,8 @@ class SnortIdsAlertCounters:
         """
         Initializes the DTO
         """
-        self.priority_alerts = list(np.zeros(4))
-        self.class_alerts = list(np.zeros(len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values()))))
+        self.priority_alerts = list(np.zeros(4).tolist())
+        self.class_alerts = list(np.zeros(len(set(constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID.values()))).tolist())
         self.severe_alerts = 0
         self.warning_alerts = 0
         self.total_alerts = 0
@@ -132,47 +132,47 @@ class SnortIdsAlertCounters:
         :return: A csle_collector.snort_ids_manager.snort_ids_manager_pb2.IdsLogDTOb
         """
         ts = time.time()
-        csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsLogDTO(
+        return csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsLogDTO(
             timestamp=ts,
             ip=ip,
-            attempted_admin_alerts=self.class_alerts[33],
-            attempted_user_alerts=self.class_alerts[32],
-            inappropriate_content_alerts=self.class_alerts[31],
-            policy_violation_alerts=self.class_alerts[30],
-            shellcode_detect_alerts=self.class_alerts[29],
-            successful_admin_alerts=self.class_alerts[28],
-            successful_user_alerts=self.class_alerts[27],
-            trojan_activity_alerts=self.class_alerts[26],
-            unsuccessful_user_alerts=self.class_alerts[25],
-            web_application_attack_alerts=self.class_alerts[24],
-            attempted_dos_alerts=self.class_alerts[23],
-            attempted_recon_alerts=self.class_alerts[22],
-            bad_unknown_alerts=self.class_alerts[21],
-            default_login_attempt_alerts=self.class_alerts[20],
-            denial_of_service_alerts=self.class_alerts[19],
-            misc_attack_alerts=self.class_alerts[18],
-            non_standard_protocol_alerts=self.class_alerts[17],
-            rpc_portman_decode_alerts=self.class_alerts[16],
-            successful_dos_alerts=self.class_alerts[15],
-            successful_recon_largescale_alerts=self.class_alerts[14],
-            successful_recon_limited_alerts=self.class_alerts[13],
-            suspicious_filename_detect_alerts=self.class_alerts[12],
-            suspicious_login_alerts=self.class_alerts[11],
-            system_call_detect_alerts=self.class_alerts[10],
-            unusual_client_port_connection_alerts=self.class_alerts[9],
-            web_application_activity_alerts=self.class_alerts[8],
-            icmp_event_alerts=self.class_alerts[7],
-            misc_activity_alerts=self.class_alerts[6],
-            network_scan_alerts=self.class_alerts[5],
-            not_suspicious_alerts=self.class_alerts[4],
-            protocol_command_decode_alerts=self.class_alerts[3],
-            string_detect_alerts=self.class_alerts[2],
-            unknown_alerts=self.class_alerts[1],
-            tcp_connection_alerts=self.class_alerts[0],
-            priority_1_alerts=self.priority_alerts[1],
-            priority_2_alerts=self.priority_alerts[2],
-            priority_3_alerts=self.priority_alerts[3],
-            priority_4_alerts=self.priority_alerts[4],
+            attempted_admin_alerts=int(self.class_alerts[33]),
+            attempted_user_alerts=int(self.class_alerts[32]),
+            inappropriate_content_alerts=int(self.class_alerts[31]),
+            policy_violation_alerts=int(self.class_alerts[30]),
+            shellcode_detect_alerts=int(self.class_alerts[29]),
+            successful_admin_alerts=int(self.class_alerts[28]),
+            successful_user_alerts=int(self.class_alerts[27]),
+            trojan_activity_alerts=int(self.class_alerts[26]),
+            unsuccessful_user_alerts=int(self.class_alerts[25]),
+            web_application_attack_alerts=int(self.class_alerts[24]),
+            attempted_dos_alerts=int(self.class_alerts[23]),
+            attempted_recon_alerts=int(self.class_alerts[22]),
+            bad_unknown_alerts=int(self.class_alerts[21]),
+            default_login_attempt_alerts=int(self.class_alerts[20]),
+            denial_of_service_alerts=int(self.class_alerts[19]),
+            misc_attack_alerts=int(self.class_alerts[18]),
+            non_standard_protocol_alerts=int(self.class_alerts[17]),
+            rpc_portman_decode_alerts=int(self.class_alerts[16]),
+            successful_dos_alerts=int(self.class_alerts[15]),
+            successful_recon_largescale_alerts=int(self.class_alerts[14]),
+            successful_recon_limited_alerts=int(self.class_alerts[13]),
+            suspicious_filename_detect_alerts=int(self.class_alerts[12]),
+            suspicious_login_alerts=int(self.class_alerts[11]),
+            system_call_detect_alerts=int(self.class_alerts[10]),
+            unusual_client_port_connection_alerts=int(self.class_alerts[9]),
+            web_application_activity_alerts=int(self.class_alerts[8]),
+            icmp_event_alerts=int(self.class_alerts[7]),
+            misc_activity_alerts=int(self.class_alerts[6]),
+            network_scan_alerts=int(self.class_alerts[5]),
+            not_suspicious_alerts=int(self.class_alerts[4]),
+            protocol_command_decode_alerts=int(self.class_alerts[3]),
+            string_detect_alerts=int(self.class_alerts[2]),
+            unknown_alerts=int(self.class_alerts[1]),
+            tcp_connection_alerts=int(self.class_alerts[0]),
+            priority_1_alerts=int(self.priority_alerts[0]),
+            priority_2_alerts=int(self.priority_alerts[1]),
+            priority_3_alerts=int(self.priority_alerts[2]),
+            priority_4_alerts=int(self.priority_alerts[3]),
             total_alerts=self.total_alerts,
             warning_alerts=self.warning_alerts,
             severe_alerts=self.severe_alerts,
