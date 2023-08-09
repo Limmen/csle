@@ -1,14 +1,15 @@
 """
 Routes and sub-resources for the /images resource
 """
+
 from typing import List, Tuple
-from flask import Blueprint, jsonify, request, Response
+from flask import Blueprint, Response, jsonify, request
 import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
 from csle_cluster.cluster_manager.cluster_controller import ClusterController
-from csle_common.metastore.metastore_facade import MetastoreFacade
-import csle_rest_api.util.rest_api_util as rest_api_util
 from csle_cluster.cluster_manager.cluster_manager_pb2 import ContainerImageDTO
+from csle_common.metastore.metastore_facade import MetastoreFacade
+import csle_rest_api.constants.constants as api_constants
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 images_bp = Blueprint(
@@ -23,7 +24,7 @@ def images() -> Tuple[Response, int]:
 
     :return: Returns a list of images
     """
-    authorized = rest_api_util.check_if_user_is_authorized(request=request)
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=False)
     if authorized is not None:
         return authorized
     config = MetastoreFacade.get_config(id=1)
