@@ -1,14 +1,9 @@
 import json
-
-import csle_common.constants.constants as constants
 import pytest
 import pytest_mock
-from csle_cluster.cluster_manager.cluster_manager_pb2 import (
-    NodeStatusDTO,
-    ServiceStatusDTO,
-)
+from csle_cluster.cluster_manager.cluster_manager_pb2 import NodeStatusDTO, ServiceStatusDTO
 from csle_common.dao.emulation_config.config import Config
-
+import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
@@ -97,8 +92,8 @@ class TestResourcesNginxSuite:
         get_node_status_mocker = mocker.MagicMock(side_effect=get_node_status)
         return get_node_status_mocker
 
-    def test_nginx_get(self, mocker, flask_app, not_logged_in, logged_in, logged_in_as_admin,
-                       config, node_status, example_node_status, example_config):
+    def test_nginx_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in, logged_in_as_admin,
+                       config, node_status, example_node_status, example_config) -> None:
         """
         testing the GET HTTPS method for the /nginx resource
         
@@ -115,8 +110,7 @@ class TestResourcesNginxSuite:
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
                      side_effect=node_status)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(api_constants.MGMT_WEBAPP.NGINX_RESOURCE)
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -182,9 +176,9 @@ class TestResourcesNginxSuite:
         for k in response_data_dict:
             assert response_data_dict[k] == example_data_dict[k]
 
-    def test_nginx_post(self, mocker, flask_app, not_logged_in, logged_in, logged_in_as_admin,
-                        config, stop, start, node_status, example_node_status, example_config,
-                        node_status_not_running):
+    def test_nginx_post(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
+                        logged_in_as_admin, config, stop, start, node_status, example_node_status, example_config,
+                        node_status_not_running) -> None:
         """
         testing the GET HTTPS method for the /nginx resource
         
@@ -201,33 +195,25 @@ class TestResourcesNginxSuite:
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_config", side_effect=config)
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
                      side_effect=node_status)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_nginx",
-                     side_effect=stop)
-        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_nginx",
-                     side_effect=start)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
-        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NGINX_RESOURCE,
-                                                data=json.dumps({api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 "123.456.78.99"}))
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.stop_nginx", side_effect=stop)
+        mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.start_nginx", side_effect=start)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
+        test_data = json.dumps({api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"})
+        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NGINX_RESOURCE, data=test_data)
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
-        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NGINX_RESOURCE,
-                                                data=json.dumps({api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 "123.456.78.99"}))
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
+        test_data = json.dumps({api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"})
+        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NGINX_RESOURCE, data=test_data)
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
         assert response_data_dict == {}
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
-        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NGINX_RESOURCE,
-                                                data=json.dumps({api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 "123.456.78.99"}))
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
+        test_data = json.dumps({api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"})
+        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NGINX_RESOURCE, data=test_data)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         response_data_dict = response_data_list[0]
@@ -275,9 +261,8 @@ class TestResourcesNginxSuite:
             assert response_data_dict[k] == example_data_dict[k]
         mocker.patch("csle_cluster.cluster_manager.cluster_controller.ClusterController.get_node_status",
                      side_effect=node_status_not_running)
-        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NGINX_RESOURCE,
-                                                data=json.dumps({api_constants.MGMT_WEBAPP.IP_PROPERTY:
-                                                                 "123.456.78.99"}))
+        test_data = json.dumps({api_constants.MGMT_WEBAPP.IP_PROPERTY: "123.456.78.99"})
+        response = flask_app.test_client().post(api_constants.MGMT_WEBAPP.NGINX_RESOURCE, data=test_data)
         response_data = response.data.decode("utf-8")
         response_data_list = json.loads(response_data)
         response_data_dict = response_data_list[0]
