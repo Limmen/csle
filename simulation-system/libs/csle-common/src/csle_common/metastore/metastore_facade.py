@@ -285,7 +285,7 @@ class MetastoreFacade:
         return emulation_name, image_bytes
 
     @staticmethod
-    def install_emulation(config: EmulationEnvConfig) -> Union[Any, int]:
+    def install_emulation(config: EmulationEnvConfig) -> Any:
         """
         Installs the emulation configuration in the metastore
 
@@ -505,7 +505,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_emulation_traces_ids() -> List[Tuple]:
+    def list_emulation_traces_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of emulation traces ids in the metastore
         """
@@ -515,11 +515,11 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE}")
-                records = cur.fetchall()
+                records: List[Tuple[int, str]] = cur.fetchall()
                 return records
 
     @staticmethod
-    def list_emulation_simulation_traces_ids() -> List[Dict]:
+    def list_emulation_simulation_traces_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of emulation-simulation traces ids in the metastore
         """
@@ -529,7 +529,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE}")
-                records = cur.fetchall()
+                records: List[Tuple[int, str]] = cur.fetchall()
                 return records
 
     @staticmethod
@@ -801,7 +801,7 @@ class MetastoreFacade:
                 return record
 
     @staticmethod
-    def save_emulation_image(img: bytes, emulation_name: str) -> Union[Any, int]:
+    def save_emulation_image(img: bytes, emulation_name: str) -> Any:
         """
         Saves the image of an emulation in the metastore
 
@@ -1076,7 +1076,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_multi_threshold_stopping_policies_ids() -> List[Dict]:
+    def list_multi_threshold_stopping_policies_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of Multi-threshold stopping policies ids in the metastore
         """
@@ -1087,7 +1087,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM "
                             f"{constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE}")
-                records = cur.fetchall()
+                records: List[Tuple[int, str]] = cur.fetchall()
                 return records
 
     @staticmethod
@@ -1167,7 +1167,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 policy_json_str = json.dumps(multi_threshold_stopping_policy.to_dict(), indent=4, sort_keys=True)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE} "
-                            f"(policy, simulation_name) "
+                            f"(policy, sigmulation_name) "
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str,
                                                               multi_threshold_stopping_policy.simulation_name))
                 id_of_new_row = cur.fetchone()[0]
@@ -1204,7 +1204,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_training_jobs_ids() -> List[Dict]:
+    def list_training_jobs_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of training job ids in the metastore
         """
@@ -1215,7 +1215,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name,emulation_name,pid FROM "
                             f"{constants.METADATA_STORE.TRAINING_JOBS_TABLE}")
-                records = cur.fetchall()
+                records: List[Tuple[int, str]] = cur.fetchall()
                 return records
 
     @staticmethod
@@ -1297,7 +1297,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_data_collection_jobs_ids() -> List[Dict]:
+    def list_data_collection_jobs_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of data collection job ids in the metastore
         """
@@ -1307,7 +1307,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name,pid FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}")
-                records = cur.fetchall()
+                records: List[Tuple[int, str]] = cur.fetchall()
                 return records
 
     @staticmethod
@@ -1487,7 +1487,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_ppo_policies_ids() -> List[Tuple]:
+    def list_ppo_policies_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of PPO policies ids in the metastore
         """
@@ -1497,7 +1497,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.PPO_POLICIES_TABLE}")
-                records = cur.fetchall()
+                records: List[Tuple[int, str]] = cur.fetchall()
                 return records
 
     @staticmethod
@@ -1609,7 +1609,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_system_identification_jobs_ids() -> List[Dict]:
+    def list_system_identification_jobs_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of system identification job ids in the metastore
         """
@@ -1620,7 +1620,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name,pid FROM "
                             f"{constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
-                records = cur.fetchall()
+                records: List[Tuple[int, str]] = cur.fetchall()
                 return records
 
     @staticmethod
