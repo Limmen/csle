@@ -1,15 +1,17 @@
 """
 Routes and sub-resources for the /traces-datasets resource
 """
-from typing import Tuple
-import os
-from flask import Blueprint, jsonify, request, send_from_directory, Response
-import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
-from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.dao.datasets.traces_dataset import TracesDataset
-import csle_rest_api.util.rest_api_util as rest_api_util
 
+import os
+from typing import Tuple
+
+import csle_common.constants.constants as constants
+from csle_common.dao.datasets.traces_dataset import TracesDataset
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, Response, jsonify, request, send_from_directory
+
+import csle_rest_api.constants.constants as api_constants
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 traces_datasets_bp = Blueprint(
@@ -25,11 +27,12 @@ def traces_datasets() -> Tuple[Response, int]:
 
     :return: A list of traces datasets or a list of ids of the traces datasets or deletes the datasets
     """
+    requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-        authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
-        if authorized is not None:
-            return authorized
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
         # Check if ids query parameter is True, then only return the ids and not the whole list of traces
@@ -78,11 +81,12 @@ def traces_dataset(traces_dataset_id: int) -> Tuple[Response, int]:
     :param traces_dataset_id: the id of the traces dataset
     :return: The given traces dataset or deletes the traces dataset
     """
+    requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-        authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
-        if authorized is not None:
-            return authorized
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
 
     traces_dataset = MetastoreFacade.get_traces_dataset_metadata(id=traces_dataset_id)
     response = jsonify({})
