@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, List, Tuple
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
@@ -21,10 +21,11 @@ class EmulationStatisticsWindowed(JSONSerializable):
         :param descr: the description
         """
         self.window_size = window_size
-        self.initial_states = []
-        self.state_transitions = []
-        self.emulation_name = emulation_name
-        self.descr = descr
+        self.initial_states: List[EmulationEnvState] = []
+        self.state_transitions: List[Tuple[EmulationEnvState, EmulationEnvState,
+                                           EmulationEnvState, EmulationEnvState]] = []
+        self.emulation_name: str = emulation_name
+        self.descr: str = descr
         self.emulation_statistics = EmulationStatistics(emulation_name=self.emulation_name, descr=self.descr)
         self.statistics_id = MetastoreFacade.save_emulation_statistic(emulation_statistics=self.emulation_statistics)
 
