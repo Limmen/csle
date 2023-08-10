@@ -1,4 +1,4 @@
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Any
 import numpy as np
 import iteround
 from csle_common.dao.training.policy import Policy
@@ -58,11 +58,11 @@ class MixedPPOPolicy(Policy):
         """
         return self.action(o=o) == a
 
-    def to_dict(self) -> Dict[str, Union[float, int, str]]:
+    def to_dict(self) -> Dict[str, Union[float, int, str, Dict[str, Any], List[Dict[str, Any]]]]:
         """
         :return: a dict representation of the policy
         """
-        d = {}
+        d = {} # type: Dict[str, Union[float, int, str, Dict[str, Any], List[Dict[str, Any]]]]
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
         d["ppo_policies"] = list(map(lambda x: x.to_dict(), self.ppo_policies))
@@ -76,7 +76,8 @@ class MixedPPOPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "MixedPPOPolicy":
+    def from_dict(d: Dict[str, Union[float, int, str,
+                                     Dict[str, Any], List[Dict[str, Any]]]]) -> "MixedPPOPolicy":
         """
         Converst a dict representation of the object to an instance
 
@@ -85,7 +86,7 @@ class MixedPPOPolicy(Policy):
         """
         ppo_policies = list(map(lambda x: x.from_dict(), d["ppo_policies"]))
         obj = MixedPPOPolicy(simulation_name=d["simulation_name"],
-                             states=list(map(lambda x: State.from_dict(x), d["states"])), player_type=d["player_type"],
+                             states=list(map(lambda x: State.from_dict(x), d["states"])), player_type=PlayerType.from_dict(d["player_type"]),
                              actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
                              experiment_config=ExperimentConfig.from_dict(d["experiment_config"]), avg_R=d["avg_R"])
         obj.ppo_policies = ppo_policies
