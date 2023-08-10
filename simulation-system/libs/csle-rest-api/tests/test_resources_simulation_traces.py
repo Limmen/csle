@@ -25,7 +25,7 @@ class TestResourcesSimulationTracesSuite:
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def list_sim_tr(self, mocker):
+    def list_sim_tr(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_simulation_traces method
 
@@ -39,7 +39,7 @@ class TestResourcesSimulationTracesSuite:
         return list_simulation_traces_mocker
 
     @pytest.fixture
-    def list_sim_tr_ids(self, mocker):
+    def list_sim_tr_ids(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_simulation_traces_ids method
         
@@ -64,7 +64,7 @@ class TestResourcesSimulationTracesSuite:
         return remove_simulation_trace_mocker
 
     @pytest.fixture
-    def get_sim_tr(self, mocker):
+    def get_sim_tr(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the get_simulation_trace
 
@@ -87,8 +87,8 @@ class TestResourcesSimulationTracesSuite:
         sim_trace = SimulationTrace(simulation_env="null")
         return sim_trace
 
-    def test_simulation_traces_get(self, mocker, flask_app, not_logged_in, logged_in,
-                                   logged_in_as_admin, list_sim_tr, list_sim_tr_ids):
+    def test_simulation_traces_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
+                                   logged_in_as_admin, list_sim_tr, list_sim_tr_ids) -> None:
         """
         Testing the GET HTTPS for the /simulation-traces resource
         :param mocker: the pytest mocker object
@@ -103,8 +103,7 @@ class TestResourcesSimulationTracesSuite:
                      side_effect=list_sim_tr)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_simulation_traces_ids",
                      side_effect=list_sim_tr_ids)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -128,8 +127,7 @@ class TestResourcesSimulationTracesSuite:
         ex_sim_tr_dict = ex_sim_tr.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == ex_sim_tr_dict[k]
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -147,8 +145,8 @@ class TestResourcesSimulationTracesSuite:
         for k in response_data_dict:
             assert response_data_dict[k] == ex_sim_tr_dict[k]
 
-    def test_simulation_traces_delete(self, mocker, flask_app, not_logged_in, logged_in,
-                                      logged_in_as_admin, list_sim_tr, remove):
+    def test_simulation_traces_delete(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
+                                      logged_in_as_admin, list_sim_tr, remove) -> None:
         """
         Testing the DELETE HTTPS for the /simulation-traces resource
         :param mocker: the pytest mocker object
@@ -163,30 +161,27 @@ class TestResourcesSimulationTracesSuite:
                      side_effect=list_sim_tr)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_simulation_trace",
                      side_effect=remove)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
 
-    def test_simulation_traces_ids_get(self, mocker, flask_app, not_logged_in, logged_in,
-                                       logged_in_as_admin, get_sim_tr):
+    def test_simulation_traces_ids_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
+                                       logged_in_as_admin, get_sim_tr) -> None:
         """
         Testing the GET HTTPS for the /simulation-traces/id resource
         :param mocker: the pytest mocker object
@@ -198,15 +193,13 @@ class TestResourcesSimulationTracesSuite:
         """
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.get_simulation_trace",
                      side_effect=get_sim_tr)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -214,8 +207,7 @@ class TestResourcesSimulationTracesSuite:
         ex_sim_tr_dict = ex_sim_tr.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == ex_sim_tr_dict[k]
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -224,8 +216,8 @@ class TestResourcesSimulationTracesSuite:
         for k in response_data_dict:
             assert response_data_dict[k] == ex_sim_tr_dict[k]
 
-    def test_simulation_traces_ids_delete(self, mocker, flask_app, not_logged_in, logged_in,
-                                          logged_in_as_admin, get_sim_tr, remove):
+    def test_simulation_traces_ids_delete(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
+                                          logged_in_as_admin, get_sim_tr, remove) -> None:
         """
         Testing the DELETE HTTPS for the /simulation-traces/id resource
         :param mocker: the pytest mocker object
@@ -239,22 +231,19 @@ class TestResourcesSimulationTracesSuite:
                      side_effect=get_sim_tr)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_simulation_trace",
                      side_effect=remove)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.SIMULATION_TRACES_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
