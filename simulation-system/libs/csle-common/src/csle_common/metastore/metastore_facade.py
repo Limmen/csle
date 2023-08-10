@@ -491,7 +491,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_emulation_traces() -> List[EmulationTrace]:
+    def list_emulation_traces() -> List[Tuple[Any, ...]]:
         """
         :return: A list of emulation traces in the metastore
         """
@@ -520,7 +520,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_emulation_simulation_traces_ids() -> List[Dict[Any, Any]]:
+    def list_emulation_simulation_traces_ids() -> List[Tuple[Any, ...]]:
         """
         :return: A list of emulation-simulation traces ids in the metastore
         """
@@ -548,7 +548,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_simulation_traces() -> List[SimulationTrace]:
+    def list_simulation_traces() -> List[Tuple[Any, ...]]:
         """
         :return: A list of simulation traces in the metastore
         """
@@ -765,7 +765,7 @@ class MetastoreFacade:
                     f"and simulation: {emulation_simulation_trace.simulation_trace.simulation_env} saved successfully")
 
     @staticmethod
-    def list_emulation_simulation_traces() -> List[EmulationSimulationTrace]:
+    def list_emulation_simulation_traces() -> List[Tuple[Any, ...]]:
         """
         :return: A list of emulation-simulation traces in the metastore
         """
@@ -828,7 +828,7 @@ class MetastoreFacade:
                                                            f"for emulation {emulation_name}, {str(e), repr(e)}")
 
     @staticmethod
-    def list_emulation_images() -> List[Tuple[str, bytes]]:
+    def list_emulation_images() -> List[Tuple[Any, ...]]:
         """
         :return: A list of emulation names and images in the metastore
         """
@@ -884,7 +884,7 @@ class MetastoreFacade:
                                                      f"{table} successfully")
 
     @staticmethod
-    def save_simulation_image(img: bytes, simulation_name: str) -> Union[Any, int]:
+    def save_simulation_image(img: bytes, simulation_name: str) -> Any:
         """
         Saves the image of a simulation in the metastore
 
@@ -910,7 +910,7 @@ class MetastoreFacade:
                                                            f"for simulation {simulation_name}, {str(e), repr(e)}")
 
     @staticmethod
-    def list_simulation_images() -> List[Tuple[str, bytes]]:
+    def list_simulation_images() -> List[Tuple[Any, ...]]:
         """
         :return: A list of simulation names and images in the metastore
         """
@@ -976,7 +976,7 @@ class MetastoreFacade:
                 return id_of_new_row
 
     @staticmethod
-    def list_experiment_executions() -> List[ExperimentExecution]:
+    def list_experiment_executions() -> List[Tuple[Any, ...]]:
         """
         :return: A list of emulation traces in the metastore
         """
@@ -991,7 +991,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_experiment_executions_ids() -> List[tuple]:
+    def list_experiment_executions_ids() -> List[Tuple[Any, ...]]:
         """
         :return: A list of experiment execution ids in the metastore
         """
@@ -1061,7 +1061,7 @@ class MetastoreFacade:
                                                      f"with id {experiment_execution.id} deleted successfully")
 
     @staticmethod
-    def list_multi_threshold_stopping_policies() -> List[MultiThresholdStoppingPolicy]:
+    def list_multi_threshold_stopping_policies() -> List[Tuple[Any, ...]]:
         """
         :return: A list of Multi-threshold stopping policies in the metastore
         """
@@ -1077,7 +1077,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_multi_threshold_stopping_policies_ids() -> List[Dict]:
+    def list_multi_threshold_stopping_policies_ids() -> List[Tuple[Any, ...]]:
         """
         :return: A list of Multi-threshold stopping policies ids in the metastore
         """
@@ -1190,7 +1190,7 @@ class MetastoreFacade:
         return training_job_config
 
     @staticmethod
-    def list_training_jobs() -> List[TrainingJobConfig]:
+    def list_training_jobs() -> List[Tuple[Any, ...]]:
         """
         :return: A list of training jobs in the metastore
         """
@@ -1205,7 +1205,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_training_jobs_ids() -> List[Dict]:
+    def list_training_jobs_ids() -> List[Tuple[Any, ...]]:
         """
         :return: A list of training job ids in the metastore
         """
@@ -1282,7 +1282,7 @@ class MetastoreFacade:
         return data_collection_job_config
 
     @staticmethod
-    def list_data_collection_jobs() -> List[DataCollectionJobConfig]:
+    def list_data_collection_jobs() -> List[Tuple[Any, ...]]:
         """
         :return: A list of data collection jobs in the metastore
         """
@@ -1298,7 +1298,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_data_collection_jobs_ids() -> List[Dict]:
+    def list_data_collection_jobs_ids() -> List[Dict[Any, Any]]:
         """
         :return: A list of data collection job ids in the metastore
         """
@@ -1473,7 +1473,7 @@ class MetastoreFacade:
                                                      f"id {data_collection_job.id} deleted successfully")
 
     @staticmethod
-    def list_ppo_policies() -> List[PPOPolicy]:
+    def list_ppo_policies() -> List[Tuple[Any, ...]]:
         """
         :return: A list of PPO policies in the metastore
         """
@@ -1488,7 +1488,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_ppo_policies_ids() -> List[Tuple]:
+    def list_ppo_policies_ids() -> List[Tuple[Any, ...]]:
         """
         :return: A list of PPO policies ids in the metastore
         """
@@ -1594,7 +1594,7 @@ class MetastoreFacade:
         return system_identification_job_config
 
     @staticmethod
-    def list_system_identification_jobs() -> List[SystemIdentificationJobConfig]:
+    def list_system_identification_jobs() -> List[Tuple[Any, ...]]:
         """
         :return: A list of system identification jobs in the metastore
         """
@@ -1734,7 +1734,7 @@ class MetastoreFacade:
         return gaussian_mixture_system_model_config
 
     @staticmethod
-    def list_gaussian_mixture_system_models() -> List[GaussianMixtureSystemModel]:
+    def list_gaussian_mixture_system_models() -> List[Tuple[Any, ...]]:
         """
         :return: A list of gaussian mixture system models in the metastore
         """

@@ -25,8 +25,8 @@ class DockerUtil:
         parsed_containers = DockerUtil.parse_running_containers(client_1=client_1, client_2=client_2)
         for container in parsed_containers:
             if container is None:
-                raise ValueError("container canot be None")
-        emulations: List[str] = list(set(list(map(lambda x: x.emulation, parsed_containers))))
+                raise ValueError("container cannot be None")
+        emulations: List[str] = list(set(list(map(lambda x: x.emulation, filter(lambda x: x is not None, parsed_containers)))))
         parsed_envs = DockerUtil.parse_running_emulation_envs(emulations=emulations, containers=parsed_containers)
         return parsed_envs
 
