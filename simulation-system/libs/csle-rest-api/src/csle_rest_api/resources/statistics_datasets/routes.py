@@ -1,15 +1,16 @@
 """
 Routes and sub-resources for the /statistics-datasets resource
 """
-from typing import Tuple
 import os
-from flask import Blueprint, jsonify, request, send_from_directory, Response
-import csle_common.constants.constants as constants
-import csle_rest_api.constants.constants as api_constants
-from csle_common.metastore.metastore_facade import MetastoreFacade
-from csle_common.dao.datasets.statistics_dataset import StatisticsDataset
-import csle_rest_api.util.rest_api_util as rest_api_util
+from typing import Tuple
 
+import csle_common.constants.constants as constants
+from csle_common.dao.datasets.statistics_dataset import StatisticsDataset
+from csle_common.metastore.metastore_facade import MetastoreFacade
+from flask import Blueprint, Response, jsonify, request, send_from_directory
+
+import csle_rest_api.constants.constants as api_constants
+import csle_rest_api.util.rest_api_util as rest_api_util
 
 # Creates a blueprint "sub application" of the main REST app
 statistics_datasets_bp = Blueprint(
@@ -25,11 +26,12 @@ def statistics_datasets() -> Tuple[Response, int]:
 
     :return: A list of statistics datasets or a list of ids of the statistics datasets or deletes the datasets
     """
+    requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-        authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
-        if authorized is not None:
-            return authorized
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
 
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_GET:
         # Check if ids query parameter is True, then only return the ids and not the whole list of statistics datasets
@@ -78,11 +80,12 @@ def statistics_dataset(statistics_dataset_id: int) -> Tuple[Response, int]:
     :param statistics_dataset_id: the id of the statistics dataset
     :return: The given statistics dataset or deletes the statistics dataset
     """
+    requires_admin = False
     if request.method == api_constants.MGMT_WEBAPP.HTTP_REST_DELETE:
         requires_admin = True
-        authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
-        if authorized is not None:
-            return authorized
+    authorized = rest_api_util.check_if_user_is_authorized(request=request, requires_admin=requires_admin)
+    if authorized is not None:
+        return authorized
 
     statistics_dataset = MetastoreFacade.get_statistics_dataset_metadata(id=statistics_dataset_id)
     response = jsonify({})
