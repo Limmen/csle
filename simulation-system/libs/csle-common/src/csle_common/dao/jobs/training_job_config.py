@@ -50,7 +50,7 @@ class TrainingJobConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d = {} #type: Dict[str, Any]
         d["simulation_env_name"] = self.simulation_env_name
         d["emulation_env_name"] = self.emulation_env_name
         d["experiment_config"] = self.experiment_config.to_dict()

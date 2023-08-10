@@ -58,11 +58,11 @@ class MixedPPOPolicy(Policy):
         """
         return self.action(o=o) == a
 
-    def to_dict(self) -> Dict[str, Union[float, int, str, Dict[str, Any], List[Dict[str, Any]]]]:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the policy
         """
-        d = {} # type: Dict[str, Union[float, int, str, Dict[str, Any], List[Dict[str, Any]]]]
+        d = {} # type: Dict[str, Any]
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
         d["ppo_policies"] = list(map(lambda x: x.to_dict(), self.ppo_policies))
@@ -76,8 +76,7 @@ class MixedPPOPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict[str, Union[float, int, str,
-                                     Dict[str, Any], List[Dict[str, Any]]]]) -> "MixedPPOPolicy":
+    def from_dict(d: Dict[str, Any]) -> "MixedPPOPolicy":
         """
         Converst a dict representation of the object to an instance
 
