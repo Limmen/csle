@@ -10,7 +10,7 @@ class DockerContainerMetadata(JSONSerializable):
     def __init__(self, name: str, status: str, short_id: str, image_short_id: str, image_tags: list, id: str,
                  created: str, ip: str, network_id: int, gateway: str, mac: str, ip_prefix_len: str,
                  name2: str, level: str, hostname: str, image_name: str, net: str,
-                 dir: Union[str, None], config_path: Union[None, str], container_handle: str, emulation: str, kafka_container: Union[None, str]):
+                 dir: Union[str, None], config_path: Union[None, str], container_handle: str, emulation: Union[None, str], kafka_container: Union[None, str]):
         """
         Intializes the DTO
 
