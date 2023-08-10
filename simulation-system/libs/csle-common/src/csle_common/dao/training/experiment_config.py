@@ -37,7 +37,7 @@ class ExperimentConfig(JSONSerializable):
         self.br_log_every = br_log_every
 
     @staticmethod
-    def from_dict(d: Dict[str, Any]) -> "[ExperimentConfig]":
+    def from_dict(d: Dict[str, Any]) -> "ExperimentConfig":
         """
         Converts a dict representation to an instance
 

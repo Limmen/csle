@@ -1,6 +1,5 @@
 from typing import List, Dict, Union, Any
 import numpy as np
-import iteround
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
@@ -62,7 +61,7 @@ class MixedPPOPolicy(Policy):
         """
         :return: a dict representation of the policy
         """
-        d = {} # type: Dict[str, Any]
+        d : Dict[str, Any]= {}
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
         d["ppo_policies"] = list(map(lambda x: x.to_dict(), self.ppo_policies))
@@ -130,10 +129,12 @@ class MixedPPOPolicy(Policy):
         stage_policies = []
         for policy in self.ppo_policies:
             stage_policies.append(policy.stage_policy(o=o))
-        stage_strategy = np.zeros((len(self.states), len(self.actions)))
+        stage_strategy: List[List[float]] = []
         for i, s_a in enumerate(self.states):
+            state_strategy = []
             for j, a in enumerate(self.actions):
-                stage_strategy[i][j] = sum([stage_policies[k][i][j]
-                                            for k in range(len(stage_policies))]) / len(stage_policies)
-            stage_strategy[i] = iteround.saferound(stage_strategy[i], 2)
-        return stage_strategy.tolist()
+                state_strategy.append(round(sum([stage_policies[k][i][j]
+                                           for k in range(len(stage_policies))]) / len(stage_policies),2))
+
+            stage_strategy.append(state_strategy)
+        return stage_strategy
