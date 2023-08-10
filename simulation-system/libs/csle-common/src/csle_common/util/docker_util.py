@@ -24,10 +24,14 @@ class DockerUtil:
         client_2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
         parsed_containers = DockerUtil.parse_running_containers(client_1=client_1, client_2=client_2)
 <<<<<<< HEAD
+<<<<<<< HEAD
         for container in parsed_containers:
             if container is None:
                 raise ValueError("container cannot be None")
         emulations: List[str] = list(set(list(map(lambda x: x.emulation, filter(lambda x: x is not None, parsed_containers)))))
+=======
+        emulations: List[Union[None, str]] = list(set(list(map(lambda x: x.emulation, parsed_containers))))
+>>>>>>> parent of 6f662e392... improved error handling
 =======
         emulations: List[Union[None, str]] = list(set(list(map(lambda x: x.emulation, parsed_containers))))
 >>>>>>> parent of 6f662e392... improved error handling
