@@ -285,12 +285,12 @@ class MetastoreFacade:
         return emulation_name, image_bytes
 
     @staticmethod
-    def install_emulation(config: EmulationEnvConfig) -> Any:
+    def install_emulation(config: EmulationEnvConfig) -> Union[int, None]:
         """
         Installs the emulation configuration in the metastore
 
         :param config: the config to install
-        :return: id of the created row
+        :return: id of the created row or None if the installation failed
         """
         Logger.__call__().get_logger().debug(f"Installing emulation:{config.name} in the metastore")
         with psycopg.connect(f"{constants.METADATA_STORE.DB_NAME_PROPERTY}={constants.METADATA_STORE.DBNAME} "
@@ -302,13 +302,14 @@ class MetastoreFacade:
                     config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} (name, config) "
                                 f"VALUES (%s, %s) RETURNING id", (config.name, config_json_str))
-                    id_of_new_row = cur.fetchone()[0]
+                    id_of_new_row: int = cur.fetchone()[0]
                     conn.commit()
                     Logger.__call__().get_logger().debug(f"Emulation {config.name} installed successfully")
                     return id_of_new_row
                 except psycopg.errors.UniqueViolation as e:
                     Logger.__call__().get_logger().debug(f"Emulation {config.name} is already installed "
                                                          f"{str(e), repr(e)}")
+                    return None
 
     @staticmethod
     def uninstall_emulation(config: EmulationEnvConfig) -> None:
