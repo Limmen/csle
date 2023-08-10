@@ -11,7 +11,8 @@ class DockerEnvMetadata(JSONSerializable):
     """
 
     def __init__(self, containers: List[DockerContainerMetadata], name: str, subnet_prefix: str,
-                 subnet_mask: str, level: str, config: Union[None, EmulationEnvConfig], kafka_config: Union[None, KafkaConfig]):
+                 subnet_mask: str, level: str, config: Union[None, EmulationEnvConfig],
+                 kafka_config: Union[None, KafkaConfig]):
         """
         Initializes the DTO
 

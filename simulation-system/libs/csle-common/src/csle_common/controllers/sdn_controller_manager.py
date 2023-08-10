@@ -26,6 +26,9 @@ class SDNControllerManager:
         :param logger: the logger to use for logging
         :return: None
         """
+        if emulation_env_config.sdn_controller_config is None:
+            raise ValueError(f"Cannot start ryu manager for emulation without an SDN config. "
+                             f"Emulation: {emulation_env_config.name}")
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
                                     ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
@@ -75,6 +78,9 @@ class SDNControllerManager:
         :param logger: the logger to use for logging
         :return: None
         """
+        if emulation_env_config.sdn_controller_config is None:
+            raise ValueError(f"Cannot stop ryu manager for emulation without an SDN config. "
+                             f"Emulation: {emulation_env_config.name}")
         # Connect
         EmulationUtil.connect_admin(emulation_env_config=emulation_env_config,
                                     ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
@@ -104,6 +110,9 @@ class SDNControllerManager:
         :param logger: the logger to use for logging
         :return: a RyuDTO with the status
         """
+        if emulation_env_config.sdn_controller_config is None:
+            raise ValueError(f"Cannot get ryu status for emulation without an SDN config. "
+                             f"Emulation: {emulation_env_config.name}")
         SDNControllerManager.start_ryu_manager(emulation_env_config=emulation_env_config, logger=logger)
         ryu_dto = SDNControllerManager.get_ryu_status_by_port_and_ip(
             ip=emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip,
@@ -111,8 +120,7 @@ class SDNControllerManager:
         return ryu_dto
 
     @staticmethod
-    def get_ryu_status_by_port_and_ip(ip: str, port: int) -> \
-            csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
+    def get_ryu_status_by_port_and_ip(ip: str, port: int) -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
         """
         Method for querying the RyuManager about the status of the Ryu SDN controller
 
@@ -135,6 +143,9 @@ class SDNControllerManager:
         :param emulation_env_config: the emulation env config
         :return: a RyuDTO with the status of the server
         """
+        if emulation_env_config.sdn_controller_config is None:
+            raise ValueError(f"Cannot stop Ryu for emulation without an SDN config. "
+                             f"Emulation: {emulation_env_config.name}")
         logger.info(
             f"Stopping RYU SDN controller on container: "
             f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
@@ -160,6 +171,9 @@ class SDNControllerManager:
         :param logger: the logger to use for logging
         :return: an RyuDTO with the status of the server
         """
+        if emulation_env_config.sdn_controller_config is None:
+            raise ValueError(f"Cannot start Ryu for emulation without an SDN config. "
+                             f"Emulation: {emulation_env_config.name}")
         if emulation_env_config.sdn_controller_config.container.physical_host_ip != physical_server_ip:
             return
         logger.info(
@@ -194,6 +208,9 @@ class SDNControllerManager:
         :param logger: the logger to use for logging
         :return: an RyuDTO with the status
         """
+        if emulation_env_config.sdn_controller_config is None:
+            raise ValueError(f"Cannot start Ryu monitor for emulation without an SDN config. "
+                             f"Emulation: {emulation_env_config.name}")
         if emulation_env_config.sdn_controller_config.container.physical_host_ip != physical_server_ip:
             return
         logger.info(
@@ -223,6 +240,9 @@ class SDNControllerManager:
         :param logger: the logger to use for logging
         :return: an RyuDTO with the status of the server
         """
+        if emulation_env_config.sdn_controller_config is None:
+            raise ValueError(f"Cannot stop Ryu monitor for emulation without an SDN config. "
+                             f"Emulation: {emulation_env_config.name}")
         logger.info(
             f"Stopping Ryu monitor on container: "
             f"{emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip}")
@@ -245,6 +265,9 @@ class SDNControllerManager:
         :param emulation_env_config: the emulation env config
         :return: the list of IP addresses
         """
+        if emulation_env_config.sdn_controller_config is None:
+            raise ValueError(f"Cannot get Ryu managers IPs for emulation without an SDN config. "
+                             f"Emulation: {emulation_env_config.name}")
         return [emulation_env_config.sdn_controller_config.container.docker_gw_bridge_ip]
 
     @staticmethod
@@ -255,6 +278,9 @@ class SDNControllerManager:
         :param emulation_env_config: the emulation env config
         :return: the list of IP addresses
         """
+        if emulation_env_config.sdn_controller_config is None:
+            raise ValueError(f"Cannot get Ryu managers ports for emulation without an SDN config. "
+                             f"Emulation: {emulation_env_config.name}")
         return [emulation_env_config.sdn_controller_config.manager_port]
 
     @staticmethod
@@ -269,6 +295,9 @@ class SDNControllerManager:
         :param physical_server_ip: the ip of the physical server
         :return: a DTO with the status of the Ryu managers
         """
+        if emulation_env_config.sdn_controller_config is None:
+            raise ValueError(f"Cannot get ryu managers info for emulation without an SDN config. "
+                             f"Emulation: {emulation_env_config.name}")
         ryu_managers_ips = SDNControllerManager.get_ryu_managers_ips(emulation_env_config=emulation_env_config)
         ryu_managers_ports = SDNControllerManager.get_ryu_managers_ports(emulation_env_config=emulation_env_config)
         ryu_managers_statuses = []

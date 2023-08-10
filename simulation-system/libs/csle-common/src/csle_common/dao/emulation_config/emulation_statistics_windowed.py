@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, List, Tuple
 from csle_common.dao.emulation_config.emulation_env_state import EmulationEnvState
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
@@ -21,8 +21,9 @@ class EmulationStatisticsWindowed(JSONSerializable):
         :param descr: the description
         """
         self.window_size = window_size
-        self.initial_states = []
-        self.state_transitions = []
+        self.initial_states: List[EmulationEnvState] = []
+        self.state_transitions: List[Tuple[EmulationEnvState, EmulationEnvState, EmulationDefenderAction,
+                                           EmulationAttackerAction]] = []
         self.emulation_name = emulation_name
         self.descr = descr
         self.emulation_statistics = EmulationStatistics(emulation_name=self.emulation_name, descr=self.descr)
@@ -99,10 +100,11 @@ class EmulationStatisticsWindowed(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["window_size"] = self.window_size
-        d["initial_states"] = self.initial_states
-        d["state_transitions"] = self.state_transitions
+        d["initial_states"] = list(map(lambda x: x.to_dict(), self.initial_states))
+        d["state_transitions"] = list(map(lambda x: (x[0].to_dict(), x[1].to_dict(), x[2].to_dict(), x[3].to_dict()),
+                                          self.state_transitions))
         d["emulation_name"] = self.emulation_name
         d["descr"] = self.descr
         d["emulation_statistics"] = self.emulation_statistics.to_dict()

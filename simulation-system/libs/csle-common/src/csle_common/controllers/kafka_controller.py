@@ -198,8 +198,7 @@ class KafkaController:
             ip=emulation_env_config.kafka_config.container.docker_gw_bridge_ip).open_sftp()
         remote_file = sftp_client.open(collector_constants.KAFKA.KAFKA_CONFIG_FILE, mode="r")
         try:
-            file_contents = remote_file.read()
-            file_contents = file_contents.decode()
+            file_contents: str = remote_file.read().decode()
             file_contents = file_contents.replace(collector_constants.KAFKA.INTERNAL_IP_PLACEHOLDER,
                                                   emulation_env_config.kafka_config.container.get_ips()[0])
             file_contents = file_contents.replace(collector_constants.KAFKA.EXTERNAL_IP_PLACEHOLDER,

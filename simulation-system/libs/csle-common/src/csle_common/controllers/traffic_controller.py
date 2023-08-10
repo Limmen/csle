@@ -454,8 +454,6 @@ class TrafficController:
         :param logger: the logger to use for logging
         :return: None
         """
-        if node_traffic_config is None or container is None:
-            return
         TrafficController.start_traffic_manager(emulation_env_config=emulation_env_config,
                                                 node_traffic_config=node_traffic_config, logger=logger)
         logger.info(f"Starting traffic generator script, "

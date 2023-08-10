@@ -61,7 +61,7 @@ class MixedPPOPolicy(Policy):
         """
         :return: a dict representation of the policy
         """
-        d : Dict[str, Any]= {}
+        d: Dict[str, Any] = {}
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
         d["ppo_policies"] = list(map(lambda x: x.to_dict(), self.ppo_policies))
@@ -84,7 +84,8 @@ class MixedPPOPolicy(Policy):
         """
         ppo_policies = list(map(lambda x: x.from_dict(), d["ppo_policies"]))
         obj = MixedPPOPolicy(simulation_name=d["simulation_name"],
-                             states=list(map(lambda x: State.from_dict(x), d["states"])), player_type=PlayerType.from_dict(d["player_type"]),
+                             states=list(map(lambda x: State.from_dict(x), d["states"])),
+                             player_type=PlayerType.from_dict(d["player_type"]),
                              actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
                              experiment_config=ExperimentConfig.from_dict(d["experiment_config"]), avg_R=d["avg_R"])
         obj.ppo_policies = ppo_policies
@@ -134,7 +135,7 @@ class MixedPPOPolicy(Policy):
             state_strategy = []
             for j, a in enumerate(self.actions):
                 state_strategy.append(round(sum([stage_policies[k][i][j]
-                                           for k in range(len(stage_policies))]) / len(stage_policies),2))
+                                                 for k in range(len(stage_policies))]) / len(stage_policies), 2))
 
             stage_strategy.append(state_strategy)
         return stage_strategy
