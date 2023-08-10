@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union
 from csle_common.dao.docker.docker_container_metadata import DockerContainerMetadata
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_config.kafka_config import KafkaConfig
@@ -11,7 +11,7 @@ class DockerEnvMetadata(JSONSerializable):
     """
 
     def __init__(self, containers: List[DockerContainerMetadata], name: str, subnet_prefix: str,
-                 subnet_mask: str, level: str, config: EmulationEnvConfig, kafka_config: KafkaConfig):
+                 subnet_mask: str, level: str, config: Union[None, EmulationEnvConfig], kafka_config: Union[None, KafkaConfig]):
         """
         Initializes the DTO
 

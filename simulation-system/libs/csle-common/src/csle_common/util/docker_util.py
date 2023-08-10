@@ -23,7 +23,7 @@ class DockerUtil:
         client_1 = docker.from_env()
         client_2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
         parsed_containers = DockerUtil.parse_running_containers(client_1=client_1, client_2=client_2)
-        emulations = list(set(list(map(lambda x: x.emulation, parsed_containers))))
+        emulations: List[Union[None, str]] = list(set(list(map(lambda x: x.emulation, parsed_containers))))
         parsed_envs = DockerUtil.parse_running_emulation_envs(emulations=emulations, containers=parsed_containers)
         return parsed_envs
 
@@ -72,7 +72,7 @@ class DockerUtil:
         return parsed_containers
 
     @staticmethod
-    def parse_running_emulation_envs(emulations: List[str], containers: List[DockerContainerMetadata]) \
+    def parse_running_emulation_envs(emulations: List[Union[None, str]], containers: List[DockerContainerMetadata]) \
             -> List[DockerEnvMetadata]:
         """
         Queries docker to get a list of all active emulation environments
@@ -180,7 +180,7 @@ class DockerUtil:
         containers = docker_gw_bridge_info[constants.DOCKER.CONTAINERS_KEY]
         if container_id in containers:
             container = containers[container_id]
-            ip = container[constants.DOCKER.IPV4_KEY]
+            ip: str = container[constants.DOCKER.IPV4_KEY]
             ip = ip.split("/")[0]
             return ip
         raise ValueError(f"The container with id:{container_id} does not have an IP in the docker gw bridge network. "

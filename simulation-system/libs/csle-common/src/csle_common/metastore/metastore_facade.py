@@ -71,7 +71,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def get_emulation_by_name(name: str) -> Union[None, EmulationEnvConfig]:
+    def get_emulation_by_name(name: Union[None, str]) -> Union[None, EmulationEnvConfig]:
         """
         Function for extracting the metadata of an emulation with a given name
 
