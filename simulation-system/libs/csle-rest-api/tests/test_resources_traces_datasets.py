@@ -66,7 +66,7 @@ class TestResourcestracesDataSetsSuite:
     @pytest.fixture
     def get_traces_ds(self, mocker):
         """
-        Pytest fixture for mocking the get_traces_dataset_metadata
+        Pytest fixture for mocking the get_traces_dataset_metadata method
 
         :param mocker: the pytest mocker object
         :return: the mocked function
