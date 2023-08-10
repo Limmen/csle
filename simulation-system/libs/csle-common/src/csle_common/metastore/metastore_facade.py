@@ -57,7 +57,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_emulations_ids() -> List[Tuple]:
+    def list_emulations_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of emulation ids in the metastore
         """
@@ -67,7 +67,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,name FROM {constants.METADATA_STORE.EMULATIONS_TABLE}")
-                records = cur.fetchall()
+                records: List[Tuple[int, str]] = cur.fetchall()
                 return records
 
     @staticmethod
@@ -124,7 +124,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_simulation_ids() -> List[Dict]:
+    def list_simulation_ids() -> List[Tuple[str, int]]:
         """
         :return: A list of simulation ids and names in the metastore
         """
@@ -134,7 +134,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,name FROM {constants.METADATA_STORE.SIMULATIONS_TABLE}")
-                records = cur.fetchall()
+                records: List[Tuple[str, int]] = cur.fetchall()
                 return records
 
     @staticmethod
@@ -476,7 +476,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_emulation_statistics_ids() -> List[Tuple]:
+    def list_emulation_statistics_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of emulation statistics ids in the metastore
         """
@@ -486,7 +486,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}")
-                records = cur.fetchall()
+                records: List[Tuple[int, str]] = cur.fetchall()
                 return records
 
     @staticmethod
