@@ -1,11 +1,9 @@
-import json
 from typing import List, Tuple
-
-import csle_common.constants.constants as constants
+import json
 import pytest
 import pytest_mock
 from csle_common.dao.datasets.statistics_dataset import StatisticsDataset
-
+import csle_common.constants.constants as constants
 import csle_rest_api.constants.constants as api_constants
 from csle_rest_api.rest_api import create_app
 
@@ -25,7 +23,7 @@ class TestResourcesStatisticsDataSetsSuite:
         return create_app(static_folder="../../../../../management-system/csle-mgmt-webapp/build")
 
     @pytest.fixture
-    def list_stat_ds(self, mocker):
+    def list_stat_ds(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_statistics_datasets method
 
@@ -39,7 +37,7 @@ class TestResourcesStatisticsDataSetsSuite:
         return list_statistics_datasets_mocker
 
     @pytest.fixture
-    def list_stat_ds_ids(self, mocker):
+    def list_stat_ds_ids(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the list_statistics_datasets_ids method
         
@@ -64,7 +62,7 @@ class TestResourcesStatisticsDataSetsSuite:
         return remove_statistics_dataset_mocker
 
     @pytest.fixture
-    def get_stat_ds(self, mocker):
+    def get_stat_ds(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the get_statistics_dataset_metadata
 
@@ -78,7 +76,7 @@ class TestResourcesStatisticsDataSetsSuite:
         return get_statistics_dataset_metadata_mocker
 
     @pytest.fixture
-    def update(self, mocker):
+    def update(self, mocker: pytest_mock.MockFixture):
         """
         Pytest fixture for mocking the update_statistics_dataset method
         
@@ -104,8 +102,8 @@ class TestResourcesStatisticsDataSetsSuite:
                                       metrics="null", num_conditions=1)
         return sim_trace
 
-    def test_statistics_datasets_get(self, mocker, flask_app, not_logged_in, logged_in,
-                                     logged_in_as_admin, list_stat_ds, list_stat_ds_ids):
+    def test_statistics_datasets_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
+                                     logged_in_as_admin, list_stat_ds, list_stat_ds_ids) -> None:
         """
         Testing the GET HTTPS for the /statistics-datasets resource
         :param mocker: the pytest mocker object
@@ -120,8 +118,7 @@ class TestResourcesStatisticsDataSetsSuite:
                      side_effect=list_stat_ds)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.list_statistics_datasets_ids",
                      side_effect=list_stat_ds_ids)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -145,8 +142,7 @@ class TestResourcesStatisticsDataSetsSuite:
         ex_st_ds_dict = ex_st_ds.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == ex_st_ds_dict[k]
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE}"
                                                f"?{api_constants.MGMT_WEBAPP.IDS_QUERY_PARAM}=true")
         response_data = response.data.decode("utf-8")
@@ -164,8 +160,8 @@ class TestResourcesStatisticsDataSetsSuite:
         for k in response_data_dict:
             assert response_data_dict[k] == ex_st_ds_dict[k]
 
-    def test_statistics_datasets_delete(self, mocker, flask_app, not_logged_in, logged_in,
-                                        logged_in_as_admin, list_stat_ds, remove):
+    def test_statistics_datasets_delete(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
+                                        logged_in_as_admin, list_stat_ds, remove) -> None:
         """
         Testing the DELETE HTTPS for the /statistics-datasets resource
         :param mocker: the pytest mocker object
@@ -179,15 +175,13 @@ class TestResourcesStatisticsDataSetsSuite:
                      side_effect=list_stat_ds)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_statistics_dataset",
                      side_effect=remove)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.UNAUTHORIZED_STATUS_CODE
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE}")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -201,8 +195,8 @@ class TestResourcesStatisticsDataSetsSuite:
         assert response_data_dict == {}
         assert response.status_code == constants.HTTPS.OK_STATUS_CODE
 
-    def test_satistics_datasets_ids_get(self, mocker, flask_app, not_logged_in, logged_in,
-                                        logged_in_as_admin, get_stat_ds, update):
+    def test_satistics_datasets_ids_get(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
+                                        logged_in_as_admin, get_stat_ds, update) -> None:
         """
         Testing the GET HTTPS for the /statistics-datasets/id resource
         :param mocker: the pytest mocker object
@@ -216,8 +210,7 @@ class TestResourcesStatisticsDataSetsSuite:
                      side_effect=get_stat_ds)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.update_statistics_dataset",
                      side_effect=update)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -232,8 +225,7 @@ class TestResourcesStatisticsDataSetsSuite:
         ex_st_ds_dict = ex_st_ds.to_dict()
         for k in response_data_dict:
             assert response_data_dict[k] == ex_st_ds_dict[k]
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=logged_in_as_admin)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=logged_in_as_admin)
         response = flask_app.test_client().get(f"{api_constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
@@ -242,8 +234,8 @@ class TestResourcesStatisticsDataSetsSuite:
         for k in response_data_dict:
             assert response_data_dict[k] == ex_st_ds_dict[k]
 
-    def test_statistics_datasets_ids_delete(self, mocker, flask_app, not_logged_in, logged_in,
-                                            logged_in_as_admin, get_stat_ds, remove):
+    def test_statistics_datasets_ids_delete(self, mocker: pytest_mock.MockFixture, flask_app, not_logged_in, logged_in,
+                                            logged_in_as_admin, get_stat_ds, remove) -> None:
         """
         Testing the DELETE HTTPS for the /statistics-datasets/id resource
         :param mocker: the pytest mocker object
@@ -257,8 +249,7 @@ class TestResourcesStatisticsDataSetsSuite:
                      side_effect=get_stat_ds)
         mocker.patch("csle_common.metastore.metastore_facade.MetastoreFacade.remove_statistics_dataset",
                      side_effect=remove)
-        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized",
-                     side_effect=not_logged_in)
+        mocker.patch("csle_rest_api.util.rest_api_util.check_if_user_is_authorized", side_effect=not_logged_in)
         response = flask_app.test_client().delete(f"{api_constants.MGMT_WEBAPP.STATISTICS_DATASETS_RESOURCE}/10")
         response_data = response.data.decode("utf-8")
         response_data_dict = json.loads(response_data)
