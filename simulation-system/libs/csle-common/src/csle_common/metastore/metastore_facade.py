@@ -53,8 +53,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATIONS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_emulation_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_emulation_record_to_dto(x), records))
 
     @staticmethod
     def list_emulations_ids() -> List[Tuple[int, str]]:
@@ -67,8 +66,8 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,name FROM {constants.METADATA_STORE.EMULATIONS_TABLE}")
-                records: List[Tuple[int, str]] = cur.fetchall()
-                return records
+                records = cur.fetchall()
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def get_emulation_by_name(name: str) -> Union[None, EmulationEnvConfig]:
@@ -120,11 +119,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATIONS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_simulation_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_simulation_record_to_dto(x), records))
 
     @staticmethod
-    def list_simulation_ids() -> List[Tuple[str, int]]:
+    def list_simulation_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of simulation ids and names in the metastore
         """
@@ -134,8 +132,8 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,name FROM {constants.METADATA_STORE.SIMULATIONS_TABLE}")
-                records: List[Tuple[str, int]] = cur.fetchall()
-                return records
+                records = cur.fetchall()
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def get_simulation_by_name(name: str) -> Union[None, SimulationEnvConfig]:
@@ -302,7 +300,10 @@ class MetastoreFacade:
                     config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} (name, config) "
                                 f"VALUES (%s, %s) RETURNING id", (config.name, config_json_str))
-                    id_of_new_row: int = cur.fetchone()[0]
+                    record = cur.fetchone()
+                    id_of_new_row = None
+                    if record is not None:
+                        id_of_new_row = int(record[0])
                     conn.commit()
                     Logger.__call__().get_logger().debug(f"Emulation {config.name} installed successfully")
                     return id_of_new_row
@@ -328,9 +329,10 @@ class MetastoreFacade:
                 cur.execute(f"DELETE FROM {constants.METADATA_STORE.EMULATIONS_TABLE} WHERE name = %s", (config.name,))
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Emulation {config.name} uninstalled successfully")
+        return None
 
     @staticmethod
-    def install_simulation(config: SimulationEnvConfig) -> Union[Any, int]:
+    def install_simulation(config: SimulationEnvConfig) -> Union[None, int]:
         """
         Installs the simulation configuration in the metastore
 
@@ -348,13 +350,17 @@ class MetastoreFacade:
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATIONS_TABLE} "
                                 f"(name, config) "
                                 f"VALUES (%s, %s) RETURNING id", (config.name, config_json_str))
-                    id_of_new_row = cur.fetchone()[0]
+                    record = cur.fetchone()
+                    id_of_new_row = None
+                    if record is not None:
+                        id_of_new_row = int(record[0])
                     conn.commit()
                     Logger.__call__().get_logger().debug(f"Simulation {config.name} installed successfully")
                     return id_of_new_row
                 except psycopg.errors.UniqueViolation as e:
                     Logger.__call__().get_logger().debug(f"Simulation {config.name} is already installed, "
                                                          f"{str(e), repr(e)}")
+                    return None
 
     @staticmethod
     def uninstall_simulation(config: SimulationEnvConfig) -> None:
@@ -396,7 +402,10 @@ class MetastoreFacade:
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_TRACES_TABLE} "
                             f"(id, emulation_name, trace) "
                             f"VALUES (%s, %s, %s) RETURNING id", (id, emulation_trace.emulation_name, config_json_str))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Emulation trace for "
                                                      f"emulation {emulation_trace.emulation_name} saved successfully")
@@ -427,7 +436,10 @@ class MetastoreFacade:
                             f"(id, emulation_name, statistics) "
                             f"VALUES (%s, %s, %s) RETURNING id", (id, emulation_statistics.emulation_name,
                                                                   config_json_str))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Statistics for emulation "
                                                      f"{emulation_statistics.emulation_name} saved successfully")
@@ -473,8 +485,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_emulation_statistics_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_emulation_statistics_record_to_dto(x), records))
 
     @staticmethod
     def list_emulation_statistics_ids() -> List[Tuple[int, str]]:
@@ -487,8 +498,8 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name FROM {constants.METADATA_STORE.EMULATION_STATISTICS_TABLE}")
-                records: List[Tuple[int, str]] = cur.fetchall()
-                return records
+                records = cur.fetchall()
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def list_emulation_traces() -> List[EmulationTrace]:
@@ -502,8 +513,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_emulation_trace_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_emulation_trace_record_to_dto(x), records))
 
     @staticmethod
     def list_emulation_traces_ids() -> List[Tuple[int, str]]:
@@ -516,11 +526,11 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name FROM {constants.METADATA_STORE.EMULATION_TRACES_TABLE}")
-                records: List[Tuple[int, str]] = cur.fetchall()
-                return records
+                records = cur.fetchall()
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
-    def list_emulation_simulation_traces_ids() -> List[Tuple[int, str]]:
+    def list_emulation_simulation_traces_ids() -> List[int]:
         """
         :return: A list of emulation-simulation traces ids in the metastore
         """
@@ -530,11 +540,11 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE}")
-                records: List[Tuple[int, str]] = cur.fetchall()
-                return records
+                records = cur.fetchall()
+                return list(map(lambda x: int(x[0]), records))
 
     @staticmethod
-    def list_simulation_traces_ids() -> List[Tuple]:
+    def list_simulation_traces_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of simulation traces ids in the metastore
         """
@@ -545,7 +555,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,gym_env FROM {constants.METADATA_STORE.SIMULATION_TRACES_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def list_simulation_traces() -> List[SimulationTrace]:
@@ -559,8 +569,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATION_TRACES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_simulation_trace_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_simulation_trace_record_to_dto(x), records))
 
     @staticmethod
     def remove_simulation_trace(simulation_trace: SimulationTrace) -> None:
@@ -725,7 +734,10 @@ class MetastoreFacade:
                 config_json_str = json.dumps(simulation_trace.to_dict(), indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATION_TRACES_TABLE} (gym_env, trace) "
                             f"VALUES (%s, %s) RETURNING id", (simulation_trace.simulation_env, config_json_str))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Simulation trace for "
                                                      f"env {simulation_trace.simulation_env} "
@@ -776,9 +788,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_SIMULATION_TRACES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_emulation_simulation_trace_record_to_dto(x),
-                                   records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_emulation_simulation_trace_record_to_dto(x),
+                                records))
 
     @staticmethod
     def get_emulation_simulation_trace(id: int) -> Union[None, EmulationSimulationTrace]:
@@ -819,7 +830,10 @@ class MetastoreFacade:
                 try:
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATION_IMAGES_TABLE} "
                                 f"(emulation_name, image) VALUES (%s, %s) RETURNING id", (emulation_name, img))
-                    id_of_new_row = cur.fetchone()[0]
+                    record = cur.fetchone()
+                    id_of_new_row = None
+                    if record is not None:
+                        id_of_new_row = int(record[0])
                     conn.commit()
                     Logger.__call__().get_logger().debug(f"Saved image for emulation {emulation_name} successfully")
                     return id_of_new_row
@@ -839,8 +853,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_IMAGES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_emulation_image_record_to_tuple(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_emulation_image_record_to_tuple(x), records))
 
     @staticmethod
     def get_emulation_image(emulation_name: str) -> Union[None, Tuple[str, bytes]]:
@@ -901,13 +914,17 @@ class MetastoreFacade:
                 try:
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.SIMULATION_IMAGES_TABLE} "
                                 f"(simulation_name, image) VALUES (%s, %s) RETURNING id", (simulation_name, img))
-                    id_of_new_row = cur.fetchone()[0]
+                    record = cur.fetchone()
+                    id_of_new_row = None
+                    if record is not None:
+                        id_of_new_row = int(record[0])
                     conn.commit()
                     Logger.__call__().get_logger().debug(f"Saved image for simulation {simulation_name} successfully")
                     return id_of_new_row
                 except Exception as e:
                     Logger.__call__().get_logger().warning(f"There was an error saving an image "
                                                            f"for simulation {simulation_name}, {str(e), repr(e)}")
+                    return None
 
     @staticmethod
     def list_simulation_images() -> List[Tuple[str, bytes]]:
@@ -921,8 +938,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SIMULATION_IMAGES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_simulation_image_record_to_tuple(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_simulation_image_record_to_tuple(x), records))
 
     @staticmethod
     def get_simulation_image(simulation_name: str) -> Union[None, Tuple[str, bytes]]:
@@ -967,7 +983,10 @@ class MetastoreFacade:
                             f"VALUES (%s, %s, %s) RETURNING id",
                             (config_json_str, experiment_execution.simulation_name,
                              experiment_execution.emulation_name))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug(f"Experiment execution for "
                                                      f"emulation {experiment_execution.emulation_name} "
@@ -987,11 +1006,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_experiment_execution_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_experiment_execution_record_to_dto(x), records))
 
     @staticmethod
-    def list_experiment_executions_ids() -> List[tuple]:
+    def list_experiment_executions_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of experiment execution ids in the metastore
         """
@@ -1003,7 +1021,7 @@ class MetastoreFacade:
                 cur.execute(f"SELECT id,simulation_name,emulation_name FROM "
                             f"{constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def _convert_experiment_execution_record_to_dto(experiment_execution_record) -> ExperimentExecution:
@@ -1072,9 +1090,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_multi_threshold_stopping_policy_record_to_dto(x),
+                return list(map(lambda x: MetastoreFacade._convert_multi_threshold_stopping_policy_record_to_dto(x),
                                    records))
-                return records
 
     @staticmethod
     def list_multi_threshold_stopping_policies_ids() -> List[Tuple[int, str]]:
@@ -1088,8 +1105,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM "
                             f"{constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE}")
-                records: List[Tuple[int, str]] = cur.fetchall()
-                return records
+                records = cur.fetchall()
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def _convert_multi_threshold_stopping_policy_record_to_dto(multi_threshold_stopping_policy_record) \
@@ -1171,7 +1188,10 @@ class MetastoreFacade:
                             f"(policy, sigmulation_name) "
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str,
                                                               multi_threshold_stopping_policy.simulation_name))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("Multi-threshold policy saved successfully")
                 return id_of_new_row
@@ -1201,11 +1221,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TRAINING_JOBS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_training_job_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_training_job_record_to_dto(x), records))
 
     @staticmethod
-    def list_training_jobs_ids() -> List[Tuple[int, str]]:
+    def list_training_jobs_ids() -> List[Tuple[int, str, str, int]]:
         """
         :return: A list of training job ids in the metastore
         """
@@ -1216,8 +1235,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name,emulation_name,pid FROM "
                             f"{constants.METADATA_STORE.TRAINING_JOBS_TABLE}")
-                records: List[Tuple[int, str]] = cur.fetchall()
-                return records
+                records = cur.fetchall()
+                return list(map(lambda x: (int(x[0]), str(x[1]), str(x[2]), int(x[3])), records))
 
     @staticmethod
     def get_training_job_config(id: int) -> Union[None, TrainingJobConfig]:
@@ -1260,7 +1279,10 @@ class MetastoreFacade:
                             f"VALUES (%s, %s, %s, %s, %s) RETURNING id",
                             (id, training_job_str, training_job.simulation_env_name,
                              training_job.emulation_env_name, training_job.pid))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("Training job saved successfully")
                 return id_of_new_row
@@ -1293,12 +1315,11 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_data_collection_job_record_to_dto(x),
+                return list(map(lambda x: MetastoreFacade._convert_data_collection_job_record_to_dto(x),
                                    records))
-                return records
 
     @staticmethod
-    def list_data_collection_jobs_ids() -> List[Tuple[int, str]]:
+    def list_data_collection_jobs_ids() -> List[Tuple[int, str, int]]:
         """
         :return: A list of data collection job ids in the metastore
         """
@@ -1308,8 +1329,8 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name,pid FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}")
-                records: List[Tuple[int, str]] = cur.fetchall()
-                return records
+                records = cur.fetchall()
+                return list(map(lambda x: (int(x[0]), str(x[1]), int(x[2])), records))
 
     @staticmethod
     def get_data_collection_job_config(id: int) -> Union[None, DataCollectionJobConfig]:
@@ -1355,7 +1376,10 @@ class MetastoreFacade:
                             f"VALUES (%s, %s, %s, %s) RETURNING id",
                             (id, data_collection_job_json, data_collection_job.emulation_env_name,
                              data_collection_job.pid))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("Data collection job saved successfully")
                 return id_of_new_row
@@ -1484,8 +1508,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.PPO_POLICIES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_ppo_policy_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_ppo_policy_record_to_dto(x), records))
 
     @staticmethod
     def list_ppo_policies_ids() -> List[Tuple[int, str]]:
@@ -1498,8 +1521,8 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.PPO_POLICIES_TABLE}")
-                records: List[Tuple[int, str]] = cur.fetchall()
-                return records
+                records = cur.fetchall()
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def _convert_ppo_policy_record_to_dto(ppo_policy_record) -> PPOPolicy:
@@ -1572,7 +1595,10 @@ class MetastoreFacade:
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.PPO_POLICIES_TABLE} "
                             f"(policy, simulation_name) "
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, ppo_policy.simulation_name))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("PPO policy saved successfully")
                 return id_of_new_row
@@ -1605,12 +1631,11 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_system_identification_job_record_to_dto(x),
+                return list(map(lambda x: MetastoreFacade._convert_system_identification_job_record_to_dto(x),
                                    records))
-                return records
 
     @staticmethod
-    def list_system_identification_jobs_ids() -> List[Tuple[int, str]]:
+    def list_system_identification_jobs_ids() -> List[Tuple[int, str, int]]:
         """
         :return: A list of system identification job ids in the metastore
         """
@@ -1621,8 +1646,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,emulation_name,pid FROM "
                             f"{constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
-                records: List[Tuple[int, str]] = cur.fetchall()
-                return records
+                records = cur.fetchall()
+                return list(map(lambda x: (int(x[0]), str(x[1]), int(x[2])), records))
 
     @staticmethod
     def get_system_identification_job_config(id: int) -> Union[None, SystemIdentificationJobConfig]:
@@ -1666,7 +1691,10 @@ class MetastoreFacade:
                             f"VALUES (%s, %s, %s) RETURNING id", (system_identification_job_json,
                                                                   system_identification_job.emulation_env_name,
                                                                   system_identification_job.pid))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("System identification job saved successfully")
                 return id_of_new_row
@@ -1745,12 +1773,11 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_gaussian_mixture_system_model_record_to_dto(x),
+                return list(map(lambda x: MetastoreFacade._convert_gaussian_mixture_system_model_record_to_dto(x),
                                    records))
-                return records
 
     @staticmethod
-    def list_gaussian_mixture_system_models_ids() -> List[Tuple]:
+    def list_gaussian_mixture_system_models_ids() -> List[Tuple[int, str, int]]:
         """
         :return: A list of gaussian mixture system model ids in the metastore
         """
@@ -1762,7 +1789,7 @@ class MetastoreFacade:
                 cur.execute(f"SELECT id,emulation_name,emulation_statistic_id FROM "
                             f"{constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1]), int(x[2])), records))
 
     @staticmethod
     def get_gaussian_mixture_system_model_config(id: int) -> Union[None, GaussianMixtureSystemModel]:
@@ -1808,7 +1835,10 @@ class MetastoreFacade:
                             (gaussian_mixture_system_model_json,
                              gaussian_mixture_system_model.emulation_env_name,
                              gaussian_mixture_system_model.emulation_statistic_id))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("Gaussian mixture model saved successfully")
                 return id_of_new_row
@@ -1873,11 +1903,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_tabular_policy_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_tabular_policy_record_to_dto(x), records))
 
     @staticmethod
-    def list_tabular_policies_ids() -> List[Dict]:
+    def list_tabular_policies_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of Tabular policies ids in the metastore
         """
@@ -1888,7 +1917,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.TABULAR_POLICIES_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def _convert_tabular_policy_record_to_dto(tabular_policy_record) -> TabularPolicy:
@@ -1961,7 +1990,10 @@ class MetastoreFacade:
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TABULAR_POLICIES_TABLE} "
                             f"(policy, simulation_name) "
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, tabular_policy.simulation_name))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("Tabular policy saved successfully")
                 return id_of_new_row
@@ -1978,11 +2010,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_alpha_vec_policy_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_alpha_vec_policy_record_to_dto(x), records))
 
     @staticmethod
-    def list_alpha_vec_policies_ids() -> List[Dict]:
+    def list_alpha_vec_policies_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of AlphaVec policies ids in the metastore
         """
@@ -1993,7 +2024,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def _convert_alpha_vec_policy_record_to_dto(alpha_vec_policy_record) -> AlphaVectorsPolicy:
@@ -2066,7 +2097,10 @@ class MetastoreFacade:
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.ALPHA_VEC_POLICIES_TABLE} "
                             f"(policy, simulation_name) "
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, alpha_vec_policy.simulation_name))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("AlphaVec policy saved successfully")
                 return id_of_new_row
@@ -2083,11 +2117,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.DQN_POLICIES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_dqn_policy_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_dqn_policy_record_to_dto(x), records))
 
     @staticmethod
-    def list_dqn_policies_ids() -> List[Dict]:
+    def list_dqn_policies_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of DQN policies ids in the metastore
         """
@@ -2098,7 +2131,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.DQN_POLICIES_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def _convert_dqn_policy_record_to_dto(dqn_policy_record) -> DQNPolicy:
@@ -2171,7 +2204,10 @@ class MetastoreFacade:
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.DQN_POLICIES_TABLE} "
                             f"(policy, simulation_name) "
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, dqn_policy.simulation_name))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("DQN policy saved successfully")
                 return id_of_new_row
@@ -2188,11 +2224,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_fnn_w_softmax_policy_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_fnn_w_softmax_policy_record_to_dto(x), records))
 
     @staticmethod
-    def list_fnn_w_softmax_policies_ids() -> Tuple[str]:
+    def list_fnn_w_softmax_policies_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of FNN with softmax policies ids in the metastore
         """
@@ -2203,7 +2238,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def _convert_fnn_w_softmax_policy_record_to_dto(fnn_w_softmax_policy_record) -> FNNWithSoftmaxPolicy:
@@ -2279,7 +2314,10 @@ class MetastoreFacade:
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.FNN_W_SOFTMAX_POLICIES_TABLE} "
                             f"(policy, simulation_name) "
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, fnn_w_softmax_policy.simulation_name))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("FNN with softmax policy saved successfully")
                 return id_of_new_row
@@ -2296,11 +2334,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_vector_policy_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_vector_policy_record_to_dto(x), records))
 
     @staticmethod
-    def list_vector_policies_ids() -> List[Dict]:
+    def list_vector_policies_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of vector policies ids in the metastore
         """
@@ -2311,7 +2348,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,simulation_name FROM {constants.METADATA_STORE.VECTOR_POLICIES_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def _convert_vector_policy_record_to_dto(vector_policy_record) -> VectorPolicy:
@@ -2384,13 +2421,16 @@ class MetastoreFacade:
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.VECTOR_POLICIES_TABLE} "
                             f"(policy, simulation_name) "
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str, vector_policy.simulation_name))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("vector policy saved successfully")
                 return id_of_new_row
 
     @staticmethod
-    def list_emulation_execution_ids() -> List[Tuple]:
+    def list_emulation_execution_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of emulation executions in the metastore
         """
@@ -2402,7 +2442,7 @@ class MetastoreFacade:
                 cur.execute(f"SELECT ip_first_octet,emulation_name FROM "
                             f"{constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def list_emulation_executions() -> List[EmulationExecution]:
@@ -2416,8 +2456,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_emulation_execution_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_emulation_execution_record_to_dto(x), records))
 
     @staticmethod
     def list_emulation_executions_for_a_given_emulation(emulation_name: str) -> List[EmulationExecution]:
@@ -2433,8 +2472,7 @@ class MetastoreFacade:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
                             f"WHERE emulation_name = %s", (emulation_name,))
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_emulation_execution_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_emulation_execution_record_to_dto(x), records))
 
     @staticmethod
     def list_emulation_executions_by_id(id: int) -> List[EmulationExecution]:
@@ -2450,8 +2488,7 @@ class MetastoreFacade:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMULATION_EXECUTIONS_TABLE} "
                             f"WHERE ip_first_octet = %s", (id,))
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_emulation_execution_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_emulation_execution_record_to_dto(x), records))
 
     @staticmethod
     def _convert_emulation_execution_record_to_dto(emulation_execution_record) -> EmulationExecution:
@@ -2593,12 +2630,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_empirical_system_model_record_to_dto(x),
-                                   records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_empirical_system_model_record_to_dto(x), records))
 
     @staticmethod
-    def list_empirical_system_models_ids() -> List[Dict]:
+    def list_empirical_system_models_ids() -> List[Tuple[int, str, int]]:
         """
         :return: A list of empirical system model ids in the metastore
         """
@@ -2610,7 +2645,7 @@ class MetastoreFacade:
                 cur.execute(f"SELECT id,emulation_name,emulation_statistic_id FROM "
                             f"{constants.METADATA_STORE.EMPIRICAL_SYSTEM_MODELS_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1]), int(x[2])), records))
 
     @staticmethod
     def get_empirical_system_model_config(id: int) -> Union[None, EmpiricalSystemModel]:
@@ -2654,7 +2689,10 @@ class MetastoreFacade:
                             f"VALUES (%s, %s, %s) RETURNING id", (empirical_system_model_json,
                                                                   empirical_system_model.emulation_env_name,
                                                                   empirical_system_model.emulation_statistic_id))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("empirical system model saved successfully")
                 return id_of_new_row
@@ -2729,12 +2767,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_mcmc_system_model_record_to_dto(x),
-                                   records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_mcmc_system_model_record_to_dto(x), records))
 
     @staticmethod
-    def list_mcmc_system_models_ids() -> List[Dict]:
+    def list_mcmc_system_models_ids() -> List[Tuple[int, str, int]]:
         """
         :return: A list of MCMC system model ids in the metastore
         """
@@ -2746,7 +2782,7 @@ class MetastoreFacade:
                 cur.execute(f"SELECT id,emulation_name,emulation_statistic_id FROM "
                             f"{constants.METADATA_STORE.MCMC_SYSTEM_MODELS_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1]), int(x[2])), records))
 
     @staticmethod
     def get_mcmc_system_model_config(id: int) -> Union[None, MCMCSystemModel]:
@@ -2789,7 +2825,10 @@ class MetastoreFacade:
                             f"VALUES (%s, %s, %s) RETURNING id", (mcmc_system_model_json,
                                                                   mcmc_system_model.emulation_env_name,
                                                                   mcmc_system_model.emulation_statistic_id))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("mcmc system model saved successfully")
                 return id_of_new_row
@@ -2865,12 +2904,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_gp_system_model_record_to_dto(x),
-                                   records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_gp_system_model_record_to_dto(x), records))
 
     @staticmethod
-    def list_gp_system_models_ids() -> List[Dict]:
+    def list_gp_system_models_ids() -> List[Tuple[int, str, int]]:
         """
         :return: A list of gp system model ids in the metastore
         """
@@ -2882,7 +2919,7 @@ class MetastoreFacade:
                 cur.execute(f"SELECT id,emulation_name,emulation_statistic_id FROM "
                             f"{constants.METADATA_STORE.GP_SYSTEM_MODELS_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1]), int(x[2])), records))
 
     @staticmethod
     def get_gp_system_model_config(id: int) -> Union[None, GPSystemModel]:
@@ -2925,7 +2962,10 @@ class MetastoreFacade:
                             f"VALUES (%s, %s, %s) RETURNING id", (gp_system_model_json,
                                                                   gp_system_model.emulation_env_name,
                                                                   gp_system_model.emulation_statistic_id))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("gp system model saved successfully")
                 return id_of_new_row
@@ -3002,12 +3042,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_management_user_record_to_dto(x),
-                                   records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_management_user_record_to_dto(x), records))
 
     @staticmethod
-    def list_management_users_ids() -> List[Tuple]:
+    def list_management_users_ids() -> List[int]:
         """
         :return: A list of management user ids in the metastore
         """
@@ -3019,7 +3057,7 @@ class MetastoreFacade:
                 cur.execute(f"SELECT id FROM "
                             f"{constants.METADATA_STORE.MANAGEMENT_USERS_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: int(x[0]), records))
 
     @staticmethod
     def get_management_user_config(id: int) -> Union[None, ManagementUser]:
@@ -3043,7 +3081,7 @@ class MetastoreFacade:
                 return record
 
     @staticmethod
-    def save_management_user(management_user: ManagementUser) -> int:
+    def save_management_user(management_user: ManagementUser) -> Union[None, int]:
         """
         Saves a management user to the metastore
 
@@ -3062,7 +3100,10 @@ class MetastoreFacade:
                             (management_user.username, management_user.password, management_user.email,
                              management_user.first_name, management_user.last_name, management_user.organization,
                              management_user.admin, management_user.salt))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("management user saved successfully")
                 return id_of_new_row
@@ -3157,9 +3198,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SESSION_TOKENS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_session_token_record_to_dto(x),
-                                   records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_session_token_record_to_dto(x), records))
 
     @staticmethod
     def get_session_token_metadata(token: str) -> Union[None, SessionToken]:
@@ -3183,7 +3222,7 @@ class MetastoreFacade:
                 return record
 
     @staticmethod
-    def save_session_token(session_token: SessionToken) -> str:
+    def save_session_token(session_token: SessionToken) -> Union[None, str]:
         """
         Saves a session token to the metastore
 
@@ -3202,14 +3241,17 @@ class MetastoreFacade:
                                 f"(token, timestamp, username) "
                                 f"VALUES (%s, %s, %s) RETURNING token",
                                 (session_token.token, ts, session_token.username))
-                    token_of_new_row = cur.fetchone()[0]
+                    record = cur.fetchone()
+                    token_of_new_row = None
+                    if record is not None:
+                        token_of_new_row = record[0]
                     conn.commit()
                     Logger.__call__().get_logger().debug("Session token saved successfully")
                     return token_of_new_row
                 except Exception as e:
                     Logger.__call__().get_logger().error(f"Could not save session token to database, error: {str(e)}, "
                                                          f"{repr(e)}")
-                    return ""
+                    return None
 
     @staticmethod
     def update_session_token(session_token: SessionToken, token: str) -> None:
@@ -3302,7 +3344,7 @@ class MetastoreFacade:
         return traces_dataset
 
     @staticmethod
-    def list_traces_datasets_ids() -> List[Dict]:
+    def list_traces_datasets_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of traces datasets ids in the metastore
         """
@@ -3313,7 +3355,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,name FROM {constants.METADATA_STORE.TRACES_DATASETS_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def list_traces_datasets() -> List[TracesDataset]:
@@ -3327,9 +3369,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.TRACES_DATASETS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_traces_dataset_record_to_dto(x),
-                                   records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_traces_dataset_record_to_dto(x), records))
 
     @staticmethod
     def get_traces_dataset_metadata(id: int) -> Union[None, TracesDataset]:
@@ -3388,7 +3428,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 schema_json_str = ""
-                if traces_dataset.data_schema is not None and traces_dataset.data_schema != "":
+                if traces_dataset.data_schema is not None:
                     schema_json_str = json.dumps(traces_dataset.data_schema, indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
                             f"(name, description, data_schema, download_count, file_path, url, date_added, num_traces, "
@@ -3402,7 +3442,10 @@ class MetastoreFacade:
                              traces_dataset.size_in_gb, traces_dataset.compressed_size_in_gb,
                              traces_dataset.citation, traces_dataset.num_files, traces_dataset.file_format,
                              traces_dataset.added_by, traces_dataset.columns))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("traces dataset saved successfully")
                 return id_of_new_row
@@ -3423,7 +3466,7 @@ class MetastoreFacade:
                              f"{constants.METADATA_STORE.HOST_PROPERTY}={constants.METADATA_STORE.HOST}") as conn:
             with conn.cursor() as cur:
                 schema_json_str = ""
-                if traces_dataset.data_schema is not None and traces_dataset.data_schema != "":
+                if traces_dataset.data_schema is not None:
                     schema_json_str = json.dumps(traces_dataset.data_schema, indent=4, sort_keys=True, cls=NpEncoder)
                 cur.execute(f"UPDATE "
                             f"{constants.METADATA_STORE.TRACES_DATASETS_TABLE} "
@@ -3486,7 +3529,7 @@ class MetastoreFacade:
         return statistics_dataset
 
     @staticmethod
-    def list_statistics_datasets_ids() -> List[Dict]:
+    def list_statistics_datasets_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of statistics datasets ids in the metastore
         """
@@ -3497,7 +3540,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id,name FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def list_statistics_datasets() -> List[StatisticsDataset]:
@@ -3511,9 +3554,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.STATISTICS_DATASETS_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_statistics_dataset_record_to_dto(x),
-                                   records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_statistics_dataset_record_to_dto(x), records))
 
     @staticmethod
     def get_statistics_dataset_metadata(id: int) -> Union[None, StatisticsDataset]:
@@ -3584,7 +3625,10 @@ class MetastoreFacade:
                              statistics_dataset.citation, statistics_dataset.num_files, statistics_dataset.file_format,
                              statistics_dataset.added_by, statistics_dataset.conditions, statistics_dataset.metrics,
                              statistics_dataset.num_conditions))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("statistics dataset saved successfully")
                 return id_of_new_row
@@ -3668,11 +3712,10 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.CONFIG_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_config_record_to_dto(x), records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_config_record_to_dto(x), records))
 
     @staticmethod
-    def list_config_ids() -> List[Dict]:
+    def list_config_ids() -> List[int]:
         """
         :return: A list of config ids in the metastore
         """
@@ -3683,7 +3726,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT id FROM {constants.METADATA_STORE.CONFIG_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: int(x[0]), records))
 
     @staticmethod
     def get_config(id: int) -> Union[None, Config]:
@@ -3723,7 +3766,10 @@ class MetastoreFacade:
                 cur.execute(f"INSERT INTO {constants.METADATA_STORE.CONFIG_TABLE} "
                             f"(id, config) "
                             f"VALUES (%s, %s) RETURNING id", (1, config_json,))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("config saved successfully")
                 return id_of_new_row
@@ -3784,12 +3830,11 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE}")
                 records = cur.fetchall()
-                records = list(map(lambda x: MetastoreFacade._convert_linear_threshold_stopping_policy_record_to_dto(x),
-                                   records))
-                return records
+                return list(map(lambda x: MetastoreFacade._convert_linear_threshold_stopping_policy_record_to_dto(x),
+                                 records))
 
     @staticmethod
-    def list_linear_threshold_stopping_policies_ids() -> List[Dict]:
+    def list_linear_threshold_stopping_policies_ids() -> List[Tuple[int, str]]:
         """
         :return: A list of Linear-threshold stopping policies ids in the metastore
         """
@@ -3801,7 +3846,7 @@ class MetastoreFacade:
                 cur.execute(f"SELECT id,simulation_name FROM "
                             f"{constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE}")
                 records = cur.fetchall()
-                return records
+                return list(map(lambda x: (int(x[0]), str(x[1])), records))
 
     @staticmethod
     def _convert_linear_threshold_stopping_policy_record_to_dto(linear_threshold_stopping_policy_record) \
@@ -3884,7 +3929,10 @@ class MetastoreFacade:
                             f"(policy, simulation_name) "
                             f"VALUES (%s, %s) RETURNING id", (policy_json_str,
                                                               linear_threshold_stopping_policy.simulation_name))
-                id_of_new_row = cur.fetchone()[0]
+                record = cur.fetchone()
+                id_of_new_row = None
+                if record is not None:
+                    id_of_new_row = int(record[0])
                 conn.commit()
                 Logger.__call__().get_logger().debug("Linear-threshold policy saved successfully")
                 return id_of_new_row
