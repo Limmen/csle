@@ -1430,6 +1430,7 @@ class DOCKER:
     IMAGE_CREATED = "Created"
     IMAGE_OS = "Os"
     IMAGE_SIZE = "Size"
+    IMAGE = "Image"
     IMAGE_ARCHITECTURE = "Architecture"
     REPO_TAGS = "RepoTags"
     ENTRYPOINT = "Entrypoint"

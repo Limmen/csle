@@ -1,5 +1,6 @@
 from typing import List, Union
 import docker
+from docker.models.containers import Container
 import os
 import json
 from csle_common.dao.docker.docker_container_metadata import DockerContainerMetadata
@@ -20,13 +21,11 @@ class DockerUtil:
 
         :return: a list of environment DTOs
         """
-        client_1 = docker.from_env()
-        client_2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
+        client_1: docker.DockerClient = docker.from_env()
+        client_2: docker.APIClient = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
         parsed_containers = DockerUtil.parse_running_containers(client_1=client_1, client_2=client_2)
-        for container in parsed_containers:
-            if container is None:
-                raise ValueError("contianer is None")
-        emulations: List[str] = list(set(list(map(lambda x: x.emulation, filter(lambda x: x is not None, parsed_containers)))))
+        emulations: List[str] = list(set(list(map(lambda x: x.emulation, filter(lambda x: x is not None,
+                                                                                parsed_containers)))))
         parsed_envs = DockerUtil.parse_running_emulation_envs(emulations=emulations, containers=parsed_containers)
         return parsed_envs
 
@@ -37,16 +36,18 @@ class DockerUtil:
 
         :return: the id
         """
-        client_1 = docker.from_env()
-        client_2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
-        containers = DockerUtil.parse_running_containers(client_1=client_1, client_2=client_2)
+        client_1: docker.DockerClient = docker.from_env()
+        client_2: docker.APIClient = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
+        containers: List[DockerContainerMetadata] = DockerUtil.parse_running_containers(client_1=client_1,
+                                                                                        client_2=client_2)
         for container in containers:
             if container.name == name:
                 return container.id
         return None
 
     @staticmethod
-    def parse_running_containers(client_1, client_2) -> List[DockerContainerMetadata]:
+    def parse_running_containers(client_1: docker.DockerClient, client_2: docker.APIClient) \
+            -> List[DockerContainerMetadata]:
         """
         Queries docker to get a list of all running containers
 
@@ -54,12 +55,13 @@ class DockerUtil:
         :param client_2:  docker client 2
         :return: list of parsed running containers
         """
-        containers = client_1.containers.list()
+        containers: List[Container] = client_1.containers.list()
         parsed_containers = DockerUtil.parse_containers(containers=containers, client2=client_2)
         return parsed_containers
 
     @staticmethod
-    def parse_stopped_containers(client_1, client2) -> List[DockerContainerMetadata]:
+    def parse_stopped_containers(client_1: docker.DockerClient, client2: docker.APIClient) \
+            -> List[DockerContainerMetadata]:
         """
         Queries docker to get a list of all stopped csle containers
 
@@ -67,8 +69,8 @@ class DockerUtil:
         :param client2: docker client 2
         :return: list of parsed containers
         """
-        containers = client_1.containers.list(all=True)
-        stopped_containers = list(filter(
+        containers: List[docker.models.containers.Container] = client_1.containers.list(all=True)
+        stopped_containers: List[docker.models.containers.Container] = list(filter(
             lambda x: (x.status == constants.DOCKER.CONTAINER_EXIT_STATUS
                        or x.status == constants.DOCKER.CONTAINER_CREATED_STATUS), containers))
         parsed_containers = DockerUtil.parse_containers(containers=stopped_containers, client2=client2)
@@ -103,7 +105,8 @@ class DockerUtil:
         return parsed_envs
 
     @staticmethod
-    def parse_containers(containers, client2) -> List[DockerContainerMetadata]:
+    def parse_containers(containers: List[docker.models.containers.Container], client2: docker.APIClient) \
+            -> List[DockerContainerMetadata]:
         """
         Queries docker to get a list of running or stopped csle containers
 
@@ -122,10 +125,10 @@ class DockerUtil:
                 if len(list(inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS].keys())) > 0:
                     net = list(inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS].keys())[0]
                 labels = c.labels
-                config_path = None
-                dir_path = None
-                emulation = None
-                kafka_config = None
+                config_path = ""
+                dir_path = ""
+                emulation = ""
+                kafka_config = ""
                 if constants.DOCKER.CFG in labels:
                     config_path = labels[constants.DOCKER.CFG]
                 if constants.DOCKER.CONTAINER_CONFIG_DIR in labels:
@@ -134,7 +137,6 @@ class DockerUtil:
                     emulation = labels[constants.DOCKER.EMULATION]
                 if constants.DOCKER.KAFKA_CONFIG in labels:
                     kafka_config = labels[constants.DOCKER.KAFKA_CONFIG]
-
                 ip = ""
                 network_id = -1
                 gateway = ""
@@ -151,20 +153,14 @@ class DockerUtil:
                         constants.DOCKER.MAC_ADDRESS_INFO]
                     ip_prefix_len = inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
                         constants.DOCKER.IP_PREFIX_LEN_INFO]
-                if emulation is None:
-                    raise ValueError("emulation is None, cannot be None")
                 parsed_c = DockerContainerMetadata(
                     name=c.name, status=c.status, short_id=c.short_id, image_short_id=c.image.short_id,
                     image_tags=c.image.tags, id=c.id,
                     created=inspect_info[constants.DOCKER.CREATED_INFO],
-                    ip=ip,
-                    network_id=network_id,
-                    gateway=gateway,
-                    mac=mac,
-                    ip_prefix_len=ip_prefix_len,
+                    ip=ip, network_id=network_id, gateway=gateway, mac=mac, ip_prefix_len=ip_prefix_len,
                     name2=container_name_2, level=level,
                     hostname=inspect_info[constants.DOCKER.CONFIG][constants.DOCKER.HOSTNAME_INFO],
-                    image_name=inspect_info[constants.DOCKER.CONFIG]["Image"],
+                    image_name=inspect_info[constants.DOCKER.CONFIG][constants.DOCKER.IMAGE],
                     net=net, dir=dir_path, config_path=config_path,
                     container_handle=c, emulation=emulation, kafka_container=kafka_config)
                 parsed_containers.append(parsed_c)
