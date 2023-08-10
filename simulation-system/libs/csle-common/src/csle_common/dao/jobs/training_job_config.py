@@ -12,7 +12,7 @@ class TrainingJobConfig(JSONSerializable):
 
     def __init__(self, simulation_env_name: str, experiment_config: ExperimentConfig,
                  progress_percentage: float, pid: int, experiment_result: ExperimentResult,
-                 emulation_env_name: Union[str, None], simulation_traces: List[SimulationTrace],
+                 emulation_env_name: str, simulation_traces: List[SimulationTrace],
                  num_cached_traces: int, log_file_path: str, descr: str, physical_host_ip: str) -> None:
         """
         Initializes the DTO
