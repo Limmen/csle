@@ -462,7 +462,7 @@ class MetastoreFacade:
                                                      f"updated successfully")
 
     @staticmethod
-    def list_emulation_statistics() -> List[EmulationStatistics]:
+    def list_emulation_statistics() -> List[Tuple[Any, ...]]:
         """
         :return: A list of emulation statistics in the metastore
         """
