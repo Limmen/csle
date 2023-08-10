@@ -533,7 +533,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_simulation_traces_ids() -> List[Dict]:
+    def list_simulation_traces_ids() -> List[Tuple]:
         """
         :return: A list of simulation traces ids in the metastore
         """
