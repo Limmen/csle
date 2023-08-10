@@ -57,7 +57,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_emulations_ids() -> List[Tuple]:
+    def list_emulations_ids() -> List[Tuple[str, int]]:
         """
         :return: A list of emulation ids in the metastore
         """
@@ -71,7 +71,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def get_emulation_by_name(name: Union[None, str]) -> Union[None, EmulationEnvConfig]:
+    def get_emulation_by_name(name: str) -> Union[None, EmulationEnvConfig]:
         """
         Function for extracting the metadata of an emulation with a given name
 
@@ -124,7 +124,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_simulation_ids() -> List[Dict]:
+    def list_simulation_ids() -> List[Tuple[Any, ...]]:
         """
         :return: A list of simulation ids and names in the metastore
         """
@@ -285,7 +285,7 @@ class MetastoreFacade:
         return emulation_name, image_bytes
 
     @staticmethod
-    def install_emulation(config: EmulationEnvConfig) -> Union[Any, int]:
+    def install_emulation(config: EmulationEnvConfig) -> Any:
         """
         Installs the emulation configuration in the metastore
 
@@ -302,6 +302,7 @@ class MetastoreFacade:
                     config_json_str = json.dumps(config.to_dict(), indent=4, sort_keys=True)
                     cur.execute(f"INSERT INTO {constants.METADATA_STORE.EMULATIONS_TABLE} (name, config) "
                                 f"VALUES (%s, %s) RETURNING id", (config.name, config_json_str))
+
                     id_of_new_row = cur.fetchone()[0]
                     conn.commit()
                     Logger.__call__().get_logger().debug(f"Emulation {config.name} installed successfully")
@@ -329,7 +330,7 @@ class MetastoreFacade:
                 Logger.__call__().get_logger().debug(f"Emulation {config.name} uninstalled successfully")
 
     @staticmethod
-    def install_simulation(config: SimulationEnvConfig) -> Union[Any, int]:
+    def install_simulation(config: SimulationEnvConfig) -> Any:
         """
         Installs the simulation configuration in the metastore
 
@@ -476,7 +477,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_emulation_statistics_ids() -> List[Tuple]:
+    def list_emulation_statistics_ids() -> List[Tuple[Any, ...]]:
         """
         :return: A list of emulation statistics ids in the metastore
         """
@@ -505,7 +506,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_emulation_traces_ids() -> List[Tuple]:
+    def list_emulation_traces_ids() -> List[Tuple[Any, ...]]:
         """
         :return: A list of emulation traces ids in the metastore
         """
@@ -519,7 +520,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_emulation_simulation_traces_ids() -> List[Dict]:
+    def list_emulation_simulation_traces_ids() -> List[Dict[Any, Any]]:
         """
         :return: A list of emulation-simulation traces ids in the metastore
         """
@@ -533,7 +534,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_simulation_traces_ids() -> List[Tuple]:
+    def list_simulation_traces_ids() -> List[Tuple[Any, ...]]:
         """
         :return: A list of simulation traces ids in the metastore
         """
@@ -1609,7 +1610,7 @@ class MetastoreFacade:
                 return records
 
     @staticmethod
-    def list_system_identification_jobs_ids() -> List[Dict]:
+    def list_system_identification_jobs_ids() -> List[Tuple[Any, ...]]:
         """
         :return: A list of system identification job ids in the metastore
         """

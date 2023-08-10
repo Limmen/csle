@@ -285,9 +285,9 @@ class ExportUtil:
         conditions = ",".join(emulation_statistic.conditions)
         num_conditions = emulation_statistic.num_conditions
         statistics_dict: Dict[str, Any] = emulation_statistic.to_dict()
-        statistics_dict = json.dumps(statistics_dict, indent=4, sort_keys=True)
+        statistics_dict_1 = json.dumps(statistics_dict, indent=4, sort_keys=True)
         with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{file_name}", 'w', encoding='utf-8') as f:
-            f.write(statistics_dict)
+            f.write(statistics_dict_1)
         file_format = "json"
         with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{constants.DATASETS.METADATA_FILE_NAME}", 'w',
                      encoding='utf-8') as f:
