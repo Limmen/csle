@@ -8,7 +8,7 @@ class DockerContainerMetadata(JSONSerializable):
     """
 
     def __init__(self, name: str, status: str, short_id: str, image_short_id: str, image_tags: list, id: str,
-                 created: str, ip: str, network_id: str, gateway: str, mac: str, ip_prefix_len: int,
+                 created: str, ip: str, network_id: int, gateway: str, mac: str, ip_prefix_len: int,
                  name2: str, level: str, hostname: str, image_name: str, net: str,
                  dir: str, config_path: str, container_handle: str, emulation: str, kafka_container: str):
         """

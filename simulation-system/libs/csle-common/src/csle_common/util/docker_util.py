@@ -23,7 +23,10 @@ class DockerUtil:
         client_1 = docker.from_env()
         client_2 = docker.APIClient(base_url=constants.DOCKER.UNIX_DOCKER_SOCK_URL)
         parsed_containers = DockerUtil.parse_running_containers(client_1=client_1, client_2=client_2)
-        emulations = list(set(list(map(lambda x: x.emulation, parsed_containers))))
+        for container in parsed_containers:
+            if container is None:
+                raise ValueError("contianer is None")
+        emulations: List[str] = list(set(list(map(lambda x: x.emulation, filter(lambda x: x is not None, parsed_containers)))))
         parsed_envs = DockerUtil.parse_running_emulation_envs(emulations=emulations, containers=parsed_containers)
         return parsed_envs
 
@@ -148,6 +151,8 @@ class DockerUtil:
                         constants.DOCKER.MAC_ADDRESS_INFO]
                     ip_prefix_len = inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
                         constants.DOCKER.IP_PREFIX_LEN_INFO]
+                if emulation is None:
+                    raise ValueError("emulation is None, cannot be None")
                 parsed_c = DockerContainerMetadata(
                     name=c.name, status=c.status, short_id=c.short_id, image_short_id=c.image.short_id,
                     image_tags=c.image.tags, id=c.id,
