@@ -1,4 +1,4 @@
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Any
 import numpy as np
 import torch
 import math
@@ -50,7 +50,7 @@ class PPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.PPO
 
-    def action(self, o: List[float]) -> Union[int, List[int], np.ndarray]:
+    def action(self, o: Union[List[float], List[int]]) -> Union[int, List[int], np.ndarray[Any, Any]]:
         """
         Multi-threshold stopping policy
 
@@ -60,7 +60,7 @@ class PPOPolicy(Policy):
         a, _ = self.model.predict(np.array(o), deterministic=False)
         return a
 
-    def probability(self, o: List[float], a: int) -> float:
+    def probability(self, o: Union[List[float], List[int]], a: int) -> float:
         """
         Multi-threshold stopping policy
 
@@ -72,11 +72,11 @@ class PPOPolicy(Policy):
             actions=torch.tensor(a)).item())
         return prob
 
-    def to_dict(self) -> Dict[str, Union[float, int, str]]:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the policy
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
         d["save_path"] = self.save_path
@@ -96,7 +96,7 @@ class PPOPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "PPOPolicy":
+    def from_dict(d: Dict[str, Any]) -> "PPOPolicy":
         """
         Converst a dict representation of the object to an instance
 
@@ -110,7 +110,7 @@ class PPOPolicy(Policy):
         obj.id = d["id"]
         return obj
 
-    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
+    def stage_policy(self, o: Union[List[int], List[float]]) -> List[List[float]]:
         """
         Gets the stage policy, i.e a |S|x|A| policy
 
