@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Optional, List, Dict, Any
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_common.dao.emulation_config.credential import Credential
@@ -10,7 +10,7 @@ class NetworkService(JSONSerializable):
     DTO Class representing a service in the network
     """
 
-    def __init__(self, protocol: TransportProtocol, port: int, name: str, credentials: List[Credential] = None):
+    def __init__(self, protocol: TransportProtocol, port: int, name: str, credentials: Optional[List[Credential]] = None):
         """
         Initializes the DTO
 

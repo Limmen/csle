@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Optional, List, Dict, Any
 from csle_common.dao.emulation_observation.common.emulation_port_observation_state \
     import EmulationPortObservationState
 from csle_common.dao.emulation_observation.common.emulation_connection_observation_state \
@@ -22,9 +22,9 @@ class EmulationDefenderMachineObservationState(JSONSerializable):
     """
 
     def __init__(self, ips: List[str], kafka_config: KafkaConfig,
-                 host_metrics: HostMetrics = None, docker_stats: DockerStats = None,
-                 snort_ids_ip_alert_counters: SnortIdsIPAlertCounters = None,
-                 ossec_ids_alert_counters: OSSECIdsAlertCounters = None):
+                 host_metrics: Optional[HostMetrics] = None, docker_stats: Optional[DockerStats] = None,
+                 snort_ids_ip_alert_counters: Optional[SnortIdsIPAlertCounters] = None,
+                 ossec_ids_alert_counters: Optional[OSSECIdsAlertCounters] = None):
         """
         Initializes the DTO
 

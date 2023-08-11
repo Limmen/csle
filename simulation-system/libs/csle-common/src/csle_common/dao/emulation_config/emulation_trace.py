@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Tuple, Union
+from typing import Optional, List, Dict, Any, Tuple, Union
 import json
 import os
 import numpy as np
@@ -93,7 +93,7 @@ class EmulationTrace(JSONSerializable):
         return d
 
     @staticmethod
-    def save_traces_to_disk(traces_save_dir, traces: List["EmulationTrace"], traces_file: str = None) -> None:
+    def save_traces_to_disk(traces_save_dir, traces: List["EmulationTrace"], traces_file: Optional[str] = None) -> None:
         """
         Utility function for saving a list of traces to a json file
 

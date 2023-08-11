@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Optional, List, Dict, Any
 import time
 from csle_common.dao.emulation_action.defender.emulation_defender_action_type import EmulationDefenderActionType
 from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
@@ -15,7 +15,7 @@ class EmulationDefenderAction(JSONSerializable):
                  type: EmulationDefenderActionType, descr: str,
                  ips: List[str], index: int,
                  action_outcome: EmulationDefenderActionOutcome = EmulationDefenderActionOutcome.GAME_END,
-                 alt_cmds: List[str] = None, execution_time: float = 0.0, ts: float = 0.0):
+                 alt_cmds: Optional[List[str]] = None, execution_time: float = 0.0, ts: float = 0.0):
         """
         Class constructor
 

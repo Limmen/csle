@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Optional, Dict, Any
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_observation.common.emulation_port_observation_state import EmulationPortObservationState
 from csle_common.dao.emulation_action_result.nmap_port_status import NmapPortStatus
@@ -15,8 +15,8 @@ class NmapPort(JSONSerializable):
     """
 
     def __init__(self, port_id: int, protocol: TransportProtocol, status: NmapPortStatus = NmapPortStatus.DOWN,
-                 service_name: str = "none", http_enum: NmapHttpEnum = None,
-                 http_grep: NmapHttpGrep = None, vulscan: NmapVulscan = None, service_version: str = "",
+                 service_name: str = "none", http_enum: Optional[NmapHttpEnum] = None,
+                 http_grep: Optional[NmapHttpGrep] = None, vulscan: Optional[NmapVulscan] = None, service_version: str = "",
                  service_fp: str = ""):
         """
         Initializes the DTO

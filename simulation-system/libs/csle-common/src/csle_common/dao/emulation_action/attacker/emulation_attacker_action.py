@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict, Any
+from typing import Optional, List, Tuple, Dict, Any
 import time
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
@@ -15,8 +15,8 @@ class EmulationAttackerAction(JSONSerializable):
     def __init__(self, id: EmulationAttackerActionId, name: str, cmds: List[str],
                  type: EmulationAttackerActionType, descr: str, ips: List[str], index: int,
                  action_outcome: EmulationAttackerActionOutcome = EmulationAttackerActionOutcome.INFORMATION_GATHERING,
-                 vulnerability: str = None, alt_cmds: List[str] = None, backdoor: bool = False,
-                 execution_time: float = 0.0, ts: float = None):
+                 vulnerability: Optional[str] = None, alt_cmds: Optional[List[str]] = None, backdoor: bool = False,
+                 execution_time: float = 0.0, ts: Optional[float] = None):
         """
         Class constructor
 
@@ -56,7 +56,7 @@ class EmulationAttackerAction(JSONSerializable):
         self.execution_time = execution_time
         self.ts = ts
 
-    def nmap_cmds(self, machine_ips: List[str] = None) -> Tuple[List[str], List[str]]:
+    def nmap_cmds(self, machine_ips: Optional[List[str]] = None) -> Tuple[List[str], List[str]]:
         """
         Augments the original command of the action with extra flags for NMAP
 

@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Optional, List, Dict, Any
 from csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state import \
     EmulationVulnerabilityObservationState
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
@@ -12,7 +12,7 @@ class NmapVuln(JSONSerializable):
     """
 
     def __init__(self, name: str, port: int, protocol: TransportProtocol, cvss: float, service: str,
-                 credentials: List[Credential] = None):
+                 credentials: Optional[List[Credential]] = None):
         """
         Initializes the DTO
 

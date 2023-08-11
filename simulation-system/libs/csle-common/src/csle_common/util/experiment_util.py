@@ -17,6 +17,7 @@ from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvCo
 from csle_common.dao.simulation_config.simulation_env_config import SimulationEnvConfig
 from csle_common.dao.encoding.np_encoder import NpEncoder
 import csle_common.constants.constants as constants
+from typing import Optional
 
 
 class ExperimentUtil:
@@ -77,7 +78,7 @@ class ExperimentUtil:
                                                   constants.EXPERIMENT.ENV_DATA_DIR, random_seed))
 
     @staticmethod
-    def setup_experiment_logger(name: str, logdir: str, time_str: str = None):
+    def setup_experiment_logger(name: str, logdir: str, time_str: Optional[str] = None):
         """
         Configures the logger for writing log-data of training
 
@@ -221,7 +222,7 @@ class ExperimentUtil:
         return script_dir
 
     @staticmethod
-    def default_emulation_config_path(out_dir: str = None) -> str:
+    def default_emulation_config_path(out_dir: Optional[str] = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to emulation config file
@@ -235,7 +236,7 @@ class ExperimentUtil:
         return config_path
 
     @staticmethod
-    def default_simulation_config_path(out_dir: str = None) -> str:
+    def default_simulation_config_path(out_dir: Optional[str] = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to simulatio config file
@@ -249,7 +250,7 @@ class ExperimentUtil:
         return config_path
 
     @staticmethod
-    def default_emulation_picture_path(out_dir: str = None) -> str:
+    def default_emulation_picture_path(out_dir: Optional[str] = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to emulation img file
@@ -262,7 +263,7 @@ class ExperimentUtil:
         return img_path
 
     @staticmethod
-    def default_simulation_picture_path(out_dir: str = None) -> str:
+    def default_simulation_picture_path(out_dir: Optional[str] = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to simulatio img file
@@ -276,7 +277,7 @@ class ExperimentUtil:
         return img_path
 
     @staticmethod
-    def default_containers_folders_path(out_dir: str = None) -> str:
+    def default_containers_folders_path(out_dir: Optional[str] = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to container folders
@@ -290,7 +291,7 @@ class ExperimentUtil:
         return config_path
 
     @staticmethod
-    def default_makefile_template_path(out_dir: str = None) -> str:
+    def default_makefile_template_path(out_dir: Optional[str] = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to makefile tempalte
@@ -305,7 +306,7 @@ class ExperimentUtil:
         return config_path
 
     @staticmethod
-    def default_makefile_path(out_dir: str = None) -> str:
+    def default_makefile_path(out_dir: Optional[str] = None) -> str:
         """
         :param out_dir: directory to write
         :return: the default path to makefile tempalte

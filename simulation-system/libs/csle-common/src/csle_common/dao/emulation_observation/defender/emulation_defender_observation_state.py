@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Union
+from typing import Optional, List, Dict, Any, Union
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state \
     import EmulationDefenderMachineObservationState
@@ -29,13 +29,13 @@ class EmulationDefenderObservationState(JSONSerializable):
     """
 
     def __init__(self, kafka_config: Union[KafkaConfig, None],
-                 client_population_metrics: ClientPopulationMetrics = None, docker_stats: DockerStats = None,
-                 snort_ids_alert_counters: SnortIdsAlertCounters = None,
-                 ossec_ids_alert_counters: OSSECIdsAlertCounters = None,
-                 aggregated_host_metrics: HostMetrics = None,
-                 defender_actions: List[EmulationDefenderAction] = None,
-                 attacker_actions: List[EmulationAttackerAction] = None,
-                 snort_ids_rule_counters: SnortIdsRuleCounters = None
+                 client_population_metrics: Optional[ClientPopulationMetrics] = None, docker_stats: Optional[DockerStats] = None,
+                 snort_ids_alert_counters: Optional[SnortIdsAlertCounters] = None,
+                 ossec_ids_alert_counters: Optional[OSSECIdsAlertCounters] = None,
+                 aggregated_host_metrics: Optional[HostMetrics] = None,
+                 defender_actions: Optional[List[EmulationDefenderAction]] = None,
+                 attacker_actions: Optional[List[EmulationAttackerAction]] = None,
+                 snort_ids_rule_counters: Optional[SnortIdsRuleCounters] = None
                  ):
         """
         Initializes the DTO

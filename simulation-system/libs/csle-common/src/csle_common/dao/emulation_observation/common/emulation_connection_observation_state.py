@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Optional, Dict, Any
 from csle_common.dao.emulation_config.credential import Credential
 from csle_base.json_serializable import JSONSerializable
 
@@ -9,8 +9,8 @@ class EmulationConnectionObservationState(JSONSerializable):
     """
 
     def __init__(self, conn, credential: Credential, root: bool, service: str, port: int, tunnel_thread=None,
-                 tunnel_port: int = None, interactive_shell=None,
-                 proxy: "EmulationConnectionObservationState" = None, ip: str = None):
+                 tunnel_port: Optional[int] = None, interactive_shell=None,
+                 proxy: Optional["EmulationConnectionObservationState"] = None, ip: Optional[str] = None):
         """
         Intializes the DTO
 

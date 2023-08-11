@@ -1,4 +1,4 @@
-from typing import List, Set, Dict, Any, Tuple
+from typing import Optional, List, Set, Dict, Any, Tuple
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state \
     import EmulationAttackerMachineObservationState
@@ -12,7 +12,7 @@ class EmulationAttackerObservationState(JSONSerializable):
     Represents the attacker's agent's current belief state of the emulation
     """
 
-    def __init__(self, catched_flags: int, agent_reachable: Set[str] = None):
+    def __init__(self, catched_flags: int, agent_reachable: Optional[Set[str]] = None):
         """
         Initializes the state
 

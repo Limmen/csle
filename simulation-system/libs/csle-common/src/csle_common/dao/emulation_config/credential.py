@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Optional, Dict, Any
 from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
 from csle_base.json_serializable import JSONSerializable
 
@@ -8,8 +8,8 @@ class Credential(JSONSerializable):
     A DTO Class to represent a credential to a service of some component in the infrastructure
     """
 
-    def __init__(self, username: str, pw: str, port: int = None, protocol: TransportProtocol = None,
-                 service: str = None, root: bool = False):
+    def __init__(self, username: str, pw: str, port: Optional[int] = None, protocol: Optional[TransportProtocol] = None,
+                 service: Optional[str] = None, root: bool = False):
         """
         Initializes the DTO
 
