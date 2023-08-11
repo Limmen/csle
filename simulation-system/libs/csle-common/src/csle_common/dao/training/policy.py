@@ -1,4 +1,4 @@
-from typing import Union, List, Dict
+from typing import Union, List, Dict, Any
 from abc import abstractmethod
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
@@ -21,7 +21,7 @@ class Policy(JSONSerializable):
         self.player_type = player_type
 
     @abstractmethod
-    def action(self, o: Union[List[Union[int, float]], int, float]) -> Union[int, float]:
+    def action(self, o: Any) -> Any:
         """
         Calculates the next action
 
@@ -40,7 +40,7 @@ class Policy(JSONSerializable):
         pass
 
     @abstractmethod
-    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
+    def stage_policy(self, o: Any) -> List[List[float]]:
         """
         Returns a stage policy (see Horak & Bosansky 2019)
 
@@ -61,7 +61,7 @@ class Policy(JSONSerializable):
         pass
 
     @abstractmethod
-    def probability(self, o: Union[List[Union[int, float]], int, float], a: int) -> float:
+    def probability(self, o: Any, a: int) -> float:
         """
         Calculates the probability of a given action for a given observation
 
