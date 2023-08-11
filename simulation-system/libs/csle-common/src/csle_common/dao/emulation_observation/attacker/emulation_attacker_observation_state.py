@@ -12,7 +12,7 @@ class EmulationAttackerObservationState(JSONSerializable):
     Represents the attacker's agent's current belief state of the emulation
     """
 
-    def __init__(self, catched_flags: int, agent_reachable: Optional[Set[str]] = None):
+    def __init__(self, catched_flags: int, agent_reachable: Optional[List[str]] = None):
         """
         Initializes the state
 
@@ -23,7 +23,7 @@ class EmulationAttackerObservationState(JSONSerializable):
         self.machines: List[EmulationAttackerMachineObservationState] = []
         self.catched_flags = catched_flags
         self.actions_tried: Set[Tuple[int, int, str]] = set()
-        self.agent_reachable: Set[str] = agent_reachable
+        self.agent_reachable = agent_reachable
         if agent_reachable is None:
             self.agent_reachable = set()
 

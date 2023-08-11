@@ -1,4 +1,4 @@
-from typing import Union, Dict, Any
+from typing import Union, Dict, Any, Optional
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state \
@@ -120,7 +120,7 @@ class EmulationEnvState(JSONSerializable):
 
         self.defender_obs_state.cleanup()
 
-    def get_attacker_machine(self, ip: str) -> Union[EmulationAttackerMachineObservationState, None]:
+    def get_attacker_machine(self, ip: Optional[str]) -> Union[EmulationAttackerMachineObservationState, None]:
         """
         Utility function for extracting the attacker machine from the attacker's observation
 
