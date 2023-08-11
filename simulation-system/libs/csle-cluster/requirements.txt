@@ -2,5 +2,5 @@ csle-base==0.2.19
 csle-common==0.2.19
 csle-collector==0.2.19
 csle-ryu==0.2.19
-grcpio==1.46.3
-grpcio-tools==1.46.3
+grcpio==1.57.0
+grpcio-tools==1.57.0

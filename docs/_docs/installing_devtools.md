@@ -66,7 +66,7 @@ Listing 113: Command to install `flake8`.
 The `mypy` static type checker and associated type libraries for Python can be installed by running the command:
 
 ```bash
-python3 -m pip install -U mypy types-protobuf types-paramiko types-requests types-urllib3
+python3 -m pip install -U mypy mypy-extensions mypy-protobuf types-PyYAML types-protobuf types-paramiko types-requests types-urllib3
 ```
 
 <p class="captionFig">

@@ -35,6 +35,7 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --gr
 - `docker` (for interacting with Docker)
 - `requests` (for interacting with the Ryu Controller's web interface)
 - `netifaces` (networking utility)
+- `PyYaml` (for parsing yaml files)
 
 ## Development Requirements
 
@@ -45,8 +46,9 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --gr
 - `pytest` (for unit tests)
 - `pytest-cov` (for unit test coverage)
 - `mypy` (for static typing)
+- `mypy-extensions` (for static typing)
 - `mypy-protobuf` (for static typing)
-- `types-yaml` (for static typing)
+- `types-PyYaml` (for static typing)
 - `types-paramiko` (for static typing)
 - `types-protobuf` (for static typing)
 - `types-requests` (for static typing)
