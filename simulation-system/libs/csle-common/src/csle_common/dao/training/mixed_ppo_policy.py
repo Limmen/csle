@@ -43,7 +43,7 @@ class MixedPPOPolicy(Policy):
         :param o: the current observation
         :return: the selected action
         """
-        policy = np.random.choice(self.ppo_policies)
+        policy: PPOPolicy = np.random.choice(self.ppo_policies)
         a = policy.action(o=o)
         return a
 

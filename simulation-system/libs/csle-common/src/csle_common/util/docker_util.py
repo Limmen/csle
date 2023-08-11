@@ -141,7 +141,7 @@ class DockerUtil:
                 network_id = -1
                 gateway = ""
                 mac = ""
-                ip_prefix_len = ""
+                ip_prefix_len = 0
                 if net is not None:
                     ip = inspect_info[constants.DOCKER.NETWORK_SETTINGS][constants.DOCKER.NETWORKS][net][
                         constants.DOCKER.IP_ADDRESS_INFO]
