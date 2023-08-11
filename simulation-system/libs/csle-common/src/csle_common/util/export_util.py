@@ -40,13 +40,13 @@ class ExportUtil:
         :param dir_path: the path to the directory
         :return: the size of the directory in GB
         """
-        total = 0
+        total = 0.0
         with os.scandir(dir_path) as it:
             for entry in it:
                 if entry.is_file():
                     total += entry.stat().st_size
                 elif entry.is_dir():
-                    total += ExportUtil.get_dir_size(entry.path)
+                    total += ExportUtil.get_dir_size_gb(entry.path)
         return round((float(total) / 1000000000), 2)
 
     @staticmethod
@@ -87,6 +87,8 @@ class ExportUtil:
             Logger.__call__().get_logger().info(f"Reading trace {i}/{len(emulation_traces_ids)} from the metastore, "
                                                 f"trace id: {id_obj[0]}")
             tr = MetastoreFacade.get_emulation_trace(id=id_obj[0])
+            if tr is None:
+                raise ValueError(f"Could not find an emulation trace with id: {id_obj[0]}")
             if num_attributes_per_time_step == -1:
                 num_attributes_per_time_step = tr.num_attributes_per_time_step()
             if schema is None:
@@ -111,7 +113,7 @@ class ExportUtil:
         num_traces = len(emulation_traces_ids)
         with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{constants.DATASETS.METADATA_FILE_NAME}", 'w',
                      encoding='utf-8') as f:
-            metadata_dict = {}
+            metadata_dict: Dict[str, Any] = {}
             metadata_dict[constants.DATASETS.FILE_FORMAT_PROPERTY] = file_format
             metadata_dict[constants.DATASETS.NUM_TRACES_PROPERTY] = num_traces
             metadata_dict[constants.DATASETS.NUM_ATTRIBUTES_PER_TIME_STEP_PROPERTY] = num_attributes_per_time_step
@@ -126,7 +128,7 @@ class ExportUtil:
 
     @staticmethod
     def extract_emulation_traces_dataset_metadata(dir_path: str, zip_file_path: str) \
-            -> Tuple[int, float, float, str, int, Dict[str, Any], int, int, str, str]:
+            -> Tuple[int, float, float, str, int, str, int, int, str, str]:
         """
         Extracts metadata of a traces dataset stored on disk
 
@@ -149,7 +151,7 @@ class ExportUtil:
             if constants.DATASETS.SCHEMA_PROPERTY in metadata_dict:
                 schema = metadata_dict[constants.DATASETS.SCHEMA_PROPERTY]
             else:
-                schema = {}
+                schema = ""
             if constants.DATASETS.NUM_TRACES_PROPERTY in metadata_dict:
                 num_traces = metadata_dict[constants.DATASETS.NUM_TRACES_PROPERTY]
             else:
@@ -173,7 +175,7 @@ class ExportUtil:
             if constants.DATASETS.COLUMNS_PROPERTY in metadata_dict:
                 columns = metadata_dict[constants.DATASETS.COLUMNS_PROPERTY]
             else:
-                columns = []
+                columns = ""
 
         num_files = len([name for name in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, name))]) - 1
         size_compressed_gb = round(float(os.path.getsize(zip_file_path)) / 1000000000, 2)
@@ -217,6 +219,8 @@ class ExportUtil:
         for i, id_obj in enumerate(emulation_traces_ids):
             Logger.__call__().get_logger().info(f"Reading trace {i}/{len(emulation_traces_ids)} from the metastore")
             tr = MetastoreFacade.get_emulation_trace(id=id_obj[0])
+            if tr is None:
+                raise ValueError(f"Could not find an emulation trace with id: {id_obj[0]}")
             tr_values, tr_labels = tr.to_csv_record(max_time_steps=max_time_steps, max_nodes=max_nodes,
                                                     max_ports=max_ports, max_vulns=max_vulns, null_value=null_value)
             if num_attributes_per_time_step == -1:
@@ -240,7 +244,7 @@ class ExportUtil:
         num_traces = len(emulation_traces_ids)
         with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{constants.DATASETS.METADATA_FILE_NAME}", 'w',
                      encoding='utf-8') as f:
-            metadata_dict = {}
+            metadata_dict: Dict[str, Any] = {}
             metadata_dict[constants.DATASETS.FILE_FORMAT_PROPERTY] = file_format
             metadata_dict[constants.DATASETS.NUM_TRACES_PROPERTY] = num_traces
             metadata_dict[constants.DATASETS.NUM_ATTRIBUTES_PER_TIME_STEP_PROPERTY] = num_attributes_per_time_step
@@ -270,6 +274,8 @@ class ExportUtil:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         emulation_statistic = MetastoreFacade.get_emulation_statistic(id=statistics_id)
+        if emulation_statistic is None:
+            raise ValueError(f"Could not find an emulation statistic with id: {statistics_id}")
         file_name = "statistics.json"
         Logger.__call__().get_logger().info(f"Exporting statistics with id {statistics_id} to file: {file_name}")
         emulation_statistic.compute_descriptive_statistics_and_distributions()
@@ -279,13 +285,13 @@ class ExportUtil:
         conditions = ",".join(emulation_statistic.conditions)
         num_conditions = emulation_statistic.num_conditions
         statistics_dict = emulation_statistic.to_dict()
-        statistics_dict = json.dumps(statistics_dict, indent=4, sort_keys=True)
+        statistics_dict_json = json.dumps(statistics_dict, indent=4, sort_keys=True)
         with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{file_name}", 'w', encoding='utf-8') as f:
-            f.write(statistics_dict)
+            f.write(statistics_dict_json)
         file_format = "json"
         with io.open(f"{output_dir}{constants.COMMANDS.SLASH_DELIM}{constants.DATASETS.METADATA_FILE_NAME}", 'w',
                      encoding='utf-8') as f:
-            metadata_dict = {}
+            metadata_dict: Dict[str, Any] = {}
             metadata_dict[constants.DATASETS.FILE_FORMAT_PROPERTY] = file_format
             metadata_dict[constants.DATASETS.NUM_MEASUREMENTS_PROPERTY] = num_measurements
             metadata_dict[constants.DATASETS.NUM_CONDITIONS_PROPERTY] = num_conditions
