@@ -52,7 +52,7 @@ class ExperimentResult(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["all_metrics"] = self.all_metrics
         d2 = {}
         for k, v in self.policies.items():
