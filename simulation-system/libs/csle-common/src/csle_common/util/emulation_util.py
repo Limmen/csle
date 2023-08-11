@@ -91,7 +91,7 @@ class EmulationUtil:
 
     @staticmethod
     def _list_all_users(c: EmulationConnectionObservationState, emulation_env_config: EmulationEnvConfig,
-                        telnet: bool = False) -> List:
+                        telnet: bool = False) -> List[str]:
         """
         List all users on a machine
 
@@ -105,9 +105,9 @@ class EmulationUtil:
         for i in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_FIND_USERS):
             if not telnet:
                 outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
-                outdata = outdata.decode()
-                errdata = errdata.decode()
-                users = outdata.split("\n")
+                outdata_1 = outdata.decode()
+                errdata_1 = errdata.decode()
+                users = outdata_1.split("\n")
                 users = list(filter(lambda x: x != '', users))
             else:
                 cmd = cmd + "\n"
@@ -285,8 +285,9 @@ class EmulationUtil:
         """
         if attack_action_id > len(env_state.attacker_action_config.actions) - 1:
             return False
-
         action = env_state.attacker_action_config.actions[attack_action_id]
+        if env_state.attacker_obs_state is None:
+            raise ValueError("Could not obtain EmulationAttackerObservationState")
         ip = env_state.attacker_obs_state.get_action_ips(action, emulation_env_config=env_config)
 
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=env_config, s=env_state)
