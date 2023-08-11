@@ -13,7 +13,7 @@ class FailedLoginAttempt:
         self.timestamp = None
 
     @staticmethod
-    def parse_from_str(login_attempt_str: str):
+    def parse_from_str(login_attempt_str: str) -> "FailedLoginAttempt":
         """
         Parses a failed login event DTO from a string
 

@@ -58,7 +58,6 @@ class SnortIdsManagerUtil:
         """
         cmd = constants.SNORT_IDS_ROUTER.TAIL_ALERTS_LATEST_COMMAND + " " + constants.SNORT_IDS_ROUTER.SNORT_ALERTS_FILE
         result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
-        year = datetime.datetime.now().year
         alerts = []
         year = datetime.datetime.now().year
         for line in result.stdout.split("\n"):
@@ -76,13 +75,17 @@ class SnortIdsManagerUtil:
             if len(alerts) == 0:
                 return datetime.datetime.now().timestamp()
             else:
-                return alerts[0].timestamp
+                if alerts[0].timestamp is None:
+                    raise ValueError("timestamp is None")
+                return float(alerts[0].timestamp)
         else:
-            return alerts[0].timestamp
+            if alerts[0].timestamp is None:
+                raise ValueError("timestamp is None")
+            return float(alerts[0].timestamp)
 
     @staticmethod
-    def read_snort_ids_data(episode_last_alert_ts: datetime) -> Tuple[SnortIdsAlertCounters, SnortIdsRuleCounters,
-                                                                      List[SnortIdsIPAlertCounters]]:
+    def read_snort_ids_data(episode_last_alert_ts: float) -> \
+            Tuple[SnortIdsAlertCounters, SnortIdsRuleCounters, List[SnortIdsIPAlertCounters]]:
         """
         Measures metrics from the Snort ids
 
@@ -153,7 +156,7 @@ class SnortIdsManagerUtil:
         :param snort_ids_log_dto: the DTO to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["timestamp"] = snort_ids_log_dto.timestamp
         d["ip"] = snort_ids_log_dto.ip
         d["attempted_admin_alerts"] = snort_ids_log_dto.attempted_admin_alerts

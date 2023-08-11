@@ -51,7 +51,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
                 script_file_str = f.read()
                 return script_file_str
         except Exception as e:
-            logging.info(f"Could not read the script file: {str(e)}, {repr(e)}")
+            raise ValueError(f"Could not read the script file: {str(e)}, {repr(e)}")
 
     def _create_traffic_script(self, commands: List[str], sleep_time: int) -> None:
         """
@@ -133,7 +133,7 @@ class TrafficManagerServicer(csle_collector.traffic_manager.traffic_manager_pb2_
         """
         logging.info(f"Starting the traffic generator, \n sleep_time: {request.sleepTime}, "
                      f"commands:{request.commands}")
-        commands = request.commands
+        commands = list(request.commands)
         sleep_time = request.sleepTime
         self._create_traffic_script(commands=commands, sleep_time=sleep_time)
         cmd = constants.TRAFFIC_GENERATOR.START_TRAFFIC_GENERATOR_CMD

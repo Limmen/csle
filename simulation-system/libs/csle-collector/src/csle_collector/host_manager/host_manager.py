@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 import logging
 import socket
 import netifaces
@@ -32,7 +32,7 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
             self.ip = socket.gethostbyname(self.hostname)
         self.conf = {constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.ip}:{constants.KAFKA.PORT}",
                      constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
-        self.host_monitor_thread = None
+        self.host_monitor_thread: Union[None, HostMonitorThread] = None
         logging.info(f"Starting the HostManager hostname: {self.hostname} ip: {self.ip}")
 
     def getHostMetrics(self, request: csle_collector.host_manager.host_manager_pb2.GetHostMetricsMsg,
@@ -242,7 +242,8 @@ class HostManagerServicer(csle_collector.host_manager.host_manager_pb2_grpc.Host
             kibana_ip=request.kibana_ip, kibana_port=request.kibana_port,
             elastic_ip=request.elastic_ip, elastic_port=request.elastic_port,
             num_elastic_shards=request.num_elastic_shards, reload_enabled=request.reload_enabled,
-            kafka_ip=request.kafka_ip, kafka_port=request.kafka_port, metricbeat_modules=request.metricbeat_modules)
+            kafka_ip=request.kafka_ip, kafka_port=request.kafka_port,
+            metricbeat_modules=list(request.metricbeat_modules))
         logging.info("Metricbeat configuration updated")
         monitor_running = self._is_monitor_running()
         filebeat_running = HostManagerServicer._get_filebeat_status()

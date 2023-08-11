@@ -1,3 +1,4 @@
+from typing import Union
 import logging
 import threading
 import time
@@ -41,6 +42,7 @@ class FailureDetector(threading.Thread):
         self.kafka_ip = kafka_ip
         self.kafka_port = kafka_port
         self.time_step_len = time_step_len
+        self.done = False
 
     def run(self) -> None:
         """
@@ -48,8 +50,8 @@ class FailureDetector(threading.Thread):
 
         :return: None
         """
-        done = False
-        while not done:
+        self.done = False
+        while not self.done:
             status_url = f"{constants.HTTP.HTTP_PROTOCOL_PREFIX}{self.ip}:{self.ryu_web_port}" \
                          f"{constants.RYU.STATUS_PRODUCER_HTTP_RESOURCE}"
             try:
@@ -101,7 +103,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         self.kafka_ip = ""
         self.kafka_port = 9092
         self.time_step_len = 30
-        self.fd = None
+        self.fd: Union[None, FailureDetector] = None
         logging.info(f"Setting up RyuManager hostname: {self.hostname} ip: {self.ip}")
 
     def _get_ryu_status(self) -> bool:
@@ -114,12 +116,14 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
         logging.info(f"Checking if Ryu controller is running by executing command: {cmd}")
         process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         stdout, stderr = process.communicate()
+        stdout_str = ""
+        stderr_str = ""
         if stdout is not None:
-            stdout = stdout.decode()
+            stdout_str = stdout.decode()
         if stderr is not None:
-            stderr = stderr.decode()
-        logging.info(f"Stdout: {stdout}, Stderr: {stderr}")
-        running = constants.RYU.SEARCH_CONTROLLER in stdout
+            stderr_str = stderr.decode()
+        logging.info(f"Stdout: {stdout_str}, Stderr: {stderr_str}")
+        running = constants.RYU.SEARCH_CONTROLLER in stdout_str
         logging.info(f"Running: {running}")
         return running
 
@@ -157,8 +161,10 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
             response = requests.get(status_url, timeout=constants.RYU.REQUEST_TIMEOUT_S)
 
         logging.info(f"Response: {response.json()}")
+        if constants.RYU.PRODUCER_RUNNING not in response.json():
+            raise ValueError("Invalid response from Ryu monitor")
         monitor_running = response.json()[constants.RYU.PRODUCER_RUNNING]
-        return monitor_running
+        return bool(monitor_running)
 
     def getRyuStatus(self, request: csle_collector.ryu_manager.ryu_manager_pb2.GetRyuStatusMsg,
                      context: grpc.ServicerContext) \
@@ -244,6 +250,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
                                  controller=self.controller, kafka_ip=self.kafka_ip, kafka_port=self.kafka_port,
                                  time_step_len=self.time_step_len)
             fd.start()
+            self.fd = fd
 
         ryu_dto = csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO(ryu_running=True, monitor_running=False,
                                                                     port=self.ryu_port,
@@ -278,7 +285,7 @@ class RyuManagerServicer(csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
                                                                  kafka_port=self.kafka_port,
                                                                  time_step_len=self.time_step_len)
 
-    def startRyuMonitor(self, request: csle_collector.ryu_manager.ryu_manager_pb2.StartRyuMsg,
+    def startRyuMonitor(self, request: csle_collector.ryu_manager.ryu_manager_pb2.StartRyuMonitorMsg,
                         context: grpc.ServicerContext) -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
         """
         Starts the ryu monitor

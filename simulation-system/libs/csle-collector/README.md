@@ -13,15 +13,15 @@ This library contains scripts and programs for collecting data from the emulatio
 
 To re-generate the gRPC files, run: 
 ```bash
-python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/client_manager/. ./protos/client_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/kafka_manager/. ./protos/kafka_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/elk_manager/. ./protos/elk_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/docker_stats_manager/. ./protos/docker_stats_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/snort_ids_manager/. ./protos/snort_ids_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/host_manager/. ./protos/host_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/ossec_ids_manager/. ./protos/ossec_ids_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/traffic_manager/. ./protos/traffic_manager.proto
-python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/ryu_manager/. ./protos/ryu_manager.proto
+python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/client_manager/. ./protos/client_manager.proto --mypy_out=./src/csle_collector/client_manager/.
+python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/kafka_manager/. ./protos/kafka_manager.proto --mypy_out=./src/csle_collector/kafka_manager/.
+python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/elk_manager/. ./protos/elk_manager.proto --mypy_out=./src/csle_collector/elk_manager/.
+python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/docker_stats_manager/. ./protos/docker_stats_manager.proto --mypy_out=./src/csle_collector/docker_stats_manager/.
+python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/snort_ids_manager/. ./protos/snort_ids_manager.proto --mypy_out=./src/csle_collector/snort_ids_manager/.
+python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/host_manager/. ./protos/host_manager.proto --mypy_out=./src/csle_collector/host_manager/.
+python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/ossec_ids_manager/. ./protos/ossec_ids_manager.proto --mypy_out=./src/csle_collector/ossec_ids_manager/.
+python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/traffic_manager/. ./protos/traffic_manager.proto --mypy_out=./src/csle_collector/traffic_manager/.
+python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --grpc_python_out=./src/csle_collector/ryu_manager/. ./protos/ryu_manager.proto --mypy_out=./src/csle_collector/ryu_manager/.
 ```
 
 ## Requirements
@@ -45,6 +45,8 @@ python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_collector/. --gr
 - `pytest` (for unit tests)
 - `pytest-cov` (for unit test coverage)
 - `mypy` (for static typing)
+- `mypy-protobuf` (for static typing)
+- `types-yaml` (for static typing)
 - `types-paramiko` (for static typing)
 - `types-protobuf` (for static typing)
 - `types-requests` (for static typing)

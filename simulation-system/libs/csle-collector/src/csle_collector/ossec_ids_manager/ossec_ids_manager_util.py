@@ -21,9 +21,9 @@ class OSSecManagerUtil:
         """
         cmd = constants.OSSEC.TAIL_ALERTS_COMMAND + " " + constants.OSSEC.OSSEC_ALERTS_FILE
         result = subprocess.run(cmd.split(" "), capture_output=True, text=True)
-        alerts = []
-        timestamp = " "
-        groups = []
+        alerts: List[OSSECIDSAlert] = []
+        timestamp = datetime.now()
+        groups: List[str] = []
         host = " "
         ip = " "
         ruleid = " "
@@ -39,43 +39,50 @@ class OSSecManagerUtil:
             if constants.OSSEC.ALERTLINE_REGEX.match(line):
                 linematched = 1
                 match = constants.OSSEC.ALERTLINE_REGEX.match(line)
-                groupstr = match.group(2).rstrip(',')
-                groups = groupstr.split(',')
+                if match is not None:
+                    groupstr = match.group(2).rstrip(',')
+                    groups = groupstr.split(',')
 
             if constants.OSSEC.DATELINEREGEX.match(line):
                 linematched = 1
                 match = constants.OSSEC.DATELINEREGEX.match(line)
-                datestr = match.group(0)
-                timestamp = datetime.strptime(datestr, "%Y %b %d %H:%M:%S")
+                if match is not None:
+                    datestr = match.group(0)
+                    timestamp = datetime.strptime(datestr, "%Y %b %d %H:%M:%S")
 
             if constants.OSSEC.HOSTLINE_REGEX.match(line):
                 linematched += 1
                 match = constants.OSSEC.HOSTLINE_REGEX.match(line)
-                host = match.group(1)
-                ip = match.group(2)
+                if match is not None:
+                    host = match.group(1)
+                    ip = match.group(2)
 
             if constants.OSSEC.SERVHOSTLINE_REGEX.match(line):
                 linematched += 1
                 match = constants.OSSEC.SERVHOSTLINE_REGEX.match(line)
-                host = match.group(1)
-                ip = '0.0.0.0'
+                if match is not None:
+                    host = match.group(1)
+                    ip = '0.0.0.0'
 
             if constants.OSSEC.RULELINE_REGEX.match(line):
                 linematched += 1
                 match = constants.OSSEC.RULELINE_REGEX.match(line)
-                ruleid = match.group(1)
-                level = match.group(2)
-                desc = match.group(3)
+                if match is not None:
+                    ruleid = match.group(1)
+                    level = int(match.group(2))
+                    desc = match.group(3)
 
             if constants.OSSEC.SRCIPLINE_REGEX.match(line):
                 linematched += 1
                 match = constants.OSSEC.SRCIPLINE_REGEX.match(line)
-                src = match.group(1)
+                if match is not None:
+                    src = match.group(1)
 
             if constants.OSSEC.USERLINE_REGEX.match(line):
                 linematched += 1
                 match = constants.OSSEC.USERLINE_REGEX.match(line)
-                user = match.group(1)
+                if match is not None:
+                    user = match.group(1)
 
             linesmatched += linematched
 
@@ -86,7 +93,7 @@ class OSSecManagerUtil:
                     print(alert)
                     alerts.append(alert)
                     linesmatched = 0
-                    timestamp = " "
+                    timestamp = datetime.now()
                     groups = []
                     host = " "
                     ip = " "
@@ -143,7 +150,7 @@ class OSSecManagerUtil:
         :param ossec_ids_log_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["timestamp"] = ossec_ids_log_dto.timestamp
         d["ip"] = ossec_ids_log_dto.ip
         d["attempted_admin_alerts"] = ossec_ids_log_dto.attempted_admin_alerts

@@ -31,7 +31,9 @@ class HostManagerUtil:
             year = datetime.datetime.now().year
             parsed_ts = FailedLoginAttempt.parse_from_str(str(year) + " " +
                                                           " ".join(login_attempts[-1][0:15].split())).timestamp
-            return parsed_ts
+            if parsed_ts is None or parsed_ts.timestamp is None:
+                raise ValueError("Could not parse the login attempts log")
+            return float(parsed_ts.timestamp)
         except Exception:
             return datetime.datetime.now().timestamp()
 
@@ -49,10 +51,12 @@ class HostManagerUtil:
         login_attempts = login_attempts_str.split("\n")
         login_attempts = list(filter(lambda x: x != "" and len(x) > 14, login_attempts))
         year = datetime.datetime.now().year
-        login_attempts = list(map(lambda x: FailedLoginAttempt.parse_from_str(
+        failed_login_attempts: List[FailedLoginAttempt] = list(map(lambda x: FailedLoginAttempt.parse_from_str(
             str(year) + " " + " ".join(x[0:15].split())), login_attempts))
-        login_attempts = list(filter(lambda x: x.timestamp > failed_auth_last_ts, login_attempts))
-        return len(login_attempts)
+        filtered_failed_login_attempts = list(filter(lambda x: (x is not None and x.timestamp is not None
+                                                               and float(x.timestamp)>failed_auth_last_ts),
+                                                     failed_login_attempts))
+        return len(filtered_failed_login_attempts)
 
     @staticmethod
     def read_latest_ts_login() -> float:
@@ -64,11 +68,13 @@ class HostManagerUtil:
         try:
             cmd = constants.HOST_METRICS.LIST_SUCCESSFUL_LOGIN_ATTEMPTS
             output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
-            logins = output.stdout
-            logins = logins.split("\n")
+            logins = output.stdout.split("\n")
             logins = list(filter(lambda x: x != "" and len(x) > 0 and "wtmp begins" not in x, logins))
             year = datetime.datetime.now().year
-            return SuccessfulLogin.parse_from_str(" ".join(logins[0].split()), year=year).timestamp
+            ts = SuccessfulLogin.parse_from_str(" ".join(logins[0].split()), year=year).timestamp
+            if ts is None:
+                raise ValueError("Could not read latest login timestamp")
+            return float(ts)
         except Exception:
             return datetime.datetime.now().timestamp()
 
@@ -82,8 +88,7 @@ class HostManagerUtil:
         """
         cmd = constants.HOST_METRICS.LIST_SUCCESSFUL_LOGIN_ATTEMPTS
         output = subprocess.run(cmd.split(" "), capture_output=True, text=True)
-        logins = output.stdout
-        logins = logins.split("\n")
+        logins = output.stdout.split("\n")
         logins = list(filter(lambda x: x != "" and len(x) > 0 and "wtmp begins" not in x, logins))
         year = datetime.datetime.now().year
         successful_logins = list(map(lambda x: SuccessfulLogin.parse_from_str(" ".join(x.split()), year=year), logins))

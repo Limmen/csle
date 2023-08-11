@@ -213,7 +213,7 @@ class SnortIdsAlertCounters:
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = self.ip
         d["ts"] = self.ts
         d["class_alerts"] = list(self.class_alerts)

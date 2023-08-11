@@ -17,7 +17,8 @@ def get_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Clie
     :return: a clientsDTO describing the state of the clients
     """
     get_clients_dto_msg = csle_collector.client_manager.client_manager_pb2.GetClientsMsg()
-    clients_dto = stub.getClients(get_clients_dto_msg, timeout=timeout)
+    clients_dto: csle_collector.client_manager.client_manager_pb2.ClientsDTO = \
+        stub.getClients(get_clients_dto_msg, timeout=timeout)
     return clients_dto
 
 
@@ -31,7 +32,8 @@ def stop_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cli
     :return: a clientsDTO describing the state of the clients
     """
     stop_clients_msg = csle_collector.client_manager.client_manager_pb2.StopClientsMsg()
-    clients_dto = stub.stopClients(stop_clients_msg, timeout=timeout)
+    clients_dto: csle_collector.client_manager.client_manager_pb2.ClientsDTO = \
+        stub.stopClients(stop_clients_msg, timeout=timeout)
     return clients_dto
 
 
@@ -54,7 +56,8 @@ def start_clients(stub: csle_collector.client_manager.client_manager_pb2_grpc.Cl
     start_clients_msg = csle_collector.client_manager.client_manager_pb2.StartClientsMsg(
         time_step_len_seconds=time_step_len_seconds, clients=clients_grpcs,
         workflows_config=workflows_config_grpc)
-    clients_dto = stub.startClients(start_clients_msg, timeout=timeout)
+    clients_dto: csle_collector.client_manager.client_manager_pb2.ClientsDTO = \
+        stub.startClients(start_clients_msg, timeout=timeout)
     return clients_dto
 
 

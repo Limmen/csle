@@ -8,7 +8,6 @@ from concurrent import futures
 import grpc
 import socket
 from confluent_kafka import Producer
-from collections import deque
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2_grpc
 import csle_collector.docker_stats_manager.docker_stats_manager_pb2
 from csle_collector.docker_stats_manager.docker_stats_manager_pb2 import ContainerIp
@@ -49,7 +48,7 @@ class DockerStatsThread(threading.Thread):
             streams.append((stream, container))
         self.stats_queue_maxsize = stats_queue_maxsize
         self.streams = streams
-        self.stats_queues = {}
+        self.stats_queues: Dict[str, List[DockerStats]] = {}
         self.time_step_len_seconds = time_step_len_seconds
         self.kafka_ip = kafka_ip
         self.kafka_port = kafka_port
@@ -93,8 +92,9 @@ class DockerStatsThread(threading.Thread):
                     stats_dict = next(stream)
                     parsed_stats = DockerStatsUtil.parse_stats(stats_dict, container.name)
                     if parsed_stats.container_name not in self.stats_queues:
-                        self.stats_queues[parsed_stats.container_name] = deque([], maxlen=self.stats_queue_maxsize)
-                    self.stats_queues[parsed_stats.container_name].append(parsed_stats)
+                        self.stats_queues[parsed_stats.container_name] = [parsed_stats]
+                    else:
+                        self.stats_queues[parsed_stats.container_name].append(parsed_stats)
             except BaseException as e:
                 logging.warning(f"Exception in monitor thread for emulation: "
                                 f"{self.emulation}, exception: {str(e)}, {repr(e)}")
@@ -149,7 +149,7 @@ class DockerStatsManagerServicer(csle_collector.docker_stats_manager.docker_stat
         dir = constants.LOG_FILES.DOCKER_STATS_MANAGER_LOG_DIR
         logfile = os.path.join(dir, file_name)
         logging.basicConfig(filename=logfile, level=logging.INFO)
-        self.docker_stats_monitor_threads = []
+        self.docker_stats_monitor_threads: List[DockerStatsThread] = []
         self.hostname = socket.gethostname()
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
@@ -232,8 +232,7 @@ class DockerStatsManagerServicer(csle_collector.docker_stats_manager.docker_stat
                 if dsmt.is_alive():
                     new_docker_stats_monitor_threads.append(dsmt)
         self.docker_stats_monitor_threads = new_docker_stats_monitor_threads
-
-        docker_stats_monitor_thread = DockerStatsThread(request.containers, request.emulation,
+        docker_stats_monitor_thread = DockerStatsThread(list(request.containers), request.emulation,
                                                         request.execution_first_ip_octet, request.kafka_ip,
                                                         request.stats_queue_maxsize, request.time_step_len_seconds,
                                                         request.kafka_port)

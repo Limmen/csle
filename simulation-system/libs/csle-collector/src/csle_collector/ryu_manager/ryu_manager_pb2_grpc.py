@@ -4,7 +4,6 @@ import grpc
 
 import csle_collector.ryu_manager.ryu_manager_pb2 as ryu__manager__pb2
 
-
 class RyuManagerStub(object):
     """Interface exported by the server
     """

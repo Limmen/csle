@@ -131,7 +131,7 @@ class WorkflowsConfig(JSONSerializable, GRPCSerializable):
 
         :return: the list of commands
         """
-        commands = []
+        commands: List[str] = []
         for w in self.workflow_services:
             commands = commands + w.get_commands()
         return commands

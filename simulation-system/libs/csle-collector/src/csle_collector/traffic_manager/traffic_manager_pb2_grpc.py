@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import csle_collector.traffic_manager.traffic_manager_pb2 as traffic__manager__pb2
+import traffic_manager_pb2 as traffic__manager__pb2
 
 
 class TrafficManagerStub(object):

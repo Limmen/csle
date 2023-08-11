@@ -30,12 +30,12 @@ class ArrivalThread(threading.Thread):
         """
         threading.Thread.__init__(self)
         self.time_step_len_seconds = time_step_len_seconds
-        self.client_threads = []
+        self.client_threads: List[ClientThread] = []
         self.t = 0
         self.clients = clients
         self.workflows_config = workflows_config
         self.stopped = False
-        self.rate = 0
+        self.rate = 0.0
         logging.info(f"Starting arrival thread, num client types:{len(self.clients)}, "
                      f"num workflows: {len(self.workflows_config.workflow_markov_chains)}")
 
@@ -48,7 +48,7 @@ class ArrivalThread(threading.Thread):
         :param arrival_config: the arrival process configuration
         :return: the rate
         """
-        rate = 0
+        rate = 0.0
         assert len(arrival_config.breakvalues) == len(arrival_config.breakpoints)
         for i in range(len(arrival_config.breakvalues)):
             if t >= arrival_config.breakpoints[i]:
@@ -65,7 +65,7 @@ class ArrivalThread(threading.Thread):
         :return: the rate
         """
         assert len(arrival_config.exponents) == len(arrival_config.factors)
-        rate = 0
+        rate = 0.0
         for i in range(len(arrival_config.exponents)):
             rate = arrival_config.factors[i] * math.exp(math.pow(-(t - arrival_config.exponents[i]), 2))
         return rate
@@ -106,10 +106,10 @@ class ArrivalThread(threading.Thread):
         :param arrival_config: the arrival process configuration
         :return: the rate
         """
-        theta_sum = 0
+        theta_sum = 0.0
         for i, theta in enumerate(arrival_config.thetas):
             theta_sum += theta * pow(t, i)
-        second_sum = 0
+        second_sum = 0.0
         for i, (gamma, phi, omega) in enumerate(zip(arrival_config.gammas, arrival_config.phis, arrival_config.omegas)):
             second_sum += gamma * math.sin(omega * t + phi)
         return math.exp(theta_sum + second_sum)
@@ -127,6 +127,7 @@ class ArrivalThread(threading.Thread):
                     new_client_threads.append(ct)
             self.client_threads = new_client_threads
             self.t += 1
+            num_new_clients = 0
             for c in self.clients:
                 try:
                     if c.arrival_config.client_arrival_type.value == ClientArrivalType.SINE_MODULATED.value:
@@ -142,7 +143,7 @@ class ArrivalThread(threading.Thread):
                         self.rate = self.eptmp_rate(t=self.t, arrival_config=c.arrival_config)
                         num_new_clients = poisson.rvs(self.rate, size=1)[0]
                     else:
-                        raise ValueError(f"Client arrival type: {self.client_arrival_type} not recognized")
+                        raise ValueError(f"Client arrival type: {c.arrival_config.client_arrival_type} not recognized")
                 except Exception as e:
                     logging.info(f"There was an error computing the arrival rate: {str(e)}, {repr(e)}")
                 try:

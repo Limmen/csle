@@ -1,3 +1,4 @@
+from typing import Union
 import time
 import logging
 import grpc
@@ -21,8 +22,8 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         """
         Initializes the server
         """
-        self.arrival_thread = None
-        self.producer_thread = None
+        self.arrival_thread: Union[None, ArrivalThread] = None
+        self.producer_thread: Union[None, ProducerThread] = None
         logging.basicConfig(filename=f"{constants.LOG_FILES.CLIENT_MANAGER_LOG_DIR}"
                                      f"{constants.LOG_FILES.CLIENT_MANAGER_LOG_FILE}", level=logging.INFO)
 
@@ -36,8 +37,8 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :return: a clients DTO with the state of the clients
         """
         num_clients = 0
-        clients_time_step_len_seconds = 0
-        producer_time_step_len_seconds = 0
+        clients_time_step_len_seconds = 0.0
+        producer_time_step_len_seconds = 0.0
 
         client_process_active = False
         if self.arrival_thread is not None:
@@ -52,8 +53,8 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
 
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients=num_clients, client_process_active=client_process_active, producer_active=producer_active,
-            clients_time_step_len_seconds=clients_time_step_len_seconds,
-            producer_time_step_len_seconds=producer_time_step_len_seconds)
+            clients_time_step_len_seconds=int(clients_time_step_len_seconds),
+            producer_time_step_len_seconds=int(producer_time_step_len_seconds))
         return clients_dto
 
     def stopClients(self, request: csle_collector.client_manager.client_manager_pb2.StopClientsMsg,
@@ -67,8 +68,8 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         """
         logging.info("Stopping clients")
 
-        clients_time_step_len_seconds = 0
-        producer_time_step_len_seconds = 0
+        clients_time_step_len_seconds = 0.0
+        producer_time_step_len_seconds = 0.0
 
         if self.arrival_thread is not None:
             clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
@@ -83,8 +84,8 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
 
         return csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients=0, client_process_active=False, producer_active=producer_active,
-            clients_time_step_len_seconds=clients_time_step_len_seconds,
-            producer_time_step_len_seconds=producer_time_step_len_seconds)
+            clients_time_step_len_seconds=int(clients_time_step_len_seconds),
+            producer_time_step_len_seconds=int(producer_time_step_len_seconds))
 
     def startClients(self, request: csle_collector.client_manager.client_manager_pb2.StartClientsMsg,
                      context: grpc.ServicerContext) -> csle_collector.client_manager.client_manager_pb2.ClientsDTO:
@@ -121,7 +122,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
             producer_time_step_len_seconds = self.producer_thread.time_step_len_seconds
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients=len(self.arrival_thread.client_threads), client_process_active=True,
-            producer_active=producer_active, clients_time_step_len_seconds=clients_time_step_len_seconds,
+            producer_active=producer_active, clients_time_step_len_seconds=int(clients_time_step_len_seconds),
             producer_time_step_len_seconds=producer_time_step_len_seconds)
         return clients_dto
 
@@ -136,13 +137,15 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         """
         logging.info(f"Starting producer, time-step len:{request.time_step_len_seconds}s, "
                      f"arrival_thread: {self.arrival_thread}")
-        clients_time_step_len_seconds = 0
+        clients_time_step_len_seconds = 0.0
         time.sleep(5)
         if self.producer_thread is not None:
             self.producer_thread.stopped = True
             time.sleep(1)
         if request.time_step_len_seconds <= 0:
             request.time_step_len_seconds = 1
+        if self.arrival_thread is None:
+            raise ValueError("Cannot start producer if the arrival thread is not started")
         producer_thread = ProducerThread(arrival_thread=self.arrival_thread,
                                          time_step_len_seconds=request.time_step_len_seconds,
                                          ip=request.ip, port=request.port)
@@ -156,7 +159,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
             clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients=num_clients, client_process_active=client_process_active, producer_active=True,
-            clients_time_step_len_seconds=clients_time_step_len_seconds,
+            clients_time_step_len_seconds=int(clients_time_step_len_seconds),
             producer_time_step_len_seconds=request.time_step_len_seconds)
         return clients_dto
 
@@ -170,7 +173,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
         :return: a clients DTO with the state of the clients
         """
         logging.info("Stopping producer")
-        clients_time_step_len_seconds = 0
+        clients_time_step_len_seconds = 0.0
         if self.producer_thread is not None:
             self.producer_thread.stopped = True
             time.sleep(1)
@@ -183,7 +186,7 @@ class ClientManagerServicer(csle_collector.client_manager.client_manager_pb2_grp
             clients_time_step_len_seconds = self.arrival_thread.time_step_len_seconds
         clients_dto = csle_collector.client_manager.client_manager_pb2.ClientsDTO(
             num_clients=num_clients, client_process_active=client_process_active, producer_active=False,
-            clients_time_step_len_seconds=clients_time_step_len_seconds, producer_time_step_len_seconds=0)
+            clients_time_step_len_seconds=int(clients_time_step_len_seconds), producer_time_step_len_seconds=0)
         return clients_dto
 
 

@@ -163,7 +163,7 @@ class SnortIdsIPAlertCounters:
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = self.ip
         d["alert_ip"] = self.alert_ip
         d["ts"] = self.ts

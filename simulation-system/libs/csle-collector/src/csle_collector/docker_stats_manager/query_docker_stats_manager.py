@@ -17,7 +17,8 @@ def get_docker_stats_manager_status(
     """
     get_docker_stats_server_msg = \
         csle_collector.docker_stats_manager.docker_stats_manager_pb2.GetDockerStatsMonitorStatusMsg()
-    docker_stats_manager_dto = stub.getDockerStatsMonitorStatus(get_docker_stats_server_msg, timeout=timeout)
+    docker_stats_manager_dto: csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO \
+        = stub.getDockerStatsMonitorStatus(get_docker_stats_server_msg, timeout=timeout)
     return docker_stats_manager_dto
 
 
@@ -48,7 +49,8 @@ def start_docker_stats_monitor(
             kafka_ip=kafka_ip, stats_queue_maxsize=stats_queue_maxsize,
             time_step_len_seconds=time_step_len_seconds, kafka_port=kafka_port, containers=containers
         )
-    docker_stats_manager_dto = stub.startDockerStatsMonitor(start_docker_stats_monitor_msg, timeout=timeout)
+    docker_stats_manager_dto: csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO \
+        = stub.startDockerStatsMonitor(start_docker_stats_monitor_msg, timeout=timeout)
     return docker_stats_manager_dto
 
 
@@ -68,5 +70,6 @@ def stop_docker_stats_monitor(
     stop_docker_stats_monitor_msg = \
         csle_collector.docker_stats_manager.docker_stats_manager_pb2.StopDockerStatsMonitorMsg(
             emulation=emulation, execution_first_ip_octet=execution_first_ip_octet)
-    docker_stats_manager_dto = stub.stopDockerStatsMonitor(stop_docker_stats_monitor_msg, timeout=timeout)
+    docker_stats_manager_dto: csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO \
+        = stub.stopDockerStatsMonitor(stop_docker_stats_monitor_msg, timeout=timeout)
     return docker_stats_manager_dto

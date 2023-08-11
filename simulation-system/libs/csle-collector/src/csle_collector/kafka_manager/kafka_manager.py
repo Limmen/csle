@@ -1,5 +1,5 @@
-import time
 from typing import Tuple, List
+import time
 import logging
 import subprocess
 import os

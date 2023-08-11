@@ -1,3 +1,4 @@
+from typing import Union
 import logging
 import socket
 import grpc
@@ -30,7 +31,7 @@ class SnortIdsManagerServicer(csle_collector.snort_ids_manager.snort_ids_manager
         self.conf = {
             constants.KAFKA.BOOTSTRAP_SERVERS_PROPERTY: f"{self.ip}:{constants.KAFKA.PORT}",
             constants.KAFKA.CLIENT_ID_PROPERTY: self.hostname}
-        self.ids_monitor_thread = None
+        self.ids_monitor_thread: Union[None, SnortIDSMonitorThread] = None
         logging.info(f"Starting the SnortIDSManager hostname: {self.hostname} ip: {self.ip}")
 
     def _is_snort_running(self) -> bool:

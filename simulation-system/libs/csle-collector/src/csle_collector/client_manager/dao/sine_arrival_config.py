@@ -67,7 +67,7 @@ class SineArrivalConfig(ArrivalConfig, JSONSerializable, GRPCSerializable):
         )
 
     @staticmethod
-    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.ConstantArrivalConfigDTO) \
+    def from_grpc_object(obj: csle_collector.client_manager.client_manager_pb2.SineArrivalConfigDTO) \
             -> "SineArrivalConfig":
         """
         Instantiates the object from a GRPC DTO

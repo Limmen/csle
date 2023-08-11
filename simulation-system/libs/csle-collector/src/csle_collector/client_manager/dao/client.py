@@ -71,7 +71,7 @@ class Client(JSONSerializable, GRPCSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["arrival_config"] = self.arrival_config.to_dict()
         d["id"] = self.id
         d["mu"] = self.mu
@@ -135,21 +135,21 @@ class Client(JSONSerializable, GRPCSerializable):
         :param obj: the object to instantiate from
         :return: the instantiated object
         """
-        arrival_config = None
         arrival_type = ClientArrivalType(obj.arrival_type)
-        if arrival_type.value == ClientArrivalType.EPTMP:
+        if arrival_type.value == ClientArrivalType.EPTMP.value:
             arrival_config = EPTMPArrivalConfig.from_grpc_object(obj.eptmp_arrival_config)
-        elif arrival_type.value == ClientArrivalType.SINE_MODULATED:
+        elif arrival_type.value == ClientArrivalType.SINE_MODULATED.value:
             arrival_config = SineArrivalConfig.from_grpc_object(obj.sine_arrival_config)
-        elif arrival_type.value == ClientArrivalType.SPIKING:
+        elif arrival_type.value == ClientArrivalType.SPIKING.value:
             arrival_config = SpikingArrivalConfig.from_grpc_object(obj.spiking_arrival_config)
-        elif arrival_type.value == ClientArrivalType.PIECE_WISE_CONSTANT:
+        elif arrival_type.value == ClientArrivalType.PIECE_WISE_CONSTANT.value:
             arrival_config = PieceWiseConstantArrivalConfig.from_grpc_object(obj.piece_wise_constant_arrival_config)
-        elif arrival_type.value == ClientArrivalType.CONSTANT:
+        elif arrival_type.value == ClientArrivalType.CONSTANT.value:
             arrival_config = ConstantArrivalConfig.from_grpc_object(obj.constant_arrival_config)
         else:
             raise ValueError(f"Client arrival type: {arrival_type} not recognized")
-        return Client(id=obj.id, workflow_distribution=obj.workflow_distribution, mu=obj.mu,
+        workflow_distribution = list(map(lambda x: float(x), obj.workflow_distribution))
+        return Client(id=obj.id, workflow_distribution=workflow_distribution, mu=obj.mu,
                       exponential_service_time=obj.exponential_service_time, arrival_config=arrival_config)
 
     def generate_commands(self, workflows_config: WorkflowsConfig) -> List[str]:
@@ -159,7 +159,7 @@ class Client(JSONSerializable, GRPCSerializable):
         :param workflows_config: the workflows configuration
         :return: sampled list of commands for the client
         """
-        commands = []
+        commands: List[str] = []
         w = np.random.choice(np.arange(0, len(workflows_config.workflow_services)), p=self.workflow_distribution)
         mc = workflows_config.get_workflow_mc(id=w)
         if mc is None:

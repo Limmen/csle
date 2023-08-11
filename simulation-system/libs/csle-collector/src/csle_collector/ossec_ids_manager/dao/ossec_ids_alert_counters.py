@@ -137,7 +137,7 @@ class OSSECIdsAlertCounters(GRPCSerializable, KafkaSerializable, JSONSerializabl
         :return: the instantiated grpc object
         """
         instance = OSSECIdsAlertCounters()
-        instance.ts = obj.ts
+        instance.ts = time.time()
         instance.ip = obj.ip
         instance.total_alerts = obj.total_alerts
         instance.warning_alerts = obj.warning_alerts
@@ -251,7 +251,7 @@ class OSSECIdsAlertCounters(GRPCSerializable, KafkaSerializable, JSONSerializabl
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = self.ip
         d["ts"] = self.ts
         d["group_alerts"] = list(self.group_alerts)

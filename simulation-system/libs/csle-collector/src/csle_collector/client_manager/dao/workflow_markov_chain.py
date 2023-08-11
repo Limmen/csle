@@ -59,6 +59,7 @@ class WorkflowMarkovChain(JSONSerializable, GRPCSerializable):
         for i in range(len(cumsum)):
             if r < cumsum[i]:  # find the first index where r is smaller than cumsum[i]
                 return i  # return that index as the outcome
+        raise ValueError(f"Invalid transition probabilities")
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "WorkflowMarkovChain":
@@ -80,7 +81,7 @@ class WorkflowMarkovChain(JSONSerializable, GRPCSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["transition_matrix"] = self.transition_matrix
         d["initial_state"] = self.initial_state
         d["current_state"] = self.current_state
