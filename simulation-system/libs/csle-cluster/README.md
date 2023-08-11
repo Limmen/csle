@@ -13,7 +13,7 @@ This library contains scripts and programs for cluster management in CSLE.
 
 To re-generate the gRPC files, run: 
 ```bash
-python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_cluster/. --grpc_python_out=./src/csle_cluster/cluster_manager/. ./protos/cluster_manager.proto
+python -m grpc_tools.protoc -I./protos/ --python_out=./src/csle_cluster/. --grpc_python_out=./src/csle_cluster/cluster_manager/. ./protos/cluster_manager.proto --mypy_out=./src/csle_cluster/cluster_manager/.
 ```
 
 ## Requirements

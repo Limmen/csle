@@ -21,7 +21,7 @@ class ClusterController:
 
     @staticmethod
     def start_containers_in_execution(ip: str, port: int, emulation: str, ip_first_octet: int) \
-            -> csle_cluster.cluster_manager.cluster_manager_pb2.NodeStatusDTO:
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Sends a request to start the containers of a given execution
 
@@ -34,14 +34,14 @@ class ClusterController:
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
-            node_status_dto = csle_cluster.cluster_manager.query_cluster_manager.start_containers_in_execution(
+            operation_outcome_dto = csle_cluster.cluster_manager.query_cluster_manager.start_containers_in_execution(
                 stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
             )
-            return node_status_dto
+            return operation_outcome_dto
 
     @staticmethod
     def attach_containers_in_execution_to_networks(ip: str, port: int, emulation: str, ip_first_octet: int) \
-            -> csle_cluster.cluster_manager.cluster_manager_pb2.NodeStatusDTO:
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Sends a request to attach the containers of a given execution to networks
 
@@ -54,11 +54,11 @@ class ClusterController:
         # Open a gRPC session
         with grpc.insecure_channel(f'{ip}:{port}', options=constants.GRPC_SERVERS.GRPC_OPTIONS) as channel:
             stub = csle_cluster.cluster_manager.cluster_manager_pb2_grpc.ClusterManagerStub(channel)
-            node_status_dto = \
+            operation_outcome_dto = \
                 csle_cluster.cluster_manager.query_cluster_manager.attach_containers_in_execution_to_networks(
                     stub=stub, emulation=emulation, ip_first_octet=ip_first_octet
                 )
-            return node_status_dto
+            return operation_outcome_dto
 
     @staticmethod
     def is_cluster_manager_running(ip: str, port: int, timeout_sec: int = 2) -> bool:
@@ -3385,7 +3385,7 @@ class ClusterController:
 
     @staticmethod
     def get_execution_info(ip: str, port: int, emulation: str, ip_first_octet: int) \
-            -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.ExecutionInfoDTO:
         """
         Gets the info of a given execution
 
@@ -3404,7 +3404,7 @@ class ClusterController:
 
     @staticmethod
     def get_snort_ids_monitor_thread_statuses(ip: str, port: int, emulation: str, ip_first_octet: int) \
-            -> csle_cluster.cluster_manager.cluster_manager_pb2.OSSECIdsMonitorThreadStatusesDTO:
+            -> csle_cluster.cluster_manager.cluster_manager_pb2.SnortIdsMonitorThreadStatusesDTO:
         """
         Gets the Snort IDS monitor thread statuses for a specific execution
 
