@@ -58,6 +58,8 @@ class UsersController:
             if vuln.physical_host_ip != physical_server_ip:
                 continue
             EmulationUtil.connect_admin(emulation_env_config=emulation_env_config, ip=vuln.docker_gw_bridge_ip)
+            if vuln.credentials is None:
+                raise ValueError("Could not find credentials corresponding to node vulnerability config.")
             for cr in vuln.credentials:
                 if cr.root:
                     cmd = "sudo useradd -rm -d /home/{} -s /bin/bash -g root -G sudo -p " \
