@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Optional, Dict, Any
 from csle_common.dao.system_identification.system_model import SystemModel
 from csle_common.dao.system_identification.system_identification_config import SystemIdentificationConfig
 from csle_common.dao.system_identification.gaussian_mixture_system_model import GaussianMixtureSystemModel
@@ -16,7 +16,7 @@ class SystemIdentificationJobConfig(JSONSerializable):
     def __init__(self, emulation_env_name: str, emulation_statistics_id: int,
                  progress_percentage: float, pid: int, log_file_path: str,
                  system_identification_config: SystemIdentificationConfig, physical_host_ip: str,
-                 descr: str = "", system_model: SystemModel = None):
+                 descr: str = "", system_model: Optional[SystemModel] = None):
         """
         Initializes the DTO
 

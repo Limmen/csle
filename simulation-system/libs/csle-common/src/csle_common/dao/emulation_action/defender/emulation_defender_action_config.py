@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Optional, List, Dict, Any
 import gymnasium as gym
 from csle_common.dao.emulation_action.defender.emulation_defender_action import EmulationDefenderAction
 from csle_common.dao.emulation_action.defender.emulation_defender_action_id import EmulationDefenderActionId
@@ -12,10 +12,10 @@ class EmulationDefenderActionConfig(JSONSerializable):
     Configuration of the action space for the defender
     """
 
-    def __init__(self, num_indices: int, actions: List[EmulationDefenderAction] = None,
-                 stopping_action_ids: List[EmulationDefenderActionId] = None,
-                 multiple_stop_actions: List[EmulationDefenderAction] = None,
-                 multiple_stop_actions_ids: List[EmulationDefenderActionId] = None):
+    def __init__(self, num_indices: int, actions: Optional[List[EmulationDefenderAction]] = None,
+                 stopping_action_ids: Optional[List[EmulationDefenderActionId]] = None,
+                 multiple_stop_actions: Optional[List[EmulationDefenderAction]] = None,
+                 multiple_stop_actions_ids: Optional[List[EmulationDefenderActionId]] = None):
         """
         Class constructor
 

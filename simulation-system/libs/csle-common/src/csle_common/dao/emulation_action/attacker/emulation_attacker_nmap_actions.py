@@ -1,4 +1,4 @@
-from typing import List
+from typing import Optional, List
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
@@ -12,7 +12,7 @@ class EmulationAttackerNMAPActions:
     """
 
     @staticmethod
-    def TCP_SYN_STEALTH_SCAN(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def TCP_SYN_STEALTH_SCAN(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a TCP SYN scan
 
@@ -35,7 +35,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def PING_SCAN(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def PING_SCAN(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a Ping scan
 
@@ -59,7 +59,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def UDP_PORT_SCAN(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def UDP_PORT_SCAN(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a UDP port scan
 
@@ -82,7 +82,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def TCP_CON_NON_STEALTH_SCAN(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def TCP_CON_NON_STEALTH_SCAN(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a TCP CON (non-stealthy) scan
 
@@ -106,7 +106,7 @@ class EmulationAttackerNMAPActions:
             backdoor=False)
 
     @staticmethod
-    def TCP_FIN_SCAN(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def TCP_FIN_SCAN(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a TCP FIN scan
 
@@ -129,7 +129,7 @@ class EmulationAttackerNMAPActions:
             backdoor=False)
 
     @staticmethod
-    def TCP_NULL_SCAN(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def TCP_NULL_SCAN(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a TCP Null scan
 
@@ -150,7 +150,7 @@ class EmulationAttackerNMAPActions:
             ips=ips, action_outcome=EmulationAttackerActionOutcome.INFORMATION_GATHERING, backdoor=False)
 
     @staticmethod
-    def TCP_XMAS_TREE_SCAN(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def TCP_XMAS_TREE_SCAN(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a TCP XMAS TREE scan
 
@@ -173,7 +173,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def OS_DETECTION_SCAN(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def OS_DETECTION_SCAN(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a OS detection scan
 
@@ -195,7 +195,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def VULSCAN(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def VULSCAN(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a vulnerability scan using the VULSCAN script
 
@@ -217,7 +217,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def NMAP_VULNERS(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def NMAP_VULNERS(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a vulnerability scan using the Vulners script
 
@@ -239,7 +239,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def TELNET_SAME_USER_PASS_DICTIONARY(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def TELNET_SAME_USER_PASS_DICTIONARY(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a dictionary attack trying combinations with same user+pw against telnet
 
@@ -266,7 +266,7 @@ class EmulationAttackerNMAPActions:
             backdoor=False)
 
     @staticmethod
-    def SSH_SAME_USER_PASS_DICTIONARY(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def SSH_SAME_USER_PASS_DICTIONARY(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a dictionary attack trying combinations with same user+pw against ssh
 
@@ -292,7 +292,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def FTP_SAME_USER_PASS_DICTIONARY(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def FTP_SAME_USER_PASS_DICTIONARY(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a dictionary attack trying combinations with same user+pw against ftp
 
@@ -318,7 +318,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def CASSANDRA_SAME_USER_PASS_DICTIONARY(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def CASSANDRA_SAME_USER_PASS_DICTIONARY(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a dictionary attack trying combinations with same user+pw against cassandra
 
@@ -344,7 +344,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def IRC_SAME_USER_PASS_DICTIONARY(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def IRC_SAME_USER_PASS_DICTIONARY(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a dictionary attack trying combinations with same user+pw against irc
 
@@ -370,7 +370,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def MONGO_SAME_USER_PASS_DICTIONARY(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def MONGO_SAME_USER_PASS_DICTIONARY(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a dictionary attack trying combinations with same user+pw against mongo
 
@@ -396,7 +396,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def MYSQL_SAME_USER_PASS_DICTIONARY(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def MYSQL_SAME_USER_PASS_DICTIONARY(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a dictionary attack trying combinations with same user+pw against mysql
 
@@ -422,7 +422,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def SMTP_SAME_USER_PASS_DICTIONARY(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def SMTP_SAME_USER_PASS_DICTIONARY(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a dictionary attack trying combinations with same user+pw against smtp
 
@@ -448,7 +448,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def POSTGRES_SAME_USER_PASS_DICTIONARY(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def POSTGRES_SAME_USER_PASS_DICTIONARY(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a dictionary attack trying combinations with same user+pw against postgres
 
@@ -474,7 +474,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def FIREWALK(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def FIREWALK(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a firewalk scan to try to identify and bypass firewalls
 
@@ -499,7 +499,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def HTTP_ENUM(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def HTTP_ENUM(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a HTTP enumeration scan
 
@@ -523,7 +523,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def HTTP_GREP(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def HTTP_GREP(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a HTTP grep scan
 
@@ -549,7 +549,7 @@ class EmulationAttackerNMAPActions:
                                        backdoor=False)
 
     @staticmethod
-    def FINGER(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def FINGER(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Runs a fingerprint scan
 

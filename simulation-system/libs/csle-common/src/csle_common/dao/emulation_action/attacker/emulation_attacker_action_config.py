@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Optional, List, Dict, Any
 import gymnasium as gym
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
@@ -19,13 +19,13 @@ class EmulationAttackerActionConfig(JSONSerializable):
     Configuration of the action space for the attacker in the emulation
     """
 
-    def __init__(self, num_indices: int, actions: List[EmulationAttackerAction] = None,
-                 nmap_action_ids: List[EmulationAttackerActionId] = None,
-                 network_service_action_ids: List[EmulationAttackerActionId] = None,
-                 shell_action_ids: List[EmulationAttackerActionId] = None,
-                 nikto_action_ids: List[EmulationAttackerActionId] = None,
-                 masscan_action_ids: List[EmulationAttackerActionId] = None,
-                 stopping_action_ids: List[EmulationAttackerActionId] = None):
+    def __init__(self, num_indices: int, actions: Optional[List[EmulationAttackerAction]] = None,
+                 nmap_action_ids: Optional[List[EmulationAttackerActionId]] = None,
+                 network_service_action_ids: Optional[List[EmulationAttackerActionId]] = None,
+                 shell_action_ids: Optional[List[EmulationAttackerActionId]] = None,
+                 nikto_action_ids: Optional[List[EmulationAttackerActionId]] = None,
+                 masscan_action_ids: Optional[List[EmulationAttackerActionId]] = None,
+                 stopping_action_ids: Optional[List[EmulationAttackerActionId]] = None):
         """
         Class constructor
 

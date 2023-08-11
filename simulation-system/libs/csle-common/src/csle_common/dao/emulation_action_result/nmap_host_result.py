@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Optional, List, Dict, Any
 import copy
 from csle_common.dao.emulation_action_result.nmap_host_status import NmapHostStatus
 from csle_common.dao.emulation_action_result.nmap_port import NmapPort
@@ -14,11 +14,11 @@ class NmapHostResult(JSONSerializable):
     A DTO representing a host found with an NMAP scan
     """
 
-    def __init__(self, status: NmapHostStatus = NmapHostStatus.DOWN, ips: List[str] = None,
-                 mac_addr: str = None, hostnames: List[str] = None,
-                 ports: List[NmapPort] = None, os: NmapOs = None, os_matches: List[NmapOs] = None,
-                 vulnerabilities: List[NmapVuln] = None, credentials: List[NmapBruteCredentials] = None,
-                 trace: NmapTrace = None):
+    def __init__(self, status: NmapHostStatus = NmapHostStatus.DOWN, ips: Optional[List[str]] = None,
+                 mac_addr: Optional[str] = None, hostnames: Optional[List[str]] = None,
+                 ports: Optional[List[NmapPort]] = None, os: Optional[NmapOs] = None, os_matches: Optional[List[NmapOs]] = None,
+                 vulnerabilities: Optional[List[NmapVuln]] = None, credentials: Optional[List[NmapBruteCredentials]] = None,
+                 trace: Optional[NmapTrace] = None):
         """
         Initializes the DTO
 

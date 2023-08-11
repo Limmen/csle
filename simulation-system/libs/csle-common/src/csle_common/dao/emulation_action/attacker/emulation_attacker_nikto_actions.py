@@ -1,4 +1,4 @@
-from typing import List
+from typing import Optional, List
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
@@ -12,7 +12,7 @@ class EmulationAttackerNIKTOActions:
     """
 
     @staticmethod
-    def NIKTO_WEB_HOST_SCAN(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def NIKTO_WEB_HOST_SCAN(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Action for running a nikto web scan on a given host
 

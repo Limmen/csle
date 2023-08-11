@@ -1,4 +1,4 @@
-from typing import List
+from typing import Optional, List
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_type import EmulationAttackerActionType
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action_id import EmulationAttackerActionId
 from csle_common.dao.emulation_action.attacker.emulation_attacker_action import EmulationAttackerAction
@@ -11,7 +11,7 @@ class EmulationAttackerNetworkServiceActions:
     """
 
     @staticmethod
-    def SERVICE_LOGIN(index: int, ips: List[str] = None) -> EmulationAttackerAction:
+    def SERVICE_LOGIN(index: int, ips: Optional[List[str]] = None) -> EmulationAttackerAction:
         """
         Action for using known credentials to login to a server
 

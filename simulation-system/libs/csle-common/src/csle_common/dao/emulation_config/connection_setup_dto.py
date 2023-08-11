@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Optional, List, Dict, Any
 from csle_common.dao.emulation_observation.common.emulation_connection_observation_state \
     import EmulationConnectionObservationState
 from csle_common.dao.emulation_config.credential import Credential
@@ -11,12 +11,12 @@ class ConnectionSetupDTO(JSONSerializable):
     DTO class containing information for setting up connections in the emulation
     """
 
-    def __init__(self, connected: bool = False, credentials: List[Credential] = None,
-                 target_connections: List = None,
-                 tunnel_threads: List[ForwardTunnelThread] = None, forward_ports: List[int] = None,
-                 ports: List[int] = None, interactive_shells: List = None, total_time: float = 0.0,
-                 non_failed_credentials: List[Credential] = None,
-                 proxies: List[EmulationConnectionObservationState] = None, ip: str = None):
+    def __init__(self, connected: bool = False, credentials: Optional[List[Credential]] = None,
+                 target_connections: Optional[List] = None,
+                 tunnel_threads: Optional[List[ForwardTunnelThread]] = None, forward_ports: Optional[List[int]] = None,
+                 ports: Optional[List[int]] = None, interactive_shells: Optional[List] = None, total_time: float = 0.0,
+                 non_failed_credentials: Optional[List[Credential]] = None,
+                 proxies: Optional[List[EmulationConnectionObservationState]] = None, ip: Optional[str] = None):
         """
         Initializes the DTO
 

@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import Optional, List, Dict, Any
 import json
 import os
 import csle_common.constants.constants as constants
@@ -98,7 +98,7 @@ class SimulationTrace(JSONSerializable):
         return trace
 
     @staticmethod
-    def save_traces(traces_save_dir, traces: List["SimulationTrace"], traces_file: str = None) -> None:
+    def save_traces(traces_save_dir, traces: List["SimulationTrace"], traces_file: Optional[str] = None) -> None:
         """
         Utility function for saving a list of traces to a json file
 
@@ -116,7 +116,7 @@ class SimulationTrace(JSONSerializable):
             json.dump({"traces": traces}, fp, cls=NpEncoder)
 
     @staticmethod
-    def load_traces(traces_save_dir: str, traces_file: str = None) -> List["SimulationTrace"]:
+    def load_traces(traces_save_dir: str, traces_file: Optional[str] = None) -> List["SimulationTrace"]:
         """
         Utility function for loading and parsing a list of traces from a json file
 
