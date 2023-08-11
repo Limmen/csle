@@ -36,18 +36,18 @@ class MixedPPOPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.MIXED_PPO_POLICY
 
-    def action(self, o: List[float]) -> Union[int, List[int], np.ndarray]:
+    def action(self, o: List[float]) -> Union[int, List[int], np.ndarray[Any, Any]]:
         """
         Multi-threshold stopping policy
 
         :param o: the current observation
         :return: the selected action
         """
-        policy = np.random.choice(self.ppo_policies)
+        policy: PPOPolicy = np.random.choice(self.ppo_policies)
         a = policy.action(o=o)
         return a
 
-    def probability(self, o: List[float], a: int) -> int:
+    def probability(self, o: Union[List[Union[int, float]], int, float], a: int) -> int:
         """
         Probability of a given action
 
@@ -85,7 +85,7 @@ class MixedPPOPolicy(Policy):
         ppo_policies = list(map(lambda x: x.from_dict(), d["ppo_policies"]))
         obj = MixedPPOPolicy(simulation_name=d["simulation_name"],
                              states=list(map(lambda x: State.from_dict(x), d["states"])),
-                             player_type=PlayerType.from_dict(d["player_type"]),
+                             player_type=PlayerType(d["player_type"]),
                              actions=list(map(lambda x: Action.from_dict(x), d["actions"])),
                              experiment_config=ExperimentConfig.from_dict(d["experiment_config"]), avg_R=d["avg_R"])
         obj.ppo_policies = ppo_policies

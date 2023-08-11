@@ -1,4 +1,5 @@
-from typing import Union, List, Dict
+from typing import Union, List, Dict, Any
+import numpy as np
 from abc import abstractmethod
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType
@@ -21,7 +22,7 @@ class Policy(JSONSerializable):
         self.player_type = player_type
 
     @abstractmethod
-    def action(self, o: Union[List[Union[int, float]], int, float]) -> Union[int, float]:
+    def action(self, o: List[float]) -> Union[int, List[int], np.ndarray[Any, Any]]:
         """
         Calculates the next action
 
