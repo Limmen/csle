@@ -44,6 +44,8 @@ class VulnerabilitiesController:
                 else:
                     raise ValueError("CVE not recognized:{}".format(vuln.cve))
 
+                if vuln.credentials is None:
+                    raise ValueError("Could not find credentials corresponding to node vulnerability config.")
                 for cr in vuln.credentials:
                     cmd = cmd.format(cr.username)
                     o, e, _ = EmulationUtil.execute_ssh_cmd(cmd=cmd,
