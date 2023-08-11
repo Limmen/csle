@@ -53,7 +53,7 @@ class ExperimentExecution(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["config"] = self.config.to_dict()
         d["result"] = self.result.to_dict()
         d["timestamp"] = self.timestamp
