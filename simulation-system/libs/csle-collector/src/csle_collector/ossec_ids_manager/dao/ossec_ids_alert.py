@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Union
 import csle_collector.constants.constants as constants
 from csle_base.json_serializable import JSONSerializable
 
@@ -8,9 +8,8 @@ class OSSECIDSAlert(JSONSerializable):
     DTO representing an OSSECIDS alert
     """
 
-    def __init__(self, timestamp: float, groups: List[str] = "", host: str = "", ip: str = "", rule_id: str = "",
-                 level: int = 1, descr: str = "",
-                 src: str = "", user: str = "") -> None:
+    def __init__(self, timestamp: float, groups: Union[List[str], None] = None, host: str = "", ip: str = "",
+                 rule_id: str = "", level: int = 1, descr: str = "", src: str = "", user: str = "") -> None:
         """
         A DTO representing an alert from the OSSEC IDS
 
@@ -25,8 +24,9 @@ class OSSECIDSAlert(JSONSerializable):
         :param user: the user of the alert
         """
         self.timestamp = timestamp
-        self.groups = groups
-        self.group_ids = list(map(lambda x: self.get_group_id(x), groups))
+        if groups is None:
+            self.groups: List[str] = []
+        self.group_ids = list(map(lambda x: self.get_group_id(x), self.groups))
         self.host = host
         self.ip = ip
         self.rule_id = rule_id
@@ -73,7 +73,7 @@ class OSSECIDSAlert(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["timestamp"] = self.timestamp
         d["groups"] = self.groups
         d["host"] = self.host

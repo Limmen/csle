@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Union
 from datetime import datetime
 import time
 import csle_collector.constants.constants as constants
@@ -11,7 +11,8 @@ class DockerStats:
 
     def __init__(self, pids: float = 0.0, timestamp: str = "", cpu_percent: float = 0.0, mem_current: float = 0.0,
                  mem_total: float = 0.0, mem_percent: float = 0.0, blk_read: float = 0.0, blk_write: float = 0.0,
-                 net_rx: float = 0.0, net_tx: float = 0.0, container_name: str = "", ip: str = None, ts: float = None):
+                 net_rx: float = 0.0, net_tx: float = 0.0, container_name: str = "",
+                 ip: Union[str, None] = None, ts: Union[None, float] = None):
         """
         Class constructor, creates a DockerStats object
 
@@ -105,7 +106,7 @@ class DockerStats:
             ts = now.strftime("%m/%d/%Y, %H:%M:%S")
             return DockerStats(pids=0.0, timestamp=ts, cpu_percent=0.0, mem_current=0.0, mem_total=0.0, mem_percent=0.0,
                                blk_read=0.0, blk_write=0.0, net_rx=0.0, net_tx=0.0, container_name="-")
-        sum_pids = 0
+        sum_pids = 0.0
         sum_cpu_percent = 0.0
         sum_mem_current = 0.0
         sum_mem_total = 0.0
@@ -228,7 +229,7 @@ class DockerStats:
             net_rx=self.net_rx, net_tx=self.net_tx, container_name=self.container_name, ip=self.ip, ts=self.ts)
         return c
 
-    def get_deltas(self, stats_prime: "DockerStats") -> Tuple[List[float], List[str]]:
+    def get_deltas(self, stats_prime: "DockerStats") -> Tuple[List[int], List[str]]:
         """
         Get the deltas between two stats objects
 
@@ -253,7 +254,7 @@ class DockerStats:
         ]
         return deltas, labels
 
-    def get_values(self) -> Tuple[List[float], List[str]]:
+    def get_values(self) -> Tuple[List[int], List[str]]:
         """
         Get the current values
 

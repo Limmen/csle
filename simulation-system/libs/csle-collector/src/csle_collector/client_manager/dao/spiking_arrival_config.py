@@ -35,7 +35,7 @@ class SpikingArrivalConfig(ArrivalConfig, JSONSerializable, GRPCSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["exponents"] = self.exponents
         d["factors"] = self.factors
         d["client_arrival_type"] = self.client_arrival_type
@@ -69,7 +69,7 @@ class SpikingArrivalConfig(ArrivalConfig, JSONSerializable, GRPCSerializable):
         :param obj: the object to instantiate from
         :return: the instantiated object
         """
-        return SpikingArrivalConfig(exponents=obj.exponents, factors=obj.factors)
+        return SpikingArrivalConfig(exponents=list(obj.exponents), factors=list(obj.factors))
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "SpikingArrivalConfig":

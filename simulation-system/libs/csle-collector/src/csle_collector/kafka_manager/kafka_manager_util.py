@@ -15,7 +15,7 @@ class KafkaManagerUtil:
         :param kafka_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["running"] = kafka_dto.running
         topics = []
         for top in kafka_dto.topics:

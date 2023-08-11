@@ -1,4 +1,4 @@
-from typing import List, Union, Any, Tuple, Dict
+from typing import List, Union, Any, Tuple
 import psycopg
 import json
 import time
@@ -1090,8 +1090,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.MULTI_THRESHOLD_STOPPING_POLICIES_TABLE}")
                 records = cur.fetchall()
-                return list(map(lambda x: MetastoreFacade._convert_multi_threshold_stopping_policy_record_to_dto(x),
-                                   records))
+                return list(map(
+                    lambda x: MetastoreFacade._convert_multi_threshold_stopping_policy_record_to_dto(x), records))
 
     @staticmethod
     def list_multi_threshold_stopping_policies_ids() -> List[Tuple[int, str]]:
@@ -1315,8 +1315,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.DATA_COLLECTION_JOBS_TABLE}")
                 records = cur.fetchall()
-                return list(map(lambda x: MetastoreFacade._convert_data_collection_job_record_to_dto(x),
-                                   records))
+                return list(map(lambda x: MetastoreFacade._convert_data_collection_job_record_to_dto(x), records))
 
     @staticmethod
     def list_data_collection_jobs_ids() -> List[Tuple[int, str, int]]:
@@ -1631,8 +1630,7 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.SYSTEM_IDENTIFICATION_JOBS_TABLE}")
                 records = cur.fetchall()
-                return list(map(lambda x: MetastoreFacade._convert_system_identification_job_record_to_dto(x),
-                                   records))
+                return list(map(lambda x: MetastoreFacade._convert_system_identification_job_record_to_dto(x), records))
 
     @staticmethod
     def list_system_identification_jobs_ids() -> List[Tuple[int, str, int]]:
@@ -1773,8 +1771,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.GAUSSIAN_MIXTURE_SYSTEM_MODELS_TABLE}")
                 records = cur.fetchall()
-                return list(map(lambda x: MetastoreFacade._convert_gaussian_mixture_system_model_record_to_dto(x),
-                                   records))
+                return list(map(
+                    lambda x: MetastoreFacade._convert_gaussian_mixture_system_model_record_to_dto(x), records))
 
     @staticmethod
     def list_gaussian_mixture_system_models_ids() -> List[Tuple[int, str, int]]:
@@ -3830,8 +3828,8 @@ class MetastoreFacade:
             with conn.cursor() as cur:
                 cur.execute(f"SELECT * FROM {constants.METADATA_STORE.LINEAR_THRESHOLD_STOPPING_POLICIES_TABLE}")
                 records = cur.fetchall()
-                return list(map(lambda x: MetastoreFacade._convert_linear_threshold_stopping_policy_record_to_dto(x),
-                                 records))
+                return list(map(
+                    lambda x: MetastoreFacade._convert_linear_threshold_stopping_policy_record_to_dto(x), records))
 
     @staticmethod
     def list_linear_threshold_stopping_policies_ids() -> List[Tuple[int, str]]:

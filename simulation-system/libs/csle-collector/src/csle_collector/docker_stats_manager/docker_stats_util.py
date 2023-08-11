@@ -10,7 +10,7 @@ class DockerStatsUtil:
     """
 
     @staticmethod
-    def calculate_cpu_percent(stats_dict: dict) -> float:
+    def calculate_cpu_percent(stats_dict: Dict[str, Any]) -> float:
         """
         Calculates the CPU utilization percentage
 
@@ -30,8 +30,8 @@ class DockerStatsUtil:
         return cpu_percent
 
     @staticmethod
-    def calculate_cpu_percent2(stats_dict: dict, previous_cpu: float, previous_system: float) \
-            -> Tuple[Union[float, any], float, float]:
+    def calculate_cpu_percent2(stats_dict: Dict[str, Any], previous_cpu: float, previous_system: float) \
+            -> Tuple[Union[float, Any], float, float]:
         """
         Calculates the CPU utilization percentage when precpu is broken in later versions of Docker
 
@@ -60,7 +60,7 @@ class DockerStatsUtil:
         return cpu_percent, cpu_system, cpu_total
 
     @staticmethod
-    def calculate_blkio_mb(stats_dict) -> Tuple[float, float]:
+    def calculate_blkio_mb(stats_dict: Dict[str, Any]) -> Tuple[float, float]:
         """
         :param stats_dict: the stats dict from the Docker API
         :return: (read_mb, wrote_mb)
@@ -68,9 +68,9 @@ class DockerStatsUtil:
         bytes_stats = DockerStatsUtil.graceful_chain_get(stats_dict, constants.DOCKER_STATS.BLKIO_STATS,
                                                          constants.DOCKER_STATS.IO_SERVICE_BYTES_RECURSIVE)
         if not bytes_stats:
-            return 0, 0
-        r = 0
-        w = 0
+            return 0.0, 0.0
+        r = 0.0
+        w = 0.0
         for s in bytes_stats:
             if s[constants.DOCKER_STATS.OP] == constants.DOCKER_STATS.READ:
                 r += s[constants.DOCKER_STATS.VALUE]
@@ -81,16 +81,16 @@ class DockerStatsUtil:
         return r, w
 
     @staticmethod
-    def calculate_network_mb(stats_dict) -> Tuple[float, float]:
+    def calculate_network_mb(stats_dict: Dict[str, Any]) -> Tuple[float, float]:
         """
         :param stats_dict: the stats dict from the Docker API
         :return: (received_mb, transceived_mb)
         """
         networks = DockerStatsUtil.graceful_chain_get(stats_dict, constants.DOCKER_STATS.NETWORKS)
         if not networks:
-            return 0, 0
-        r = 0
-        t = 0
+            return 0.0, 0.0
+        r = 0.0
+        t = 0.0
         for if_name, data in networks.items():
             r += data[constants.DOCKER_STATS.RX_BYTES]
             t += data[constants.DOCKER_STATS.TX_BYTES]
@@ -99,7 +99,7 @@ class DockerStatsUtil:
         return r, t
 
     @staticmethod
-    def graceful_chain_get(stats_dict: dict, *args, default=None):
+    def graceful_chain_get(stats_dict: Dict[str, Any], *args, default=None):
         """
         Wrapper to handle errors
 
@@ -117,7 +117,7 @@ class DockerStatsUtil:
         return t
 
     @staticmethod
-    def parse_stats(stats_dict, container: str) -> DockerStats:
+    def parse_stats(stats_dict: Dict[str, Any], container: str) -> DockerStats:
         """
         Parses a stats dict into a DockerStats object
 
@@ -162,7 +162,7 @@ class DockerStatsUtil:
         :param docker_stats_monitor_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["num_monitors"] = docker_stats_monitor_dto.num_monitors
         emulations = []
         for em in docker_stats_monitor_dto.emulations:

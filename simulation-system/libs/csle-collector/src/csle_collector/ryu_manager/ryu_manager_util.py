@@ -15,7 +15,7 @@ class RyuManagerUtil:
         :param ryu_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ryu_running"] = ryu_dto.ryu_running
         d["monitor_running"] = ryu_dto.monitor_running
         d["port"] = ryu_dto.port

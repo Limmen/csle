@@ -41,7 +41,7 @@ class EPTMPArrivalConfig(ArrivalConfig, JSONSerializable, GRPCSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["thetas"] = self.thetas
         d["gammas"] = self.gammas
         d["phis"] = self.phis
@@ -77,7 +77,8 @@ class EPTMPArrivalConfig(ArrivalConfig, JSONSerializable, GRPCSerializable):
         :param obj: the object to instantiate from
         :return: the instantiated object
         """
-        return EPTMPArrivalConfig(thetas=obj.thetas, gammas=obj.gammas, phis=obj.phis, omegas=obj.omegas)
+        return EPTMPArrivalConfig(thetas=list(obj.thetas), gammas=list(obj.gammas), phis=list(obj.phis),
+                                  omegas=list(obj.omegas))
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "EPTMPArrivalConfig":

@@ -54,7 +54,7 @@ class HostManagerUtil:
         failed_login_attempts: List[FailedLoginAttempt] = list(map(lambda x: FailedLoginAttempt.parse_from_str(
             str(year) + " " + " ".join(x[0:15].split())), login_attempts))
         filtered_failed_login_attempts = list(filter(lambda x: (x is not None and x.timestamp is not None
-                                                               and float(x.timestamp)>failed_auth_last_ts),
+                                                                and float(x.timestamp) > failed_auth_last_ts),
                                                      failed_login_attempts))
         return len(filtered_failed_login_attempts)
 
@@ -232,7 +232,7 @@ class HostManagerUtil:
         :param host_metrics_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["num_logged_in_users"] = host_metrics_dto.num_logged_in_users
         d["num_failed_login_attempts"] = host_metrics_dto.num_failed_login_attempts
         d["num_open_connections"] = host_metrics_dto.num_open_connections
@@ -312,7 +312,7 @@ class HostManagerUtil:
         :param kafka_ip: the kafka server ip
         :return: the filebeat configuration dict
         """
-        filebeat_config = {}
+        filebeat_config: Dict[str, Any] = {}
         filebeat_config[constants.FILEBEAT.INPUTS_PROPERTY] = [
             {
                 constants.BEATS.TYPE_PROPERTY: constants.BEATS.FILESTREAM_PROPERTY,
@@ -505,7 +505,7 @@ class HostManagerUtil:
         :param num_elastic_shards: the number of elastic shards
         :return: the filebeat configuration dict
         """
-        packetbeat_config = {}
+        packetbeat_config: Dict[str, Any] = {}
         packetbeat_config[constants.PACKETBEAT.INTERFACES_TYPE_PROPERTY] = constants.PACKETBEAT.AF_PACKET_PROPERTY
         packetbeat_config[constants.PACKETBEAT.INTERFACES_DEVICE_PROPERTY] = constants.PACKETBEAT.ANY_DEVICE_PROPERTY
         packetbeat_config[constants.PACKETBEAT.FLOWS] = {
@@ -756,7 +756,7 @@ class HostManagerUtil:
         :param hosts_to_monitor: a list of host IP addresses to monitor
         :return: the heartbeat configuration dict
         """
-        heartbeat_config = {}
+        heartbeat_config: Dict[str, Any] = {}
         heartbeat_config[constants.HEARTBEAT.HEARTBEAT_MONITORS_PROPERTY] = [
             {
                 constants.BEATS.TYPE_PROPERTY: constants.HEARTBEAT.ICMP_MONITOR_TYPE,

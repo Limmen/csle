@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Union
 import csle_collector.client_manager.client_manager_pb2
 from csle_base.json_serializable import JSONSerializable
 from csle_base.grpc_serializable import GRPCSerializable
@@ -11,7 +11,7 @@ class WorkflowService(JSONSerializable, GRPCSerializable):
     The service is defined by the series of commands that a client executes to make use of the service.
     """
 
-    def __init__(self, ips_and_commands: List[Tuple[str, str]], id: int) -> None:
+    def __init__(self, ips_and_commands: List[Tuple[str, List[str]]], id: int) -> None:
         """
         Initializes the object
 
@@ -29,7 +29,8 @@ class WorkflowService(JSONSerializable, GRPCSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = WorkflowService(ips_and_commands=list(map(lambda x: tuple(x), d["ips_and_commands"])), id=d["id"])
+        obj = WorkflowService(ips_and_commands=list(map(lambda x: (x[0], x[1]),
+                                                        d["ips_and_commands"])), id=d["id"])
         return obj
 
     def to_dict(self) -> Dict[str, Any]:
@@ -38,7 +39,7 @@ class WorkflowService(JSONSerializable, GRPCSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Union[int, List[Tuple[str, List[str]]]]] = {}
         d["ips_and_commands"] = self.ips_and_commands
         d["id"] = self.id
         return d
@@ -84,8 +85,10 @@ class WorkflowService(JSONSerializable, GRPCSerializable):
         """
         config = self.copy()
         for i in range(len(self.ips_and_commands)):
-            self.ips_and_commands[i][0] = WorkflowService.replace_first_octet_of_ip(ip=self.ips_and_commands[i][0],
-                                                                                    ip_first_octet=ip_first_octet)
+            self.ips_and_commands[i] = \
+                (WorkflowService.replace_first_octet_of_ip(ip=self.ips_and_commands[i][0],
+                                                           ip_first_octet=ip_first_octet),
+                 self.ips_and_commands[i][1])
         return config
 
     def to_grpc_object(self) -> csle_collector.client_manager.client_manager_pb2.WorkflowServiceDTO:
@@ -114,7 +117,7 @@ class WorkflowService(JSONSerializable, GRPCSerializable):
         ips = list(obj.ips)
         commands = list(obj.commands)
         for i in range(len(list(ips))):
-            ips_and_commands.append((ips[i], commands[i].commands))
+            ips_and_commands.append((ips[i], list(commands[i].commands)))
         return WorkflowService(id=obj.id, ips_and_commands=ips_and_commands)
 
     def get_commands(self) -> List[str]:

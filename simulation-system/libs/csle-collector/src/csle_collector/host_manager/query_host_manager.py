@@ -17,7 +17,8 @@ def get_host_status(
     """
     get_host_monitor_status_msg = \
         csle_collector.host_manager.host_manager_pb2.GetHostStatusMsg()
-    host_dto = stub.getHostStatus(get_host_monitor_status_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO \
+        = stub.getHostStatus(get_host_monitor_status_msg, timeout=timeout)
     return host_dto
 
 
@@ -38,7 +39,8 @@ def start_host_monitor(stub: csle_collector.host_manager.host_manager_pb2_grpc.H
     start_host_monitor_msg = csle_collector.host_manager.host_manager_pb2.StartHostMonitorMsg(
         kafka_ip=kafka_ip, kafka_port=kafka_port, time_step_len_seconds=time_step_len_seconds
     )
-    host_dto = stub.startHostMonitor(start_host_monitor_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.startHostMonitor(start_host_monitor_msg, timeout=timeout)
     return host_dto
 
 
@@ -54,7 +56,8 @@ def stop_host_monitor(
     """
     stop_host_monitor_msg = \
         csle_collector.host_manager.host_manager_pb2.StopHostMonitorMsg()
-    host_dto = stub.stopHostMonitor(stop_host_monitor_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.stopHostMonitor(stop_host_monitor_msg, timeout=timeout)
     return host_dto
 
 
@@ -70,7 +73,8 @@ def start_filebeat(
     """
     start_filebeat_msg = \
         csle_collector.host_manager.host_manager_pb2.StartFilebeatMsg()
-    host_dto = stub.startFilebeat(start_filebeat_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO \
+        = stub.startFilebeat(start_filebeat_msg, timeout=timeout)
     return host_dto
 
 
@@ -86,7 +90,8 @@ def stop_filebeat(
     """
     stop_filebeat_msg = \
         csle_collector.host_manager.host_manager_pb2.StopFilebeatMsg()
-    host_dto = stub.stopFilebeat(stop_filebeat_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.stopFilebeat(stop_filebeat_msg, timeout=timeout)
     return host_dto
 
 
@@ -121,7 +126,8 @@ def config_filebeat(
             elastic_port=elastic_port, num_elastic_shards=num_elastic_shards, reload_enabled=reload_enabled,
             kafka=kafka, kafka_port=kafka_port, kafka_ip=kafka_ip, kafka_topics=kafka_topics,
             filebeat_modules=filebeat_modules)
-    host_dto = stub.configFilebeat(config_filebeat_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO \
+        = stub.configFilebeat(config_filebeat_msg, timeout=timeout)
     return host_dto
 
 
@@ -141,7 +147,8 @@ def get_host_metrics(
     get_host_metrics_msg = \
         csle_collector.host_manager.host_manager_pb2.GetHostMetricsMsg(
             failed_auth_last_ts=failed_auth_last_ts, login_last_ts=login_last_ts)
-    host_metrics_dto = stub.getHostMetrics(get_host_metrics_msg, timeout=timeout)
+    host_metrics_dto: csle_collector.host_manager.host_manager_pb2.HostMetricsDTO = \
+        stub.getHostMetrics(get_host_metrics_msg, timeout=timeout)
     return host_metrics_dto
 
 
@@ -157,7 +164,8 @@ def start_packetbeat(
     """
     start_packetbeat_msg = \
         csle_collector.host_manager.host_manager_pb2.StartPacketbeatMsg()
-    host_dto = stub.startPacketbeat(start_packetbeat_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.startPacketbeat(start_packetbeat_msg, timeout=timeout)
     return host_dto
 
 
@@ -173,7 +181,8 @@ def stop_packetbeat(
     """
     stop_packetbeat_msg = \
         csle_collector.host_manager.host_manager_pb2.StopPacketbeatMsg()
-    host_dto = stub.stopPacketbeat(stop_packetbeat_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.stopPacketbeat(stop_packetbeat_msg, timeout=timeout)
     return host_dto
 
 
@@ -198,7 +207,8 @@ def config_packetbeat(
         csle_collector.host_manager.host_manager_pb2.ConfigPacketbeatMsg(
             kibana_ip=kibana_ip, kibana_port=kibana_port, elastic_ip=elastic_ip,
             elastic_port=elastic_port, num_elastic_shards=num_elastic_shards)
-    host_dto = stub.configPacketbeat(config_packetbeat_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.configPacketbeat(config_packetbeat_msg, timeout=timeout)
     return host_dto
 
 
@@ -214,7 +224,8 @@ def start_metricbeat(
     """
     start_metricbeat_msg = \
         csle_collector.host_manager.host_manager_pb2.StartMetricbeatMsg()
-    host_dto = stub.startMetricbeat(start_metricbeat_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.startMetricbeat(start_metricbeat_msg, timeout=timeout)
     return host_dto
 
 
@@ -230,7 +241,8 @@ def stop_metricbeat(
     """
     stop_metricbeat_msg = \
         csle_collector.host_manager.host_manager_pb2.StopMetricbeatMsg()
-    host_dto = stub.stopMetricbeat(stop_metricbeat_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.stopMetricbeat(stop_metricbeat_msg, timeout=timeout)
     return host_dto
 
 
@@ -261,7 +273,8 @@ def config_metricbeat(
             kibana_ip=kibana_ip, kibana_port=kibana_port, elastic_ip=elastic_ip,
             elastic_port=elastic_port, num_elastic_shards=num_elastic_shards, reload_enabled=reload_enabled,
             kafka_port=kafka_port, kafka_ip=kafka_ip, metricbeat_modules=metricbeat_modules)
-    host_dto = stub.configMetricbeat(config_metricbeat_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.configMetricbeat(config_metricbeat_msg, timeout=timeout)
     return host_dto
 
 
@@ -276,7 +289,8 @@ def start_heartbeat(
     :return: a HostDTO describing the host status
     """
     start_heartbeat_msg = csle_collector.host_manager.host_manager_pb2.StartHeartbeatMsg()
-    host_dto = stub.startHeartbeat(start_heartbeat_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.startHeartbeat(start_heartbeat_msg, timeout=timeout)
     return host_dto
 
 
@@ -292,7 +306,8 @@ def stop_heartbeat(
     """
     stop_heartbeat_msg = \
         csle_collector.host_manager.host_manager_pb2.StopHeartbeatMsg()
-    host_dto = stub.stopHeartbeat(stop_heartbeat_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.stopHeartbeat(stop_heartbeat_msg, timeout=timeout)
     return host_dto
 
 
@@ -319,7 +334,8 @@ def config_heartbeat(
         csle_collector.host_manager.host_manager_pb2.ConfigHeartbeatMsg(
             kibana_ip=kibana_ip, kibana_port=kibana_port, elastic_ip=elastic_ip,
             elastic_port=elastic_port, num_elastic_shards=num_elastic_shards, hosts_to_monitor=hosts_to_monitor)
-    host_dto = stub.configHeartbeat(config_heartbeat_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.configHeartbeat(config_heartbeat_msg, timeout=timeout)
     return host_dto
 
 
@@ -334,7 +350,8 @@ def start_spark(
     :return: a HostDTO describing the host status
     """
     start_spark_msg = csle_collector.host_manager.host_manager_pb2.StartSparkMsg()
-    host_dto = stub.startSpark(start_spark_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.startSpark(start_spark_msg, timeout=timeout)
     return host_dto
 
 
@@ -350,5 +367,6 @@ def stop_spark(
     """
     stop_spark_msg = \
         csle_collector.host_manager.host_manager_pb2.StopSparkMsg()
-    host_dto = stub.stopSpark(stop_spark_msg, timeout=timeout)
+    host_dto: csle_collector.host_manager.host_manager_pb2.HostStatusDTO = \
+        stub.stopSpark(stop_spark_msg, timeout=timeout)
     return host_dto

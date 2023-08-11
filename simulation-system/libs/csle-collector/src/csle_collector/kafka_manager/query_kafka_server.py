@@ -14,7 +14,8 @@ def get_kafka_status(stub: csle_collector.kafka_manager.kafka_manager_pb2_grpc.K
     :return: a KafkaDTO describing the status of the kafka server
     """
     get_kafka_status_msg = csle_collector.kafka_manager.kafka_manager_pb2.GetKafkaStatusMsg()
-    kafka_dto = stub.getKafkaStatus(get_kafka_status_msg, timeout=timeout)
+    kafka_dto: csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO = \
+        stub.getKafkaStatus(get_kafka_status_msg, timeout=timeout)
     return kafka_dto
 
 
@@ -35,7 +36,8 @@ def create_topic(stub: csle_collector.kafka_manager.kafka_manager_pb2_grpc.Kafka
     """
     create_kafka_topic_msg = csle_collector.kafka_manager.kafka_manager_pb2.CreateTopicMsg(
         name=name, partitions=partitions, replicas=replicas, retention_time_hours=retention_time_hours)
-    kafka_dto = stub.createTopic(create_kafka_topic_msg, timeout=timeout)
+    kafka_dto: csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO = \
+        stub.createTopic(create_kafka_topic_msg, timeout=timeout)
     return kafka_dto
 
 
@@ -50,7 +52,8 @@ def stop_kafka(stub: csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaMa
     :return: a KafkaDTO describing the status of the kafka server
     """
     stop_kafka_msg = csle_collector.kafka_manager.kafka_manager_pb2.StopKafkaMsg()
-    kafka_dto = stub.stopKafka(stop_kafka_msg, timeout=timeout)
+    kafka_dto: csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO = \
+        stub.stopKafka(stop_kafka_msg, timeout=timeout)
     return kafka_dto
 
 
@@ -65,5 +68,6 @@ def start_kafka(stub: csle_collector.kafka_manager.kafka_manager_pb2_grpc.KafkaM
     :return: a KafkaDTO describing the status of the kafka server
     """
     start_kafka_msg = csle_collector.kafka_manager.kafka_manager_pb2.StartKafkaMsg()
-    kafka_dto = stub.startKafka(start_kafka_msg, timeout=timeout)
+    kafka_dto: csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO = \
+        stub.startKafka(start_kafka_msg, timeout=timeout)
     return kafka_dto

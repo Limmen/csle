@@ -57,7 +57,7 @@ class SnortIdsAlert:
         self.tcp_window = None
         self.ttl = None
         self.tos = None
-        self.id = id
+        self.id = None
         self.dgm_len = None
         self.ip_len = None
         self.icmp_type = None
@@ -75,8 +75,6 @@ class SnortIdsAlert:
         :param year: the year of the entry
         :return: the parsed IDS Alert
         """
-        if year is None:
-            year = datetime.datetime.now().year
         a_fields = csv_str_record.split(",")
         alert_dao = SnortIdsAlert()
         if len(a_fields) > 1:
@@ -182,13 +180,13 @@ class SnortIdsAlert:
         if alert_class in constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID:
             alert_class_id = constants.SNORT_IDS_ROUTER.SNORT_ALERT_IDS_ID[alert_class]
 
-        ts = fast_log_str.split(" ")[0]
-        if ts is not None and ts != "":
-            ts = ts.strip()
-            if ts != "":
-                ts = str(year) + " " + ts
+        ts_str = fast_log_str.split(" ")[0]
+        if ts_str is not None and ts_str != "":
+            ts_str = ts_str.strip()
+            if ts_str != "":
+                ts_str = str(year) + " " + ts_str
                 try:
-                    ts = datetime.datetime.strptime(ts.strip(), '%Y %m/%d-%H:%M:%S.%f').timestamp()
+                    ts = datetime.datetime.strptime(ts_str.strip(), '%Y %m/%d-%H:%M:%S.%f').timestamp()
                 except Exception:
                     ts = datetime.datetime.strptime("2010 04/20-08:46:14.094913", '%Y %m/%d-%H:%M:%S.%f').timestamp()
             else:

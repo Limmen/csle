@@ -15,7 +15,8 @@ def get_traffic_status(stub: csle_collector.traffic_manager.traffic_manager_pb2_
     :return: a TrafficDTO describing the status of the traffic generator
     """
     get_traffic_status_msg = csle_collector.traffic_manager.traffic_manager_pb2.GetTrafficStatusMsg()
-    traffic_dto = stub.getTrafficStatus(get_traffic_status_msg, timeout=timeout)
+    traffic_dto: csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO = \
+        stub.getTrafficStatus(get_traffic_status_msg, timeout=timeout)
     return traffic_dto
 
 
@@ -30,7 +31,8 @@ def stop_traffic(stub: csle_collector.traffic_manager.traffic_manager_pb2_grpc.T
     :return: a TrafficDTO describing the status of the traffic generator
     """
     stop_traffic_msg = csle_collector.traffic_manager.traffic_manager_pb2.StopTrafficMsg()
-    traffic_dto = stub.stopTraffic(stop_traffic_msg, timeout=timeout)
+    traffic_dto: csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO = \
+        stub.stopTraffic(stop_traffic_msg, timeout=timeout)
     return traffic_dto
 
 
@@ -49,5 +51,6 @@ def start_traffic(stub: csle_collector.traffic_manager.traffic_manager_pb2_grpc.
     """
     start_traffic_msg = csle_collector.traffic_manager.traffic_manager_pb2.StartTrafficMsg(
         commands=commands, sleepTime=sleep_time)
-    traffic_dto = stub.startTraffic(start_traffic_msg, timeout=timeout)
+    traffic_dto: csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO = \
+        stub.startTraffic(start_traffic_msg, timeout=timeout)
     return traffic_dto

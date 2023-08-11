@@ -15,7 +15,8 @@ def get_ossec_ids_monitor_status(
     """
     get_ids_monitor_status_msg = \
         csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.GetOSSECIdsMonitorStatusMsg()
-    ids_monitor_dto = stub.getOSSECIdsMonitorStatus(get_ids_monitor_status_msg, timeout=timeout)
+    ids_monitor_dto: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO = \
+        stub.getOSSECIdsMonitorStatus(get_ids_monitor_status_msg, timeout=timeout)
     return ids_monitor_dto
 
 
@@ -38,7 +39,8 @@ def start_ossec_ids_monitor(stub: csle_collector.ossec_ids_manager.ossec_ids_man
         kafka_ip=kafka_ip, kafka_port=kafka_port, log_file_path=log_file_path,
         time_step_len_seconds=time_step_len_seconds
     )
-    ids_monitor_dto = stub.startOSSECIdsMonitor(start_ids_monitor_msg, timeout=timeout)
+    ids_monitor_dto: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO = \
+        stub.startOSSECIdsMonitor(start_ids_monitor_msg, timeout=timeout)
     return ids_monitor_dto
 
 
@@ -55,7 +57,8 @@ def stop_ossec_ids_monitor(
     """
     stop_ids_monitor_msg = \
         csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.StopOSSECIdsMonitorMsg()
-    ids_monitor_dto = stub.stopOSSECIdsMonitor(stop_ids_monitor_msg, timeout=timeout)
+    ids_monitor_dto: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO = \
+        stub.stopOSSECIdsMonitor(stop_ids_monitor_msg, timeout=timeout)
     return ids_monitor_dto
 
 
@@ -72,7 +75,8 @@ def stop_ossec_ids(
     """
     stop_ossec_ids_msg = \
         csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.StopOSSECIdsMsg()
-    ids_monitor_dto = stub.stopOSSECIds(stop_ossec_ids_msg, timeout=timeout)
+    ids_monitor_dto: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO = \
+        stub.stopOSSECIds(stop_ossec_ids_msg, timeout=timeout)
     return ids_monitor_dto
 
 
@@ -89,7 +93,8 @@ def start_ossec_ids(
     """
     start_ossec_ids_msg = \
         csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.StartOSSECIdsMsg()
-    ids_monitor_dto = stub.startOSSECIds(start_ossec_ids_msg, timeout=timeout)
+    ids_monitor_dto: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO = \
+        stub.startOSSECIds(start_ossec_ids_msg, timeout=timeout)
     return ids_monitor_dto
 
 
@@ -109,5 +114,6 @@ def get_ossec_ids_alerts(
     get_ids_log_alerts_msg = \
         csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.GetOSSECIdsAlertsMsg(
             timestamp=timestamp, log_file_path=log_file_path)
-    ids_log_dto = stub.getOSSECIdsAlerts(get_ids_log_alerts_msg, timeout=timeout)
+    ids_log_dto: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsLogDTO = \
+        stub.getOSSECIdsAlerts(get_ids_log_alerts_msg, timeout=timeout)
     return ids_log_dto

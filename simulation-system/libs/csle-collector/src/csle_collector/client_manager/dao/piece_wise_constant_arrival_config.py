@@ -37,7 +37,7 @@ class PieceWiseConstantArrivalConfig(ArrivalConfig, GRPCSerializable, JSONSerial
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["breakvalues"] = self.breakvalues
         d["breakpoints"] = self.breakpoints
         d["client_arrival_type"] = self.client_arrival_type
@@ -71,7 +71,7 @@ class PieceWiseConstantArrivalConfig(ArrivalConfig, GRPCSerializable, JSONSerial
         :param obj: the object to instantiate from
         :return: the instantiated object
         """
-        return PieceWiseConstantArrivalConfig(breakvalues=obj.breakvalues, breakpoints=obj.breakpoints)
+        return PieceWiseConstantArrivalConfig(breakvalues=list(obj.breakvalues), breakpoints=list(obj.breakpoints))
 
     @staticmethod
     def from_json_file(json_file_path: str) -> "PieceWiseConstantArrivalConfig":

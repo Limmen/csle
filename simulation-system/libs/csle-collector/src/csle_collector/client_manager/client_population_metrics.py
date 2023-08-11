@@ -75,7 +75,7 @@ class ClientPopulationMetrics:
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = self.ip
         d["ts"] = self.ts
         d["num_clients"] = self.num_clients

@@ -1,4 +1,4 @@
-from typing import Dict, Any, Tuple, List
+from typing import Dict, Any, Tuple, List, Union
 import time
 import csle_collector.host_manager.host_manager_pb2
 
@@ -11,7 +11,7 @@ class HostMetrics:
     def __init__(self, num_logged_in_users: int = 0, num_failed_login_attempts: int = 0,
                  num_open_connections: int = 0,
                  num_login_events: int = 0, num_processes: int = 0, num_users: int = 0,
-                 ip: str = None, ts: float = None) -> None:
+                 ip: Union[None, str] = None, ts: Union[float, None] = None) -> None:
         """
         Initializes the DTO
 
@@ -82,7 +82,7 @@ class HostMetrics:
         parts = record.split(",")
         if parts[1] == ip:
             self.ip = parts[1]
-            self.ts = float(parts[0]),
+            self.ts = float(parts[0])
             self.num_logged_in_users = int(parts[2])
             self.num_failed_login_attempts = int(parts[3])
             self.num_open_connections = int(parts[4])
@@ -124,7 +124,7 @@ class HostMetrics:
         """
         :return: a dict representation of the instance
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["num_logged_in_users"] = self.num_logged_in_users
         d["num_failed_login_attempts"] = self.num_failed_login_attempts
         d["num_open_connections"] = self.num_open_connections
@@ -146,7 +146,7 @@ class HostMetrics:
         )
         return c
 
-    def get_deltas(self, stats_prime: "HostMetrics") -> Tuple[List[float], List[str]]:
+    def get_deltas(self, stats_prime: "HostMetrics") -> Tuple[List[int], List[str]]:
         """
         Get the deltas between two stats objects
 
@@ -166,7 +166,7 @@ class HostMetrics:
                   "num_login_events", "num_processes", "num_users"]
         return deltas, labels
 
-    def get_values(self) -> Tuple[List[float], List[str]]:
+    def get_values(self) -> Tuple[List[int], List[str]]:
         """
         Get the current values
 

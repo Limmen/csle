@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Union
 import csle_collector.traffic_manager.traffic_manager_pb2
 
 
@@ -9,14 +9,14 @@ class TrafficManagerUtil:
 
     @staticmethod
     def traffic_dto_to_dict(traffic_dto: csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO) \
-            -> Dict[str, Any]:
+            -> Dict[str, Union[bool, str]]:
         """
         Converts a TrafficDTO to a dict
 
         :param traffic_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Union[bool, str]] = {}
         d["running"] = traffic_dto.running
         d["script"] = traffic_dto.script
         return d

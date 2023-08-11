@@ -121,7 +121,7 @@ class SnortIdsRuleCounters:
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = self.ip
         d["ts"] = self.ts
         d["rule_alerts"] = self.rule_alerts

@@ -16,7 +16,8 @@ def get_snort_ids_monitor_status(
     """
     get_ids_monitor_status_msg = \
         csle_collector.snort_ids_manager.snort_ids_manager_pb2.GetSnortIdsMonitorStatusMsg()
-    ids_monitor_dto = stub.getSnortIdsMonitorStatus(get_ids_monitor_status_msg, timeout=timeout)
+    ids_monitor_dto: csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO = \
+        stub.getSnortIdsMonitorStatus(get_ids_monitor_status_msg, timeout=timeout)
     return ids_monitor_dto
 
 
@@ -39,7 +40,8 @@ def start_snort_ids_monitor(stub: csle_collector.snort_ids_manager.snort_ids_man
         kafka_ip=kafka_ip, kafka_port=kafka_port, log_file_path=log_file_path,
         time_step_len_seconds=time_step_len_seconds
     )
-    ids_monitor_dto = stub.startSnortIdsMonitor(start_ids_monitor_msg, timeout=timeout)
+    ids_monitor_dto: csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO = \
+        stub.startSnortIdsMonitor(start_ids_monitor_msg, timeout=timeout)
     return ids_monitor_dto
 
 
@@ -56,7 +58,8 @@ def stop_snort_ids_monitor(
     """
     stop_ids_monitor_msg = \
         csle_collector.snort_ids_manager.snort_ids_manager_pb2.StopSnortIdsMonitorMsg()
-    ids_monitor_dto = stub.stopSnortIdsMonitor(stop_ids_monitor_msg, timeout=timeout)
+    ids_monitor_dto: csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO = \
+        stub.stopSnortIdsMonitor(stop_ids_monitor_msg, timeout=timeout)
     return ids_monitor_dto
 
 
@@ -73,7 +76,8 @@ def stop_snort_ids(
     """
     stop_ids_msg = \
         csle_collector.snort_ids_manager.snort_ids_manager_pb2.StopSnortIdsMsg()
-    ids_monitor_dto = stub.stopSnortIds(stop_ids_msg, timeout=timeout)
+    ids_monitor_dto: csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO = \
+        stub.stopSnortIds(stop_ids_msg, timeout=timeout)
     return ids_monitor_dto
 
 
@@ -95,7 +99,8 @@ def start_snort_ids(
         csle_collector.snort_ids_manager.snort_ids_manager_pb2.StartSnortIdsMsg(
             ingress_interface=ingress_interface, egress_interface=egress_interface, subnetmask=subnetmask
         )
-    ids_monitor_dto = stub.startSnortIds(start_ids_msg, timeout=timeout)
+    ids_monitor_dto: csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO = \
+        stub.startSnortIds(start_ids_msg, timeout=timeout)
     return ids_monitor_dto
 
 
@@ -115,5 +120,6 @@ def get_snort_ids_alerts(
     get_ids_log_alerts_msg = \
         csle_collector.snort_ids_manager.snort_ids_manager_pb2.GetSnortIdsAlertsMsg(
             timestamp=timestamp, log_file_path=log_file_path)
-    ids_log_dto = stub.getSnortIdsAlerts(get_ids_log_alerts_msg, timeout=timeout)
+    ids_log_dto: csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsLogDTO = \
+        stub.getSnortIdsAlerts(get_ids_log_alerts_msg, timeout=timeout)
     return ids_log_dto

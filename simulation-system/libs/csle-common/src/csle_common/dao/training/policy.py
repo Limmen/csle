@@ -1,4 +1,4 @@
-from typing import Union, List, Dict, Any
+from typing import List, Dict, Any
 from abc import abstractmethod
 from csle_common.dao.training.agent_type import AgentType
 from csle_common.dao.training.player_type import PlayerType

@@ -14,7 +14,8 @@ def get_ryu_status(stub: csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMana
     :return: a RyuDTO describing the status of the ryu controller
     """
     get_ryu_status_msg = csle_collector.ryu_manager.ryu_manager_pb2.GetRyuStatusMsg()
-    ryu_dto = stub.getRyuStatus(get_ryu_status_msg, timeout=timeout)
+    ryu_dto: csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO = \
+        stub.getRyuStatus(get_ryu_status_msg, timeout=timeout)
     return ryu_dto
 
 
@@ -29,7 +30,8 @@ def stop_ryu(stub: csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerStu
     :return: a RyuDTO describing the status of the ryu controller
     """
     stop_ryu_msg = csle_collector.ryu_manager.ryu_manager_pb2.StopRyuMsg()
-    ryu_dto = stub.stopRyu(stop_ryu_msg, timeout=timeout)
+    ryu_dto: csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO = \
+        stub.stopRyu(stop_ryu_msg, timeout=timeout)
     return ryu_dto
 
 
@@ -48,7 +50,8 @@ def start_ryu(stub: csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuManagerSt
     """
     start_ryu_msg = csle_collector.ryu_manager.ryu_manager_pb2.StartRyuMsg(
         port=port, web_port=web_port, controller=controller)
-    ryu_dto = stub.startRyu(start_ryu_msg, timeout=timeout)
+    ryu_dto: csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO = \
+        stub.startRyu(start_ryu_msg, timeout=timeout)
     return ryu_dto
 
 
@@ -63,7 +66,8 @@ def stop_ryu_monitor(stub: csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuMa
     :return: a RyuDTO describing the status of the ryu controller
     """
     stop_ryu_monitor_msg = csle_collector.ryu_manager.ryu_manager_pb2.StopRyuMonitorMsg()
-    ryu_dto = stub.stopRyuMonitor(stop_ryu_monitor_msg, timeout=timeout)
+    ryu_dto: csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO = \
+        stub.stopRyuMonitor(stop_ryu_monitor_msg, timeout=timeout)
     return ryu_dto
 
 
@@ -82,5 +86,6 @@ def start_ryu_monitor(stub: csle_collector.ryu_manager.ryu_manager_pb2_grpc.RyuM
     """
     start_ryu_monitor_msg = csle_collector.ryu_manager.ryu_manager_pb2.StartRyuMonitorMsg(
         kafka_ip=kafka_ip, kafka_port=kafka_port, time_step_len=time_step_len)
-    ryu_dto = stub.startRyuMonitor(start_ryu_monitor_msg, timeout=timeout)
+    ryu_dto: csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO = \
+        stub.startRyuMonitor(start_ryu_monitor_msg, timeout=timeout)
     return ryu_dto
