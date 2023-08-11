@@ -88,7 +88,7 @@ class ExportUtil:
                                                 f"trace id: {id_obj[0]}")
             tr = MetastoreFacade.get_emulation_trace(id=id_obj[0])
             if tr is None:
-                raise ValueError("tr is None")
+                raise ValueError(f"Could not find an emulation trace with id: {id_obj[0]}")
             if num_attributes_per_time_step == -1:
                 num_attributes_per_time_step = tr.num_attributes_per_time_step()
             if schema is None:
@@ -220,7 +220,7 @@ class ExportUtil:
             Logger.__call__().get_logger().info(f"Reading trace {i}/{len(emulation_traces_ids)} from the metastore")
             tr = MetastoreFacade.get_emulation_trace(id=id_obj[0])
             if tr is None:
-                raise ValueError("tr is None")
+                raise ValueError(f"Could not find an emulation trace with id: {id_obj[0]}")
             tr_values, tr_labels = tr.to_csv_record(max_time_steps=max_time_steps, max_nodes=max_nodes,
                                                     max_ports=max_ports, max_vulns=max_vulns, null_value=null_value)
             if num_attributes_per_time_step == -1:
@@ -275,7 +275,7 @@ class ExportUtil:
             os.makedirs(output_dir)
         emulation_statistic = MetastoreFacade.get_emulation_statistic(id=statistics_id)
         if emulation_statistic is None:
-            raise ValueError("emulation_statistic is None.")
+            raise ValueError(f"Could not find an emulation statistic with id: {statistics_id}")
         file_name = "statistics.json"
         Logger.__call__().get_logger().info(f"Exporting statistics with id {statistics_id} to file: {file_name}")
         emulation_statistic.compute_descriptive_statistics_and_distributions()
