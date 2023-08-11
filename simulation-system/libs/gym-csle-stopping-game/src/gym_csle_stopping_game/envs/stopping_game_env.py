@@ -1,5 +1,6 @@
-from typing import Tuple, Dict, Union, List, Any
+from typing import Tuple, Dict, List, Any
 import numpy as np
+import numpy.typing as npt
 import time
 import math
 import csle_common.constants.constants as constants
@@ -59,15 +60,15 @@ class StoppingGameEnv(BaseEnv):
         }
 
         # Setup traces
-        self.traces = []
+        self.traces: List[SimulationTrace] = []
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
 
         # Reset
         self.reset()
         super().__init__()
 
-    def step(self, action_profile: Tuple[int, Tuple[np.ndarray, int]]) \
-            -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, bool, dict]:
+    def step(self, action_profile: Tuple[int, Tuple[npt.NDArray[Any], int]]) \
+            -> Tuple[Tuple[npt.NDArray[Any], npt.NDArray[Any]], Tuple[int, int], bool, bool, Dict[str, Any]]:
         """
         Takes a step in the environment by executing the given action
 
@@ -81,7 +82,7 @@ class StoppingGameEnv(BaseEnv):
         assert pi2.shape[0] == len(self.config.S)
         assert pi2.shape[1] == len(self.config.A1)
         done = False
-        info = {}
+        info: Dict[str, Any] = {}
 
         # Compute r, s', b',o'
         r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
@@ -134,8 +135,8 @@ class StoppingGameEnv(BaseEnv):
 
         return (defender_obs, attacker_obs), (r, -r), done, done, info
 
-    def step_test(self, action_profile: Tuple[int, Tuple[np.ndarray, int]], sample_Z) \
-            -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
+    def step_test(self, action_profile: Tuple[int, Tuple[npt.NDArray[Any], int]], sample_Z) \
+            -> Tuple[Tuple[npt.NDArray[Any], npt.NDArray[Any]], Tuple[int, int], bool, Dict[str, Any]]:
         """
         Takes a step in the environment by executing the given action
 
@@ -149,7 +150,7 @@ class StoppingGameEnv(BaseEnv):
         assert pi2.shape[0] == len(self.config.S)
         assert pi2.shape[1] == len(self.config.A1)
         done = False
-        info = {}
+        info: Dict[str, Any] = {}
 
         # Compute r, s', b',o'
         r = self.config.R[self.state.l - 1][a1][a2][self.state.s]
@@ -201,8 +202,8 @@ class StoppingGameEnv(BaseEnv):
 
         return (defender_obs, attacker_obs), (r, -r), done, info
 
-    def step_trace(self, trace: EmulationTrace, a1: int, pi2: np.ndarray) \
-            -> Tuple[Tuple[np.ndarray, np.ndarray], Tuple[int, int], bool, dict]:
+    def step_trace(self, trace: EmulationTrace, a1: int, pi2: npt.NDArray[Any]) \
+            -> Tuple[Tuple[npt.NDArray[Any], npt.NDArray[Any]], Tuple[int, int], bool, Dict[str, Any]]:
         """
         Utility function for stepping a given trace
 
@@ -212,7 +213,7 @@ class StoppingGameEnv(BaseEnv):
         :return: the result of the step
         """
         done = False
-        info = {}
+        info: Dict[str, Any] = {}
         if (self.state.t - 1) < len(trace.attacker_actions):
             a2_emulation_action = trace.attacker_actions[self.state.t - 1]
             a2 = 0
@@ -300,7 +301,7 @@ class StoppingGameEnv(BaseEnv):
         else:
             return 1 - (min(10, (first_stop - (intrusion_start + 1))) / 2) / 10
 
-    def _info(self, info) -> Dict[str, Union[float, int]]:
+    def _info(self, info: Dict[str, Any]) -> Dict[str, Any]:
         """
         Adds the cumulative reward and episode length to the info dict
 
@@ -363,7 +364,8 @@ class StoppingGameEnv(BaseEnv):
             defender_baseline_stop_on_first_alert_return
         return info
 
-    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[Tuple[np.ndarray, np.ndarray], Dict[str, Any]]:
+    def reset(self, seed: int = 0, soft: bool = False) \
+            -> Tuple[Tuple[npt.NDArray[Any], npt.NDArray[Any]], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -378,7 +380,7 @@ class StoppingGameEnv(BaseEnv):
         defender_obs = self.state.defender_observation()
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
-        info = {}
+        info: Dict[str, Any] = {}
         return (defender_obs, attacker_obs), info
 
     @staticmethod
@@ -408,7 +410,7 @@ class StoppingGameEnv(BaseEnv):
             done = False
             defender_obs_space = simulation_env_config.joint_observation_space_config.observation_spaces[0]
             b = env.state.b1
-            o = env.reset()
+            o, _ = env.reset()
             (d_obs, a_obs) = o
             t = 0
             s.reset()
@@ -419,7 +421,7 @@ class StoppingGameEnv(BaseEnv):
             while not done:
                 a1 = defender_policy.action(d_obs)
                 a2 = attacker_policy.action(a_obs)
-                o, r, done, info = env.step((a1, a2))
+                o, r, done, info, _ = env.step((a1, a2))
                 (d_obs, a_obs) = o
                 r_1, r_2 = r
                 logger.debug(f"a1:{a1}, a2:{a2}, d_obs:{d_obs}, a_obs:{a_obs}, r:{r}, done:{done}, info: {info}")
@@ -448,12 +450,12 @@ class StoppingGameEnv(BaseEnv):
                              f"{defender_obs_space.observation_id_to_observation_vector_inv}")
                 logger.debug(f"observation_id_to_observation_vector_inv:"
                              f"{o_components_str in defender_obs_space.observation_id_to_observation_vector_inv}")
+                emulation_o = 0
                 if o_components_str in defender_obs_space.observation_id_to_observation_vector_inv:
-                    o = defender_obs_space.observation_id_to_observation_vector_inv[o_components_str]
-                else:
-                    o = 0
-                logger.debug(f"o:{o}")
-                b = StoppingGameUtil.next_belief(o=o, a1=a1, b=b, pi2=a2, config=env.config, l=env.state.l, a2=a2)
+                    emulation_o = defender_obs_space.observation_id_to_observation_vector_inv[o_components_str]
+                logger.debug(f"o:{emulation_o}")
+                b = StoppingGameUtil.next_belief(o=emulation_o, a1=a1, b=b, pi2=a2, config=env.config,
+                                                 l=env.state.l, a2=a2)
                 d_obs[1] = b[1]
                 a_obs[1] = b[1]
                 logger.debug(f"b:{b}")
@@ -464,7 +466,7 @@ class StoppingGameEnv(BaseEnv):
                 simulation_trace.infos.append(info)
                 simulation_trace.states.append(s)
                 simulation_trace.beliefs.append(b[1])
-                simulation_trace.infrastructure_metrics.append(o)
+                simulation_trace.infrastructure_metrics.append(emulation_o)
 
             em_sim_trace = EmulationSimulationTrace(emulation_trace=emulation_trace, simulation_trace=simulation_trace)
             MetastoreFacade.save_emulation_simulation_trace(em_sim_trace)
@@ -556,10 +558,10 @@ class StoppingGameEnv(BaseEnv):
                 stage_policy = []
                 for s in self.config.S:
                     if s != 2:
-                        dist = [0, 0]
-                        dist[a2] = 1
+                        dist = [0.0, 0.0]
+                        dist[a2] = 1.0
                         stage_policy.append(dist)
                     else:
                         stage_policy.append([0.5, 0.5])
-                stage_policy = np.array(stage_policy)
-                _, _, done, _ = self.step(action_profile=(a1, (stage_policy, a2)))
+                pi2 = np.array(stage_policy)
+                _, _, done, _, _ = self.step(action_profile=(a1, (pi2, a2)))

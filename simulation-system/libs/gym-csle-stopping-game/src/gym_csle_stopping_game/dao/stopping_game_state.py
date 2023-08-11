@@ -1,5 +1,6 @@
 from typing import Dict, Any
 import numpy as np
+import numpy.typing as npt
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 from csle_base.json_serializable import JSONSerializable
 
@@ -9,7 +10,7 @@ class StoppingGameState(JSONSerializable):
     Represents the state of the optimal stopping game
     """
 
-    def __init__(self, b1: np.ndarray, L: int) -> None:
+    def __init__(self, b1: npt.NDArray[np.float_], L: int) -> None:
         """
         Intializes the state
 
@@ -34,13 +35,13 @@ class StoppingGameState(JSONSerializable):
         self.s = StoppingGameUtil.sample_initial_state(b1=self.b1)
         self.b = self.b1.copy()
 
-    def attacker_observation(self) -> np.ndarray:
+    def attacker_observation(self) -> npt.NDArray[Any]:
         """
         :return: the attacker's observation
         """
         return np.array([self.l, self.b[1], self.s])
 
-    def defender_observation(self) -> np.ndarray:
+    def defender_observation(self) -> npt.NDArray[Any]:
         """
         :return: the defender's observation
         """
@@ -73,7 +74,7 @@ class StoppingGameState(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["L"] = self.L
         d["b1"] = list(self.b1)
         d["b"] = list(self.b)

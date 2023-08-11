@@ -1,5 +1,6 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Any
 import numpy as np
+import numpy.typing as npt
 from scipy.stats import betabinom
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.simulation_config.observation_space_config import ObservationSpaceConfig
@@ -14,7 +15,7 @@ class StoppingGameUtil:
     """
 
     @staticmethod
-    def b1() -> np.ndarray:
+    def b1() -> npt.NDArray[np.int_]:
         """
         Gets the initial belief
 
@@ -32,7 +33,7 @@ class StoppingGameUtil:
         return np.array([0, 1, 2])
 
     @staticmethod
-    def defender_actions() -> np.ndarray:
+    def defender_actions() -> npt.NDArray[np.int_]:
         """
         Gets the action space of the defender
 
@@ -41,7 +42,7 @@ class StoppingGameUtil:
         return np.array([0, 1])
 
     @staticmethod
-    def attacker_actions() -> np.ndarray:
+    def attacker_actions() -> npt.NDArray[np.int_]:
         """
         Gets the action space of the attacker
 
@@ -60,7 +61,7 @@ class StoppingGameUtil:
         return np.array(list(range(n + 1)))
 
     @staticmethod
-    def reward_tensor(R_SLA: int, R_INT: int, R_COST: int, L: int, R_ST: int) -> np.ndarray:
+    def reward_tensor(R_SLA: int, R_INT: int, R_COST: int, L: int, R_ST: int) -> npt.NDArray[Any]:
         """
         Gets the reward tensor
 
@@ -89,11 +90,10 @@ class StoppingGameUtil:
                 ]
             ]
             R_l.append(R)
-        R = np.array(R_l)
-        return R
+        return np.array(R_l)
 
     @staticmethod
-    def transition_tensor(L: int, p: float) -> np.ndarray:
+    def transition_tensor(L: int, p: float) -> npt.NDArray[Any]:
         """
         Gets the transition tensor
 
@@ -171,15 +171,14 @@ class StoppingGameUtil:
                     ]
                 ]
             T_l.append(T)
-        T = np.array(T_l)
-        return T
+        return np.array(T_l)
 
     @staticmethod
     def observation_tensor_from_emulation_statistics(emulation_statistic: EmulationStatistics,
                                                      observation_space_defender: ObservationSpaceConfig,
                                                      joint_action_space: JointActionSpaceConfig,
                                                      state_space: StateSpaceConfig) \
-            -> Tuple[np.ndarray, Dict[str, List]]:
+            -> Tuple[npt.NDArray[Any], Dict[str, List[Any]]]:
         """
         Returns an observation tensor based on measured emulation statistics
 
@@ -189,9 +188,9 @@ class StoppingGameUtil:
         :param state_space: the state space
         :return: a |A1|x|A2|x|S|x|O| tensor
         """
-        intrusion_severe_alerts_probabilities = []
-        intrusion_warning_alerts_probabilities = []
-        intrusion_login_attempts_probabilities = []
+        intrusion_severe_alerts_probabilities: List[float] = []
+        intrusion_warning_alerts_probabilities: List[float] = []
+        intrusion_login_attempts_probabilities: List[float] = []
         norm = sum(emulation_statistic.conditionals_counts["intrusion"]["severe_alerts"].values())
         for severe_alert_obs in observation_space_defender.component_observations["severe_alerts"]:
             count = emulation_statistic.conditionals_counts["intrusion"]["severe_alerts"][severe_alert_obs.id]
@@ -229,14 +228,14 @@ class StoppingGameUtil:
             login_attempts_a1_a2_s_o_dist = []
             for a2 in range(len(joint_action_space.action_spaces[1].actions)):
                 a2_s_o_dist = []
-                severe_alerts_a2_s_o_dist = []
-                warning_alerts_a2_s_o_dist = []
-                login_attempts_a2_s_o_dist = []
+                severe_alerts_a2_s_o_dist: List[List[float]] = []
+                warning_alerts_a2_s_o_dist: List[List[float]] = []
+                login_attempts_a2_s_o_dist: List[List[float]] = []
                 for s in range(len(state_space.states)):
                     s_o_dist = []
-                    severe_alerts_s_o_dist = []
-                    warning_alerts_s_o_dist = []
-                    login_attempts_s_o_dist = []
+                    severe_alerts_s_o_dist: List[float] = []
+                    warning_alerts_s_o_dist: List[float] = []
+                    login_attempts_s_o_dist: List[float] = []
                     for o in range(len(observation_space_defender.observations)):
                         obs_vector = observation_space_defender.observation_id_to_observation_id_vector[o]
                         if s == 0:
@@ -256,8 +255,8 @@ class StoppingGameUtil:
                         s_o_dist.append(p)
                     a2_s_o_dist.append(s_o_dist)
                     severe_alerts_a2_s_o_dist.append(severe_alerts_s_o_dist)
-                    warning_alerts_a2_s_o_dist.append(warning_alerts_a2_s_o_dist)
-                    login_attempts_a2_s_o_dist.append(login_attempts_a2_s_o_dist)
+                    warning_alerts_a2_s_o_dist.append(warning_alerts_s_o_dist)
+                    login_attempts_a2_s_o_dist.append(login_attempts_s_o_dist)
                 a1_a2_s_o_dist.append(a2_s_o_dist)
                 severe_alerts_a1_a2_s_o_dist.append(severe_alerts_a2_s_o_dist)
                 warning_alerts_a1_a2_s_o_dist.append(warning_alerts_a2_s_o_dist)
@@ -316,7 +315,7 @@ class StoppingGameUtil:
         return Z
 
     @staticmethod
-    def sample_next_state(T: np.ndarray, l: int, s: int, a1: int, a2: int, S: np.ndarray) -> int:
+    def sample_next_state(T: npt.NDArray[Any], l: int, s: int, a1: int, a2: int, S: npt.NDArray[np.int_]) -> int:
         """
         Samples the next state
 
@@ -331,22 +330,20 @@ class StoppingGameUtil:
         state_probs = []
         for s_prime in S:
             state_probs.append(T[l - 1][a1][a2][s][s_prime])
-        s_prime = np.random.choice(np.arange(0, len(S)), p=state_probs)
-        return s_prime
+        return int(np.random.choice(np.arange(0, len(S)), p=state_probs))
 
     @staticmethod
-    def sample_initial_state(b1: np.ndarray) -> int:
+    def sample_initial_state(b1: npt.NDArray[np.float_]) -> int:
         """
         Samples the initial state
 
         :param b1: the initial belief
         :return: s1
         """
-        s1 = np.random.choice(np.arange(0, len(b1)), p=b1)
-        return s1
+        return int(np.random.choice(np.arange(0, len(b1)), p=b1))
 
     @staticmethod
-    def sample_next_observation(Z: np.ndarray, s_prime: int, O: np.ndarray) -> int:
+    def sample_next_observation(Z: npt.NDArray[Any], s_prime: int, O: npt.NDArray[np.int_]) -> int:
         """
         Samples the next observation
 
@@ -366,7 +363,7 @@ class StoppingGameUtil:
         return int(o)
 
     @staticmethod
-    def bayes_filter(s_prime: int, o: int, a1: int, b: np.ndarray, pi2: np.ndarray, l: int,
+    def bayes_filter(s_prime: int, o: int, a1: int, b: npt.NDArray[np.float_], pi2: npt.NDArray[Any], l: int,
                      config: StoppingGameConfig) -> float:
         """
         A Bayesian filter to compute the belief of player 1
@@ -404,7 +401,7 @@ class StoppingGameUtil:
         return b_prime_s_prime
 
     @staticmethod
-    def p_o_given_b_a1_a2(o: int, b: List, a1: int, a2: int, config: StoppingGameConfig) -> float:
+    def p_o_given_b_a1_a2(o: int, b: List[float], a1: int, a2: int, config: StoppingGameConfig) -> float:
         """
         Computes P[o|a,b]
 
@@ -423,8 +420,8 @@ class StoppingGameUtil:
         return prob
 
     @staticmethod
-    def next_belief(o: int, a1: int, b: np.ndarray, pi2: np.ndarray, config: StoppingGameConfig, l: int,
-                    a2: int = 0, s: int = 0) -> np.ndarray:
+    def next_belief(o: int, a1: int, b: npt.NDArray[np.float_], pi2: npt.NDArray[Any],
+                    config: StoppingGameConfig, l: int, a2: int = 0, s: int = 0) -> npt.NDArray[np.float_]:
         """
         Computes the next belief using a Bayesian filter
 
@@ -449,7 +446,7 @@ class StoppingGameUtil:
         return b_prime
 
     @staticmethod
-    def sample_attacker_action(pi2: np.ndarray, s: int) -> int:
+    def sample_attacker_action(pi2: npt.NDArray[Any], s: int) -> int:
         """
         Samples the attacker action
 
@@ -457,5 +454,4 @@ class StoppingGameUtil:
         :param s: the game state
         :return: a2 (the attacker action
         """
-        a2 = np.random.choice(np.arange(0, len(pi2[s])), p=pi2[s])
-        return a2
+        return int(np.random.choice(np.arange(0, len(pi2[s])), p=pi2[s]))

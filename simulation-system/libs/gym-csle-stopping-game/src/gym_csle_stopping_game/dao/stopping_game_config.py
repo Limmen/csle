@@ -1,6 +1,7 @@
 from typing import Dict, Any
 import gymnasium as gym
 import numpy as np
+import numpy.typing as npt
 from csle_common.dao.simulation_config.simulation_env_input_config import SimulationEnvInputConfig
 
 
@@ -10,8 +11,10 @@ class StoppingGameConfig(SimulationEnvInputConfig):
     """
 
     def __init__(self, env_name: str,
-                 T: np.ndarray, O: np.ndarray, Z: np.ndarray, R: np.ndarray, S: np.ndarray, A1: np.ndarray,
-                 A2: np.ndarray, L: int, R_INT: int, R_COST: int, R_SLA: int, R_ST: int, b1: np.ndarray,
+                 T: npt.NDArray[Any], O: npt.NDArray[np.int_], Z: npt.NDArray[Any],
+                 R: npt.NDArray[Any], S: npt.NDArray[np.int_], A1: npt.NDArray[np.int_],
+                 A2: npt.NDArray[np.int_], L: int, R_INT: int, R_COST: int, R_SLA: int, R_ST: int,
+                 b1: npt.NDArray[np.float_],
                  save_dir: str, checkpoint_traces_freq: int, gamma: float = 1) -> None:
         """
         Initializes the DTO
@@ -59,7 +62,7 @@ class StoppingGameConfig(SimulationEnvInputConfig):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["T"] = list(self.T.tolist())
         d["O"] = list(self.O.tolist())
         d["Z"] = list(self.Z.tolist())

@@ -1,6 +1,6 @@
-from typing import Tuple, List, Dict, Any
-import gymnasium as gym
+from typing import Tuple, List, Dict, Any, Union
 import numpy as np
+import numpy.typing as npt
 from csle_common.dao.simulation_config.base_env import BaseEnv
 from gym_csle_stopping_game.dao.stopping_game_defender_pomdp_config import StoppingGameDefenderPomdpConfig
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
@@ -27,7 +27,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         :param attacker_strategy: the strategy of the static attacker
         """
         self.config = config
-        self.stopping_game_env = gym.make(self.config.stopping_game_name, config=self.config.stopping_game_config)
+        self.stopping_game_env = StoppingGameEnv(config=self.config.stopping_game_config)
 
         # Setup spaces
         self.observation_space = self.config.stopping_game_config.defender_observation_space()
@@ -37,18 +37,18 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         self.static_attacker_strategy = self.config.attacker_strategy
 
         # Setup Config
-        self.viewer = None
+        self.viewer: Union[None, Any] = None
         self.metadata = {
             'render.modes': ['human', 'rgb_array'],
             'video.frames_per_second': 50  # Video rendering speed
         }
 
-        self.latest_attacker_obs = None
+        self.latest_attacker_obs: Union[None, npt.NDArray[Any]] = None
         # Reset
         self.reset()
         super().__init__()
 
-    def step(self, a1: int) -> Tuple[np.ndarray, int, bool, bool, dict]:
+    def step(self, a1: int) -> Tuple[npt.NDArray[Any], int, bool, bool, Dict[str, Any]]:
         """
         Takes a step in the environment by executing the given action
 
@@ -66,7 +66,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
 
         return defender_obs, r[0], d, d, info
 
-    def step_test(self, a1: int, sample_Z) -> Tuple[np.ndarray, int, bool, dict]:
+    def step_test(self, a1: int, sample_Z) -> Tuple[npt.NDArray[Any], int, bool, Dict[str, Any]]:
         """
         Takes a step in the environment by executing the given action
 
@@ -84,7 +84,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
 
         return defender_obs, r[0], d, info
 
-    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[np.ndarray, Dict[str, Any]]:
+    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -93,7 +93,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         o, _ = self.stopping_game_env.reset()
         self.latest_attacker_obs = o[1]
         defender_obs = o[0]
-        dict = {}
+        dict: Dict[str, Any] = {}
         return defender_obs, dict
 
     def render(self, mode: str = 'human'):
@@ -105,7 +105,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         """
         raise NotImplementedError("Rendering is not implemented for this environment")
 
-    def step_trace(self, trace: EmulationTrace, a1: int) -> Tuple[np.ndarray, int, bool, dict]:
+    def step_trace(self, trace: EmulationTrace, a1: int) -> Tuple[npt.NDArray[Any], int, bool, Dict[str, Any]]:
         """
         Utility method for stopping a pre-recorded trace
 
@@ -178,7 +178,7 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
         Closes the viewer (cleanup)
         :return: None
         """
-        if self.viewer:
+        if self.viewer is not None:
             self.viewer.close()
             self.viewer = None
 
@@ -211,4 +211,4 @@ class StoppingGamePomdpDefenderEnv(BaseEnv):
                 self.reset()
             else:
                 action_idx = int(raw_input)
-                _, _, done, _ = self.step(pi2=action_idx)
+                _, _, done, _, _ = self.step(a1=action_idx)

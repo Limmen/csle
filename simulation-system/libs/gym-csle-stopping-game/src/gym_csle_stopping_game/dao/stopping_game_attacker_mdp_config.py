@@ -58,7 +58,7 @@ class StoppingGameAttackerMdpConfig(SimulationEnvInputConfig):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["stopping_game_config"] = self.stopping_game_config.to_dict()
         d["defender_strategy"] = self.defender_strategy.to_dict()
         d["stopping_game_name"] = self.stopping_game_name

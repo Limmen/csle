@@ -1,6 +1,6 @@
 from typing import Tuple, List, Union, Dict, Any
-import gymnasium as gym
 import numpy as np
+import numpy.typing as npt
 import torch
 import math
 from csle_common.dao.simulation_config.base_env import BaseEnv
@@ -9,6 +9,7 @@ from gym_csle_stopping_game.dao.stopping_game_attacker_mdp_config import Stoppin
 from csle_common.dao.simulation_config.simulation_trace import SimulationTrace
 from gym_csle_stopping_game.util.stopping_game_util import StoppingGameUtil
 import gym_csle_stopping_game.constants.constants as env_constants
+from gym_csle_stopping_game.envs.stopping_game_env import StoppingGameEnv
 
 
 class StoppingGameMdpAttackerEnv(BaseEnv):
@@ -23,7 +24,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         :param config: the configuration of the environment
         """
         self.config = config
-        self.stopping_game_env = gym.make(self.config.stopping_game_name, config=self.config.stopping_game_config)
+        self.stopping_game_env: StoppingGameEnv = StoppingGameEnv(config=self.config.stopping_game_config)
 
         # Setup spaces
         self.observation_space = self.config.stopping_game_config.attacker_observation_space()
@@ -33,41 +34,47 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         self.static_defender_strategy = self.config.defender_strategy
 
         # Setup Config
-        self.viewer = None
+        self.viewer: Union[None, Any] = None
         self.metadata = {
             'render.modes': ['human', 'rgb_array'],
             'video.frames_per_second': 50  # Video rendering speed
         }
 
-        self.latest_defender_obs = None
-        self.latest_attacker_obs = None
-        self.model = None
+        self.latest_defender_obs: Union[None, List[Any], npt.NDArray[Any]] = None
+        self.latest_attacker_obs: Union[None, List[Any], npt.NDArray[Any]] = None
+        self.model: Union[None, Any] = None
 
         # Reset
         self.reset()
         super().__init__()
 
-    def step(self, pi2: Union[List[List[float]], int, float, np.int64, float, np.float64]) \
-            -> Tuple[np.ndarray, int, bool, bool, dict]:
+    def step(self, pi2: Union[npt.NDArray[Any], int, float, np.int_, np.float_]) \
+            -> Tuple[npt.NDArray[Any], int, bool, bool, Dict[str, Any]]:
         """
         Takes a step in the environment by executing the given action
 
         :param pi2: attacker stage policy
         :return: (obs, reward, terminated, truncated, info)
         """
-        if type(pi2) is int or type(pi2) is float or type(pi2) is np.int64 or type(pi2) is float \
-                or type(pi2) is np.float64:
+        if type(pi2) is int or type(pi2) is float or type(pi2) is np.int64 or type(pi2) is np.float64:
             a2 = pi2
-            pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs, a2=a2)
+            if self.latest_attacker_obs is None:
+                raise ValueError("Attacker observation is None")
+            pi2 = self.calculate_stage_policy(o=list(self.latest_attacker_obs), a2=int(a2))
         else:
             if self.model is not None:
-                pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
+                if self.latest_attacker_obs is None:
+                    raise ValueError("Attacker observation is None")
+                pi2 = self.calculate_stage_policy(o=list(self.latest_attacker_obs))
                 a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
             else:
                 pi2 = np.array(pi2)
-                if (not pi2.shape[0] == len(self.config.stopping_game_config.S)
-                        or pi2.shape[1] != len(self.config.stopping_game_config.A1)) and self.model is not None:
-                    pi2 = self.calculate_stage_policy(o=self.latest_attacker_obs)
+                try:
+                    if self.latest_attacker_obs is None:
+                        raise ValueError("Attacker observation is None")
+                    pi2 = self.calculate_stage_policy(o=list(self.latest_attacker_obs))
+                except Exception:
+                    pass
                 a2 = StoppingGameUtil.sample_attacker_action(pi2=pi2, s=self.stopping_game_env.state.s)
 
         # a2 = pi2
@@ -83,7 +90,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         a1 = self.static_defender_strategy.action(o=self.latest_defender_obs)
 
         # Step the game
-        o, r, d, _, info = self.stopping_game_env.step((a1, (pi2, a2)))
+        o, r, d, _, info = self.stopping_game_env.step((int(a1), (pi2, int(a2))))
         self.latest_defender_obs = o[0]
         self.latest_attacker_obs = o[1]
         attacker_obs = o[1]
@@ -94,7 +101,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
 
         return attacker_obs, r[1], d, d, info
 
-    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[np.ndarray, Dict[str, Any]]:
+    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -104,7 +111,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         self.latest_defender_obs = o[0]
         self.latest_attacker_obs = o[1]
         attacker_obs = o[1]
-        info = {}
+        info: Dict[str, Any] = {}
         return attacker_obs, info
 
     def set_model(self, model) -> None:
@@ -116,7 +123,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         """
         self.model = model
 
-    def calculate_stage_policy(self, o: List, a2: int = 0) -> np.ndarray:
+    def calculate_stage_policy(self, o: List[Any], a2: int = 0) -> npt.NDArray[Any]:
         """
         Calculates the stage policy of a given model and observation
 
@@ -127,15 +134,14 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
             stage_policy = []
             for s in self.config.stopping_game_config.S:
                 if s != 2:
-                    dist = [0, 0]
-                    dist[a2] = 1
+                    dist = [0.0, 0.0]
+                    dist[a2] = 1.0
                     stage_policy.append(dist)
                 else:
                     stage_policy.append([0.5, 0.5])
             return np.array(stage_policy)
         if isinstance(self.model, MixedMultiThresholdStoppingPolicy):
-            stage_policy = np.array(self.model.stage_policy(o=o))
-            return stage_policy
+            return np.array(self.model.stage_policy(o=o))
         else:
             b1 = o[1]
             l = int(o[0])
@@ -146,18 +152,19 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
                     stage_policy.append(self._get_attacker_dist(obs=o))
                 else:
                     stage_policy.append([0.5, 0.5])
-            stage_policy = np.array(stage_policy)
-            return stage_policy
+            return np.array(stage_policy)
 
-    def _get_attacker_dist(self, obs: List) -> List:
+    def _get_attacker_dist(self, obs: List[Any]) -> List[float]:
         """
         Utility function for getting the attacker's action distribution based on a given observation
 
         :param obs: the given observation
         :return:  the action distribution
         """
-        obs = np.array([obs])
-        actions, values, log_prob = self.model.policy.forward(obs=torch.tensor(obs).to(self.model.device))
+        np_obs = np.array([obs])
+        if self.model is None:
+            raise ValueError("Model is None")
+        actions, values, log_prob = self.model.policy.forward(obs=torch.tensor(np_obs).to(self.model.device))
         action = actions[0]
         if action == 1:
             stop_prob = math.exp(log_prob)
@@ -211,7 +218,7 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
         Closes the viewer (cleanup)
         :return: None
         """
-        if self.viewer:
+        if self.viewer is not None:
             self.viewer.close()
             self.viewer = None
 
@@ -244,4 +251,4 @@ class StoppingGameMdpAttackerEnv(BaseEnv):
                 self.reset()
             else:
                 action_idx = int(raw_input)
-                _, _, done, _ = self.step(pi2=action_idx)
+                _, _, done, _, _ = self.step(pi2=action_idx)
