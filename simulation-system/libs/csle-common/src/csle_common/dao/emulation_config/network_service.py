@@ -10,7 +10,8 @@ class NetworkService(JSONSerializable):
     DTO Class representing a service in the network
     """
 
-    def __init__(self, protocol: TransportProtocol, port: int, name: str, credentials: Optional[List[Credential]] = None):
+    def __init__(self, protocol: TransportProtocol, port: int, name: str,
+                 credentials: Optional[List[Credential]] = None):
         """
         Initializes the DTO
 

@@ -3,7 +3,8 @@ from csle_common.logging.log import Logger
 from csle_common.metastore.metastore_facade import MetastoreFacade
 from csle_common.dao.system_identification.emulation_statistics import EmulationStatistics
 from csle_common.dao.emulation_config.emulation_trace import EmulationTrace
-from typing import Optional, Union    
+from typing import Optional, Union
+
 
 class ImportUtil:
     """

@@ -16,8 +16,10 @@ class NmapHostResult(JSONSerializable):
 
     def __init__(self, status: NmapHostStatus = NmapHostStatus.DOWN, ips: Optional[List[str]] = None,
                  mac_addr: Optional[str] = None, hostnames: Optional[List[str]] = None,
-                 ports: Optional[List[NmapPort]] = None, os: Optional[NmapOs] = None, os_matches: Optional[List[NmapOs]] = None,
-                 vulnerabilities: Optional[List[NmapVuln]] = None, credentials: Optional[List[NmapBruteCredentials]] = None,
+                 ports: Optional[List[NmapPort]] = None, os: Optional[NmapOs] = None,
+                 os_matches: Optional[List[NmapOs]] = None,
+                 vulnerabilities: Optional[List[NmapVuln]] = None,
+                 credentials: Optional[List[NmapBruteCredentials]] = None,
                  trace: Optional[NmapTrace] = None):
         """
         Initializes the DTO

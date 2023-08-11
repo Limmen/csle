@@ -1609,7 +1609,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
 
     def getNumActiveClients(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.GetNumActiveClientsMsg,
-            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.GetNumActiveClientsMsg:
+            context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.GetNumClientsDTO:
         """
         Gets the number of active clients of a given execution
 
@@ -2314,7 +2314,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                 emulation_env_config=execution.emulation_env_config, logger=logging.getLogger(),
                 active_ips=ClusterManagerUtil.get_active_ips(emulation_env_config=execution.emulation_env_config),
                 physical_host_ip=GeneralUtil.get_host_ip())
-            return ClusterManagerUtil.convert_elk_dto(elk_dto=elk_managers_dto)
+            return ClusterManagerUtil.convert_elk_info_dto(elk_managers_dto=elk_managers_dto)
         else:
             return ClusterManagerUtil.get_empty_elk_managers_info_dto()
 
@@ -2421,7 +2421,7 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
         return csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO(outcome=True)
 
     def stopHostManager(
-            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopHostManagersMsg,
+            self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StopHostManagerMsg,
             context: grpc.ServicerContext) -> csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO:
         """
         Stops a specific host manager
@@ -3440,10 +3440,9 @@ class ClusterManagerServicer(csle_cluster.cluster_manager.cluster_manager_pb2_gr
                 GeneralUtil.get_host_ip():
             status_dto = SDNControllerManager.get_ryu_status(emulation_env_config=execution.emulation_env_config,
                                                              logger=logging.getLogger())
-            status_dto = ClusterManagerUtil.convert_ryu_dto_to_ryu_status_dto(status_dto)
-            return status_dto
+            return ClusterManagerUtil.convert_ryu_dto_to_ryu_status_dto(status_dto)
         else:
-            ClusterManagerUtil.get_empty_ryu_manager_status_dto()
+            return ClusterManagerUtil.get_empty_ryu_manager_status_dto()
 
     def startRyu(
             self, request: csle_cluster.cluster_manager.cluster_manager_pb2.StartRyuServiceMsg,

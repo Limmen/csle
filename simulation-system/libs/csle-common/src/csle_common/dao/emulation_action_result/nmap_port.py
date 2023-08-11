@@ -16,7 +16,8 @@ class NmapPort(JSONSerializable):
 
     def __init__(self, port_id: int, protocol: TransportProtocol, status: NmapPortStatus = NmapPortStatus.DOWN,
                  service_name: str = "none", http_enum: Optional[NmapHttpEnum] = None,
-                 http_grep: Optional[NmapHttpGrep] = None, vulscan: Optional[NmapVulscan] = None, service_version: str = "",
+                 http_grep: Optional[NmapHttpGrep] = None, vulscan: Optional[NmapVulscan] = None,
+                 service_version: str = "",
                  service_fp: str = ""):
         """
         Initializes the DTO

@@ -70,7 +70,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_traffic_dto_to_traffic_manager_info_dto_reverse(
-            traffic_dto: cluster_manager_pb2.TrafficManagerInfoDTO) -> \
+            traffic_dto: Union[cluster_manager_pb2.TrafficManagerInfoDTO, None]) -> \
             csle_collector.traffic_manager.traffic_manager_pb2.TrafficDTO:
         """
         Converts a TrafficManagerInfoDTO to a TrafficDTO
@@ -116,7 +116,7 @@ class ClusterManagerUtil:
             clientManagersStatuses=[])
 
     @staticmethod
-    def get_empty_get_num_clients_dto() -> cluster_manager_pb2.GetNumActiveClientsMsg:
+    def get_empty_get_num_clients_dto() -> cluster_manager_pb2.GetNumClientsDTO:
         """
         Gets an empty GetNumClientsDTO
 
@@ -147,7 +147,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_client_dto_to_get_num_clients_dto_reverse(
-            clients_dto: cluster_manager_pb2.GetNumClientsDTO) -> \
+            clients_dto: Union[cluster_manager_pb2.GetNumClientsDTO, None]) -> \
             csle_collector.client_manager.client_manager_pb2.ClientsDTO:
         """
         Converts a clients DTO to a GetNumClientsDTO
@@ -174,7 +174,7 @@ class ClusterManagerUtil:
         :param node_status_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Union[str, bool]] = {}
         d["ip"] = node_status_dto.ip
         d["leader"] = node_status_dto.leader
         d["cAdvisorRunning"] = node_status_dto.cAdvisorRunning
@@ -197,7 +197,7 @@ class ClusterManagerUtil:
         :param node_status_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, bool] = {}
         d["running"] = node_status_dto.running
         return d
 
@@ -209,7 +209,7 @@ class ClusterManagerUtil:
         :param logs_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, List[str]] = {}
         d["logs"] = list(logs_dto.logs)
         return d
 
@@ -221,7 +221,7 @@ class ClusterManagerUtil:
         :param get_num_clients_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["num_clients"] = get_num_clients_dto.num_clients
         d["client_process_active"] = get_num_clients_dto.client_process_active
         d["producer_active"] = get_num_clients_dto.producer_active
@@ -257,14 +257,14 @@ class ClusterManagerUtil:
         :param clients_managers_info_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ips"] = list(clients_managers_info_dto.ips)
         d["ports"] = list(clients_managers_info_dto.ports)
         d["emulationName"] = clients_managers_info_dto.emulationName
         d["executionId"] = clients_managers_info_dto.executionId
         d["clientManagersRunning"] = list(clients_managers_info_dto.clientManagersRunning)
-        d["clientManagersRunning"] = list(map(lambda x: ClusterManagerUtil.get_num_clients_dto_to_dict(x),
-                                              list(clients_managers_info_dto.clientManagersRunning)))
+        d["clientManagersStatuses"] = list(map(lambda x: ClusterManagerUtil.get_num_clients_dto_to_dict(x),
+                                               list(clients_managers_info_dto.clientManagersStatuses)))
         return d
 
     @staticmethod
@@ -276,7 +276,7 @@ class ClusterManagerUtil:
         :param traffic_manager_info_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Union[str, bool]] = {}
         d["running"] = traffic_manager_info_dto.running
         d["script"] = traffic_manager_info_dto.script
         return d
@@ -290,7 +290,7 @@ class ClusterManagerUtil:
         :param traffic_managers_info_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ips"] = list(traffic_managers_info_dto.ips)
         d["ports"] = list(traffic_managers_info_dto.ports)
         d["trafficManagersRunning"] = list(traffic_managers_info_dto.trafficManagersRunning)
@@ -309,8 +309,8 @@ class ClusterManagerUtil:
         :param docker_stats_managers_info_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
-        d["num_monitors"] = list(docker_stats_managers_info_dto.num_monitors)
+        d: Dict[str, Any] = {}
+        d["num_monitors"] = docker_stats_managers_info_dto.num_monitors
         d["emulations"] = list(docker_stats_managers_info_dto.emulations)
         d["emulation_executions"] = list(docker_stats_managers_info_dto.emulation_executions)
         return d
@@ -324,7 +324,7 @@ class ClusterManagerUtil:
         :param docker_stats_managers_info_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ips"] = list(docker_stats_managers_info_dto.ips)
         d["ports"] = list(docker_stats_managers_info_dto.ports)
         d["dockerStatsManagersRunning"] = list(docker_stats_managers_info_dto.dockerStatsManagersRunning)
@@ -344,7 +344,7 @@ class ClusterManagerUtil:
         :param stopped_containers_dto_to_dict: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["stoppedContainers"] = list(map(lambda x: ClusterManagerUtil.docker_container_dto_to_dict(x),
                                           list(stopped_containers_dto_to_dict.stoppedContainers)))
         return d
@@ -358,7 +358,7 @@ class ClusterManagerUtil:
         :param docker_container_dto_to_dict: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["name"] = docker_container_dto_to_dict.name
         d["image"] = docker_container_dto_to_dict.image
         d["ip"] = docker_container_dto_to_dict.ip
@@ -373,7 +373,7 @@ class ClusterManagerUtil:
         :param running_emulations_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["runningEmulations"] = list(running_emulations_dto.runningEmulations)
         return d
 
@@ -386,9 +386,9 @@ class ClusterManagerUtil:
         :param running_containers_dto_to_dict: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["runningContainers"] = list(map(lambda x: ClusterManagerUtil.docker_container_dto_to_dict(x),
-                                          list(running_containers_dto_to_dict.stoppedContainers)))
+                                          list(running_containers_dto_to_dict.runningContainers)))
         return d
 
     @staticmethod
@@ -399,7 +399,7 @@ class ClusterManagerUtil:
         :param docker_networks_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["networks"] = list(docker_networks_dto.networks)
         d["network_ids"] = list(docker_networks_dto.network_ids)
         return d
@@ -412,12 +412,12 @@ class ClusterManagerUtil:
         :param container_image_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["repoTags"] = list(container_image_dto.repoTags)
         d["created"] = list(container_image_dto.created)
         d["os"] = list(container_image_dto.os)
         d["architecture"] = list(container_image_dto.architecture)
-        d["size"] = list(container_image_dto.size)
+        d["size"] = container_image_dto.size
         return d
 
     @staticmethod
@@ -428,7 +428,7 @@ class ClusterManagerUtil:
         :param container_images_dtos: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["images"] = list(map(lambda x: ClusterManagerUtil.container_image_dto_to_dict(x),
                                list(container_images_dtos.images)))
         return d
@@ -452,7 +452,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_docker_stats_monitor_dto_reverse(
-            monitor_dto: cluster_manager_pb2.DockerStatsMonitorStatusDTO) -> \
+            monitor_dto: Union[cluster_manager_pb2.DockerStatsMonitorStatusDTO, None]) -> \
             csle_collector.docker_stats_manager.docker_stats_manager_pb2.DockerStatsMonitorDTO:
         """
         Converts a DockerStatsMonitorStatusDTO to a DockerStatsMonitorDTO
@@ -476,7 +476,7 @@ class ClusterManagerUtil:
         :param elk_status_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, bool] = {}
         d["elasticRunning"] = elk_status_dto.elasticRunning
         d["kibanaRunning"] = elk_status_dto.kibanaRunning
         d["logstashRunning"] = elk_status_dto.logstashRunning
@@ -490,7 +490,7 @@ class ClusterManagerUtil:
         :param elk_managers_info_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ips"] = list(elk_managers_info_dto.ips)
         d["ports"] = list(elk_managers_info_dto.ports)
         d["elkManagersRunning"] = list(elk_managers_info_dto.elkManagersRunning)
@@ -518,8 +518,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_elk_dto_reverse(
-            elk_dto: cluster_manager_pb2.ElkStatusDTO) -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
+    def convert_elk_dto_reverse(elk_dto: Union[cluster_manager_pb2.ElkStatusDTO, None]) \
+            -> csle_collector.elk_manager.elk_manager_pb2.ElkDTO:
         """
         Converts an ElkStatusDTO to an ElkDTO
 
@@ -527,7 +527,7 @@ class ClusterManagerUtil:
         :return: the converted DTO
         """
         if elk_dto is None:
-            return ClusterManagerUtil.convert_elk_info_dto_reverse(ClusterManagerUtil.get_empty_elk_status_dto())
+            return ClusterManagerUtil.convert_elk_dto_reverse(ClusterManagerUtil.get_empty_elk_status_dto())
         return csle_collector.elk_manager.elk_manager_pb2.ElkDTO(
             elasticRunning=elk_dto.elasticRunning, kibanaRunning=elk_dto.kibanaRunning,
             logstashRunning=elk_dto.logstashRunning
@@ -535,7 +535,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_snort_ids_monitor_dto_to_snort_ids_status_dto(
-            snort_dto: csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO) -> \
+            snort_dto: Union[csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO, None]) -> \
             cluster_manager_pb2.SnortIdsStatusDTO:
         """
         Converts a SnortIdsMonitorDTO to a SnortIdsStatusDTO
@@ -550,7 +550,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_snort_ids_monitor_dto_to_snort_ids_status_dto_reverse(
-            snort_dto: cluster_manager_pb2.SnortIdsStatusDTO) -> \
+            snort_dto: Union[cluster_manager_pb2.SnortIdsStatusDTO, None]) -> \
             csle_collector.snort_ids_manager.snort_ids_manager_pb2.SnortIdsMonitorDTO:
         """
         Converts a SnortIdsStatusDTO to a SnortIdsMonitorDTO
@@ -566,7 +566,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_ossec_ids_monitor_dto_to_ossec_ids_status_dto(
-            ossec_dto: csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO) -> \
+            ossec_dto: Union[None, csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO]) -> \
             cluster_manager_pb2.OSSECIdsStatusDTO:
         """
         Converts a OSSECIdsMonitorDTO to a OSSECIdsStatusDTO
@@ -581,7 +581,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_ossec_ids_monitor_dto_to_ossec_ids_status_dto_reverse(
-            ossec_dto: cluster_manager_pb2.OSSECIdsStatusDTO) -> \
+            ossec_dto: Union[None, cluster_manager_pb2.OSSECIdsStatusDTO]) -> \
             csle_collector.ossec_ids_manager.ossec_ids_manager_pb2.OSSECIdsMonitorDTO:
         """
         Converts a OSSECIdsStatusDTO to a OSSECIdsMonitorDTO
@@ -597,7 +597,8 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_kafka_dto_to_kafka_status_dto(
-            kafka_dto: csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO) -> cluster_manager_pb2.KafkaStatusDTO:
+            kafka_dto: Union[None, csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO]) \
+            -> cluster_manager_pb2.KafkaStatusDTO:
         """
         Converts a KafkaDTO to a KafkaStatusDTO
 
@@ -610,7 +611,8 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_kafka_dto_to_kafka_status_dto_reverse(
-            kafka_dto: cluster_manager_pb2.KafkaStatusDTO) -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
+            kafka_dto: Union[None, cluster_manager_pb2.KafkaStatusDTO]) \
+            -> csle_collector.kafka_manager.kafka_manager_pb2.KafkaDTO:
         """
         Converts a KafkaStatusDTO to a KafkaDTO
 
@@ -625,7 +627,8 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_ryu_dto_to_ryu_status_dto(
-            ryu_dto: csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO) -> cluster_manager_pb2.RyuManagerStatusDTO:
+            ryu_dto: Union[None, csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO]) \
+            -> cluster_manager_pb2.RyuManagerStatusDTO:
         """
         Converts a RyuDTO to a RyuManagerStatusDTO
 
@@ -641,7 +644,8 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_ryu_dto_to_ryu_status_dto_reverse(
-            ryu_dto: cluster_manager_pb2.RyuManagerStatusDTO) -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
+            ryu_dto: Union[None, cluster_manager_pb2.RyuManagerStatusDTO]) \
+            -> csle_collector.ryu_manager.ryu_manager_pb2.RyuDTO:
         """
         Converts a RyuManagerStatusDTO to a RyuDTO
 
@@ -664,7 +668,7 @@ class ClusterManagerUtil:
         :param snort_ids_status_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, bool] = {}
         d["monitor_running"] = snort_ids_status_dto.monitor_running
         d["snort_ids_running"] = snort_ids_status_dto.snort_ids_running
         return d
@@ -677,7 +681,7 @@ class ClusterManagerUtil:
         :param ossec_ids_status_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, bool] = {}
         d["monitor_running"] = ossec_ids_status_dto.monitor_running
         d["ossec_ids_running"] = ossec_ids_status_dto.ossec_ids_running
         return d
@@ -692,7 +696,7 @@ class ClusterManagerUtil:
         :param snort_ids_monitor_thread_statuses_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["snortIDSStatuses"] = list(map(lambda x: ClusterManagerUtil.snort_ids_status_dto_to_dict(x),
                                          snort_ids_monitor_thread_statuses_dto.snortIDSStatuses))
         return d
@@ -707,7 +711,7 @@ class ClusterManagerUtil:
         :param ossec_ids_monitor_thread_statuses_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ossecIDSStatuses"] = list(map(lambda x: ClusterManagerUtil.ossec_ids_status_dto_to_dict(x),
                                          ossec_ids_monitor_thread_statuses_dto.ossecIDSStatuses))
         return d
@@ -721,7 +725,7 @@ class ClusterManagerUtil:
         :param ryu_manager_status_dto_to_dict: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ryu_running"] = ryu_manager_status_dto_to_dict.ryu_running
         d["monitor_running"] = ryu_manager_status_dto_to_dict.monitor_running
         d["port"] = ryu_manager_status_dto_to_dict.port
@@ -741,7 +745,7 @@ class ClusterManagerUtil:
         :param host_manager_status_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["monitor_running"] = host_manager_status_dto.monitor_running
         d["filebeat_running"] = host_manager_status_dto.filebeat_running
         d["packetbeat_running"] = host_manager_status_dto.packetbeat_running
@@ -757,7 +761,7 @@ class ClusterManagerUtil:
         :param kafka_status_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["running"] = kafka_status_dto.running
         d["topics"] = kafka_status_dto.topics
         return d
@@ -771,7 +775,7 @@ class ClusterManagerUtil:
         :param snort_managers_info_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ips"] = list(snort_managers_info_dto.ips)
         d["ports"] = list(snort_managers_info_dto.ports)
         d["snortIdsManagersRunning"] = list(snort_managers_info_dto.snortIdsManagersRunning)
@@ -790,7 +794,7 @@ class ClusterManagerUtil:
         :param ossec_managers_info_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ips"] = list(ossec_managers_info_dto.ips)
         d["ports"] = list(ossec_managers_info_dto.ports)
         d["ossecIdsManagersRunning"] = list(ossec_managers_info_dto.ossecIdsManagersRunning)
@@ -809,7 +813,7 @@ class ClusterManagerUtil:
         :param kafka_managers_info_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ips"] = list(kafka_managers_info_dto.ips)
         d["ports"] = list(kafka_managers_info_dto.ports)
         d["kafkaManagersRunning"] = list(kafka_managers_info_dto.kafkaManagersRunning)
@@ -828,7 +832,7 @@ class ClusterManagerUtil:
         :param host_managers_info_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ips"] = list(host_managers_info_dto.ips)
         d["ports"] = list(host_managers_info_dto.ports)
         d["hostManagersRunning"] = list(host_managers_info_dto.hostManagersRunning)
@@ -846,7 +850,7 @@ class ClusterManagerUtil:
         :param ryu_managers_info_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ips"] = list(ryu_managers_info_dto.ips)
         d["ports"] = list(ryu_managers_info_dto.ports)
         d["ryuManagersRunning"] = list(ryu_managers_info_dto.ryuManagersRunning)
@@ -881,7 +885,7 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_host_status_to_host_manager_status_dto_reverse(
-            host_status_dto: cluster_manager_pb2.HostManagerStatusDTO) -> \
+            host_status_dto: Union[None, cluster_manager_pb2.HostManagerStatusDTO]) -> \
             Tuple[csle_collector.host_manager.host_manager_pb2.HostStatusDTO, str]:
         """
         Converts a HostManagerStatusDTO to a HostStatusDTO
@@ -900,7 +904,7 @@ class ClusterManagerUtil:
             heartbeat_running=host_status_dto.heartbeat_running), host_status_dto.ip)
 
     @staticmethod
-    def convert_snort_info_dto(snort_ids_managers_info_dto: SnortIdsManagersInfo) -> \
+    def convert_snort_info_dto(snort_ids_managers_info_dto: Union[None, SnortIdsManagersInfo]) -> \
             cluster_manager_pb2.SnortIdsManagersInfoDTO:
         """
         Converts a SnortIdsManagersInfo into a SnortIdsManagersInfoDTO
@@ -922,8 +926,9 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_snort_info_dto_reverse(snort_ids_managers_info_dto: cluster_manager_pb2.SnortIdsManagersInfoDTO) -> \
-            SnortIdsManagersInfo:
+    def convert_snort_info_dto_reverse(
+            snort_ids_managers_info_dto: Union[None, cluster_manager_pb2.SnortIdsManagersInfoDTO]) \
+            -> SnortIdsManagersInfo:
         """
         Converts a SnortIdsManagersInfo into a SnortIdsManagersInfoDTO
 
@@ -945,7 +950,7 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_ossec_info_dto(ossec_ids_managers_info_dto: OSSECIDSManagersInfo) \
+    def convert_ossec_info_dto(ossec_ids_managers_info_dto: Union[OSSECIDSManagersInfo, None]) \
             -> cluster_manager_pb2.OSSECIdsManagersInfoDTO:
         """
         Converts a OSSECIDSManagersInfo into a OSSECIdsManagersInfoDTO
@@ -967,7 +972,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_ossec_info_dto_reverse(ossec_ids_managers_info_dto: cluster_manager_pb2.OSSECIdsManagersInfoDTO) \
+    def convert_ossec_info_dto_reverse(
+            ossec_ids_managers_info_dto: Union[None, cluster_manager_pb2.OSSECIdsManagersInfoDTO]) \
             -> OSSECIDSManagersInfo:
         """
         Converts a OSSECIdsManagersInfoDTO into a OSSECIDSManagersInfo
@@ -990,7 +996,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_elk_info_dto(elk_managers_dto: ELKManagersInfo) -> cluster_manager_pb2.ElkManagersInfoDTO:
+    def convert_elk_info_dto(elk_managers_dto: Union[None, ELKManagersInfo]) \
+            -> cluster_manager_pb2.ElkManagersInfoDTO:
         """
         Converts a ELKManagersInfo into a ElkManagersInfoDTO
 
@@ -1011,7 +1018,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_elk_info_dto_reverse(elk_managers_dto: cluster_manager_pb2.ElkManagersInfoDTO) -> ELKManagersInfo:
+    def convert_elk_info_dto_reverse(elk_managers_dto: Union[None, cluster_manager_pb2.ElkManagersInfoDTO]) \
+            -> ELKManagersInfo:
         """
         Converts a ELKManagersInfo into a ElkManagersInfoDTO
 
@@ -1033,7 +1041,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_ryu_info_dto(ryu_managers_info_dto: RyuManagersInfo) -> cluster_manager_pb2.RyuManagersInfoDTO:
+    def convert_ryu_info_dto(ryu_managers_info_dto: Union[None, RyuManagersInfo]) \
+            -> cluster_manager_pb2.RyuManagersInfoDTO:
         """
         Converts a RyuManagersInfo into a RyuManagersInfoDTO
 
@@ -1056,7 +1065,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_ryu_info_dto_reverse(ryu_managers_info_dto: cluster_manager_pb2.RyuManagersInfoDTO) -> RyuManagersInfo:
+    def convert_ryu_info_dto_reverse(ryu_managers_info_dto: Union[None, cluster_manager_pb2.RyuManagersInfoDTO]) \
+            -> RyuManagersInfo:
         """
         Converts a RyuManagersInfoDTO into a RyuManagersInfo
 
@@ -1079,7 +1089,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_host_info_dto(host_managers_dto: HostManagersInfo) -> cluster_manager_pb2.HostManagersInfoDTO:
+    def convert_host_info_dto(host_managers_dto: Union[None, HostManagersInfo]) \
+            -> cluster_manager_pb2.HostManagersInfoDTO:
         """
         Converts a HostManagersInfo into a HostManagersInfoDTO
 
@@ -1100,7 +1111,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_host_info_dto_reverse(host_managers_dto: cluster_manager_pb2.HostManagersInfoDTO) -> HostManagersInfo:
+    def convert_host_info_dto_reverse(host_managers_dto: Union[None, cluster_manager_pb2.HostManagersInfoDTO]) \
+            -> HostManagersInfo:
         """
         Converts a HostManagersInfoDTO into a HostManagersInfo
 
@@ -1122,7 +1134,7 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_kafka_info_dto(kafka_managers_info_dto: KafkaManagersInfo) \
+    def convert_kafka_info_dto(kafka_managers_info_dto: Union[None, KafkaManagersInfo]) \
             -> cluster_manager_pb2.KafkaManagersInfoDTO:
         """
         Converts a KafkaManagersInfo into a KafkaManagersInfoDTO
@@ -1143,8 +1155,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_kafka_info_dto_reverse(kafka_managers_info_dto: cluster_manager_pb2.KafkaManagersInfoDTO) \
-            -> KafkaManagersInfo:
+    def convert_kafka_info_dto_reverse(
+            kafka_managers_info_dto: Union[None, cluster_manager_pb2.KafkaManagersInfoDTO]) -> KafkaManagersInfo:
         """
         Converts a KafkaManagersInfoDTO into a KafkaManagersInfo
 
@@ -1166,7 +1178,7 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_client_info_dto(client_managers_dto: ClientManagersInfo) \
+    def convert_client_info_dto(client_managers_dto: Union[None, ClientManagersInfo]) \
             -> cluster_manager_pb2.ClientManagersInfoDTO:
         """
         Converts a ClientManagersInfo into a ClientManagersInfoDTO
@@ -1187,7 +1199,7 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_client_info_dto_reverse(client_managers_dto: cluster_manager_pb2.ClientManagersInfoDTO) \
+    def convert_client_info_dto_reverse(client_managers_dto: Union[None, cluster_manager_pb2.ClientManagersInfoDTO]) \
             -> ClientManagersInfo:
         """
         Converts a ClientManagersInfoDTO into a ClientManagersInfo
@@ -1210,8 +1222,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_traffic_info_dto(traffic_managers_dto: TrafficManagersInfo) \
-            -> cluster_manager_pb2.TrafficManagerInfoDTO:
+    def convert_traffic_info_dto(traffic_managers_dto: Union[None, TrafficManagersInfo]) \
+            -> cluster_manager_pb2.TrafficManagersInfoDTO:
         """
         Converts a TrafficManagersInfo into a TrafficManagerInfoDTO
 
@@ -1232,8 +1244,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_traffic_info_dto_reverse(traffic_managers_dto: cluster_manager_pb2.TrafficManagerInfoDTO) \
-            -> TrafficManagersInfo:
+    def convert_traffic_info_dto_reverse(
+            traffic_managers_dto: Union[None, cluster_manager_pb2.TrafficManagersInfoDTO]) -> TrafficManagersInfo:
         """
         Converts a TrafficManagerInfoDTO into a TrafficManagersInfo
 
@@ -1255,7 +1267,7 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_docker_info_dto(docker_stats_managers_dto: DockerStatsManagersInfo) \
+    def convert_docker_info_dto(docker_stats_managers_dto: Union[None, DockerStatsManagersInfo]) \
             -> cluster_manager_pb2.DockerStatsManagersInfoDTO:
         """
         Converts a DockerStatsManagersInfo into a DockerStatsManagersInfoDTO
@@ -1276,7 +1288,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_docker_info_dto_reverse(docker_stats_managers_dto: cluster_manager_pb2.DockerStatsManagersInfoDTO) \
+    def convert_docker_info_dto_reverse(
+            docker_stats_managers_dto: Union[None, cluster_manager_pb2.DockerStatsManagersInfoDTO]) \
             -> DockerStatsManagersInfo:
         """
         Converts a DockerStatsManagersInfoDTO into a DockerStatsManagersInfo
@@ -1299,7 +1312,8 @@ class ClusterManagerUtil:
         )
 
     @staticmethod
-    def convert_execution_info_dto(execution_info_dto: EmulationExecutionInfo) -> cluster_manager_pb2.ExecutionInfoDTO:
+    def convert_execution_info_dto(execution_info_dto: Union[None, EmulationExecutionInfo]) \
+            -> cluster_manager_pb2.ExecutionInfoDTO:
         """
         Converts a EmulationExecutionInfo into a ExecutionInfoDTO
 
@@ -1327,15 +1341,9 @@ class ClusterManagerUtil:
         for net in execution_info_dto.active_networks:
             network_names.append(net.name)
             network_ids.append(-1)
-        stopped_containers = cluster_manager_pb2.StoppedContainersDTO(
-            stoppedContainers=stopped_containers
-        )
-        running_containers = cluster_manager_pb2.RunningContainersDTO(
-            runningContainers=running_containers
-        )
-        activeNetworks = cluster_manager_pb2.DockerNetworksDTO(
-            networks=network_names, network_ids=network_ids
-        )
+        stopped_container_dtos = cluster_manager_pb2.StoppedContainersDTO(stoppedContainers=stopped_containers)
+        running_container_dtos = cluster_manager_pb2.RunningContainersDTO(runningContainers=running_containers)
+        activeNetworks = cluster_manager_pb2.DockerNetworksDTO(networks=network_names, network_ids=network_ids)
         return cluster_manager_pb2.ExecutionInfoDTO(
             emulationName=execution_info_dto.emulation_name,
             executionId=execution_info_dto.execution_id,
@@ -1346,7 +1354,7 @@ class ClusterManagerUtil:
             clientManagersInfo=ClusterManagerUtil.convert_client_info_dto(execution_info_dto.client_managers_info),
             dockerStatsManagersInfo=ClusterManagerUtil.convert_docker_info_dto(
                 execution_info_dto.docker_stats_managers_info),
-            runningContainers=running_containers, stoppedContainers=stopped_containers,
+            runningContainers=running_container_dtos, stoppedContainers=stopped_container_dtos,
             trafficManagersInfoDTO=ClusterManagerUtil.convert_traffic_info_dto(
                 execution_info_dto.traffic_managers_info),
             activeNetworks=activeNetworks,
@@ -1361,9 +1369,7 @@ class ClusterManagerUtil:
 
         :return: an empty KafkaStatusDTO
         """
-        return cluster_manager_pb2.KafkaStatusDTO(
-            running=False, topics=[]
-        )
+        return cluster_manager_pb2.KafkaStatusDTO(running=False, topics=[])
 
     @staticmethod
     def get_empty_ryu_manager_status_dto() -> cluster_manager_pb2.RyuManagerStatusDTO:
@@ -1422,7 +1428,7 @@ class ClusterManagerUtil:
 
         :return: an empty OSSECIdsStatusDTO
         """
-        return cluster_manager_pb2.OSSECIdsStatusDTO(monitor_running=False, snort_ids_running=False)
+        return cluster_manager_pb2.OSSECIdsStatusDTO(monitor_running=False, ossec_ids_running=False)
 
     @staticmethod
     def get_empty_ossec_ids_monitor_dto() -> cluster_manager_pb2.OSSECIdsStatusDTO:
@@ -1452,8 +1458,7 @@ class ClusterManagerUtil:
         :return: an empty SnortIdsManagersInfoDTO
         """
         return cluster_manager_pb2.SnortIdsManagersInfoDTO(
-            ips=[], ports=[], emulationName="", executionId="", snortIdsManagersRunning=[], snortIdsManagersStatuses=[]
-        )
+            ips=[], ports=[], emulationName="", executionId=-1, snortIdsManagersRunning=[], snortIdsManagersStatuses=[])
 
     @staticmethod
     def get_empty_ossec_managers_info_dto() -> cluster_manager_pb2.OSSECIdsManagersInfoDTO:
@@ -1463,7 +1468,7 @@ class ClusterManagerUtil:
         :return: an empty OSSECIdsManagersInfoDTO
         """
         return cluster_manager_pb2.OSSECIdsManagersInfoDTO(
-            ips=[], ports=[], emulationName="", executionId="", ossecIdsManagersRunning=[], ossecIdsManagersStatuses=[]
+            ips=[], ports=[], emulationName="", executionId=-1, ossecIdsManagersRunning=[], ossecIdsManagersStatuses=[]
         )
 
     @staticmethod
@@ -1474,7 +1479,7 @@ class ClusterManagerUtil:
         :return: an empty ElkManagersInfoDTO
         """
         return cluster_manager_pb2.ElkManagersInfoDTO(
-            ips=[], ports=[], emulationName="", executionId="", elkManagersRunning=[], elkManagersStatuses=[],
+            ips=[], ports=[], emulationName="", executionId=-1, elkManagersRunning=[], elkManagersStatuses=[],
             localKibanaPort=-1, physicalServerIp=""
         )
 
@@ -1498,7 +1503,7 @@ class ClusterManagerUtil:
         :return: an empty HostManagersInfoDTO
         """
         return cluster_manager_pb2.HostManagersInfoDTO(
-            ips=[], ports=[], emulationName="", executionId="", hostManagersRunning=[], hostManagersStatuses=[]
+            ips=[], ports=[], emulationName="", executionId=-1, hostManagersRunning=[], hostManagersStatuses=[]
         )
 
     @staticmethod
@@ -1509,8 +1514,7 @@ class ClusterManagerUtil:
         :return: an empty KafkaManagersInfoDTO
         """
         return cluster_manager_pb2.KafkaManagersInfoDTO(
-            ips=[], ports=[], emulationName="", executionId="", hostManagersRunning=[], hostManagersStatuses=[]
-        )
+            ips=[], ports=[], emulationName="", executionId=-1, kafkaManagersRunning=[], kafkaManagersStatuses=[])
 
     @staticmethod
     def get_empty_docker_managers_info_dto() -> cluster_manager_pb2.DockerStatsManagersInfoDTO:
@@ -1520,7 +1524,7 @@ class ClusterManagerUtil:
         :return: an empty DockerStatsManagersInfoDTO
         """
         return cluster_manager_pb2.DockerStatsManagersInfoDTO(
-            ips=[], ports=[], emulationName="", executionId="", dockerStatsManagersRunning=[],
+            ips=[], ports=[], emulationName="", executionId=-1, dockerStatsManagersRunning=[],
             dockerStatsManagersStatuses=[]
         )
 
@@ -1532,10 +1536,10 @@ class ClusterManagerUtil:
         :return: an empty ExecutionInfoDTO
         """
         return cluster_manager_pb2.ExecutionInfoDTO(
-            emulationName="", executionId="", snortIdsManagersInfo=None, ossecIdsManagersInfo=None,
+            emulationName="", executionId=-1, snortIdsManagersInfo=None, ossecIdsManagersInfo=None,
             kafkaManagersInfo=None, hostManagersInfo=None, clientManagersInfo=None, dockerStatsManagersInfo=None,
-            runningContainers=[], elkManagersInfoDTO=None, ryuManagersInfoDTO=None, trafficManagersInfoDTO=None,
-            stoppedContainers=[], activeNetworks=[]
+            runningContainers=None, elkManagersInfoDTO=None, ryuManagersInfoDTO=None, trafficManagersInfoDTO=None,
+            stoppedContainers=None, activeNetworks=None
         )
 
     @staticmethod
@@ -1564,7 +1568,7 @@ class ClusterManagerUtil:
         :param kibana_tunnel_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = kibana_tunnel_dto.ip
         d["port"] = kibana_tunnel_dto.port
         d["emulation"] = kibana_tunnel_dto.emulation
@@ -1579,7 +1583,7 @@ class ClusterManagerUtil:
         :param kibana_tunnels_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["tunnels"] = list(map(lambda x: ClusterManagerUtil.kibana_tunnel_dto_to_dict(kibana_tunnel_dto=x),
                                 kibana_tunnels_dto.tunnels))
         return d
@@ -1608,7 +1612,7 @@ class ClusterManagerUtil:
         :param ryu_tunnel_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = ryu_tunnel_dto.ip
         d["port"] = ryu_tunnel_dto.port
         d["emulation"] = ryu_tunnel_dto.emulation
@@ -1623,7 +1627,7 @@ class ClusterManagerUtil:
         :param ryu_tunnels_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["tunnels"] = list(map(lambda x: ClusterManagerUtil.ryu_tunnel_dto_to_dict(ryu_tunnel_dto=x),
                                 ryu_tunnels_dto.tunnels))
         return d
@@ -1908,9 +1912,9 @@ class ClusterManagerUtil:
             elk_managers_info.append(ClusterManagerUtil.convert_elk_info_dto_reverse(exec_info.elkManagersInfoDTO))
             ryu_managers_info.append(ClusterManagerUtil.convert_ryu_info_dto_reverse(exec_info.ryuManagersInfoDTO))
 
-        for net in execution.emulation_env_config.containers_config.networks:
-            if net.name not in active_network_names:
-                inactive_networks.append(net)
+        for network in execution.emulation_env_config.containers_config.networks:
+            if network.name not in active_network_names:
+                inactive_networks.append(network)
 
         stopped_containers = list(filter(lambda x: x.name not in running_container_names, stopped_containers))
         merged_snort_ids_managers_info = snort_ids_managers_info[0]
@@ -2133,7 +2137,8 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_client_population_metrics_dto_reverse(
-            client_population_metrics_dto: cluster_manager_pb2.ClientPopulationMetricsDTO) -> ClientPopulationMetrics:
+            client_population_metrics_dto: Union[None, cluster_manager_pb2.ClientPopulationMetricsDTO]) \
+            -> ClientPopulationMetrics:
         """
         Converts a ClientPopulationMetricsDTO to a ClientPopulationMetrics
 
@@ -2168,7 +2173,7 @@ class ClusterManagerUtil:
         :param client_population_metrics_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = client_population_metrics_dto.ip
         d["ts"] = client_population_metrics_dto.ts
         d["num_clients"] = client_population_metrics_dto.num_clients
@@ -2177,7 +2182,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_docker_stats_dto(docker_stats: DockerStats) -> cluster_manager_pb2.DockerStatsDTO:
+    def convert_docker_stats_dto(docker_stats: Union[None, DockerStats]) -> cluster_manager_pb2.DockerStatsDTO:
         """
         Converts a DockerStats object to a DockerStatsDTO
 
@@ -2195,7 +2200,8 @@ class ClusterManagerUtil:
                 ip=docker_stats.ip, ts=docker_stats.ts)
 
     @staticmethod
-    def convert_docker_stats_dto_reverse(docker_stats_dto: cluster_manager_pb2.DockerStatsDTO) -> DockerStats:
+    def convert_docker_stats_dto_reverse(docker_stats_dto: Union[None, cluster_manager_pb2.DockerStatsDTO]) \
+            -> DockerStats:
         """
         Converts a DockerStatsDTO to a DockerStats
 
@@ -2232,7 +2238,7 @@ class ClusterManagerUtil:
         :param docker_stats_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["pids"] = docker_stats_dto.pids
         d["timestamp"] = docker_stats_dto.timestamp
         d["cpu_percent"] = docker_stats_dto.cpu_percent
@@ -2249,7 +2255,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_host_metrics_dto(host_metrics: HostMetrics) -> cluster_manager_pb2.HostMetricsDataDTO:
+    def convert_host_metrics_dto(host_metrics: Union[None, HostMetrics]) -> cluster_manager_pb2.HostMetricsDataDTO:
         """
         Converts a HostMetrics object to a HostMetricsDataDTO
 
@@ -2267,7 +2273,8 @@ class ClusterManagerUtil:
                 num_users=host_metrics.num_users, ip=host_metrics.ip, ts=host_metrics.ts)
 
     @staticmethod
-    def convert_host_metrics_dto_reverse(host_metrics_dto: cluster_manager_pb2.HostMetricsDataDTO) -> HostMetrics:
+    def convert_host_metrics_dto_reverse(host_metrics_dto: Union[None, cluster_manager_pb2.HostMetricsDataDTO]) \
+            -> HostMetrics:
         """
         Converts a HostMetricsDataDTO to a HostMetrics
 
@@ -2303,7 +2310,7 @@ class ClusterManagerUtil:
         :param host_metrics_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["num_logged_in_users"] = host_metrics_dto.num_logged_in_users
         d["num_failed_login_attempts"] = host_metrics_dto.num_failed_login_attempts
         d["num_open_connections"] = host_metrics_dto.num_open_connections
@@ -2315,7 +2322,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_emulation_defender_action_dto(emulation_defender_action: EmulationDefenderAction) \
+    def convert_emulation_defender_action_dto(emulation_defender_action: Union[None, EmulationDefenderAction]) \
             -> cluster_manager_pb2.EmulationDefenderActionDTO:
         """
         Converts a EmulationDefenderAction object to a EmulationDefenderActionDTO
@@ -2336,7 +2343,8 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_emulation_defender_action_dto_reverse(
-            emulation_defender_action_dto: cluster_manager_pb2.EmulationDefenderActionDTO) -> EmulationDefenderAction:
+            emulation_defender_action_dto: Union[None, cluster_manager_pb2.EmulationDefenderActionDTO]) \
+            -> EmulationDefenderAction:
         """
         Converts a EmulationDefenderActionDTO to an EmulationDefenderAction
 
@@ -2376,7 +2384,7 @@ class ClusterManagerUtil:
         :param emulation_defender_action_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["id"] = emulation_defender_action_dto.id
         d["name"] = emulation_defender_action_dto.name
         d["cmds"] = emulation_defender_action_dto.cmds
@@ -2391,7 +2399,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_emulation_attacker_action_dto(emulation_attacker_action: EmulationAttackerAction) \
+    def convert_emulation_attacker_action_dto(emulation_attacker_action: Union[None, EmulationAttackerAction]) \
             -> cluster_manager_pb2.EmulationAttackerActionDTO:
         """
         Converts a EmulationAttackerAction object to a EmulationAttackerActionDTO
@@ -2414,7 +2422,8 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_emulation_attacker_action_dto_reverse(
-            emulation_attacker_action_dto: cluster_manager_pb2.EmulationAttackerActionDTO) -> EmulationAttackerAction:
+            emulation_attacker_action_dto: Union[None, cluster_manager_pb2.EmulationAttackerActionDTO]) \
+            -> EmulationAttackerAction:
         """
         Converts a EmulationAttackerActionDTO to an EmulationAttackerAction
 
@@ -2456,7 +2465,7 @@ class ClusterManagerUtil:
         :param emulation_attacker_action_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["id"] = emulation_attacker_action_dto.id
         d["name"] = emulation_attacker_action_dto.name
         d["cmds"] = emulation_attacker_action_dto.cmds
@@ -2471,7 +2480,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_snort_ids_alert_counters_dto(snort_ids_alert_counters: SnortIdsAlertCounters) \
+    def convert_snort_ids_alert_counters_dto(snort_ids_alert_counters: Union[None, SnortIdsAlertCounters]) \
             -> cluster_manager_pb2.SnortIdsAlertCountersDTO:
         """
         Converts a SnortIdsAlertCounters object to a SnortIdsAlertCountersDTO
@@ -2493,7 +2502,8 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_snort_ids_alert_counters_dto_reverse(
-            snort_ids_alert_counters_dto: cluster_manager_pb2.SnortIdsAlertCountersDTO) -> SnortIdsAlertCounters:
+            snort_ids_alert_counters_dto: Union[None, cluster_manager_pb2.SnortIdsAlertCountersDTO]) \
+            -> SnortIdsAlertCounters:
         """
         Converts a SnortIdsAlertCountersDTO to a SnortIdsAlertCounters
 
@@ -2534,19 +2544,18 @@ class ClusterManagerUtil:
         :param snort_ids_alert_counters_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = snort_ids_alert_counters_dto.ip
         d["ts"] = snort_ids_alert_counters_dto.ts
         d["class_alerts"] = snort_ids_alert_counters_dto.class_alerts
         d["priority_alerts"] = snort_ids_alert_counters_dto.priority_alerts
-        d["total_alerts"] = snort_ids_alert_counters_dto.total_alerts
         d["warning_alerts"] = snort_ids_alert_counters_dto.warning_alerts
         d["severe_alerts"] = snort_ids_alert_counters_dto.severe_alerts
         d["alerts_weighted_by_priority"] = snort_ids_alert_counters_dto.alerts_weighted_by_priority
         return d
 
     @staticmethod
-    def convert_snort_ids_rule_counters_dto(snort_ids_rule_counters: SnortIdsRuleCounters) \
+    def convert_snort_ids_rule_counters_dto(snort_ids_rule_counters: Union[SnortIdsRuleCounters, None]) \
             -> cluster_manager_pb2.SnortIdsRuleCountersDTO:
         """
         Converts a SnortIdsRuleCounters object to a SnortIdsRuleCountersDTO
@@ -2565,7 +2574,8 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_snort_ids_rule_counters_dto_reverse(
-            snort_ids_rule_counters_dto: cluster_manager_pb2.SnortIdsRuleCountersDTO) -> SnortIdsRuleCounters:
+            snort_ids_rule_counters_dto: Union[None, cluster_manager_pb2.SnortIdsRuleCountersDTO]) \
+            -> SnortIdsRuleCounters:
         """
         Converts a SnortIdsRuleCountersDTO to a SnortIdsRuleCounters
 
@@ -2603,7 +2613,7 @@ class ClusterManagerUtil:
         :param snort_ids_rule_counters_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = snort_ids_rule_counters_dto.ip
         d["ts"] = snort_ids_rule_counters_dto.ts
         d["rule_ids"] = list(snort_ids_rule_counters_dto.rule_ids)
@@ -2611,7 +2621,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_snort_ids_ip_alert_counters_dto(snort_ids_ip_alert_counters: SnortIdsIPAlertCounters) \
+    def convert_snort_ids_ip_alert_counters_dto(snort_ids_ip_alert_counters: Union[None, SnortIdsIPAlertCounters]) \
             -> cluster_manager_pb2.SnortIdsIpAlertCountersDTO:
         """
         Converts a SnortIdsIPAlertCounters object to a SnortIdsIpAlertCountersDTO
@@ -2634,7 +2644,8 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_snort_ids_ip_alert_counters_dto_reverse(
-            snort_ids_ip_alert_counters_dto: cluster_manager_pb2.SnortIdsIpAlertCountersDTO) -> SnortIdsIPAlertCounters:
+            snort_ids_ip_alert_counters_dto: Union[None, cluster_manager_pb2.SnortIdsIpAlertCountersDTO]) \
+            -> SnortIdsIPAlertCounters:
         """
         Converts a SnortIdsIpAlertCountersDTO to a SnortIdsIPAlertCounters
 
@@ -2676,20 +2687,19 @@ class ClusterManagerUtil:
         :param snort_ids_alert_counters_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["ip"] = snort_ids_alert_counters_dto.ip
         d["alert_ip"] = snort_ids_alert_counters_dto.alert_ip
         d["ts"] = snort_ids_alert_counters_dto.ts
         d["class_alerts"] = snort_ids_alert_counters_dto.class_alerts
         d["priority_alerts"] = snort_ids_alert_counters_dto.priority_alerts
-        d["total_alerts"] = snort_ids_alert_counters_dto.total_alerts
         d["warning_alerts"] = snort_ids_alert_counters_dto.warning_alerts
         d["severe_alerts"] = snort_ids_alert_counters_dto.severe_alerts
         d["alerts_weighted_by_priority"] = snort_ids_alert_counters_dto.alerts_weighted_by_priority
         return d
 
     @staticmethod
-    def convert_ossec_ids_alert_counters_dto(ossec_ids_alert_counters: OSSECIdsAlertCounters) \
+    def convert_ossec_ids_alert_counters_dto(ossec_ids_alert_counters: Union[None, OSSECIdsAlertCounters]) \
             -> cluster_manager_pb2.OSSECIdsAlertCountersDTO:
         """
         Converts a OSSECIdsAlertCounters object to a OSSECIdsAlertCountersDTO
@@ -2712,7 +2722,8 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_ossec_ids_alert_counters_dto_reverse(
-            ossec_ids_alert_counters_dto: cluster_manager_pb2.OSSECIdsAlertCountersDTO) -> OSSECIdsAlertCounters:
+            ossec_ids_alert_counters_dto: Union[None, cluster_manager_pb2.OSSECIdsAlertCountersDTO]) \
+            -> OSSECIdsAlertCounters:
         """
         Converts a OSSECIdsAlertCountersDTO to a OSSECIdsAlertCounters
 
@@ -2754,19 +2765,19 @@ class ClusterManagerUtil:
         :param ossec_ids_alert_counters_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
+        d["level_alerts"] = ossec_ids_alert_counters_dto.level_alerts
+        d["group_alerts"] = ossec_ids_alert_counters_dto.group_alerts
+        d["severe_alerts"] = ossec_ids_alert_counters_dto.severe_alerts
+        d["warning_alerts"] = ossec_ids_alert_counters_dto.warning_alerts
+        d["total_alerts"] = ossec_ids_alert_counters_dto.total_alerts
+        d["alerts_weighted_by_level"] = ossec_ids_alert_counters_dto.alerts_weighted_by_level
         d["ip"] = ossec_ids_alert_counters_dto.ip
         d["ts"] = ossec_ids_alert_counters_dto.ts
-        d["class_alerts"] = ossec_ids_alert_counters_dto.class_alerts
-        d["priority_alerts"] = ossec_ids_alert_counters_dto.priority_alerts
-        d["total_alerts"] = ossec_ids_alert_counters_dto.total_alerts
-        d["warning_alerts"] = ossec_ids_alert_counters_dto.warning_alerts
-        d["severe_alerts"] = ossec_ids_alert_counters_dto.severe_alerts
-        d["alerts_weighted_by_priority"] = ossec_ids_alert_counters_dto.alerts_weighted_by_priority
         return d
 
     @staticmethod
-    def convert_flow_statistics_dto(flow_statistic: FlowStatistic) -> cluster_manager_pb2.FlowStatisticDTO:
+    def convert_flow_statistics_dto(flow_statistic: Union[None, FlowStatistic]) -> cluster_manager_pb2.FlowStatisticDTO:
         """
         Converts a FlowStatistic object to a FlowStatisticDTO
 
@@ -2786,7 +2797,8 @@ class ClusterManagerUtil:
                 cookie=flow_statistic.cookie)
 
     @staticmethod
-    def convert_flow_statistic_dto_reverse(flow_statistic_dto: cluster_manager_pb2.FlowStatisticDTO) -> FlowStatistic:
+    def convert_flow_statistic_dto_reverse(flow_statistic_dto: Union[None, cluster_manager_pb2.FlowStatisticDTO]) \
+            -> FlowStatistic:
         """
         Converts a FlowStatisticDTO to a FlowStatistic
 
@@ -2827,7 +2839,7 @@ class ClusterManagerUtil:
         :param flow_statistic_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["timestamp"] = flow_statistic_dto.timestamp
         d["datapath_id"] = flow_statistic_dto.datapath_id
         d["in_port"] = flow_statistic_dto.in_port
@@ -2844,7 +2856,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_port_statistics_dto(port_statistic: PortStatistic) -> cluster_manager_pb2.PortStatisticDTO:
+    def convert_port_statistics_dto(port_statistic: Union[None, PortStatistic]) -> cluster_manager_pb2.PortStatisticDTO:
         """
         Converts a PortStatistic object to a PortStatisticDTO
 
@@ -2872,7 +2884,8 @@ class ClusterManagerUtil:
                 duration_seconds=port_statistic.duration_seconds)
 
     @staticmethod
-    def convert_port_statistic_dto_reverse(port_statistic_dto: cluster_manager_pb2.PortStatisticDTO) -> PortStatistic:
+    def convert_port_statistic_dto_reverse(port_statistic_dto: Union[None, cluster_manager_pb2.PortStatisticDTO]) \
+            -> PortStatistic:
         """
         Converts a PortStatisticDTO to a PortStatistic
 
@@ -2923,7 +2936,7 @@ class ClusterManagerUtil:
         :param port_statistic_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["timestamp"] = port_statistic_dto.timestamp
         d["datapath_id"] = port_statistic_dto.datapath_id
         d["port"] = port_statistic_dto.port
@@ -2944,7 +2957,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_agg_flow_statistic_dto(agg_flow_statistic: AggFlowStatistic) \
+    def convert_agg_flow_statistic_dto(agg_flow_statistic: Union[None, AggFlowStatistic]) \
             -> cluster_manager_pb2.AggFlowStatisticDTO:
         """
         Converts a AggFlowStatistic object to a AggFlowStatisticDTO
@@ -2962,8 +2975,8 @@ class ClusterManagerUtil:
                 total_num_flows=agg_flow_statistic.total_num_flows)
 
     @staticmethod
-    def convert_agg_flow_statistic_dto_reverse(agg_flow_statistic_dto: cluster_manager_pb2.AggFlowStatisticDTO) \
-            -> AggFlowStatistic:
+    def convert_agg_flow_statistic_dto_reverse(
+            agg_flow_statistic_dto: Union[None, cluster_manager_pb2.AggFlowStatisticDTO]) -> AggFlowStatistic:
         """
         Converts a AggFlowStatisticDTO to a AggFlowStatistic
 
@@ -2999,7 +3012,7 @@ class ClusterManagerUtil:
         :param agg_flow_statistic_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["timestamp"] = agg_flow_statistic_dto.timestamp
         d["datapath_id"] = agg_flow_statistic_dto.datapath_id
         d["total_num_packets"] = agg_flow_statistic_dto.total_num_packets
@@ -3008,7 +3021,7 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_avg_flow_statistic_dto(avg_flow_statistic: AvgFlowStatistic) \
+    def convert_avg_flow_statistic_dto(avg_flow_statistic: Union[None, AvgFlowStatistic]) \
             -> cluster_manager_pb2.AvgFlowStatisticDTO:
         """
         Converts a AvgFlowStatistic object to a AvgFlowStatisticDTO
@@ -3031,8 +3044,8 @@ class ClusterManagerUtil:
                 avg_cookie=avg_flow_statistic.avg_cookie)
 
     @staticmethod
-    def convert_avg_flow_statistic_dto_reverse(avg_flow_statistic_dto: cluster_manager_pb2.AvgFlowStatisticDTO) \
-            -> AvgFlowStatistic:
+    def convert_avg_flow_statistic_dto_reverse(
+            avg_flow_statistic_dto: Union[None, cluster_manager_pb2.AvgFlowStatisticDTO]) -> AvgFlowStatistic:
         """
         Converts a AvgFlowStatisticDTO to a AvgFlowStatistic
 
@@ -3075,7 +3088,7 @@ class ClusterManagerUtil:
         :param avg_flow_statistic_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["timestamp"] = avg_flow_statistic_dto.timestamp
         d["datapath_id"] = avg_flow_statistic_dto.datapath_id
         d["total_num_packets"] = avg_flow_statistic_dto.total_num_packets
@@ -3089,7 +3102,8 @@ class ClusterManagerUtil:
         return d
 
     @staticmethod
-    def convert_avg_port_statistic_dto(avg_port_statistic: AvgPortStatistic) -> cluster_manager_pb2.AvgPortStatisticDTO:
+    def convert_avg_port_statistic_dto(avg_port_statistic: Union[None, AvgPortStatistic]) \
+            -> cluster_manager_pb2.AvgPortStatisticDTO:
         """
         Converts a AvgPortStatistic object to a AvgPortStatisticDTO
 
@@ -3117,8 +3131,8 @@ class ClusterManagerUtil:
                 avg_duration_seconds=avg_port_statistic.avg_duration_seconds)
 
     @staticmethod
-    def convert_avg_port_statistic_dto_reverse(avg_port_statistic_dto: cluster_manager_pb2.AvgPortStatisticDTO) \
-            -> AvgPortStatistic:
+    def convert_avg_port_statistic_dto_reverse(
+            avg_port_statistic_dto: Union[None, cluster_manager_pb2.AvgPortStatisticDTO]) -> AvgPortStatistic:
         """
         Converts a AvgPortStatisticDTO to a AvgPortStatistic
 
@@ -3170,7 +3184,7 @@ class ClusterManagerUtil:
         :param avg_port_statistic_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["timestamp"] = avg_port_statistic_dto.timestamp
         d["datapath_id"] = avg_port_statistic_dto.datapath_id
         d["total_num_received_packets"] = avg_port_statistic_dto.total_num_received_packets
@@ -3220,7 +3234,7 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.convert_docker_stats_dict_reverse(
                 ClusterManagerUtil.get_empty_docker_stats_dict())
         else:
-            d = {}
+            d: Dict[str, Any] = {}
             for ds in docker_stats_dict:
                 d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_docker_stats_dto_reverse(x), ds.dtos))
             return d
@@ -3243,10 +3257,10 @@ class ClusterManagerUtil:
         :param docker_stats_dict: the DTO to convert
         :return: the dict
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["key"] = docker_stats_dict.key
         dtos = []
-        for dto in docker_stats_dict.dtos.items():
+        for dto in docker_stats_dict.dtos:
             dtos.append(ClusterManagerUtil.docker_stats_dto_to_dict(dto))
         d["dtos"] = dtos
         return d
@@ -3284,7 +3298,7 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict_reverse(
                 ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dict())
         else:
-            d = {}
+            d: Dict[str, Any] = {}
             for ds in snort_ids_ip_alerts_counters_dict:
                 d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dto_reverse(x),
                                      ds.dtos))
@@ -3308,10 +3322,10 @@ class ClusterManagerUtil:
         :param snort_ids_ip_alert_counters_dict: the DTO to convert
         :return: the dict
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["key"] = snort_ids_ip_alert_counters_dict.key
         dtos = []
-        for dto in snort_ids_ip_alert_counters_dict.dtos.items():
+        for dto in snort_ids_ip_alert_counters_dict.dtos:
             dtos.append(ClusterManagerUtil.snort_ids_ip_alert_counters_dto_to_dict(dto))
         d["dtos"] = dtos
         return d
@@ -3349,7 +3363,7 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.convert_snort_ids_alert_counters_dict_reverse(
                 ClusterManagerUtil.get_empty_snort_ids_alert_counters_dict())
         else:
-            d = {}
+            d: Dict[str, Any] = {}
             for ds in snort_ids_alerts_counters_dict:
                 d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_snort_ids_alert_counters_dto_reverse(x),
                                      ds.dtos))
@@ -3373,10 +3387,10 @@ class ClusterManagerUtil:
         :param snort_ids_alert_counters_dict: the DTO to convert
         :return: the dict
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["key"] = snort_ids_alert_counters_dict.key
         dtos = []
-        for dto in snort_ids_alert_counters_dict.dtos.items():
+        for dto in snort_ids_alert_counters_dict.dtos:
             dtos.append(ClusterManagerUtil.snort_ids_alert_counters_dto_to_dict(dto))
         d["dtos"] = dtos
         return d
@@ -3414,7 +3428,7 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.convert_snort_ids_rule_counters_dict_reverse(
                 ClusterManagerUtil.get_empty_snort_ids_rule_counters_dict())
         else:
-            d = {}
+            d: Dict[str, Any] = {}
             for ds in snort_ids_rule_counters_dict:
                 d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_snort_ids_rule_counters_dto_reverse(x),
                                      ds.dtos))
@@ -3431,17 +3445,17 @@ class ClusterManagerUtil:
 
     @staticmethod
     def snort_ids_rule_counters_dict_to_dict(
-            snort_ids_rule_counters_dict: cluster_manager_pb2.SnortIdsAlertCountersDict) -> Dict[str, Any]:
+            snort_ids_rule_counters_dict: cluster_manager_pb2.SnortIdsRuleCountersDict) -> Dict[str, Any]:
         """
         Converts a DTO to a dict
 
         :param snort_ids_rule_counters_dict: the DTO to convert
         :return: the dict
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["key"] = snort_ids_rule_counters_dict.key
         dtos = []
-        for dto in snort_ids_rule_counters_dict.dtos.items():
+        for dto in snort_ids_rule_counters_dict.dtos:
             dtos.append(ClusterManagerUtil.snort_ids_rule_counters_dto_to_dict(dto))
         d["dtos"] = dtos
         return d
@@ -3477,7 +3491,7 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.convert_host_metrics_dict_reverse(
                 ClusterManagerUtil.get_empty_host_metrics_dict())
         else:
-            d = {}
+            d: Dict[str, Any] = {}
             for ds in host_metrics_dict:
                 d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_host_metrics_dto_reverse(x), ds.dtos))
             return d
@@ -3500,10 +3514,10 @@ class ClusterManagerUtil:
         :param host_metrics_dict: the DTO to convert
         :return: the dict
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["key"] = host_metrics_dict.key
         dtos = []
-        for dto in host_metrics_dict.dtos.items():
+        for dto in host_metrics_dict.dtos:
             dtos.append(ClusterManagerUtil.host_metrics_dto_to_dict(dto))
         d["dtos"] = dtos
         return d
@@ -3539,9 +3553,9 @@ class ClusterManagerUtil:
         """
         if ossec_ids_alert_counters_dict is None:
             return ClusterManagerUtil.convert_ossec_ids_alert_counters_dict_reverse(
-                ClusterManagerUtil.get_empty_host_metrics_dict())
+                ClusterManagerUtil.get_empty_ossec_ids_alert_counters_dict())
         else:
-            d = {}
+            d: Dict[str, Any] = {}
             for ds in ossec_ids_alert_counters_dict:
                 d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_ossec_ids_alert_counters_dto_reverse(x),
                                      ds.dtos))
@@ -3564,10 +3578,10 @@ class ClusterManagerUtil:
         :param ossec_ids_alert_counters_dict: the DTO to convert
         :return: the dict
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["key"] = ossec_ids_alert_counters_dict.key
         dtos = []
-        for dto in ossec_ids_alert_counters_dict.dtos.items():
+        for dto in ossec_ids_alert_counters_dict.dtos:
             dtos.append(ClusterManagerUtil.ossec_ids_alert_counters_dto_to_dict(dto))
         d["dtos"] = dtos
         return d
@@ -3604,7 +3618,7 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.convert_flow_statistic_dict_reverse(
                 ClusterManagerUtil.get_empty_flow_statistic_dict())
         else:
-            d = {}
+            d: Dict[str, Any] = {}
             for ds in flow_statistics_dict:
                 d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_flow_statistic_dto_reverse(x), ds.dtos))
             return d
@@ -3626,10 +3640,10 @@ class ClusterManagerUtil:
         :param flow_statistics_dict: the DTO to convert
         :return: the dict
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["key"] = flow_statistics_dict.key
         dtos = []
-        for dto in flow_statistics_dict.dtos.items():
+        for dto in flow_statistics_dict.dtos:
             dtos.append(ClusterManagerUtil.flow_statistic_dto_to_dict(dto))
         d["dtos"] = dtos
         return d
@@ -3666,7 +3680,7 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.convert_port_statistic_dict_reverse(
                 ClusterManagerUtil.get_empty_port_statistic_dict())
         else:
-            d = {}
+            d: Dict[str, Any] = {}
             for ds in port_statistics_dict:
                 d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_port_statistic_dto_reverse(x), ds.dtos))
             return d
@@ -3688,10 +3702,10 @@ class ClusterManagerUtil:
         :param port_statistics_dict: the DTO to convert
         :return: the dict
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["key"] = port_statistics_dict.key
         dtos = []
-        for dto in port_statistics_dict.dtos.items():
+        for dto in port_statistics_dict.dtos:
             dtos.append(ClusterManagerUtil.port_statistic_dto_to_dict(dto))
         d["dtos"] = dtos
         return d
@@ -3728,7 +3742,7 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.convert_avg_flow_statistic_dict_reverse(
                 ClusterManagerUtil.get_empty_avg_flow_statistic_dict())
         else:
-            d = {}
+            d: Dict[str, Any] = {}
             for ds in avg_flow_statistics_dict:
                 d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_avg_flow_statistic_dto_reverse(x), ds.dtos))
             return d
@@ -3751,10 +3765,10 @@ class ClusterManagerUtil:
         :param avg_flow_statistics_dict: the DTO to convert
         :return: the dict
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["key"] = avg_flow_statistics_dict.key
         dtos = []
-        for dto in avg_flow_statistics_dict.dtos.items():
+        for dto in avg_flow_statistics_dict.dtos:
             dtos.append(ClusterManagerUtil.avg_flow_statistic_dto_to_dict(dto))
         d["dtos"] = dtos
         return d
@@ -3791,7 +3805,7 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.convert_agg_flow_statistic_dict_reverse(
                 ClusterManagerUtil.get_empty_agg_flow_statistic_dict())
         else:
-            d = {}
+            d: Dict[str, Any] = {}
             for ds in agg_flow_statistics_dict:
                 d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_agg_flow_statistic_dto_reverse(x), ds.dtos))
             return d
@@ -3813,10 +3827,10 @@ class ClusterManagerUtil:
         :param agg_flow_statistics_dict: the DTO to convert
         :return: the dict
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["key"] = agg_flow_statistics_dict.key
         dtos = []
-        for dto in agg_flow_statistics_dict.dtos.items():
+        for dto in agg_flow_statistics_dict.dtos:
             dtos.append(ClusterManagerUtil.agg_flow_statistic_dto_to_dict(dto))
         d["dtos"] = dtos
         return d
@@ -3853,7 +3867,7 @@ class ClusterManagerUtil:
             return ClusterManagerUtil.convert_avg_port_statistic_dict_reverse(
                 ClusterManagerUtil.get_empty_avg_port_statistic_dict())
         else:
-            d = {}
+            d: Dict[str, Any] = {}
             for ds in avg_port_statistics_dict:
                 d[ds.key] = list(map(lambda x: ClusterManagerUtil.convert_avg_port_statistic_dto_reverse(x), ds.dtos))
             return d
@@ -3876,10 +3890,10 @@ class ClusterManagerUtil:
         :param avg_port_statistics_dict: the DTO to convert
         :return: the dict
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["key"] = avg_port_statistics_dict.key
         dtos = []
-        for dto in avg_port_statistics_dict.dtos.items():
+        for dto in avg_port_statistics_dict.dtos:
             dtos.append(ClusterManagerUtil.avg_port_statistic_dto_to_dict(dto))
         d["dtos"] = dtos
         return d
@@ -3909,9 +3923,9 @@ class ClusterManagerUtil:
             avg_openflow_port_stats=[ClusterManagerUtil.get_empty_avg_port_statistic_dto()],
             openflow_flow_metrics_per_switch=ClusterManagerUtil.get_empty_flow_statistic_dict(),
             openflow_port_metrics_per_switch=ClusterManagerUtil.get_empty_port_statistic_dict(),
-            openflow_flow_avg_metrics_per_switch=ClusterManagerUtil.get_empty_flow_statistic_dict(),
+            openflow_flow_avg_metrics_per_switch=ClusterManagerUtil.get_empty_avg_flow_statistic_dict(),
             openflow_port_avg_metrics_per_switch=ClusterManagerUtil.get_empty_avg_port_statistic_dict(),
-            agg_openflow_flow_metrics_per_switch=ClusterManagerUtil.get_empty_avg_flow_statistic_dict(),
+            agg_openflow_flow_metrics_per_switch=ClusterManagerUtil.get_empty_agg_flow_statistic_dict(),
             agg_openflow_flow_stats=[ClusterManagerUtil.get_empty_agg_flow_statistic_dto()],
             agg_snort_ids_rule_metrics=[ClusterManagerUtil.get_empty_snort_ids_rule_counters_dto()],
             snort_ids_ip_metrics=ClusterManagerUtil.get_empty_snort_ids_ip_alert_counters_dict(),
@@ -3984,7 +3998,8 @@ class ClusterManagerUtil:
 
     @staticmethod
     def convert_emulation_metrics_time_series_dto_reverse(
-            time_series_dto: cluster_manager_pb2.EmulationMetricsTimeSeriesDTO) -> EmulationMetricsTimeSeries:
+            time_series_dto: Union[None, cluster_manager_pb2.EmulationMetricsTimeSeriesDTO]) \
+            -> EmulationMetricsTimeSeries:
         """
         Converts a EmulationMetricsTimeSeriesDTO to a EmulationMetricsTimeSeries
 
@@ -4002,52 +4017,52 @@ class ClusterManagerUtil:
                 aggregated_docker_stats=list(map(lambda x: ClusterManagerUtil.convert_docker_stats_dto_reverse(x),
                                                  time_series_dto.aggregated_docker_stats)),
                 docker_host_stats=ClusterManagerUtil.convert_docker_stats_dict_reverse(
-                    time_series_dto.docker_host_stats),
-                host_metrics=ClusterManagerUtil.convert_host_metrics_dict_reverse(time_series_dto.host_metrics),
+                    list(time_series_dto.docker_host_stats)),
+                host_metrics=ClusterManagerUtil.convert_host_metrics_dict_reverse(list(time_series_dto.host_metrics)),
                 aggregated_host_metrics=list(map(lambda x: ClusterManagerUtil.convert_host_metrics_dto_reverse(x),
-                                                 time_series_dto.aggregated_host_metrics)),
+                                                 list(time_series_dto.aggregated_host_metrics))),
                 defender_actions=list(map(lambda x: ClusterManagerUtil.convert_emulation_defender_action_dto_reverse(x),
-                                          time_series_dto.defender_actions)),
+                                          list(time_series_dto.defender_actions))),
                 attacker_actions=list(map(lambda x: ClusterManagerUtil.convert_emulation_attacker_action_dto_reverse(x),
-                                          time_series_dto.attacker_actions)),
+                                          list(time_series_dto.attacker_actions))),
                 agg_snort_ids_metrics=list(
                     map(lambda x: ClusterManagerUtil.convert_snort_ids_alert_counters_dto_reverse(x),
-                        time_series_dto.agg_snort_ids_metrics)),
+                        list(time_series_dto.agg_snort_ids_metrics))),
                 emulation_env_config=emulation_config,
                 ossec_host_alert_counters=ClusterManagerUtil.convert_ossec_ids_alert_counters_dict_reverse(
-                    time_series_dto.ossec_host_alert_counters),
+                    list(time_series_dto.ossec_host_alert_counters)),
                 aggregated_ossec_host_alert_counters=list(
                     map(lambda x: ClusterManagerUtil.convert_ossec_ids_alert_counters_dto_reverse(x),
-                        time_series_dto.aggregated_ossec_host_alert_counters)),
+                        list(time_series_dto.aggregated_ossec_host_alert_counters))),
                 openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_flow_statistic_dto_reverse(x),
-                                             time_series_dto.openflow_flow_stats)),
+                                             list(time_series_dto.openflow_flow_stats))),
                 openflow_port_stats=list(map(lambda x: ClusterManagerUtil.convert_port_statistic_dto_reverse(x),
-                                             time_series_dto.openflow_port_stats)),
+                                             list(time_series_dto.openflow_port_stats))),
                 avg_openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_avg_flow_statistic_dto_reverse(x),
-                                                 time_series_dto.avg_openflow_flow_stats)),
+                                                 list(time_series_dto.avg_openflow_flow_stats))),
                 avg_openflow_port_stats=list(map(lambda x: ClusterManagerUtil.convert_avg_port_statistic_dto_reverse(x),
-                                                 time_series_dto.avg_openflow_port_stats)),
+                                                 list(time_series_dto.avg_openflow_port_stats))),
                 openflow_flow_metrics_per_switch=ClusterManagerUtil.convert_flow_statistic_dict_reverse(
-                    time_series_dto.openflow_flow_metrics_per_switch),
+                    list(time_series_dto.openflow_flow_metrics_per_switch)),
                 openflow_port_metrics_per_switch=ClusterManagerUtil.convert_port_statistic_dict_reverse(
-                    time_series_dto.openflow_port_metrics_per_switch),
+                    list(time_series_dto.openflow_port_metrics_per_switch)),
                 openflow_flow_avg_metrics_per_switch=ClusterManagerUtil.convert_avg_flow_statistic_dict_reverse(
-                    time_series_dto.openflow_flow_avg_metrics_per_switch),
+                    list(time_series_dto.openflow_flow_avg_metrics_per_switch)),
                 openflow_port_avg_metrics_per_switch=ClusterManagerUtil.convert_avg_port_statistic_dict_reverse(
-                    time_series_dto.openflow_port_avg_metrics_per_switch),
+                    list(time_series_dto.openflow_port_avg_metrics_per_switch)),
                 agg_openflow_flow_metrics_per_switch=ClusterManagerUtil.convert_agg_flow_statistic_dict_reverse(
-                    time_series_dto.agg_openflow_flow_metrics_per_switch),
+                    list(time_series_dto.agg_openflow_flow_metrics_per_switch)),
                 agg_openflow_flow_stats=list(map(lambda x: ClusterManagerUtil.convert_agg_flow_statistic_dto_reverse(x),
-                                                 time_series_dto.agg_openflow_flow_stats)),
+                                                 list(time_series_dto.agg_openflow_flow_stats))),
                 agg_snort_ids_rule_metrics=list(
                     map(lambda x: ClusterManagerUtil.convert_snort_ids_rule_counters_dto_reverse(x),
-                        time_series_dto.agg_snort_ids_rule_metrics)),
+                        list(time_series_dto.agg_snort_ids_rule_metrics))),
                 snort_ids_ip_metrics=ClusterManagerUtil.convert_snort_ids_ip_alert_counters_dict_reverse(
-                    time_series_dto.snort_ids_ip_metrics),
+                    list(time_series_dto.snort_ids_ip_metrics)),
                 snort_rule_metrics_per_ids=ClusterManagerUtil.convert_snort_ids_rule_counters_dict_reverse(
-                    time_series_dto.snort_rule_metrics_per_ids),
+                    list(time_series_dto.snort_rule_metrics_per_ids)),
                 snort_alert_metrics_per_ids=ClusterManagerUtil.convert_snort_ids_alert_counters_dict_reverse(
-                    time_series_dto.snort_alert_metrics_per_ids)
+                    list(time_series_dto.snort_alert_metrics_per_ids))
             )
 
     @staticmethod
@@ -4059,7 +4074,7 @@ class ClusterManagerUtil:
         :param time_series_dto: the dto to convert
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["client_metrics"] = list(map(lambda x: ClusterManagerUtil.client_population_metrics_dto_to_dict(x),
                                        time_series_dto.client_metrics))
         d["aggregated_docker_stats"] = list(map(lambda x: ClusterManagerUtil.docker_stats_dto_to_dict(x),

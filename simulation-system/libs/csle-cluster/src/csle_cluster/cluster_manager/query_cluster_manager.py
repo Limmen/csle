@@ -2857,7 +2857,7 @@ def get_host_monitor_threads_statuses(
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetHostMonitorThreadsStatusesMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
-    statuses: csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO = \
+    statuses: csle_cluster.cluster_manager.cluster_manager_pb2.HostManagerStatusesDTO = \
         stub.getHostMonitorThreadsStatuses(operation_msg, timeout=timeout)
     return statuses
 
@@ -2879,7 +2879,7 @@ def get_host_managers_info(
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetHostManagersInfoMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
-    host_managers_info: csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO = \
+    host_managers_info: csle_cluster.cluster_manager.cluster_manager_pb2.HostManagersInfoDTO = \
         stub.getHostManagersInfo(operation_msg, timeout=timeout)
     return host_managers_info
 
@@ -2967,7 +2967,7 @@ def get_kafka_status(
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetKafkaManagerStatusMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
-    kafka_status_dto: csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO = \
+    kafka_status_dto: csle_cluster.cluster_manager.cluster_manager_pb2.KafkaStatusDTO = \
         stub.getKafkaStatus(operation_msg, timeout=timeout)
     return kafka_status_dto
 
@@ -3033,7 +3033,7 @@ def get_kafka_managers_info(
     operation_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetKafkaManagersInfoMsg(
         ipFirstOctet=ip_first_octet, emulation=emulation
     )
-    kafka_managers_info: csle_cluster.cluster_manager.cluster_manager_pb2.OperationOutcomeDTO = \
+    kafka_managers_info: csle_cluster.cluster_manager.cluster_manager_pb2.KafkaManagersInfoDTO = \
         stub.getKafkaManagersInfo(operation_msg, timeout=timeout)
     return kafka_managers_info
 
@@ -4337,9 +4337,9 @@ def get_execution_time_series_data(
     get_msg = csle_cluster.cluster_manager.cluster_manager_pb2.GetExecutionTimeSeriesDataMsg(
         emulation=emulation, ipFirstOctet=ip_first_octet, minutes=minutes
     )
-    logs_dto: csle_cluster.cluster_manager.cluster_manager_pb2.LogsDTO = \
+    time_series_dto: csle_cluster.cluster_manager.cluster_manager_pb2.EmulationMetricsTimeSeriesDTO = \
         stub.getExecutionTimeSeriesData(get_msg, timeout=timeout)
-    return logs_dto
+    return time_series_dto
 
 
 def start_spark_servers(

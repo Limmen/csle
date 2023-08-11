@@ -29,7 +29,8 @@ class EmulationDefenderObservationState(JSONSerializable):
     """
 
     def __init__(self, kafka_config: Union[KafkaConfig, None],
-                 client_population_metrics: Optional[ClientPopulationMetrics] = None, docker_stats: Optional[DockerStats] = None,
+                 client_population_metrics: Optional[ClientPopulationMetrics] = None,
+                 docker_stats: Optional[DockerStats] = None,
                  snort_ids_alert_counters: Optional[SnortIdsAlertCounters] = None,
                  ossec_ids_alert_counters: Optional[OSSECIdsAlertCounters] = None,
                  aggregated_host_metrics: Optional[HostMetrics] = None,
