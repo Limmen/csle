@@ -1,6 +1,7 @@
 from typing import Dict, Any
 import gymnasium as gym
 import numpy as np
+import numpy.typing as npt
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -9,10 +10,11 @@ class WorkflowIntrusionResponseGameConfig(JSONSerializable):
     DTO representing the configuration of a workflow intrusion response game
     """
 
-    def __init__(self, env_name: str, adjacency_matrix: np.ndarray,
-                 nodes: np.ndarray, initial_zones: np.ndarray, X_max: int, beta: float, gamma: float,
-                 zones: np.ndarray, Z_D_P: np.ndarray, C_D: np.ndarray, A_P: np.ndarray, Z_U: np.ndarray,
-                 eta: float, gw_reachable: np.ndarray):
+    def __init__(self, env_name: str, adjacency_matrix: npt.NDArray[Any],
+                 nodes: npt.NDArray[np.int_], initial_zones: npt.NDArray[np.int_], X_max: int, beta: float,
+                 gamma: float,
+                 zones: npt.NDArray[np.int_], Z_D_P: npt.NDArray[Any], C_D: npt.NDArray[Any], A_P: npt.NDArray[Any],
+                 Z_U: npt.NDArray[Any], eta: float, gw_reachable: npt.NDArray[np.int_]):
         """
         Initializes the DTO
 
@@ -79,7 +81,7 @@ class WorkflowIntrusionResponseGameConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["nodes"] = list(self.nodes.tolist())
         d["initial_zones"] = list(self.initial_zones.tolist())
         d["zones"] = list(self.zones.tolist())

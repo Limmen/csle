@@ -1,5 +1,6 @@
-from typing import Tuple, List, Dict, Union
+from typing import Tuple, List, Dict, Union, Any
 import numpy as np
+import numpy.typing as npt
 import time
 import math
 import csle_common.constants.constants as constants
@@ -78,16 +79,16 @@ class IntrusionResponseGameWorkflowPOMDPAttackerEnv(BaseEnv):
         self.action_space = self.config.game_config.attacker_action_space()
 
         # Setup Config
-        self.viewer = None
+        self.viewer: Union[Any, None] = None
         self.metadata = {
             'render.modes': ['human', 'rgb_array'],
             'video.frames_per_second': 50  # Video rendering speed
         }
 
         # Setup traces
-        self.traces = []
+        self.traces: List[SimulationTrace] = []
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
-        self.latest_attacker_obs = None
+        self.latest_attacker_obs: Union[None, npt.NDArray[Any]] = None
 
         # Reset
         self.reset()
@@ -106,26 +107,27 @@ class IntrusionResponseGameWorkflowPOMDPAttackerEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, a2: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Union[float, int]]]:
+    def step(self, a2: npt.NDArray[Any]) -> Tuple[npt.NDArray[Any], float, bool, bool, Dict[str, Any]]:
         """
         Takes a step in the environment by executing the given action
 
         :param a1: defender action
         :return: (obs, reward, terminated, truncated, info)
         """
-        done, info = False, {}
+        done = False
+        info: Dict[str, Any] = {}
 
-        r = 0
-        attacker_obs = []
-        defender_obs = []
-        d_a = []
-        s = []
-        a1 = []
+        r = 0.0
+        attacker_obs: List[Any] = []
+        defender_obs: List[Any] = []
+        d_a: List[Any] = []
+        s: List[Any] = []
+        a1: List[Any] = []
 
         # Step the envs
         for i, local_env in enumerate(self.local_envs):
             local_a2 = a2[i]
-            local_o, local_r, local_done, _ = local_env.step(a2=local_a2)
+            local_o, local_r, local_done, _, _ = local_env.step(a2=local_a2)
             if local_done:
                 done = True
             r = r + local_r
@@ -134,40 +136,40 @@ class IntrusionResponseGameWorkflowPOMDPAttackerEnv(BaseEnv):
             a1.append(local_env.trace.defender_actions[-1])
             defender_obs = defender_obs + local_env.trace.defender_observations[-1].tolist()
             d_a = d_a + local_env.trace.beliefs[-1].tolist()
-        attacker_obs = np.array(attacker_obs)
-        s = np.array(s)
-        a1 = np.array(a1)
-        d_a = np.array(d_a)
+        attacker_obs_np = np.array(attacker_obs)
+        s_np = np.array(s)
+        a1_np = np.array(a1)
+        d_a_np = np.array(d_a)
 
         # Update time-step
         self.t += 1
 
         # Populate info dict
-        info[env_constants.ENV_METRICS.STATE] = s
-        info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a1
+        info[env_constants.ENV_METRICS.STATE] = s_np
+        info[env_constants.ENV_METRICS.DEFENDER_ACTION] = a1_np
         info[env_constants.ENV_METRICS.ATTACKER_ACTION] = a2
-        info[env_constants.ENV_METRICS.OBSERVATION] = attacker_obs
+        info[env_constants.ENV_METRICS.OBSERVATION] = attacker_obs_np
         info[env_constants.ENV_METRICS.TIME_STEP] = self.t
 
         # Log trace
         self.trace.defender_rewards.append(-r)
         self.trace.attacker_rewards.append(r)
         self.trace.attacker_actions.append(a2)
-        self.trace.defender_actions.append(a1)
+        self.trace.defender_actions.append(a1_np)
         self.trace.infos.append(info)
-        self.trace.states.append(s)
-        self.trace.beliefs.append(d_a)
-        self.trace.infrastructure_metrics.append(attacker_obs)
+        self.trace.states.append(s_np)
+        self.trace.beliefs.append(d_a_np)
+        self.trace.infrastructure_metrics.append(attacker_obs_np)
         if not done:
             self.trace.attacker_observations.append(defender_obs)
-            self.trace.defender_observations.append(attacker_obs)
+            self.trace.defender_observations.append(attacker_obs_np)
 
         # Populate info
         info = self._info(info)
 
-        return attacker_obs, r, done, done, info
+        return attacker_obs_np, r, done, done, info
 
-    def _info(self, info) -> Dict[str, Union[float, int]]:
+    def _info(self, info: Dict[str, Any]) -> Dict[str, Any]:
         """
         Adds the cumulative reward and episode length to the info dict
         :param info: the info dict to update
@@ -182,7 +184,7 @@ class IntrusionResponseGameWorkflowPOMDPAttackerEnv(BaseEnv):
         info[env_constants.ENV_METRICS.AVERAGE_RANDOM_RETURN] = self.random_return
         return info
 
-    def reset(self, seed: int = 0, soft: bool = False) -> np.ndarray:
+    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -190,21 +192,21 @@ class IntrusionResponseGameWorkflowPOMDPAttackerEnv(BaseEnv):
         """
         super().reset(seed=seed)
         self.t = 0
-        attacker_obs = []
-        defender_obs = []
+        attacker_obs: List[Any] = []
+        defender_obs: List[Any] = []
         for local_env in self.local_envs:
-            local_o = local_env.reset()
+            local_o, _ = local_env.reset()
             attacker_obs = attacker_obs + local_o.tolist()
             defender_obs = defender_obs + local_env.trace.defender_observations[-1].tolist()
-        attacker_obs = np.array(attacker_obs)
-        defender_obs = np.array(defender_obs)
+        attacker_obs_np = np.array(attacker_obs)
+        defender_obs_np = np.array(defender_obs)
         if len(self.trace.defender_rewards) > 0:
             self.traces.append(self.trace)
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
-        self.trace.attacker_observations.append(defender_obs)
-        self.trace.defender_observations.append(attacker_obs)
-        info = {}
-        return attacker_obs, info
+        self.trace.attacker_observations.append(defender_obs_np)
+        self.trace.defender_observations.append(attacker_obs_np)
+        info: Dict[str, Any] = {}
+        return attacker_obs_np, info
 
     def render(self, mode: str = 'human'):
         """
@@ -261,7 +263,7 @@ class IntrusionResponseGameWorkflowPOMDPAttackerEnv(BaseEnv):
         Closes the viewer (cleanup)
         :return: None
         """
-        if self.viewer:
+        if self.viewer is not None:
             self.viewer.close()
             self.viewer = None
 
@@ -272,7 +274,7 @@ class IntrusionResponseGameWorkflowPOMDPAttackerEnv(BaseEnv):
         :return: None
         """
         done = False
-        o = self.reset()
+        o, _ = self.reset()
         print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}")
         while True:
             raw_input = input("> ")
@@ -293,9 +295,9 @@ class IntrusionResponseGameWorkflowPOMDPAttackerEnv(BaseEnv):
                 print(self.trace)
             elif raw_input == "R":
                 print("Resetting the state")
-                o = self.reset()
+                o, _ = self.reset()
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}")
             else:
                 a2 = np.array(list(map(lambda x: int(x), raw_input.split(","))))
-                o, r, done, _ = self.step(a2=a2)
+                o, r, done, _, _ = self.step(a2=a2)
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}, r:{round(r, 2)}, done: {done}")

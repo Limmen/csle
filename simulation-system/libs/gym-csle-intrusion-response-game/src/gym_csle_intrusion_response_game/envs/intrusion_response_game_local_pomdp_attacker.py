@@ -1,5 +1,6 @@
-from typing import Tuple, List, Dict, Union
+from typing import Tuple, List, Dict, Union, Any
 import numpy as np
+import numpy.typing as npt
 import time
 import math
 import csle_common.constants.constants as constants
@@ -46,17 +47,17 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         self.static_attacker_strategy = self.config.attacker_strategy
 
         # Setup Config
-        self.viewer = None
+        self.viewer: Union[Any, None] = None
         self.metadata = {
             'render.modes': ['human', 'rgb_array'],
             'video.frames_per_second': 50  # Video rendering speed
         }
 
         # Setup traces
-        self.traces = []
+        self.traces: List[SimulationTrace] = []
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
-        self.latest_defender_obs = None
-        self.latest_attacker_obs = None
+        self.latest_defender_obs: Union[None, npt.NDArray[Any]] = None
+        self.latest_attacker_obs: Union[None, npt.NDArray[Any]] = None
 
         # Reset
         self.reset()
@@ -86,14 +87,14 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
             o, _ = self.reset()
             done = False
             t = 0
-            cumulative_reward = 0
+            cumulative_reward = 0.0
             while not done and t <= max_horizon:
                 a2 = np.random.choice(self.config.local_intrusion_response_game_config.A2)
                 o, r, done, _, info = self.step(a2)
                 cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
-        return np.mean(np.array(returns))
+        return float(np.mean(np.array(returns)))
 
     def get_attack_baseline_return(self, samples: int = 100) -> float:
         """
@@ -108,7 +109,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
             o, _ = self.reset()
             done = False
             t = 0
-            cumulative_reward = 0
+            cumulative_reward = 0.0
             while not done and t <= max_horizon:
                 if o[0] == 0:
                     a2 = 1
@@ -120,7 +121,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
                 cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
-        return np.mean(np.array(returns))
+        return float(np.mean(np.array(returns)))
 
     def get_upper_bound_return(self, samples: int = 100) -> float:
         """
@@ -135,7 +136,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
             o, _ = self.reset()
             done = False
             t = 0
-            cumulative_reward = 0
+            cumulative_reward = 0.0
             while not done and t <= max_horizon:
                 a2 = 0
                 if self.state.attacker_state() == env_constants.ATTACK_STATES.HEALTHY:
@@ -146,16 +147,18 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
                 cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
-        return np.mean(np.array(returns))
+        return float(np.mean(np.array(returns)))
 
-    def step(self, a2: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Union[float, int]]]:
+    def step(self, a2: Union[int, List[int]]) \
+            -> Tuple[npt.NDArray[Any], float, bool, bool, Dict[str, Union[float, int]]]:
         """
         Takes a step in the environment by executing the given action
 
         :param a2: defender action
         :return: (obs, reward, terminated, truncated, info)
         """
-        done, info = False, {}
+        done = False
+        info: Dict[str, Union[float, int]] = {}
 
         # Extract the attacker action
         if isinstance(a2, list):
@@ -236,9 +239,10 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         info = self._info(info)
         return attacker_obs, -r, done, done, info
 
-    def _info(self, info) -> Dict[str, Union[float, int]]:
+    def _info(self, info: Dict[str, Union[float, int]]) -> Dict[str, Union[float, int]]:
         """
         Adds the cumulative reward and episode length to the info dict
+
         :param info: the info dict to update
         :return: the updated info dict
         """
@@ -252,7 +256,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         info[env_constants.ENV_METRICS.AVERAGE_HEURISTIC_RETURN] = self.attack_return
         return info
 
-    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[np.ndarray, Dict]:
+    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -269,7 +273,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         self.latest_attacker_obs = attacker_obs
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
-        info = {}
+        info: Dict[str, Any] = {}
         return attacker_obs, info
 
     def render(self, mode: str = 'human'):
@@ -327,7 +331,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         Closes the viewer (cleanup)
         :return: None
         """
-        if self.viewer:
+        if self.viewer is not None:
             self.viewer.close()
             self.viewer = None
 
@@ -338,7 +342,7 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
         :return: None
         """
         done = False
-        o = self.reset()
+        o, _ = self.reset()
         print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}")
         while True:
             raw_input = input("> ")
@@ -359,9 +363,9 @@ class IntrusionResponseGameLocalPOMDPAttackerEnv(BaseEnv):
                 print(self.trace)
             elif raw_input == "R":
                 print("Resetting the state")
-                o = self.reset()
+                o, _ = self.reset()
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}")
             else:
                 a2 = int(raw_input)
-                o, r, done, _ = self.step(a2=a2)
+                o, r, done, _, _ = self.step(a2=a2)
                 print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}, r:{round(r, 2)}, done: {done}")

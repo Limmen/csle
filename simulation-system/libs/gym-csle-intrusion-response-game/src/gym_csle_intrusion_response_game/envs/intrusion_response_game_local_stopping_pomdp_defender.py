@@ -1,5 +1,6 @@
 from typing import Tuple, List, Dict, Union, Any
 import numpy as np
+import numpy.typing as npt
 import time
 import math
 import csle_common.constants.constants as constants
@@ -67,16 +68,16 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         self.static_defender_strategy = self.config.defender_strategy
 
         # Setup Config
-        self.viewer = None
+        self.viewer: Union[None, Any] = None
         self.metadata = {
             'render.modes': ['human', 'rgb_array'],
             'video.frames_per_second': 50  # Video rendering speed
         }
 
         # Setup traces
-        self.traces = []
+        self.traces: List[SimulationTrace] = []
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
-        self.latest_attacker_obs = None
+        self.latest_attacker_obs: Union[None, List[Any]] = None
         self.latest_obs = 0
         self.latest_a2 = 0
 
@@ -95,14 +96,16 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         self.reset()
         super().__init__()
 
-    def step(self, a1: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Union[float, int]]]:
+    def step(self, a1: Union[int, List[int]]) \
+            -> Tuple[npt.NDArray[Any], float, bool, bool, Dict[str, Union[float, int]]]:
         """
         Takes a step in the environment by executing the given action
 
         :param a1: defender action
         :return: (obs, reward, terminated, truncated, info)
         """
-        done, info = False, {}
+        done = False
+        info: Dict[str, Any] = {}
 
         # Extract the defender action
         if isinstance(a1, list):
@@ -174,7 +177,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         # Get observations
         defender_obs = self.b
         self.latest_attacker_obs = [self.s] + list(self.a_b)
-        self.latest_defender_obs = [self.zone] + list(self.b)
+        self.latest_defender_obs: List[Any] = [self.zone] + list(self.b)
 
         # Log trace
         self.trace.defender_rewards.append(r)
@@ -193,7 +196,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         info = self._info(info)
         return defender_obs, r, done, done, info
 
-    def _info(self, info) -> Dict[str, Union[float, int]]:
+    def _info(self, info: Dict[str, Union[float, int]]) -> Dict[str, Union[float, int]]:
         """
         Adds the cumulative reward and episode length to the info dict
         :param info: the info dict to update
@@ -221,7 +224,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
             _, _ = self.reset()
             done = False
             t = 0
-            cumulative_reward = 0
+            cumulative_reward = 0.0
             while not done and t <= max_horizon:
                 a1 = 0
                 if self.s == 2:
@@ -230,9 +233,9 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
                 cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
-        return np.mean(np.array(returns))
+        return float(np.mean(np.array(returns)))
 
-    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[np.ndarray, Dict[str, Any]]:
+    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -251,7 +254,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         self.latest_defender_obs = [self.zone] + list(self.b)
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
-        info = {}
+        info: Dict[str, Any] = {}
         return defender_obs, info
 
     def render(self, mode: str = 'human'):
@@ -309,7 +312,7 @@ class IntrusionResponseGameLocalStoppingPOMDPDefenderEnv(BaseEnv):
         Closes the viewer (cleanup)
         :return: None
         """
-        if self.viewer:
+        if self.viewer is not None:
             self.viewer.close()
             self.viewer = None
 

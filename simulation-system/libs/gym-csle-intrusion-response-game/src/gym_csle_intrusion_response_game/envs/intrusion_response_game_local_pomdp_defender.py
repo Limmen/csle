@@ -1,5 +1,6 @@
 from typing import Tuple, List, Dict, Union, Any
 import numpy as np
+import numpy.typing as npt
 import time
 import math
 import csle_common.constants.constants as constants
@@ -48,18 +49,18 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         self.static_defender_strategy = self.config.defender_strategy
 
         # Setup Config
-        self.viewer = None
+        self.viewer: Union[Any, None] = None
         self.metadata = {
             'render.modes': ['human', 'rgb_array'],
             'video.frames_per_second': 50  # Video rendering speed
         }
 
         # Setup traces
-        self.traces = []
+        self.traces: List[SimulationTrace] = []
         self.trace = SimulationTrace(simulation_env=self.config.env_name)
-        self.latest_attacker_obs = None
-        self.latest_defender_obs = None
-        self.latest_attacker_action = None
+        self.latest_attacker_obs: Union[npt.NDArray[Any], None] = None
+        self.latest_defender_obs: Union[npt.NDArray[Any], None] = None
+        self.latest_attacker_action: Union[None, int] = None
 
         # Reset
         self.reset()
@@ -84,17 +85,17 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         max_horizon = 1000
         returns = []
         for i in range(samples):
-            o = self.reset()
+            self.reset()
             done = False
             t = 0
-            cumulative_reward = 0
+            cumulative_reward = 0.0
             while not done and t <= max_horizon:
                 a1 = np.random.choice(self.config.local_intrusion_response_game_config.A1)
                 o, r, done, _, info = self.step(a1)
                 cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
-        return np.mean(np.array(returns))
+        return float(np.mean(np.array(returns)))
 
     def get_upper_bound_return(self, samples: int = 100) -> float:
         """
@@ -111,7 +112,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             o, _ = self.reset()
             done = False
             t = 0
-            cumulative_reward = 0
+            cumulative_reward = 0.0
             while not done and t <= max_horizon:
                 a1 = 0
                 if self.state.attacker_state() == env_constants.ATTACK_STATES.COMPROMISED:
@@ -120,9 +121,10 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
                 cumulative_reward += r * math.pow(self.config.local_intrusion_response_game_config.gamma, t)
                 t += 1
             returns.append(cumulative_reward)
-        return np.mean(np.array(returns))
+        return float(np.mean(np.array(returns)))
 
-    def step(self, a1: int) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Union[float, int]]]:
+    def step(self, a1: Union[int, List[int]]) \
+            -> Tuple[npt.NDArray[Any], float, bool, bool, Dict[str, Union[float, int]]]:
         """
         Takes a step in the environment by executing the given action
 
@@ -213,7 +215,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         info = self._info(info)
         return defender_obs, r, done, done, info
 
-    def _info(self, info) -> Dict[str, Union[float, int]]:
+    def _info(self, info: Dict[str, Union[float, int]]) -> Dict[str, Union[float, int]]:
         """
         Adds the cumulative reward and episode length to the info dict
         :param info: the info dict to update
@@ -228,7 +230,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         info[env_constants.ENV_METRICS.AVERAGE_RANDOM_RETURN] = self.random_return
         return info
 
-    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[np.ndarray, Dict[str, Any]]:
+    def reset(self, seed: int = 0, soft: bool = False) -> Tuple[npt.NDArray[Any], Dict[str, Any]]:
         """
         Resets the environment state, this should be called whenever step() returns <done>
 
@@ -245,7 +247,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         self.latest_defender_obs = defender_obs
         self.trace.attacker_observations.append(attacker_obs)
         self.trace.defender_observations.append(defender_obs)
-        info = {}
+        info: Dict[str, Any] = {}
         return defender_obs, info
 
     def render(self, mode: str = 'human'):
@@ -303,7 +305,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         Closes the viewer (cleanup)
         :return: None
         """
-        if self.viewer:
+        if self.viewer is not None:
             self.viewer.close()
             self.viewer = None
 
@@ -314,8 +316,8 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
         :return: None
         """
         done = False
-        o = self.reset()
-        print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}")
+        o, _ = self.reset()
+        print(f"o:{list(map(lambda x: round(float(x), 3), list(o)))}")
         while True:
             raw_input = input("> ")
             raw_input = raw_input.strip()
@@ -335,12 +337,12 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
                 print(self.trace)
             elif raw_input == "R":
                 print("Resetting the state")
-                o = self.reset()
-                print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}")
+                o, _ = self.reset()
+                print(f"o:{list(map(lambda x: round(float(x), 3), list(o)))}")
             else:
                 a1 = int(raw_input)
                 o, r, done, _, _ = self.step(a1=a1)
-                print(f"o:{list(map(lambda x: round(x, 3), list(o.tolist())))}, r:{round(r, 2)}, done: {done}")
+                print(f"o:{list(map(lambda x: round(float(x), 3), list(o)))}, r:{round(r, 2)}, done: {done}")
 
     def pomdp_solver_file(self) -> str:
         """
@@ -356,12 +358,13 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             O=self.config.local_intrusion_response_game_config.O,
             T=self.config.local_intrusion_response_game_config.T,
             R=self.config.local_intrusion_response_game_config.R,
+            Z=self.config.local_intrusion_response_game_config.Z,
             static_attacker_strategy=self.config.attacker_strategy,
             s_1_idx=self.config.local_intrusion_response_game_config.s_1_idx,
             discount_factor=self.config.local_intrusion_response_game_config.gamma
         )
 
-    def get_local_stopping_mdp_transition_tensor(self) -> np.ndarray:
+    def get_local_stopping_mdp_transition_tensor(self) -> npt.NDArray[Any]:
         """
         :return: the local MDP transition tensor of the optimal stopping formulation
         """
@@ -373,7 +376,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             S_D=self.config.local_intrusion_response_game_config.S_D
         )
 
-    def get_local_stopping_mdp_reward_tensor(self) -> np.ndarray:
+    def get_local_stopping_mdp_reward_tensor(self) -> npt.NDArray[Any]:
         """
         :return: the local MDP reward tensor of the optimal stopping formulation
         """
@@ -385,7 +388,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             S_D=self.config.local_intrusion_response_game_config.S_D
         )
 
-    def get_local_stopping_pomdp_transition_tensor(self, a1: int) -> np.ndarray:
+    def get_local_stopping_pomdp_transition_tensor(self, a1: int) -> npt.NDArray[Any]:
         """
         :param a1: the defender action
         :return: the local POMDP transition tensor of the optimal stopping formulation
@@ -398,7 +401,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             a1=a1
         )
 
-    def get_local_stopping_pomdp_reward_tensor(self, a1: int, zone: int) -> np.ndarray:
+    def get_local_stopping_pomdp_reward_tensor(self, a1: int, zone: int) -> npt.NDArray[Any]:
         """
         :param a1: the defender action
         :param zone: the zone
@@ -412,7 +415,7 @@ class IntrusionResponseGameLocalPOMDPDefenderEnv(BaseEnv):
             a1=a1, zone=zone
         )
 
-    def get_local_stopping_pomdp_obs_tensor(self, a1: int, zone: int) -> np.ndarray:
+    def get_local_stopping_pomdp_obs_tensor(self, a1: int, zone: int) -> npt.NDArray[Any]:
         """
         :param a1: the defender action
         :param zone: the zone

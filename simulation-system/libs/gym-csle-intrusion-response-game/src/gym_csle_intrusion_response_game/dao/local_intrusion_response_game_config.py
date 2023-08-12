@@ -1,5 +1,6 @@
 from typing import Dict, Any
 import numpy as np
+import numpy.typing as npt
 import gymnasium as gym
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 from csle_base.json_serializable import JSONSerializable
@@ -10,11 +11,13 @@ class LocalIntrusionResponseGameConfig(JSONSerializable):
     DTO representing the configuration of the local intrusion response game
     """
 
-    def __init__(self, env_name: str, T: np.ndarray, O: np.ndarray, Z: np.ndarray, R: np.ndarray, S: np.ndarray,
-                 S_A: np.ndarray, S_D: np.ndarray, s_1_idx: int, zones: np.ndarray,
-                 A1: np.ndarray, A2: np.ndarray, d_b1: np.ndarray, a_b1: np.ndarray, gamma: float,
-                 beta: float, C_D: np.ndarray, eta: float, A_P: np.ndarray, Z_D_P: np.ndarray, Z_U: np.ndarray) \
-            -> None:
+    def __init__(self, env_name: str, T: npt.NDArray[Any], O: npt.NDArray[np.int_], Z: npt.NDArray[Any],
+                 R: npt.NDArray[Any], S: npt.NDArray[np.int_], S_A: npt.NDArray[np.int_],
+                 S_D: npt.NDArray[np.int_], s_1_idx: int, zones: npt.NDArray[np.int_],
+                 A1: npt.NDArray[np.int_], A2: npt.NDArray[np.int_], d_b1: npt.NDArray[np.float_],
+                 a_b1: npt.NDArray[np.float_], gamma: float,
+                 beta: float, C_D: npt.NDArray[Any], eta: float, A_P: npt.NDArray[Any],
+                 Z_D_P: npt.NDArray[Any], Z_U: npt.NDArray[Any]) -> None:
         """
         Initializes the DTO
 
@@ -113,7 +116,7 @@ class LocalIntrusionResponseGameConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["T"] = list(self.T.tolist())
         d["O"] = list(self.O.tolist())
         d["Z"] = list(self.Z.tolist())

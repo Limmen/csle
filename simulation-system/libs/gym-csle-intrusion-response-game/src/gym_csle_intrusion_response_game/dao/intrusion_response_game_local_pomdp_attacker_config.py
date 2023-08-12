@@ -72,7 +72,7 @@ class IntrusionResponseGameLocalPOMDPAttackerConfig(SimulationEnvInputConfig):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["local_intrusion_response_game_config"] = self.local_intrusion_response_game_config.to_dict()
         d["defender_strategy"] = self.defender_strategy.to_dict()
         d["env_name"] = self.env_name

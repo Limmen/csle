@@ -1,5 +1,6 @@
 from typing import Dict, Any
 import numpy as np
+import numpy.typing as npt
 import gym_csle_intrusion_response_game.constants.constants as env_constants
 from csle_base.json_serializable import JSONSerializable
 
@@ -10,8 +11,8 @@ class IntrusionResponseGameStateLocal(JSONSerializable):
     with public observations)
     """
 
-    def __init__(self, d_b1: np.ndarray, a_b1: np.ndarray, s_1_idx: int, S: np.ndarray, S_A: np.ndarray,
-                 S_D: np.ndarray) -> None:
+    def __init__(self, d_b1: npt.NDArray[np.float_], a_b1: npt.NDArray[np.float_], s_1_idx: int,
+                 S: npt.NDArray[Any], S_A: npt.NDArray[Any], S_D: npt.NDArray[Any]) -> None:
         """
         Initializes the DTO
         :param d_b1: the initial belief of the defender
@@ -43,19 +44,19 @@ class IntrusionResponseGameStateLocal(JSONSerializable):
         self.d_b = self.d_b1.copy()
         self.a_b = self.a_b1.copy()
 
-    def attacker_observation(self) -> np.ndarray:
+    def attacker_observation(self) -> npt.NDArray[Any]:
         """
         :return: the attacker's observation
         """
         return np.array([self.attacker_state()] + list(self.a_b.tolist()))
 
-    def defender_observation(self) -> np.ndarray:
+    def defender_observation(self) -> npt.NDArray[Any]:
         """
         :return: the defender's observation
         """
         return np.array([self.defender_state()] + list(self.d_b.tolist()))
 
-    def state_vector(self) -> np.ndarray:
+    def state_vector(self) -> Any:
         """
         :return: the state vector
         """
@@ -65,13 +66,13 @@ class IntrusionResponseGameStateLocal(JSONSerializable):
         """
         :return: the attacker state
         """
-        return self.S[self.s_idx][env_constants.STATES.A_STATE_INDEX]
+        return int(self.S[self.s_idx][env_constants.STATES.A_STATE_INDEX])
 
     def defender_state(self) -> int:
         """
         :return: the defender state
         """
-        return self.S[self.s_idx][env_constants.STATES.D_STATE_INDEX]
+        return int(self.S[self.s_idx][env_constants.STATES.D_STATE_INDEX])
 
     def __str__(self) -> str:
         """
@@ -86,7 +87,7 @@ class IntrusionResponseGameStateLocal(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["d_b1"] = list(self.d_b1)
         d["a_b1"] = list(self.a_b1)
         d["s_1_idx"] = self.s_1_idx
@@ -109,8 +110,7 @@ class IntrusionResponseGameStateLocal(JSONSerializable):
         """
         obj = IntrusionResponseGameStateLocal(
             d_b1=np.array(d["d_b1"]), a_b1=np.array(d["a_b1"]), s_1_idx=d["s_1_idx"], S=np.array(d["S"]),
-            S_A=np.array(d["S_A"]), S_D=np.array(d["S_D"])
-        )
+            S_A=np.array(d["S_A"]), S_D=np.array(d["S_D"]))
         return obj
 
     @staticmethod

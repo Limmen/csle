@@ -35,7 +35,7 @@ class WorkflowIntrusionResponsePOMDPDefenderConfig(SimulationEnvInputConfig):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["env_name"] = self.env_name
         d["game_config"] = self.game_config.to_dict()
         d["attacker_strategies"] = list(map(lambda x: x.to_dict(), self.attacker_strategies))
