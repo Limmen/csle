@@ -1,5 +1,6 @@
 from typing import List, Set, Dict, Any
 import copy
+from csle_common.dao.emulation_config.flag import Flag
 from csle_common.dao.emulation_config.credential import Credential
 from csle_common.dao.emulation_observation.common.emulation_port_observation_state import EmulationPortObservationState
 from csle_common.dao.emulation_observation.common.emulation_vulnerability_observation_state \
@@ -33,7 +34,7 @@ class EmulationAttackerMachineObservationState(JSONSerializable):
         self.backdoor_credentials: List[Credential] = []
         self.logged_in = False
         self.root = False
-        self.flags_found: Set[str] = set()
+        self.flags_found: Set[Flag] = set()
         self.filesystem_searched = False
         self.untried_credentials = False
         self.ssh_connections: List[EmulationConnectionObservationState] = []
