@@ -44,11 +44,13 @@ class EmulationEnvState(JSONSerializable):
         self.os_lookup_inv = {v: k for k, v in self.os_lookup.items()}
         self.attacker_obs_state: Union[EmulationAttackerObservationState, None] = None
         self.defender_obs_state: Union[EmulationDefenderObservationState, None] = None
-        self.attacker_cached_ssh_connections = {}
-        self.attacker_cached_telnet_connections = {}
-        self.attacker_cached_ftp_connections = {}
-        self.attacker_cached_backdoor_credentials = {}
-        self.defender_cached_ssh_connections = {}
+        if self.defender_obs_state is None:
+            raise ValueError("EmualtionDefenderObservationState is None")
+        self.attacker_cached_ssh_connections: Dict[Any, Any] = {}
+        self.attacker_cached_telnet_connections: Dict[Any, EmulationAttackerMachineObservationState] = {}
+        self.attacker_cached_ftp_connections: Dict[Any, EmulationAttackerMachineObservationState] = {}
+        self.attacker_cached_backdoor_credentials: Dict[Any, EmulationAttackerMachineObservationState] = {}
+        self.defender_cached_ssh_connections: Dict[Any, EmulationAttackerMachineObservationState] = {}
         self.reset()
 
     def initialize_defender_machines(self) -> None:
@@ -61,6 +63,8 @@ class EmulationEnvState(JSONSerializable):
         for c in self.emulation_env_config.containers_config.containers:
             defender_machines.append(EmulationDefenderMachineObservationState.from_container(
                 c, kafka_config=self.emulation_env_config.kafka_config))
+        if self.defender_obs_state is None:
+            raise ValueError("EmulationDefenderObservationState is None")
         self.defender_obs_state.machines = defender_machines
         self.defender_obs_state.start_monitoring_threads()
 
@@ -111,13 +115,16 @@ class EmulationEnvState(JSONSerializable):
         for _, c in self.attacker_cached_telnet_connections.items():
             c.cleanup()
 
+        if self.attacker_obs_state is None:
+            raise ValueError("EmualtionAttackerObservationState is None")
         self.attacker_obs_state.cleanup()
 
         for _, c in self.defender_cached_ssh_connections.items():
             (ssh_conns, _) = c
             for c2 in ssh_conns:
                 c2.cleanup()
-
+        if self.defender_obs_state is None:
+            raise ValueError("EmulationDefenderObservationState is None")
         self.defender_obs_state.cleanup()
 
     def get_attacker_machine(self, ip: str) -> Union[EmulationAttackerMachineObservationState, None]:
@@ -127,6 +134,8 @@ class EmulationEnvState(JSONSerializable):
         :param ip: the ip of the attacker machine
         :return: the machine if is found, otherwise None
         """
+        if self.attacker_obs_state is None:
+            raise ValueError("EmulationAttackerObservationState is None")
         for m in self.attacker_obs_state.machines:
             for m_ip in m.ips:
                 if m_ip == ip:
@@ -140,6 +149,8 @@ class EmulationEnvState(JSONSerializable):
         :param ip: the ip of the machine
         :return: the machine if found otherwise None
         """
+        if self.defender_obs_state is None:
+            raise ValueError("EmulationDefenderObservationState is None")
         for m in self.defender_obs_state.machines:
             for m_ip in m.ips:
                 if m_ip == ip:
@@ -151,6 +162,10 @@ class EmulationEnvState(JSONSerializable):
         :return: a copy of the env state
         """
         copy = EmulationEnvState(emulation_env_config=self.emulation_env_config)
+        if self.attacker_obs_state is None:
+            raise ValueError("EmulationAttackerObservationState is None")
+        if self.defender_obs_state is None:
+            raise ValueError("EmulationDefenderObservationState is None")
         copy.attacker_obs_state = self.attacker_obs_state.copy()
         copy.defender_obs_state = self.defender_obs_state.copy()
         return copy
@@ -179,6 +194,7 @@ class EmulationEnvState(JSONSerializable):
         """
         Converts the object to a dict representation
 
+        
         :return: a dict representation of the object
         """
         d = {}
