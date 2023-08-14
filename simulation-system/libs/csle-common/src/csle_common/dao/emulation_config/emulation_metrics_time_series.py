@@ -182,7 +182,7 @@ class EmulationMetricsTimeSeries(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["client_metrics"] = list(map(lambda x: x.to_dict(), self.client_metrics))
         d["aggregated_docker_stats"] = list(map(lambda x: x.to_dict(), self.aggregated_docker_stats))
         d["docker_host_stats"] = {}
