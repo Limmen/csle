@@ -81,7 +81,7 @@ class EmulationTrace(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["initial_attacker_observation_state"] = self.initial_attacker_observation_state.to_dict()
         d["initial_defender_observation_state"] = self.initial_defender_observation_state.to_dict()
         d["attacker_observation_states"] = list(map(lambda x: x.to_dict(), self.attacker_observation_states))
@@ -102,13 +102,13 @@ class EmulationTrace(JSONSerializable):
         :param traces_file: the filename of the traces file
         :return: None
         """
-        traces = list(map(lambda x: x.to_dict(), traces))
+        traces_1 = list(map(lambda x: x.to_dict(), traces))
         if traces_file is None:
             traces_file = constants.SYSTEM_IDENTIFICATION.EMULATION_TRACES_FILE
         if not os.path.exists(traces_save_dir):
             os.makedirs(traces_save_dir)
         with open(traces_save_dir + "/" + traces_file, 'w') as fp:
-            json.dump({"traces": traces}, fp, cls=NpEncoder)
+            json.dump({"traces": traces_1}, fp, cls=NpEncoder)
 
     @staticmethod
     def load_traces_from_disk(traces_file: str) -> List["EmulationTrace"]:
@@ -125,8 +125,8 @@ class EmulationTrace(JSONSerializable):
                     traces = d[constants.METADATA_STORE.TRACES_PROPERTY]
                 else:
                     traces = d["emulations"]
-                traces = list(map(lambda x: EmulationTrace.from_dict(x), traces))
-                return traces
+                traces_1 = list(map(lambda x: EmulationTrace.from_dict(x), traces))
+                return traces_1
         else:
             Logger.__call__().get_logger().info("Warning: Could not "
                                                 f"read traces file, path does not exist:{traces_file}")
@@ -201,7 +201,7 @@ class EmulationTrace(JSONSerializable):
         """
         # lookup tables for vuln names, service names, protocol names
         labels = []
-        values = []
+        values: List[Union[str, float]] = []
         intrusion_started = False
         attacker_observations = [self.initial_attacker_observation_state] + self.attacker_observation_states
         defender_observations = [self.initial_defender_observation_state] + self.defender_observation_states
