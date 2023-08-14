@@ -44,8 +44,6 @@ class EmulationEnvState(JSONSerializable):
         self.os_lookup_inv = {v: k for k, v in self.os_lookup.items()}
         self.attacker_obs_state: Union[EmulationAttackerObservationState, None] = None
         self.defender_obs_state: Union[EmulationDefenderObservationState, None] = None
-        if self.defender_obs_state is None:
-            raise ValueError("EmualtionDefenderObservationState is None")
         self.attacker_cached_ssh_connections: Dict[Any, Any] = {}
         self.attacker_cached_telnet_connections: Dict[Any, EmulationAttackerMachineObservationState] = {}
         self.attacker_cached_ftp_connections: Dict[Any, EmulationAttackerMachineObservationState] = {}
