@@ -88,7 +88,7 @@ class EmulationAttackerObservationState(JSONSerializable):
             raise ValueError(f"invalid index: {a.index}, num machines: {len(self.machines)}")
         return a.ips
 
-    def exploit_tried(self, a: EmulationAttackerAction, m: Optional[EmulationAttackerMachineObservationState]) -> bool:
+    def exploit_tried(self, a: EmulationAttackerAction, m: EmulationAttackerMachineObservationState) -> bool:
         """
         Checks if a given exploit have been tried on a given machine or not
 
