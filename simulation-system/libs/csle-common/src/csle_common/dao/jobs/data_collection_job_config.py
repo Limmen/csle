@@ -58,7 +58,7 @@ class DataCollectionJobConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any]= {}
         d["emulation_env_name"] = self.emulation_env_name
         d["progress_percentage"] = round(self.progress_percentage, 2)
         d["pid"] = self.pid
