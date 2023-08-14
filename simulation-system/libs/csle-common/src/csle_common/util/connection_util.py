@@ -23,11 +23,6 @@ class ConnectionUtil:
     """
     Class containing utility functions for the connection-related functionality to the emulation
     """
-    @staticmethod
-    def raise_error(obj_list):
-        for obj in obj_list:
-            if obj is None:
-                raise ValueError("Connection failed")
 
     @staticmethod
     def login_service_helper(s: EmulationEnvState, a: EmulationAttackerAction, alive_check,
@@ -283,15 +278,9 @@ class ConnectionUtil:
                                                                          agent_addr)
                             target_conn = paramiko.SSHClient()
                             target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                            if connection_setup_dto.connected is None or \
-                                connection_setup_dto.credentials is None or \
-                                    connection_setup_dto.target_connections is None or \
-                                        connection_setup_dto.proxies is None or \
-                                            connection_setup_dto.ports is None or \
-                                                connection_setup_dto.ports is None or \
-                                                    connection_setup_dto.non_failed_credentials is None or \
-                                                        connection_setup_dto.ip is None or \
-                                                            target_conn is None:
+                            if target_conn is None:
+                                raise ValueError("Connection failed")
+                            if not connection_setup_dto.is_connection_active():
                                 raise ValueError("Connection Failed")
                             target_conn.connect(ip, username=cr.username, password=cr.pw, sock=relay_channel)
                             target_conn.get_transport().set_keepalive(5)
@@ -334,12 +323,8 @@ class ConnectionUtil:
         """
         start = time.time()
         root = False
-        if connection_setup_dto.target_connections is None or \
-            connection_setup_dto.credentials is None or \
-                connection_setup_dto.ports is None or \
-                    connection_setup_dto.proxies is None or \
-                        connection_setup_dto.ip is None:
-            raise ValueError("Connection failed")
+        if not connection_setup_dto.is_connection_active():
+            raise ValueError("Connection Failed")
         for j in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT):
             outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(
                 cmd="sudo -l", conn=connection_setup_dto.target_connections[i])
@@ -416,14 +401,8 @@ class ConnectionUtil:
                             response_1 = response.decode()
                             if constants.TELNET.INCORRECT_LOGIN not in response_1 and response_1 != "":
                                 connection_setup_dto.connected = True
-                                if connection_setup_dto.target_connections is None or \
-                                    connection_setup_dto.credentials is None or \
-                                        connection_setup_dto.tunnel_threads is None or \
-                                            connection_setup_dto.ports is None or \
-                                                connection_setup_dto.proxies is None or \
-                                                    connection_setup_dto.ip is None or \
-                                                        connection_setup_dto.forward_ports is None:
-                                            raise ValueError("Connection failed")
+                                if not connection_setup_dto.is_connection_active():
+                                    raise ValueError("Connection Failed")
                                 connection_setup_dto.credentials.append(cr)
                                 connection_setup_dto.target_connections.append(target_conn)
                                 connection_setup_dto.proxies.append(proxy_conn)
@@ -464,13 +443,8 @@ class ConnectionUtil:
         """
         start = time.time()
         root = False
-        if connection_setup_dto.target_connections is None or \
-            connection_setup_dto.credentials is None or \
-                connection_setup_dto.tunnel_threads is None or \
-                    connection_setup_dto.forward_ports is None or \
-                        connection_setup_dto.ports is None or \
-                            connection_setup_dto.proxies is None:
-            raise ValueError("Connection failed")
+        if not connection_setup_dto.is_connection_active():
+            raise ValueError("Connection Failed")
         for i in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT):
             connection_setup_dto.target_connections[i].write("sudo -l\n".encode())
             response = connection_setup_dto.target_connections[i].read_until(constants.TELNET.PROMPT, timeout=3)
@@ -541,14 +515,8 @@ class ConnectionUtil:
                             login_result = target_conn.login(cr.username, cr.pw)
                             if constants.FTP.INCORRECT_LOGIN not in login_result:
                                 connection_setup_dto.connected = True
-                                if connection_setup_dto.credentials is None or \
-                                    connection_setup_dto.target_connections is None or \
-                                        connection_setup_dto.proxies is None or \
-                                            connection_setup_dto.tunnel_threads is None or \
-                                                connection_setup_dto.forward_ports is None or \
-                                                    connection_setup_dto.ports is None or \
-                                                        connection_setup_dto.ip is None:
-                                    raise ValueError("Connection failed")
+                                if not connection_setup_dto.is_connection_active():
+                                    raise ValueError("Connection Failed")
                                 connection_setup_dto.credentials.append(cr)
                                 connection_setup_dto.target_connections.append(target_conn)
                                 connection_setup_dto.proxies.append(proxy_conn)
@@ -606,15 +574,8 @@ class ConnectionUtil:
         :return: boolean, whether the connection has root privileges, cost
         """
         root = False
-        if connection_setup_dto.target_connections is None or \
-            connection_setup_dto.credentials is None or \
-                connection_setup_dto.tunnel_threads is None or \
-                    connection_setup_dto.forward_ports is None or \
-                        connection_setup_dto.ports is None or \
-                            connection_setup_dto.interactive_shells is None or \
-                                connection_setup_dto.ip is None or \
-                                    connection_setup_dto.proxies is None:
-            raise ValueError("Connection failed")
+        if not connection_setup_dto.is_connection_active():
+            raise ValueError("Connection Failed")
         connection_dto = EmulationConnectionObservationState(
             conn=connection_setup_dto.target_connections[i], credential=connection_setup_dto.credentials[i],
             root=root,
