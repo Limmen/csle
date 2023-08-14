@@ -48,7 +48,7 @@ class SystemIdentificationJobConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["emulation_env_name"] = self.emulation_env_name
         d["pid"] = self.pid
         d["progress_percentage"] = self.progress_percentage
@@ -73,7 +73,7 @@ class SystemIdentificationJobConfig(JSONSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
-        system_model = None
+        # system_model = None
         parse_models = [GaussianMixtureSystemModel, EmpiricalSystemModel,
                         GPSystemModel, MCMCSystemModel]
         for parse_model in parse_models:
