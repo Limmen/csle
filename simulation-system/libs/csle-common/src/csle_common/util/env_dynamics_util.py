@@ -1,4 +1,4 @@
-from typing import List, Tuple, Union, Set
+from typing import List, Tuple, Union, Set, Any
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_observation.attacker.emulation_attacker_machine_observation_state \
     import EmulationAttackerMachineObservationState
@@ -55,6 +55,8 @@ class EnvDynamicsUtil:
         :param action: the action
         :return: the merged machine observations
         """
+        if action is None:
+            raise ValueError("action is None")
         new_machines_obs = EnvDynamicsUtil.merge_duplicate_machines(machines=new_machines_obs, action=action)
         attacker_machine_observations = []
         # Add updated machines to merged state
@@ -90,9 +92,7 @@ class EnvDynamicsUtil:
         :param n_m: newly collected machine information
         :return: the merged attacker machine observation state
         """
-        if n_m is None:
-            return o_m
-
+        
         merged_ports, num_new_ports_found = EnvDynamicsUtil.merge_ports(o_m.ports, n_m.ports, acc=True)
         n_m.ports = merged_ports
         merged_os, num_new_os_found = EnvDynamicsUtil.merge_os(o_m.os, n_m.os)
@@ -499,7 +499,9 @@ class EnvDynamicsUtil:
         total_flags = set()
         for flag in emulation_env_config.flags_config.node_flag_configs:
             total_flags.add(flag)
-        found_flags = set()
+        found_flags: Set[Any] = set()
+        if s.attacker_obs_state is None:
+            raise ValueError("EmlationAttackerObservationState is None")
         for node in s.attacker_obs_state.machines:
             found_flags = found_flags.union(node.flags_found)
         return total_flags == found_flags
@@ -615,6 +617,8 @@ class EnvDynamicsUtil:
         :param s: the current state
         :return: None
         """
+        if s.attacker_obs_state is None:
+            raise ValueError("EmulationAttackerObservationState is None")
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=s.emulation_env_config, s=s)
         s.attacker_obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
 
@@ -628,6 +632,8 @@ class EnvDynamicsUtil:
         :param s: the current state
         :return: None
         """
+        if s.attacker_obs_state is None:
+            raise ValueError("EmulationAttackerObservationState is None")
         logged_in_ips_str = EnvDynamicsUtil.logged_in_ips_str(emulation_env_config=s.emulation_env_config, s=s)
         s.defender_obs_state.actions_tried.add((a.id, a.index, logged_in_ips_str))
 
@@ -641,6 +647,8 @@ class EnvDynamicsUtil:
         :return: the string id
         """
         hacker_ip = emulation_env_config.containers_config.agent_ip
+        if s.attacker_obs_state is None:
+            raise ValueError("EmultaionAttackerObservationState is None")
         machines = s.attacker_obs_state.machines
         logged_in_ips = list(map(lambda x: "_".join(x.ips) + "_tools=" + str(int(x.tools_installed)) + "_backdoor="
                                            + str(int(x.backdoor_installed)) + "_root=" + str(int(x.root)),
