@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Dict, Any
 import time
 import datetime
 from confluent_kafka import Consumer, KafkaError, KafkaException, TopicPartition
@@ -38,34 +38,34 @@ class ReadEmulationStatisticsUtil:
         :param time_window_minutes : the length of the time window in minutes to consume (now-time_windows_minutes, now)
         :return: the collected time series data
         """
-        client_metrics = []
-        agg_docker_stats = []
-        docker_host_stats = {}
-        host_metrics = {}
-        aggregated_host_metrics = []
-        defender_actions = []
-        attacker_actions = []
-        snort_ids_metrics = []
-        snort_ids_ip_metrics = {}
-        snort_ids_rule_metrics = []
-        snort_alert_metrics_per_ids = {}
-        snort_rule_metrics_per_ids = {}
-        total_snort_metrics = []
-        total_snort_rule_metrics = []
-        total_host_metrics = []
-        ossec_host_ids_metrics = {}
-        total_ossec_metrics = []
-        aggregated_ossec_metrics = []
-        openflow_flow_stats = []
-        openflow_port_stats = []
-        avg_openflow_flow_stats = []
-        avg_openflow_port_stats = []
-        openflow_flow_metrics_per_switch = {}
-        openflow_port_metrics_per_switch = {}
-        openflow_flow_avg_metrics_per_switch = {}
-        openflow_port_avg_metrics_per_switch = {}
-        agg_openflow_flow_stats = []
-        agg_openflow_flow_metrics_per_switch = {}
+        client_metrics: List[ClientPopulationMetrics] = []
+        agg_docker_stats: List[DockerStats] = []
+        docker_host_stats: Dict[str, DockerStats] = {}
+        host_metrics: Dict[str, HostMetrics] = {}
+        aggregated_host_metrics: List[HostMetrics] = []
+        defender_actions: List[EmulationDefenderAction] = []
+        attacker_actions: List[EmulationAttackerAction] = []
+        snort_ids_metrics: List[Any] = []
+        snort_ids_ip_metrics: Dict[str, Any] = {}
+        snort_ids_rule_metrics: List[Any] = []
+        snort_alert_metrics_per_ids: Dict[str, Any] = {}
+        snort_rule_metrics_per_ids: Dict[str, Any] = {}
+        total_snort_metrics: List[Any] = []
+        total_snort_rule_metrics: List[Any] = []
+        total_host_metrics: List[Any] = []
+        ossec_host_ids_metrics: Dict[str, Any] = {}
+        total_ossec_metrics: List[Any] = []
+        aggregated_ossec_metrics: List[Any] = []
+        openflow_flow_stats: List[Any] = []
+        openflow_port_stats: List[Any] = []
+        avg_openflow_flow_stats: List[AvgFlowStatistic] = []
+        avg_openflow_port_stats: List[AvgPortStatistic] = []
+        openflow_flow_metrics_per_switch: Dict[str, AvgFlowStatistic] = {}
+        openflow_port_metrics_per_switch: Dict[str, AvgPortStatistic] = {}
+        openflow_flow_avg_metrics_per_switch: Dict[str, AvgFlowStatistic] = {}
+        openflow_port_avg_metrics_per_switch: Dict[str, AvgPortStatistic] = {}
+        agg_openflow_flow_stats: List[AggFlowStatistic]  = []
+        agg_openflow_flow_metrics_per_switch: Dict[str, AggFlowStatistic] = {}
 
         num_ossec_containers = len(list(filter(lambda x: x.name in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES,
                                                emulation_env_config.containers_config.containers)))
@@ -156,6 +156,8 @@ class ReadEmulationStatisticsUtil:
                         agg_docker_stats.append(DockerStats.from_kafka_record(record=msg.value().decode()))
                     elif topic == collector_constants.KAFKA_CONFIG.HOST_METRICS_TOPIC_NAME:
                         metrics = HostMetrics.from_kafka_record(record=msg.value().decode())
+                        if emulation_env_config.get_container_from_ip(metrics.ip) is None:
+                            raise ValueError("NodeContainerConfig is None")
                         c = emulation_env_config.get_container_from_ip(metrics.ip)
                         host_metrics[c.get_full_name()].append(metrics)
                         host_metrics_counter += 1
