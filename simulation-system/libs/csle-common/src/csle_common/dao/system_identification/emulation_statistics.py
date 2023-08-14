@@ -35,22 +35,23 @@ class EmulationStatistics(JSONSerializable):
             EmulationStatistics.initialize_counters(d={},
                                                     agg_labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_AGG_LABELS)
         self.id = -1
-        self.means = {}
-        self.stds = {}
-        self.mins = {}
-        self.maxs = {}
-        self.conditionals_probs = {}
-        self.initial_distributions_probs = {}
-        self.initial_means = {}
-        self.initial_stds = {}
-        self.initial_mins = {}
-        self.initial_maxs = {}
-        self.conditionals_kl_divergences = {}
+
+        self.means: Dict[str, Any] = {}
+        self.stds: Dict[str, Any] = {}
+        self.mins: Dict[str, Any] = {}
+        self.maxs: Dict[str, Any] = {}
+        self.conditionals_probs: Dict[str, Any] = {}
+        self.initial_distributions_probs: Dict[str, Any] = {}
+        self.initial_means: Dict[str, Any] = {}
+        self.initial_stds: Dict[str, Any] = {}
+        self.initial_mins: Dict[str, Any] = {}
+        self.initial_maxs: Dict[str, Any] = {}
+        self.conditionals_kl_divergences: Dict[str, Any] = {}
         self.num_metrics = 0
         self.num_measurements = 0
         self.num_conditions = 0
-        self.conditions = []
-        self.metrics = []
+        self.conditions: List[Any] = []
+        self.metrics: List[Any] = []
 
     @staticmethod
     def initialize_counters(d: Dict[str, Dict[int, int]], agg_labels: List[str]) \
@@ -79,6 +80,8 @@ class EmulationStatistics(JSONSerializable):
         :return: the initialized dict
         """
         labels = collector_constants.KAFKA_CONFIG.ALL_INITIAL_MACHINE_LABELS
+        if s.defender_obs_state is None:
+            raise ValueError("EmulationDefenderObservationState is None")
         for label in labels:
             for machine in s.defender_obs_state.machines:
                 lbl = f"{label}_{machine.ips[0]}"
@@ -107,7 +110,7 @@ class EmulationStatistics(JSONSerializable):
                 d=self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.NO_INTRUSION_CONDITIONAL],
                 labels=collector_constants.KAFKA_CONFIG.ALL_DELTA_MACHINE_LABELS)
 
-    def update_counters(self, d: Dict, s: EmulationEnvState, s_prime: EmulationEnvState) -> None:
+    def update_counters(self, d: Dict[str, Any], s: EmulationEnvState, s_prime: EmulationEnvState) -> None:
         """
         Updates the delta counters for a specific dict based on a state transition s->s'
 
@@ -118,6 +121,8 @@ class EmulationStatistics(JSONSerializable):
         """
 
         # Snort alerts
+        if s_prime.defender_obs_state is None or s.defender_obs_state is None:
+            raise ValueError("EmulationDefenderObservationState is None")
         snort_alert_deltas, snort_alert_labels = s.defender_obs_state.avg_snort_ids_alert_counters.get_deltas(
             s_prime.defender_obs_state.avg_snort_ids_alert_counters)
         for i in range(len(snort_alert_deltas)):
@@ -127,6 +132,9 @@ class EmulationStatistics(JSONSerializable):
                 d[snort_alert_labels[i]][snort_alert_deltas[i]] = 1
         for machine in s.defender_obs_state.machines:
             s_prime_machine = s_prime.get_defender_machine(ip=machine.ips[0])
+            if machine.snort_ids_ip_alert_counters is None or \
+                s_prime_machine is None:
+                raise ValueError("Machine is None")
             snort_alert_deltas, snort_alert_labels = machine.snort_ids_ip_alert_counters.get_deltas(
                 s_prime_machine.snort_ids_ip_alert_counters)
             for i in range(len(snort_alert_deltas)):
@@ -147,6 +155,9 @@ class EmulationStatistics(JSONSerializable):
 
         for machine in s.defender_obs_state.machines:
             s_prime_machine = s_prime.get_defender_machine(ip=machine.ips[0])
+            if machine.ossec_ids_alert_counters is None or \
+                s_prime_machine is None:
+                raise ValueError("Machine is None")
             ossec_alert_deltas, ossec_alert_labels = machine.ossec_ids_alert_counters.get_deltas(
                 s_prime_machine.ossec_ids_alert_counters)
             for i in range(len(ossec_alert_deltas)):
@@ -167,6 +178,9 @@ class EmulationStatistics(JSONSerializable):
 
         for machine in s.defender_obs_state.machines:
             s_prime_machine = s_prime.get_defender_machine(ip=machine.ips[0])
+            if machine.docker_stats is None or \
+                s_prime_machine is None:
+                raise ValueError("Machine is None")
             docker_stats_deltas, docker_stats_labels = machine.docker_stats.get_deltas(
                 stats_prime=s_prime_machine.docker_stats)
             for i in range(len(docker_stats_deltas)):
@@ -198,6 +212,9 @@ class EmulationStatistics(JSONSerializable):
 
         for machine in s.defender_obs_state.machines:
             s_prime_machine = s_prime.get_defender_machine(ip=machine.ips[0])
+            if machine.host_metrics is None or \
+                s_prime_machine is None:
+                raise ValueError("Machine is None")
             host_metrics_deltas, host_metrics_labels = machine.host_metrics.get_deltas(
                 stats_prime=s_prime_machine.host_metrics)
             for i in range(len(host_metrics_deltas)):
@@ -226,7 +243,8 @@ class EmulationStatistics(JSONSerializable):
         else:
             self.update_counters(d=self.conditionals_counts[constants.SYSTEM_IDENTIFICATION.INTRUSION_CONDITIONAL],
                                  s=s, s_prime=s_prime)
-
+        if s.attacker_obs_state is None:
+            raise ValueError("EmulationAttackerObservationState is None")
         logged_in_ips = list(map(lambda x: "_".join(x.ips), filter(
             lambda x: x.logged_in and x.tools_installed and x.backdoor_installed and x.root,
             s.attacker_obs_state.machines)))
@@ -251,6 +269,8 @@ class EmulationStatistics(JSONSerializable):
         :return: None
         """
         snort_alert_labels = collector_constants.KAFKA_CONFIG.SNORT_IDS_ALERTS_LABELS
+        if s.defender_obs_state is None:
+            raise ValueError("EmulationDefenderObservationState is None")
         for i in range(len(snort_alert_labels)):
             if 0 in self.initial_distributions_counts[snort_alert_labels[i]]:
                 self.initial_distributions_counts[snort_alert_labels[i]][0] += 1
@@ -275,7 +295,8 @@ class EmulationStatistics(JSONSerializable):
                     self.initial_distributions_counts[lbl][0] += 1
                 else:
                     self.initial_distributions_counts[lbl][0] = 1
-
+        if s.defender_obs_state.docker_stats is None:
+            raise ValueError("DockerStats is None")
         docker_stats_values, docker_stats_labels = s.defender_obs_state.docker_stats.get_values()
         for i in range(len(docker_stats_values)):
             if docker_stats_values[i] in self.initial_distributions_counts[docker_stats_labels[i]]:
@@ -283,6 +304,8 @@ class EmulationStatistics(JSONSerializable):
             else:
                 self.initial_distributions_counts[docker_stats_labels[i]][docker_stats_values[i]] = 1
         for machine in s.defender_obs_state.machines:
+            if machine.docker_stats is None:
+                raise ValueError("Dockerstats is None")
             m_values, m_labels = machine.docker_stats.get_values()
             for i in range(len(m_values)):
                 lbl = f"{m_labels[i]}_{machine.ips[0]}"
@@ -290,7 +313,8 @@ class EmulationStatistics(JSONSerializable):
                     self.initial_distributions_counts[lbl][m_values[i]] += 1
                 else:
                     self.initial_distributions_counts[lbl][m_values[i]] = 1
-
+        if s.defender_obs_state.client_population_metrics is None:
+            raise ValueError("ClientPopulationMetrics is None")
         client_population_metrics_values, client_population_metrics_labels = \
             s.defender_obs_state.client_population_metrics.get_values()
         for i in range(len(client_population_metrics_values)):
@@ -301,7 +325,8 @@ class EmulationStatistics(JSONSerializable):
             else:
                 self.initial_distributions_counts[
                     client_population_metrics_labels[i]][client_population_metrics_values[i]] = 1
-
+        if s.defender_obs_state.aggregated_host_metrics is None:
+            raise ValueError("HostMetrics is None")
         aggregated_host_metrics_values, aggregated_host_metrics_labels = \
             s.defender_obs_state.aggregated_host_metrics.get_values()
         for i in range(len(aggregated_host_metrics_values)):
@@ -314,6 +339,8 @@ class EmulationStatistics(JSONSerializable):
                     aggregated_host_metrics_values[i]] = 1
 
         for machine in s.defender_obs_state.machines:
+            if machine.host_metrics is None:
+                raise ValueError("HostMetrics is None")
             m_values, m_labels = machine.host_metrics.get_values()
             for i in range(len(m_values)):
                 lbl = f"{m_labels[i]}_{machine.ips[0]}"
@@ -339,7 +366,7 @@ class EmulationStatistics(JSONSerializable):
             self.conditionals_probs[condition] = {}
             for metric in self.conditionals_counts[condition].keys():
                 self.conditionals_probs[condition][metric] = {}
-                observations = []
+                observations: List[Any] = []
                 total_counts = sum(self.conditionals_counts[condition][metric].values())
                 self.num_measurements = self.num_measurements + total_counts
                 for value in self.conditionals_counts[condition][metric].keys():
@@ -471,7 +498,7 @@ class EmulationStatistics(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["descr"] = self.descr
         d["id"] = self.id
         d["conditionals_counts"] = self.conditionals_counts
