@@ -120,7 +120,7 @@ class EmulationEnvState(JSONSerializable):
 
         self.defender_obs_state.cleanup()
 
-    def get_attacker_machine(self, ip: Optional[str]) -> Union[EmulationAttackerMachineObservationState, None]:
+    def get_attacker_machine(self, ip: str) -> Union[EmulationAttackerMachineObservationState, None]:
         """
         Utility function for extracting the attacker machine from the attacker's observation
 

@@ -152,7 +152,7 @@ class EmulationAttackerAction(JSONSerializable):
         d["ts"] = self.ts
         return d
 
-    def ips_match(self, ips: Optional[List[str]]) -> bool:
+    def ips_match(self, ips: List[str]) -> bool:
         """
         Checks if a list of ips overlap with the ips of this host
 

@@ -23,6 +23,11 @@ class ConnectionUtil:
     """
     Class containing utility functions for the connection-related functionality to the emulation
     """
+    @staticmethod
+    def raise_error(obj_list):
+        for obj in obj_list:
+            if obj is None:
+                raise ValueError("Connection failed")
 
     @staticmethod
     def login_service_helper(s: EmulationEnvState, a: EmulationAttackerAction, alive_check,
@@ -48,8 +53,6 @@ class ConnectionUtil:
                 target_machine = m
                 target_machine = target_machine.copy()
                 break
-        if target_machine is None:
-            raise ValueError("Could not find a target machine")
         # Check if already logged in
         if target_machine is not None:
             alive_connections = []
@@ -102,6 +105,8 @@ class ConnectionUtil:
 
         # Check cached connections
         non_used_nor_cached_credentials = []
+        if target_machine is None:
+            raise ValueError("Target machine is None")
         for cr in non_used_credentials:
             if cr.service == constants.SSH.SERVICE_NAME:
                 for ip in target_machine.ips:
@@ -153,7 +158,7 @@ class ConnectionUtil:
             s_prime = s
             if target_machine is not None:
                 if s.attacker_obs_state is None or s_prime.attacker_obs_state is None:
-                    raise ValueError("Could not find EmulationAttackerObservationState object.")
+                    raise ValueError("EmulationAttackerObservationState is None.")
                 attacker_machine_observations = EnvDynamicsUtil.merge_new_obs_with_old(
                     s.attacker_obs_state.machines, [target_machine],
                     emulation_env_config=s.emulation_env_config, action=a)
@@ -256,14 +261,15 @@ class ConnectionUtil:
         start = time.time()
         for proxy_conn in proxy_connections:
             if proxy_conn.ip is None:
-                raise ValueError("Could not find ip of EmulationConnectionObservationState object")
+                raise ValueError("EmulationConnectionObservationState is None")
             if proxy_conn.ip != s.emulation_env_config.containers_config.agent_ip:
                 m = s.get_attacker_machine(proxy_conn.ip)
                 if m is None or not a.ips_match(list(m.reachable)) or m.ips_match(a.ips):
                     continue
             else:
-                if s.attacker_obs_state is None:
-                    raise ValueError("Could not find EmulationAttackerObservationState")
+                if s.attacker_obs_state is None or \
+                    s.attacker_obs_state.agent_reachable is None:
+                    raise ValueError("EmulationAttackerObservationState is None")
                 if not a.ips_match(s.attacker_obs_state.agent_reachable):
                     continue
             for cr in credentials:
@@ -277,41 +283,37 @@ class ConnectionUtil:
                                                                          agent_addr)
                             target_conn = paramiko.SSHClient()
                             target_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                            if connection_setup_dto.connected is None or \
+                                connection_setup_dto.credentials is None or \
+                                    connection_setup_dto.target_connections is None or \
+                                        connection_setup_dto.proxies is None or \
+                                            connection_setup_dto.ports is None or \
+                                                connection_setup_dto.ports is None or \
+                                                    connection_setup_dto.non_failed_credentials is None or \
+                                                        connection_setup_dto.ip is None or \
+                                                            target_conn is None:
+                                raise ValueError("Connection Failed")
                             target_conn.connect(ip, username=cr.username, password=cr.pw, sock=relay_channel)
-                            if target_conn.get_transport() is None:
-                                raise ValueError("Could not obtain transport")
                             target_conn.get_transport().set_keepalive(5)
                             connection_setup_dto.connected = True
-                            if connection_setup_dto.credentials is None:
-                                raise ValueError("Could not obtain credentials")
                             connection_setup_dto.credentials.append(cr)
-                            if connection_setup_dto.target_connections is None:
-                                raise ValueError("Could not obtain target_connections")
                             connection_setup_dto.target_connections.append(target_conn)
-                            if connection_setup_dto.proxies is None:
-                                raise ValueError("Could not obtain proxies")
                             connection_setup_dto.proxies.append(proxy_conn)
-                            if connection_setup_dto.ports is None:
-                                raise ValueError("Could not obtain ports")
                             connection_setup_dto.ports.append(cr.port)
-                            if connection_setup_dto.non_failed_credentials is None:
-                                raise ValueError("Could not obtain non_failed_credentials")
                             connection_setup_dto.non_failed_credentials.append(cr)
-                            if connection_setup_dto.ip is None:
-                                raise ValueError("Could not obtain ip")
                             connection_setup_dto.ip = ip
                             break
                         except Exception as e:
                             Logger.__call__().get_logger().warning("SSH exception :{}".format(str(e)))
                             Logger.__call__().get_logger().warning("user:{}, pw:{}".format(cr.username, cr.pw))
                             if s.attacker_obs_state is None:
-                                raise ValueError("Could not obtain EmulationAttackerObservationState")
+                                raise ValueError("EmulationAttackerObservationState is None")
                             Logger.__call__().get_logger().warning("Agent reachable:{}".format(
                                 s.attacker_obs_state.agent_reachable))
                             Logger.__call__().get_logger().warning("Action:{}, {}, {}".format(a.id, a.ips, a.descr))
                     else:
                         if connection_setup_dto.non_failed_credentials is None:
-                            raise ValueError("Could not obtain list of Credential objects")
+                            raise ValueError("List is None")
                         connection_setup_dto.non_failed_credentials.append(cr)
             if connection_setup_dto.connected:
                 break
@@ -332,16 +334,12 @@ class ConnectionUtil:
         """
         start = time.time()
         root = False
-        if connection_setup_dto.target_connections is None:
-            raise ValueError("Could not obtain target connections")
-        if connection_setup_dto.credentials is None:
-            raise ValueError("Could not obtain list of Credential objects")
-        if connection_setup_dto.ports is None:
-            raise ValueError("Could not obtain ports")
-        if connection_setup_dto.proxies is None:
-            raise ValueError("Could not obtain proxies")
-        if connection_setup_dto.ip is None:
-            raise ValueError("Could not obtain ip")
+        if connection_setup_dto.target_connections is None or \
+            connection_setup_dto.credentials is None or \
+                connection_setup_dto.ports is None or \
+                    connection_setup_dto.proxies is None or \
+                        connection_setup_dto.ip is None:
+            raise ValueError("Connection failed")
         for j in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT):
             outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(
                 cmd="sudo -l", conn=connection_setup_dto.target_connections[i])
@@ -383,12 +381,15 @@ class ConnectionUtil:
         start = time.time()
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != s.emulation_env_config.containers_config.agent_ip:
+                if proxy_conn.ip is None:
+                    raise ValueError("EmulationConnectionObservationState is None")
                 m = s.get_attacker_machine(proxy_conn.ip)
                 if m is None or a.ips not in m.reachable or m.ips == a.ips:
                     continue
             else:
-                if s.attacker_obs_state is None:
-                    raise ValueError("Could not obtain EmulationAttackerObservationState")
+                if s.attacker_obs_state is None or \
+                    s.attacker_obs_state.agent_reachable is None:
+                    raise ValueError("EmulationAttackerObservationState or agent_reachable is None")
                 if not a.ips_match(s.attacker_obs_state.agent_reachable):
                     continue
             for cr in credentials:
@@ -399,6 +400,8 @@ class ConnectionUtil:
                         try:
                             forward_port = s.emulation_env_config.get_port_forward_port()
                             agent_transport = proxy_conn.conn.get_transport()
+                            if cr.port is None:
+                                raise ValueError("port is None")
                             tunnel_thread = ForwardTunnelThread(local_port=forward_port,
                                                                 remote_host=ip, remote_port=cr.port,
                                                                 transport=agent_transport)
@@ -413,27 +416,20 @@ class ConnectionUtil:
                             response_1 = response.decode()
                             if constants.TELNET.INCORRECT_LOGIN not in response_1 and response_1 != "":
                                 connection_setup_dto.connected = True
-                                if connection_setup_dto.credentials is None:
-                                    raise ValueError("Could not obtain list of Credential objects")
+                                if connection_setup_dto.target_connections is None or \
+                                    connection_setup_dto.credentials is None or \
+                                        connection_setup_dto.tunnel_threads is None or \
+                                            connection_setup_dto.ports is None or \
+                                                connection_setup_dto.proxies is None or \
+                                                    connection_setup_dto.ip is None or \
+                                                        connection_setup_dto.forward_ports is None:
+                                            raise ValueError("Connection failed")
                                 connection_setup_dto.credentials.append(cr)
-                                if connection_setup_dto.target_connections is None:
-                                    raise ValueError("Could not obtain list of target connections")
                                 connection_setup_dto.target_connections.append(target_conn)
-                                if connection_setup_dto.proxies is None:
-                                    raise ValueError("Could not obtain list of "
-                                                     "EmulationConnectionObservationState objects")
                                 connection_setup_dto.proxies.append(proxy_conn)
-                                if connection_setup_dto.tunnel_threads is None:
-                                    raise ValueError("Could not obtain list of ForwardTunnelThread objects")
                                 connection_setup_dto.tunnel_threads.append(tunnel_thread)
-                                if connection_setup_dto.forward_ports is None:
-                                    raise ValueError("Could not obtain forward ports")
                                 connection_setup_dto.forward_ports.append(forward_port)
-                                if connection_setup_dto.ports is None:
-                                    raise ValueError("Could not obtain ports")
                                 connection_setup_dto.ports.append(cr.port)
-                                if connection_setup_dto.ip is None:
-                                    raise ValueError("Could not obtain ip")
                                 connection_setup_dto.ip = ip
                             connection_setup_dto.non_failed_credentials.append(cr)
                             break
@@ -468,18 +464,13 @@ class ConnectionUtil:
         """
         start = time.time()
         root = False
-        if connection_setup_dto.target_connections is None:
-            raise ValueError("Could not obtain list of  target connections")
-        if connection_setup_dto.credentials is None:
-            raise ValueError("Could not obtain list of Credential objects")
-        if connection_setup_dto.tunnel_threads is None:
-            raise ValueError("Could not obtain list of ForwardTunnelThread objects")
-        if connection_setup_dto.forward_ports is None:
-            raise ValueError("Could not obtain list of forward ports")
-        if connection_setup_dto.ports is None:
-            raise ValueError("Could not obtain list of ports")
-        if connection_setup_dto.proxies is None:
-            raise ValueError("Could not obtain proxies")
+        if connection_setup_dto.target_connections is None or \
+            connection_setup_dto.credentials is None or \
+                connection_setup_dto.tunnel_threads is None or \
+                    connection_setup_dto.forward_ports is None or \
+                        connection_setup_dto.ports is None or \
+                            connection_setup_dto.proxies is None:
+            raise ValueError("Connection failed")
         for i in range(constants.ENV_CONSTANTS.ATTACKER_RETRY_CHECK_ROOT):
             connection_setup_dto.target_connections[i].write("sudo -l\n".encode())
             response = connection_setup_dto.target_connections[i].read_until(constants.TELNET.PROMPT, timeout=3)
@@ -522,12 +513,15 @@ class ConnectionUtil:
         start = time.time()
         for proxy_conn in proxy_connections:
             if proxy_conn.ip != s.emulation_env_config.containers_config.agent_ip:
+                if proxy_conn.ip is None:
+                    raise ValueError("ip is None")
                 m = s.get_attacker_machine(proxy_conn.ip)
                 if m is None or a.ips not in m.reachable or m.ips == a.ips:
                     continue
             else:
-                if s.attacker_obs_state is None:
-                    raise ValueError("Could not obtain EmulationAttackerObservationState")
+                if s.attacker_obs_state is None or \
+                    s.attacker_obs_state.agent_reachable is None:
+                    raise ValueError("EmulationAttackerObservationState or agent_reachable is None")
                 if not a.ips_match(s.attacker_obs_state.agent_reachable):
                     continue
             for cr in credentials:
@@ -536,6 +530,8 @@ class ConnectionUtil:
                         try:
                             forward_port = s.emulation_env_config.get_port_forward_port()
                             agent_transport = proxy_conn.conn.get_transport()
+                            if cr.port is None:
+                                raise ValueError("port is None")
                             tunnel_thread = ForwardTunnelThread(local_port=forward_port,
                                                                 remote_host=ip, remote_port=cr.port,
                                                                 transport=agent_transport)
@@ -545,26 +541,20 @@ class ConnectionUtil:
                             login_result = target_conn.login(cr.username, cr.pw)
                             if constants.FTP.INCORRECT_LOGIN not in login_result:
                                 connection_setup_dto.connected = True
-                                if connection_setup_dto.credentials is None:
-                                    raise ValueError("Could not obtain list of Credential objects")
+                                if connection_setup_dto.credentials is None or \
+                                    connection_setup_dto.target_connections is None or \
+                                        connection_setup_dto.proxies is None or \
+                                            connection_setup_dto.tunnel_threads is None or \
+                                                connection_setup_dto.forward_ports is None or \
+                                                    connection_setup_dto.ports is None or \
+                                                        connection_setup_dto.ip is None:
+                                    raise ValueError("Connection failed")
                                 connection_setup_dto.credentials.append(cr)
-                                if connection_setup_dto.target_connections is None:
-                                    raise ValueError("Could not obtain list of  target connections")
                                 connection_setup_dto.target_connections.append(target_conn)
-                                if connection_setup_dto.proxies is None:
-                                    raise ValueError("Could not obtain proxies")
                                 connection_setup_dto.proxies.append(proxy_conn)
-                                if connection_setup_dto.tunnel_threads is None:
-                                    raise ValueError("Could not obtain list of ForwardTunnelThread objects")
                                 connection_setup_dto.tunnel_threads.append(tunnel_thread)
-                                if connection_setup_dto.forward_ports is None:
-                                    raise ValueError("Could not obtain list of forward ports")
                                 connection_setup_dto.forward_ports.append(forward_port)
-                                if connection_setup_dto.ports is None:
-                                    raise ValueError("Could not obtain list of ports")
                                 connection_setup_dto.ports.append(cr.port)
-                                if connection_setup_dto.ip is None:
-                                    raise ValueError("Could not obtain ip")
                                 connection_setup_dto.ip = ip
                                 # Create LFTP connection too to be able to search file system
                                 shell = proxy_conn.conn.invoke_shell()
@@ -578,13 +568,13 @@ class ConnectionUtil:
                                     shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
                                 if connection_setup_dto.interactive_shells is None or \
                                     connection_setup_dto.non_failed_credentials is None:
-                                    raise ValueError("Could not obtain interactive shells "
-                                                     "or list of Credential objects")
+                                    raise ValueError("Interactive shells or list is None")
                                 connection_setup_dto.interactive_shells.append(shell)
                                 connection_setup_dto.non_failed_credentials.append(cr)
                                 break
                         except Exception as e:
-                            if s.attacker_obs_state is None:
+                            if s.attacker_obs_state is None or \
+                                s.attacker_obs_state.agent_reachable is None:
                                 raise ValueError("Could not obtain EmulationAttackerObservationState")
                             Logger.__call__().get_logger().warning(f"FTP exception: {str(e)}, {repr(e)}")
                             Logger.__call__().get_logger().warning(
@@ -593,7 +583,7 @@ class ConnectionUtil:
                                                                    f"{s.attacker_obs_state.agent_reachable}")
                     else:
                         if connection_setup_dto.non_failed_credentials is None:
-                            raise ValueError("Could not obatin list of Credential objects")
+                            raise ValueError("List is None")
                         connection_setup_dto.non_failed_credentials.append(cr)
                 if connection_setup_dto.connected:
                     break
@@ -616,22 +606,15 @@ class ConnectionUtil:
         :return: boolean, whether the connection has root privileges, cost
         """
         root = False
-        if connection_setup_dto.target_connections is None:
-            raise ValueError("Could not obtain target connections")
-        if connection_setup_dto.credentials is None:
-            raise ValueError("Could not obtain list of Credential objects")
-        if connection_setup_dto.tunnel_threads is None:
-            raise ValueError("Could not obtain tunnel threads")
-        if connection_setup_dto.forward_ports is None:
-            raise ValueError("Could not obtain forward ports")
-        if connection_setup_dto.ports is None: 
-            raise ValueError("Could not obtain list of ports")
-        if connection_setup_dto.interactive_shells is None:
-            raise ValueError("Could not obtain interactive shells")
-        if connection_setup_dto.ip is None:
-            raise ValueError("Could not obtain ip")
-        if connection_setup_dto.proxies is None:
-            raise ValueError("Could not obtain proxies")
+        if connection_setup_dto.target_connections is None or \
+            connection_setup_dto.credentials is None or \
+                connection_setup_dto.tunnel_threads is None or \
+                    connection_setup_dto.forward_ports is None or \
+                        connection_setup_dto.ports is None or \
+                            connection_setup_dto.interactive_shells is None or \
+                                connection_setup_dto.ip is None or \
+                                    connection_setup_dto.proxies is None:
+            raise ValueError("Connection failed")
         connection_dto = EmulationConnectionObservationState(
             conn=connection_setup_dto.target_connections[i], credential=connection_setup_dto.credentials[i],
             root=root,
@@ -652,8 +635,9 @@ class ConnectionUtil:
         :param emulation_env_config: the emulation environment configuration
         :return: a connection DTO
         """
-        if s.attacker_obs_state is None:
-            raise ValueError("Cold not obtain EmulationAttackerObservationState")
+        if s.attacker_obs_state is None or \
+            s.attacker_obs_state.agent_reachable is None:
+            raise ValueError("EmulationAttackerObservationState or agent_reachable is None")
         if ip in s.attacker_obs_state.agent_reachable:
             cr = Credential(
                 username=constants.AGENT.USER, pw=constants.AGENT.PW, root=True,
@@ -745,6 +729,8 @@ class ConnectionUtil:
         for i in range(constants.ENV_CONSTANTS.NUM_RETRIES):
             try:
                 agent_transport = c.proxy.conn.get_transport()
+                if c.ip is None:
+                    raise ValueError("The EmulationConnectionObservationState ip is None")
                 tunnel_thread = ForwardTunnelThread(local_port=forward_port,
                                                     remote_host=c.ip, remote_port=constants.TELNET.DEFAULT_PORT,
                                                     transport=agent_transport)
