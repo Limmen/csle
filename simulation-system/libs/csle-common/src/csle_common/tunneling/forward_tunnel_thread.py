@@ -2,14 +2,16 @@ import threading
 import time
 from csle_common.tunneling.forward_ssh_server import ForwardSSHServer
 from csle_common.tunneling.forward_ssh_controller import ForwardSSHHandler
-
+from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
+from typing import Optional, Dict, Any
 
 class ForwardTunnelThread(threading.Thread):
     """
     Thread that starts up a SSH tunnel that forwards a local port to a remote machine
     """
 
-    def __init__(self, local_port: int, remote_host: str, remote_port: int, transport, tunnels_dict) -> None:
+    def __init__(self, local_port: int, remote_host: str, remote_port: int,
+                 transport, tunnels_dict: Dict[str, Any] = {}) -> None:
         """
         Initializes the thread
 

@@ -87,6 +87,19 @@ class ConnectionSetupDTO(JSONSerializable):
             non_failed_credentials=self.non_failed_credentials, proxies=self.proxies, ip=self.ip
         )
 
+    def is_connection_active(self) -> bool:
+        if self.connected is None or \
+            self.credentials is None or \
+                self.target_connections is None or \
+                    self.proxies is None or \
+                        self.ports is None or \
+                            self.ports is None or \
+                                self.non_failed_credentials is None or \
+                                    self.ip is None:
+              return False
+        else:
+            return True
+
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "ConnectionSetupDTO":
         """
