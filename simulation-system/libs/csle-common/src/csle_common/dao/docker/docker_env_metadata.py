@@ -53,7 +53,7 @@ class DockerEnvMetadata(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["containers"] = list(map(lambda x: x.to_dict(), self.containers))
         d["name"] = self.name
         d["subnet_prefix"] = self.subnet_prefix
