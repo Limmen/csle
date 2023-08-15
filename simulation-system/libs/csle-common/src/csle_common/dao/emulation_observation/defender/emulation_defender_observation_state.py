@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict, Any, Union
+from typing import Optional, List, Dict, Any, Union, Set, Tuple
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_observation.defender.emulation_defender_machine_observation_state \
     import EmulationDefenderMachineObservationState
@@ -53,7 +53,7 @@ class EmulationDefenderObservationState(JSONSerializable):
         """
         self.kafka_config = kafka_config
         self.machines: List[EmulationDefenderMachineObservationState] = []
-        self.actions_tried = set()
+        self.actions_tried: Set[List[Tuple[int, int, str]]] = set()
         self.client_population_metrics = client_population_metrics
         if self.client_population_metrics is None:
             self.client_population_metrics = ClientPopulationMetrics()
@@ -83,15 +83,15 @@ class EmulationDefenderObservationState(JSONSerializable):
         self.aggregated_host_metrics = aggregated_host_metrics
         if aggregated_host_metrics is None:
             self.aggregated_host_metrics = HostMetrics()
-        self.avg_aggregated_host_metrics = self.aggregated_host_metrics.copy()
-        self.docker_stats_consumer_thread = None
-        self.client_population_consumer_thread = None
-        self.aggregated_snort_ids_log_consumer_thread = None
-        self.aggregated_snort_ids_rule_log_consumer_thread = None
-        self.aggregated_ossec_ids_log_consumer_thread = None
-        self.attacker_actions_consumer_thread = None
-        self.defender_actions_consumer_thread = None
-        self.aggregated_host_metrics_thread = None
+        self.avg_aggregated_host_metrics: Optional[HostMetrics] = self.aggregated_host_metrics.copy()
+        self.docker_stats_consumer_thread: Optional[DockerStatsConsumerThread] = None
+        self.client_population_consumer_thread: Optional[ClientPopulationConsumerThread] = None
+        self.aggregated_snort_ids_log_consumer_thread: Optional[AggregatedSnortIdsLogConsumerThread] = None
+        self.aggregated_snort_ids_rule_log_consumer_thread: Optional[AggregatedSnortIdsRuleLogConsumerThread] = None
+        self.aggregated_ossec_ids_log_consumer_thread: Optional[AggregatedOSSECIdsLogConsumerThread] = None
+        self.attacker_actions_consumer_thread: Optional[AttackerActionsConsumerThread] = None
+        self.defender_actions_consumer_thread: Optional[DefenderActionsConsumerThread] = None
+        self.aggregated_host_metrics_thread: Optional[AggregatedHostMetricsThread] = None
 
     def start_monitoring_threads(self) -> None:
         """
@@ -99,6 +99,12 @@ class EmulationDefenderObservationState(JSONSerializable):
 
         :return: None
         """
+        if self.kafka_config is None:
+            raise ValueError("KafkaConfig is None")
+        if self.attacker_actions is None:
+            raise ValueError("EmulationAttackerAction is None")
+        if self.defender_actions is None:
+            raise ValueError("EmulationDefenderAction is None")
         self.aggregated_host_metrics_thread = AggregatedHostMetricsThread(
             host_metrics=self.aggregated_host_metrics,
             sleep_time=self.kafka_config.time_step_len_seconds,
@@ -185,9 +191,13 @@ class EmulationDefenderObservationState(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["machines"] = list(map(lambda x: x.to_dict(), self.machines))
         d["actions_tried"] = list(self.actions_tried)
+        if self.client_population_metrics is None or self.docker_stats is None \
+            or self.snort_ids_alert_counters is None or self.snort_ids_rule_counters is None or \
+                self.ossec_ids_alert_counters is None:
+            raise ValueError("ClientPopulationMetrics is None")
         d["client_population_metrics"] = self.client_population_metrics.to_dict()
         d["docker_stats"] = self.docker_stats.to_dict()
         d["snort_ids_alert_counters"] = self.snort_ids_alert_counters.to_dict()
@@ -197,6 +207,12 @@ class EmulationDefenderObservationState(JSONSerializable):
             d["kafka_config"] = self.kafka_config.to_dict()
         else:
             d["kafka_config"] = None
+        if self.attacker_actions is None:
+            raise ValueError("attacker_actions is None and thus has no to_dict attribute")
+        if self.defender_actions is None:
+            raise ValueError("attacker_actions is None and thus has no to_dict attribute")
+        if self.aggregated_host_metrics is None or self.avg_aggregated_host_metrics is None:
+            raise ValueError("aggregated_host_metrics is None and thus has no to_dict attribute")
         d["attacker_actions"] = list(map(lambda x: x.to_dict(), self.attacker_actions))
         d["defender_actions"] = list(map(lambda x: x.to_dict(), self.defender_actions))
         d["aggregated_host_metrics"] = self.aggregated_host_metrics.to_dict()
@@ -254,6 +270,14 @@ class EmulationDefenderObservationState(JSONSerializable):
 
         :return: None
         """
+        if self.aggregated_snort_ids_log_consumer_thread is None or \
+            self.aggregated_snort_ids_rule_log_consumer_thread is None or \
+                self.aggregated_ossec_ids_log_consumer_thread is None or \
+                    self.docker_stats_consumer_thread is None or \
+                        self.client_population_consumer_thread is None or \
+                            self.aggregated_host_metrics_thread is None:
+            raise ValueError("At least one of the objects is None")
+
         self.aggregated_snort_ids_log_consumer_thread.snort_ids_alert_counters_list = []
         self.aggregated_snort_ids_rule_log_consumer_thread.snort_ids_rule_counters_list = []
         self.aggregated_ossec_ids_log_consumer_thread.ossec_ids_alert_counters_list = []
@@ -265,6 +289,13 @@ class EmulationDefenderObservationState(JSONSerializable):
         """
         :return: computes the averages of the metric lists
         """
+        if self.aggregated_snort_ids_log_consumer_thread is None or \
+            self.aggregated_snort_ids_rule_log_consumer_thread is None or \
+                self.aggregated_ossec_ids_log_consumer_thread is None or \
+                    self.docker_stats_consumer_thread is None or \
+                        self.client_population_consumer_thread is None or \
+                            self.aggregated_host_metrics_thread is None:
+            raise ValueError("At least one of the objects is None")
         self.avg_snort_ids_alert_counters = \
             self.aggregated_snort_ids_log_consumer_thread.get_aggregated_ids_alert_counters()
         self.avg_snort_ids_rule_counters = \
@@ -294,6 +325,13 @@ class EmulationDefenderObservationState(JSONSerializable):
         """
         :return: a copy of the object
         """
+        if self.client_population_metrics is None or self.docker_stats is None or \
+            self.snort_ids_alert_counters is None or self.ossec_ids_alert_counters is None or \
+                self.attacker_actions is None or self.defender_actions is None or \
+                    self.aggregated_host_metrics is None or \
+                        self.snort_ids_rule_counters is None or \
+                            self.avg_aggregated_host_metrics is None:
+            raise ValueError("At least of the objects is None")
         c = EmulationDefenderObservationState(
             kafka_config=self.kafka_config,
             client_population_metrics=self.client_population_metrics.copy(), docker_stats=self.docker_stats.copy(),
@@ -319,6 +357,10 @@ class EmulationDefenderObservationState(JSONSerializable):
         """
         :return: a string representation of the object
         """
+        if self.attacker_actions is None:
+            raise ValueError("attacker_Actions is not iterable")
+        if self.defender_actions is None:
+            raise ValueError("defender_actions is not iterable")
         return f"client_population_metrics: {self.client_population_metrics}," \
                f"docker_stats: {self.docker_stats}," \
                f"snort_ids_alert_counters: {self.snort_ids_alert_counters}," \
@@ -353,6 +395,10 @@ class EmulationDefenderObservationState(JSONSerializable):
         """
         :return: The number of attribute of the DTO
         """
+        if self.defender_actions is None:
+            raise ValueError("defender_action is None and thus has no size")
+        if self.attacker_actions is None:
+            raise ValueError("attacker_action is None and thus has no size")
         num_attributes = 0
         if self.client_population_metrics is not None:
             num_attributes = num_attributes + self.client_population_metrics.num_attributes()
