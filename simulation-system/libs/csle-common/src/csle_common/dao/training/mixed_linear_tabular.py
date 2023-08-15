@@ -1,5 +1,6 @@
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Any
 import numpy as np
+from numpy.typing import NDArray
 import iteround
 from csle_common.dao.training.policy import Policy
 from csle_common.dao.training.agent_type import AgentType
@@ -37,7 +38,7 @@ class MixedLinearTabularPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.MIXED_LINEAR_TABULAR
 
-    def action(self, o: List[float]) -> Union[int, List[int], np.ndarray]:
+    def action(self, o: List[float]) -> Union[int, List[int], NDArray[Any]]:
         """
         Multi-threshold stopping policy
 
@@ -58,11 +59,11 @@ class MixedLinearTabularPolicy(Policy):
         """
         return self.action(o=o) == a
 
-    def to_dict(self) -> Dict[str, Union[float, int, str]]:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the policy
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
         d["linear_tabular_policies"] = list(map(lambda x: x.to_dict(), self.linear_tabular_policies))
