@@ -43,9 +43,10 @@ class EmulationExecution(JSONSerializable):
         """
         Converts the object to a dict representation
 
+
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["emulation_name"] = self.emulation_name
         d["timestamp"] = self.timestamp
         d["emulation_env_config"] = self.emulation_env_config.to_dict()
