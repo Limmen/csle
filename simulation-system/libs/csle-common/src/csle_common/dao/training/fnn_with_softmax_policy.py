@@ -1,6 +1,9 @@
-from typing import List, Dict, Union, Tuple
+from typing import List, Dict, Union, Tuple, Any
 import numpy as np
+from numpy import dtype
+from numpy.typing import NDArray
 import torch
+from torch import Tensor
 import math
 from torch.distributions import Categorical
 from csle_common.models.fnn_w_softmax import FNNwithSoftmax
@@ -66,7 +69,7 @@ class FNNWithSoftmaxPolicy(Policy):
                     f"There was an exception loading the model from path: {self.save_path}, "
                     f"exception: {str(e)}, {repr(e)}")
 
-    def action(self, o: List[float]) -> Union[int, List[int], np.ndarray]:
+    def action(self, o: NDArray[Any]) -> Any:
         """
         Multi-threshold stopping policy
 
@@ -74,10 +77,10 @@ class FNNWithSoftmaxPolicy(Policy):
         :return: the selected action
         """
         state = torch.from_numpy(o).float()
-        state = state.to(torch.device(self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value))
+        state1 = state.to(torch.device(self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value))
 
         # Forward pass using the current policy network to predict P(a|s)
-        action_probs = self.policy_network(state).squeeze()
+        action_probs = self.policy_network(state1).squeeze()
         # Set probability of non-legal actions to 0
         action_probs_1 = action_probs.clone()
 
@@ -91,7 +94,7 @@ class FNNWithSoftmaxPolicy(Policy):
         action = policy_dist.sample()
         return action
 
-    def get_action_and_log_prob(self, state: np.ndarray) -> Tuple[int, float]:
+    def get_action_and_log_prob(self, state: NDArray[Any]) -> Tuple[int, float]:
         """
         Samples an action from the policy network
 
@@ -99,11 +102,11 @@ class FNNWithSoftmaxPolicy(Policy):
         :param state: the state to sample an action for
         :return: The sampled action id and the log probability
         """
-        state = torch.from_numpy(state.flatten()).float()
-        state = state.to(torch.device(self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value))
+        state1 = torch.from_numpy(state.flatten()).float()
+        state2 = state1.to(torch.device(self.experiment_config.hparams[constants.NEURAL_NETWORKS.DEVICE].value))
 
         # Forward pass using the current policy network to predict P(a|s)
-        action_probs = self.policy_network(state).squeeze()
+        action_probs = self.policy_network(state2).squeeze()
         # Set probability of non-legal actions to 0
         action_probs_1 = action_probs.clone()
 
@@ -124,7 +127,7 @@ class FNNWithSoftmaxPolicy(Policy):
         log_prob = policy_dist.log_prob(action)
         return action.item(), log_prob
 
-    def probability(self, o: List[float], a) -> Union[int, List[int], np.ndarray]:
+    def probability(self, o: NDArray[Any], a: int) -> Union[int, float]:
         """
         Multi-threshold stopping policy
 
@@ -137,11 +140,11 @@ class FNNWithSoftmaxPolicy(Policy):
         else:
             return 0
 
-    def to_dict(self) -> Dict[str, Union[float, int, str]]:
+    def to_dict(self) -> Dict[str, Any]:
         """
         :return: a dict representation of the policy
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["id"] = self.id
         d["simulation_name"] = self.simulation_name
         d["save_path"] = self.save_path
@@ -157,7 +160,7 @@ class FNNWithSoftmaxPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "FNNWithSoftmaxPolicy":
+    def from_dict(d: Dict[str, Any]) -> "FNNWithSoftmaxPolicy":
         """
         Converst a dict representation of the object to an instance
 
