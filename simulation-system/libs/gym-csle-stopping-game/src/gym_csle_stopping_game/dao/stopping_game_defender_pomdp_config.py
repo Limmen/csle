@@ -38,7 +38,6 @@ class StoppingGameDefenderPomdpConfig(SimulationEnvInputConfig):
         :param d: the dict to convert
         :return: the created instance
         """
-        attacker_strategy = None
         try:
             attacker_strategy = MultiThresholdStoppingPolicy.from_dict(d["attacker_strategy"])
         except Exception:
