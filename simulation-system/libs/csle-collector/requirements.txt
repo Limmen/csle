@@ -1,4 +1,4 @@
-csle-base==0.2.19
+csle-base==0.2.20
 grcpio==1.57.0
 grpcio-tools==1.57.0
 scipy==1.9.3
