@@ -1,5 +1,5 @@
 import logging
-from typing import List, Dict, Any
+from typing import List, Dict
 import time
 import datetime
 from confluent_kafka import Consumer, KafkaError, KafkaException, TopicPartition
@@ -64,7 +64,7 @@ class ReadEmulationStatisticsUtil:
         openflow_port_metrics_per_switch: Dict[str, AvgPortStatistic] = {}
         openflow_flow_avg_metrics_per_switch: Dict[str, List[AvgFlowStatistic]] = {}
         openflow_port_avg_metrics_per_switch: Dict[str, List[AvgPortStatistic]] = {}
-        agg_openflow_flow_stats: List[AggFlowStatistic]  = []
+        agg_openflow_flow_stats: List[AggFlowStatistic] = []
         agg_openflow_flow_metrics_per_switch: Dict[str, List[AggFlowStatistic]] = {}
 
         num_ossec_containers = len(list(filter(lambda x: x.name in constants.CONTAINER_IMAGES.OSSEC_IDS_IMAGES,

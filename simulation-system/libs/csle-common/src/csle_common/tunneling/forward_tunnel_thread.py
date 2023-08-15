@@ -2,8 +2,8 @@ import threading
 import time
 from csle_common.tunneling.forward_ssh_server import ForwardSSHServer
 from csle_common.tunneling.forward_ssh_controller import ForwardSSHHandler
-from csle_common.dao.emulation_config.transport_protocol import TransportProtocol
-from typing import Optional, Dict, Any
+from typing import Dict, Any
+
 
 class ForwardTunnelThread(threading.Thread):
     """
