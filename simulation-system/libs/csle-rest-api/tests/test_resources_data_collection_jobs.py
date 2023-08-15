@@ -163,7 +163,7 @@ class TestResourcesDataCollectionSuite:
                                                         aggregated_host_metrics=None, defender_actions=None,
                                                         attacker_actions=None, snort_ids_rule_counters=None)
         e_trace = EmulationTrace(
-            initial_attacker_observation_state=EmulationAttackerObservationState(catched_flags=["1"], agent_reachable=None),
+            initial_attacker_observation_state=EmulationAttackerObservationState(catched_flags=7, agent_reachable=None),
             initial_defender_observation_state=e_d_o_state,
             emulation_name="JohnDoeEmulation")
         obj = DataCollectionJobConfig(emulation_env_name="JDoe_env", num_collected_steps=10,
