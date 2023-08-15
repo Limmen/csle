@@ -17,8 +17,10 @@ class NmapScanResult(JSONSerializable):
         """
         self.hosts = hosts
         self.ips = ips
-        self.reachable = []
+        self.reachable: List[str] = []
         for h in self.hosts:
+            if h.ips is None:
+                raise ValueError("No ips found")
             self.reachable = self.reachable + h.ips
 
     def __str__(self) -> str:
@@ -42,7 +44,7 @@ class NmapScanResult(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["hosts"] = list(map(lambda x: x.to_dict(), self.hosts))
         d["ips"] = self.ips
         return d
