@@ -195,7 +195,7 @@ class EmulationDefenderObservationState(JSONSerializable):
         d["machines"] = list(map(lambda x: x.to_dict(), self.machines))
         d["actions_tried"] = list(self.actions_tried)
         if self.client_population_metrics is None or self.docker_stats is None \
-            or self.snort_ids_alert_counters is None or self.snort_ids_rule_counters is None or \
+                or self.snort_ids_alert_counters is None or self.snort_ids_rule_counters is None or \
                 self.ossec_ids_alert_counters is None:
             raise ValueError("ClientPopulationMetrics is None")
         d["client_population_metrics"] = self.client_population_metrics.to_dict()
@@ -271,11 +271,11 @@ class EmulationDefenderObservationState(JSONSerializable):
         :return: None
         """
         if self.aggregated_snort_ids_log_consumer_thread is None or \
-            self.aggregated_snort_ids_rule_log_consumer_thread is None or \
+                self.aggregated_snort_ids_rule_log_consumer_thread is None or \
                 self.aggregated_ossec_ids_log_consumer_thread is None or \
-                    self.docker_stats_consumer_thread is None or \
-                        self.client_population_consumer_thread is None or \
-                            self.aggregated_host_metrics_thread is None:
+                self.docker_stats_consumer_thread is None or \
+                self.client_population_consumer_thread is None or \
+                self.aggregated_host_metrics_thread is None:
             raise ValueError("At least one of the objects is None")
 
         self.aggregated_snort_ids_log_consumer_thread.snort_ids_alert_counters_list = []
@@ -290,11 +290,11 @@ class EmulationDefenderObservationState(JSONSerializable):
         :return: computes the averages of the metric lists
         """
         if self.aggregated_snort_ids_log_consumer_thread is None or \
-            self.aggregated_snort_ids_rule_log_consumer_thread is None or \
+                self.aggregated_snort_ids_rule_log_consumer_thread is None or \
                 self.aggregated_ossec_ids_log_consumer_thread is None or \
-                    self.docker_stats_consumer_thread is None or \
-                        self.client_population_consumer_thread is None or \
-                            self.aggregated_host_metrics_thread is None:
+                self.docker_stats_consumer_thread is None or \
+                self.client_population_consumer_thread is None or \
+                self.aggregated_host_metrics_thread is None:
             raise ValueError("At least one of the objects is None")
         self.avg_snort_ids_alert_counters = \
             self.aggregated_snort_ids_log_consumer_thread.get_aggregated_ids_alert_counters()
@@ -326,11 +326,11 @@ class EmulationDefenderObservationState(JSONSerializable):
         :return: a copy of the object
         """
         if self.client_population_metrics is None or self.docker_stats is None or \
-            self.snort_ids_alert_counters is None or self.ossec_ids_alert_counters is None or \
+                self.snort_ids_alert_counters is None or self.ossec_ids_alert_counters is None or \
                 self.attacker_actions is None or self.defender_actions is None or \
-                    self.aggregated_host_metrics is None or \
-                        self.snort_ids_rule_counters is None or \
-                            self.avg_aggregated_host_metrics is None:
+                self.aggregated_host_metrics is None or \
+                self.snort_ids_rule_counters is None or \
+                self.avg_aggregated_host_metrics is None:
             raise ValueError("At least of the objects is None")
         c = EmulationDefenderObservationState(
             kafka_config=self.kafka_config,

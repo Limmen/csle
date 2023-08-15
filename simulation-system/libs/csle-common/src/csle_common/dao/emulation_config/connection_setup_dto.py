@@ -14,7 +14,8 @@ class ConnectionSetupDTO(JSONSerializable):
     def __init__(self, connected: bool = False, credentials: Optional[List[Credential]] = None,
                  target_connections: Optional[List[str]] = None,
                  tunnel_threads: Optional[List[ForwardTunnelThread]] = None, forward_ports: Optional[List[int]] = None,
-                 ports: Optional[List[int]] = None, interactive_shells: Optional[List[str]] = None, total_time: float = 0.0,
+                 ports: Optional[List[int]] = None, interactive_shells: Optional[List[str]] = None,
+                 total_time: float = 0.0,
                  non_failed_credentials: Optional[List[Credential]] = None,
                  proxies: Optional[List[EmulationConnectionObservationState]] = None, ip: Optional[str] = None):
         """
@@ -67,7 +68,7 @@ class ConnectionSetupDTO(JSONSerializable):
         :return: a string represetation of the object
         """
         if self.credentials is None or self.target_connections is None or self.tunnel_threads is None or \
-            self.forward_ports is None or self.ports is None or self.interactive_shells is None or \
+                self.forward_ports is None or self.ports is None or self.interactive_shells is None or \
                 self.non_failed_credentials is None or self.proxies is None:
             raise ValueError("At leat one of the iterables is None")
         return f"connected:{self.connected}, total_time:{self.total_time}, " \
@@ -92,13 +93,18 @@ class ConnectionSetupDTO(JSONSerializable):
         )
 
     def is_connection_active(self) -> bool:
+        """
+        Utility function to check if the connection is alive or not
+
+        :return: True if alive, False otherwise
+        """
         if self.connected is None or \
-            self.credentials is None or \
+                self.credentials is None or \
                 self.target_connections is None or \
-                    self.proxies is None or self.ports is None or \
-                        self.ports is None or \
-                            self.non_failed_credentials is None or \
-                                self.ip is None:
+                self.proxies is None or self.ports is None or \
+                self.ports is None or \
+                self.non_failed_credentials is None or \
+                self.ip is None:
             return False
         else:
             return True

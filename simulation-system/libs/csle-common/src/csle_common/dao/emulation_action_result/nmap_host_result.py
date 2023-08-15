@@ -53,7 +53,7 @@ class NmapHostResult(JSONSerializable):
         :return: a string representation of the object
         """
         if self.hostnames is None or self.ports is None or self.os_matches \
-            is None or self.vulnerabilities is None or self.credentials is None:
+                is None or self.vulnerabilities is None or self.credentials is None:
             raise ValueError("One of the objects to join as return string is None")
         return f"status:{self.status}, ip_addr:{self.ips}, mac_addr:{self.mac_addr}, " \
                f"hostnames:{' '.join(self.hostnames)}, " \
@@ -90,7 +90,7 @@ class NmapHostResult(JSONSerializable):
         :return: a dict representation of the object
         """
         if self.ports is None or self.os is None or self.os_matches is None or \
-            self.vulnerabilities is None or self.credentials is None or self.trace is None:
+                self.vulnerabilities is None or self.credentials is None or self.trace is None:
             raise ValueError("At least one of the iterable objects is None")
         d: Dict[str, Any] = {}
         d["status"] = self.status

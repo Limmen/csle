@@ -1,9 +1,7 @@
 from typing import List, Dict, Union, Tuple, Any
 import numpy as np
-from numpy import dtype
 from numpy.typing import NDArray
 import torch
-from torch import Tensor
 import math
 from torch.distributions import Categorical
 from csle_common.models.fnn_w_softmax import FNNwithSoftmax

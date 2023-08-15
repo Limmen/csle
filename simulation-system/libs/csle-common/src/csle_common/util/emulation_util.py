@@ -106,7 +106,6 @@ class EmulationUtil:
             if not telnet:
                 outdata, errdata, total_time = EmulationUtil.execute_ssh_cmd(cmd=cmd, conn=c.conn)
                 outdata_1 = outdata.decode()
-                errdata_1 = errdata.decode()
                 users = outdata_1.split("\n")
                 users = list(filter(lambda x: x != '', users))
             else:

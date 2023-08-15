@@ -1,6 +1,5 @@
 from typing import List, Dict, Any, Union
 import gpytorch
-import numpy as np
 from numpy.typing import NDArray
 import torch
 from csle_system_identification.gp.gp_regression_model_with_gauissan_noise import GPRegressionModelWithGaussianNoise

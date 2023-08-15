@@ -534,7 +534,7 @@ class ConnectionUtil:
                                 if shell.recv_ready():
                                     shell.recv(constants.COMMON.DEFAULT_RECV_SIZE)
                                 if connection_setup_dto.interactive_shells is None or \
-                                    connection_setup_dto.non_failed_credentials is None:
+                                        connection_setup_dto.non_failed_credentials is None:
                                     raise ValueError("Interactive shells or list is None")
                                 connection_setup_dto.interactive_shells.append(shell)
                                 connection_setup_dto.non_failed_credentials.append(cr)
