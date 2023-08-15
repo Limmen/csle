@@ -76,6 +76,7 @@ class SystemIdentificationJobConfig(JSONSerializable):
         # system_model = None
         parse_models = [GaussianMixtureSystemModel, EmpiricalSystemModel,
                         GPSystemModel, MCMCSystemModel]
+        system_model = None
         for parse_model in parse_models:
             try:
                 system_model = parse_model.from_dict(d['system_model'])

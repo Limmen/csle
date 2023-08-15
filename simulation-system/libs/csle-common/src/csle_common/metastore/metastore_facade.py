@@ -1021,7 +1021,7 @@ class MetastoreFacade:
                 cur.execute(f"SELECT id,simulation_name,emulation_name FROM "
                             f"{constants.METADATA_STORE.EXPERIMENT_EXECUTIONS_TABLE}")
                 records = cur.fetchall()
-                return list(map(lambda x: (int(x[0]), str(x[1])), records))
+                return list(map(lambda x: (int(x[0]), str(x[1]), str(x[2])), records))
 
     @staticmethod
     def _convert_experiment_execution_record_to_dto(experiment_execution_record) -> ExperimentExecution:

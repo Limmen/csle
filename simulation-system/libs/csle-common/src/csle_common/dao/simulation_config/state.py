@@ -30,9 +30,7 @@ class State(JSONSerializable):
         :param d: the dict to convert
         :return: the created instance
         """
-        obj = State(
-            id=d["id"], name=d["name"], descr=d["descr"], state_type=d["state_type"]
-        )
+        obj = State(id=d["id"], name=d["name"], descr=d["descr"], state_type=StateType(d["state_type"]))
         return obj
 
     def to_dict(self) -> Dict[str, Any]:

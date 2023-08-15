@@ -114,7 +114,7 @@ class SimulationEnvConfig(JSONSerializable):
             state_space_config=StateSpaceConfig.from_dict(d["state_space_config"]),
             joint_action_space_config=JointActionSpaceConfig.from_dict(d["joint_action_space_config"]),
             joint_observation_space_config=JointObservationSpaceConfig.from_dict(d["joint_observation_space_config"]),
-            time_step_type=d["time_step_type"],
+            time_step_type=TimeStepType(d["time_step_type"]),
             reward_function_config=RewardFunctionConfig.from_dict(d["reward_function_config"]),
             transition_operator_config=TransitionOperatorConfig.from_dict(d["transition_operator_config"]),
             observation_function_config=ObservationFunctionConfig.from_dict(d["observation_function_config"]),
