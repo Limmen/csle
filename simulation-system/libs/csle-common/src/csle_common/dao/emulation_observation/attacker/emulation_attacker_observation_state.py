@@ -12,7 +12,7 @@ class EmulationAttackerObservationState(JSONSerializable):
     Represents the attacker's agent's current belief state of the emulation
     """
 
-    def __init__(self, catched_flags: int, agent_reachable: Optional[List[str]] = None):
+    def __init__(self, catched_flags: int, agent_reachable: Optional[Set[str]] = None):
         """
         Initializes the state
 
@@ -48,11 +48,11 @@ class EmulationAttackerObservationState(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["machines"] = list(map(lambda x: x.to_dict(), self.machines))
         d["catched_flags"] = self.catched_flags
-        d["actions_tried"] = list(self.actions_tried)
-        d["agent_reachable"] = list(self.agent_reachable)
+        d["actions_tried"] = self.actions_tried
+        d["agent_reachable"] = self.agent_reachable
         return d
 
     def sort_machines(self) -> None:
@@ -84,11 +84,12 @@ class EmulationAttackerObservationState(JSONSerializable):
             return emulation_env_config.topology_config.subnetwork_masks
         elif a.index < len(self.machines):
             return self.machines[a.index].ips
-        else:
+        elif a.index > len(self.machines):
             raise ValueError(f"invalid index: {a.index}, num machines: {len(self.machines)}")
-        return a.ips
+        else:
+            return a.ips
 
-    def exploit_tried(self, a: EmulationAttackerAction, m: EmulationAttackerMachineObservationState) -> bool:
+    def exploit_tried(self, a: EmulationAttackerAction, m: Optional[EmulationAttackerMachineObservationState]) -> bool:
         """
         Checks if a given exploit have been tried on a given machine or not
 
@@ -188,6 +189,8 @@ class EmulationAttackerObservationState(JSONSerializable):
         """
         :return: a copy of the state
         """
+        if self.agent_reachable is None:
+            raise ValueError("agent_reachable is None")
         c = EmulationAttackerObservationState(catched_flags=self.catched_flags,
                                               agent_reachable=self.agent_reachable.copy())
         c.actions_tried = self.actions_tried.copy()
@@ -231,6 +234,8 @@ class EmulationAttackerObservationState(JSONSerializable):
         :return: get the schema of the DTO
         """
         dto = EmulationAttackerObservationState(catched_flags=0, agent_reachable=set())
+        if dto.agent_reachable is None:
+            raise ValueError("agent_reachable is None")
         dto.agent_reachable.add("")
         dto.actions_tried.add((-1, -1, ""))
         dto.machines = [EmulationAttackerMachineObservationState.schema()]
