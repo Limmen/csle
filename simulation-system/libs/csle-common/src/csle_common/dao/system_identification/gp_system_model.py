@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Set, Union
 import math
 from scipy.special import rel_entr
 from csle_common.dao.system_identification.gp_conditional import GPConditional
@@ -23,7 +23,7 @@ class GPSystemModel(SystemModel):
         """
         super(GPSystemModel, self).__init__(descr=descr, model_type=SystemModelType.GAUSSIAN_PROCESS)
         self.conditional_metric_distributions = conditional_metric_distributions
-        complete_sample_space = set()
+        complete_sample_space: Set[int] = set()
         for conds in self.conditional_metric_distributions:
             for cond in conds:
                 complete_sample_space = complete_sample_space.union(set(cond.sample_space))
@@ -34,7 +34,7 @@ class GPSystemModel(SystemModel):
         self.emulation_env_name = emulation_env_name
         self.emulation_statistic_id = emulation_statistic_id
         self.id = -1
-        self.conditionals_kl_divergences = {}
+        self.conditionals_kl_divergences: Dict[str, Dict[str, Dict[str, Union[str, float]]]] = {}
         self.compute_kl_divergences()
 
     def compute_kl_divergences(self) -> None:
@@ -83,7 +83,7 @@ class GPSystemModel(SystemModel):
         """
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["conditional_metric_distributions"] = list(map(lambda x: list(map(lambda y: y.to_dict(), x)),
                                                          self.conditional_metric_distributions))
         d["emulation_env_name"] = self.emulation_env_name
