@@ -40,6 +40,8 @@ class AvgHostMetricsThread(threading.Thread):
             total_num_processes = 0
             total_num_users = 0
             for m in self.machines:
+                if m.host_metrics is None:
+                    raise ValueError("HostMetrics is None")
                 total_num_logged_in_users += m.host_metrics.num_logged_in_users
                 total_num_failed_login_attempts += m.host_metrics.num_failed_login_attempts
                 total_num_open_connections += m.host_metrics.num_open_connections

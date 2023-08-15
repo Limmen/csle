@@ -35,7 +35,7 @@ class NiktoScanResult(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["port"] = self.port
         d["ip"] = self.ip
         d["sitename"] = self.sitename
