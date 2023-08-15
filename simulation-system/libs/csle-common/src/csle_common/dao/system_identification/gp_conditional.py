@@ -1,6 +1,7 @@
 from typing import List, Dict, Any, Union
 import gpytorch
 import numpy as np
+from numpy.typing import NDArray
 import torch
 from csle_system_identification.gp.gp_regression_model_with_gauissan_noise import GPRegressionModelWithGaussianNoise
 from csle_base.json_serializable import JSONSerializable
@@ -33,7 +34,7 @@ class GPConditional(JSONSerializable):
         self.observed_y = observed_y
         self.scale_parameter = scale_parameter
         self.noise_parameter = noise_parameter
-        self.distribution = []
+        self.distribution: List[NDArray[Any]] = []
 
     @staticmethod
     def from_dict(d: Dict[str, Any]) -> "GPConditional":
@@ -53,7 +54,7 @@ class GPConditional(JSONSerializable):
         """
         :return: a dict representation of the DTO
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["conditional_name"] = self.conditional_name
         d["metric_name"] = self.metric_name
         d["sample_space"] = self.sample_space
@@ -95,7 +96,7 @@ class GPConditional(JSONSerializable):
         self.sample_space.sort()
         self.distribution = list(self.generate_distributions_for_samples(samples=self.sample_space).tolist())
 
-    def generate_distributions_for_samples(self, samples) -> np.ndarray:
+    def generate_distributions_for_samples(self, samples) -> NDArray[Any]:
         """
         Generates distributions for a given sample
 
