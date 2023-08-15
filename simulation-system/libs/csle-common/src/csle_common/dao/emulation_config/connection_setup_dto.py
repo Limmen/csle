@@ -12,9 +12,9 @@ class ConnectionSetupDTO(JSONSerializable):
     """
 
     def __init__(self, connected: bool = False, credentials: Optional[List[Credential]] = None,
-                 target_connections: Optional[List] = None,
+                 target_connections: Optional[List[str]] = None,
                  tunnel_threads: Optional[List[ForwardTunnelThread]] = None, forward_ports: Optional[List[int]] = None,
-                 ports: Optional[List[int]] = None, interactive_shells: Optional[List] = None, total_time: float = 0.0,
+                 ports: Optional[List[int]] = None, interactive_shells: Optional[List[str]] = None, total_time: float = 0.0,
                  non_failed_credentials: Optional[List[Credential]] = None,
                  proxies: Optional[List[EmulationConnectionObservationState]] = None, ip: Optional[str] = None):
         """
@@ -66,6 +66,10 @@ class ConnectionSetupDTO(JSONSerializable):
         """
         :return: a string represetation of the object
         """
+        if self.credentials is None or self.target_connections is None or self.tunnel_threads is None or \
+            self.forward_ports is None or self.ports is None or self.interactive_shells is None or \
+                self.non_failed_credentials is None or self.proxies is None:
+            raise ValueError("At leat one of the iterables is None")
         return f"connected:{self.connected}, total_time:{self.total_time}, " \
                f"credentials:{list(map(lambda x: str(x), self.credentials))}, " \
                f"target_connections:{list(map(lambda x: str(x), self.target_connections))}, " \
@@ -123,7 +127,9 @@ class ConnectionSetupDTO(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        if self.credentials is None or self.non_failed_credentials is None or self.proxies is None:
+            raise ValueError("At least one of the iterables is None")
+        d: Dict[str, Any] = {}
         d["connected"] = self.connected
         d["credentials"] = list(map(lambda x: x.to_dict(), self.credentials))
         d["ports"] = self.ports
