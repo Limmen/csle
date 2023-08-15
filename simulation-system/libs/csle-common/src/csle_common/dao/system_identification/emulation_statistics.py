@@ -132,8 +132,7 @@ class EmulationStatistics(JSONSerializable):
                 d[snort_alert_labels[i]][snort_alert_deltas[i]] = 1
         for machine in s.defender_obs_state.machines:
             s_prime_machine = s_prime.get_defender_machine(ip=machine.ips[0])
-            if machine.snort_ids_ip_alert_counters is None or \
-                s_prime_machine is None:
+            if machine.snort_ids_ip_alert_counters is None or s_prime_machine is None:
                 raise ValueError("Machine is None")
             snort_alert_deltas, snort_alert_labels = machine.snort_ids_ip_alert_counters.get_deltas(
                 s_prime_machine.snort_ids_ip_alert_counters)
@@ -155,8 +154,7 @@ class EmulationStatistics(JSONSerializable):
 
         for machine in s.defender_obs_state.machines:
             s_prime_machine = s_prime.get_defender_machine(ip=machine.ips[0])
-            if machine.ossec_ids_alert_counters is None or \
-                s_prime_machine is None:
+            if machine.ossec_ids_alert_counters is None or s_prime_machine is None:
                 raise ValueError("Machine is None")
             ossec_alert_deltas, ossec_alert_labels = machine.ossec_ids_alert_counters.get_deltas(
                 s_prime_machine.ossec_ids_alert_counters)
@@ -178,8 +176,7 @@ class EmulationStatistics(JSONSerializable):
 
         for machine in s.defender_obs_state.machines:
             s_prime_machine = s_prime.get_defender_machine(ip=machine.ips[0])
-            if machine.docker_stats is None or \
-                s_prime_machine is None:
+            if machine.docker_stats is None or s_prime_machine is None:
                 raise ValueError("Machine is None")
             docker_stats_deltas, docker_stats_labels = machine.docker_stats.get_deltas(
                 stats_prime=s_prime_machine.docker_stats)
@@ -212,8 +209,7 @@ class EmulationStatistics(JSONSerializable):
 
         for machine in s.defender_obs_state.machines:
             s_prime_machine = s_prime.get_defender_machine(ip=machine.ips[0])
-            if machine.host_metrics is None or \
-                s_prime_machine is None:
+            if machine.host_metrics is None or s_prime_machine is None:
                 raise ValueError("Machine is None")
             host_metrics_deltas, host_metrics_labels = machine.host_metrics.get_deltas(
                 stats_prime=s_prime_machine.host_metrics)

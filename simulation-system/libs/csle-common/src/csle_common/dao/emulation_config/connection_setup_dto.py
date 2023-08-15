@@ -91,12 +91,11 @@ class ConnectionSetupDTO(JSONSerializable):
         if self.connected is None or \
             self.credentials is None or \
                 self.target_connections is None or \
-                    self.proxies is None or \
+                    self.proxies is None or self.ports is None or \
                         self.ports is None or \
-                            self.ports is None or \
-                                self.non_failed_credentials is None or \
-                                    self.ip is None:
-              return False
+                            self.non_failed_credentials is None or \
+                                self.ip is None:
+            return False
         else:
             return True
 

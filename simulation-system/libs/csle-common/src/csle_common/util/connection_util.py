@@ -262,8 +262,7 @@ class ConnectionUtil:
                 if m is None or not a.ips_match(list(m.reachable)) or m.ips_match(a.ips):
                     continue
             else:
-                if s.attacker_obs_state is None or \
-                    s.attacker_obs_state.agent_reachable is None:
+                if s.attacker_obs_state is None or s.attacker_obs_state.agent_reachable is None:
                     raise ValueError("EmulationAttackerObservationState is None")
                 if not a.ips_match(s.attacker_obs_state.agent_reachable):
                     continue
@@ -351,7 +350,8 @@ class ConnectionUtil:
 
     @staticmethod
     def _telnet_setup_connection(a: EmulationAttackerAction,
-                                 credentials: List[Credential], proxy_connections: List[EmulationConnectionObservationState],
+                                 credentials: List[Credential],
+                                 proxy_connections: List[EmulationConnectionObservationState],
                                  s: EmulationEnvState) -> ConnectionSetupDTO:
         """
         Helper function for setting up a Telnet connection to a target machine
@@ -372,8 +372,7 @@ class ConnectionUtil:
                 if m is None or a.ips not in m.reachable or m.ips == a.ips:
                     continue
             else:
-                if s.attacker_obs_state is None or \
-                    s.attacker_obs_state.agent_reachable is None:
+                if s.attacker_obs_state is None or s.attacker_obs_state.agent_reachable is None:
                     raise ValueError("EmulationAttackerObservationState or agent_reachable is None")
                 if not a.ips_match(s.attacker_obs_state.agent_reachable):
                     continue
@@ -472,7 +471,8 @@ class ConnectionUtil:
 
     @staticmethod
     def _ftp_setup_connection(a: EmulationAttackerAction,
-                              credentials: List[Credential], proxy_connections: List[EmulationConnectionObservationState],
+                              credentials: List[Credential],
+                              proxy_connections: List[EmulationConnectionObservationState],
                               s: EmulationEnvState) -> ConnectionSetupDTO:
         """
         Helper function for setting up a FTP connection
@@ -493,8 +493,7 @@ class ConnectionUtil:
                 if m is None or a.ips not in m.reachable or m.ips == a.ips:
                     continue
             else:
-                if s.attacker_obs_state is None or \
-                    s.attacker_obs_state.agent_reachable is None:
+                if s.attacker_obs_state is None or s.attacker_obs_state.agent_reachable is None:
                     raise ValueError("EmulationAttackerObservationState or agent_reachable is None")
                 if not a.ips_match(s.attacker_obs_state.agent_reachable):
                     continue
@@ -541,8 +540,7 @@ class ConnectionUtil:
                                 connection_setup_dto.non_failed_credentials.append(cr)
                                 break
                         except Exception as e:
-                            if s.attacker_obs_state is None or \
-                                s.attacker_obs_state.agent_reachable is None:
+                            if s.attacker_obs_state is None or s.attacker_obs_state.agent_reachable is None:
                                 raise ValueError("Could not obtain EmulationAttackerObservationState")
                             Logger.__call__().get_logger().warning(f"FTP exception: {str(e)}, {repr(e)}")
                             Logger.__call__().get_logger().warning(
@@ -596,8 +594,7 @@ class ConnectionUtil:
         :param emulation_env_config: the emulation environment configuration
         :return: a connection DTO
         """
-        if s.attacker_obs_state is None or \
-            s.attacker_obs_state.agent_reachable is None:
+        if s.attacker_obs_state is None or s.attacker_obs_state.agent_reachable is None:
             raise ValueError("EmulationAttackerObservationState or agent_reachable is None")
         if ip in s.attacker_obs_state.agent_reachable:
             cr = Credential(

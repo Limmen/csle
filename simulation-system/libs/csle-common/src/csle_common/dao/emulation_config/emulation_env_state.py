@@ -1,4 +1,4 @@
-from typing import Union, Dict, Any, Optional
+from typing import Union, Dict, Any
 import csle_common.constants.constants as constants
 from csle_common.dao.emulation_config.emulation_env_config import EmulationEnvConfig
 from csle_common.dao.emulation_observation.attacker.emulation_attacker_observation_state \
