@@ -50,8 +50,8 @@ class EmulationAttackerObservationState(JSONSerializable):
         """
         d: Dict[str, Any] = {}
         d["machines"] = list(map(lambda x: x.to_dict(), self.machines))
-        d["catched_flags"] = self.catched_flags
-        d["actions_tried"] = self.actions_tried
+        d["catched_flags"] = list(self.catched_flags)
+        d["actions_tried"] = list(self.actions_tried)
         d["agent_reachable"] = self.agent_reachable
         return d
 
