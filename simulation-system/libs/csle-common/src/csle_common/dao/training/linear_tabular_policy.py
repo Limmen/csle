@@ -1,4 +1,4 @@
-from typing import List, Dict, Union, Optional
+from typing import List, Dict, Union, Optional, Any
 import iteround
 import numpy as np
 from csle_common.dao.training.policy import Policy
@@ -46,7 +46,7 @@ class LinearTabularPolicy(Policy):
         self.avg_R = avg_R
         self.policy_type = PolicyType.LINEAR_TABULAR
 
-    def action(self, o: List[float]) -> int:
+    def action(self, o: List[float]) -> Union[int, float]:
         """
         Multi-threshold stopping policy
 
@@ -70,7 +70,7 @@ class LinearTabularPolicy(Policy):
         taken_action = self.action(o=o)
         return taken_action == a
 
-    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> List[List[float]]:
+    def stage_policy(self, o: Union[List[Union[int, float]], int, float]) -> Any:
         """
         Gets the stage policy, i.e a |S|x|A| policy
 
@@ -90,7 +90,7 @@ class LinearTabularPolicy(Policy):
         """
         :return: a dict representation of the policy
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["stopping_policy"] = self.stopping_policy.to_dict()
         d["action_policy"] = self.action_policy.to_dict()
         d["id"] = self.id
@@ -108,7 +108,7 @@ class LinearTabularPolicy(Policy):
         return d
 
     @staticmethod
-    def from_dict(d: Dict) -> "LinearTabularPolicy":
+    def from_dict(d: Dict[str, Any]) -> "LinearTabularPolicy":
         """
         Converst a dict representation of the object to an instance
 
