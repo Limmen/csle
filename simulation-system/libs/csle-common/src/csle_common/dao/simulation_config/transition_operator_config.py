@@ -1,5 +1,6 @@
 from typing import List, Dict, Any
 import numpy as np
+from numpy.typing import NDArray
 from csle_base.json_serializable import JSONSerializable
 
 
@@ -8,7 +9,7 @@ class TransitionOperatorConfig(JSONSerializable):
     DTO representing the transition operator definition of a simulation
     """
 
-    def __init__(self, transition_tensor: List):
+    def __init__(self, transition_tensor: NDArray[Any]):
         """
         Initializes the DTO
 
@@ -33,8 +34,8 @@ class TransitionOperatorConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
-        if isinstance(self.transition_tensor, np.ndarray):
+        d: Dict[str, Any] = {}
+        if isinstance(self.transition_tensor, type(NDArray[Any])):
             tensor = self.transition_tensor.tolist()
         else:
             tensor = self.transition_tensor
