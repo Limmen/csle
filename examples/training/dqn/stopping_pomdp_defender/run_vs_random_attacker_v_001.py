@@ -8,7 +8,7 @@ from csle_agents.agents.dqn.dqn_agent import DQNAgent
 import csle_agents.constants.constants as agents_constants
 
 if __name__ == '__main__':
-    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-002")
+    emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-003")
     simulation_env_config = MetastoreFacade.get_simulation_by_name("csle-stopping-pomdp-defender-002")
     experiment_config = ExperimentConfig(
         output_dir=f"{constants.LOGGING.DEFAULT_LOG_DIR}dqn_test",

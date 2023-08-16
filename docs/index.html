@@ -180,7 +180,7 @@ layout: default
 
                 # Select an emulation execution
                 executions = MetastoreFacade.list_emulation_executions_for_a_given_emulation(
-                                            emulation_name="csle-level9-002")
+                                            emulation_name="csle-level9-003")
                 emulation_env_config = executions[0].emulation_env_config
 
                 # Define attacker and defender sequences for the traces
@@ -248,7 +248,7 @@ layout: default
                 import csle_system_identification.constants.constants as system_identification_constants
 
                 # Select emulation configuration from metastore
-                emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-002")
+                emulation_env_config = MetastoreFacade.get_emulation_by_name("csle-level9-003")
 
                 # Select emulation statistic (input data) from metastore
                 emulation_statistic = MetastoreFacade.get_emulation_statistic(id=1)
