@@ -26,23 +26,29 @@ class EmulationDefenderActionConfig(JSONSerializable):
         :param multiple_stop_actions_ids: if it is a multiple stopping environment, this defines the ids of
                                           the stop actions
         """
-        self.num_actions = len(actions)
         self.actions = actions
+        if self.actions is None:
+            raise ValueError("Thera are no actions")
         self.num_actions = len(self.actions)
         self.num_indices = num_indices
         self.action_space = gym.spaces.Discrete(self.num_actions)
         self.action_lookup_d = {}
         self.action_lookup_d_val = {}
-        for action in actions:
-            self.action_lookup_d[(action.id, action.index)] = action
-            self.action_lookup_d_val[(action.id, action.index)] = action
+        if actions is not None:
+            for action in actions:
+                self.action_lookup_d[(action.id, action.index)] = action
+                self.action_lookup_d_val[(action.id, action.index)] = action
+        else:
+            raise ValueError("actions is None and thus not iterable")
 
         self.stopping_action_ids = stopping_action_ids
         self.action_ids = self.stopping_action_ids
         self.multiple_stop_actions = multiple_stop_actions
         self.multiple_stop_actions_ids = multiple_stop_actions_ids
-        self.num_node_specific_actions = len(self.action_ids)
-
+        if self.action_ids is not None:
+            self.num_node_specific_actions = len(self.action_ids)
+        else:
+            raise ValueError("There are no number of node-specific actions")
     def print_actions(self) -> None:
         """
         Utility function for printing the list of actions
@@ -50,18 +56,23 @@ class EmulationDefenderActionConfig(JSONSerializable):
         :return: None
         """
         print("Defender Actions:")
-        for i, action in enumerate(self.actions):
-            tag = "-"
-            if not action.index == -1 and action.index is not None:
-                tag = str(action.index)
-            else:
-                tag = "*"
-            print(str(i) + ":" + action.name + "[" + tag + "]")
+        if self.actions is None:
+            raise ValueError("self.actions is not iterable")
+        else:
+            for i, action in enumerate(self.actions):
+                tag = "-"
+                if not action.index == -1 and action.index is not None:
+                    tag = str(action.index)
+                else:
+                    tag = "*"
+                print(str(i) + ":" + action.name + "[" + tag + "]")
 
     def get_continue_action_idx(self) -> int:
         """
         :return: the index of the continue action
         """
+        if self.actions is None:
+            raise ValueError("self.actions is None and thus has no length")
         for i in range(len(self.actions)):
             if self.actions[i].id == EmulationDefenderActionId.CONTINUE:
                 return i
@@ -109,7 +120,7 @@ class EmulationDefenderActionConfig(JSONSerializable):
         
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["num_indices"] = self.num_indices
         d["actions"] = self.actions
         d["stopping_action_ids"] = self.stopping_action_ids

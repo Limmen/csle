@@ -38,6 +38,8 @@ class EmulationAttackerActionConfig(JSONSerializable):
         :param masscan_action_ids: list of ids of the actions that are Masscan actions
         :param stopping_action_ids: List of ids of the actions that are actions related to optimal stopping
         """
+        if actions is None:
+            raise ValueError("self.num_actions can not be defined")
         self.num_actions = len(actions)
         self.actions = actions
         self.num_indices = num_indices
@@ -54,6 +56,10 @@ class EmulationAttackerActionConfig(JSONSerializable):
         self.nikto_action_ids = nikto_action_ids
         self.masscan_action_ids = masscan_action_ids
         self.stopping_action_ids = stopping_action_ids
+        if self.nmap_action_ids is None or self.network_service_action_ids is None or \
+            self.shell_action_ids is None or self.nikto_action_ids is None or \
+                self.masscan_action_ids is None or self.stopping_action_ids is None:
+            raise ValueError("At least one of the actions is None")
         self.action_ids = (self.nmap_action_ids + self.network_service_action_ids + self.shell_action_ids
                            + self.nikto_action_ids + self.masscan_action_ids + self.stopping_action_ids)
         self.num_node_specific_actions = len(self.action_ids)
@@ -329,7 +335,7 @@ class EmulationAttackerActionConfig(JSONSerializable):
 
         :return: a dict representation of the object
         """
-        d = {}
+        d: Dict[str, Any] = {}
         d["num_indices"] = self.num_indices
         d["actions"] = self.actions
         d["nmap_action_ids"] = self.nmap_action_ids
