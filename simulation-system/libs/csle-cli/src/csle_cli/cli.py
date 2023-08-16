@@ -2412,12 +2412,13 @@ def print_emulation_config(emulation_env_config: "EmulationEnvConfig") -> None:
             click.secho(f"{rc.container_name}: CPUs:{rc.num_cpus}, memory: {rc.available_memory_gb}GB, "
                         f"network:{network_bandwidth}", bold=False)
     click.secho("Flags:", fg="yellow", bold=True)
-    for flag in emulation_env_config.flags_config.node_flag_configs:
-        click.secho(f"{flag.flags[0][0]} {flag.ip}", bold=False)
+    for node_flag_cfg in emulation_env_config.flags_config.node_flag_configs:
+        for flag in node_flag_cfg.flags:
+            click.secho(f"{flag} {node_flag_cfg.ip}", bold=False)
     click.secho("Users:", fg="yellow", bold=True)
-    for user in emulation_env_config.users_config.users_configs:
-        users = ",".join(list(map(lambda x: x[0], user.users)))
-        click.secho(f"{users} {user.ip}", bold=False)
+    for node_user_cfg in emulation_env_config.users_config.users_configs:
+        for user in node_user_cfg.users:
+            click.secho(f"{str(user)} {node_user_cfg.ip}", bold=False)
     click.secho("Kafka configuration:", fg="yellow", bold=True)
     click.secho(f"{emulation_env_config.kafka_config.container.name} "
                 f"{','.join(emulation_env_config.kafka_config.container.get_ips())}", bold=False)
